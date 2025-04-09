@@ -18,7 +18,7 @@ export default function Home() {
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
               src/app/page.tsx
             </code>
-            .
+            . ✅
           </li>
           <li className="tracking-[-.01em]">
             Save and see your changes instantly.
