@@ -1,11 +1,12 @@
 // src/components/auth/SignUpForm.tsx
-// Fixed ESLint 'no-explicit-any' errors
+// Refined error handling in catch blocks using type guards
 
 'use client';
 
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth, db } from '@/lib/firebase/clientApp';
 // import { useRouter } from 'next/navigation';
 
@@ -51,27 +52,31 @@ export default function SignUpForm() {
                     // billingModel: 'user_keys', // Example default field
                 });
                 console.log("Firestore document created successfully.");
-            } catch (firestoreError: unknown) { // Changed 'any' to 'unknown'
+            } catch (firestoreError: unknown) { // Catch Firestore write error
                 console.error("Error writing document to Firestore:", firestoreError);
-                const message = (firestoreError instanceof Error) ? firestoreError.message : 'An unknown error occurred.';
+                const message = (firestoreError instanceof Error) ? firestoreError.message : 'An unknown error occurred saving profile.';
                 setError(`Account created, but failed to save profile data: ${message}`);
             }
 
             // router.push('/dashboard');
 
-        } catch (authError: unknown) { // Changed 'any' to 'unknown'
+        } catch (authError: unknown) { // Catch Auth creation error
             console.error("Sign up error (Auth):", authError);
-            // Check error code cautiously after typing as unknown
-            const code = (authError as any)?.code; // Use optional chaining or type assertion
-            if (code === 'auth/email-already-in-use') {
-                setError('This email address is already registered.');
-            } else if (code === 'auth/weak-password') {
-                setError('Password should be at least 6 characters long.');
-            } else if (code === 'auth/invalid-email') {
-                setError('Please enter a valid email address.');
+             // Check if it's a FirebaseError to access error.code safely
+            if (authError instanceof FirebaseError) {
+                if (authError.code === 'auth/email-already-in-use') {
+                    setError('This email address is already registered.');
+                } else if (authError.code === 'auth/weak-password') {
+                    setError('Password should be at least 6 characters long.');
+                } else if (authError.code === 'auth/invalid-email') {
+                    setError('Please enter a valid email address.');
+                } else {
+                    setError(`Failed to sign up: ${authError.message}`);
+                }
+            } else if (authError instanceof Error) {
+                 setError(`Failed to sign up: ${authError.message}`);
             } else {
-                 const message = (authError instanceof Error) ? authError.message : 'An unknown error occurred.';
-                setError(`Failed to sign up: ${message}`);
+                setError('An unknown error occurred during sign up.');
             }
         } finally {
             setLoading(false);

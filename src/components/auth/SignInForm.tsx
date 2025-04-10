@@ -1,11 +1,12 @@
 // src/components/auth/SignInForm.tsx
-// Fixed ESLint 'no-explicit-any' errors
+// Refined error handling in catch blocks using type guards
 
 'use client';
 
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase/clientApp'; // Adjust path if needed
+import { FirebaseError } from 'firebase/app'; // Import FirebaseError
+import { auth } from '@/lib/firebase/clientApp';
 // import { useRouter } from 'next/navigation';
 
 export default function SignInForm() {
@@ -32,20 +33,26 @@ export default function SignInForm() {
             console.log('Signed in successfully!');
             // router.push('/dashboard');
 
-        } catch (error: unknown) { // Changed 'any' to 'unknown'
+        } catch (error: unknown) { // Catch error as unknown
             console.error("Sign in error:", error);
-            // Check error code cautiously after typing as unknown
-            const code = (error as any)?.code; // Use optional chaining or type assertion
-            if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
-                setError('Invalid email or password. Please try again.');
-            } else if (code === 'auth/invalid-email') {
-                 setError('Please enter a valid email address.');
-            } else if (code === 'auth/too-many-requests') {
-                 setError('Access temporarily disabled due to too many failed login attempts. Please reset your password or try again later.');
-            }
-             else {
-                const message = (error instanceof Error) ? error.message : 'An unknown error occurred.';
-                setError(`Failed to sign in: ${message}`);
+            // Check if it's a FirebaseError to access error.code safely
+            if (error instanceof FirebaseError) {
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    setError('Invalid email or password. Please try again.');
+                } else if (error.code === 'auth/invalid-email') {
+                     setError('Please enter a valid email address.');
+                } else if (error.code === 'auth/too-many-requests') {
+                     setError('Access temporarily disabled due to too many failed login attempts. Please reset your password or try again later.');
+                } else {
+                    // Handle other Firebase errors
+                    setError(`Sign in failed: ${error.message}`);
+                }
+            } else if (error instanceof Error) {
+                 // Handle generic JavaScript errors
+                 setError(`Sign in failed: ${error.message}`);
+            } else {
+                // Handle non-Error exceptions
+                setError('An unknown error occurred during sign in.');
             }
         } finally {
             setLoading(false);

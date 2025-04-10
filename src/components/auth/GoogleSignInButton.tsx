@@ -1,14 +1,13 @@
 // src/components/auth/GoogleSignInButton.tsx
-// Fixed ESLint 'no-explicit-any' and 'no-unused-vars' errors
+// Refined error handling in catch blocks using type guards
 
-'use client'; // This is a client component
+'use client';
 
 import { useState } from 'react';
-// Removed unused 'User' type import
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-// Removed unused 'Firestore' type import
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase/clientApp'; // Adjust path as needed
+import { FirebaseError } from 'firebase/app'; // Import FirebaseError
+import { auth, db } from '@/lib/firebase/clientApp';
 
 // Simple SVG Google Icon component
 const GoogleIcon = () => (
@@ -51,33 +50,38 @@ export default function GoogleSignInButton() {
                             displayName: user.displayName || '',
                             photoURL: user.photoURL || '',
                             createdAt: serverTimestamp(),
-                            // billingModel: 'user_keys',
                         });
                         console.log("Firestore document created successfully for new Google user.");
-                    } catch (writeError: unknown) { // Changed 'any' to 'unknown'
+                    } catch (writeError: unknown) { // Catch Firestore write error
                             console.error("Error writing new user document to Firestore:", writeError);
-                            const message = (writeError instanceof Error) ? writeError.message : 'An unknown error occurred.';
+                            const message = (writeError instanceof Error) ? writeError.message : 'An unknown error occurred during profile save.';
                             setError(`Signed in, but failed to save profile data: ${message}`);
                     }
                 } else {
                     console.log("Existing user document found in Firestore.");
                 }
-            } catch (firestoreCheckError: unknown) { // Changed 'any' to 'unknown'
+            } catch (firestoreCheckError: unknown) { // Catch Firestore get/set error
                     console.error("Error checking/writing user document in Firestore:", firestoreCheckError);
-                    const message = (firestoreCheckError instanceof Error) ? firestoreCheckError.message : 'An unknown error occurred.';
+                    const message = (firestoreCheckError instanceof Error) ? firestoreCheckError.message : 'An unknown error occurred accessing profile data.';
                     setError(`Signed in, but failed to check/save profile data: ${message}`);
             }
 
-        } catch (authError: unknown) { // Changed 'any' to 'unknown'
+        } catch (authError: unknown) { // Catch Auth popup error
             console.error("Google Sign-In error (Auth):", authError);
-            // Check error code cautiously after typing as unknown
-            const code = (authError as any)?.code; // Use optional chaining or type assertion
-            if (code === 'auth/popup-closed-by-user') {
-                console.log('Google Sign-In popup closed by user.');
-            } else if (code === 'auth/account-exists-with-different-credential') {
-                setError('An account already exists with this email using a different sign-in method.');
+            // Check for specific Firebase error codes safely
+            if (authError instanceof FirebaseError) {
+                 if (authError.code === 'auth/popup-closed-by-user') {
+                    console.log('Google Sign-In popup closed by user.');
+                    // Optionally set a non-error message or just do nothing
+                 } else if (authError.code === 'auth/account-exists-with-different-credential') {
+                    setError('An account already exists with this email using a different sign-in method.');
+                 } else {
+                    setError(`Google Sign-In failed: ${authError.message}`);
+                 }
+            } else if (authError instanceof Error) {
+                 setError(`Google Sign-In failed: ${authError.message}`);
             } else {
-                setError('Failed to sign in with Google. Please try again later.');
+                setError('An unknown error occurred during Google Sign-In.');
             }
         } finally {
             setLoading(false);
