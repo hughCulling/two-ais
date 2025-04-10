@@ -1,0 +1,4 @@
+# public/robots.txt (Example)
+User-agent: *
+Allow: /
+Disallow: /api/ # Example: Disallow crawling API routes
