@@ -1,5 +1,5 @@
 // src/components/auth/SignOutButton.tsx
-// Fixed version with null check for auth
+// Fixed ESLint 'no-explicit-any' errors
 
 'use client'; // This is a client component
 
@@ -9,37 +9,32 @@ import { auth } from '@/lib/firebase/clientApp'; // Adjust path as needed
 
 export default function SignOutButton() {
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null); // Optional: To display sign-out errors
+    const [error, setError] = useState<string | null>(null);
 
-    // Function to handle the sign-out process
     const handleSignOut = async () => {
-        setError(null); // Clear previous errors
-        setLoading(true); // Indicate loading
+        setError(null);
+        setLoading(true);
 
-        // --- Add check for auth ---
         if (!auth) {
             console.error("Firebase auth not initialized for sign out.");
             setError("Sign out failed: Service unavailable.");
-            setLoading(false); // Reset loading state before exiting
-            return; // Exit if auth is null
+            setLoading(false);
+            return;
         }
-        // --- End check ---
 
         try {
-            // Now safe to pass non-null 'auth'
             await signOut(auth);
             console.log('Signed out successfully');
-            // AuthProvider will automatically update the global state
 
-        } catch (err: any) { // Catch any errors during sign-out
-            console.error('Sign out error:', err);
-            setError('Failed to sign out. Please try again.'); // Set error message
+        } catch (error: unknown) { // Changed 'any' to 'unknown'
+            console.error('Sign out error:', error);
+            const message = (error instanceof Error) ? error.message : 'An unknown error occurred.';
+            setError(`Failed to sign out: ${message}`);
         } finally {
-            setLoading(false); // Reset loading state
+            setLoading(false);
         }
     };
 
-    // Render the sign-out button
     return (
         <div className="flex flex-col items-center">
             <button
@@ -49,7 +44,6 @@ export default function SignOutButton() {
             >
                 {loading ? 'Signing Out...' : 'Sign Out'}
             </button>
-            {/* Optionally display sign-out errors */}
             {error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>}
         </div>
     );
