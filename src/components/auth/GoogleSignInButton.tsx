@@ -1,11 +1,13 @@
 // src/components/auth/GoogleSignInButton.tsx
-// Component for initiating Google Sign-In flow - with null checks for auth/db
+// Fixed ESLint 'no-explicit-any' and 'no-unused-vars' errors
 
 'use client'; // This is a client component
 
 import { useState } from 'react';
-import { GoogleAuthProvider, signInWithPopup, User } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp, Firestore } from 'firebase/firestore'; // Import Firestore type if needed for clarity
+// Removed unused 'User' type import
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+// Removed unused 'Firestore' type import
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase/clientApp'; // Adjust path as needed
 
 // Simple SVG Google Icon component
@@ -14,34 +16,27 @@ const GoogleIcon = () => (
 );
 
 export default function GoogleSignInButton() {
-    // State for loading status and error messages
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Function to handle the Google Sign-In process
     const handleGoogleSignIn = async () => {
-        setError(null); // Clear previous errors
-        setLoading(true); // Set loading state
+        setError(null);
+        setLoading(true);
 
-        // --- Add checks for auth and db ---
         if (!auth || !db) {
             console.error("Firebase auth or db not initialized.");
             setError("Initialization error. Please try again later.");
             setLoading(false);
-            return; // Exit if auth or db is null
+            return;
         }
-        // --- End checks ---
 
-        // Create a new instance of the GoogleAuthProvider
         const provider = new GoogleAuthProvider();
 
         try {
-            // 1. Sign In with Google Popup - Now safe to pass non-null 'auth'
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             console.log('Google Sign-In successful (Auth):', user.uid);
 
-            // 2. Check/Write Firestore Document - Now safe to pass non-null 'db'
             const userDocRef = doc(db, "users", user.uid);
             console.log('Checking Firestore for user document:', user.uid);
 
@@ -59,38 +54,36 @@ export default function GoogleSignInButton() {
                             // billingModel: 'user_keys',
                         });
                         console.log("Firestore document created successfully for new Google user.");
-                    } catch (writeError: any) {
+                    } catch (writeError: unknown) { // Changed 'any' to 'unknown'
                             console.error("Error writing new user document to Firestore:", writeError);
-                            setError(`Signed in, but failed to save profile data: ${writeError.message}`);
+                            const message = (writeError instanceof Error) ? writeError.message : 'An unknown error occurred.';
+                            setError(`Signed in, but failed to save profile data: ${message}`);
                     }
                 } else {
                     console.log("Existing user document found in Firestore.");
-                    // Optionally update existing data if needed:
-                    // await setDoc(userDocRef, { photoURL: user.photoURL }, { merge: true });
                 }
-            } catch (firestoreCheckError: any) {
+            } catch (firestoreCheckError: unknown) { // Changed 'any' to 'unknown'
                     console.error("Error checking/writing user document in Firestore:", firestoreCheckError);
-                    setError(`Signed in, but failed to check/save profile data: ${firestoreCheckError.message}`);
+                    const message = (firestoreCheckError instanceof Error) ? firestoreCheckError.message : 'An unknown error occurred.';
+                    setError(`Signed in, but failed to check/save profile data: ${message}`);
             }
 
-            // Optional: Redirect user
-            // router.push('/dashboard');
-
-        } catch (authError: any) { // Catch errors during Google Sign In Popup
+        } catch (authError: unknown) { // Changed 'any' to 'unknown'
             console.error("Google Sign-In error (Auth):", authError);
-            if (authError.code === 'auth/popup-closed-by-user') {
+            // Check error code cautiously after typing as unknown
+            const code = (authError as any)?.code; // Use optional chaining or type assertion
+            if (code === 'auth/popup-closed-by-user') {
                 console.log('Google Sign-In popup closed by user.');
-            } else if (authError.code === 'auth/account-exists-with-different-credential') {
+            } else if (code === 'auth/account-exists-with-different-credential') {
                 setError('An account already exists with this email using a different sign-in method.');
             } else {
                 setError('Failed to sign in with Google. Please try again later.');
             }
         } finally {
-            setLoading(false); // Reset loading state
+            setLoading(false);
         }
     };
 
-    // --- Render the button (JSX remains the same) ---
     return (
         <div>
             <button onClick={handleGoogleSignIn} disabled={loading} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800">
