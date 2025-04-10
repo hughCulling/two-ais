@@ -1,5 +1,6 @@
 // src/app/page.tsx
 // Main page component handling authentication status display and forms
+// Fixed ESLint 'no-explicit-any' errors
 
 'use client';
 
@@ -9,7 +10,7 @@ import { auth } from '@/lib/firebase/clientApp';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
-import { useState } from 'react'; // Import useState for sign-out loading/error
+import { useState } from 'react';
 
 // Standard naming convention for the root page component
 export default function Page() {
@@ -24,10 +25,12 @@ export default function Page() {
             try {
                 await signOut(auth);
                 console.log('Signed out successfully');
-                // No need to manually update user state, AuthProvider handles it
-            } catch (error: any) {
+            } catch (error: unknown) { // Changed 'any' to 'unknown'
                 console.error('Sign out error:', error);
-                setSignOutError('Failed to sign out. Please try again.');
+                // You might want to check the error type before accessing properties
+                // For simplicity here, we assume it has a message property
+                const message = (error instanceof Error) ? error.message : 'An unknown error occurred.';
+                setSignOutError(`Failed to sign out: ${message}`);
             }
         } else {
             console.error("Sign out failed: Firebase auth not initialized.");
@@ -41,7 +44,6 @@ export default function Page() {
     if (loading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                {/* Replace with a proper spinner component if desired */}
                 <p className="text-gray-500 dark:text-gray-400 animate-pulse">Loading...</p>
             </main>
         );
@@ -76,7 +78,6 @@ export default function Page() {
                          <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                             Sign In or Sign Up
                         </h1>
-                        {/* Tabs or Accordion could be used here for better UX */}
                         <div className="space-y-4">
                             <h2 className="text-lg font-medium border-b pb-2 dark:border-gray-700">Sign In</h2>
                             <SignInForm />
