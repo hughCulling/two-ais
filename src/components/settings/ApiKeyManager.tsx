@@ -1,6 +1,7 @@
 // src/components/ApiKeyManager.tsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { getFunctions, httpsCallable, FunctionsError } from 'firebase/functions';
+import React, { useState, /* useEffect removed */ useCallback } from 'react';
+// getFunctions removed, FunctionsError still needed if used in catch block explicitly
+import { httpsCallable, FunctionsError } from 'firebase/functions';
 // Corrected import path for AuthContext
 import { useAuth } from '@/context/AuthContext'; // Assuming src/context/AuthContext.tsx
 // Ensure app is correctly imported from your clientApp configuration
@@ -179,6 +180,7 @@ const ApiKeyManager: React.FC = () => {
         // Check if any errors occurred overall
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
         if (hasErrors) {
+            // Add generalError check here to satisfy exhaustive-deps
             if (!generalError) {
                  setGeneralError("Some API keys could not be saved. See details below.");
             }
@@ -186,7 +188,8 @@ const ApiKeyManager: React.FC = () => {
             setGeneralError(null); // Clear general error if all succeeded
         }
 
-    }, [apiKeys, user, authLoading, initializedFunctions]); // Dependencies
+    // Added generalError to dependency array
+    }, [apiKeys, user, authLoading, initializedFunctions, generalError]); // Dependencies
 
     return (
         <div className="space-y-6 p-4 md:p-6 max-w-lg mx-auto">
