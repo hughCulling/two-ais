@@ -1,0 +1,36 @@
+// functions/tsconfig.json
+// Ensure compilerOptions match this structure (add/update properties as needed)
+{
+  "compilerOptions": {
+    // Target Node.js version specified in package.json engines (e.g., ES2017/ES2020)
+    "target": "es2022", // Or "es2020" etc. based on your Node engine
+    // Use CommonJS modules - standard for Firebase Functions v1/v2
+    "module": "commonjs",
+    // Use Node style module resolution
+    "moduleResolution": "node",
+    // Enable strict type checking
+    "strict": true,
+    // Output directory for compiled JS (should match firebase.json functions.source)
+    "outDir": "lib",
+     // Ensure source map generation is enabled for debugging
+    "sourceMap": true,
+    // Resolve JSON modules
+    "resolveJsonModule": true,
+    // Allow default imports from modules with no default export
+    "esModuleInterop": true,
+    // --- Add/Update these lines ---
+    // Skip type checking of declaration files (.d.ts) in node_modules
+    "skipLibCheck": true,
+    // Force consistent casing in file names
+    "forceConsistentCasingInFileNames": true
+    // -----------------------------
+  },
+  "compileOnSave": true,
+  "include": [
+    "src" // Only include files in the 'src' directory
+  ],
+  "exclude": [
+     "node_modules", // Exclude node_modules
+     "lib" // Exclude compiled output
+  ]
+}

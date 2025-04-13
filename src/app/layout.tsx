@@ -1,6 +1,10 @@
+// src/app/layout.tsx
+// Root layout including the shared Header component
+
 import type { Metadata } from "next";
-import { AuthProvider } from '@/context/AuthContext'; // Adjust path
+import { AuthProvider } from '@/context/AuthContext'; // Adjust path if needed
 import { Geist, Geist_Mono } from "next/font/google";
+import Header from '@/components/layout/Header'; // Import the Header component
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,13 +29,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      {/* Apply font variables to html or body */}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900`}> {/* Added default background */}
         <AuthProvider>
+          <Header /> {/* Render the Header component here */}
+          {/* The rest of the page content will be rendered below the header */}
           {children}
         </AuthProvider>
       </body>
     </html>
   );
 }
+
