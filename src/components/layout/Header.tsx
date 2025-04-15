@@ -1,11 +1,12 @@
 // src/components/layout/Header.tsx
-// Shared header component with updated link for logged-out users
+// Shared header component with ThemeSwitcher integrated
 
 'use client';
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext'; // Adjust path if needed
 import SignOutButton from '@/components/auth/SignOutButton'; // Adjust path if needed
+import { ThemeSwitcher } from '@/components/theme-switcher'; // *** 1. Import ThemeSwitcher ***
 
 export default function Header() {
     const { user, loading } = useAuth();
@@ -26,6 +27,10 @@ export default function Header() {
 
                     {/* Right-aligned Navigation Links and Auth Status */}
                     <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
+                            {/* *** 2. Add ThemeSwitcher here *** */}
+                            <ThemeSwitcher />
+
+                        {/* --- Auth Status / Links --- */}
                         {loading ? (
                             // Loading Placeholder
                             <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
