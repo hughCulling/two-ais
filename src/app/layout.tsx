@@ -1,12 +1,12 @@
 // src/app/layout.tsx
-// Root layout including the shared Header component and ThemeProvider
+// Root layout - Removed shortcut icon link
 
 import type { Metadata } from "next";
-import { AuthProvider } from '@/context/AuthContext'; // Adjust path if needed
+import { AuthProvider } from '@/context/AuthContext';
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from '@/components/layout/Header'; // Import the Header component
-import { ThemeProvider } from "@/components/theme-provider"; // Import the ThemeProvider
-import { cn } from "@/lib/utils"; // Import the cn utility
+import Header from '@/components/layout/Header';
+import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +22,17 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Two AIs",
   description: "Listen to AI conversations",
+  icons: {
+    // Define icon as an array with specific sizes
+    icon: [
+      { url: '/icon.png', sizes: 'any', type: 'image/png' },
+      { url: '/icon.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    // *** Removed shortcut link as favicon.ico is being deleted ***
+    // shortcut: '/favicon.ico',
+    apple: '/icon.png', // Apple touch icon
+  },
 };
 
 export default function RootLayout({
@@ -30,29 +41,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Add suppressHydrationWarning here as recommended by next-themes
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          // Apply font variables using the cn utility
           geistSans.variable,
           geistMono.variable,
-          // Basic body styles - theme provider will handle background via CSS variables
           "min-h-screen font-sans antialiased"
-          // Removed hardcoded background colors (bg-gray-50 dark:bg-gray-900)
-          // Rely on CSS variables defined in globals.css for theme backgrounds
         )}
       >
-        {/* Wrap AuthProvider and the rest with ThemeProvider */}
         <ThemeProvider
-          attribute="class" // Tells next-themes to use class strategy
-          defaultTheme="system" // Default to system preference
-          enableSystem // Enable the 'system' option
-          disableTransitionOnChange // Optional: Prevent theme change transitions
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           <AuthProvider>
-            <Header /> {/* Render the Header component here */}
-            {/* The rest of the page content */}
+            <Header />
             {children}
           </AuthProvider>
         </ThemeProvider>
