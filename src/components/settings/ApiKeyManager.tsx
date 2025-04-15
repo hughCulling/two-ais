@@ -1,50 +1,79 @@
 // src/components/settings/ApiKeyManager.tsx
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { httpsCallable, FunctionsError } from 'firebase/functions';
+import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
-import { app, auth as firebaseAuth, functions as initializedFunctions } from '@/lib/firebase/clientApp';
+import { app, auth as firebaseAuth, db, functions as initializedFunctions } from '@/lib/firebase/clientApp';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
+import { Terminal, CheckCircle } from "lucide-react";
 
-// Define the structure for API key inputs
-interface ApiKeyInput {
-    id: string;
-    label: string;
-    value: string;
-}
-
-// Define the expected request structure for the Cloud Function
-interface SaveApiKeyRequest {
-    apiKey: string;
-    service: string;
-}
-
-// Define the expected success response structure (can be expanded)
-interface SaveApiKeySuccessResponse {
-    message: string;
-    service: string;
-}
-
-// Define the expected error response structure
-interface SaveApiKeyErrorResponse {
-    error: string;
-    service: string;
-}
+// Interfaces remain the same...
+interface ApiKeyInput { id: string; label: string; value: string; }
+interface SaveApiKeyRequest { apiKey: string; service: string; }
+interface SaveApiKeySuccessResponse { message: string; service: string; }
+interface SaveApiKeyErrorResponse { error: string; service: string; }
 
 const ApiKeyManager: React.FC = () => {
     const { user, loading: authLoading } = useAuth();
-    const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>([
+    // Keep the initial state definition based on your services
+    const initialApiKeys: ApiKeyInput[] = [
         { id: 'openai', label: 'OpenAI API Key', value: '' },
         { id: 'google_ai', label: 'Google AI API Key', value: '' },
         { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '' },
-        // Add more services as needed
-    ]);
+    ];
+    const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(initialApiKeys);
     const [statusMessages, setStatusMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
     const [isSaving, setIsSaving] = useState(false);
     const [generalError, setGeneralError] = useState<string | null>(null);
+    const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
+    const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+
+    useEffect(() => {
+        const fetchKeyStatus = async () => {
+            if (user) {
+                setIsLoadingStatus(true);
+                setGeneralError(null);
+                try {
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    const status: Record<string, boolean> = {}; // Initialize status locally
+
+                    if (userDocSnap.exists()) {
+                        const data = userDocSnap.data() as DocumentData;
+                        const versions = data.apiSecretVersions || {};
+                        // Use initialApiKeys definition to check against Firestore data
+                        initialApiKeys.forEach(key => {
+                            if (versions[key.id] && typeof versions[key.id] === 'string' && versions[key.id].length > 0) {
+                                status[key.id] = true;
+                            } else {
+                                status[key.id] = false;
+                            }
+                        });
+                    } else {
+                        // User doc doesn't exist, initialize all as false
+                        initialApiKeys.forEach(key => { status[key.id] = false; });
+                        console.log("User document does not exist yet.");
+                    }
+                    setSavedKeyStatus(status); // Set the derived status
+                } catch (error) {
+                    console.error("Error fetching user document for key status:", error);
+                    setGeneralError("Could not load saved key status.");
+                    setSavedKeyStatus({});
+                } finally {
+                    setIsLoadingStatus(false);
+                }
+            } else if (!authLoading) {
+                setSavedKeyStatus({});
+                setIsLoadingStatus(false);
+            }
+        };
+
+        fetchKeyStatus();
+    // Dependency array only includes user and authLoading
+    }, [user, authLoading]);
 
     const handleInputChange = (id: string, value: string) => {
         setApiKeys(prevKeys =>
@@ -59,25 +88,8 @@ const ApiKeyManager: React.FC = () => {
     };
 
     const saveKeys = useCallback(async () => {
-        if (authLoading) {
-            setGeneralError("Authentication status is loading. Please wait.");
-            console.warn("Save attempt while auth is loading.");
-            return;
-        }
-        const currentUser = user;
-        if (!currentUser) {
-            setGeneralError("You must be logged in to save API keys.");
-            console.error("Save attempt failed: User not authenticated (from AuthContext).");
-            return;
-        }
-         if (!firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== currentUser.uid) {
-             console.error("Save attempt failed: Auth inconsistency detected.");
-             setGeneralError("Authentication inconsistency detected. Please refresh.");
-             return;
-         }
-        if (!app) {
-             setGeneralError("Firebase is not initialized correctly. Please refresh.");
-             console.error("Save attempt failed: Firebase app not available.");
+         if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app) {
+             setGeneralError("Authentication issue or Firebase not ready.");
              return;
         }
 
@@ -88,19 +100,21 @@ const ApiKeyManager: React.FC = () => {
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
         if (keysToSave.length === 0) {
-            setGeneralError("No API keys entered to save.");
+            setGeneralError("No new API keys entered to save.");
             setIsSaving(false);
             return;
         }
 
         try {
-            await currentUser.getIdToken();
+            await user.getIdToken();
         } catch (tokenError) {
             console.error("Error retrieving ID token:", tokenError);
             setGeneralError("Failed to get authentication token. Please try logging out and back in.");
             setIsSaving(false);
             return;
         }
+
+        const newlySavedKeys: Record<string, boolean> = {};
 
         const promises = keysToSave.map(async (apiKeyInput) => {
             const service = apiKeyInput.id;
@@ -112,37 +126,32 @@ const ApiKeyManager: React.FC = () => {
                 const result = await saveApiKeyFunction(dataToSend);
                 const data = result.data;
 
-                if (typeof data === 'object' && data !== null && 'error' in data) {
-                    const errorData = data as SaveApiKeyErrorResponse;
-                    console.error(`Error saving ${service} key (from function response):`, errorData.error);
-                    currentStatusMessages[service] = { type: 'error', message: `Error saving ${service}: ${errorData.error}` };
-                }
-                else if (typeof data === 'object' && data !== null && 'message' in data) {
+                if (typeof data === 'object' && data !== null && 'message' in data && !('error' in data)) {
                     const successData = data as SaveApiKeySuccessResponse;
-                    console.log(`Successfully saved ${service} key.`);
+                    console.log(`Successfully saved/updated ${service} key.`);
                     currentStatusMessages[service] = { type: 'success', message: successData.message };
+                    newlySavedKeys[service] = true;
+                    setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
                 } else {
-                     console.error(`Unexpected response structure for ${service}:`, data);
-                     currentStatusMessages[service] = { type: 'error', message: `Unexpected response for ${service}.` };
+                    const errorMsg = (data as SaveApiKeyErrorResponse)?.error || 'Unknown error structure.';
+                    console.error(`Error saving ${service} key (from function response):`, errorMsg);
+                    currentStatusMessages[service] = { type: 'error', message: `Error: ${errorMsg}` };
                 }
 
             } catch (error) {
                 console.error(`Caught error calling function for ${service}:`, error);
                 let errorMessage = `Failed to save ${service} key.`;
-                if (error instanceof FunctionsError) {
-                     if (error.code === 'unauthenticated') {
-                         errorMessage = `Authentication error saving ${service}. Please ensure you are logged in. The server rejected the call.`;
-                    } else {
-                         errorMessage = `Function error saving ${service}: ${error.message} (Code: ${error.code})`;
-                    }
-                } else if (error instanceof Error) {
-                    errorMessage = `Generic error saving ${service}: ${error.message}`;
-                }
+                 if (error instanceof FunctionsError) {
+                      errorMessage = `Function error: ${error.message} (Code: ${error.code})`;
+                 } else if (error instanceof Error) {
+                     errorMessage = `Error: ${error.message}`;
+                 }
                 currentStatusMessages[service] = { type: 'error', message: errorMessage };
             }
         });
 
         await Promise.all(promises);
+        setSavedKeyStatus(prevStatus => ({ ...prevStatus, ...newlySavedKeys }));
         setStatusMessages(currentStatusMessages);
         setIsSaving(false);
 
@@ -154,15 +163,17 @@ const ApiKeyManager: React.FC = () => {
         } else {
             setGeneralError(null);
         }
-
     }, [apiKeys, user, authLoading, initializedFunctions, generalError]);
 
-    // *** Root div no longer has padding, max-width, or mx-auto ***
-    // These are now handled by the wrapping container in the page component
+
+    if (isLoadingStatus && !authLoading) {
+         return <p className="text-center text-sm text-muted-foreground">Loading key status...</p>;
+    }
+
+    // *** Root div no longer has padding, max-width, or mx-auto classes ***
     return (
         <div className="space-y-6">
-            {/* *** H2 Title Removed - Handled by the page component *** */}
-            {/* <h2 className="text-2xl font-semibold text-center">Manage API Keys</h2> */}
+            {/* *** H2 Title Removed - Handled by the page component (api-keys/page.tsx) *** */}
 
             {/* General Error Display */}
             {generalError && (
@@ -175,36 +186,52 @@ const ApiKeyManager: React.FC = () => {
 
             {/* API Key Inputs */}
             <div className="space-y-4">
-                {apiKeys.map(({ id, label, value }) => (
-                    <div key={id} className="space-y-2">
-                        <Label htmlFor={id}>{label}</Label>
-                        <Input
-                            id={id}
-                            type="password"
-                            value={value}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
-                            placeholder={`Enter your ${label}`}
-                            disabled={isSaving || authLoading}
-                            className="transition-colors duration-200 focus:border-primary focus:ring-primary"
-                        />
-                        {statusMessages[id] && (
-                            <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
-                                <Terminal className="h-4 w-4" />
-                                <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
-                                <AlertDescription>{statusMessages[id].message}</AlertDescription>
-                            </Alert>
-                        )}
-                    </div>
-                ))}
+                {/* Use initialApiKeys here to ensure map always uses the base list */}
+                {initialApiKeys.map(({ id, label }) => {
+                    // Find the current value from the state
+                    const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
+                    const isSaved = savedKeyStatus[id] === true;
+                    const showSavedPlaceholder = isSaved && currentKeyValue === '';
+
+                    return (
+                        <div key={id} className="space-y-2">
+                            <Label htmlFor={id}>{label}</Label>
+                            <div className="flex items-center space-x-2">
+                                <Input
+                                    id={id}
+                                    type="password"
+                                    value={currentKeyValue} // Use value from state
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
+                                    placeholder={showSavedPlaceholder ? '•••••••• Key Saved' : `Enter your ${label}`}
+                                    disabled={isSaving || authLoading || isLoadingStatus}
+                                    className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
+                                />
+                                {isSaved && (
+                                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" aria-label="Key saved indicator"/>
+                                )}
+                            </div>
+                             <p className="text-xs text-muted-foreground px-1">
+                                 {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely."}
+                             </p>
+                            {statusMessages[id] && (
+                                <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
+                                    <Terminal className="h-4 w-4" />
+                                    <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
+                                    <AlertDescription>{statusMessages[id].message}</AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             {/* Save Button */}
             <Button
                 onClick={saveKeys}
-                disabled={isSaving || authLoading || !user}
+                disabled={isSaving || authLoading || !user || isLoadingStatus}
                 className="w-full transition-opacity duration-200"
             >
-                {isSaving ? 'Saving...' : 'Save API Keys'}
+                {isSaving ? 'Saving...' : 'Save / Update Keys'}
             </Button>
 
              {/* Auth Loading Indicator */}
