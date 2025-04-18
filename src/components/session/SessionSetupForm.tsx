@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle } from 'lucide-react'; // Icon for warning
+// --- LINT FIX: Removed unused AlertCircle import ---
+// import { AlertCircle } from 'lucide-react'; // Icon for warning
+// --- END LINT FIX ---
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase/clientApp'; // Import db
 
@@ -67,7 +69,7 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                     const requiredKeys = new Set(llmOptions.map(o => o.requiredKey)); // Get unique keys needed
 
                     if (userDocSnap.exists()) {
-                        const data = userDocSnap.data() as DocumentData;
+                        const data = userDocSnap.data(); // No need for DocumentData cast here
                         const versions = data.apiSecretVersions || {};
                         requiredKeys.forEach(keyId => {
                             status[keyId] = !!(versions[keyId] && typeof versions[keyId] === 'string' && versions[keyId].length > 0);
@@ -160,11 +162,9 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                         <SelectItem
                                             key={option.value}
                                             value={option.value}
-                                            // *** Disable item if key is missing ***
                                             disabled={isOptionDisabled(option.requiredKey)}
                                         >
                                             {option.label}
-                                            {/* Add visual cue for disabled items */}
                                             {isOptionDisabled(option.requiredKey) && (
                                                 <span className="ml-2 text-xs text-muted-foreground">(API Key Missing)</span>
                                             )}
@@ -195,11 +195,9 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                         <SelectItem
                                             key={option.value}
                                             value={option.value}
-                                            // *** Disable item if key is missing ***
                                             disabled={isOptionDisabled(option.requiredKey)}
                                         >
                                             {option.label}
-                                            {/* Add visual cue for disabled items */}
                                             {isOptionDisabled(option.requiredKey) && (
                                                     <span className="ml-2 text-xs text-muted-foreground">(API Key Missing)</span>
                                             )}
@@ -229,3 +227,4 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
         </Card>
     );
 }
+

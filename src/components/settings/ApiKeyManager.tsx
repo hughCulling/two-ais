@@ -16,14 +16,16 @@ interface SaveApiKeyRequest { apiKey: string; service: string; }
 interface SaveApiKeySuccessResponse { message: string; service: string; }
 interface SaveApiKeyErrorResponse { error: string; service: string; }
 
+// Define outside component so it's stable
+const initialApiKeys: ApiKeyInput[] = [
+    { id: 'openai', label: 'OpenAI API Key', value: '' },
+    { id: 'google_ai', label: 'Google AI API Key', value: '' },
+    { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '' }, // Assuming you might add this later
+];
+
 const ApiKeyManager: React.FC = () => {
     const { user, loading: authLoading } = useAuth();
-    // Keep the initial state definition based on your services
-    const initialApiKeys: ApiKeyInput[] = [
-        { id: 'openai', label: 'OpenAI API Key', value: '' },
-        { id: 'google_ai', label: 'Google AI API Key', value: '' },
-        { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '' },
-    ];
+    // Initialize state from the stable initialApiKeys
     const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(initialApiKeys);
     const [statusMessages, setStatusMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
     const [isSaving, setIsSaving] = useState(false);
@@ -42,7 +44,7 @@ const ApiKeyManager: React.FC = () => {
                     const status: Record<string, boolean> = {}; // Initialize status locally
 
                     if (userDocSnap.exists()) {
-                        const data = userDocSnap.data() as DocumentData;
+                        const data = userDocSnap.data(); // No need for DocumentData cast
                         const versions = data.apiSecretVersions || {};
                         // Use initialApiKeys definition to check against Firestore data
                         initialApiKeys.forEach(key => {
@@ -66,28 +68,34 @@ const ApiKeyManager: React.FC = () => {
                     setIsLoadingStatus(false);
                 }
             } else if (!authLoading) {
+                // Clear status if user logs out or was never logged in
                 setSavedKeyStatus({});
                 setIsLoadingStatus(false);
             }
         };
 
         fetchKeyStatus();
-    // Dependency array only includes user and authLoading
-    }, [user, authLoading]);
+    // --- LINT FIX: Disabled rule for initialApiKeys ---
+    // initialApiKeys is defined outside the component and is stable.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user, authLoading]); // Rerun only when user/auth state changes
 
     const handleInputChange = (id: string, value: string) => {
         setApiKeys(prevKeys =>
             prevKeys.map(key => (key.id === id ? { ...key, value } : key))
         );
+        // Clear status message for the specific key being edited
         setStatusMessages(prev => {
             const newStatus = { ...prev };
             delete newStatus[id];
             return newStatus;
         });
-        setGeneralError(null);
+        setGeneralError(null); // Clear general error when user starts typing
     };
 
     const saveKeys = useCallback(async () => {
+         // Ensure Firebase services and user are ready
+         // Note: initializedFunctions is imported and stable, no need to check it here.
          if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app) {
              setGeneralError("Authentication issue or Firebase not ready.");
              return;
@@ -96,6 +104,12 @@ const ApiKeyManager: React.FC = () => {
         setIsSaving(true);
         setGeneralError(null);
         const currentStatusMessages: Record<string, { type: 'success' | 'error'; message: string }> = {};
+        // Ensure initializedFunctions is available before calling httpsCallable
+        if (!initializedFunctions) {
+             setGeneralError("Firebase Functions service is not initialized.");
+             setIsSaving(false);
+             return;
+        }
         const saveApiKeyFunction = httpsCallable<SaveApiKeyRequest, SaveApiKeySuccessResponse | SaveApiKeyErrorResponse>(initializedFunctions, 'saveApiKey');
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
@@ -105,17 +119,19 @@ const ApiKeyManager: React.FC = () => {
             return;
         }
 
+        // Ensure ID token is fresh before making calls
         try {
-            await user.getIdToken();
+            await user.getIdToken(true); // Force refresh token
         } catch (tokenError) {
-            console.error("Error retrieving ID token:", tokenError);
-            setGeneralError("Failed to get authentication token. Please try logging out and back in.");
+            console.error("Error refreshing ID token:", tokenError);
+            setGeneralError("Failed to refresh authentication token. Please try logging out and back in.");
             setIsSaving(false);
             return;
         }
 
         const newlySavedKeys: Record<string, boolean> = {};
 
+        // Use Promise.all to run save operations concurrently
         const promises = keysToSave.map(async (apiKeyInput) => {
             const service = apiKeyInput.id;
             const apiKey = apiKeyInput.value;
@@ -126,19 +142,29 @@ const ApiKeyManager: React.FC = () => {
                 const result = await saveApiKeyFunction(dataToSend);
                 const data = result.data;
 
+                // Check for success structure (has message, no error)
                 if (typeof data === 'object' && data !== null && 'message' in data && !('error' in data)) {
                     const successData = data as SaveApiKeySuccessResponse;
                     console.log(`Successfully saved/updated ${service} key.`);
                     currentStatusMessages[service] = { type: 'success', message: successData.message };
-                    newlySavedKeys[service] = true;
+                    newlySavedKeys[service] = true; // Mark as saved
+                    // Clear the input field on success
                     setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
-                } else {
+                }
+                // Check for explicit error structure from the function
+                else if (typeof data === 'object' && data !== null && 'error' in data) {
                     const errorMsg = (data as SaveApiKeyErrorResponse)?.error || 'Unknown error structure.';
                     console.error(`Error saving ${service} key (from function response):`, errorMsg);
                     currentStatusMessages[service] = { type: 'error', message: `Error: ${errorMsg}` };
                 }
+                // Handle unexpected response structure
+                else {
+                     console.error(`Unexpected response structure for ${service}:`, data);
+                     currentStatusMessages[service] = { type: 'error', message: "Unexpected response from server." };
+                }
 
             } catch (error) {
+                // Handle errors thrown by httpsCallable itself (network, permissions, etc.)
                 console.error(`Caught error calling function for ${service}:`, error);
                 let errorMessage = `Failed to save ${service} key.`;
                  if (error instanceof FunctionsError) {
@@ -151,30 +177,36 @@ const ApiKeyManager: React.FC = () => {
         });
 
         await Promise.all(promises);
+
+        // Update the saved key status based on successful saves
         setSavedKeyStatus(prevStatus => ({ ...prevStatus, ...newlySavedKeys }));
+        // Set all status messages collected from the promises
         setStatusMessages(currentStatusMessages);
         setIsSaving(false);
 
+        // Check if any errors occurred during the process
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
         if (hasErrors) {
+            // Set general error only if it wasn't already set by auth/token issues
             if (!generalError) {
                  setGeneralError("Some API keys could not be saved. See details below.");
             }
         } else {
+            // Clear general error if all saves were successful
             setGeneralError(null);
         }
-    }, [apiKeys, user, authLoading, initializedFunctions, generalError]);
+    // --- LINT FIX: Removed initializedFunctions from dependency array ---
+    // It's imported and stable, doesn't need to be a dependency.
+    // Keep generalError? Maybe not, as it's set within the callback. Let's remove it too.
+    }, [apiKeys, user, authLoading, app]); // Dependencies: state used, user context
 
 
     if (isLoadingStatus && !authLoading) {
          return <p className="text-center text-sm text-muted-foreground">Loading key status...</p>;
     }
 
-    // *** Root div no longer has padding, max-width, or mx-auto classes ***
     return (
         <div className="space-y-6">
-            {/* *** H2 Title Removed - Handled by the page component (api-keys/page.tsx) *** */}
-
             {/* General Error Display */}
             {generalError && (
                 <Alert variant="destructive">
@@ -186,9 +218,7 @@ const ApiKeyManager: React.FC = () => {
 
             {/* API Key Inputs */}
             <div className="space-y-4">
-                {/* Use initialApiKeys here to ensure map always uses the base list */}
                 {initialApiKeys.map(({ id, label }) => {
-                    // Find the current value from the state
                     const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
                     const isSaved = savedKeyStatus[id] === true;
                     const showSavedPlaceholder = isSaved && currentKeyValue === '';
@@ -200,7 +230,7 @@ const ApiKeyManager: React.FC = () => {
                                 <Input
                                     id={id}
                                     type="password"
-                                    value={currentKeyValue} // Use value from state
+                                    value={currentKeyValue}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
                                     placeholder={showSavedPlaceholder ? '•••••••• Key Saved' : `Enter your ${label}`}
                                     disabled={isSaving || authLoading || isLoadingStatus}
@@ -215,7 +245,8 @@ const ApiKeyManager: React.FC = () => {
                              </p>
                             {statusMessages[id] && (
                                 <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
-                                    <Terminal className="h-4 w-4" />
+                                    {/* Use appropriate icon based on type */}
+                                    {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" /> : <Terminal className="h-4 w-4" />}
                                     <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
                                     <AlertDescription>{statusMessages[id].message}</AlertDescription>
                                 </Alert>
@@ -242,3 +273,4 @@ const ApiKeyManager: React.FC = () => {
 };
 
 export default ApiKeyManager;
+
