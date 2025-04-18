@@ -10,7 +10,9 @@ import SessionSetupForm from '@/components/session/SessionSetupForm';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 // --- Import Firestore functions ---
 import { db } from '@/lib/firebase/clientApp';
-import { doc, getDoc, DocumentData, FirestoreError } from 'firebase/firestore';
+// --- LINT FIX: Removed unused DocumentData import ---
+import { doc, getDoc, FirestoreError } from 'firebase/firestore';
+// --- END LINT FIX ---
 import { AlertCircle } from "lucide-react";
 import {
   Alert,
@@ -67,7 +69,9 @@ export default function Page() {
             getDoc(userDocRef)
                 .then((docSnap) => {
                     if (docSnap.exists()) {
+                        // --- LINT FIX: Use specific type instead of DocumentData ---
                         const data = docSnap.data() as UserData; // Cast to expected type
+                        // --- END LINT FIX ---
                         if (data.apiSecretVersions) {
                             setUserApiSecrets(data.apiSecretVersions);
                             logger.info("User API secret versions loaded.");
@@ -183,7 +187,6 @@ export default function Page() {
                 {/* Authenticated User View */}
                 {user ? (
                     !sessionConfig ? (
-                        // --- UPDATED: Use flex to center the form horizontally ---
                          <div className="flex justify-center">
                             <SessionSetupForm
                                 onStartSession={handleStartSession}
