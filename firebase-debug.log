@@ -1,0 +1,56 @@
+[debug] [2025-04-18T14:26:58.285Z] ----------------------------------------------------------------------
+[debug] [2025-04-18T14:26:58.291Z] Command:       /Users/hughculling/.nvm/versions/node/v22.13.1/bin/node /Users/hughculling/.nvm/versions/node/v22.13.1/bin/firebase deploy --only functions
+[debug] [2025-04-18T14:26:58.291Z] CLI Version:   14.2.0
+[debug] [2025-04-18T14:26:58.292Z] Platform:      darwin
+[debug] [2025-04-18T14:26:58.292Z] Node Version:  v22.13.1
+[debug] [2025-04-18T14:26:58.292Z] Time:          Fri Apr 18 2025 15:26:58 GMT+0100 (British Summer Time)
+[debug] [2025-04-18T14:26:58.292Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-04-18T14:26:58.374Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-18T14:26:58.374Z] > authorizing via signed-in user (hughculling@gmail.com)
+[debug] [2025-04-18T14:26:58.374Z] [iam] checking project two-ais for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-04-18T14:26:58.374Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:26:58.374Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:26:58.375Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/two-ais:testIamPermissions [none]
+[debug] [2025-04-18T14:26:58.375Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/two-ais:testIamPermissions x-goog-quota-user=projects/two-ais
+[debug] [2025-04-18T14:26:58.375Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/two-ais:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-04-18T14:26:59.097Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/two-ais:testIamPermissions 200
+[debug] [2025-04-18T14:26:59.097Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/two-ais:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-04-18T14:26:59.097Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:26:59.097Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:26:59.097Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/two-ais/serviceAccounts/two-ais@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-04-18T14:26:59.097Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/two-ais/serviceAccounts/two-ais@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-04-18T14:26:59.701Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/two-ais/serviceAccounts/two-ais@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-04-18T14:26:59.701Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/two-ais/serviceAccounts/two-ais@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'two-ais'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-04-18T14:27:02.380Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.380Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.380Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/two-ais [none]
+[debug] [2025-04-18T14:27:02.570Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/two-ais 200
+[debug] [2025-04-18T14:27:02.570Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/two-ais {"projectNumber":"168064501882","projectId":"two-ais","lifecycleState":"ACTIVE","name":"two-ais","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-04-09T18:02:10.246139Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-04-18T14:27:02.572Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.572Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.572Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.572Z] Checked if tokens are valid: true, expires at: 1744989391288
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-04-18T14:27:02.573Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.573Z] Checked if tokens are valid: true, expires at: 1744989391288
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-04-18T14:27:02.573Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.573Z] Checked if tokens are valid: true, expires at: 1744989391288
+[debug] [2025-04-18T14:27:02.573Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-04-18T14:27:02.573Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/two-ais
+[debug] [2025-04-18T14:27:02.575Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-04-18T14:27:02.575Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/two-ais
+[debug] [2025-04-18T14:27:02.577Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/cloudbuild.googleapis.com [none]
+[debug] [2025-04-18T14:27:02.577Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/cloudbuild.googleapis.com x-goog-quota-user=projects/two-ais
+[debug] [2025-04-18T14:27:02.578Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/artifactregistry.googleapis.com [none]
+[debug] [2025-04-18T14:27:02.578Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/two-ais/services/artifactregistry.googleapis.com x-goog-quota-user=projects/two-ais
