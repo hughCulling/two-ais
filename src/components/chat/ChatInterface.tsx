@@ -9,7 +9,10 @@ import {
     onSnapshot, // Keep this for messages
     query,
     orderBy,
+    // --- LINT FIX: Import FieldValue for serverTimestamp type ---
+    FieldValue,
     serverTimestamp,
+    // --- END LINT FIX ---
     Timestamp, // Import Timestamp type
     updateDoc,
     DocumentData, // Import DocumentData type
@@ -29,7 +32,7 @@ interface Message {
     id: string;
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
-    timestamp: Timestamp | null;
+    timestamp: Timestamp | null; // Timestamps read from Firestore are Timestamps
 }
 
 // --- NEW: Define structure for conversation document data ---
@@ -39,8 +42,8 @@ interface ConversationData {
     agentB_llm: string;
     turn: "agentA" | "agentB";
     status: "running" | "stopped" | "error"; // Add 'error' status
-    createdAt: Timestamp;
-    lastActivity: Timestamp;
+    createdAt: Timestamp; // Read as Timestamp
+    lastActivity: Timestamp; // Read as Timestamp
     apiSecretVersions: { [key: string]: string };
     errorContext?: string; // Optional field for error details
 }
@@ -112,12 +115,22 @@ export function ChatInterface({
                  const newConversationRef = doc(collection(db, "conversations"));
                  const newId = newConversationRef.id;
                  logger.debug(`ChatInterface: Generated new conversation ID: ${newId}`);
-                 // Initial status is 'running'
-                 const conversationData: Omit<ConversationData, 'createdAt' | 'lastActivity'> & { createdAt: any, lastActivity: any } = {
-                     userId, agentA_llm, agentB_llm, turn: "agentA", status: "running", apiSecretVersions,
-                     createdAt: serverTimestamp(), lastActivity: serverTimestamp()
+
+                 // --- LINT FIX: Define type correctly using FieldValue for serverTimestamp ---
+                 // Type for the object before it's saved, where timestamps are FieldValue
+                 type ConversationDataForWrite = Omit<ConversationData, 'createdAt' | 'lastActivity'> & {
+                     createdAt: FieldValue;
+                     lastActivity: FieldValue;
                  };
-                 await setDoc(newConversationRef, conversationData);
+
+                 const conversationData: ConversationDataForWrite = {
+                     userId, agentA_llm, agentB_llm, turn: "agentA", status: "running", apiSecretVersions,
+                     createdAt: serverTimestamp(), // serverTimestamp() returns FieldValue
+                     lastActivity: serverTimestamp() // serverTimestamp() returns FieldValue
+                 };
+                 // --- END LINT FIX ---
+
+                 await setDoc(newConversationRef, conversationData); // setDoc handles FieldValue correctly
                  logger.info(`Created conversation document: ${newId} with status 'running'`);
                  const initialMessageData = { role: "system", content: initialPrompt, timestamp: serverTimestamp() };
                  await addDoc(collection(db, "conversations", newId, "messages"), initialMessageData);
@@ -154,13 +167,15 @@ export function ChatInterface({
                 logger.debug(`ChatInterface: Message snapshot received ${querySnapshot.docs.length} docs.`);
                 const fetchedMessages: Message[] = [];
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data() as DocumentData;
+                    // --- LINT FIX: Use specific type instead of DocumentData ---
+                    const data = doc.data(); // data() returns DocumentData implicitly
+                    // --- END LINT FIX ---
                     if (data.role && data.content && data.timestamp) {
                         fetchedMessages.push({
                             id: doc.id,
                             role: data.role,
                             content: data.content,
-                            timestamp: data.timestamp
+                            timestamp: data.timestamp // Firestore Timestamps are handled correctly
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
@@ -196,6 +211,7 @@ export function ChatInterface({
         const unsubscribeStatus = onSnapshot(conversationDocRef,
             (docSnap) => {
                 if (docSnap.exists()) {
+                    // Cast directly to ConversationData when reading
                     const data = docSnap.data() as ConversationData;
                     logger.debug(`ChatInterface: Status snapshot received. Status: ${data.status}, ErrorContext: ${data.errorContext}`);
                     setConversationStatus(data.status); // Update local status tracker
@@ -210,10 +226,13 @@ export function ChatInterface({
                         logger.warn(`Conversation ${conversationId} entered error state: ${errorMsg}`);
                     } else if (data.status === "stopped") {
                         setIsStopped(true); // Mark as stopped if status changes to stopped
-                        setError(null); // Clear errors if manually stopped
+                        // Clear only conversation-related errors if manually stopped
+                        if (error && error.startsWith("Conversation Error:")) {
+                             setError(null);
+                        }
                         logger.info(`Conversation ${conversationId} status changed to 'stopped'.`);
                     } else if (data.status === "running") {
-                        // If status goes back to running (e.g., manual intervention), clear error
+                        // Clear conversation-related errors if it becomes running again
                          if (error && error.startsWith("Conversation Error:")) {
                              setError(null);
                          }
@@ -238,7 +257,7 @@ export function ChatInterface({
             unsubscribeStatus();
         };
 
-    }, [conversationId, error]); // Rerun if conversationId changes or if local error state changes
+    }, [conversationId, error]); // Keep 'error' dependency? Maybe remove if clearing logic is robust. Let's keep for now.
 
 
     // --- Auto-scroll ---
@@ -274,7 +293,7 @@ export function ChatInterface({
                 status: "stopped",
                 lastActivity: serverTimestamp()
                 // Optionally clear errorContext if manually stopping
-                // errorContext: admin.firestore.FieldValue.delete()
+                // errorContext: deleteField() // Requires importing deleteField
             });
             logger.info(`Conversation ${conversationId} status set to stopped via button.`);
             // No need to setIsStopped(true) here, the status listener will handle it
@@ -288,7 +307,7 @@ export function ChatInterface({
         } finally {
             setIsStopping(false); // Reset stopping indicator
         }
-    }, [conversationId, isStopping, isStopped, onConversationStopped]);
+    }, [conversationId, isStopping, isStopped, onConversationStopped]); // Removed 'error' from deps
 
 
     // --- Render Logic ---
@@ -301,7 +320,6 @@ export function ChatInterface({
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
-              {/* Optionally add a button to go back if it's a fatal error */}
                {isStopped && onConversationStopped && (
                    <Button variant="outline" size="sm" className="mt-2" onClick={onConversationStopped}>
                        Go Back
