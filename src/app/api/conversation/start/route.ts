@@ -11,7 +11,7 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+// import { BaseChatModel } from "@langchain/core/language_models/chat_models"; // Commented out: llmA/llmB unused
 
 // --- Initialize Services ---
 let firebaseAdminApp: App | null = null;
@@ -29,11 +29,7 @@ function initializeServices() {
         if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
         if (!secretManagerClient) {
              console.warn("Secret Manager Client potentially not initialized on subsequent requests.");
-             // Attempt re-init only if firebaseAdminApp exists
-             if(firebaseAdminApp) {
-                 // Clear potentially problematic state before retrying? Maybe not needed.
-                 // Let's rely on the check in POST for now.
-             }
+             if(firebaseAdminApp) { }
         }
         return;
     }
@@ -45,9 +41,8 @@ function initializeServices() {
             throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.");
         }
 
-        let serviceAccount: ServiceAccount; // Typed as ServiceAccount (expects camelCase)
+        let serviceAccount: ServiceAccount;
         try {
-             // Parse the JSON string (contains snake_case keys and escaped \\n in private_key)
              serviceAccount = JSON.parse(serviceAccountJson);
         } catch (parseError) {
              console.error("JSON PARSE ERROR:", parseError);
@@ -55,39 +50,37 @@ function initializeServices() {
              throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY JSON.");
         }
 
-        // --- FIX: Convert escaped newlines \\n back to literal \n in the private_key ---
-        // The cert() function and SecretManagerServiceClient need the key with actual newlines.
-        // We access/modify using `as any` because the actual key is snake_case.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rawPrivateKey = (serviceAccount as any).private_key;
         if (typeof rawPrivateKey !== 'string') {
              throw new Error("Parsed service account key is missing the 'private_key' string property.");
         }
         const privateKeyWithNewlines = rawPrivateKey.replace(/\\n/g, '\n');
-        // Assign the corrected key back to the object (using `as any` to satisfy TS)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (serviceAccount as any).private_key = privateKeyWithNewlines;
-        // --- END FIX ---
 
-        // Validate using type assertion `as any` for snake_case keys
-        // Now we check the object *after* potentially modifying the private_key
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!serviceAccount || !(serviceAccount as any).client_email || !(serviceAccount as any).private_key || !(serviceAccount as any).project_id) {
-             console.error("Validation failed: Parsed object missing required snake_case fields (project_id, private_key, client_email). Actual keys:", Object.keys(serviceAccount));
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             console.error("Validation failed: Parsed object missing required snake_case fields (project_id, private_key, client_email). Actual keys:", Object.keys(serviceAccount as any));
             throw new Error("Parsed service account key is missing required fields after processing.");
         }
         console.log("Parsed service account key validation passed.");
 
-        // Initialize Firebase Admin SDK - cert() needs the object with literal newlines in private_key
-        firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) }); // Line 71
+        firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) });
         console.log("Firebase Admin SDK Initialized.");
 
         dbAdmin = getFirestore(firebaseAdminApp);
 
-        // Initialize Secret Manager Client - It also needs the key with literal newlines
         secretManagerClient = new SecretManagerServiceClient({
             credentials: {
-                client_email: (serviceAccount as any).client_email, // Use snake_case via `as any`
-                private_key: (serviceAccount as any).private_key  // Use the already corrected key
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                client_email: (serviceAccount as any).client_email,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                private_key: (serviceAccount as any).private_key
             },
-            projectId: (serviceAccount as any).project_id // Use snake_case via `as any`
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            projectId: (serviceAccount as any).project_id
         });
         console.log("Secret Manager Client Initialized.");
 
@@ -108,7 +101,7 @@ initializeServices();
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
     if (!secretManagerClient) {
         console.error("Secret Manager Client not available when trying to get secret.");
-         initializeServices();
+         initializeServices(); // Attempt re-initialization
          if (!secretManagerClient) {
              console.error("Re-initialization failed, Secret Manager Client still not available.");
              return null;
@@ -122,11 +115,32 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
     }
     try {
         const [version] = await secretManagerClient.accessSecretVersion({ name: secretVersionName });
-        if (!version.payload?.data) {
+        const payloadData = version.payload?.data; // Type: string | Uint8Array | null | undefined
+
+        if (!payloadData) {
             console.warn(`Secret version ${secretVersionName} payload is empty.`);
             return null;
         }
-        return version.payload.data.toString();
+
+        // --- TYPE FIX: Handle string or Uint8Array explicitly ---
+        let apiKey: string;
+        if (typeof payloadData === "string") {
+            // If it's already a string, use it directly
+            apiKey = payloadData;
+            console.log("Secret payload was already a string.");
+        } else if (payloadData instanceof Uint8Array) {
+            // If it's a Uint8Array (includes Buffer), convert it
+            apiKey = Buffer.from(payloadData).toString("utf8");
+            console.log("Secret payload was Uint8Array/Buffer, converted to string.");
+        } else {
+            // Should not happen based on types, but handle defensively
+            console.error(`Unexpected type for secret payload: ${typeof payloadData}`);
+            return null;
+        }
+        // --- END TYPE FIX ---
+
+        return apiKey;
+
     } catch (error) {
         console.error(`Failed to access secret version ${secretVersionName}:`, error);
         return null;
@@ -153,7 +167,12 @@ export async function POST(request: NextRequest) {
 
     if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
          console.error("Services not initialized at start of POST handler. Initialization might have failed.");
-         return NextResponse.json({ error: 'Server configuration error - services not initialized' }, { status: 500 });
+         initializeServices();
+         if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
+            console.error("Re-initialization failed again. Services unavailable.");
+            return NextResponse.json({ error: 'Server configuration error - services not initialized' }, { status: 500 });
+         }
+         console.log("Services successfully re-initialized within POST handler.");
     }
 
     try {
@@ -233,26 +252,26 @@ export async function POST(request: NextRequest) {
         console.log("API Keys retrieved successfully.");
 
         // 6. Initialize LangChain Models
-        let llmA: BaseChatModel;
-        let llmB: BaseChatModel;
+        // let llmA: BaseChatModel; // Unused
+        // let llmB: BaseChatModel; // Unused
         try {
              const modelNameA = getModelName(agentA_llm);
              const modelNameB = getModelName(agentB_llm);
 
              console.log(`Initializing Agent A: ${agentARequiredKey} with model ${modelNameA}`);
              if (agentARequiredKey === 'openai') {
-                 llmA = new ChatOpenAI({ apiKey: apiKeyA, modelName: modelNameA });
+                /* llmA = */ new ChatOpenAI({ apiKey: apiKeyA, modelName: modelNameA });
              } else if (agentARequiredKey === 'google_ai') {
-                 llmA = new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: modelNameA });
+                /* llmA = */ new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: modelNameA });
              } else {
                  throw new Error(`Unsupported provider for Agent A: ${agentARequiredKey}`);
              }
 
              console.log(`Initializing Agent B: ${agentBRequiredKey} with model ${modelNameB}`);
              if (agentBRequiredKey === 'openai') {
-                 llmB = new ChatOpenAI({ apiKey: apiKeyB, modelName: modelNameB });
+                 /* llmB = */ new ChatOpenAI({ apiKey: apiKeyB, modelName: modelNameB });
              } else if (agentBRequiredKey === 'google_ai') {
-                 llmB = new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: modelNameB });
+                 /* llmB = */ new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: modelNameB });
              } else {
                  throw new Error(`Unsupported provider for Agent B: ${agentBRequiredKey}`);
              }
@@ -264,9 +283,10 @@ export async function POST(request: NextRequest) {
         }
 
         // 7. TODO: Setup LangChain Conversation Logic
-        console.log("LangChain conversation logic would go here, using llmA and llmB.");
+        // The actual conversation orchestration happens in the 'orchestrateConversation' Cloud Function.
+        console.log("LangChain conversation logic would go here, using the initialized models (but happens in Cloud Function).");
 
-        // --- Return Success (Placeholder for now) ---
+        // --- Return Success ---
         return NextResponse.json({
             message: "Session setup ready. Models initialized.",
             config: { agentA_llm, agentB_llm }
