@@ -15,7 +15,9 @@ import {
     // --- END LINT FIX ---
     Timestamp, // Import Timestamp type
     updateDoc,
-    DocumentData, // Import DocumentData type
+    // --- LINT FIX: Removed unused DocumentData import ---
+    // DocumentData, // Import DocumentData type
+    // --- END LINT FIX ---
     FirestoreError // Import FirestoreError type
 } from 'firebase/firestore';
 import { Button } from "@/components/ui/button"; // Assuming shadcn Button

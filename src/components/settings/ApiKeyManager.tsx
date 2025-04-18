@@ -175,10 +175,10 @@ const ApiKeyManager: React.FC = () => {
                  setGeneralError(null);
              }
         }
-    // --- LINT FIX: Added generalError and setters, removed app ---
+    // --- LINT FIX: Added generalError and setters, kept initializedFunctions ---
     // Include state variables read *or written* inside the callback.
-    // Exclude stable imports like 'app'.
-    }, [apiKeys, user, authLoading, generalError, setGeneralError, setStatusMessages, setSavedKeyStatus, setApiKeys, initializedFunctions]); // Added initializedFunctions back as it IS used
+    // Keep initializedFunctions as it's used to create saveApiKeyFunction.
+    }, [apiKeys, user, authLoading, generalError, initializedFunctions, setGeneralError, setStatusMessages, setSavedKeyStatus, setApiKeys]);
 
 
     if (isLoadingStatus && !authLoading) {
