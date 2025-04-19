@@ -307,12 +307,13 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
          const errorMessage = error instanceof Error ? error.message : String(error);
          logger.error(`Error invoking LLM ${agentConfigKey} for ${agentToRespond}:`, error);
          try {
-             // Use double quotes for the error string
+             // --- UPDATED: Increased substring limit ---
              await conversationRef.update({
                  status: "error",
-                 errorContext: "LLM call failed for " + agentToRespond + ". Please check API key and model validity. Error: " + errorMessage.substring(0, 200),
+                 errorContext: "LLM call failed for " + agentToRespond + ". Please check API key and model validity. Error: " + errorMessage.substring(0, 1000), // Increased limit to 1000
                  lastActivity: admin.firestore.FieldValue.serverTimestamp()
              });
+             // --- END UPDATE ---
              logger.info(`Updated conversation ${conversationId} status to 'error'.`);
          } catch (updateError) {
              logger.error(`Failed to update conversation ${conversationId} status to 'error' after LLM failure:`, updateError);
@@ -379,6 +380,7 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
              logger.warn(`Secret payload for ${secretVersionName} was unexpectedly a string.`);
              return payloadData;
         } else if (payloadData instanceof Uint8Array || Buffer.isBuffer(payloadData)) {
+             // Use double quotes for encoding
              const apiKey = Buffer.from(payloadData).toString("utf8");
              logger.info(`Successfully retrieved secret from version: ${secretVersionName}`);
              return apiKey;
@@ -402,7 +404,7 @@ const getModelName = (frontendValue: string): string => {
         case "google_gemini10pro": return "gemini-1.0-pro";
         default:
             logger.error(`Unknown LLM selection encountered in Cloud Function: ${frontendValue}`);
-            // --- UPDATED: Use double quotes and concatenation ---
+            // Use double quotes and concatenation
             throw new Error("Unknown LLM selection: " + frontendValue);
     }
 };
