@@ -71,12 +71,14 @@ export default function Page() {
             return;
         }
 
-        // If user is logged in, but secrets haven't been loaded yet, fetch them
-        if (user && !userApiSecrets) {
+        // If user is logged in, but secrets haven't been loaded yet (userApiSecrets is null), fetch them
+        // This condition prevents re-fetching if secrets are already loaded ({}) or failed (null but caught)
+        if (user && userApiSecrets === null) {
             setSecretsLoading(true);
             setPageError(null); // Clear previous errors
             const userDocRef = doc(db, "users", user.uid); // Reference to the user's document in Firestore
 
+            logger.info("Fetching user data for API secrets..."); // Log fetch attempt
             getDoc(userDocRef)
                 .then((docSnap) => {
                     if (docSnap.exists()) {
@@ -94,18 +96,26 @@ export default function Page() {
                     // Handle errors during Firestore fetch
                     logger.error("Error fetching user document:", err);
                     setPageError(`Failed to load user data: ${err.message}. Please try refreshing.`);
-                    setUserApiSecrets(null); // Set to null on error
+                    setUserApiSecrets(null); // Set back to null on error to allow retry if user changes
                 })
                 .finally(() => {
                     setSecretsLoading(false); // Mark loading as complete
                 });
-        } else if (user && userApiSecrets) {
-             // Secrets already loaded, ensure loading state is false
-             setSecretsLoading(false);
+        } else if (user && userApiSecrets !== null) {
+             // Secrets already loaded (or defaulted to {}), ensure loading state is false
+             // This handles the case where the effect runs again after secrets are set
+             if (secretsLoading) { // Only set if it's currently true
+                setSecretsLoading(false);
+             }
         }
 
-    // This effect depends on the user object. Re-fetching isn't needed if userApiSecrets changes elsewhere.
-    }, [user]); // Rerun only when the user object changes
+    // --- FIX: Added 'userApiSecrets' to dependency array ---
+    // The effect reads userApiSecrets in the condition `if (user && userApiSecrets === null)`.
+    // Including it ensures the effect runs correctly if userApiSecrets changes externally
+    // (though unlikely here) and satisfies the exhaustive-deps rule.
+    // The condition prevents infinite loops as the fetch only happens when secrets are null.
+    }, [user, userApiSecrets, secretsLoading]); // Added userApiSecrets and secretsLoading
+
 
     // Callback passed to SessionSetupForm, triggered when the user clicks "Start Conversation"
     const handleStartSession = async (config: SessionConfig) => {
@@ -195,7 +205,8 @@ export default function Page() {
     // --- Render Logic ---
 
     // Show a simple loading indicator during initial auth check or secrets fetch
-    if (authLoading || (user && secretsLoading)) {
+    // Use the secretsLoading state which becomes false even if user doc doesn't exist
+    if (authLoading || secretsLoading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
                 {/* Basic loading text, consider a spinner component */}
@@ -233,13 +244,6 @@ export default function Page() {
                         // Render ChatInterface ONLY if we have an active conversation ID
                         // We assume userApiSecrets has been loaded or defaulted by this point
                         <ChatInterface
-                            // --- FIX: Remove props no longer accepted by ChatInterface ---
-                            // userId={user.uid} // Removed
-                            // agentA_llm={sessionConfig.agentA_llm} // Removed
-                            // agentB_llm={sessionConfig.agentB_llm} // Removed
-                            // apiSecretVersions={userApiSecrets} // Removed - secrets are handled backend now
-                            // --- End FIX ---
-
                             // Pass only the required props
                             conversationId={activeConversationId}
                             onConversationStopped={handleConversationStopped}
