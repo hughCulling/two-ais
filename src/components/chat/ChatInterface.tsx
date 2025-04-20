@@ -4,12 +4,9 @@ import { db } from '@/lib/firebase/clientApp'; // Client-side SDK for stop butto
 import {
     collection,
     doc,
-    // setDoc, // No longer used here
-    // addDoc, // No longer used here
     onSnapshot,
     query,
     orderBy,
-    // FieldValue, // No longer used here
     serverTimestamp, // Still used for updateDoc
     Timestamp,
     updateDoc, // Used by stop button
@@ -45,16 +42,10 @@ interface ConversationData {
 }
 
 // --- Component Props ---
+// Props interface now only includes what the component actually uses internally
 interface ChatInterfaceProps {
-    // Removed unused props from the interface if they are truly not needed anywhere
-    // If they might be needed later, keep them here but remove from destructuring below
-    // userId: string;
-    // agentA_llm: string; // Backend ID
-    // agentB_llm: string; // Backend ID
-    // apiSecretVersions: { [key: string]: string };
-
     conversationId: string; // ID is now passed as a prop
-    onConversationStopped: () => void; // Renamed for clarity
+    onConversationStopped: () => void; // Callback when conversation stops or user wants to go back
 }
 
 // Basic logger placeholder
@@ -66,34 +57,22 @@ const logger = {
 };
 
 export function ChatInterface({
-    // --- FIX: Removed unused variables from destructuring ---
-    // userId,
-    // agentA_llm,
-    // agentB_llm,
-    // apiSecretVersions,
-    // --- End Fix ---
-    conversationId, // Use the passed-in conversation ID
+    // Destructure only the needed props
+    conversationId,
     onConversationStopped
 }: ChatInterfaceProps) {
-    // Removed internal conversationId state - use the prop instead
     const [messages, setMessages] = useState<Message[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [technicalErrorDetails, setTechnicalErrorDetails] = useState<string | null>(null);
     const [showErrorDetails, setShowErrorDetails] = useState(false);
-    const [isStopping, setIsStopping] = useState(false);
-    const [isStopped, setIsStopped] = useState(false); // Still track local stopped state based on status listener
+    const [isStopping, setIsStopping] = useState(false); // Tracks if the stop *button* action is in progress
+    const [isStopped, setIsStopped] = useState(false); // Tracks if the conversation is *actually* stopped (via status listener or error)
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    // Removed setupRan ref - no longer needed as creation logic is removed
 
-    // --- REMOVED Effect 1: Initiate Conversation ---
-    // The conversation document and initial message are now created by the
-    // /api/conversation/start API route before this component mounts.
-
-    // --- Effect 2: Listen for Messages ---
+    // --- Effect 1: Listen for Messages ---
     useEffect(() => {
         logger.debug(`ChatInterface: Message listener effect running. conversationId prop: ${conversationId}`);
-        // Only run if a valid conversationId prop is provided
         if (!conversationId) {
             logger.warn("ChatInterface: Message listener effect skipped - no conversationId prop.");
             return;
@@ -111,7 +90,6 @@ export function ChatInterface({
                 const fetchedMessages: Message[] = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    // Basic validation to prevent errors if Firestore data is incomplete
                     if (data.role && data.content && data.timestamp) {
                         fetchedMessages.push({
                             id: doc.id,
@@ -128,19 +106,17 @@ export function ChatInterface({
             (err: FirestoreError) => {
                  logger.error(`Error listening to messages for conversation ${conversationId}:`, err);
                  setError(`Failed to load messages: ${err.message}`);
-                 setTechnicalErrorDetails(null); // Clear technical details on new error
+                 setTechnicalErrorDetails(null);
             }
         );
-        // Cleanup listener when conversationId changes or component unmounts
         return () => {
             logger.info(`ChatInterface: Cleaning up message listener for conversation: ${conversationId}`);
             unsubscribe();
         };
-    // Depend only on the conversationId prop
-    }, [conversationId]);
+    }, [conversationId]); // Depend only on conversationId
 
 
-    // --- Effect 3: Listen for Conversation Status Changes ---
+    // --- Effect 2: Listen for Conversation Status Changes ---
     useEffect(() => {
         logger.debug(`ChatInterface: Status listener effect running. conversationId prop: ${conversationId}`);
         if (!conversationId) {
@@ -154,12 +130,11 @@ export function ChatInterface({
         const unsubscribeStatus = onSnapshot(conversationDocRef,
             (docSnap) => {
                 if (docSnap.exists()) {
-                    const data = docSnap.data() as ConversationData; // Assume ConversationData structure
+                    const data = docSnap.data() as ConversationData;
                     logger.debug(`ChatInterface: Status snapshot received for ${conversationId}. Status: ${data.status}, ErrorContext: ${data.errorContext}`);
                     const newStatus = data.status;
                     setConversationStatus(newStatus); // Update local status state
 
-                    // Handle status changes
                     if (newStatus === "error") {
                         const fullErrorContext = data.errorContext || "An unknown error occurred in the conversation.";
                         const errorPrefix = "Conversation Error: ";
@@ -167,126 +142,111 @@ export function ChatInterface({
                         let userFriendlyError = fullErrorContext;
                         let techDetails: string | null = null;
 
-                        // Extract user-friendly part and technical details if possible
                         if (fullErrorContext.startsWith(errorPrefix)) {
                             userFriendlyError = fullErrorContext.substring(errorPrefix.length);
                         }
                         const techIndex = userFriendlyError.indexOf(technicalSeparator);
                         if (techIndex !== -1) {
                             techDetails = userFriendlyError.substring(techIndex + technicalSeparator.length);
-                            userFriendlyError = userFriendlyError.substring(0, techIndex + 1); // Include the period
+                            userFriendlyError = userFriendlyError.substring(0, techIndex + 1);
                         } else {
-                             techDetails = null; // No technical details found
+                             techDetails = null;
                         }
 
-                        setError(errorPrefix + userFriendlyError); // Set the combined error message
-                        setTechnicalErrorDetails(techDetails); // Set technical details separately
-                        setShowErrorDetails(false); // Reset details view on new error
+                        setError(errorPrefix + userFriendlyError);
+                        setTechnicalErrorDetails(techDetails);
+                        setShowErrorDetails(false);
                         setIsStopped(true); // Error means stopped
                         logger.warn(`Conversation ${conversationId} entered error state: ${userFriendlyError}`);
                     } else if (newStatus === "stopped") {
                         setIsStopped(true); // Mark as stopped locally
-                        // Clear previous errors ONLY if it was stopped cleanly (not an error state)
-                        if (error && conversationStatus !== 'error') {
+                        if (error && conversationStatus !== 'error') { // Clear non-critical errors if stopped cleanly
                              setError(null);
                              setTechnicalErrorDetails(null);
                         }
                         logger.info(`Conversation ${conversationId} status changed to 'stopped'.`);
                     } else if (newStatus === "running") {
-                        // If it becomes running again, clear errors and stopped state
-                         if (error || isStopped) { // Clear if previously errored or stopped
+                         // If it becomes running again, clear errors and stopped state
+                         // Check current 'isStopped' state before clearing
+                         if (error || isStopped) {
                              setError(null);
                              setTechnicalErrorDetails(null);
-                             setIsStopped(false);
+                             setIsStopped(false); // Explicitly set back to not stopped
                          }
                          logger.info(`Conversation ${conversationId} status changed to 'running'.`);
                     }
                 } else {
-                    // Handle case where conversation doc disappears unexpectedly
                     logger.warn(`Conversation document ${conversationId} does not exist in status listener.`);
                     setError("Conversation data not found. It might have been deleted.");
                     setTechnicalErrorDetails(null);
-                    setIsStopped(true); // Treat as stopped/error
+                    setIsStopped(true);
                 }
             },
             (err: FirestoreError) => {
                 logger.error(`Error listening to conversation status for ${conversationId}:`, err);
                 setError(`Failed to get conversation status: ${err.message}`);
                 setTechnicalErrorDetails(null);
-                setIsStopped(true); // Treat as stopped/error
+                setIsStopped(true);
             }
         );
-        // Cleanup listener
         return () => {
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribeStatus();
         };
-    // Depend on conversationId, error state (to clear errors), and current conversationStatus (to detect transitions)
-    }, [conversationId, error, conversationStatus]); // Added conversationStatus
+    // --- FIX: Added 'isStopped' to dependency array ---
+    // The effect reads 'isStopped' when transitioning to 'running', so it needs to be a dependency.
+    }, [conversationId, error, conversationStatus, isStopped]);
 
 
-    // --- Effect 4: Auto-scroll ---
+    // --- Effect 3: Auto-scroll ---
     useEffect(() => {
         // Only scroll when running and not locally marked as stopped
         if (conversationStatus === "running" && !isStopped) {
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            // logger.debug("Attempted smooth scroll to messagesEndRef."); // Less verbose logging
-        } else {
-             // logger.debug(`Skipping scroll. Status: ${conversationStatus}, isStopped: ${isStopped}`);
         }
-    // Depend on messages array, status, and stopped state
-    }, [messages, conversationStatus, isStopped]);
+    }, [messages, conversationStatus, isStopped]); // Dependencies are correct here
 
 
-    // --- Handler 5: Stop Conversation ---
+    // --- Handler 4: Stop Conversation ---
     const handleStopConversation = useCallback(async () => {
-        // --- DEBUG: Log the conversationId being used ---
         logger.debug(`handleStopConversation called. Conversation ID prop: ${conversationId}`);
-
-        // Check if we have an ID and aren't already stopping/stopped
+        // Prevent stopping if no ID, already stopping, or already confirmed stopped
         if (!conversationId || isStopping || isStopped) {
             logger.warn(`Stop conversation skipped. ID: ${conversationId}, Stopping: ${isStopping}, Stopped: ${isStopped}`);
             return;
         }
 
-        setIsStopping(true); // Indicate process start
+        setIsStopping(true); // Indicate button action start
         logger.info(`Attempting to stop conversation via button: ${conversationId}`);
         try {
-            // Get reference to the conversation document using the client SDK
             const conversationRef = doc(db, "conversations", conversationId);
-            // Update the status field to 'stopped'
             await updateDoc(conversationRef, {
                 status: "stopped",
-                lastActivity: serverTimestamp() // Update activity timestamp
+                lastActivity: serverTimestamp()
             });
             logger.info(`Client-side updateDoc call successful for conversation ${conversationId} status to 'stopped'.`);
-            // Note: The status listener above will eventually set isStopped=true
-
-            // Call the callback provided by the parent component (page.tsx)
+            // The status listener (Effect 2) will handle setting isStopped = true eventually.
+            // Call the parent callback immediately after successful update.
             if (onConversationStopped) {
                 onConversationStopped();
             }
         } catch (err) {
-            // Log and potentially display error if update fails
             logger.error(`Error stopping conversation ${conversationId} via client-side update:`, err);
-            // Set local error state to inform user
             setError(`Failed to stop conversation: ${err instanceof Error ? err.message : String(err)}`);
-            setTechnicalErrorDetails(null); // No specific tech details here
+            setTechnicalErrorDetails(null);
+            // Don't call onConversationStopped here on error, let user use Go Back button in error state
         } finally {
-            setIsStopping(false); // Reset stopping indicator
+            setIsStopping(false); // Reset button action indicator regardless of success/failure
         }
-    // Dependencies for useCallback
-    }, [conversationId, isStopping, isStopped, onConversationStopped]);
+    }, [conversationId, isStopping, isStopped, onConversationStopped]); // Dependencies for useCallback
 
 
     // --- Render Logic ---
-    // logger.debug(`ChatInterface: Rendering. Status: ${conversationStatus}, isStopped: ${isStopped}, Error: ${error}, Messages: ${messages.length}`);
 
     // --- A. Error Display ---
     if (error) {
-        // logger.debug("Rendering Error Alert. Technical Details State:", technicalErrorDetails);
         return (
-             <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4"> {/* Added max-width and centering */}
+             <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
               <AlertDescription className="text-sm break-words whitespace-pre-wrap">
@@ -295,7 +255,7 @@ export function ChatInterface({
 
               <div className="mt-4 flex flex-col items-start space-y-3">
                   {technicalErrorDetails && (
-                      <div className="w-full"> {/* Apply w-full to container div */}
+                      <div className="w-full">
                           <Button
                               variant="secondary"
                               size="sm"
@@ -312,16 +272,13 @@ export function ChatInterface({
                           )}
                       </div>
                   )}
-
-                  {/* Show Go Back button if conversation is stopped (locally) AND callback exists */}
-                  {/* This allows going back even if Firestore update failed but listener caught 'error' status */}
+                  {/* Show Go Back button if conversation is stopped (due to error) AND callback exists */}
                   {isStopped && onConversationStopped && (
                        <div>
                            <Button
                                variant="outline"
-                               className="px-4" // Removed h-8 for default height
-                               size="sm" // Use standard small size
-                               onClick={onConversationStopped}
+                               size="sm"
+                               onClick={onConversationStopped} // Use the callback to navigate away
                             >
                                Go Back
                            </Button>
@@ -332,37 +289,33 @@ export function ChatInterface({
         );
     }
     // --- B. Initializing State Display ---
-    // Show initializing if we don't have a conversation ID prop yet
     if (!conversationId) {
         return <div className="p-4 text-center text-muted-foreground">Initializing session...</div>;
     }
-    // Or if status hasn't loaded yet (and no error occurred)
-     if (!conversationStatus && !error) {
+     if (!conversationStatus && !error) { // Added !error check
         return <div className="p-4 text-center text-muted-foreground">Loading conversation status...</div>;
     }
 
 
     // --- C. Main Chat Interface Render ---
     return (
-        <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden"> {/* Added max-width and centering */}
+        <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden">
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">AI Conversation</h2>
-                {/* Stop Button */}
                 <Button
                     variant="destructive"
                     size="sm"
                     onClick={handleStopConversation}
-                    // Disable button if stopping process is ongoing OR if locally marked as stopped
+                    // Disable button if stop action is in progress OR if conversation is confirmed stopped
                     disabled={isStopping || isStopped}
                 >
-                    {/* Change button text based on state */}
                     {isStopped ? "Stopped" : (isStopping ? "Stopping..." : "Stop Conversation")}
                 </Button>
             </div>
 
              {/* Scrollable Message Area */}
-             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4"> {/* Adjust padding/margin for scrollbar */}
+             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
                 <div className="space-y-4">
                     {messages.map((msg) => (
                         <div
@@ -370,37 +323,34 @@ export function ChatInterface({
                             className={`flex ${
                                 msg.role === 'agentA' ? 'justify-start' :
                                 msg.role === 'agentB' ? 'justify-end' :
-                                'justify-center text-xs text-muted-foreground italic py-1' // Adjusted system message style
+                                'justify-center text-xs text-muted-foreground italic py-1'
                             }`}
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm ${
                                     msg.role === 'agentA' ? 'bg-muted text-foreground' :
                                     msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
-                                    'bg-transparent px-0 py-0 shadow-none' // System message styling
+                                    'bg-transparent px-0 py-0 shadow-none'
                                 }`}
                             >
-                                {/* Conditionally render Agent name */}
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }
-                                {/* Message Content */}
                                 {msg.content}
                             </div>
                         </div>
                     ))}
-                     {/* Placeholder if conversation is running but no messages yet */}
                      {conversationStatus === "running" && messages.length === 0 && !isStopped && (
                         <div className="text-center text-muted-foreground text-sm p-4">Waiting for first message...</div>
                      )}
-                      {/* Message indicating conversation has stopped normally */}
+                      {/* Show stopped message only if cleanly stopped (status is 'stopped') */}
                       {isStopped && conversationStatus === "stopped" && !error && (
                          <div className="text-center text-muted-foreground text-sm p-4">Conversation stopped.</div>
                       )}
-                     {/* Invisible div to target for auto-scrolling */}
                      <div ref={messagesEndRef} />
                 </div>
             </ScrollArea>
         </div>
     );
 }
+
