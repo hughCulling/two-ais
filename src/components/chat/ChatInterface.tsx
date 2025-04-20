@@ -46,12 +46,14 @@ interface ConversationData {
 
 // --- Component Props ---
 interface ChatInterfaceProps {
-    userId: string;
-    agentA_llm: string; // Backend ID
-    agentB_llm: string; // Backend ID
-    apiSecretVersions: { [key: string]: string };
+    // Removed unused props from the interface if they are truly not needed anywhere
+    // If they might be needed later, keep them here but remove from destructuring below
+    // userId: string;
+    // agentA_llm: string; // Backend ID
+    // agentB_llm: string; // Backend ID
+    // apiSecretVersions: { [key: string]: string };
+
     conversationId: string; // ID is now passed as a prop
-    // initialPrompt?: string; // No longer needed as conversation is created by API
     onConversationStopped: () => void; // Renamed for clarity
 }
 
@@ -64,10 +66,12 @@ const logger = {
 };
 
 export function ChatInterface({
-    userId, // Keep userId if needed for display/logic, but not for creation
-    agentA_llm, // Keep for display/logic if needed
-    agentB_llm, // Keep for display/logic if needed
-    apiSecretVersions, // Keep for potential future use? Or remove if unused.
+    // --- FIX: Removed unused variables from destructuring ---
+    // userId,
+    // agentA_llm,
+    // agentB_llm,
+    // apiSecretVersions,
+    // --- End Fix ---
     conversationId, // Use the passed-in conversation ID
     onConversationStopped
 }: ChatInterfaceProps) {
@@ -107,6 +111,7 @@ export function ChatInterface({
                 const fetchedMessages: Message[] = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
+                    // Basic validation to prevent errors if Firestore data is incomplete
                     if (data.role && data.content && data.timestamp) {
                         fetchedMessages.push({
                             id: doc.id,
@@ -123,7 +128,7 @@ export function ChatInterface({
             (err: FirestoreError) => {
                  logger.error(`Error listening to messages for conversation ${conversationId}:`, err);
                  setError(`Failed to load messages: ${err.message}`);
-                 setTechnicalErrorDetails(null);
+                 setTechnicalErrorDetails(null); // Clear technical details on new error
             }
         );
         // Cleanup listener when conversationId changes or component unmounts
@@ -151,53 +156,55 @@ export function ChatInterface({
                 if (docSnap.exists()) {
                     const data = docSnap.data() as ConversationData; // Assume ConversationData structure
                     logger.debug(`ChatInterface: Status snapshot received for ${conversationId}. Status: ${data.status}, ErrorContext: ${data.errorContext}`);
-                    setConversationStatus(data.status); // Update local status state
+                    const newStatus = data.status;
+                    setConversationStatus(newStatus); // Update local status state
 
                     // Handle status changes
-                    if (data.status === "error") {
+                    if (newStatus === "error") {
                         const fullErrorContext = data.errorContext || "An unknown error occurred in the conversation.";
                         const errorPrefix = "Conversation Error: ";
                         const technicalSeparator = ". Error: ";
                         let userFriendlyError = fullErrorContext;
                         let techDetails: string | null = null;
 
+                        // Extract user-friendly part and technical details if possible
                         if (fullErrorContext.startsWith(errorPrefix)) {
                             userFriendlyError = fullErrorContext.substring(errorPrefix.length);
                         }
                         const techIndex = userFriendlyError.indexOf(technicalSeparator);
                         if (techIndex !== -1) {
                             techDetails = userFriendlyError.substring(techIndex + technicalSeparator.length);
-                            userFriendlyError = userFriendlyError.substring(0, techIndex + 1);
+                            userFriendlyError = userFriendlyError.substring(0, techIndex + 1); // Include the period
                         } else {
-                             techDetails = null;
+                             techDetails = null; // No technical details found
                         }
 
-                        setError(errorPrefix + userFriendlyError);
-                        setTechnicalErrorDetails(techDetails);
+                        setError(errorPrefix + userFriendlyError); // Set the combined error message
+                        setTechnicalErrorDetails(techDetails); // Set technical details separately
                         setShowErrorDetails(false); // Reset details view on new error
                         setIsStopped(true); // Error means stopped
                         logger.warn(`Conversation ${conversationId} entered error state: ${userFriendlyError}`);
-                    } else if (data.status === "stopped") {
+                    } else if (newStatus === "stopped") {
                         setIsStopped(true); // Mark as stopped locally
-                        // Clear previous errors if it was stopped cleanly
-                        if (error) { // Clear any type of error if stopped
+                        // Clear previous errors ONLY if it was stopped cleanly (not an error state)
+                        if (error && conversationStatus !== 'error') {
                              setError(null);
                              setTechnicalErrorDetails(null);
                         }
                         logger.info(`Conversation ${conversationId} status changed to 'stopped'.`);
-                    } else if (data.status === "running") {
+                    } else if (newStatus === "running") {
                         // If it becomes running again, clear errors and stopped state
-                         if (error) {
+                         if (error || isStopped) { // Clear if previously errored or stopped
                              setError(null);
                              setTechnicalErrorDetails(null);
+                             setIsStopped(false);
                          }
-                         setIsStopped(false);
                          logger.info(`Conversation ${conversationId} status changed to 'running'.`);
                     }
                 } else {
                     // Handle case where conversation doc disappears unexpectedly
                     logger.warn(`Conversation document ${conversationId} does not exist in status listener.`);
-                    setError("Conversation data not found.");
+                    setError("Conversation data not found. It might have been deleted.");
                     setTechnicalErrorDetails(null);
                     setIsStopped(true); // Treat as stopped/error
                 }
@@ -214,8 +221,8 @@ export function ChatInterface({
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribeStatus();
         };
-    // Depend on conversationId prop and error state (to clear errors if status changes)
-    }, [conversationId, error]);
+    // Depend on conversationId, error state (to clear errors), and current conversationStatus (to detect transitions)
+    }, [conversationId, error, conversationStatus]); // Added conversationStatus
 
 
     // --- Effect 4: Auto-scroll ---
@@ -279,7 +286,7 @@ export function ChatInterface({
     if (error) {
         // logger.debug("Rendering Error Alert. Technical Details State:", technicalErrorDetails);
         return (
-             <Alert variant="destructive" className="w-full">
+             <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4"> {/* Added max-width and centering */}
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
               <AlertDescription className="text-sm break-words whitespace-pre-wrap">
@@ -312,7 +319,8 @@ export function ChatInterface({
                        <div>
                            <Button
                                variant="outline"
-                               className="px-4"
+                               className="px-4" // Removed h-8 for default height
+                               size="sm" // Use standard small size
                                onClick={onConversationStopped}
                             >
                                Go Back
@@ -336,7 +344,7 @@ export function ChatInterface({
 
     // --- C. Main Chat Interface Render ---
     return (
-        <div className="flex flex-col h-[70vh] w-full p-4 bg-background rounded-lg shadow-md border overflow-hidden">
+        <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden"> {/* Added max-width and centering */}
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">AI Conversation</h2>
@@ -354,7 +362,7 @@ export function ChatInterface({
             </div>
 
              {/* Scrollable Message Area */}
-             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4">
+             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4"> {/* Adjust padding/margin for scrollbar */}
                 <div className="space-y-4">
                     {messages.map((msg) => (
                         <div
@@ -362,19 +370,21 @@ export function ChatInterface({
                             className={`flex ${
                                 msg.role === 'agentA' ? 'justify-start' :
                                 msg.role === 'agentB' ? 'justify-end' :
-                                'justify-center text-xs text-muted-foreground italic'
+                                'justify-center text-xs text-muted-foreground italic py-1' // Adjusted system message style
                             }`}
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm ${
                                     msg.role === 'agentA' ? 'bg-muted text-foreground' :
                                     msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
-                                    'bg-transparent px-0 py-1'
+                                    'bg-transparent px-0 py-0 shadow-none' // System message styling
                                 }`}
                             >
+                                {/* Conditionally render Agent name */}
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }
+                                {/* Message Content */}
                                 {msg.content}
                             </div>
                         </div>
@@ -394,4 +404,3 @@ export function ChatInterface({
         </div>
     );
 }
-
