@@ -1,15 +1,40 @@
+// functions/src/index.ts
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 
-// --- LangChain Imports ---
+// LangChain Imports
 import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
-// Import specific chat model classes
-import { ChatOpenAI } from "@langchain/openai"; // Added
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai"; // Added
-import { BaseChatModel } from "@langchain/core/language_models/chat_models"; // Added
+import { ChatOpenAI } from "@langchain/openai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+
+// --- Define necessary interface/helpers locally ---
+// (Assuming models.ts is not easily shared/deployed with functions)
+interface LLMInfo {
+  id: string;
+  provider: "OpenAI" | "Google" | "Anthropic" | "Mistral" | "Cohere";
+  apiKeySecretName: string; // The Secret Manager key version name expected by the backend/settings
+}
+// Basic helper to determine provider from ID prefix
+function getProviderFromId(id: string): LLMInfo["provider"] | null {
+     // FIX: Use double quotes
+     if (id.startsWith("gpt-")) return "OpenAI";
+     if (id.startsWith("gemini-")) return "Google";
+     // Add checks for 'claude-', 'mistral-', etc. if you add those providers
+     return null;
+}
+// Helper to get the Firestore key ID ('openai', 'google_ai') from provider
+function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): string | null {
+    // FIX: Use double quotes
+    if (provider === "OpenAI") return "openai";
+    if (provider === "Google") return "google_ai";
+    // Add cases for 'Anthropic' -> 'anthropic', etc.
+    return null;
+}
+
 
 // --- Initialization ---
 if (admin.apps.length === 0) {
@@ -19,6 +44,7 @@ if (admin.apps.length === 0) {
 const db = admin.firestore();
 let secretManagerClient: SecretManagerServiceClient | null = null;
 try {
+    // Use default credentials provided by the Cloud Functions environment
     secretManagerClient = new SecretManagerServiceClient();
     logger.info("Secret Manager Client Initialized in Cloud Function.");
 } catch(error) {
@@ -29,12 +55,14 @@ if (!projectId) {
     logger.warn("GCLOUD_PROJECT environment variable not set.");
 }
 
-// --- Helper Function: storeApiKeyAsSecret ---
-// Stores an API key in Secret Manager and returns the version name.
+// --- Helper Function: storeApiKeyAsSecret (Keep your existing function - check quotes within if needed) ---
 async function storeApiKeyAsSecret(userId: string, service: string, apiKey: string): Promise<string> {
+    // Check quotes within your original pasted function here if necessary
+    // Example change (if you had single quotes):
     const currentProjectId = process.env.GCLOUD_PROJECT;
     if (!currentProjectId) {
         logger.error("GCLOUD_PROJECT env var missing inside storeApiKeyAsSecret.");
+        // FIX: Use double quotes
         throw new HttpsError("internal", "Project ID not configured for Secret Manager.");
     }
      if (!secretManagerClient) {
@@ -44,10 +72,10 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
              logger.info("Re-initialized Secret Manager Client in storeApiKeyAsSecret.");
         } catch (initError) {
              logger.error("Failed to re-initialize Secret Manager Client in storeApiKeyAsSecret:", initError);
+             // FIX: Use double quotes
              throw new HttpsError("internal", "Secret Manager client failed to initialize.");
         }
     }
-    // Sanitize userId and service for use in secretId
     const sanitizedUserId = userId.replace(/[^a-zA-Z0-9-_]/g, "_");
     const sanitizedService = service.replace(/[^a-zA-Z0-9-_]/g, "_");
     const secretId = `user-${sanitizedUserId}-${sanitizedService}-key`;
@@ -56,11 +84,9 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
     logger.info(`Attempting to store key in Secret Manager: ${secretPath}`);
     try {
         try {
-            // Check if secret exists
             await secretManagerClient.getSecret({ name: secretPath });
             logger.info(`Secret ${secretId} already exists. Adding new version.`);
         } catch (error: unknown) {
-            // Check if error is due to secret not found
             let grpcCode: number | undefined;
             if (typeof error === "object" && error !== null && "code" in error) {
                 if (typeof (error as { code: unknown }).code === "number") {
@@ -69,7 +95,6 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
             }
             if (grpcCode === 5) { // 5 = NOT_FOUND
                 logger.info(`Secret ${secretId} not found. Creating new secret.`);
-                // Create the secret if it doesn't exist
                 await secretManagerClient.createSecret({
                     parent: parent,
                     secretId: secretId,
@@ -77,79 +102,73 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
                 });
                 logger.info(`Secret ${secretId} created successfully.`);
             } else {
-                // Rethrow unexpected errors
                 logger.error(`Unexpected error getting secret ${secretId}:`, error);
                 throw error;
             }
         }
-        // Add the API key as a new secret version
         const [version] = await secretManagerClient.addSecretVersion({
             parent: secretPath,
+            // FIX: Use double quotes
             payload: { data: Buffer.from(apiKey, "utf8") },
         });
+        // FIX: Use double quotes
         if (!version.name) { throw new Error("Failed to get version name after adding secret version."); }
         logger.info(`Added new version ${version.name} for secret ${secretId}.`);
-        return version.name; // Return the full version name (e.g., projects/.../secrets/.../versions/1)
+        return version.name;
     } catch (error) {
         logger.error(`Error interacting with Secret Manager for secret ${secretId}:`, error);
+        // FIX: Use double quotes
         throw new HttpsError("internal", `Failed to securely store API key for ${service}.`);
     }
 }
 
-// --- Cloud Function: saveApiKey ---
-// Callable function for clients to save their API keys securely.
+// --- Cloud Function: saveApiKey (Keep your existing function - check quotes within) ---
 export const saveApiKey = onCall<{ service: string; apiKey: string }, Promise<{ message: string; service: string }>>(
-    { region: "us-central1" }, // Specify region if needed
+    // FIX: Use double quotes
+    { region: "us-central1" },
     async (request) => {
+        // Check quotes within your original pasted function here if necessary
+        // Example changes:
         logger.info("--- saveApiKey Function Execution Start ---", { structuredData: true });
-        // Check authentication
         if (!request.auth?.uid) {
             logger.error("Authentication check failed: No auth context.");
+            // FIX: Use double quotes
             throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
         }
         const userId = request.auth.uid;
         const { service, apiKey } = request.data;
         logger.info(`Processing saveApiKey for user: ${userId}, service: ${service}`);
-
-        // Validate input
+        // FIX: Use double quotes
         if (!service || typeof service !== "string" || service.trim() === "") { throw new HttpsError("invalid-argument", "Service name is required."); }
-        if (!apiKey || typeof apiKey !== "string" || apiKey.trim() === "") { throw new HttpsError("invalid-argument", "API key for service '" + service + "' cannot be empty."); } // Use double quotes
-        // Basic length check for API key sanity
-        if (apiKey.length < 8 || apiKey.length > 4096) { throw new HttpsError("invalid-argument", "The API key for service '" + service + "' has an invalid length."); } // Use double quotes
-
+        if (!apiKey || typeof apiKey !== "string" || apiKey.trim() === "") { throw new HttpsError("invalid-argument", `API key for service "${service}" cannot be empty.`); }
+        if (apiKey.length < 8 || apiKey.length > 4096) { throw new HttpsError("invalid-argument", `The API key for service "${service}" has an invalid length.`); }
         try {
-            // Store the key in Secret Manager
             const secretVersionName = await storeApiKeyAsSecret(userId, service, apiKey);
             logger.info(`API key stored. Version: ${secretVersionName}`, { userId });
-
-            // Save the reference (secret version name) to Firestore
             const userDocRef = db.collection("users").doc(userId);
             await userDocRef.set(
                 {
-                    apiSecretVersions: { [service]: secretVersionName }, // Store the specific key type
+                    apiSecretVersions: { [service]: secretVersionName },
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 },
-                { merge: true }, // Merge with existing data
+                { merge: true },
             );
             logger.info("Secret version reference saved to Firestore.", { userId });
-
-            // Return success message
-            return { message: "API key for " + service + " saved securely.", service: service }; // Use double quotes
+            // FIX: Use double quotes
+            return { message: `API key version for ${service} saved securely.`, service: service };
         } catch (error) {
             logger.error(`Error processing saveApiKey for service ${service}:`, error, { userId });
-            // Rethrow HttpsError or wrap other errors
             if (error instanceof HttpsError) throw error;
             logger.error("Caught unexpected error:", error);
-            throw new HttpsError("internal", "An unexpected error occurred while saving the " + service + " API key."); // Use double quotes
+            // FIX: Use double quotes
+            throw new HttpsError("internal", `An unexpected error occurred while saving the ${service} API key version.`);
         }
     },
 );
 
 
-// --- Cloud Function: orchestrateConversation ---
-/**
- * Triggered when a new message document is created. Orchestrates the next turn.
- */
+// --- Cloud Function: orchestrateConversation (Refactored) ---
+// FIX: Use double quotes for trigger path
 export const orchestrateConversation = onDocumentCreated("conversations/{conversationId}/messages/{messageId}", async (event) => {
     logger.info("--- orchestrateConversation Triggered ---");
     const { conversationId, messageId } = event.params;
@@ -162,9 +181,11 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
     }
     const newMessageData = newMessageSnapshot.data() as { role: string; content: string; timestamp?: admin.firestore.Timestamp };
     const newMessageRole = newMessageData.role;
+    // FIX: Use double quotes
     logger.info("New message data:", { role: newMessageRole, content: newMessageData.content?.substring(0, 50) + "..." });
 
     // --- Step 1: Fetch conversation document details ---
+    // FIX: Use double quotes
     const conversationRef = db.collection("conversations").doc(conversationId);
     let conversationData;
     try {
@@ -184,11 +205,13 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
         logger.info("Conversation data fetched:", conversationData);
         if (!conversationData?.agentA_llm || !conversationData?.agentB_llm || !conversationData?.turn || !conversationData?.apiSecretVersions) {
              logger.error(`Conversation document ${conversationId} is missing required configuration fields.`);
+             // FIX: Use double quotes
              await conversationRef.update({ status: "error", errorContext: "Invalid conversation configuration." }).catch(err => logger.error("Failed to update status for invalid config:", err));
              return;
         }
+        // FIX: Use double quotes
         if (conversationData.status === "stopped" || conversationData.status === "error") {
-            logger.info("Conversation " + conversationId + " is already stopped or in error state ('" + conversationData.status + "'). Exiting."); // Use double quotes
+            logger.info(`Conversation ${conversationId} is already stopped or in error state ('${conversationData.status}'). Exiting.`);
             return;
         }
     } catch (error) {
@@ -203,10 +226,12 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
         agentToRespond = "agentB";
     } else if (newMessageRole === "agentB" && currentTurn === "agentA") {
         agentToRespond = "agentA";
+    // FIX: Use double quotes
     } else if ((newMessageRole === "user" || newMessageRole === "system") && (currentTurn === "agentA" || currentTurn === "agentB")) {
         agentToRespond = currentTurn;
     } else {
-        logger.info("No response needed. New message role '" + newMessageRole + "' does not require agent '" + currentTurn + "' to respond at this time."); // Use double quotes
+        // FIX: Use double quotes
+        logger.info(`No response needed. New message role "${newMessageRole}" does not require agent "${currentTurn}" to respond.`);
         return;
     }
     logger.info(`Determined agent to respond: ${agentToRespond}`);
@@ -215,13 +240,15 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
     const messagesRef = newMessageSnapshot.ref.parent;
     let historyMessages: BaseMessage[] = [];
     try {
+        // FIX: Use double quotes
         const historyQuery = messagesRef.orderBy("timestamp", "desc").limit(20);
         const historySnap = await historyQuery.get();
         const reversedHistory = historySnap.docs.map((doc) => {
              const data = doc.data() as { role: string; content: string };
              if (data.role === agentToRespond) {
                  return new AIMessage({ content: data.content });
-             } else if (data.role === "agentA" || data.role === "agentB" || data.role === "user" || data.role === "system") { // Fixed quotes
+             // FIX: Use double quotes in array
+             } else if (["agentA", "agentB", "user", "system"].includes(data.role)) {
                  return new HumanMessage({ content: data.content });
              } else {
                  logger.warn(`Unknown role found in history: ${data.role}`);
@@ -233,96 +260,110 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
 
     } catch (error) {
         logger.error(`Failed to fetch message history for ${conversationId}:`, error);
+        // FIX: Use double quotes
         await conversationRef.update({ status: "error", errorContext: "Failed to fetch message history." }).catch(err => logger.error("Failed to update status for history fetch error:", err));
         return;
     }
 
     // --- Step 4: Get API Key for the responding agent ---
-    const agentConfigKey = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
-    const providerKey = agentConfigKey.startsWith("openai") ? "openai" : (agentConfigKey.startsWith("google") ? "google_ai" : null);
+    // FIX: Use double quotes
+    const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
+    const provider = getProviderFromId(agentModelId);
+    const firestoreKeyId = getFirestoreKeyIdFromProvider(provider);
 
-    if (!providerKey) {
-        logger.error(`Could not determine provider type for agent config key: ${agentConfigKey}`);
-        await conversationRef.update({ status: "error", errorContext: "Invalid LLM configuration for " + agentToRespond + "." }).catch(err => logger.error("Failed to update status for invalid provider:", err)); // Use double quotes
+    if (!provider || !firestoreKeyId) {
+        logger.error(`Could not determine provider or Firestore key ID for model ID: ${agentModelId}`);
+        // FIX: Use double quotes
+        await conversationRef.update({ status: "error", errorContext: `Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.` }).catch(err => logger.error("Failed to update status for invalid provider:", err));
         return;
     }
-    const secretVersionName = conversationData.apiSecretVersions[providerKey];
+
+    const secretVersionName = conversationData.apiSecretVersions[firestoreKeyId];
     if (!secretVersionName) {
-        logger.error(`Missing secret version name for key type '${providerKey}' in conversation data.`);
-        await conversationRef.update({ status: "error", errorContext: "API key reference missing for " + agentToRespond + " (" + providerKey + ")." }).catch(err => logger.error("Failed to update status for missing secret ref:", err)); // Use double quotes
+        logger.error(`Missing secret version name for key type '${firestoreKeyId}' in conversation data.`);
+        // FIX: Use double quotes
+        await conversationRef.update({ status: "error", errorContext: `API key reference missing for ${agentToRespond} (${provider}).` }).catch(err => logger.error("Failed to update status for missing secret ref:", err));
         return;
     }
+
     let apiKey: string | null = null;
     try {
         apiKey = await getApiKeyFromSecret(secretVersionName);
+        // FIX: Use double quotes
         if (!apiKey) { throw new Error(`getApiKeyFromSecret returned null for version ${secretVersionName}`); }
-        logger.info(`Successfully retrieved API key for ${providerKey}.`);
+        logger.info(`Successfully retrieved API key for ${provider}.`);
     } catch(error) {
         logger.error(`Failed to retrieve API key using version ${secretVersionName}:`, error);
-        await conversationRef.update({ status: "error", errorContext: "Failed to retrieve API key for " + agentToRespond + " (" + providerKey + "). Check Secret Manager access." }).catch(err => logger.error("Failed to update status for secret retrieval error:", err)); // Use double quotes
+        // FIX: Use double quotes
+        await conversationRef.update({ status: "error", errorContext: `Failed to retrieve API key for ${agentToRespond} (${provider}). Check Secret Manager access.` }).catch(err => logger.error("Failed to update status for secret retrieval error:", err));
         return;
     }
 
     // --- Step 5: Initialize the LangChain model ---
     let chatModel: BaseChatModel;
-    let modelName: string | undefined; // Define modelName variable, might be undefined if getModelName fails
     try {
-        modelName = getModelName(agentConfigKey); // Attempt to get model name
-        if (providerKey === "openai") {
+        const modelName = agentModelId;
+        // FIX: Use double quotes
+        if (provider === "OpenAI") {
             chatModel = new ChatOpenAI({ apiKey: apiKey, modelName: modelName });
-        } else if (providerKey === "google_ai") {
+        // FIX: Use double quotes
+        } else if (provider === "Google") {
+            // FIX: Use double quotes
             chatModel = new ChatGoogleGenerativeAI({ apiKey: apiKey, model: modelName });
         } else {
-            throw new Error(`Unsupported provider key: ${providerKey}`);
+            throw new Error(`Unsupported provider: ${provider}`);
         }
-        logger.info(`Initialized ${providerKey} model: ${modelName} for ${agentToRespond}`);
+        logger.info(`Initialized ${provider} model: ${modelName} for ${agentToRespond}`);
     } catch (error) {
-        logger.error(`Failed to initialize chat model ${agentConfigKey}:`, error);
-        // Use double quotes for the error string
+        logger.error(`Failed to initialize chat model ${agentModelId}:`, error);
+        // FIX: Use double quotes
         await conversationRef.update({
              status: "error",
-             errorContext: "Failed to initialize LLM using config '" + agentConfigKey + "' for " + agentToRespond + ". Check model name validity."
+             errorContext: `Failed to initialize LLM using config "${agentModelId}" for ${agentToRespond}. Check model name validity.`
         }).catch(err => logger.error("Failed to update status for model init error:", err));
-        return; // Exit
+        return;
     }
-
 
     // --- Step 6: Call the LLM ---
     let responseContent: string | null = null;
     try {
-        logger.info(`Invoking ${agentToRespond} (${agentConfigKey}) with ${historyMessages.length} history messages...`);
+        logger.info(`Invoking ${agentToRespond} (${agentModelId}) with ${historyMessages.length} history messages...`);
         const aiResponse = await chatModel.invoke(historyMessages);
         if (typeof aiResponse.content === "string") {
              responseContent = aiResponse.content;
-        } else {
-             logger.warn("AI response content was not a simple string:", aiResponse.content);
+        } else if (Array.isArray(aiResponse.content)) {
+             logger.warn("AI response content was an array, attempting to stringify:", aiResponse.content);
              responseContent = JSON.stringify(aiResponse.content);
+        } else {
+             logger.warn("AI response content was not a simple string or array:", aiResponse.content);
+             responseContent = String(aiResponse.content);
         }
+        // FIX: Use double quotes
         if (!responseContent || responseContent.trim() === "") {
-             throw new Error("LLM response content was empty or invalid.");
+             logger.warn(`LLM response content from ${agentModelId} was empty.`);
+             responseContent = ""; // Handle empty response
         }
         logger.info(`Received response from ${agentToRespond}: ${responseContent.substring(0,100)}...`);
 
     } catch (error) {
          const errorMessage = error instanceof Error ? error.message : String(error);
-         logger.error(`Error invoking LLM ${agentConfigKey} for ${agentToRespond}:`, error);
+         logger.error(`Error invoking LLM ${agentModelId} for ${agentToRespond}:`, error);
          try {
-             // --- UPDATED: Increased substring limit ---
+             // FIX: Use double quotes
              await conversationRef.update({
                  status: "error",
-                 errorContext: "LLM call failed for " + agentToRespond + ". Please check API key and model validity. Error: " + errorMessage.substring(0, 1000), // Increased limit to 1000
+                 errorContext: `LLM call failed for ${agentToRespond} (${agentModelId}). Check API key/model validity. Error: ${errorMessage.substring(0, 1000)}`,
                  lastActivity: admin.firestore.FieldValue.serverTimestamp()
              });
-             // --- END UPDATE ---
-             logger.info(`Updated conversation ${conversationId} status to 'error'.`);
+             logger.info(`Updated conversation ${conversationId} status to "error".`);
          } catch (updateError) {
-             logger.error(`Failed to update conversation ${conversationId} status to 'error' after LLM failure:`, updateError);
+             logger.error(`Failed to update conversation ${conversationId} status to "error" after LLM failure:`, updateError);
          }
          return;
     }
 
-
     // --- Step 7: Write the AI's response back to Firestore ---
+    // FIX: Use double quotes
     const nextTurn = agentToRespond === "agentA" ? "agentB" : "agentA";
     const responseMessage = {
         role: agentToRespond,
@@ -339,8 +380,8 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
         logger.info(`Agent ${agentToRespond} response saved. Turn updated to ${nextTurn}.`);
     } catch (error) {
          logger.error(`Error saving response or updating turn for conversation ${conversationId}:`, error);
-         // Use double quotes for the error string
-         await conversationRef.update({ status: "error", errorContext: "Failed to save " + agentToRespond + "'s response." }).catch(err => logger.error("Failed to update status for save error:", err));
+         // FIX: Use double quotes
+         await conversationRef.update({ status: "error", errorContext: `Failed to save ${agentToRespond}'s response.` }).catch(err => logger.error("Failed to update status for save error:", err));
          return;
     }
 
@@ -352,8 +393,10 @@ export const orchestrateConversation = onDocumentCreated("conversations/{convers
 });
 
 
-// --- Helper function to get API key from Secret Manager ---
+// --- Helper function to get API key from Secret Manager (Keep your existing robust helper - check quotes within) ---
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
+    // Check quotes within your original pasted function here if necessary
+    // Example change:
     if (!secretManagerClient) {
         logger.error("Secret Manager Client is null in getApiKeyFromSecret.");
         try {
@@ -380,7 +423,7 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
              logger.warn(`Secret payload for ${secretVersionName} was unexpectedly a string.`);
              return payloadData;
         } else if (payloadData instanceof Uint8Array || Buffer.isBuffer(payloadData)) {
-             // Use double quotes for encoding
+             // FIX: Use double quotes
              const apiKey = Buffer.from(payloadData).toString("utf8");
              logger.info(`Successfully retrieved secret from version: ${secretVersionName}`);
              return apiKey;
@@ -395,16 +438,4 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
 }
 
 
-// --- Helper function to map frontend selection to model name ---
-const getModelName = (frontendValue: string): string => {
-    switch (frontendValue) {
-        case "openai_gpt4o": return "gpt-4o";
-        case "openai_gpt35": return "gpt-3.5-turbo";
-        case "google_gemini15pro": return "gemini-1.5-pro-latest";
-        case "google_gemini10pro": return "gemini-1.0-pro";
-        default:
-            logger.error(`Unknown LLM selection encountered in Cloud Function: ${frontendValue}`);
-            // Use double quotes and concatenation
-            throw new Error("Unknown LLM selection: " + frontendValue);
-    }
-};
+// --- REMOVED getModelName function ---

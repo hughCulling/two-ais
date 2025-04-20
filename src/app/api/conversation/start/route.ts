@@ -2,34 +2,40 @@
 import { NextResponse } from 'next/server';
 import { type NextRequest } from 'next/server';
 
-// --- Firebase Admin, Auth, Firestore, Secret Manager Setup ---
+// Firebase Admin, Auth, Firestore, Secret Manager Setup
 import { initializeApp, getApps, cert, App, ServiceAccount } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
-import { getFirestore, Firestore } from 'firebase-admin/firestore';
+import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore'; // Import FieldValue
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-// import { BaseChatModel } from "@langchain/core/language_models/chat_models"; // Commented out: llmA/llmB unused
 
-// --- Initialize Services ---
+// --- Import LLM Info Helper ---
+// FIX: Use the path alias which should be configured in tsconfig.json
+import { getLLMInfoById, LLMInfo } from '@/lib/models';
+
+// --- Initialize Services (Keep your existing robust initialization logic) ---
 let firebaseAdminApp: App | null = null;
 let dbAdmin: Firestore | null = null;
 let secretManagerClient: SecretManagerServiceClient | null = null;
 
-/**
- * Initializes Firebase Admin SDK and Google Cloud Secret Manager client
- * if they haven't been initialized already.
- * Reads the service account key from the FIREBASE_SERVICE_ACCOUNT_KEY environment variable.
- */
 function initializeServices() {
-    if (getApps().length > 0) {
+    // --- PASTE YOUR EXISTING initializeServices() function here ---
+    // (Ensure it initializes firebaseAdminApp, dbAdmin, secretManagerClient)
+     if (getApps().length > 0) {
         if (!firebaseAdminApp) firebaseAdminApp = getApps()[0];
         if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
+        // Secret Manager client might need careful handling in serverless envs
         if (!secretManagerClient) {
-             console.warn("Secret Manager Client potentially not initialized on subsequent requests.");
-             if(firebaseAdminApp) { }
+             console.warn("Attempting to initialize Secret Manager Client (might already exist).");
+             try {
+                 secretManagerClient = new SecretManagerServiceClient();
+             } catch (error) {
+                  console.error("Failed to initialize Secret Manager Client:", error);
+                  secretManagerClient = null; // Ensure it's null on failure
+             }
         }
         return;
     }
@@ -40,7 +46,7 @@ function initializeServices() {
         if (!serviceAccountJson) {
             throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.");
         }
-
+        // Safely parse JSON
         let serviceAccount: ServiceAccount;
         try {
              serviceAccount = JSON.parse(serviceAccountJson);
@@ -49,27 +55,24 @@ function initializeServices() {
              console.error("String that failed to parse:", serviceAccountJson);
              throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY JSON.");
         }
-
+        // Format private key
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rawPrivateKey = (serviceAccount as any).private_key;
-        if (typeof rawPrivateKey !== 'string') {
-             throw new Error("Parsed service account key is missing the 'private_key' string property.");
+        if (typeof rawPrivateKey === 'string') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (serviceAccount as any).private_key = rawPrivateKey.replace(/\\n/g, '\n');
+        } else {
+             throw new Error("Parsed service account key 'private_key' is not a string.");
         }
-        const privateKeyWithNewlines = rawPrivateKey.replace(/\\n/g, '\n');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (serviceAccount as any).private_key = privateKeyWithNewlines;
-
+        // Validate essential fields
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!serviceAccount || !(serviceAccount as any).client_email || !(serviceAccount as any).private_key || !(serviceAccount as any).project_id) {
-             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-             console.error("Validation failed: Parsed object missing required snake_case fields (project_id, private_key, client_email). Actual keys:", Object.keys(serviceAccount as any));
+            console.error("Parsed service account key missing required fields.");
             throw new Error("Parsed service account key is missing required fields after processing.");
         }
-        console.log("Parsed service account key validation passed.");
 
         firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) });
         console.log("Firebase Admin SDK Initialized.");
-
         dbAdmin = getFirestore(firebaseAdminApp);
 
         secretManagerClient = new SecretManagerServiceClient({
@@ -86,20 +89,18 @@ function initializeServices() {
 
     } catch (error) {
         console.error("Failed to initialize services:", error);
+        // Ensure services are null if init fails
         firebaseAdminApp = null;
         dbAdmin = null;
         secretManagerClient = null;
     }
 }
-
-// Initialize services when the module loads
 initializeServices();
 
-/**
- * Retrieves an API key from Google Cloud Secret Manager.
- */
+// --- getApiKeyFromSecret Helper (Keep your existing robust helper) ---
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
-    if (!secretManagerClient) {
+    // --- PASTE YOUR EXISTING getApiKeyFromSecret() function here ---
+     if (!secretManagerClient) {
         console.error("Secret Manager Client not available when trying to get secret.");
          initializeServices(); // Attempt re-initialization
          if (!secretManagerClient) {
@@ -108,66 +109,49 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
          }
          console.log("Secret Manager Client re-initialized successfully in getApiKeyFromSecret.");
     }
-
     if (!secretVersionName) {
         console.warn("getApiKeyFromSecret called with empty secretVersionName.");
         return null;
     }
     try {
         const [version] = await secretManagerClient.accessSecretVersion({ name: secretVersionName });
-        const payloadData = version.payload?.data; // Type: string | Uint8Array | null | undefined
-
+        const payloadData = version.payload?.data;
         if (!payloadData) {
             console.warn(`Secret version ${secretVersionName} payload is empty.`);
             return null;
         }
-
-        // --- TYPE FIX: Handle string or Uint8Array explicitly ---
+        // Handle string or Uint8Array explicitly
         let apiKey: string;
         if (typeof payloadData === "string") {
-            // If it's already a string, use it directly
             apiKey = payloadData;
-            console.log("Secret payload was already a string.");
         } else if (payloadData instanceof Uint8Array) {
-            // If it's a Uint8Array (includes Buffer), convert it
             apiKey = Buffer.from(payloadData).toString("utf8");
-            console.log("Secret payload was Uint8Array/Buffer, converted to string.");
         } else {
-            // Should not happen based on types, but handle defensively
             console.error(`Unexpected type for secret payload: ${typeof payloadData}`);
             return null;
         }
-        // --- END TYPE FIX ---
-
         return apiKey;
-
     } catch (error) {
         console.error(`Failed to access secret version ${secretVersionName}:`, error);
         return null;
     }
 }
 
+// --- Request Body Interface (receives backend IDs now) ---
 interface StartConversationRequest {
-    agentA_llm: string;
-    agentB_llm: string;
+    agentA_llm: string; // e.g., 'gpt-4o'
+    agentB_llm: string; // e.g., 'gemini-1.5-pro-latest'
 }
 
-const getModelName = (frontendValue: string): string => {
-    switch (frontendValue) {
-        case 'openai_gpt4o': return 'gpt-4o';
-        case 'openai_gpt35': return 'gpt-3.5-turbo';
-        case 'google_gemini15pro': return 'gemini-1.5-pro-latest';
-        case 'google_gemini10pro': return 'gemini-1.0-pro';
-        default: throw new Error(`Unknown LLM selection: ${frontendValue}`);
-    }
-};
+// --- REMOVED getModelName function ---
 
 export async function POST(request: NextRequest) {
     console.log("API route /api/conversation/start hit");
 
+    // Check service initialization
     if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
-         console.error("Services not initialized at start of POST handler. Initialization might have failed.");
-         initializeServices();
+         console.error("Services not initialized at start of POST handler.");
+         initializeServices(); // Attempt re-init
          if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
             console.error("Re-initialization failed again. Services unavailable.");
             return NextResponse.json({ error: 'Server configuration error - services not initialized' }, { status: 500 });
@@ -176,7 +160,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        // 1. Verify Firebase ID Token
+        // 1. Verify Firebase ID Token (Keep existing logic)
         const authorization = request.headers.get('Authorization');
         if (!authorization?.startsWith('Bearer ')) {
             return NextResponse.json({ error: 'Unauthorized: Missing Bearer token' }, { status: 401 });
@@ -192,7 +176,7 @@ export async function POST(request: NextRequest) {
         const userId = decodedToken.uid;
         console.log(`Authenticated user: ${userId}`);
 
-        // 2. Parse Request Body
+        // 2. Parse Request Body (Receives backend IDs now)
         let requestBody: StartConversationRequest;
         try {
             requestBody = await request.json();
@@ -200,21 +184,37 @@ export async function POST(request: NextRequest) {
             console.error("Error parsing request body:", e);
             return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
         }
+        // These are now backend IDs like 'gpt-4o'
         const { agentA_llm, agentB_llm } = requestBody;
         if (!agentA_llm || !agentB_llm) {
             return NextResponse.json({ error: 'Missing agent LLM selections' }, { status: 400 });
         }
+        console.log(`Received LLM selections: AgentA=${agentA_llm}, AgentB=${agentB_llm}`);
 
-        // 3. Determine Required API Key Types
-        const agentARequiredKey = agentA_llm.startsWith('openai') ? 'openai' : (agentA_llm.startsWith('google') ? 'google_ai' : null);
-        const agentBRequiredKey = agentB_llm.startsWith('openai') ? 'openai' : (agentB_llm.startsWith('google') ? 'google_ai' : null);
-        if (!agentARequiredKey || !agentBRequiredKey) {
+        // 3. Get LLM Info and Required Key Names using the received backend IDs
+        const agentALLMInfo = getLLMInfoById(agentA_llm);
+        const agentBLLMInfo = getLLMInfoById(agentB_llm);
+
+        // Validate that the received IDs correspond to known models
+        if (!agentALLMInfo || !agentBLLMInfo) {
+            console.error(`Invalid model ID received: A=${agentA_llm}, B=${agentB_llm}`);
             return NextResponse.json({ error: 'Invalid LLM selection provided' }, { status: 400 });
         }
 
-        // 4. Fetch Secret Version Names from Firestore
+        // Determine the Firestore key ID ('openai', 'google_ai') based on provider for lookup
+        // This assumes your ApiKeyManager saves keys under these IDs in the user doc
+        const agentARequiredKey = agentALLMInfo.provider === 'OpenAI' ? 'openai' : (agentALLMInfo.provider === 'Google' ? 'google_ai' : null); // Add other providers if needed
+        const agentBRequiredKey = agentBLLMInfo.provider === 'OpenAI' ? 'openai' : (agentBLLMInfo.provider === 'Google' ? 'google_ai' : null); // Add other providers if needed
+
+        if (!agentARequiredKey || !agentBRequiredKey) {
+             console.error(`Could not map provider to Firestore key ID: A=${agentALLMInfo.provider}, B=${agentBLLMInfo.provider}`);
+             return NextResponse.json({ error: 'Internal configuration error mapping provider to key ID.' }, { status: 500 });
+        }
+
+        // 4. Fetch Secret Version Names from Firestore using 'openai'/'google_ai' keys
         let agentASecretVersion: string | null = null;
         let agentBSecretVersion: string | null = null;
+        let userApiSecretVersions: Record<string, string> = {}; // Store all versions for conversation doc
         try {
             const userDocRef = dbAdmin.collection('users').doc(userId);
             const userDocSnap = await userDocRef.get();
@@ -222,17 +222,18 @@ export async function POST(request: NextRequest) {
                 console.error(`User profile not found for userId: ${userId}`);
                 return NextResponse.json({ error: 'User profile not found' }, { status: 404 });
             }
-            const secretVersions = userDocSnap.data()?.apiSecretVersions || {};
-            agentASecretVersion = secretVersions[agentARequiredKey] || null;
-            agentBSecretVersion = secretVersions[agentBRequiredKey] || null;
+            userApiSecretVersions = userDocSnap.data()?.apiSecretVersions || {}; // Get the whole map
+            agentASecretVersion = userApiSecretVersions[agentARequiredKey] || null; // Lookup using 'openai'/'google_ai'
+            agentBSecretVersion = userApiSecretVersions[agentBRequiredKey] || null;
 
+            // Check if the required secret versions were found in the user's document
             if (!agentASecretVersion) {
                 console.error(`Missing secret version name for key type '${agentARequiredKey}' for user ${userId}`);
-                return NextResponse.json({ error: `API key reference for ${agentARequiredKey} not found.` }, { status: 404 });
+                return NextResponse.json({ error: `API key reference for ${agentALLMInfo.provider} not found in settings.` }, { status: 404 });
             }
              if (!agentBSecretVersion) {
                 console.error(`Missing secret version name for key type '${agentBRequiredKey}' for user ${userId}`);
-                return NextResponse.json({ error: `API key reference for ${agentBRequiredKey} not found.` }, { status: 404 });
+                return NextResponse.json({ error: `API key reference for ${agentBLLMInfo.provider} not found in settings.` }, { status: 404 });
             }
             console.log(`Found secret versions: A=${agentASecretVersion}, B=${agentBSecretVersion}`);
 
@@ -241,7 +242,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Error retrieving API key configuration.' }, { status: 500 });
         }
 
-        // 5. Retrieve Actual API Keys from Secret Manager
+        // 5. Retrieve Actual API Keys from Secret Manager (Keep existing logic)
         const apiKeyA = await getApiKeyFromSecret(agentASecretVersion);
         const apiKeyB = (agentASecretVersion === agentBSecretVersion) ? apiKeyA : await getApiKeyFromSecret(agentBSecretVersion);
 
@@ -251,46 +252,81 @@ export async function POST(request: NextRequest) {
         }
         console.log("API Keys retrieved successfully.");
 
-        // 6. Initialize LangChain Models
-        // let llmA: BaseChatModel; // Unused
-        // let llmB: BaseChatModel; // Unused
+        // 6. Initialize LangChain Models for Validation (using direct backend IDs)
         try {
-             const modelNameA = getModelName(agentA_llm);
-             const modelNameB = getModelName(agentB_llm);
-
-             console.log(`Initializing Agent A: ${agentARequiredKey} with model ${modelNameA}`);
-             if (agentARequiredKey === 'openai') {
-                /* llmA = */ new ChatOpenAI({ apiKey: apiKeyA, modelName: modelNameA });
-             } else if (agentARequiredKey === 'google_ai') {
-                /* llmA = */ new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: modelNameA });
+             // No translation needed - agentA_llm IS the backend ID now
+             console.log(`Initializing Agent A: ${agentALLMInfo.provider} with model ${agentA_llm}`);
+             if (agentALLMInfo.provider === 'OpenAI') {
+                 // Attempt initialization to validate key/model combo
+                 new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm });
+             } else if (agentALLMInfo.provider === 'Google') {
+                 // Attempt initialization to validate key/model combo
+                 new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm });
              } else {
-                 throw new Error(`Unsupported provider for Agent A: ${agentARequiredKey}`);
+                 // Add other providers if needed
+                 throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
              }
 
-             console.log(`Initializing Agent B: ${agentBRequiredKey} with model ${modelNameB}`);
-             if (agentBRequiredKey === 'openai') {
-                 /* llmB = */ new ChatOpenAI({ apiKey: apiKeyB, modelName: modelNameB });
-             } else if (agentBRequiredKey === 'google_ai') {
-                 /* llmB = */ new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: modelNameB });
+             console.log(`Initializing Agent B: ${agentBLLMInfo.provider} with model ${agentB_llm}`);
+             if (agentBLLMInfo.provider === 'OpenAI') {
+                 new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm });
+             } else if (agentBLLMInfo.provider === 'Google') {
+                 new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm });
              } else {
-                 throw new Error(`Unsupported provider for Agent B: ${agentBRequiredKey}`);
+                  // Add other providers if needed
+                 throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
              }
-             console.log("LangChain models initialized successfully.");
+             console.log("LangChain models initialized successfully for validation.");
 
         } catch (initError) {
              console.error("Error initializing LangChain models:", initError);
-             return NextResponse.json({ error: `Failed to initialize AI models: ${initError instanceof Error ? initError.message : 'Unknown error'}` }, { status: 500 });
+             // Provide a more specific error if possible
+             const errorDetail = initError instanceof Error ? initError.message : 'Unknown initialization error';
+             return NextResponse.json({ error: `Failed to validate AI models/keys: ${errorDetail}` }, { status: 500 });
         }
 
-        // 7. TODO: Setup LangChain Conversation Logic
-        // The actual conversation orchestration happens in the 'orchestrateConversation' Cloud Function.
-        console.log("LangChain conversation logic would go here, using the initialized models (but happens in Cloud Function).");
+        // 7. Create Conversation Document in Firestore
+        try {
+            const newConversationRef = dbAdmin.collection('conversations').doc(); // Auto-generate ID
+            const conversationId = newConversationRef.id;
+            const conversationData = {
+                userId: userId,
+                agentA_llm: agentA_llm, // Save backend ID
+                agentB_llm: agentB_llm, // Save backend ID
+                turn: "agentA", // Agent A starts by default
+                status: "running", // Initial status
+                // Save the map of ALL secret versions fetched from user doc
+                // The Cloud Function will use this map and the provider to get the right version name
+                apiSecretVersions: userApiSecretVersions,
+                createdAt: FieldValue.serverTimestamp(),
+                lastActivity: FieldValue.serverTimestamp(),
+            };
 
-        // --- Return Success ---
-        return NextResponse.json({
-            message: "Session setup ready. Models initialized.",
-            config: { agentA_llm, agentB_llm }
-        }, { status: 200 });
+            // Set the data for the new conversation document
+            await newConversationRef.set(conversationData);
+            console.log(`Created conversation document: ${conversationId}`);
+
+            // Add initial system message to trigger the Cloud Function
+            // You might want to make this configurable or pass from frontend
+            const initialPrompt = "Start the conversation.";
+            await newConversationRef.collection('messages').add({
+                role: "system",
+                content: initialPrompt,
+                timestamp: FieldValue.serverTimestamp(),
+            });
+             console.log(`Added initial system message for conversation: ${conversationId}`);
+
+             // Return success with the new conversation ID
+             return NextResponse.json({
+                 message: "Conversation created successfully.",
+                 conversationId: conversationId, // Send back the ID
+                 config: { agentA_llm, agentB_llm } // Echo back the config used
+             }, { status: 200 });
+
+        } catch (firestoreError) {
+             console.error(`Error creating conversation document or initial message for user ${userId}:`, firestoreError);
+             return NextResponse.json({ error: 'Error initializing conversation.' }, { status: 500 });
+        }
 
     } catch (error) {
         console.error("Unhandled error in /api/conversation/start:", error);
