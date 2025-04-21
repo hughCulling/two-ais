@@ -11,9 +11,10 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+// FIX 0: Import ChatAnthropic
+import { ChatAnthropic } from "@langchain/anthropic";
 
 // --- Import LLM Info Helper ---
-// FIX: Removed unused LLMInfo type import
 import { getLLMInfoById } from '@/lib/models'; // Use path alias
 
 // --- Initialize Services (Keep your existing robust initialization logic) ---
@@ -128,8 +129,6 @@ interface StartConversationRequest {
     agentB_llm: string; // e.g., 'gemini-1.5-pro-latest'
 }
 
-// --- REMOVED getModelName function ---
-
 export async function POST(request: NextRequest) {
     console.log("API route /api/conversation/start hit");
 
@@ -183,9 +182,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid LLM selection provided" }, { status: 400 });
         }
 
-        const agentARequiredKey = agentALLMInfo.provider === "OpenAI" ? "openai" : (agentALLMInfo.provider === "Google" ? "google_ai" : null);
-        const agentBRequiredKey = agentBLLMInfo.provider === "OpenAI" ? "openai" : (agentBLLMInfo.provider === "Google" ? "google_ai" : null);
+        // FIX 1a: Add 'Anthropic' case for Agent A key mapping
+        const agentARequiredKey = agentALLMInfo.provider === "OpenAI" ? "openai"
+                                : agentALLMInfo.provider === "Google" ? "google_ai"
+                                : agentALLMInfo.provider === "Anthropic" ? "anthropic"
+                                : null;
+        // FIX 1b: Add 'Anthropic' case for Agent B key mapping
+        const agentBRequiredKey = agentBLLMInfo.provider === "OpenAI" ? "openai"
+                                : agentBLLMInfo.provider === "Google" ? "google_ai"
+                                : agentBLLMInfo.provider === "Anthropic" ? "anthropic"
+                                : null;
 
+        // This check now works for Anthropic
         if (!agentARequiredKey || !agentBRequiredKey) {
              console.error(`Could not map provider to Firestore key ID: A=${agentALLMInfo.provider}, B=${agentBLLMInfo.provider}`);
              return NextResponse.json({ error: "Internal configuration error mapping provider to key ID." }, { status: 500 });
@@ -223,6 +231,7 @@ export async function POST(request: NextRequest) {
 
         // 5. Retrieve Actual API Keys from Secret Manager
         const apiKeyA = await getApiKeyFromSecret(agentASecretVersion);
+        // Optimization: Only fetch second key if the secret version name is different
         const apiKeyB = (agentASecretVersion === agentBSecretVersion) ? apiKeyA : await getApiKeyFromSecret(agentBSecretVersion);
 
         if (!apiKeyA || !apiKeyB) {
@@ -234,20 +243,28 @@ export async function POST(request: NextRequest) {
         // 6. Initialize LangChain Models for Validation
         try {
              console.log(`Initializing Agent A: ${agentALLMInfo.provider} with model ${agentA_llm}`);
+             // FIX 2a: Add ChatAnthropic case for Agent A validation
              if (agentALLMInfo.provider === "OpenAI") {
                  new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm });
              } else if (agentALLMInfo.provider === "Google") {
                  new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm });
+             } else if (agentALLMInfo.provider === "Anthropic") {
+                 new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm });
              } else {
+                 // This case should ideally not be reached if provider mapping is correct
                  throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
              }
 
              console.log(`Initializing Agent B: ${agentBLLMInfo.provider} with model ${agentB_llm}`);
+             // FIX 2b: Add ChatAnthropic case for Agent B validation
              if (agentBLLMInfo.provider === "OpenAI") {
                  new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm });
              } else if (agentBLLMInfo.provider === "Google") {
                  new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm });
+             } else if (agentBLLMInfo.provider === "Anthropic") {
+                 new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm });
              } else {
+                  // This case should ideally not be reached if provider mapping is correct
                  throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
              }
              console.log("LangChain models initialized successfully for validation.");
@@ -255,6 +272,7 @@ export async function POST(request: NextRequest) {
         } catch (initError) {
              console.error("Error initializing LangChain models:", initError);
              const errorDetail = initError instanceof Error ? initError.message : "Unknown initialization error";
+             // Provide more specific error message if possible
              return NextResponse.json({ error: `Failed to validate AI models/keys: ${errorDetail}` }, { status: 500 });
         }
 
@@ -266,9 +284,10 @@ export async function POST(request: NextRequest) {
                 userId: userId,
                 agentA_llm: agentA_llm, // Save backend ID
                 agentB_llm: agentB_llm, // Save backend ID
-                turn: "agentA",
+                turn: "agentA", // Start with Agent A
                 status: "running",
-                apiSecretVersions: userApiSecretVersions, // Save map for function use
+                // Ensure the full map is saved, including the 'anthropic' key if present
+                apiSecretVersions: userApiSecretVersions,
                 createdAt: FieldValue.serverTimestamp(),
                 lastActivity: FieldValue.serverTimestamp(),
             };
@@ -276,18 +295,20 @@ export async function POST(request: NextRequest) {
             await newConversationRef.set(conversationData);
             console.log(`Created conversation document: ${conversationId}`);
 
+            // Add initial system message to trigger the first agent
             const initialPrompt = "Start the conversation.";
             await newConversationRef.collection("messages").add({
-                role: "system",
+                role: "system", // Use 'system' or 'user' based on how orchestrateConversation expects it
                 content: initialPrompt,
                 timestamp: FieldValue.serverTimestamp(),
             });
              console.log(`Added initial system message for conversation: ${conversationId}`);
 
+             // Return success response
              return NextResponse.json({
                  message: "Conversation created successfully.",
                  conversationId: conversationId,
-                 config: { agentA_llm, agentB_llm }
+                 config: { agentA_llm, agentB_llm } // Return the config used
              }, { status: 200 });
 
         } catch (firestoreError) {

@@ -36,13 +36,14 @@ const groupedOptions = groupLLMsByProvider();
 
 // --- Define the keys used in Firestore user doc's apiSecretVersions map ---
 // These match the 'id' used in ApiKeyManager's initialApiKeys
-const FIRESTORE_KEY_IDS = ['openai', 'google_ai']; // Add others like 'anthropic' if needed
+// FIX 1: Add 'anthropic' to the array
+const FIRESTORE_KEY_IDS = ['openai', 'google_ai', 'anthropic'];
 
 export default function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
     const { user, loading: authLoading } = useAuth();
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
-    // Key status will now use 'openai', 'google_ai' as keys
+    // Key status will now use 'openai', 'google_ai', 'anthropic' as keys
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
@@ -61,12 +62,11 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                     if (userDocSnap.exists()) {
                         // Explicitly type data from Firestore snapshot
                         const data: DocumentData = userDocSnap.data();
-                        // --- FIX: Replace 'any' with 'string' for the value type ---
                         // Assuming apiSecretVersions stores string values (the version names)
                         const versions: Record<string, string> = data?.apiSecretVersions || {};
-                        // --- End Fix ---
 
-                        // Check status using the Firestore keys ('openai', 'google_ai')
+                        // Check status using the Firestore keys ('openai', 'google_ai', 'anthropic')
+                        // This loop now correctly includes 'anthropic' thanks to FIX 1
                         FIRESTORE_KEY_IDS.forEach(keyId => {
                             const versionValue = versions[keyId];
                             // Check if the value exists and is a non-empty string
@@ -106,16 +106,23 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
 
         // Ensure both models are selected
         if (!agentAOption || !agentBOption) {
-                // Use a more user-friendly notification if possible (e.g., toast)
                 alert("Please select a model for both Agent A and Agent B.");
                 return;
         }
 
         // Determine the required Firestore key ID based on the provider
-        const agentARequiredKey = agentAOption.provider === 'OpenAI' ? 'openai' : (agentAOption.provider === 'Google' ? 'google_ai' : null);
-        const agentBRequiredKey = agentBOption.provider === 'OpenAI' ? 'openai' : (agentBOption.provider === 'Google' ? 'google_ai' : null);
+        // FIX 3a: Add 'Anthropic' case for Agent A
+        const agentARequiredKey = agentAOption.provider === 'OpenAI' ? 'openai'
+                                : agentAOption.provider === 'Google' ? 'google_ai'
+                                : agentAOption.provider === 'Anthropic' ? 'anthropic'
+                                : null;
+        // FIX 3b: Add 'Anthropic' case for Agent B
+        const agentBRequiredKey = agentBOption.provider === 'OpenAI' ? 'openai'
+                                : agentBOption.provider === 'Google' ? 'google_ai'
+                                : agentBOption.provider === 'Anthropic' ? 'anthropic'
+                                : null;
 
-        // Basic check if the provider mapping worked (should generally not fail if models are configured correctly)
+        // Basic check if the provider mapping worked
         if (!agentARequiredKey || !agentBRequiredKey) {
              console.error("Internal error: Could not determine required key type for selected models.", { agentAOption, agentBOption });
              alert("An internal error occurred. Could not verify API keys for the selected models.");
@@ -123,6 +130,7 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
         }
 
         // Check if the required keys are marked as saved in the fetched status
+        // This check now works for 'anthropic' because savedKeyStatus['anthropic'] will be populated
         const isAgentAKeyMissing = !savedKeyStatus[agentARequiredKey];
         const isAgentBKeyMissing = !savedKeyStatus[agentBRequiredKey];
 
@@ -132,7 +140,7 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
             const missingProviders = new Set<string>();
             if (isAgentAKeyMissing) missingProviders.add(agentAOption.provider);
             if (isAgentBKeyMissing) missingProviders.add(agentBOption.provider);
-            missingKeysMsg += Array.from(missingProviders).join(' and '); // Use 'and' for better readability
+            missingKeysMsg += Array.from(missingProviders).join(' and ');
             alert(missingKeysMsg + ".");
             return;
         }
@@ -147,9 +155,15 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
     // Helper function to check if a specific LLM option should be disabled based on key status
     const isOptionDisabled = (llm: LLMInfo): boolean => {
         // Determine the required Firestore key ID based on the provider
-        const requiredKey = llm.provider === 'OpenAI' ? 'openai' : (llm.provider === 'Google' ? 'google_ai' : null);
+        // FIX 2: Add 'Anthropic' case here
+        const requiredKey = llm.provider === 'OpenAI' ? 'openai'
+                          : llm.provider === 'Google' ? 'google_ai'
+                          : llm.provider === 'Anthropic' ? 'anthropic'
+                          : null;
+
         // Disable if provider isn't recognized or if the key status is loading or the key is not saved
         if (!requiredKey) return true;
+        // This check now works for 'anthropic' because savedKeyStatus['anthropic'] will be populated
         return isLoadingStatus || !savedKeyStatus[requiredKey];
     };
 
@@ -188,7 +202,7 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                     <SelectLabel>{provider}</SelectLabel>
                                     {/* Map through LLMs within each provider group */}
                                     {llms.map((llm: LLMInfo) => {
-                                        const isDisabled = isOptionDisabled(llm);
+                                        const isDisabled = isOptionDisabled(llm); // This now works for Anthropic
                                         return (
                                             <SelectItem
                                                 key={llm.id}
@@ -215,8 +229,6 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                                     {!isDisabled && (
                                                         <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                             ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
-                                                            {/* Optional pricing note */}
-                                                            {/* {llm.pricing.note && <span className="italic ml-1">({llm.pricing.note})</span>} */}
                                                         </span>
                                                     )}
                                                 </div>
@@ -247,7 +259,7 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                     <SelectLabel>{provider}</SelectLabel>
                                      {/* Map through LLMs within each provider group */}
                                     {llms.map((llm: LLMInfo) => {
-                                        const isDisabled = isOptionDisabled(llm);
+                                        const isDisabled = isOptionDisabled(llm); // This now works for Anthropic
                                         return (
                                             <SelectItem
                                                 key={llm.id}
@@ -274,8 +286,6 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                                     {!isDisabled && (
                                                          <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                             ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
-                                                            {/* Optional pricing note */}
-                                                            {/* {llm.pricing.note && <span className="italic ml-1">({llm.pricing.note})</span>} */}
                                                         </span>
                                                     )}
                                                 </div>
@@ -308,4 +318,3 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
         </Card>
     );
 }
-
