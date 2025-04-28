@@ -20,18 +20,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models';
+// Removed unused AVAILABLE_LLMS and LLMInfo imports
+import { groupLLMsByProvider } from '@/lib/models'; // LLMInfo type is implicitly used by groupLLMsByProvider return type
 
 // --- Define TTS Types (Locally, mirroring SessionSetupForm) ---
-// Note: This might be better placed in a shared types file if used elsewhere
-const AVAILABLE_TTS_PROVIDERS = [
-    { id: 'none', name: 'None (Text Only)' },
-    { id: 'browser', name: 'Browser Built-in' },
-    { id: 'openai', name: 'OpenAI TTS' },
-    { id: 'google', name: 'Google Cloud TTS' },
-    { id: 'elevenlabs', name: 'ElevenLabs TTS' },
-] as const;
-type TTSProviderId = typeof AVAILABLE_TTS_PROVIDERS[number]['id'];
+// Removed unused AVAILABLE_TTS_PROVIDERS const
+// Keep type definitions if needed elsewhere, or import from a shared file
+const TTS_PROVIDER_IDS = ['none', 'browser', 'openai', 'google', 'elevenlabs'] as const; // Keep if type is used
+type TTSProviderId = typeof TTS_PROVIDER_IDS[number];
 interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
 
 // --- Updated SessionConfig Interface ---
@@ -271,15 +267,14 @@ export default function Page() {
                              <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
                              <p className="text-muted-foreground">Listen to conversations between distinct AI agents.</p>
 
-                             {/* *** API KEY REQUIREMENT NOTICE *** */}
-                             <Alert variant="default" className="text-left border-theme-primary/50"> {/* Added border color */}
-                                <KeyRound className="h-4 w-4 text-theme-primary" /> {/* Added icon color */}
-                                <AlertTitle className="font-semibold">API Keys Required</AlertTitle> {/* Made title bolder */}
+                             {/* API KEY REQUIREMENT NOTICE */}
+                             <Alert variant="default" className="text-left border-theme-primary/50">
+                                <KeyRound className="h-4 w-4 text-theme-primary" />
+                                <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
                                     To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
-                             {/* *********************************** */}
 
                              <p className="text-muted-foreground pt-2">Please use the link in the header to sign in or create an account to start.</p>
                         </div>
@@ -293,6 +288,7 @@ export default function Page() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {/* Use groupedLLMs which is already defined */}
                                 {Object.entries(groupedLLMs).map(([provider, llms]) => (
                                     <div key={provider}>
                                         <h3 className="text-lg font-semibold mb-2 border-b pb-1">{provider}</h3>
@@ -316,4 +312,3 @@ export default function Page() {
         </main>
     );
 }
-

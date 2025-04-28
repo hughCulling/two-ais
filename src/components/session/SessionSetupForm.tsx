@@ -149,7 +149,8 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
         } else if (!agentATTSSettings.voice && voices.length > 0) {
             setAgentATTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentATTSSettings.provider]); // Rerun only when provider changes
+    // Added agentATTSSettings.voice to dependency array
+    }, [agentATTSSettings.provider, agentATTSSettings.voice]);
 
     // Effect to update available voices list when the selected provider changes for Agent B
     useEffect(() => {
@@ -161,7 +162,8 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
         } else if (!agentBTTSSettings.voice && voices.length > 0) {
             setAgentBTTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentBTTSSettings.provider]); // Rerun only when provider changes
+    // Added agentBTTSSettings.voice to dependency array
+    }, [agentBTTSSettings.provider, agentBTTSSettings.voice]);
     // --- End Effects ---
 
 
@@ -372,7 +374,6 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                 <div className="space-y-2"> {/* Consistent spacing */}
                                     <Label htmlFor="agent-a-tts-provider">Provider</Label>
                                     <Select value={agentATTSSettings.provider} onValueChange={(value: TTSProviderId) => handleTTSProviderChange('A', value)} disabled={!user || isLoadingStatus || AVAILABLE_TTS_PROVIDERS.length === 0}>
-                                        {/* Added w-full to match LLM selectors */}
                                         <SelectTrigger id="agent-a-tts-provider" className="w-full">
                                             <SelectValue placeholder="Select TTS Provider" />
                                         </SelectTrigger>
@@ -403,9 +404,8 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                             onValueChange={(value) => handleExternalVoiceChange('A', value)}
                                             disabled={!user || currentExternalVoicesA.length === 0}
                                         >
-                                            {/* Added w-full to match LLM selectors */}
                                             <SelectTrigger id="agent-a-external-voice" className="w-full">
-                                                <SelectValue placeholder={`Select ${AVAILABLE_TTS_PROVIDERS.find(p=>p.id === agentATTSSettings.provider)?.name || '...'} Voice`} />
+                                                <SelectValue placeholder="Select Voice" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                     {currentExternalVoicesA.length > 0 ? (
@@ -426,7 +426,6 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                 <div className="space-y-2"> {/* Consistent spacing */}
                                     <Label htmlFor="agent-b-tts-provider">Provider</Label>
                                     <Select value={agentBTTSSettings.provider} onValueChange={(value: TTSProviderId) => handleTTSProviderChange('B', value)} disabled={!user || isLoadingStatus || AVAILABLE_TTS_PROVIDERS.length === 0}>
-                                        {/* Added w-full to match LLM selectors */}
                                         <SelectTrigger id="agent-b-tts-provider" className="w-full">
                                             <SelectValue placeholder="Select TTS Provider" />
                                         </SelectTrigger>
@@ -457,9 +456,8 @@ export default function SessionSetupForm({ onStartSession, isLoading }: SessionS
                                             onValueChange={(value) => handleExternalVoiceChange('B', value)}
                                             disabled={!user || !agentBTTSSettings.provider || currentExternalVoicesB.length === 0}
                                         >
-                                            {/* Added w-full to match LLM selectors */}
                                             <SelectTrigger id="agent-b-external-voice" className="w-full">
-                                                <SelectValue placeholder={`Select ${AVAILABLE_TTS_PROVIDERS.find(p=>p.id === agentBTTSSettings.provider)?.name || '...'} Voice`} />
+                                                <SelectValue placeholder="Select Voice" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                     {currentExternalVoicesB.length > 0 ? (

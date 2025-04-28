@@ -15,7 +15,8 @@ import {
 } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, ChevronDown, ChevronUp, PlayCircle, PauseCircle, Volume2 } from "lucide-react"; // Added audio icons
+// Removed unused PlayCircle, PauseCircle
+import { AlertCircle, ChevronDown, ChevronUp, Volume2 } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -28,7 +29,7 @@ interface Message {
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
     timestamp: Timestamp | null;
-    audioUrl?: string; // Added optional audioUrl
+    audioUrl?: string; // Optional audioUrl
 }
 
 interface ConversationData {
@@ -40,12 +41,12 @@ interface ConversationData {
     createdAt: Timestamp;
     lastActivity: Timestamp;
     apiSecretVersions: { [key: string]: string };
-    ttsSettings?: { // Added TTS settings structure (read-only here)
+    ttsSettings?: {
         enabled: boolean;
         agentA: { provider: string; voice: string | null };
         agentB: { provider: string; voice: string | null };
     };
-    waitingForTTSEndSignal?: boolean; // Added flag check
+    waitingForTTSEndSignal?: boolean;
     errorContext?: string;
 }
 
@@ -63,11 +64,8 @@ const logger = {
 };
 
 // --- Define the callable function ---
-// Memoize the function reference outside the component if possible,
-// or ensure it's stable using useCallback if defined inside.
 let requestNextTurnFunction: ReturnType<typeof httpsCallable> | null = null;
 try {
-    // Ensure clientFunctions is initialized before using it
     if (clientFunctions) {
         requestNextTurnFunction = httpsCallable(clientFunctions, 'requestNextTurn');
     } else {
@@ -89,16 +87,60 @@ export function ChatInterface({
     const [isStopping, setIsStopping] = useState(false);
     const [isStopped, setIsStopped] = useState(false);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
-    const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false); // Track backend waiting state
+    const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
 
     // --- Audio Playback State ---
-    const audioPlayerRef = useRef<HTMLAudioElement>(null); // Ref for the audio element
+    const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-    // Track which messages have finished playing to prevent duplicate signals
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // --- Handler 5: Audio Playback Finished or Error (Defined before Effect 4) ---
+    // Use useCallback to stabilize the function reference for the effect dependency array
+    const handleAudioEnd = useCallback(async (messageId: string) => {
+        logger.info(`Audio ended or failed for message ${messageId}.`);
+        setIsAudioPlaying(false);
+        setCurrentlyPlayingMsgId(null);
+
+        // Mark this message as played to prevent duplicate signals.
+        setPlayedMessageIds(prev => new Set(prev).add(messageId));
+
+        // --- Call requestNextTurn Cloud Function ---
+        if (!requestNextTurnFunction) {
+             logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
+             setError("Error: Cannot communicate with backend to continue conversation.");
+             return;
+        }
+         if (!conversationId) {
+             logger.error("Cannot call requestNextTurn without conversationId.");
+             return;
+         }
+         // Only call if the backend is actually waiting (based on local state)
+         // Check local state first for responsiveness, backend state confirms later
+         if (!isWaitingForSignal) {
+             logger.warn(`handleAudioEnd called for ${messageId}, but local state indicates backend wasn't waiting for signal. Skipping call.`);
+             return;
+         }
+
+        logger.info(`Calling requestNextTurn for conversation ${conversationId}...`);
+        try {
+            const result = await requestNextTurnFunction({ conversationId });
+            logger.info("requestNextTurn successful:", result.data);
+            // State will update via the status listener when backend clears the flag
+        } catch (error) {
+            logger.error("Error calling requestNextTurn function:", error);
+            let errorMsg = "Failed to signal backend to continue.";
+            if (error instanceof FunctionsError) {
+                errorMsg = `Error signalling backend: ${error.message} (Code: ${error.code})`;
+            } else if (error instanceof Error) {
+                 errorMsg = `Error signalling backend: ${error.message}`;
+            }
+            setError(errorMsg);
+        }
+    }, [conversationId, isWaitingForSignal]); // Dependencies for the callback
+
 
     // --- Effect 1: Listen for Messages ---
     useEffect(() => {
@@ -120,14 +162,13 @@ export function ChatInterface({
                 const fetchedMessages: Message[] = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    // --- Include audioUrl when creating Message object ---
                     if (data.role && data.content && data.timestamp) {
                         fetchedMessages.push({
                             id: doc.id,
                             role: data.role,
                             content: data.content,
                             timestamp: data.timestamp,
-                            audioUrl: data.audioUrl // Add audioUrl here
+                            audioUrl: data.audioUrl
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
@@ -141,16 +182,20 @@ export function ChatInterface({
                  setTechnicalErrorDetails(null);
             }
         );
+
+        // --- Cleanup function fix ---
+        // Store the current ref value in a variable within the effect scope
+        const currentAudioPlayer = audioPlayerRef.current;
         return () => {
             logger.info(`ChatInterface: Cleaning up message listener for conversation: ${conversationId}`);
             unsubscribe();
-            // Stop audio if component unmounts
-            if (audioPlayerRef.current) {
-                audioPlayerRef.current.pause();
-                setIsAudioPlaying(false);
+            // Use the variable captured in the effect's scope for cleanup
+            if (currentAudioPlayer) {
+                currentAudioPlayer.pause();
+                // No need to setIsAudioPlaying here, as component is unmounting
             }
         };
-    }, [conversationId]);
+    }, [conversationId]); // Only depends on conversationId
 
 
     // --- Effect 2: Listen for Conversation Status Changes ---
@@ -170,13 +215,12 @@ export function ChatInterface({
                     const data = docSnap.data() as ConversationData;
                     logger.debug(`ChatInterface: Status snapshot received for ${conversationId}. Status: ${data.status}, Waiting: ${data.waitingForTTSEndSignal}`);
                     const newStatus = data.status;
-                    const newWaitingState = data.waitingForTTSEndSignal ?? false; // Default to false if undefined
+                    const newWaitingState = data.waitingForTTSEndSignal ?? false;
 
                     setConversationStatus(newStatus);
-                    setIsWaitingForSignal(newWaitingState); // Update local waiting state
+                    setIsWaitingForSignal(newWaitingState); // Update local waiting state from Firestore
 
                     if (newStatus === "error") {
-                        // ... (keep existing error handling logic) ...
                         const fullErrorContext = data.errorContext || "An unknown error occurred in the conversation.";
                         const errorPrefix = "Conversation Error: ";
                         const technicalSeparator = ". Error: ";
@@ -199,7 +243,6 @@ export function ChatInterface({
                              setError(null); setTechnicalErrorDetails(null);
                         }
                         logger.info(`Conversation ${conversationId} status changed to 'stopped'.`);
-                        // Stop audio if conversation stops
                         if (audioPlayerRef.current) audioPlayerRef.current.pause();
                         setIsAudioPlaying(false);
                         setCurrentlyPlayingMsgId(null);
@@ -227,8 +270,7 @@ export function ChatInterface({
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribeStatus();
         };
-    // Added 'isStopped' and 'conversationStatus' to dependencies as they are read inside
-    }, [conversationId, error, isStopped, conversationStatus]);
+    }, [conversationId, error, isStopped, conversationStatus]); // Keep dependencies
 
 
     // --- Effect 3: Auto-scroll ---
@@ -236,26 +278,21 @@ export function ChatInterface({
         if (conversationStatus === "running" && !isStopped) {
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
-    }, [messages, conversationStatus, isStopped]);
+    }, [messages, conversationStatus, isStopped]); // Keep dependencies
 
 
     // --- Effect 4: Handle Automatic Audio Playback ---
     useEffect(() => {
-        // Find the latest message with an audioUrl that hasn't been played yet
         const latestUnplayedAudioMessage = messages
-            .slice() // Create a copy to avoid mutating original
-            .reverse() // Check from latest to oldest
+            .slice()
+            .reverse()
             .find(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
 
-        // Play only if:
-        // - Found an unplayed message with audio
-        // - No other audio is currently playing OR the found message is different from the one playing
-        // - The conversation is running and waiting for the signal (meaning backend generated TTS)
         if (
             latestUnplayedAudioMessage &&
             (!isAudioPlaying || currentlyPlayingMsgId !== latestUnplayedAudioMessage.id) &&
             conversationStatus === "running" &&
-            isWaitingForSignal // Check if backend is waiting for signal
+            isWaitingForSignal // Check local state reflecting backend's waiting status
         ) {
             const audioSrc = latestUnplayedAudioMessage.audioUrl;
             const messageIdToPlay = latestUnplayedAudioMessage.id;
@@ -263,13 +300,11 @@ export function ChatInterface({
             logger.info(`Attempting to play audio for message ${messageIdToPlay}: ${audioSrc}`);
 
             if (audioPlayerRef.current && audioSrc) {
-                // Stop any currently playing audio first
                 if (isAudioPlaying) {
                     audioPlayerRef.current.pause();
                     logger.debug("Paused previous audio.");
                 }
 
-                // Set the new source and play
                 audioPlayerRef.current.src = audioSrc;
                 audioPlayerRef.current.play()
                     .then(() => {
@@ -281,14 +316,13 @@ export function ChatInterface({
                         logger.error(`Error playing audio for message ${messageIdToPlay}:`, err);
                         setIsAudioPlaying(false);
                         setCurrentlyPlayingMsgId(null);
-                        // If playback fails, immediately signal backend to proceed? Or show error?
-                        // For now, let's signal to avoid getting stuck. Consider adding UI feedback.
+                        // Signal backend even on playback error to avoid getting stuck
                         handleAudioEnd(messageIdToPlay);
                     });
             }
         }
-    // Dependencies: messages array, playback state, conversation status, waiting status
-    }, [messages, isAudioPlaying, currentlyPlayingMsgId, conversationStatus, isWaitingForSignal, playedMessageIds]);
+    // Added handleAudioEnd to dependency array
+    }, [messages, isAudioPlaying, currentlyPlayingMsgId, conversationStatus, isWaitingForSignal, playedMessageIds, handleAudioEnd]);
 
 
     // --- Handler 4: Stop Conversation Button ---
@@ -300,7 +334,6 @@ export function ChatInterface({
         }
         setIsStopping(true);
         logger.info(`Attempting to stop conversation via button: ${conversationId}`);
-        // Stop audio if playing
         if (audioPlayerRef.current) {
              audioPlayerRef.current.pause();
              setIsAudioPlaying(false);
@@ -310,7 +343,7 @@ export function ChatInterface({
             const conversationRef = doc(db, "conversations", conversationId);
             await updateDoc(conversationRef, {
                 status: "stopped",
-                waitingForTTSEndSignal: false, // Ensure flag is cleared on manual stop
+                waitingForTTSEndSignal: false,
                 lastActivity: serverTimestamp()
             });
             logger.info(`Client-side updateDoc call successful for conversation ${conversationId} status to 'stopped'.`);
@@ -324,60 +357,11 @@ export function ChatInterface({
         } finally {
             setIsStopping(false);
         }
-    }, [conversationId, isStopping, isStopped, onConversationStopped]);
-
-
-    // --- Handler 5: Audio Playback Finished or Error ---
-    const handleAudioEnd = useCallback(async (messageId: string) => {
-        logger.info(`Audio ended or failed for message ${messageId}.`);
-        setIsAudioPlaying(false);
-        setCurrentlyPlayingMsgId(null);
-
-        // Mark this message as played only if it successfully finished
-        // Note: We might call this on error too, so check if needed.
-        // For simplicity, mark as played to prevent retries/duplicate signals.
-        setPlayedMessageIds(prev => new Set(prev).add(messageId));
-
-        // --- Call requestNextTurn Cloud Function ---
-        if (!requestNextTurnFunction) {
-             logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
-             setError("Error: Cannot communicate with backend to continue conversation.");
-             return;
-        }
-         if (!conversationId) {
-             logger.error("Cannot call requestNextTurn without conversationId.");
-             return;
-         }
-         // Only call if the backend is actually waiting
-         if (!isWaitingForSignal) {
-             logger.warn(`handleAudioEnd called for ${messageId}, but backend wasn't waiting for signal. Skipping call.`);
-             return;
-         }
-
-
-        logger.info(`Calling requestNextTurn for conversation ${conversationId}...`);
-        try {
-            const result = await requestNextTurnFunction({ conversationId });
-            logger.info("requestNextTurn successful:", result.data);
-            // No need to update local state here, the status listener will catch
-            // the change when the backend updates 'waitingForTTSEndSignal' to false.
-        } catch (error) {
-            logger.error("Error calling requestNextTurn function:", error);
-            let errorMsg = "Failed to signal backend to continue.";
-            if (error instanceof FunctionsError) {
-                errorMsg = `Error signalling backend: ${error.message} (Code: ${error.code})`;
-            } else if (error instanceof Error) {
-                 errorMsg = `Error signalling backend: ${error.message}`;
-            }
-            setError(errorMsg); // Show error to user
-            // Consider how to recover - maybe add a manual "continue" button?
-        }
-    }, [conversationId, isWaitingForSignal]); // Dependencies for the callback
+    }, [conversationId, isStopping, isStopped, onConversationStopped]); // Keep dependencies
 
 
     // --- Render Logic ---
 
-    // Error Display
     if (error) {
         return (
              <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4">
@@ -401,26 +385,19 @@ export function ChatInterface({
             </Alert>
         );
     }
-    // Initializing State Display
     if (!conversationId) return <div className="p-4 text-center text-muted-foreground">Initializing session...</div>;
     if (!conversationStatus && !error) return <div className="p-4 text-center text-muted-foreground">Loading conversation status...</div>;
 
 
-    // Main Chat Interface Render
     return (
         <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden">
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">AI Conversation</h2>
-                {/* Display Audio Status/Controls if audio is playing */}
                 {isAudioPlaying && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                          <Volume2 className="h-4 w-4 animate-pulse text-primary"/>
                          <span>Playing Audio...</span>
-                         {/* Optional: Add manual pause/play button */}
-                         {/* <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => audioPlayerRef.current?.pause()}>
-                             <PauseCircle className="h-4 w-4" />
-                         </Button> */}
                     </div>
                 )}
                 <Button variant="destructive" size="sm" onClick={handleStopConversation} disabled={isStopping || isStopped}>
@@ -441,7 +418,7 @@ export function ChatInterface({
                             }`}
                         >
                             <div
-                                className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${ // Added relative positioning
+                                className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${
                                     msg.role === 'agentA' ? 'bg-muted text-foreground' :
                                     msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
                                     'bg-transparent px-0 py-0 shadow-none'
@@ -451,7 +428,6 @@ export function ChatInterface({
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }
                                 {msg.content}
-                                {/* Add a small indicator if audio is playing for this message */}
                                 {isAudioPlaying && currentlyPlayingMsgId === msg.id && (
                                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -485,13 +461,12 @@ export function ChatInterface({
                 onError={(e) => {
                      logger.error("Audio playback error:", e);
                      if (currentlyPlayingMsgId) {
-                         // Treat error as end to prevent getting stuck
                          handleAudioEnd(currentlyPlayingMsgId);
                      }
                 }}
-                // controls // Optional: Show controls for debugging
-                style={{ display: 'none' }} // Keep hidden
+                style={{ display: 'none' }}
             />
         </div>
     );
 }
+
