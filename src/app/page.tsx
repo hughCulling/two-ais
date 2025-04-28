@@ -20,14 +20,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-// Removed unused AVAILABLE_LLMS and LLMInfo imports
 import { groupLLMsByProvider } from '@/lib/models'; // LLMInfo type is implicitly used by groupLLMsByProvider return type
 
-// --- Define TTS Types (Locally, mirroring SessionSetupForm) ---
-// Removed unused AVAILABLE_TTS_PROVIDERS const
-// Keep type definitions if needed elsewhere, or import from a shared file
-const TTS_PROVIDER_IDS = ['none', 'browser', 'openai', 'google', 'elevenlabs'] as const; // Keep if type is used
-type TTSProviderId = typeof TTS_PROVIDER_IDS[number];
+// --- Define TTS Types (Locally) ---
+// Removed the unused TTS_PROVIDER_IDS constant
+// Define the type directly with the possible string literals
+type TTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
 interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
 
 // --- Updated SessionConfig Interface ---
