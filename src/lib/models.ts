@@ -25,7 +25,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
     {
         id: 'gpt-4o',
-        name: 'GPT-4o (Omni)',
+        // --- NAME CHANGE HERE ---
+        name: 'GPT-4o', // Changed from 'GPT-4o (Omni)'
         provider: 'OpenAI',
         contextWindow: 128000,
         pricing: { input: 2.50, output: 10.00 }, // Example pricing
@@ -165,7 +166,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
      {
         // Fastest and most compact model (original Haiku)
         id: 'claude-3-haiku-20240307',
-        name: 'Claude 3 Haiku (Original)', // Added clarification
+        name: 'Claude 3 Haiku', // Added clarification
         provider: 'Anthropic',
         contextWindow: 200000,
         pricing: { input: 0.25, output: 1.25 },

@@ -8,6 +8,7 @@ import Header from '@/components/layout/Header';
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,6 +59,7 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             {children}
+            <Analytics />
           </AuthProvider>
         </ThemeProvider>
       </body>

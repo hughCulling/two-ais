@@ -5,19 +5,18 @@ import { type NextRequest } from 'next/server';
 // Firebase Admin, Auth, Firestore, Secret Manager Setup
 import { initializeApp, getApps, cert, App, ServiceAccount } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
-import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore'; // Import FieldValue
+import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-// FIX 0: Import ChatAnthropic
 import { ChatAnthropic } from "@langchain/anthropic";
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models'; // Use path alias
 
-// --- Initialize Services (Keep your existing robust initialization logic) ---
+// --- Initialize Services (Keep existing logic) ---
 let firebaseAdminApp: App | null = null;
 let dbAdmin: Firestore | null = null;
 let secretManagerClient: SecretManagerServiceClient | null = null;
@@ -84,7 +83,8 @@ function initializeServices() {
 }
 initializeServices();
 
-// --- getApiKeyFromSecret Helper (Keep your existing robust helper) ---
+
+// --- getApiKeyFromSecret Helper (Keep existing logic) ---
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
     // --- PASTE YOUR EXISTING getApiKeyFromSecret() function here ---
      if (!secretManagerClient) {
@@ -123,15 +123,31 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
     }
 }
 
-// --- Request Body Interface (receives backend IDs now) ---
+// --- Define TTS Types (Mirroring frontend) ---
+const AVAILABLE_TTS_PROVIDERS = [
+    { id: 'none' }, { id: 'browser' }, { id: 'openai' }, { id: 'google' }, { id: 'elevenlabs' }
+] as const;
+type TTSProviderId = typeof AVAILABLE_TTS_PROVIDERS[number]['id'];
+interface AgentTTSSettings {
+    provider: TTSProviderId;
+    voice: string | null;
+    // No apiKey field
+}
+
+// --- Updated Request Body Interface ---
+// Now includes the full SessionConfig structure from the frontend
 interface StartConversationRequest {
-    agentA_llm: string; // e.g., 'gpt-4o'
-    agentB_llm: string; // e.g., 'gemini-1.5-pro-latest'
+    agentA_llm: string;
+    agentB_llm: string;
+    ttsEnabled: boolean;
+    agentA_tts: AgentTTSSettings;
+    agentB_tts: AgentTTSSettings;
 }
 
 export async function POST(request: NextRequest) {
     console.log("API route /api/conversation/start hit");
 
+    // --- Service Initialization Check (Keep existing logic) ---
     if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
          console.error("Services not initialized at start of POST handler.");
          initializeServices();
@@ -143,7 +159,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        // 1. Verify Firebase ID Token
+        // 1. Verify Firebase ID Token (Keep existing logic)
         const authorization = request.headers.get("Authorization");
         if (!authorization?.startsWith("Bearer ")) {
             return NextResponse.json({ error: "Unauthorized: Missing Bearer token" }, { status: 401 });
@@ -159,7 +175,7 @@ export async function POST(request: NextRequest) {
         const userId = decodedToken.uid;
         console.log(`Authenticated user: ${userId}`);
 
-        // 2. Parse Request Body
+        // 2. Parse Request Body (Now expects the full SessionConfig)
         let requestBody: StartConversationRequest;
         try {
             requestBody = await request.json();
@@ -167,39 +183,39 @@ export async function POST(request: NextRequest) {
             console.error("Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm } = requestBody; // Backend IDs
-        if (!agentA_llm || !agentB_llm) {
-            return NextResponse.json({ error: "Missing agent LLM selections" }, { status: 400 });
+        // Destructure all expected fields, including TTS settings
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts } = requestBody;
+        // Basic validation for required fields
+        if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
+            return NextResponse.json({ error: "Missing required configuration fields (LLMs or TTS settings)" }, { status: 400 });
         }
-        console.log(`Received LLM selections: AgentA=${agentA_llm}, AgentB=${agentB_llm}`);
+         // Add more specific validation for TTS settings if needed (e.g., provider exists)
+         if (!AVAILABLE_TTS_PROVIDERS.some(p => p.id === agentA_tts.provider) || !AVAILABLE_TTS_PROVIDERS.some(p => p.id === agentB_tts.provider)) {
+             return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
+         }
+        console.log(`Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS=${agentA_tts.provider}, AgentB TTS=${agentB_tts.provider}`);
 
-        // 3. Get LLM Info and Required Key Names
+        // 3. Get LLM Info and Required Key Names (Keep existing logic)
         const agentALLMInfo = getLLMInfoById(agentA_llm);
         const agentBLLMInfo = getLLMInfoById(agentB_llm);
-
         if (!agentALLMInfo || !agentBLLMInfo) {
             console.error(`Invalid model ID received: A=${agentA_llm}, B=${agentB_llm}`);
             return NextResponse.json({ error: "Invalid LLM selection provided" }, { status: 400 });
         }
-
-        // FIX 1a: Add 'Anthropic' case for Agent A key mapping
         const agentARequiredKey = agentALLMInfo.provider === "OpenAI" ? "openai"
                                 : agentALLMInfo.provider === "Google" ? "google_ai"
                                 : agentALLMInfo.provider === "Anthropic" ? "anthropic"
                                 : null;
-        // FIX 1b: Add 'Anthropic' case for Agent B key mapping
         const agentBRequiredKey = agentBLLMInfo.provider === "OpenAI" ? "openai"
                                 : agentBLLMInfo.provider === "Google" ? "google_ai"
                                 : agentBLLMInfo.provider === "Anthropic" ? "anthropic"
                                 : null;
-
-        // This check now works for Anthropic
         if (!agentARequiredKey || !agentBRequiredKey) {
              console.error(`Could not map provider to Firestore key ID: A=${agentALLMInfo.provider}, B=${agentBLLMInfo.provider}`);
              return NextResponse.json({ error: "Internal configuration error mapping provider to key ID." }, { status: 500 });
         }
 
-        // 4. Fetch Secret Version Names from Firestore
+        // 4. Fetch Secret Version Names from Firestore (Keep existing logic)
         let agentASecretVersion: string | null = null;
         let agentBSecretVersion: string | null = null;
         let userApiSecretVersions: Record<string, string> = {};
@@ -213,7 +229,6 @@ export async function POST(request: NextRequest) {
             userApiSecretVersions = userDocSnap.data()?.apiSecretVersions || {};
             agentASecretVersion = userApiSecretVersions[agentARequiredKey] || null;
             agentBSecretVersion = userApiSecretVersions[agentBRequiredKey] || null;
-
             if (!agentASecretVersion) {
                 console.error(`Missing secret version name for key type '${agentARequiredKey}' for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentALLMInfo.provider} not found in settings.` }, { status: 404 });
@@ -223,82 +238,85 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: `API key reference for ${agentBLLMInfo.provider} not found in settings.` }, { status: 404 });
             }
             console.log(`Found secret versions: A=${agentASecretVersion}, B=${agentBSecretVersion}`);
-
         } catch (firestoreError) {
             console.error(`Firestore error fetching secret versions for user ${userId}:`, firestoreError);
             return NextResponse.json({ error: "Error retrieving API key configuration." }, { status: 500 });
         }
+        // --- Add check for external TTS provider keys if needed ---
+        // Example for ElevenLabs (add similar checks for other external TTS providers)
+        const agentATTSProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === agentA_tts.provider);
+        // @ts-expect-error - Check if requiresOwnKey exists before accessing apiKeyId
+        if (agentATTSProvider?.requiresOwnKey && !userApiSecretVersions[agentATTSProvider.apiKeyId]) {
+             // @ts-expect-error - Check if requiresOwnKey exists before accessing apiKeyId
+             return NextResponse.json({ error: `API key reference for Agent A TTS provider (${agentATTSProvider.name}) not found in settings.` }, { status: 404 });
+        }
+        const agentBTTSProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === agentB_tts.provider);
+        // @ts-expect-error - Check if requiresOwnKey exists before accessing apiKeyId
+        if (agentBTTSProvider?.requiresOwnKey && !userApiSecretVersions[agentBTTSProvider.apiKeyId]) {
+             // @ts-expect-error - Check if requiresOwnKey exists before accessing apiKeyId
+             return NextResponse.json({ error: `API key reference for Agent B TTS provider (${agentBTTSProvider.name}) not found in settings.` }, { status: 404 });
+        }
 
-        // 5. Retrieve Actual API Keys from Secret Manager
+
+        // 5. Retrieve Actual API Keys from Secret Manager (Keep existing logic)
         const apiKeyA = await getApiKeyFromSecret(agentASecretVersion);
-        // Optimization: Only fetch second key if the secret version name is different
         const apiKeyB = (agentASecretVersion === agentBSecretVersion) ? apiKeyA : await getApiKeyFromSecret(agentBSecretVersion);
-
         if (!apiKeyA || !apiKeyB) {
             console.error(`Failed to retrieve API keys from Secret Manager. Key A found: ${!!apiKeyA}, Key B found: ${!!apiKeyB}`);
             return NextResponse.json({ error: "Failed to retrieve one or more API keys from secure storage." }, { status: 500 });
         }
         console.log("API Keys retrieved successfully.");
 
-        // 6. Initialize LangChain Models for Validation
+        // 6. Initialize LangChain Models for Validation (Keep existing logic)
         try {
              console.log(`Initializing Agent A: ${agentALLMInfo.provider} with model ${agentA_llm}`);
-             // FIX 2a: Add ChatAnthropic case for Agent A validation
-             if (agentALLMInfo.provider === "OpenAI") {
-                 new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm });
-             } else if (agentALLMInfo.provider === "Google") {
-                 new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm });
-             } else if (agentALLMInfo.provider === "Anthropic") {
-                 new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm });
-             } else {
-                 // This case should ideally not be reached if provider mapping is correct
-                 throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
-             }
+             if (agentALLMInfo.provider === "OpenAI") { new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm }); }
+             else if (agentALLMInfo.provider === "Google") { new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm }); }
+             else if (agentALLMInfo.provider === "Anthropic") { new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm }); }
+             else { throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`); }
 
              console.log(`Initializing Agent B: ${agentBLLMInfo.provider} with model ${agentB_llm}`);
-             // FIX 2b: Add ChatAnthropic case for Agent B validation
-             if (agentBLLMInfo.provider === "OpenAI") {
-                 new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm });
-             } else if (agentBLLMInfo.provider === "Google") {
-                 new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm });
-             } else if (agentBLLMInfo.provider === "Anthropic") {
-                 new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm });
-             } else {
-                  // This case should ideally not be reached if provider mapping is correct
-                 throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
-             }
+             if (agentBLLMInfo.provider === "OpenAI") { new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm }); }
+             else if (agentBLLMInfo.provider === "Google") { new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm }); }
+             else if (agentBLLMInfo.provider === "Anthropic") { new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm }); }
+             else { throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`); }
              console.log("LangChain models initialized successfully for validation.");
-
         } catch (initError) {
              console.error("Error initializing LangChain models:", initError);
              const errorDetail = initError instanceof Error ? initError.message : "Unknown initialization error";
-             // Provide more specific error message if possible
              return NextResponse.json({ error: `Failed to validate AI models/keys: ${errorDetail}` }, { status: 500 });
         }
 
-        // 7. Create Conversation Document in Firestore
+        // 7. Create Conversation Document in Firestore (Updated to include TTS settings)
         try {
             const newConversationRef = dbAdmin.collection("conversations").doc();
             const conversationId = newConversationRef.id;
+
+            // --- Updated conversationData object ---
             const conversationData = {
                 userId: userId,
-                agentA_llm: agentA_llm, // Save backend ID
-                agentB_llm: agentB_llm, // Save backend ID
-                turn: "agentA", // Start with Agent A
+                agentA_llm: agentA_llm,
+                agentB_llm: agentB_llm,
+                turn: "agentA",
                 status: "running",
-                // Ensure the full map is saved, including the 'anthropic' key if present
-                apiSecretVersions: userApiSecretVersions,
+                apiSecretVersions: userApiSecretVersions, // Save all fetched versions
                 createdAt: FieldValue.serverTimestamp(),
                 lastActivity: FieldValue.serverTimestamp(),
+                // --- Add TTS Settings ---
+                ttsSettings: {
+                    enabled: ttsEnabled,
+                    agentA: agentA_tts, // Save { provider, voice }
+                    agentB: agentB_tts, // Save { provider, voice }
+                }
             };
 
             await newConversationRef.set(conversationData);
-            console.log(`Created conversation document: ${conversationId}`);
+            console.log(`Created conversation document with TTS settings: ${conversationId}`);
 
-            // Add initial system message to trigger the first agent
+            // Add initial system message (Keep existing logic)
             const initialPrompt = "Start the conversation.";
             await newConversationRef.collection("messages").add({
-                role: "system", // Use 'system' or 'user' based on how orchestrateConversation expects it
+                role: "system",
                 content: initialPrompt,
                 timestamp: FieldValue.serverTimestamp(),
             });
@@ -308,7 +326,8 @@ export async function POST(request: NextRequest) {
              return NextResponse.json({
                  message: "Conversation created successfully.",
                  conversationId: conversationId,
-                 config: { agentA_llm, agentB_llm } // Return the config used
+                 // Optionally echo back the full config saved
+                 // config: conversationData
              }, { status: 200 });
 
         } catch (firestoreError) {

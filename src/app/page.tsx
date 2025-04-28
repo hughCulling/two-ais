@@ -6,38 +6,58 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import SessionSetupForm from '@/components/session/SessionSetupForm';
-// Ensure you are importing the corrected ChatInterface
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
-import { AlertCircle } from "lucide-react";
+// --- Import required icons ---
+import { AlertCircle, BrainCircuit, KeyRound } from "lucide-react";
+// --- Import required UI components ---
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+// --- Import LLM data and grouping function ---
+import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models';
 
-// Interface for the configuration selected in the form
+// --- Define TTS Types (Locally, mirroring SessionSetupForm) ---
+// Note: This might be better placed in a shared types file if used elsewhere
+const AVAILABLE_TTS_PROVIDERS = [
+    { id: 'none', name: 'None (Text Only)' },
+    { id: 'browser', name: 'Browser Built-in' },
+    { id: 'openai', name: 'OpenAI TTS' },
+    { id: 'google', name: 'Google Cloud TTS' },
+    { id: 'elevenlabs', name: 'ElevenLabs TTS' },
+] as const;
+type TTSProviderId = typeof AVAILABLE_TTS_PROVIDERS[number]['id'];
+interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
+
+// --- Updated SessionConfig Interface ---
+// Defines the configuration for a conversation session
 interface SessionConfig {
-    agentA_llm: string; // Backend ID (e.g., 'gpt-4o')
-    agentB_llm: string; // Backend ID (e.g., 'gemini-1.5-pro-latest')
+    agentA_llm: string;
+    agentB_llm: string;
+    ttsEnabled: boolean;
+    agentA_tts: AgentTTSSettings;
+    agentB_tts: AgentTTSSettings;
 }
 
 // Interface for the expected structure of the API response from /api/conversation/start
 interface StartApiResponse {
     message: string;
-    conversationId: string; // Expect the API to return the ID
-    config: SessionConfig; // The config used (optional, for confirmation)
+    conversationId: string;
+    config?: SessionConfig; // Optional: Echo back the config saved
 }
-
 
 // Define structure for user data containing secret versions from Firestore
 interface UserData {
-    // Make apiSecretVersions optional as the document might not have it
     apiSecretVersions?: { [key: string]: string };
+    // Add other user fields if needed
 }
 
-// Basic logger placeholder
+// Basic logger placeholder (replace with a proper logging solution if needed)
 const logger = {
     info: console.log,
     error: console.error,
@@ -45,181 +65,179 @@ const logger = {
     debug: console.debug,
 };
 
+// Get grouped LLM data outside the component for static rendering
+// This prevents re-calculating on every render
+const groupedLLMs = groupLLMsByProvider();
 
 export default function Page() {
-    const { user, loading: authLoading } = useAuth(); // Get user and auth loading status
-    const [isStartingSession, setIsStartingSession] = useState(false); // Loading state for API call
-    // Stores the LLM IDs for the active session (e.g., { agentA_llm: 'gpt-4o', ... })
-    const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
-    // Stores the ID of the currently active Firestore conversation document
-    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-    // Stores the fetched API secret versions for the logged-in user (e.g., { openai: 'v1', google_ai: 'v2' })
-    // Note: This is fetched but no longer passed directly to ChatInterface
-    const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
-    const [secretsLoading, setSecretsLoading] = useState(true); // Loading state for fetching secrets
-    const [pageError, setPageError] = useState<string | null>(null); // For displaying errors on this page
+    // Authentication context hook
+    const { user, loading: authLoading } = useAuth();
 
-    // Effect to fetch user data (specifically apiSecretVersions) when user logs in or changes
+    // State for managing session start process
+    const [isStartingSession, setIsStartingSession] = useState(false);
+    // State for the current active session configuration
+    const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
+    // State for the ID of the active conversation
+    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+    // State to store the user's saved API secret references (fetched from Firestore)
+    const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
+    // State to track loading of user secrets
+    const [secretsLoading, setSecretsLoading] = useState(true);
+    // State for displaying page-level errors
+    const [pageError, setPageError] = useState<string | null>(null);
+
+    // Effect to fetch user data (API secret references) when user logs in or out
     useEffect(() => {
-        // If user logs out, reset relevant state
+        // If no user is logged in, reset state and stop loading
         if (!user) {
             setUserApiSecrets(null);
             setSessionConfig(null);
             setActiveConversationId(null);
-            setSecretsLoading(false); // No secrets to load
+            setSecretsLoading(false);
             setPageError(null);
             return;
         }
 
-        // If user is logged in, but secrets haven't been loaded yet (userApiSecrets is null), fetch them
-        // This condition prevents re-fetching if secrets are already loaded ({}) or failed (null but caught)
+        // If user is logged in and secrets haven't been fetched yet
         if (user && userApiSecrets === null) {
             setSecretsLoading(true);
-            setPageError(null); // Clear previous errors
-            const userDocRef = doc(db, "users", user.uid); // Reference to the user's document in Firestore
+            setPageError(null);
+            const userDocRef = doc(db, "users", user.uid);
+            logger.info("Fetching user data for API secrets...");
 
-            logger.info("Fetching user data for API secrets..."); // Log fetch attempt
             getDoc(userDocRef)
                 .then((docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data() as UserData;
-                        // Store the fetched versions, default to empty object if field is missing
+                        // Store the fetched secret versions or an empty object if none exist
                         setUserApiSecrets(data.apiSecretVersions || {});
                         logger.info("User API secret versions loaded.");
                     } else {
-                        // User document doesn't exist (might be first login)
+                        // User document doesn't exist (new user or data missing)
                         logger.warn(`User document not found for user ${user.uid}. Assuming no API keys saved yet.`);
-                        setUserApiSecrets({}); // Treat as no secrets saved
+                        setUserApiSecrets({}); // Set to empty object, user needs to add keys
                     }
                 })
                 .catch((err: FirestoreError) => {
-                    // Handle errors during Firestore fetch
+                    // Handle Firestore errors
                     logger.error("Error fetching user document:", err);
                     setPageError(`Failed to load user data: ${err.message}. Please try refreshing.`);
-                    setUserApiSecrets(null); // Set back to null on error to allow retry if user changes
+                    setUserApiSecrets(null); // Indicate failure to load
                 })
                 .finally(() => {
-                    setSecretsLoading(false); // Mark loading as complete
+                    // Stop loading indicator regardless of success or failure
+                    setSecretsLoading(false);
                 });
         } else if (user && userApiSecrets !== null) {
-             // Secrets already loaded (or defaulted to {}), ensure loading state is false
-             // This handles the case where the effect runs again after secrets are set
-             if (secretsLoading) { // Only set if it's currently true
+            // If user exists and secrets are already loaded, ensure loading state is false
+             if (secretsLoading) {
                 setSecretsLoading(false);
              }
         }
-
-    // --- FIX: Added 'userApiSecrets' to dependency array ---
-    // The effect reads userApiSecrets in the condition `if (user && userApiSecrets === null)`.
-    // Including it ensures the effect runs correctly if userApiSecrets changes externally
-    // (though unlikely here) and satisfies the exhaustive-deps rule.
-    // The condition prevents infinite loops as the fetch only happens when secrets are null.
-    }, [user, userApiSecrets, secretsLoading]); // Added userApiSecrets and secretsLoading
+        // Dependencies for the effect: user object and the secrets state itself
+    }, [user, userApiSecrets, secretsLoading]);
 
 
-    // Callback passed to SessionSetupForm, triggered when the user clicks "Start Conversation"
+    // Callback function passed to SessionSetupForm to initiate a new conversation
     const handleStartSession = async (config: SessionConfig) => {
-        // Guard clauses: Ensure user is logged in and secrets are loaded (or defaulted)
+        // Ensure user is authenticated
         if (!user) {
             setPageError("User not found. Please sign in again.");
             return;
         }
-        // Note: We proceed even if userApiSecrets is {} (no keys saved),
-        // as the backend function should handle the check.
-        if (userApiSecrets === null) { // Check for null (indicates loading error)
+        // Ensure user API key configuration is loaded (even if empty)
+        if (userApiSecrets === null) {
             setPageError("User API key configuration could not be loaded. Please refresh or check settings.");
             return;
         }
 
-        logger.info("Attempting to start session via API with config:", config);
-        setIsStartingSession(true); // Set loading state for the button
+        logger.info("Attempting to start session via API with full config:", config);
+        setIsStartingSession(true); // Show loading state
         setPageError(null); // Clear previous errors
-        setSessionConfig(null); // Clear previous session details
-        setActiveConversationId(null);
+        setSessionConfig(null); // Reset current session config
+        setActiveConversationId(null); // Reset active conversation
 
         try {
-            // Get the Firebase ID token for authentication
+            // Get the Firebase ID token for authentication with the API route
             const idToken = await user.getIdToken();
             logger.info("Obtained ID Token for API call.");
 
-            // Call the backend API route to initiate the conversation
+            // Call the backend API route to start the conversation
             const response = await fetch('/api/conversation/start', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}` // Pass token in header
+                    'Authorization': `Bearer ${idToken}` // Pass token in Authorization header
                 },
-                body: JSON.stringify(config), // Send selected LLM IDs
+                body: JSON.stringify(config), // Send the session configuration
             });
 
-            // Handle non-successful HTTP responses
+            // Handle API errors
             if (!response.ok) {
                 let errorMsg = `API Error: ${response.status} ${response.statusText}`;
                 try {
-                    // Attempt to parse a more specific error message from the API response body
+                    // Try to parse a more specific error message from the response body
                     const errorData = await response.json();
-                    errorMsg = errorData.error || errorMsg; // Use API error message if available
+                    errorMsg = errorData.error || errorMsg;
                 } catch (parseError) {
+                    // If parsing fails, stick with the status text
                     logger.warn("Could not parse error response JSON:", parseError);
-                    // Use the status text if JSON parsing fails
                     errorMsg = `API Error: ${response.status} ${response.statusText}`;
                 }
-                throw new Error(errorMsg); // Throw error to be caught by the catch block
+                throw new Error(errorMsg);
             }
 
-            // Parse the successful JSON response
+            // Parse the successful API response
             const result: StartApiResponse = await response.json();
             logger.info("API Response received:", result);
 
-            // Validate that the necessary conversationId is present in the response
+            // Validate the response
             if (!result.conversationId) {
-                 throw new Error("API response successful but did not include a conversationId.");
+                throw new Error("API response successful but did not include a conversationId.");
             }
 
+            // Set the state to activate the ChatInterface
             logger.info(`Session setup successful via API. Conversation ID: ${result.conversationId}`);
-            // Store the configuration and the new conversation ID to trigger rendering ChatInterface
             setSessionConfig(config);
             setActiveConversationId(result.conversationId);
 
         } catch (error) {
-            // Catch errors from fetch, token retrieval, or thrown errors
+            // Handle errors during the API call or response processing
             logger.error("Failed to start session:", error);
             setPageError(`Error starting session: ${error instanceof Error ? error.message : String(error)}`);
-            // Ensure session state is cleared on error to return to setup form
-            setSessionConfig(null);
+            setSessionConfig(null); // Ensure session state is reset on error
             setActiveConversationId(null);
         } finally {
-            setIsStartingSession(false); // Reset loading state regardless of outcome
+            // Stop the loading indicator
+            setIsStartingSession(false);
         }
     };
 
-    // Callback passed to ChatInterface, triggered when the user stops the chat or clicks "Go Back"
+    // Callback function passed to ChatInterface, triggered when a conversation ends
     const handleConversationStopped = () => {
         logger.info("Conversation stopped callback triggered on page.");
         // Reset session state to show the setup form again
         setSessionConfig(null);
         setActiveConversationId(null);
-        setPageError(null); // Clear any previous errors when returning to setup
+        setPageError(null); // Clear any errors
     };
 
     // --- Render Logic ---
 
-    // Show a simple loading indicator during initial auth check or secrets fetch
-    // Use the secretsLoading state which becomes false even if user doc doesn't exist
+    // Show loading indicator while authentication or secrets are loading
     if (authLoading || secretsLoading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                {/* Basic loading text, consider a spinner component */}
                 <p className="text-muted-foreground animate-pulse">Loading user data...</p>
             </main>
         );
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 md:p-12">
-            {/* Display Page-Level Errors prominently */}
+        <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
+            {/* Display page-level errors */}
             {pageError && (
-                 <Alert variant="destructive" className="mb-4 max-w-3xl w-full flex-shrink-0">
+                 <Alert variant="destructive" className="mb-6 max-w-3xl w-full flex-shrink-0">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Error</AlertTitle>
                   <AlertDescription>{pageError}</AlertDescription>
@@ -227,40 +245,75 @@ export default function Page() {
             )}
 
             {/* Main content area */}
-            <div className="w-full max-w-3xl space-y-6 flex flex-col flex-grow justify-center">
-                {/* Conditional rendering based on authentication state */}
+            <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
                 {user ? (
                     // --- Authenticated User View ---
-                    // Show setup form if no active session config OR no active conversation ID
+                    // If no active session, show the setup form
                     !sessionConfig || !activeConversationId ? (
-                         <div className="flex justify-center">
-                            <SessionSetupForm
-                                onStartSession={handleStartSession}
-                                isLoading={isStartingSession} // Pass loading state to disable form button
-                            />
-                         </div>
+                         <SessionSetupForm
+                             onStartSession={handleStartSession}
+                             isLoading={isStartingSession}
+                             // Pass userApiSecrets if needed by the form for validation/display
+                             // userApiSecrets={userApiSecrets}
+                         />
                     ) : (
-                        // --- Active Session View ---
-                        // Render ChatInterface ONLY if we have an active conversation ID
-                        // We assume userApiSecrets has been loaded or defaulted by this point
+                        // If session is active, show the chat interface
                         <ChatInterface
-                            // Pass only the required props
                             conversationId={activeConversationId}
                             onConversationStopped={handleConversationStopped}
                         />
-                        // Note: Removed the check for userApiSecrets here, as ChatInterface no longer needs it.
-                        // The API call in handleStartSession implicitly checks if keys are usable.
                     )
                 ) : (
-                    // --- Unauthenticated User View ---
-                    <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center">
-                         <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
-                         <p className="text-muted-foreground">Listen to conversations between distinct AI agents.</p>
-                         <p className="text-muted-foreground">Please use the link in the header to sign in or create an account.</p>
-                         {/* Consider adding a prominent LoginButton component here */}
-                    </div>
+                    // --- Unauthenticated User View (Landing Page) ---
+                    <>
+                        {/* Welcome Section */}
+                        <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
+                             <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
+                             <p className="text-muted-foreground">Listen to conversations between distinct AI agents.</p>
+
+                             {/* *** API KEY REQUIREMENT NOTICE *** */}
+                             <Alert variant="default" className="text-left border-theme-primary/50"> {/* Added border color */}
+                                <KeyRound className="h-4 w-4 text-theme-primary" /> {/* Added icon color */}
+                                <AlertTitle className="font-semibold">API Keys Required</AlertTitle> {/* Made title bolder */}
+                                <AlertDescription>
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                </AlertDescription>
+                             </Alert>
+                             {/* *********************************** */}
+
+                             <p className="text-muted-foreground pt-2">Please use the link in the header to sign in or create an account to start.</p>
+                        </div>
+
+                        {/* Available LLMs Section */}
+                        <Card className="w-full">
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-center text-xl">
+                                    <BrainCircuit className="mr-2 h-5 w-5" />
+                                    Currently Available LLMs
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {Object.entries(groupedLLMs).map(([provider, llms]) => (
+                                    <div key={provider}>
+                                        <h3 className="text-lg font-semibold mb-2 border-b pb-1">{provider}</h3>
+                                        <ul className="space-y-1 list-disc list-inside text-sm">
+                                            {llms.map((llm) => (
+                                                <li key={llm.id} className="ml-4">
+                                                    {llm.name}
+                                                    {/* Display badges for model status */}
+                                                    {llm.status === 'preview' && <Badge variant="outline" className="ml-2 text-orange-600 border-orange-600">Preview</Badge>}
+                                                    {llm.status === 'experimental' && <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-600">Experimental</Badge>}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </>
                 )}
             </div>
         </main>
     );
 }
+

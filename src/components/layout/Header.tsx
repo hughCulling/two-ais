@@ -1,12 +1,13 @@
 // src/components/layout/Header.tsx
-// Shared header component with ThemeSwitcher integrated
+// Shared header component with ThemeSwitcher and User Info integrated
 
 'use client';
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext'; // Adjust path if needed
 import SignOutButton from '@/components/auth/SignOutButton'; // Adjust path if needed
-import { ThemeSwitcher } from '@/components/theme-switcher'; // *** 1. Import ThemeSwitcher ***
+import { ThemeSwitcher } from '@/components/theme-switcher';
+import { UserCircle } from 'lucide-react'; // Import an icon for user
 
 export default function Header() {
     const { user, loading } = useAuth();
@@ -27,8 +28,8 @@ export default function Header() {
 
                     {/* Right-aligned Navigation Links and Auth Status */}
                     <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
-                            {/* *** 2. Add ThemeSwitcher here *** */}
-                            <ThemeSwitcher />
+                        {/* Theme Switcher */}
+                        <ThemeSwitcher />
 
                         {/* --- Auth Status / Links --- */}
                         {loading ? (
@@ -37,6 +38,16 @@ export default function Header() {
                         ) : user ? (
                             // Links for logged-in users
                             <>
+                                {/* --- Display User Info --- */}
+                                <div className="flex items-center space-x-2">
+                                    <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'}>
+                                        {/* Prefer display name, fallback to email */}
+                                        {user.displayName || user.email}
+                                    </span>
+                                </div>
+                                {/* --- End User Info --- */}
+
                                 <Link href="/settings" className={navItemClasses}>
                                     Settings
                                 </Link>
@@ -45,12 +56,10 @@ export default function Header() {
                                 </div>
                             </>
                         ) : (
-                            // Link for logged-out users - NOW POINTS TO /login
+                            // Link for logged-out users
                             <Link href="/login" className={navItemClasses}>
                                 Sign In
                             </Link>
-                            // You could add a separate Sign Up link here too if desired
-                            // <Link href="/signup" className={navItemClasses}>Sign Up</Link>
                         )}
                     </div>
                 </div>
