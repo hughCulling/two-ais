@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -90,6 +91,7 @@ export default function RootLayout({
             <Header />
             {children}
             <Analytics />
+            <SpeedInsights />
           </AuthProvider>
         </ThemeProvider>
       </body>
