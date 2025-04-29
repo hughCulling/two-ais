@@ -26,8 +26,6 @@ import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models'; // Import the actual
 
 // --- Define TTS Types (Locally) ---
 // Define the type directly with the possible string literals
-// Note: This local type might become outdated if tts_models.ts changes significantly.
-// Consider importing the type from tts_models if needed elsewhere in this component.
 type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
 interface AgentTTSSettings { provider: LocalTTSProviderId; voice: string | null; }
 
@@ -38,7 +36,6 @@ interface SessionConfig {
     agentB_llm: string;
     ttsEnabled: boolean;
     // Use the imported type for consistency if SessionConfig is passed around
-    // For now, local type might suffice if only used for handleStartSession argument typing
     agentA_tts: AgentTTSSettings;
     agentB_tts: AgentTTSSettings;
 }
@@ -253,8 +250,6 @@ export default function Page() {
                          <SessionSetupForm
                              onStartSession={handleStartSession}
                              isLoading={isStartingSession}
-                             // Pass userApiSecrets if needed by the form for validation/display
-                             // userApiSecrets={userApiSecrets}
                          />
                     ) : (
                         // If session is active, show the chat interface
@@ -282,6 +277,21 @@ export default function Page() {
 
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
                         </div>
+
+                        {/* --- YouTube Video Embed --- */}
+                        <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
+                            {/* The iframe for the YouTube video */}
+                            <iframe
+                                className="w-full h-full" // Make iframe fill the container
+                                src="https://www.youtube.com/embed/52oUvRFdaXE" // Use the provided Video ID
+                                title="Two AIs Conversation Demo"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                        {/* --- End YouTube Video Embed --- */}
 
                         {/* Available LLMs Section */}
                         <Card className="w-full">
@@ -317,7 +327,7 @@ export default function Page() {
                             </CardContent>
                         </Card>
 
-                        {/* --- Available TTS Section --- */}
+                        {/* Available TTS Section */}
                         <Card className="w-full">
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-center text-xl">
@@ -331,8 +341,6 @@ export default function Page() {
                                         {availableTTS.map((tts) => (
                                             <li key={tts.id} className="ml-4">
                                                 {tts.name}
-                                                {/* Add more details like voice count or status later if desired */}
-                                                {/* Example: ({tts.voices.length} voices) */}
                                             </li>
                                         ))}
                                     </ul>
@@ -341,7 +349,6 @@ export default function Page() {
                                 )}
                             </CardContent>
                         </Card>
-                        {/* --- End Available TTS Section --- */}
                     </>
                 )}
             </div>
