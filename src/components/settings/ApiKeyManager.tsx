@@ -9,13 +9,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, CheckCircle } from "lucide-react";
+// --- Import Tooltip components ---
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+// --- Import Icons ---
+import { Terminal, CheckCircle, Info } from "lucide-react"; // Added Info icon
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
     id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic')
     label: string; // User-friendly label for the input
     value: string; // Current value entered by the user
+    tooltip: string; // Tooltip help text
 }
 
 // Interface for the data sent to the Firebase Function
@@ -37,14 +46,28 @@ interface SaveApiKeyErrorResponse {
 }
 
 // Define initial structure for API key inputs outside the component
-// This ensures it's a stable reference and doesn't cause re-renders
-// --- MODIFIED: Added Anthropic ---
+// --- Updated tooltip content with prerequisites ---
 const initialApiKeys: ApiKeyInput[] = [
-    { id: 'openai', label: 'OpenAI API Key', value: '' },
-    { id: 'google_ai', label: 'Google AI API Key', value: '' },
-    { id: 'anthropic', label: 'Anthropic API Key', value: '' }, // Added Anthropic
+    {
+        id: 'openai',
+        label: 'OpenAI API Key',
+        value: '',
+        tooltip: 'Requires OpenAI account. Usage may incur costs. Find keys at platform.openai.com/api-keys'
+    },
+    {
+        id: 'google_ai',
+        label: 'Google AI API Key',
+        value: '',
+        tooltip: 'Requires Google account. Often free tier available. Create keys at aistudio.google.com/app/apikey'
+    },
+    {
+        id: 'anthropic',
+        label: 'Anthropic API Key',
+        value: '',
+        tooltip: 'Requires Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys'
+    },
     // Example: Add other keys here if needed in the future
-    // { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '' },
+    // { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '', tooltip: 'Requires ElevenLabs account. Costs apply. Find keys at elevenlabs.io/...' },
 ];
 
 const ApiKeyManager: React.FC = () => {
@@ -79,7 +102,6 @@ const ApiKeyManager: React.FC = () => {
                         // Safely access apiSecretVersions, default to empty object if null/undefined
                         const versions = data?.apiSecretVersions || {};
                         // Check each key defined in initialApiKeys
-                        // --- This automatically includes 'anthropic' now ---
                         initialApiKeys.forEach(key => {
                             // A key is considered saved if its ID exists in versions and the value is a non-empty string
                             status[key.id] = !!(versions[key.id] && typeof versions[key.id] === 'string' && versions[key.id].length > 0);
@@ -113,21 +135,23 @@ const ApiKeyManager: React.FC = () => {
     // Effect dependencies remain the same
     }, [user, authLoading]);
 
-    // Handler for input field changes (no changes needed)
+    // Handler for input field changes
     const handleInputChange = (id: string, value: string) => {
         setApiKeys(prevKeys =>
             prevKeys.map(key => (key.id === id ? { ...key, value } : key))
         );
+        // Clear status message for the specific key being edited
         setStatusMessages(prev => {
             const newStatus = { ...prev };
             delete newStatus[id];
             return newStatus;
         });
-        setGeneralError(null);
+        setGeneralError(null); // Clear general error when user types
     };
 
-    // Callback function to handle saving the API keys via Firebase Function (no changes needed here)
+    // Callback function to handle saving the API keys via Firebase Function
     const saveKeys = useCallback(async () => {
+         // Basic checks before proceeding
          if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app || !initializedFunctions) {
              setGeneralError("Authentication issue or Firebase services not ready. Please ensure you are logged in.");
              return;
@@ -140,6 +164,7 @@ const ApiKeyManager: React.FC = () => {
         // Reference to the Cloud Function (name is 'saveApiKey')
         const saveApiKeyFunction = httpsCallable<SaveApiKeyRequest, SaveApiKeySuccessResponse | SaveApiKeyErrorResponse>(initializedFunctions, 'saveApiKey');
 
+        // Filter only keys that have a new value entered
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
         if (keysToSave.length === 0) {
@@ -148,6 +173,7 @@ const ApiKeyManager: React.FC = () => {
             return;
         }
 
+        // Ensure user token is fresh before making calls
         try {
             await user.getIdToken(true); // Force token refresh
         } catch (tokenError) {
@@ -157,11 +183,11 @@ const ApiKeyManager: React.FC = () => {
             return;
         }
 
-        const newlySavedKeys: Record<string, boolean> = {};
+        const newlySavedKeys: Record<string, boolean> = {}; // Track which keys were successfully saved in this batch
 
-        // --- This loop now includes 'anthropic' if it has a value ---
+        // Call the function for each key with a value
         const promises = keysToSave.map(async (apiKeyInput) => {
-            const service = apiKeyInput.id; // Will be 'openai', 'google_ai', or 'anthropic'
+            const service = apiKeyInput.id;
             const apiKey = apiKeyInput.value;
             const dataToSend: SaveApiKeyRequest = { service, apiKey };
 
@@ -170,11 +196,13 @@ const ApiKeyManager: React.FC = () => {
                 const result = await saveApiKeyFunction(dataToSend);
                 const data = result.data;
 
+                // Check response structure for success or error
                 if (typeof data === 'object' && data !== null && 'message' in data && !('error' in data)) {
                     const successData = data as SaveApiKeySuccessResponse;
                     console.log(`Successfully saved/updated key for service: ${successData.service}`);
                     currentStatusMessages[service] = { type: 'success', message: successData.message };
-                    newlySavedKeys[service] = true;
+                    newlySavedKeys[service] = true; // Mark as newly saved
+                    // Clear the input field on success
                     setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
                 } else if (typeof data === 'object' && data !== null && 'error' in data) {
                     const errorMsg = (data as SaveApiKeyErrorResponse)?.error || 'Unknown error structure received.';
@@ -197,97 +225,120 @@ const ApiKeyManager: React.FC = () => {
             }
         });
 
+        // Wait for all save attempts to complete
         await Promise.all(promises);
 
+        // Update the saved status indicator based on newly saved keys
         setSavedKeyStatus(prevStatus => ({ ...prevStatus, ...newlySavedKeys }));
+        // Display the status messages from the operations
         setStatusMessages(currentStatusMessages);
-        setIsSaving(false);
+        setIsSaving(false); // Mark saving as complete
 
+        // Set a general error if any individual save failed
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
         if (hasErrors) {
-            if (!generalError) {
+            if (!generalError) { // Avoid overwriting a more specific general error
                  setGeneralError("Some API keys could not be saved. Please check the details below.");
             }
         } else {
-             if (!generalError) {
+             if (!generalError) { // Clear general error only if no new errors occurred
                  setGeneralError(null);
              }
         }
-    // Dependencies remain the same
+    // Dependencies for the useCallback
     }, [apiKeys, user, authLoading, generalError, setGeneralError, setStatusMessages, setSavedKeyStatus, setApiKeys]);
 
 
-    // Display loading message while fetching initial key status (no change needed)
+    // Display loading message while fetching initial key status
     if (isLoadingStatus && !authLoading) {
          return <p className="text-center text-sm text-muted-foreground p-4">Loading key status...</p>;
     }
 
-    // Render the main component UI (no changes needed in structure, just maps over updated initialApiKeys)
+    // Render the main component UI
     return (
-        <div className="space-y-6">
-            {/* General Error Alert */}
-            {generalError && (
-                <Alert variant="destructive">
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{generalError}</AlertDescription>
-                </Alert>
-            )}
+        // --- TooltipProvider wrapper ---
+        <TooltipProvider delayDuration={100}>
+            <div className="space-y-6">
+                {/* General Error Alert */}
+                {generalError && (
+                    <Alert variant="destructive">
+                        <Terminal className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{generalError}</AlertDescription>
+                    </Alert>
+                )}
 
-            {/* API Key Input Section */}
-            <div className="space-y-4">
-                {/* --- This now automatically includes the Anthropic input field --- */}
-                {initialApiKeys.map(({ id, label }) => {
-                    const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
-                    const isSaved = savedKeyStatus[id] === true;
-                    const showSavedPlaceholder = isSaved && currentKeyValue === '';
+                {/* API Key Input Section */}
+                <div className="space-y-4">
+                    {/* Map over initialApiKeys to render each input field */}
+                    {initialApiKeys.map(({ id, label, tooltip }) => { // Destructure tooltip content
+                        const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
+                        const isSaved = savedKeyStatus[id] === true;
+                        const showSavedPlaceholder = isSaved && currentKeyValue === '';
 
-                    return (
-                        <div key={id} className="space-y-2">
-                            <Label htmlFor={id}>{label}</Label>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    id={id}
-                                    type="password"
-                                    value={currentKeyValue}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
-                                    placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${label}`}
-                                    disabled={isSaving || authLoading || isLoadingStatus}
-                                    className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
-                                />
-                                {isSaved && (
-                                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" aria-label="Key saved indicator"/>
+                        return (
+                            <div key={id} className="space-y-2">
+                                {/* --- Label and Tooltip Trigger --- */}
+                                <div className="flex items-center space-x-1.5">
+                                    <Label htmlFor={id}>{label}</Label>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            {/* Using Info icon as the trigger */}
+                                            <Info className="h-4 w-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-xs"> {/* Added max-width */}
+                                            {/* Display tooltip text */}
+                                            <p className="text-xs">{tooltip}</p> {/* Made text smaller */}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                {/* --- End Label and Tooltip Trigger --- */}
+
+                                <div className="flex items-center space-x-2">
+                                    <Input
+                                        id={id}
+                                        type="password" // Keep type as password
+                                        value={currentKeyValue}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
+                                        placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${label}`}
+                                        disabled={isSaving || authLoading || isLoadingStatus}
+                                        className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
+                                    />
+                                    {/* Display checkmark if key is saved */}
+                                    {isSaved && (
+                                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" aria-label="Key saved indicator"/>
+                                    )}
+                                </div>
+                                 <p className="text-xs text-muted-foreground px-1">
+                                     {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely using Google Secret Manager."}
+                                 </p>
+                                {/* Status Alert for this specific key */}
+                                {statusMessages[id] && (
+                                    <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
+                                        {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" /> : <Terminal className="h-4 w-4" />}
+                                        <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
+                                        <AlertDescription>{statusMessages[id].message}</AlertDescription>
+                                    </Alert>
                                 )}
                             </div>
-                             <p className="text-xs text-muted-foreground px-1">
-                                 {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely using Google Secret Manager."}
-                             </p>
-                            {/* Status Alert for this key */}
-                            {statusMessages[id] && (
-                                <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
-                                    {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" /> : <Terminal className="h-4 w-4" />}
-                                    <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
-                                    <AlertDescription>{statusMessages[id].message}</AlertDescription>
-                                </Alert>
-                            )}
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
+
+                {/* Save Button */}
+                <Button
+                    onClick={saveKeys}
+                    disabled={isSaving || authLoading || !user || isLoadingStatus}
+                    className="w-full transition-opacity duration-200"
+                >
+                    {isSaving ? 'Saving...' : 'Save / Update Keys'}
+                </Button>
+
+                 {/* Auth Status Messages */}
+                 {authLoading && <p className="text-center text-sm text-muted-foreground">Checking authentication status...</p>}
+                 {!authLoading && !user && <p className="text-center text-sm text-destructive">Please log in to manage API keys.</p>}
             </div>
-
-            {/* Save Button */}
-            <Button
-                onClick={saveKeys}
-                disabled={isSaving || authLoading || !user || isLoadingStatus}
-                className="w-full transition-opacity duration-200"
-            >
-                {isSaving ? 'Saving...' : 'Save / Update Keys'}
-            </Button>
-
-             {/* Auth Status Messages */}
-             {authLoading && <p className="text-center text-sm text-muted-foreground">Checking authentication status...</p>}
-             {!authLoading && !user && <p className="text-center text-sm text-destructive">Please log in to manage API keys.</p>}
-        </div>
+        </TooltipProvider> // --- End TooltipProvider wrapper ---
     );
 };
 

@@ -10,7 +10,7 @@ import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound } from "lucide-react";
+import { AlertCircle, BrainCircuit, KeyRound, Volume2 } from "lucide-react"; // Added Volume2
 // --- Import required UI components ---
 import {
   Alert,
@@ -21,12 +21,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
 import { groupLLMsByProvider } from '@/lib/models'; // LLMInfo type is implicitly used by groupLLMsByProvider return type
+// --- Import TTS data ---
+import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models'; // Import the actual providers
 
 // --- Define TTS Types (Locally) ---
-// Removed the unused TTS_PROVIDER_IDS constant
 // Define the type directly with the possible string literals
-type TTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
-interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
+// Note: This local type might become outdated if tts_models.ts changes significantly.
+// Consider importing the type from tts_models if needed elsewhere in this component.
+type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
+interface AgentTTSSettings { provider: LocalTTSProviderId; voice: string | null; }
 
 // --- Updated SessionConfig Interface ---
 // Defines the configuration for a conversation session
@@ -34,6 +37,8 @@ interface SessionConfig {
     agentA_llm: string;
     agentB_llm: string;
     ttsEnabled: boolean;
+    // Use the imported type for consistency if SessionConfig is passed around
+    // For now, local type might suffice if only used for handleStartSession argument typing
     agentA_tts: AgentTTSSettings;
     agentB_tts: AgentTTSSettings;
 }
@@ -60,8 +65,9 @@ const logger = {
 };
 
 // Get grouped LLM data outside the component for static rendering
-// This prevents re-calculating on every render
 const groupedLLMs = groupLLMsByProvider();
+// Get TTS providers outside the component
+const availableTTS = AVAILABLE_TTS_PROVIDERS; // Use the imported data
 
 export default function Page() {
     // Authentication context hook
@@ -263,7 +269,7 @@ export default function Page() {
                         {/* Welcome Section */}
                         <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
                              <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
-                             <p className="text-muted-foreground">Listen to conversations between distinct AI agents.</p>
+                             <p className="text-muted-foreground">This website lets you experience conversations between distinct AI agents.</p>
 
                              {/* API KEY REQUIREMENT NOTICE */}
                              <Alert variant="default" className="text-left border-theme-primary/50">
@@ -274,7 +280,7 @@ export default function Page() {
                                 </AlertDescription>
                              </Alert>
 
-                             <p className="text-muted-foreground pt-2">Please use the link in the header to sign in or create an account to start.</p>
+                             <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
                         </div>
 
                         {/* Available LLMs Section */}
@@ -291,12 +297,18 @@ export default function Page() {
                                     <div key={provider}>
                                         <h3 className="text-lg font-semibold mb-2 border-b pb-1">{provider}</h3>
                                         <ul className="space-y-1 list-disc list-inside text-sm">
+                                            {/* Map through LLMs for the current provider */}
                                             {llms.map((llm) => (
-                                                <li key={llm.id} className="ml-4">
-                                                    {llm.name}
-                                                    {/* Display badges for model status */}
-                                                    {llm.status === 'preview' && <Badge variant="outline" className="ml-2 text-orange-600 border-orange-600">Preview</Badge>}
-                                                    {llm.status === 'experimental' && <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-600">Experimental</Badge>}
+                                                <li key={llm.id} className="ml-4 flex items-center space-x-2">
+                                                    {/* LLM Name */}
+                                                    <span>{llm.name}</span>
+                                                    {/* Status Badges */}
+                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
+                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
+                                                    {/* Pricing Info */}
+                                                    <span className="text-xs text-muted-foreground">
+                                                        (${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok)
+                                                    </span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -304,6 +316,32 @@ export default function Page() {
                                 ))}
                             </CardContent>
                         </Card>
+
+                        {/* --- Available TTS Section --- */}
+                        <Card className="w-full">
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-center text-xl">
+                                    <Volume2 className="mr-2 h-5 w-5" /> {/* Use Volume2 icon */}
+                                    Currently Available TTS
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2"> {/* Adjust spacing if needed */}
+                                {availableTTS.length > 0 ? (
+                                    <ul className="space-y-1 list-disc list-inside text-sm">
+                                        {availableTTS.map((tts) => (
+                                            <li key={tts.id} className="ml-4">
+                                                {tts.name}
+                                                {/* Add more details like voice count or status later if desired */}
+                                                {/* Example: ({tts.voices.length} voices) */}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-center text-muted-foreground text-sm">No TTS options currently available.</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                        {/* --- End Available TTS Section --- */}
                     </>
                 )}
             </div>
