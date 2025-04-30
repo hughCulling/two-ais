@@ -257,14 +257,14 @@ export default function Page() {
                                                             </TooltipTrigger>
                                                             <TooltipContent side="top">
                                                                 <p className="text-xs max-w-[200px]">
-                                                                    Requires verified OpenAI organization.
+                                                                    Requires verified OpenAI organization. You can
                                                                     <a
                                                                         href="https://platform.openai.com/settings/organization/general"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="underline text-blue-500 hover:text-blue-600 ml-1"
                                                                     >
-                                                                        Verify here
+                                                                        verify here
                                                                     </a>
                                                                     .
                                                                 </p>
