@@ -163,8 +163,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-2.5-pro-preview-03-25',
         name: 'Gemini 2.5 Pro',
         provider: 'Google',
-        contextWindow: 2000000, // Assuming 2M based on Flash
-        pricing: { input: 1.25, output: 10.00, note: 'Higher rate for >200k tokens' }, // Updated pricing
+        contextWindow: 2000000,
+        pricing: { input: 1.25, output: 10.00, note: 'Higher rate for >200k tokens' },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
@@ -173,8 +173,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-2.5-flash-preview-04-17',
         name: 'Gemini 2.5 Flash',
         provider: 'Google',
-        contextWindow: 2000000, // Assuming 2M
-        pricing: { input: 0.15, output: 3.50, note: 'Output uses Thinking rate' }, // Kept existing pricing/note as it matches
+        contextWindow: 2000000,
+        pricing: { input: 0.15, output: 3.50, note: 'Output uses Thinking rate' },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
@@ -184,7 +184,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 2.0 Flash',
         provider: 'Google',
         contextWindow: 0, // Placeholder - Needs verification
-        pricing: { input: 0.10, output: 0.40 }, // Updated pricing
+        pricing: { input: 0.10, output: 0.40 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental', // Assuming experimental/preview
@@ -194,7 +194,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 2.0 Flash-Lite',
         provider: 'Google',
         contextWindow: 0, // Placeholder - Needs verification
-        pricing: { input: 0.075, output: 0.30 }, // Updated pricing
+        pricing: { input: 0.075, output: 0.30 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental', // Assuming experimental/preview
@@ -203,8 +203,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-1.5-pro-latest',
         name: 'Gemini 1.5 Pro',
         provider: 'Google',
-        contextWindow: 1000000, // Updated to 1M based on text (was 2M previously)
-        pricing: { input: 1.25, output: 5.00, note: 'Higher rate for >128k tokens' }, // Kept existing pricing/note as it matches
+        contextWindow: 1000000,
+        pricing: { input: 1.25, output: 5.00, note: 'Higher rate for >128k tokens' },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -214,7 +214,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 1.5 Flash',
         provider: 'Google',
         contextWindow: 1000000,
-        pricing: { input: 0.075, output: 0.30, note: 'Higher rate for >128k tokens' }, // Kept existing pricing/note as it matches
+        pricing: { input: 0.075, output: 0.30, note: 'Higher rate for >128k tokens' },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -224,10 +224,10 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 1.5 Flash-8B',
         provider: 'Google',
         contextWindow: 0, // Placeholder - Needs verification
-        pricing: { input: 0.0375, output: 0.15, note: 'Higher rate for >128k tokens' }, // Updated pricing
+        pricing: { input: 0.0375, output: 0.15, note: 'Higher rate for >128k tokens' },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
-        status: 'stable', // Assuming stable based on 1.5 family
+        status: 'stable',
     },
 
     // === Anthropic ===
@@ -260,6 +260,17 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
+    },
+    {
+        id: 'claude-3-5-sonnet-20241022',
+        name: 'Claude 3.5 Sonnet v2', // Updated name
+        provider: 'Anthropic',
+        contextWindow: 200000, // Assuming same as previous 3.5 Sonnet
+        pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as 2024-06-20 version' }, // Assuming same pricing
+        apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
+        apiKeySecretName: 'anthropic',
+        status: 'stable', // Assuming stable
+        requiresOrgVerification: false, // Assuming same as previous 3.5 Sonnet
     },
     {
         id: 'claude-3-opus-20240229',
