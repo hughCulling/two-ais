@@ -27,7 +27,7 @@ const geistMono = Geist_Mono({
 // --- Updated Metadata (Kept from previous version) ---
 export const metadata: Metadata = {
   // Revised title v3 - Uses LLMs
-  title: "Two AIs: Audible LLM Conversations",
+  title: "Two AIs: Audible Conversations Between Two LLMs",
   // Revised description v3 - More descriptive, uses LLMs
   description: "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience. Requires user API keys.",
   // Optional: Add keywords meta tag if desired, though description is more important
