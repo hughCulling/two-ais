@@ -91,19 +91,29 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: true, // Requires verification
     },
-    // --- Added o3-mini ---
     {
-        id: 'o3-mini', // Model ID
-        name: 'o3-mini', // Display Name
+        id: 'o3-mini',
+        name: 'o3-mini',
         provider: 'OpenAI',
-        contextWindow: 200000, // Context window from provided text
-        pricing: { input: 1.10, output: 4.40 }, // Pricing from provided text
-        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
-        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
-        status: 'stable', // Assuming stable status
+        contextWindow: 200000,
+        pricing: { input: 1.10, output: 4.40 },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
         requiresOrgVerification: false, // Assuming false for mini models
     },
-    // --- End Added o3-mini ---
+    {
+        id: 'o1',
+        name: 'o1',
+        provider: 'OpenAI',
+        contextWindow: 200000,
+        pricing: { input: 15.00, output: 60.00 },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        // --- Set verification flag to false ---
+        requiresOrgVerification: false, // Updated based on user info
+    },
 
     // === Google ===
     {
