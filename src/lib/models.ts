@@ -41,6 +41,19 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
     },
+    // --- Added GPT-4o mini ---
+    {
+        id: 'gpt-4o-mini', // Model ID from provided text
+        name: 'GPT-4o mini', // Display Name
+        provider: 'OpenAI',
+        contextWindow: 128000, // Context window from provided text
+        pricing: { input: 0.15, output: 0.60 }, // Pricing from provided text
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
+        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
+        status: 'stable', // Assuming stable status
+        requiresOrgVerification: false, // Assuming false for mini models
+    },
+    // --- End Added GPT-4o mini ---
     {
         id: 'gpt-4.1',
         name: 'GPT-4.1',
@@ -62,19 +75,17 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
     },
-    // --- Added GPT-4.1 nano ---
     {
-        id: 'gpt-4.1-nano', // Model ID from provided text
-        name: 'GPT-4.1 nano', // Display Name
+        id: 'gpt-4.1-nano',
+        name: 'GPT-4.1 nano',
         provider: 'OpenAI',
-        contextWindow: 1047576, // Context window from provided text
-        pricing: { input: 0.10, output: 0.40 }, // Pricing from provided text
-        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
-        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
-        status: 'stable', // Assuming stable status
-        requiresOrgVerification: false, // Assuming false for nano models
+        contextWindow: 1047576,
+        pricing: { input: 0.10, output: 0.40 },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        requiresOrgVerification: false,
     },
-    // --- End Added GPT-4.1 nano ---
     {
         id: 'gpt-4-turbo',
         name: 'GPT-4 Turbo',
