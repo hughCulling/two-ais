@@ -32,10 +32,10 @@ interface ConversationData {
 // --- End Interfaces ---
 
 // --- Helper Functions (Defined ONCE) ---
-// Determines the LLM provider based on the model ID prefix
+// Determines the LLM provider based on the model ID prefix/name
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     // Using exact match for o3 and o4-mini for clarity
-     if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3") return "OpenAI";
+     // --- FIX: Added check for 'o3-mini' ---
+     if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      logger.warn(`Could not determine provider from model ID prefix/name: ${id}`);
@@ -300,7 +300,6 @@ async function _triggerAgentResponse(
             if (error && typeof error === "object") {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const errorDetails = error as any;
-                // --- LINT FIX: Changed template literal to string concatenation ---
                 logger.error("LLM Error Details: Status=" + errorDetails.status + ", Code=" + errorDetails.code + ", Param=" + errorDetails.param + ", Type=" + errorDetails.type);
             }
             // Throw a new error with combined info

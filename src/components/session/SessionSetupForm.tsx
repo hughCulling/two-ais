@@ -370,14 +370,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         {/* --- Added Explanation Note for Warning Icon --- */}
                         <p className="text-xs text-muted-foreground px-1 flex items-center">
                              <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
-                             Indicates model requires a verified OpenAI organization.
+                             Indicates model requires a verified OpenAI organization. You can
                              <a
                                 href="https://platform.openai.com/settings/organization/general"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="underline text-blue-500 hover:text-blue-600 ml-1"
                             >
-                                Verify here
+                                verify here
                             </a>.
                         </p>
                         {/* --- End Explanation Note --- */}

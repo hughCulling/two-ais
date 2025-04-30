@@ -14,8 +14,7 @@ export interface LLMInfo {
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
     apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai')
     status?: 'stable' | 'preview' | 'experimental'; // Optional status indicator
-    // --- Added flag for models requiring organization verification ---
-    requiresOrgVerification?: boolean;
+    requiresOrgVerification?: boolean; // Flag for models requiring organization verification
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -32,7 +31,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
     },
     {
-        id: 'gpt-4.1', // Assuming this exists
+        id: 'gpt-4.1',
         name: 'GPT-4.1',
         provider: 'OpenAI',
         contextWindow: 1047576,
@@ -80,7 +79,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        // requiresOrgVerification: false, // Assuming false unless specified
     },
     {
         id: 'o3',
@@ -91,9 +89,21 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        // --- Set verification flag to true ---
-        requiresOrgVerification: true,
+        requiresOrgVerification: true, // Requires verification
     },
+    // --- Added o3-mini ---
+    {
+        id: 'o3-mini', // Model ID
+        name: 'o3-mini', // Display Name
+        provider: 'OpenAI',
+        contextWindow: 200000, // Context window from provided text
+        pricing: { input: 1.10, output: 4.40 }, // Pricing from provided text
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
+        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
+        status: 'stable', // Assuming stable status
+        requiresOrgVerification: false, // Assuming false for mini models
+    },
+    // --- End Added o3-mini ---
 
     // === Google ===
     {
@@ -194,8 +204,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
 
 /**
  * Finds LLM information by its unique backend ID.
- * @param id The backend ID of the LLM (e.g., 'gpt-4o', 'claude-3-opus-20240229').
- * @returns The LLMInfo object or undefined if not found.
  */
 export function getLLMInfoById(id: string): LLMInfo | undefined {
     return AVAILABLE_LLMS.find(llm => llm.id === id);
@@ -203,17 +211,13 @@ export function getLLMInfoById(id: string): LLMInfo | undefined {
 
 /**
  * Finds LLM information by the Secret Manager secret *key ID* associated with its API key.
- * @param secretName The secret key ID (e.g., 'openai', 'anthropic').
- * @returns The first matching LLMInfo object or undefined if not found.
  */
 export function getLLMInfoBySecretName(secretName: string): LLMInfo | undefined {
-    // This will return the first match if multiple models share the same secret name (which is expected per provider)
     return AVAILABLE_LLMS.find(llm => llm.apiKeySecretName === secretName);
 }
 
 /**
  * Groups available LLMs by their provider.
- * @returns An object where keys are provider names and values are arrays of LLMInfo objects for that provider, sorted by name.
  */
 export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
     const grouped = AVAILABLE_LLMS.reduce((acc, llm) => {
