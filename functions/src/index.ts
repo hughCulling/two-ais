@@ -34,11 +34,11 @@ interface ConversationData {
 // --- Helper Functions (Defined ONCE) ---
 // Determines the LLM provider based on the model ID prefix
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     // --- FIX: Added check for 'o4-' prefix ---
-     if (id.startsWith("gpt-") || id.startsWith("o4-")) return "OpenAI";
+     // Using exact match for o3 and o4-mini for clarity
+     if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
-     logger.warn(`Could not determine provider from model ID prefix: ${id}`);
+     logger.warn(`Could not determine provider from model ID prefix/name: ${id}`);
      return null;
 }
 // Maps the LLM provider to the key ID used in Firestore/Secret Manager
@@ -262,7 +262,6 @@ async function _triggerAgentResponse(
         const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
         const llmProvider = getProviderFromId(agentModelId); // Uses updated function
         const llmFirestoreKeyId = getFirestoreKeyIdFromProvider(llmProvider);
-        // --- Error check now uses updated llmProvider logic ---
         if (!llmProvider || !llmFirestoreKeyId) { throw new Error(`Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.`); }
         const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
         if (!llmSecretVersionName) { throw new Error(`API key reference missing for ${agentToRespond} (${llmProvider}). Check Firestore user data.`); }
@@ -293,7 +292,21 @@ async function _triggerAgentResponse(
             else responseContent = String(aiResponse.content);
             if (!responseContent || responseContent.trim() === "") responseContent = "(No content returned)";
             logger.info(`Received response from ${agentToRespond} in _triggerAgentResponse: ${responseContent.substring(0,100)}...`);
-        } catch (error) { throw new Error(`LLM call failed for ${agentToRespond} (${agentModelId}). Error: ${error instanceof Error ? error.message : String(error)}`); }
+        } catch (error) {
+            // --- Enhanced LLM Error Logging ---
+            logger.error(`LLM call failed for ${agentToRespond} (${agentModelId}). Raw Error:`, error); // Log the raw error object
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            // Log specific properties if available (e.g., from OpenAI errors)
+            if (error && typeof error === "object") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const errorDetails = error as any;
+                // --- LINT FIX: Changed template literal to string concatenation ---
+                logger.error("LLM Error Details: Status=" + errorDetails.status + ", Code=" + errorDetails.code + ", Param=" + errorDetails.param + ", Type=" + errorDetails.type);
+            }
+            // Throw a new error with combined info
+            throw new Error(`LLM call failed for ${agentToRespond} (${agentModelId}). Error: ${errorMessage}`);
+            // --- End Enhanced LLM Error Logging ---
+        }
 
         // 6.5: Generate TTS Audio (if enabled and configured)
         let audioUrl: string | null = null;
