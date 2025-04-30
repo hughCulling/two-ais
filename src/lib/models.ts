@@ -20,19 +20,17 @@ export interface LLMInfo {
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
 export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
-     // --- Added ChatGPT-4o ---
      {
-        id: 'chatgpt-4o-latest', // Model ID/Alias
-        name: 'ChatGPT-4o', // Display Name
+        id: 'chatgpt-4o-latest',
+        name: 'ChatGPT-4o',
         provider: 'OpenAI',
-        contextWindow: 128000, // Context window from provided text
-        pricing: { input: 5.00, output: 15.00 }, // Pricing from provided text
-        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
-        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
-        status: 'stable', // Assuming stable status
-        requiresOrgVerification: false, // Assuming false
+        contextWindow: 128000,
+        pricing: { input: 5.00, output: 15.00 },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        requiresOrgVerification: false,
     },
-    // --- End Added ChatGPT-4o ---
     {
         id: 'gpt-4o',
         name: 'GPT-4o',
@@ -53,6 +51,19 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
     },
+     // --- Added GPT-4.1 mini ---
+     {
+        id: 'gpt-4.1-mini', // Model ID from snapshot alias
+        name: 'GPT-4.1 mini', // Display Name
+        provider: 'OpenAI',
+        contextWindow: 1047576, // Context window from provided text (Verify if correct for mini)
+        pricing: { input: 0.40, output: 1.60 }, // Pricing from provided text
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
+        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
+        status: 'stable', // Assuming stable status
+        requiresOrgVerification: false, // Assuming false for mini models
+    },
+    // --- End Added GPT-4.1 mini ---
     {
         id: 'gpt-4-turbo',
         name: 'GPT-4 Turbo',
@@ -126,7 +137,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
     },
-
 
     // === Google ===
     {
