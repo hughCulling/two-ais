@@ -34,7 +34,8 @@ interface ConversationData {
 // --- Helper Functions (Defined ONCE) ---
 // Determines the LLM provider based on the model ID prefix
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     if (id.startsWith("gpt-")) return "OpenAI";
+     // --- FIX: Added check for 'o4-' prefix ---
+     if (id.startsWith("gpt-") || id.startsWith("o4-")) return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      logger.warn(`Could not determine provider from model ID prefix: ${id}`);
@@ -259,8 +260,9 @@ async function _triggerAgentResponse(
 
         // 4. Get LLM API Key
         const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
-        const llmProvider = getProviderFromId(agentModelId);
+        const llmProvider = getProviderFromId(agentModelId); // Uses updated function
         const llmFirestoreKeyId = getFirestoreKeyIdFromProvider(llmProvider);
+        // --- Error check now uses updated llmProvider logic ---
         if (!llmProvider || !llmFirestoreKeyId) { throw new Error(`Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.`); }
         const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
         if (!llmSecretVersionName) { throw new Error(`API key reference missing for ${agentToRespond} (${llmProvider}). Check Firestore user data.`); }
@@ -310,7 +312,6 @@ async function _triggerAgentResponse(
                 let audioBuffer: Buffer | null = null;
                 let ttsApiKey: string | null = null;
                 // --- Explicitly get the 'openai' key reference ---
-                // --- LINT FIX: Use double quotes ---
                 const ttsSecretVersionName = conversationData.apiSecretVersions["openai"];
                 logger.info(`[TTS Key Check] Looking for OpenAI key version: ${ttsSecretVersionName}`);
 
