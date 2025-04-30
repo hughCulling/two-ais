@@ -20,6 +20,19 @@ export interface LLMInfo {
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
 export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
+     // --- Added ChatGPT-4o ---
+     {
+        id: 'chatgpt-4o-latest', // Model ID/Alias
+        name: 'ChatGPT-4o', // Display Name
+        provider: 'OpenAI',
+        contextWindow: 128000, // Context window from provided text
+        pricing: { input: 5.00, output: 15.00 }, // Pricing from provided text
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
+        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
+        status: 'stable', // Assuming stable status
+        requiresOrgVerification: false, // Assuming false
+    },
+    // --- End Added ChatGPT-4o ---
     {
         id: 'gpt-4o',
         name: 'GPT-4o',
@@ -113,19 +126,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
     },
-    // --- Removed o1-pro ---
-    // {
-    //    id: 'o1-pro',
-    //    name: 'o1-pro',
-    //    provider: 'OpenAI',
-    //    contextWindow: 200000,
-    //    pricing: { input: 150.00, output: 600.00 },
-    //    apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
-    //    apiKeySecretName: 'openai',
-    //    status: 'stable',
-    //    requiresOrgVerification: true,
-    // },
-    // --- End Removed o1-pro ---
+
 
     // === Google ===
     {

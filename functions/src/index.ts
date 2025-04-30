@@ -34,8 +34,8 @@ interface ConversationData {
 // --- Helper Functions (Defined ONCE) ---
 // Determines the LLM provider based on the model ID prefix/name
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     // --- FIX: Removed check for 'o1-pro' ---
-     if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1") return "OpenAI";
+     // --- FIX: Added check for 'chatgpt-4o-latest' ---
+     if (id.startsWith("gpt-") || id.startsWith("o4-") || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      logger.warn(`Could not determine provider from model ID prefix/name: ${id}`);
