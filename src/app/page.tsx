@@ -206,7 +206,6 @@ export default function Page() {
                         />
                     )
                 ) : (
-                    // --- Wrap unauthenticated view in TooltipProvider ---
                     <TooltipProvider delayDuration={100}>
                         {/* Welcome Section */}
                         <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
@@ -216,7 +215,8 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    {/* Fixed unescaped apostrophe */}
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
@@ -244,13 +244,12 @@ export default function Page() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {Object.entries(groupedLLMs).map(([provider, llms]: [string, LLMInfo[]]) => ( // Explicitly type llms
+                                {Object.entries(groupedLLMs).map(([provider, llms]: [string, LLMInfo[]]) => (
                                     <div key={provider}>
                                         <h3 className="text-lg font-semibold mb-2 border-b pb-1">{provider}</h3>
                                         <ul className="space-y-1 list-disc list-inside text-sm">
                                             {llms.map((llm) => (
                                                 <li key={llm.id} className="ml-4 flex items-center space-x-2">
-                                                    {/* --- Added Org Verification Warning --- */}
                                                     {llm.requiresOrgVerification && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
@@ -272,7 +271,6 @@ export default function Page() {
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     )}
-                                                    {/* --- End Org Verification Warning --- */}
                                                     <span>{llm.name}</span>
                                                     {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
                                                     {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
@@ -309,7 +307,7 @@ export default function Page() {
                                 )}
                             </CardContent>
                         </Card>
-                    </TooltipProvider> // --- Close TooltipProvider ---
+                    </TooltipProvider>
                 )}
             </div>
         </main>
