@@ -100,7 +100,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        requiresOrgVerification: false, // Assuming false for mini models
+        requiresOrgVerification: false,
     },
     {
         id: 'o1',
@@ -111,9 +111,21 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        // --- Set verification flag to false ---
-        requiresOrgVerification: false, // Updated based on user info
+        requiresOrgVerification: false,
     },
+    // --- Removed o1-pro ---
+    // {
+    //    id: 'o1-pro',
+    //    name: 'o1-pro',
+    //    provider: 'OpenAI',
+    //    contextWindow: 200000,
+    //    pricing: { input: 150.00, output: 600.00 },
+    //    apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+    //    apiKeySecretName: 'openai',
+    //    status: 'stable',
+    //    requiresOrgVerification: true,
+    // },
+    // --- End Removed o1-pro ---
 
     // === Google ===
     {

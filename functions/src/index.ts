@@ -34,7 +34,7 @@ interface ConversationData {
 // --- Helper Functions (Defined ONCE) ---
 // Determines the LLM provider based on the model ID prefix/name
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     // --- FIX: Added check for 'o1' ---
+     // --- FIX: Removed check for 'o1-pro' ---
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
