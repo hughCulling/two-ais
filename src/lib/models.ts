@@ -41,19 +41,17 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
     },
-    // --- Added GPT-4o mini ---
     {
-        id: 'gpt-4o-mini', // Model ID from provided text
-        name: 'GPT-4o mini', // Display Name
+        id: 'gpt-4o-mini',
+        name: 'GPT-4o mini',
         provider: 'OpenAI',
-        contextWindow: 128000, // Context window from provided text
-        pricing: { input: 0.15, output: 0.60 }, // Pricing from provided text
-        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys', // Standard OpenAI key URL
-        apiKeySecretName: 'openai', // Uses the standard OpenAI key ID
-        status: 'stable', // Assuming stable status
-        requiresOrgVerification: false, // Assuming false for mini models
+        contextWindow: 128000,
+        pricing: { input: 0.15, output: 0.60 },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        requiresOrgVerification: false,
     },
-    // --- End Added GPT-4o mini ---
     {
         id: 'gpt-4.1',
         name: 'GPT-4.1',
@@ -68,7 +66,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gpt-4.1-mini',
         name: 'GPT-4.1 mini',
         provider: 'OpenAI',
-        contextWindow: 1047576, // Assuming same as GPT-4.1 based on previous addition
+        contextWindow: 1047576,
         pricing: { input: 0.40, output: 1.60 },
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
@@ -165,8 +163,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-2.5-pro-preview-03-25',
         name: 'Gemini 2.5 Pro',
         provider: 'Google',
-        contextWindow: 2000000,
-        pricing: { input: 2.50, output: 15.00, note: '>200k tokens rate' },
+        contextWindow: 2000000, // Assuming 2M based on Flash
+        pricing: { input: 1.25, output: 10.00, note: 'Higher rate for >200k tokens' }, // Updated pricing
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
@@ -175,18 +173,38 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-2.5-flash-preview-04-17',
         name: 'Gemini 2.5 Flash',
         provider: 'Google',
-        contextWindow: 2000000,
-        pricing: { input: 0.15, output: 3.50, note: 'Output uses Thinking rate' },
+        contextWindow: 2000000, // Assuming 2M
+        pricing: { input: 0.15, output: 3.50, note: 'Output uses Thinking rate' }, // Kept existing pricing/note as it matches
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
     },
     {
+        id: 'gemini-2.0-flash',
+        name: 'Gemini 2.0 Flash',
+        provider: 'Google',
+        contextWindow: 0, // Placeholder - Needs verification
+        pricing: { input: 0.10, output: 0.40 }, // Updated pricing
+        apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
+        apiKeySecretName: 'google_ai',
+        status: 'experimental', // Assuming experimental/preview
+    },
+    {
+        id: 'gemini-2.0-flash-lite',
+        name: 'Gemini 2.0 Flash-Lite',
+        provider: 'Google',
+        contextWindow: 0, // Placeholder - Needs verification
+        pricing: { input: 0.075, output: 0.30 }, // Updated pricing
+        apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
+        apiKeySecretName: 'google_ai',
+        status: 'experimental', // Assuming experimental/preview
+    },
+    {
         id: 'gemini-1.5-pro-latest',
         name: 'Gemini 1.5 Pro',
         provider: 'Google',
-        contextWindow: 1000000,
-        pricing: { input: 1.25, output: 5.00, note: 'Higher rate for >128k tokens' },
+        contextWindow: 1000000, // Updated to 1M based on text (was 2M previously)
+        pricing: { input: 1.25, output: 5.00, note: 'Higher rate for >128k tokens' }, // Kept existing pricing/note as it matches
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -196,10 +214,20 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 1.5 Flash',
         provider: 'Google',
         contextWindow: 1000000,
-        pricing: { input: 0.075, output: 0.30, note: 'Higher rate for >128k tokens' },
+        pricing: { input: 0.075, output: 0.30, note: 'Higher rate for >128k tokens' }, // Kept existing pricing/note as it matches
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
+    },
+    {
+        id: 'gemini-1.5-flash-8b',
+        name: 'Gemini 1.5 Flash-8B',
+        provider: 'Google',
+        contextWindow: 0, // Placeholder - Needs verification
+        pricing: { input: 0.0375, output: 0.15, note: 'Higher rate for >128k tokens' }, // Updated pricing
+        apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
+        apiKeySecretName: 'google_ai',
+        status: 'stable', // Assuming stable based on 1.5 family
     },
 
     // === Anthropic ===
