@@ -2,9 +2,9 @@
 // Centralized definition for available Large Language Models
 
 export interface LLMInfo {
-    id: string; // Unique identifier used in backend (e.g., 'grok-1')
-    name: string; // User-friendly name (e.g., 'Grok 1')
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'Mistral' | 'Cohere' | 'XAI'; // Added XAI
+    id: string; // Unique identifier used in backend (e.g., 'llama3-70b-8192')
+    name: string; // User-friendly name (e.g., 'Llama 3 70B (Groq)')
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'Groq'; // Added Groq, removed Replicate, Mistral, Cohere for now
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -12,12 +12,13 @@ export interface LLMInfo {
         note?: string; // Optional note, e.g., for preview models or variable pricing
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
-    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai')
+    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai', 'groq')
     status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
     requiresOrgVerification?: boolean; // Flag for models requiring organization verification
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
+
 export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
      {
@@ -294,13 +295,12 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === XAI (Grok) ===
-    // Keeping only primary IDs, removed aliases like grok-3, grok-3-latest etc.
     {
         id: 'grok-3-beta',
         name: 'Grok 3 Beta',
         provider: 'XAI',
         contextWindow: 131072,
-        pricing: { input: 3.00, output: 15.00 }, // From user table
+        pricing: { input: 3.00, output: 15.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
@@ -310,7 +310,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Grok 3 Fast Beta',
         provider: 'XAI',
         contextWindow: 131072,
-        pricing: { input: 5.00, output: 25.00 }, // From user table
+        pricing: { input: 5.00, output: 25.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
@@ -320,7 +320,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Grok 3 Mini Beta',
         provider: 'XAI',
         contextWindow: 131072,
-        pricing: { input: 0.30, output: 0.50 }, // From user table
+        pricing: { input: 0.30, output: 0.50 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
@@ -330,32 +330,74 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Grok 3 Mini Fast Beta',
         provider: 'XAI',
         contextWindow: 131072,
-        pricing: { input: 0.60, output: 4.00 }, // From user table
+        pricing: { input: 0.60, output: 4.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
     },
     {
-        id: 'grok-2-1212', // Primary ID for Grok 2
+        id: 'grok-2-1212',
         name: 'Grok 2',
         provider: 'XAI',
-        contextWindow: 131072, // Context from API response
-        pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' }, // Placeholder based on vision pricing
+        contextWindow: 131072,
+        pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
-        status: 'stable', // Assuming stable based on ID format
+        status: 'stable',
     },
-    // --- Removed Grok 2 Vision and Image models ---
-    // {
-    //     id: 'grok-2-vision-1212', // Primary ID for Grok 2 Vision
-    //     name: 'Grok 2 Vision',
-    //     provider: 'XAI',
-    //     contextWindow: 32768, // Context from pricing screenshot
-    //     pricing: { input: 2.00, output: 10.00, note: 'Input includes image cost' }, // From pricing screenshot
-    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
-    //     apiKeySecretName: 'xai',
-    //     status: 'stable', // Assuming stable based on ID format
-    // },
+
+    // === Groq (Llama) ===
+    {
+        id: 'llama3-70b-8192',
+        name: 'Llama 3 70B (Groq)',
+        provider: 'Groq',
+        contextWindow: 8192,
+        pricing: { input: 0.59, output: 0.79 }, // From Groq pricing table
+        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
+        apiKeySecretName: 'groq', // Use 'groq' as the key name
+        status: 'stable',
+    },
+    {
+        id: 'llama3-8b-8192',
+        name: 'Llama 3 8B (Groq)',
+        provider: 'Groq',
+        contextWindow: 8192,
+        pricing: { input: 0.05, output: 0.08 }, // From Groq pricing table
+        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
+        apiKeySecretName: 'groq',
+        status: 'stable',
+    },
+    {
+        id: 'llama-3.1-8b-instant', // ID from Groq table
+        name: 'Llama 3.1 8B Instant (Groq)',
+        provider: 'Groq',
+        contextWindow: 131072, // From user list
+        pricing: { input: 0.05, output: 0.08 }, // From Groq pricing table
+        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
+        apiKeySecretName: 'groq',
+        status: 'stable',
+    },
+     {
+        id: 'llama-3.3-70b-versatile', // ID from Groq table
+        name: 'Llama 3.3 70B Versatile (Groq)',
+        provider: 'Groq',
+        contextWindow: 131072, // From user list
+        pricing: { input: 0.59, output: 0.79 }, // From Groq pricing table
+        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
+        apiKeySecretName: 'groq',
+        status: 'stable',
+    },
+    {
+        id: 'llama-guard-3-8b', // ID from Groq table
+        name: 'Llama Guard 3 8B (Groq)',
+        provider: 'Groq',
+        contextWindow: 8192, // From user list
+        pricing: { input: 0.20, output: 0.20 }, // From Groq pricing table (Note: Safety model)
+        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
+        apiKeySecretName: 'groq',
+        status: 'stable',
+    },
+    // --- Removed Replicate Models ---
 ];
 
 // --- Helper Functions ---

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase/clientApp';
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models'; // LLMInfo now includes requiresOrgVerification?
+import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models';
 import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
@@ -62,8 +62,8 @@ interface SessionSetupFormProps {
 const groupedLLMOptions = groupLLMsByProvider();
 
 // --- Determine all potentially required API key IDs ---
-// Updated to include 'xai'
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai'];
+// Updated to include 'groq', removed 'replicate'
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'groq'];
 
 
 // --- Main Component Definition ---
@@ -172,7 +172,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             return;
         }
 
-        // --- Refactored Key Check using apiKeySecretName ---
+        // --- Key Check using apiKeySecretName ---
         const agentARequiredLLMKey = agentAOption.apiKeySecretName;
         const agentBRequiredLLMKey = agentBOption.apiKeySecretName;
 
@@ -189,7 +189,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             alert(missingKeysMsg + ".");
             return;
         }
-        // --- End Refactored Key Check ---
+        // --- End Key Check ---
 
         // TTS validation (if enabled)
         if (ttsEnabled) {
@@ -213,13 +213,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         });
     };
 
-    // --- Refactored to use apiKeySecretName ---
+    // Function to check if an LLM option should be disabled based on key status
     const isLLMOptionDisabled = (llm: LLMInfo): boolean => {
         const requiredKey = llm.apiKeySecretName; // Get the secret name directly
         if (!requiredKey) return true; // Should not happen if models.ts is correct
         return isLoadingStatus || !savedKeyStatus[requiredKey]; // Check status using the correct key ID
     };
-    // --- End Refactored ---
 
     const handleTtsToggle = (checked: boolean | 'indeterminate') => {
          setTtsEnabled(Boolean(checked));
@@ -313,11 +312,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
-                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>} {/* Added Beta status */}
+                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                {!isDisabled && (
+                                                                {/* Display pricing note if available */}
+                                                                {!isDisabled && llm.pricing.note && (
+                                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
+                                                                        ({llm.pricing.note})
+                                                                    </span>
+                                                                )}
+                                                                {/* Display token pricing if note doesn't exist */}
+                                                                {!isDisabled && !llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                                         ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
                                                                     </span>
@@ -379,11 +385,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
-                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>} {/* Added Beta status */}
+                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                {!isDisabled && (
+                                                                 {/* Display pricing note if available */}
+                                                                 {!isDisabled && llm.pricing.note && (
+                                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
+                                                                        ({llm.pricing.note})
+                                                                    </span>
+                                                                )}
+                                                                {/* Display token pricing if note doesn't exist */}
+                                                                {!isDisabled && !llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                                         ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
                                                                     </span>

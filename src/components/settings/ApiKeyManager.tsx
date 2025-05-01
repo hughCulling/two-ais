@@ -21,7 +21,7 @@ import { Terminal, CheckCircle, Info } from "lucide-react"; // Added Info icon
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
-    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic', 'xai')
+    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic', 'xai', 'groq')
     label: string; // User-friendly label for the input
     value: string; // Current value entered by the user
     tooltip: string; // Tooltip help text
@@ -30,7 +30,7 @@ interface ApiKeyInput {
 // Interface for the data sent to the Firebase Function
 interface SaveApiKeyRequest {
     apiKey: string; // The API key string
-    service: string; // The identifier of the service (e.g., 'openai', 'anthropic', 'xai')
+    service: string; // The identifier of the service (e.g., 'openai', 'anthropic', 'xai', 'groq')
 }
 
 // Interface for a successful response from the Firebase Function
@@ -46,7 +46,6 @@ interface SaveApiKeyErrorResponse {
 }
 
 // Define initial structure for API key inputs outside the component
-// --- Updated tooltip content with prerequisites ---
 const initialApiKeys: ApiKeyInput[] = [
     {
         id: 'openai',
@@ -66,16 +65,20 @@ const initialApiKeys: ApiKeyInput[] = [
         value: '',
         tooltip: 'Requires Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys'
     },
-    // --- Added XAI (Grok) ---
     {
-        id: 'xai', // Matches the apiKeySecretName in models.ts
+        id: 'xai',
         label: 'XAI (Grok) API Key',
         value: '',
         tooltip: 'Requires xAI account. Find keys at console.x.ai (or similar). Costs may apply.'
     },
-    // --- End Added XAI (Grok) ---
-    // Example: Add other keys here if needed in the future
-    // { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '', tooltip: 'Requires ElevenLabs account. Costs apply. Find keys at elevenlabs.io/...' },
+    // --- Switched from Replicate to Groq ---
+    {
+        id: 'groq', // Matches the apiKeySecretName in models.ts
+        label: 'Groq API Key',
+        value: '',
+        tooltip: 'Required for Llama models via Groq. Find keys at console.groq.com/keys'
+    },
+    // --- End Change ---
 ];
 
 const ApiKeyManager: React.FC = () => {

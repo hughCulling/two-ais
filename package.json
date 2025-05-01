@@ -13,6 +13,7 @@
     "@langchain/anthropic": "^0.3.18",
     "@langchain/core": "^0.3.44",
     "@langchain/google-genai": "^0.2.3",
+    "@langchain/groq": "^0.1.1",
     "@langchain/openai": "^0.5.5",
     "@langchain/xai": "^0.0.2",
     "@radix-ui/react-checkbox": "^1.2.2",
@@ -48,5 +49,6 @@
     "eslint-config-next": "15.2.5",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "overrides": {}
 }

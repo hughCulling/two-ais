@@ -5,16 +5,16 @@ import { type NextRequest } from 'next/server';
 // Firebase Admin, Auth, Firestore, Secret Manager Setup
 import { initializeApp, getApps, cert, App, ServiceAccount } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
-// --- CORRECTED FIRESTORE IMPORT (Removed getDoc) ---
-import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore';
-// --- END CORRECTION ---
+import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore'; // No getDoc needed for Admin SDK
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatXAI } from "@langchain/xai"; // Import XAI (Grok) client
+import { ChatXAI } from "@langchain/xai";
+import { ChatGroq } from "@langchain/groq"; // Added Groq client
+// import { Replicate } from "@langchain/community/llms/replicate"; // Removed Replicate client
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models'; // Use path alias
@@ -237,10 +237,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid LLM selection provided" }, { status: 400 });
         }
 
-        // --- CORRECTED Logic: Get the required secret key name directly from the model info ---
+        // --- Get the required secret key name directly from the model info ---
         const agentARequiredKey = agentALLMInfo.apiKeySecretName;
         const agentBRequiredKey = agentBLLMInfo.apiKeySecretName;
-        // --- End CORRECTED Logic ---
+        // --- End Get the required secret key name ---
 
         // --- Added Debug Logging ---
         console.log(`API Route: Agent A Required Key Name derived: ${agentARequiredKey}`);
@@ -321,7 +321,15 @@ export async function POST(request: NextRequest) {
                  case "OpenAI": new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm }); break;
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm }); break;
-                 case "XAI": new ChatXAI({ apiKey: apiKeyA, model: agentA_llm }); break; // Added XAI
+                 case "XAI": new ChatXAI({ apiKey: apiKeyA, model: agentA_llm }); break;
+                 // --- Added Groq ---
+                 case "Groq":
+                     // --- FIX: Use 'model' instead of 'modelName' ---
+                     new ChatGroq({ apiKey: apiKeyA, model: agentA_llm });
+                     break;
+                 // --- End Added Groq ---
+                 // Remove Replicate case
+                 // case "Replicate": ...
                  default: throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
              }
 
@@ -330,7 +338,15 @@ export async function POST(request: NextRequest) {
                  case "OpenAI": new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm }); break;
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm }); break;
-                 case "XAI": new ChatXAI({ apiKey: apiKeyB, model: agentB_llm }); break; // Added XAI
+                 case "XAI": new ChatXAI({ apiKey: apiKeyB, model: agentB_llm }); break;
+                 // --- Added Groq ---
+                 case "Groq":
+                      // --- FIX: Use 'model' instead of 'modelName' ---
+                     new ChatGroq({ apiKey: apiKeyB, model: agentB_llm });
+                     break;
+                 // --- End Added Groq ---
+                 // Remove Replicate case
+                 // case "Replicate": ...
                  default: throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
              }
              console.log("API Route: LangChain models initialized successfully for validation.");
