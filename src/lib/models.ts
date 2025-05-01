@@ -2,9 +2,9 @@
 // Centralized definition for available Large Language Models
 
 export interface LLMInfo {
-    id: string; // Unique identifier used in backend (e.g., 'claude-3-opus-20240229')
-    name: string; // User-friendly name (e.g., 'Claude 3 Opus')
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'Mistral' | 'Cohere'; // Add more providers as needed
+    id: string; // Unique identifier used in backend (e.g., 'grok-1')
+    name: string; // User-friendly name (e.g., 'Grok 1')
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'Mistral' | 'Cohere' | 'XAI'; // Added XAI
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -12,8 +12,8 @@ export interface LLMInfo {
         note?: string; // Optional note, e.g., for preview models or variable pricing
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
-    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai')
-    status?: 'stable' | 'preview' | 'experimental'; // Optional status indicator
+    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai')
+    status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
     requiresOrgVerification?: boolean; // Flag for models requiring organization verification
 }
 
@@ -282,18 +282,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
     },
-    // --- Removed Claude 3 Sonnet (2024-02-29) entry ---
-    // {
-    //     id: 'claude-3-sonnet-20240229',
-    //     name: 'Claude 3 Sonnet',
-    //     provider: 'Anthropic',
-    //     contextWindow: 200000,
-    //     pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as other Sonnet versions' },
-    //     apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
-    //     apiKeySecretName: 'anthropic',
-    //     status: 'stable',
-    //     requiresOrgVerification: false,
-    // },
      {
         id: 'claude-3-haiku-20240307',
         name: 'Claude 3 Haiku',
@@ -304,9 +292,73 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
     },
+
+    // === XAI (Grok) ===
+    // Keeping only primary IDs, removed aliases like grok-3, grok-3-latest etc.
+    {
+        id: 'grok-3-beta',
+        name: 'Grok 3 Beta',
+        provider: 'XAI',
+        contextWindow: 131072,
+        pricing: { input: 3.00, output: 15.00 }, // From user table
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'beta',
+    },
+    {
+        id: 'grok-3-fast-beta',
+        name: 'Grok 3 Fast Beta',
+        provider: 'XAI',
+        contextWindow: 131072,
+        pricing: { input: 5.00, output: 25.00 }, // From user table
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'beta',
+    },
+    {
+        id: 'grok-3-mini-beta',
+        name: 'Grok 3 Mini Beta',
+        provider: 'XAI',
+        contextWindow: 131072,
+        pricing: { input: 0.30, output: 0.50 }, // From user table
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'beta',
+    },
+    {
+        id: 'grok-3-mini-fast-beta',
+        name: 'Grok 3 Mini Fast Beta',
+        provider: 'XAI',
+        contextWindow: 131072,
+        pricing: { input: 0.60, output: 4.00 }, // From user table
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'beta',
+    },
+    {
+        id: 'grok-2-1212', // Primary ID for Grok 2
+        name: 'Grok 2',
+        provider: 'XAI',
+        contextWindow: 131072, // Context from API response
+        pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' }, // Placeholder based on vision pricing
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'stable', // Assuming stable based on ID format
+    },
+    // --- Removed Grok 2 Vision and Image models ---
+    // {
+    //     id: 'grok-2-vision-1212', // Primary ID for Grok 2 Vision
+    //     name: 'Grok 2 Vision',
+    //     provider: 'XAI',
+    //     contextWindow: 32768, // Context from pricing screenshot
+    //     pricing: { input: 2.00, output: 10.00, note: 'Input includes image cost' }, // From pricing screenshot
+    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
+    //     apiKeySecretName: 'xai',
+    //     status: 'stable', // Assuming stable based on ID format
+    // },
 ];
 
-// --- Helper Functions (Keep existing) ---
+// --- Helper Functions ---
 
 /**
  * Finds LLM information by its unique backend ID.

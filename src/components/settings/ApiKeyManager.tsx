@@ -21,7 +21,7 @@ import { Terminal, CheckCircle, Info } from "lucide-react"; // Added Info icon
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
-    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic')
+    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic', 'xai')
     label: string; // User-friendly label for the input
     value: string; // Current value entered by the user
     tooltip: string; // Tooltip help text
@@ -30,7 +30,7 @@ interface ApiKeyInput {
 // Interface for the data sent to the Firebase Function
 interface SaveApiKeyRequest {
     apiKey: string; // The API key string
-    service: string; // The identifier of the service (e.g., 'openai', 'anthropic')
+    service: string; // The identifier of the service (e.g., 'openai', 'anthropic', 'xai')
 }
 
 // Interface for a successful response from the Firebase Function
@@ -66,6 +66,14 @@ const initialApiKeys: ApiKeyInput[] = [
         value: '',
         tooltip: 'Requires Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys'
     },
+    // --- Added XAI (Grok) ---
+    {
+        id: 'xai', // Matches the apiKeySecretName in models.ts
+        label: 'XAI (Grok) API Key',
+        value: '',
+        tooltip: 'Requires xAI account. Find keys at console.x.ai (or similar). Costs may apply.'
+    },
+    // --- End Added XAI (Grok) ---
     // Example: Add other keys here if needed in the future
     // { id: 'elevenlabs', label: 'ElevenLabs API Key', value: '', tooltip: 'Requires ElevenLabs account. Costs apply. Find keys at elevenlabs.io/...' },
 ];
@@ -111,6 +119,7 @@ const ApiKeyManager: React.FC = () => {
                         initialApiKeys.forEach(key => { status[key.id] = false; });
                         console.log("User document does not exist yet for API key status check.");
                     }
+                    console.log("Fetched Key Status:", status); // Log fetched status
                     setSavedKeyStatus(status); // Update the saved status state
                 } catch (error) {
                     console.error("Error fetching user document for key status:", error);
@@ -131,6 +140,7 @@ const ApiKeyManager: React.FC = () => {
             }
         };
 
+        console.log("Fetching user data for API secrets..."); // Log when effect runs
         fetchKeyStatus();
     // Effect dependencies remain the same
     }, [user, authLoading]);

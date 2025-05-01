@@ -15,14 +15,16 @@ import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatXAI } from "@langchain/xai"; // Added XAI (Grok) client
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+
 
 // --- Interfaces ---
 type TTSProviderId = "openai"; // Only OpenAI is left for now
 interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
 interface ConversationTTSSettings { enabled: boolean; agentA: AgentTTSSettings; agentB: AgentTTSSettings; }
-// Updated LLMInfo["provider"] to include potential future providers if needed, although only OpenAI, Google, Anthropic are currently used.
-interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "Mistral" | "Cohere"; apiKeySecretName: string; }
+// Updated LLMInfo["provider"] to include XAI
+interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "Mistral" | "Cohere" | "XAI"; apiKeySecretName: string; }
 interface GcpError extends Error { code?: number | string; details?: string; }
 interface ConversationData {
     agentA_llm: string; agentB_llm: string; turn: "agentA" | "agentB";
@@ -35,14 +37,15 @@ interface ConversationData {
 // --- Helper Functions (Defined ONCE) ---
 // Determines the LLM provider based on the model ID prefix/name
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
-     // --- FIX: Added check for 'gpt-4.1-mini' and 'gpt-4.1-nano' ---
      // Using startsWith for gpt models, exact match for o-series
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
+     // Using startsWith for gemini models
      if (id.startsWith("gemini-")) return "Google";
+     // Using startsWith for claude models
      if (id.startsWith("claude-")) return "Anthropic";
-     // Add checks for other providers (Mistral, Cohere) here if/when models are added
-     // if (id.startsWith("mistral-")) return "Mistral";
-     // if (id.startsWith("command-")) return "Cohere";
+     // --- Added check for XAI (Grok) ---
+     if (id.startsWith("grok-")) return "XAI";
+     // --- End Added check ---
      logger.warn(`Could not determine provider from model ID prefix/name: ${id}`);
      return null;
 }
@@ -51,9 +54,9 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "OpenAI") return "openai";
     if (provider === "Google") return "google_ai";
     if (provider === "Anthropic") return "anthropic";
-    // Add mappings for other providers here if/when models are added
-    // if (provider === "Mistral") return "mistral_ai";
-    // if (provider === "Cohere") return "cohere_ai";
+    // --- Added mapping for XAI (Grok) ---
+    if (provider === "XAI") return "xai"; // Assumed secret key name
+    // --- End Added mapping ---
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -287,9 +290,9 @@ async function _triggerAgentResponse(
             if (llmProvider === "OpenAI") chatModel = new ChatOpenAI({ apiKey: llmApiKey, modelName: modelName });
             else if (llmProvider === "Google") chatModel = new ChatGoogleGenerativeAI({ apiKey: llmApiKey, model: modelName });
             else if (llmProvider === "Anthropic") chatModel = new ChatAnthropic({ apiKey: llmApiKey, modelName: modelName });
-            // Add initializations for other providers here if/when models are added
-            // else if (llmProvider === "Mistral") chatModel = new ChatMistralAI({ apiKey: llmApiKey, modelName: modelName }); // Example
-            // else if (llmProvider === "Cohere") chatModel = new ChatCohere({ apiKey: llmApiKey, model: modelName }); // Example
+            // --- Added XAI (Grok) ---
+            else if (llmProvider === "XAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName }); // Use 'model' parameter for ChatXAI
+            // --- End Added XAI (Grok) ---
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in _triggerAgentResponse`);
         } catch (error) { throw new Error(`Failed to initialize LLM "${agentModelId}" for ${agentToRespond}: ${error}`); }

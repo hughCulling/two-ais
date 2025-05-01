@@ -1,7 +1,6 @@
 // src/components/settings/SessionSetupForm.tsx
 'use client';
 
-// Removed unused useCallback import
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
@@ -17,28 +16,23 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-// --- Import TooltipProvider ---
 import { TooltipProvider } from "@/components/ui/tooltip";
-// --- Import Popover components ---
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { useAuth } from '@/context/AuthContext';
-// --- Import firebase instances ---
 import { db } from '@/lib/firebase/clientApp';
 import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models'; // LLMInfo now includes requiresOrgVerification?
-// --- Import updated TTS types and data (only OpenAI left) ---
 import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
     TTSVoice,
     getVoicesForProvider,
     getDefaultVoiceForProvider
-} from '@/lib/tts_models'; // Adjust path if needed
-// --- Import Icons ---
-import { AlertTriangle } from "lucide-react"; // Keep AlertTriangle icon
+} from '@/lib/tts_models';
+import { AlertTriangle } from "lucide-react";
 
 // --- Define TTS Types (using imported types) ---
 type TTSProviderId = TTSProviderInfo['id'];
@@ -68,7 +62,8 @@ interface SessionSetupFormProps {
 const groupedLLMOptions = groupLLMsByProvider();
 
 // --- Determine all potentially required API key IDs ---
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic'];
+// Updated to include 'xai'
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai'];
 
 
 // --- Main Component Definition ---
@@ -82,7 +77,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
-    const defaultTTSProvider = AVAILABLE_TTS_PROVIDERS[0]?.id || 'openai';
+    // Ensure AVAILABLE_TTS_PROVIDERS is not empty before accessing index 0
+    const defaultTTSProvider = AVAILABLE_TTS_PROVIDERS.length > 0 ? AVAILABLE_TTS_PROVIDERS[0].id : 'openai'; // Fallback if empty
     const defaultVoiceA = getDefaultVoiceForProvider(defaultTTSProvider)?.id ?? null;
     const defaultVoiceB = getDefaultVoiceForProvider(defaultTTSProvider)?.id ?? null;
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
@@ -107,11 +103,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     if (userDocSnap.exists()) {
                         const data: DocumentData = userDocSnap.data();
                         const versions: Record<string, string> = data?.apiSecretVersions || {};
+                        // Check status for all defined required keys
                         ALL_REQUIRED_KEY_IDS.forEach(keyId => {
                             const versionValue = versions[keyId];
                             status[keyId] = !!(versionValue && typeof versionValue === 'string' && versionValue.length > 0);
                         });
                     } else {
+                        // If doc doesn't exist, all keys are considered missing
                         ALL_REQUIRED_KEY_IDS.forEach(keyId => { status[keyId] = false; });
                     }
                     setSavedKeyStatus(status);
@@ -126,6 +124,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     setIsLoadingStatus(false);
                 }
             } else if (!authLoading) {
+                // Reset if no user and auth isn't loading
                 const resetStatus: Record<string, boolean> = {};
                 ALL_REQUIRED_KEY_IDS.forEach(keyId => { resetStatus[keyId] = false; });
                 setSavedKeyStatus(resetStatus);
@@ -133,69 +132,94 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             }
         };
         fetchKeyStatus();
-    }, [user, authLoading]);
+    }, [user, authLoading]); // Dependencies
 
+    // Effect to update available voices when TTS provider changes for Agent A
     useEffect(() => {
         const voices = getVoicesForProvider(agentATTSSettings.provider);
         setCurrentExternalVoicesA(voices);
+        // Reset voice selection if current voice is not available for the new provider
         if (agentATTSSettings.voice && !voices.some(v => v.id === agentATTSSettings.voice)) {
             setAgentATTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         } else if (!agentATTSSettings.voice && voices.length > 0) {
+            // Set default voice if none is selected
             setAgentATTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentATTSSettings.provider, agentATTSSettings.voice]);
+    }, [agentATTSSettings.provider, agentATTSSettings.voice]); // Dependencies
 
+    // Effect to update available voices when TTS provider changes for Agent B
     useEffect(() => {
         const voices = getVoicesForProvider(agentBTTSSettings.provider);
         setCurrentExternalVoicesB(voices);
+        // Reset voice selection if current voice is not available for the new provider
         if (agentBTTSSettings.voice && !voices.some(v => v.id === agentBTTSSettings.voice)) {
             setAgentBTTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         } else if (!agentBTTSSettings.voice && voices.length > 0) {
+            // Set default voice if none is selected
             setAgentBTTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentBTTSSettings.provider, agentBTTSSettings.voice]);
+    }, [agentBTTSSettings.provider, agentBTTSSettings.voice]); // Dependencies
 
     // --- Event Handlers ---
     const handleStartClick = () => {
+        // Find the selected LLM info objects
         const agentAOption = AVAILABLE_LLMS.find(llm => llm.id === agentA_llm);
         const agentBOption = AVAILABLE_LLMS.find(llm => llm.id === agentB_llm);
+
+        // Basic validation: ensure models are selected
         if (!agentAOption || !agentBOption) {
-            alert("Please select a model for both Agent A and Agent B."); return;
+            alert("Please select a model for both Agent A and Agent B.");
+            return;
         }
-        const agentARequiredLLMKey = agentAOption.provider === 'OpenAI' ? 'openai' : agentAOption.provider === 'Google' ? 'google_ai' : agentAOption.provider === 'Anthropic' ? 'anthropic' : null;
-        const agentBRequiredLLMKey = agentBOption.provider === 'OpenAI' ? 'openai' : agentBOption.provider === 'Google' ? 'google_ai' : agentBOption.provider === 'Anthropic' ? 'anthropic' : null;
-        if (!agentARequiredLLMKey || !agentBRequiredLLMKey) {
-             alert("Internal error: Could not map selected LLM models to required API keys."); return;
-        }
+
+        // --- Refactored Key Check using apiKeySecretName ---
+        const agentARequiredLLMKey = agentAOption.apiKeySecretName;
+        const agentBRequiredLLMKey = agentBOption.apiKeySecretName;
+
+        // Check if the required keys are present based on fetched status
         const isAgentALLMKeyMissing = !savedKeyStatus[agentARequiredLLMKey];
         const isAgentBLLMKeyMissing = !savedKeyStatus[agentBRequiredLLMKey];
+
         if (isAgentALLMKeyMissing || isAgentBLLMKeyMissing) {
             let missingKeysMsg = "Missing required LLM API key in Settings for: ";
             const missingProviders = new Set<string>();
             if (isAgentALLMKeyMissing) missingProviders.add(agentAOption.provider);
             if (isAgentBLLMKeyMissing) missingProviders.add(agentBOption.provider);
             missingKeysMsg += Array.from(missingProviders).join(' and ');
-            alert(missingKeysMsg + "."); return;
+            alert(missingKeysMsg + ".");
+            return;
         }
+        // --- End Refactored Key Check ---
+
+        // TTS validation (if enabled)
         if (ttsEnabled) {
              if (!agentATTSSettings.voice) {
-                 alert(`Please select a voice for Agent A's TTS provider (${agentATTSSettings.provider}) or disable TTS.`); return;
+                 alert(`Please select a voice for Agent A's TTS provider (${agentATTSSettings.provider}) or disable TTS.`);
+                 return;
              }
              if (!agentBTTSSettings.voice) {
-                  alert(`Please select a voice for Agent B's TTS provider (${agentBTTSSettings.provider}) or disable TTS.`); return;
+                  alert(`Please select a voice for Agent B's TTS provider (${agentBTTSSettings.provider}) or disable TTS.`);
+                  return;
              }
         }
+
+        // Call the parent component's start function with the full config
         onStartSession({
-            agentA_llm, agentB_llm, ttsEnabled,
-            agentA_tts: agentATTSSettings, agentB_tts: agentBTTSSettings,
+            agentA_llm,
+            agentB_llm,
+            ttsEnabled,
+            agentA_tts: agentATTSSettings,
+            agentB_tts: agentBTTSSettings,
         });
     };
 
+    // --- Refactored to use apiKeySecretName ---
     const isLLMOptionDisabled = (llm: LLMInfo): boolean => {
-         const requiredKey = llm.provider === 'OpenAI' ? 'openai' : llm.provider === 'Google' ? 'google_ai' : llm.provider === 'Anthropic' ? 'anthropic' : null;
-        if (!requiredKey) return true;
-        return isLoadingStatus || !savedKeyStatus[requiredKey];
+        const requiredKey = llm.apiKeySecretName; // Get the secret name directly
+        if (!requiredKey) return true; // Should not happen if models.ts is correct
+        return isLoadingStatus || !savedKeyStatus[requiredKey]; // Check status using the correct key ID
     };
+    // --- End Refactored ---
 
     const handleTtsToggle = (checked: boolean | 'indeterminate') => {
          setTtsEnabled(Boolean(checked));
@@ -214,10 +238,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     };
 
     const isTTSProviderDisabled = (provider: TTSProviderInfo): boolean => {
+        // Example: Disable OpenAI TTS if the 'openai' key is missing
         if (provider.id === 'openai') {
             return isLoadingStatus || !savedKeyStatus['openai'];
         }
-        return false;
+        // Add checks for other TTS providers requiring keys here
+        // if (provider.id === 'elevenlabs') {
+        //     return isLoadingStatus || !savedKeyStatus['elevenlabs']; // Assuming 'elevenlabs' is the key ID
+        // }
+        return false; // Default to enabled if no specific key check needed
     };
 
     const isStartDisabled = isLoading || isLoadingStatus || !agentA_llm || !agentB_llm || !user;
@@ -284,6 +313,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
+                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>} {/* Added Beta status */}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
@@ -349,6 +379,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
+                                                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>} {/* Added Beta status */}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
