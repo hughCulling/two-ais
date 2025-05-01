@@ -263,14 +263,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'claude-3-5-sonnet-20241022',
-        name: 'Claude 3.5 Sonnet v2', // Updated name
+        name: 'Claude 3.5 Sonnet v2',
         provider: 'Anthropic',
-        contextWindow: 200000, // Assuming same as previous 3.5 Sonnet
-        pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as 2024-06-20 version' }, // Assuming same pricing
+        contextWindow: 200000,
+        pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as 2024-06-20 version' },
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
-        status: 'stable', // Assuming stable
-        requiresOrgVerification: false, // Assuming same as previous 3.5 Sonnet
+        status: 'stable',
+        requiresOrgVerification: false,
     },
     {
         id: 'claude-3-opus-20240229',
@@ -282,6 +282,18 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
     },
+    // --- Removed Claude 3 Sonnet (2024-02-29) entry ---
+    // {
+    //     id: 'claude-3-sonnet-20240229',
+    //     name: 'Claude 3 Sonnet',
+    //     provider: 'Anthropic',
+    //     contextWindow: 200000,
+    //     pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as other Sonnet versions' },
+    //     apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
+    //     apiKeySecretName: 'anthropic',
+    //     status: 'stable',
+    //     requiresOrgVerification: false,
+    // },
      {
         id: 'claude-3-haiku-20240307',
         name: 'Claude 3 Haiku',
