@@ -16,8 +16,10 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
-import { ChatGroq } from "@langchain/groq"; // Added Groq client
-// import { Replicate } from "@langchain/community/llms/replicate"; // Removed Replicate client
+import { ChatGroq } from "@langchain/groq";
+// --- Added TogetherAI Import ---
+import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+// --- End Added TogetherAI Import ---
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 
@@ -26,8 +28,8 @@ import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 type TTSProviderId = "openai";
 interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
 interface ConversationTTSSettings { enabled: boolean; agentA: AgentTTSSettings; agentB: AgentTTSSettings; }
-// Updated LLMInfo["provider"] to include Groq, removed Replicate
-interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "XAI" | "Groq"; apiKeySecretName: string; }
+// Updated LLMInfo["provider"] to include TogetherAI
+interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "XAI" | "Groq" | "TogetherAI"; apiKeySecretName: string; }
 interface GcpError extends Error { code?: number | string; details?: string; }
 interface ConversationData {
     agentA_llm: string; agentB_llm: string; turn: "agentA" | "agentB";
@@ -44,10 +46,12 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      if (id.startsWith("grok-")) return "XAI";
-     // --- Added check for Groq (Llama models) ---
-     if (id.startsWith("llama")) return "Groq";
+     if (id.startsWith("llama")) return "Groq"; // Handles Groq Llama models
+     // --- Added check for TogetherAI (Llama models) ---
+     // Check for common TogetherAI prefixes or patterns if needed, currently relying on models.ts definition
+     // A simple check might be if it includes 'meta-llama/' and isn't Groq
+     if (id.includes("meta-llama/")) return "TogetherAI";
      // --- End Added check ---
-     // Removed Replicate check
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
 }
@@ -57,10 +61,10 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "Google") return "google_ai";
     if (provider === "Anthropic") return "anthropic";
     if (provider === "XAI") return "xai";
-    // --- Added mapping for Groq ---
-    if (provider === "Groq") return "groq"; // Assumed secret key name
+    if (provider === "Groq") return "groq";
+    // --- Added mapping for TogetherAI ---
+    if (provider === "TogetherAI") return "together_ai"; // Assumed secret key name
     // --- End Added mapping ---
-    // Removed Replicate mapping
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -295,17 +299,15 @@ async function _triggerAgentResponse(
             else if (llmProvider === "Google") chatModel = new ChatGoogleGenerativeAI({ apiKey: llmApiKey, model: modelName });
             else if (llmProvider === "Anthropic") chatModel = new ChatAnthropic({ apiKey: llmApiKey, modelName: modelName });
             else if (llmProvider === "XAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName });
-            // --- Added Groq ---
-            else if (llmProvider === "Groq") {
-                 // --- FIX: Use 'model' instead of 'modelName' for ChatGroq ---
-                 chatModel = new ChatGroq({
+            else if (llmProvider === "Groq") chatModel = new ChatGroq({ apiKey: llmApiKey, model: modelName });
+            // --- Added TogetherAI ---
+            else if (llmProvider === "TogetherAI") {
+                 chatModel = new ChatTogetherAI({
                      apiKey: llmApiKey, // Use standard apiKey parameter
-                     model: modelName, // Pass the model ID (e.g., 'llama3-70b-8192')
+                     modelName: modelName, // Pass the model ID (e.g., 'meta-llama/Llama-3-70b-chat-hf')
                  });
             }
-            // --- End Added Groq ---
-            // Remove Replicate logic
-            // else if (llmProvider === "Replicate") { ... }
+            // --- End Added TogetherAI ---
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in _triggerAgentResponse`);
         } catch (error) { throw new Error(`Failed to initialize LLM "${agentModelId}" for ${agentToRespond}: ${error}`); }
@@ -315,13 +317,11 @@ async function _triggerAgentResponse(
         try {
             logger.info(`Invoking ${agentToRespond} (${agentModelId}) with ${historyMessages.length} history messages in _triggerAgentResponse...`);
 
-            // --- Removed Replicate specific handling ---
             // All integrated models now conform to BaseChatModel interface for invoke
             const aiResponse = await chatModel.invoke(historyMessages as BaseLanguageModelInput);
             if (typeof aiResponse.content === "string") responseContent = aiResponse.content;
             else if (Array.isArray(aiResponse.content)) responseContent = aiResponse.content.map(item => typeof item === "string" ? item : JSON.stringify(item)).join("\n");
             else responseContent = String(aiResponse.content);
-            // --- End Removed Replicate specific handling ---
 
             if (!responseContent || responseContent.trim() === "") responseContent = "(No content returned)";
             logger.info(`Processed response from ${agentToRespond} in _triggerAgentResponse: ${responseContent.substring(0,100)}...`);

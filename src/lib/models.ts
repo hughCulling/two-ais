@@ -2,9 +2,9 @@
 // Centralized definition for available Large Language Models
 
 export interface LLMInfo {
-    id: string; // Unique identifier used in backend (e.g., 'llama3-70b-8192')
+    id: string; // Unique identifier used in backend (e.g., 'llama3-70b-8192' or 'meta-llama/Llama-3-70b-chat-hf')
     name: string; // User-friendly name (e.g., 'Llama 3 70B (Groq)')
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'Groq'; // Added Groq, removed Replicate, Mistral, Cohere for now
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'Groq' | 'TogetherAI'; // Added TogetherAI
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -12,7 +12,7 @@ export interface LLMInfo {
         note?: string; // Optional note, e.g., for preview models or variable pricing
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
-    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai', 'groq')
+    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai', 'groq', 'together_ai')
     status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
     requiresOrgVerification?: boolean; // Flag for models requiring organization verification
 }
@@ -335,18 +335,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'xai',
         status: 'beta',
     },
-    // --- Removed Grok 2 ---
-    // {
-    //     id: 'grok-2-1212',
-    //     name: 'Grok 2',
-    //     provider: 'XAI',
-    //     contextWindow: 131072,
-    //     pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' },
-    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
-    //     apiKeySecretName: 'xai',
-    //     status: 'stable',
-    // },
-    // --- End Removed Grok 2 ---
 
     // === Groq (Llama) ===
     {
@@ -354,9 +342,9 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Llama 3 70B (Groq)',
         provider: 'Groq',
         contextWindow: 8192,
-        pricing: { input: 0.59, output: 0.79 }, // From Groq pricing table
+        pricing: { input: 0.59, output: 0.79 },
         apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq', // Use 'groq' as the key name
+        apiKeySecretName: 'groq',
         status: 'stable',
     },
     {
@@ -364,39 +352,161 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Llama 3 8B (Groq)',
         provider: 'Groq',
         contextWindow: 8192,
-        pricing: { input: 0.05, output: 0.08 }, // From Groq pricing table
+        pricing: { input: 0.05, output: 0.08 },
         apiKeyInstructionsUrl: 'https://console.groq.com/keys',
         apiKeySecretName: 'groq',
         status: 'stable',
     },
     {
-        id: 'llama-3.1-8b-instant', // ID from Groq table
+        id: 'llama-3.1-8b-instant',
         name: 'Llama 3.1 8B Instant (Groq)',
         provider: 'Groq',
-        contextWindow: 131072, // From user list
-        pricing: { input: 0.05, output: 0.08 }, // From Groq pricing table
+        contextWindow: 131072,
+        pricing: { input: 0.05, output: 0.08 },
         apiKeyInstructionsUrl: 'https://console.groq.com/keys',
         apiKeySecretName: 'groq',
         status: 'stable',
     },
      {
-        id: 'llama-3.3-70b-versatile', // ID from Groq table
+        id: 'llama-3.3-70b-versatile',
         name: 'Llama 3.3 70B Versatile (Groq)',
         provider: 'Groq',
-        contextWindow: 131072, // From user list
-        pricing: { input: 0.59, output: 0.79 }, // From Groq pricing table
+        contextWindow: 131072,
+        pricing: { input: 0.59, output: 0.79 },
         apiKeyInstructionsUrl: 'https://console.groq.com/keys',
         apiKeySecretName: 'groq',
         status: 'stable',
     },
     {
-        id: 'llama-guard-3-8b', // ID from Groq table
+        id: 'llama-guard-3-8b',
         name: 'Llama Guard 3 8B (Groq)',
         provider: 'Groq',
-        contextWindow: 8192, // From user list
-        pricing: { input: 0.20, output: 0.20 }, // From Groq pricing table (Note: Safety model)
+        contextWindow: 8192,
+        pricing: { input: 0.20, output: 0.20 },
         apiKeyInstructionsUrl: 'https://console.groq.com/keys',
         apiKeySecretName: 'groq',
+        status: 'stable',
+    },
+
+    // === Together.ai (Llama) ===
+    {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama 4 Scout (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 1000000, // 1M
+        pricing: { input: 0.18, output: 0.59 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+        name: 'Llama 4 Maverick FP8 (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 1000000, // 1M
+        pricing: { input: 0.27, output: 0.85 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+        name: 'Llama 3.3 70B Instruct Turbo (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 131072, // 128K
+        pricing: { input: 0.88, output: 0.88, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-3.2-3B-Instruct-Turbo',
+        name: 'Llama 3.2 3B Instruct Turbo (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 131072, // 131K
+        pricing: { input: 0.06, output: 0.06, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo',
+        name: 'Llama 3.1 405B Instruct Turbo (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 131072, // 131K
+        pricing: { input: 3.50, output: 3.50, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo',
+        name: 'Llama 3.1 8B Instruct Turbo (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 131072, // 131K
+        pricing: { input: 0.18, output: 0.18, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-3-70b-chat-hf',
+        name: 'Llama 3 70B Instruct HF (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 8192, // 8K
+        pricing: { input: 0.88, output: 0.88, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Meta-Llama-3-70B-Instruct-Turbo',
+        name: 'Llama 3 70B Instruct Turbo (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 8192, // 8K
+        pricing: { input: 0.88, output: 0.88, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Meta-Llama-3-8B-Instruct-Lite',
+        name: 'Llama 3 8B Instruct Lite (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 8192, // 8K
+        pricing: { input: 0.10, output: 0.10, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-3-8b-chat-hf',
+        name: 'Llama 3 8B Instruct HF (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 8192, // 8K
+        pricing: { input: 0.20, output: 0.20, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-2-13b-chat-hf',
+        name: 'Llama 2 13B Chat HF (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 4096, // 4K
+        pricing: { input: 0.22, output: 0.22, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+    },
+    {
+        id: 'meta-llama/Llama-2-7b-chat-hf',
+        name: 'Llama 2 7B Chat HF (TogetherAI)',
+        provider: 'TogetherAI',
+        contextWindow: 4096, // 4K
+        pricing: { input: 0.20, output: 0.20, note: 'Single price listed' },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
         status: 'stable',
     },
 ];

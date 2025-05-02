@@ -62,8 +62,8 @@ interface SessionSetupFormProps {
 const groupedLLMOptions = groupLLMsByProvider();
 
 // --- Determine all potentially required API key IDs ---
-// Updated to include 'groq', removed 'replicate'
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'groq'];
+// Updated to include 'together_ai'
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'groq', 'together_ai'];
 
 
 // --- Main Component Definition ---

@@ -13,8 +13,10 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
-import { ChatGroq } from "@langchain/groq"; // Added Groq client
-// import { Replicate } from "@langchain/community/llms/replicate"; // Removed Replicate client
+import { ChatGroq } from "@langchain/groq";
+// --- Added TogetherAI Import ---
+import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+// --- End Added TogetherAI Import ---
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models'; // Use path alias
@@ -322,14 +324,12 @@ export async function POST(request: NextRequest) {
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm }); break;
                  case "XAI": new ChatXAI({ apiKey: apiKeyA, model: agentA_llm }); break;
-                 // --- Added Groq ---
-                 case "Groq":
-                     // --- FIX: Use 'model' instead of 'modelName' ---
-                     new ChatGroq({ apiKey: apiKeyA, model: agentA_llm });
+                 case "Groq": new ChatGroq({ apiKey: apiKeyA, model: agentA_llm }); break; // Use model
+                 // --- Added TogetherAI ---
+                 case "TogetherAI":
+                     new ChatTogetherAI({ apiKey: apiKeyA, modelName: agentA_llm }); // Use modelName
                      break;
-                 // --- End Added Groq ---
-                 // Remove Replicate case
-                 // case "Replicate": ...
+                 // --- End Added TogetherAI ---
                  default: throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
              }
 
@@ -339,14 +339,12 @@ export async function POST(request: NextRequest) {
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm }); break;
                  case "XAI": new ChatXAI({ apiKey: apiKeyB, model: agentB_llm }); break;
-                 // --- Added Groq ---
-                 case "Groq":
-                      // --- FIX: Use 'model' instead of 'modelName' ---
-                     new ChatGroq({ apiKey: apiKeyB, model: agentB_llm });
+                 case "Groq": new ChatGroq({ apiKey: apiKeyB, model: agentB_llm }); break; // Use model
+                 // --- Added TogetherAI ---
+                 case "TogetherAI":
+                     new ChatTogetherAI({ apiKey: apiKeyB, modelName: agentB_llm }); // Use modelName
                      break;
-                 // --- End Added Groq ---
-                 // Remove Replicate case
-                 // case "Replicate": ...
+                 // --- End Added TogetherAI ---
                  default: throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
              }
              console.log("API Route: LangChain models initialized successfully for validation.");
