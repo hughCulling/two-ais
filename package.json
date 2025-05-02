@@ -11,7 +11,7 @@
   "dependencies": {
     "@google-cloud/secret-manager": "^6.0.1",
     "@langchain/anthropic": "^0.3.18",
-    "@langchain/community": "^0.3.42",
+    "@langchain/community": "^0.3.42", 
     "@langchain/core": "^0.3.44",
     "@langchain/google-genai": "^0.2.3",
     "@langchain/groq": "^0.1.1",
@@ -51,5 +51,9 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "overrides": {}
+  "overrides": {
+    "@langchain/community": {
+      "firebase-admin": "^13.2.0"
+    }
+  }
 }
