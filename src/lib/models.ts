@@ -335,16 +335,18 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'xai',
         status: 'beta',
     },
-    {
-        id: 'grok-2-1212',
-        name: 'Grok 2',
-        provider: 'XAI',
-        contextWindow: 131072,
-        pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' },
-        apiKeyInstructionsUrl: 'https://docs.x.ai/',
-        apiKeySecretName: 'xai',
-        status: 'stable',
-    },
+    // --- Removed Grok 2 ---
+    // {
+    //     id: 'grok-2-1212',
+    //     name: 'Grok 2',
+    //     provider: 'XAI',
+    //     contextWindow: 131072,
+    //     pricing: { input: 2.00, output: 10.00, note: 'Pricing needs official source confirmation' },
+    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
+    //     apiKeySecretName: 'xai',
+    //     status: 'stable',
+    // },
+    // --- End Removed Grok 2 ---
 
     // === Groq (Llama) ===
     {
@@ -397,7 +399,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'groq',
         status: 'stable',
     },
-    // --- Removed Replicate Models ---
 ];
 
 // --- Helper Functions ---
