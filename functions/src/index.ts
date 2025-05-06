@@ -16,7 +16,9 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
-import { ChatGroq } from "@langchain/groq";
+// --- Removed Groq Import ---
+// import { ChatGroq } from "@langchain/groq";
+// --- End Removed Groq Import ---
 // --- Added TogetherAI Import ---
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 // --- End Added TogetherAI Import ---
@@ -28,8 +30,8 @@ import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 type TTSProviderId = "openai";
 interface AgentTTSSettings { provider: TTSProviderId; voice: string | null; }
 interface ConversationTTSSettings { enabled: boolean; agentA: AgentTTSSettings; agentB: AgentTTSSettings; }
-// Updated LLMInfo["provider"] to include TogetherAI
-interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "XAI" | "Groq" | "TogetherAI"; apiKeySecretName: string; }
+// Updated LLMInfo["provider"] to remove Groq
+interface LLMInfo { id: string; provider: "OpenAI" | "Google" | "Anthropic" | "XAI" | "TogetherAI"; apiKeySecretName: string; }
 interface GcpError extends Error { code?: number | string; details?: string; }
 interface ConversationData {
     agentA_llm: string; agentB_llm: string; turn: "agentA" | "agentB";
@@ -45,13 +47,11 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
-     if (id.startsWith("grok-")) return "XAI";
-     if (id.startsWith("llama")) return "Groq"; // Handles Groq Llama models
-     // --- Added check for TogetherAI (Llama models) ---
-     // Check for common TogetherAI prefixes or patterns if needed, currently relying on models.ts definition
-     // A simple check might be if it includes 'meta-llama/' and isn't Groq
+     if (id.startsWith("grok-")) return "XAI"; // Refers to xAI's Grok model
+     // --- Removed Groq Llama check, TogetherAI handles meta-llama ---
+     // if (id.startsWith("llama")) return "Groq"; 
      if (id.includes("meta-llama/")) return "TogetherAI";
-     // --- End Added check ---
+     // --- End Removed/Adjusted check ---
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
 }
@@ -60,11 +60,11 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "OpenAI") return "openai";
     if (provider === "Google") return "google_ai";
     if (provider === "Anthropic") return "anthropic";
-    if (provider === "XAI") return "xai";
-    if (provider === "Groq") return "groq";
-    // --- Added mapping for TogetherAI ---
-    if (provider === "TogetherAI") return "together_ai"; // Assumed secret key name
-    // --- End Added mapping ---
+    if (provider === "XAI") return "xai"; // For xAI's Grok model
+    // --- Removed Groq mapping ---
+    // if (provider === "Groq") return "groq";
+    // --- End Removed Groq mapping ---
+    if (provider === "TogetherAI") return "together_ai"; 
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -179,7 +179,7 @@ if (admin.apps.length === 0) {
   logger.info("Firebase Admin SDK Initialized in Cloud Function.");
 }
 const db = admin.firestore();
-const defaultBucketName = process.env.FIREBASE_STORAGE_BUCKET || "two-ais.firebasestorage.app";
+const defaultBucketName = process.env.FIREBASE_STORAGE_BUCKET || "two-ais.firebasestorage.app"; // Ensure your project ID is correctly inferred or set
 const storageBucket = getStorage().bucket(defaultBucketName);
 logger.info(`Using Storage bucket: ${defaultBucketName}`);
 
@@ -299,15 +299,15 @@ async function _triggerAgentResponse(
             else if (llmProvider === "Google") chatModel = new ChatGoogleGenerativeAI({ apiKey: llmApiKey, model: modelName });
             else if (llmProvider === "Anthropic") chatModel = new ChatAnthropic({ apiKey: llmApiKey, modelName: modelName });
             else if (llmProvider === "XAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName });
-            else if (llmProvider === "Groq") chatModel = new ChatGroq({ apiKey: llmApiKey, model: modelName });
-            // --- Added TogetherAI ---
+            // --- Removed Groq Case ---
+            // else if (llmProvider === "Groq") chatModel = new ChatGroq({ apiKey: llmApiKey, model: modelName });
+            // --- End Removed Groq Case ---
             else if (llmProvider === "TogetherAI") {
                  chatModel = new ChatTogetherAI({
                      apiKey: llmApiKey, // Use standard apiKey parameter
                      modelName: modelName, // Pass the model ID (e.g., 'meta-llama/Llama-3-70b-chat-hf')
                  });
             }
-            // --- End Added TogetherAI ---
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in _triggerAgentResponse`);
         } catch (error) { throw new Error(`Failed to initialize LLM "${agentModelId}" for ${agentToRespond}: ${error}`); }
@@ -430,7 +430,7 @@ async function _triggerAgentResponse(
                 logger.info(`Setting waitingForTTSEndSignal = true for conversation ${conversationId}.`);
             } else {
                 updateData.turn = nextTurn;
-                updateData.waitingForTTSEndSignal = false;
+                updateData.waitingForTTSEndSignal = false; // Explicitly set to false
                 logger.info(`No TTS generated or TTS disabled. Updating turn to ${nextTurn} immediately.`);
             }
             await conversationRef.update(updateData);
@@ -556,7 +556,7 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
 
                 if (data.waitingForTTSEndSignal !== true) {
                     logger.warn(`Received next turn request for ${conversationId}, but it wasn't waiting for a TTS signal (flag is ${data.waitingForTTSEndSignal}). Ignoring.`);
-                    nextTurn = null;
+                    nextTurn = null; // Ensure no agent is triggered if not waiting
                     return;
                 }
 
@@ -580,7 +580,7 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
                 logger.info(`Cleared waitingForTTSEndSignal flag and set turn to ${nextTurn} for conversation ${conversationId}.`);
             }); // End Transaction
 
-            if (nextTurn !== null) {
+            if (nextTurn !== null) { // Only trigger if a next turn was determined and state was updated
                  logger.info(`Signalling agent ${nextTurn} to respond for ${conversationId} via requestNextTurn.`);
                  await _triggerAgentResponse(conversationId, nextTurn, conversationRef, messagesRef);
             } else {

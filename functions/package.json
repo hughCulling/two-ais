@@ -22,7 +22,6 @@
     "@langchain/community": "^0.3.42",
     "@langchain/core": "^0.3.45",
     "@langchain/google-genai": "^0.2.3",
-    "@langchain/groq": "^0.2.2",
     "@langchain/openai": "^0.5.5",
     "@langchain/xai": "^0.0.2",
     "firebase-admin": "^13.2.0",

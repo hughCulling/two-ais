@@ -21,7 +21,7 @@ import { Terminal, CheckCircle, Info } from "lucide-react"; // Added Info icon
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
-    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic', 'xai', 'groq', 'together_ai')
+    id: string; // Unique identifier (e.g., 'openai', 'google_ai', 'anthropic', 'xai', 'together_ai')
     label: string; // User-friendly label for the input
     value: string; // Current value entered by the user
     tooltip: string; // Tooltip help text
@@ -30,7 +30,7 @@ interface ApiKeyInput {
 // Interface for the data sent to the Firebase Function
 interface SaveApiKeyRequest {
     apiKey: string; // The API key string
-    service: string; // The identifier of the service (e.g., 'openai', 'anthropic', 'xai', 'groq', 'together_ai')
+    service: string; // The identifier of the service (e.g., 'openai', 'anthropic', 'xai', 'together_ai')
 }
 
 // Interface for a successful response from the Firebase Function
@@ -71,20 +71,20 @@ const initialApiKeys: ApiKeyInput[] = [
         value: '',
         tooltip: 'Requires xAI account. Find keys at console.x.ai (or similar). Costs may apply.'
     },
-    {
-        id: 'groq',
-        label: 'Groq API Key',
-        value: '',
-        tooltip: 'Required for Llama models via Groq. Find keys at console.groq.com/keys'
-    },
-    // --- Added TogetherAI, Removed Replicate ---
+    // --- Removed Groq Entry ---
+    // {
+    //     id: 'groq',
+    //     label: 'Groq API Key',
+    //     value: '',
+    //     tooltip: 'Required for Llama models via Groq. Find keys at console.groq.com/keys'
+    // },
+    // --- End Removed Groq Entry ---
     {
         id: 'together_ai', // Matches the apiKeySecretName in models.ts
         label: 'TogetherAI API Key',
         value: '',
         tooltip: 'Required for Llama models via TogetherAI. Find keys at api.together.ai/settings/api-keys'
     },
-    // --- End Change ---
 ];
 
 const ApiKeyManager: React.FC = () => {

@@ -2,17 +2,17 @@
 // Centralized definition for available Large Language Models
 
 export interface LLMInfo {
-    id: string; // Unique identifier used in backend (e.g., 'llama3-70b-8192' or 'meta-llama/Llama-3-70b-chat-hf')
-    name: string; // User-friendly name (e.g., 'Llama 3 70B (Groq)')
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'Groq' | 'TogetherAI'; // Added TogetherAI
+    id: string; // Unique identifier used in backend
+    name: string; // User-friendly name
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'TogetherAI'; // Groq has been removed
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
         output: number; // Price per 1 million output tokens (in USD)
-        note?: string; // Optional note, e.g., for preview models or variable pricing
+        note?: string; // Optional note
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
-    apiKeySecretName: string; // The Secret Manager secret *key ID* (e.g., 'openai', 'google_ai', 'xai', 'groq', 'together_ai')
+    apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
     requiresOrgVerification?: boolean; // Flag for models requiring organization verification
 }
@@ -134,7 +134,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        requiresOrgVerification: true, // Requires verification
+        requiresOrgVerification: true,
     },
     {
         id: 'o3-mini',
@@ -188,7 +188,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { input: 0.10, output: 0.40 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
-        status: 'experimental', // Assuming experimental/preview
+        status: 'experimental',
     },
     {
         id: 'gemini-2.0-flash-lite',
@@ -198,7 +198,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { input: 0.075, output: 0.30 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
-        status: 'experimental', // Assuming experimental/preview
+        status: 'experimental',
     },
     {
         id: 'gemini-1.5-pro-latest',
@@ -294,7 +294,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
     },
 
-    // === XAI (Grok) ===
+    // === XAI (Grok - the model by xAI, not the Groq company) ===
     {
         id: 'grok-3-beta',
         name: 'Grok 3 Beta',
@@ -336,59 +336,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'beta',
     },
 
-    // === Groq (Llama) ===
-    {
-        id: 'llama3-70b-8192',
-        name: 'Llama 3 70B (Groq)',
-        provider: 'Groq',
-        contextWindow: 8192,
-        pricing: { input: 0.59, output: 0.79 },
-        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq',
-        status: 'stable',
-    },
-    {
-        id: 'llama3-8b-8192',
-        name: 'Llama 3 8B (Groq)',
-        provider: 'Groq',
-        contextWindow: 8192,
-        pricing: { input: 0.05, output: 0.08 },
-        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq',
-        status: 'stable',
-    },
-    {
-        id: 'llama-3.1-8b-instant',
-        name: 'Llama 3.1 8B Instant (Groq)',
-        provider: 'Groq',
-        contextWindow: 131072,
-        pricing: { input: 0.05, output: 0.08 },
-        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq',
-        status: 'stable',
-    },
-     {
-        id: 'llama-3.3-70b-versatile',
-        name: 'Llama 3.3 70B Versatile (Groq)',
-        provider: 'Groq',
-        contextWindow: 131072,
-        pricing: { input: 0.59, output: 0.79 },
-        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq',
-        status: 'stable',
-    },
-    {
-        id: 'llama-guard-3-8b',
-        name: 'Llama Guard 3 8B (Groq)',
-        provider: 'Groq',
-        contextWindow: 8192,
-        pricing: { input: 0.20, output: 0.20 },
-        apiKeyInstructionsUrl: 'https://console.groq.com/keys',
-        apiKeySecretName: 'groq',
-        status: 'stable',
-    },
-
-    // === Together.ai (Llama) ===
+    // === Together.ai (Llama & other models) ===
     {
         id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
         name: 'Llama 4 Scout (TogetherAI)',
@@ -397,7 +345,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { input: 0.18, output: 0.59 },
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
-        status: 'stable',
+        status: 'stable', // Assuming stable unless noted otherwise
     },
     {
         id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',

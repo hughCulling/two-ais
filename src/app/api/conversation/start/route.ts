@@ -13,7 +13,9 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
-import { ChatGroq } from "@langchain/groq";
+// --- Removed Groq Import ---
+// import { ChatGroq } from "@langchain/groq"; 
+// --- End Removed Groq Import ---
 // --- Added TogetherAI Import ---
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 // --- End Added TogetherAI Import ---
@@ -324,7 +326,9 @@ export async function POST(request: NextRequest) {
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm }); break;
                  case "XAI": new ChatXAI({ apiKey: apiKeyA, model: agentA_llm }); break;
-                 case "Groq": new ChatGroq({ apiKey: apiKeyA, model: agentA_llm }); break; // Use model
+                 // --- Removed Groq Case ---
+                 // case "Groq": new ChatGroq({ apiKey: apiKeyA, model: agentA_llm }); break; 
+                 // --- End Removed Groq Case ---
                  // --- Added TogetherAI ---
                  case "TogetherAI":
                      new ChatTogetherAI({ apiKey: apiKeyA, modelName: agentA_llm }); // Use modelName
@@ -339,7 +343,9 @@ export async function POST(request: NextRequest) {
                  case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm }); break;
                  case "Anthropic": new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm }); break;
                  case "XAI": new ChatXAI({ apiKey: apiKeyB, model: agentB_llm }); break;
-                 case "Groq": new ChatGroq({ apiKey: apiKeyB, model: agentB_llm }); break; // Use model
+                 // --- Removed Groq Case ---
+                 // case "Groq": new ChatGroq({ apiKey: apiKeyB, model: agentB_llm }); break;
+                 // --- End Removed Groq Case ---
                  // --- Added TogetherAI ---
                  case "TogetherAI":
                      new ChatTogetherAI({ apiKey: apiKeyB, modelName: agentB_llm }); // Use modelName
