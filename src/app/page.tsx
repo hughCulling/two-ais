@@ -210,7 +210,7 @@ export default function Page() {
                         {/* Welcome Section */}
                         <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
                              <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
-                             <p className="text-muted-foreground">This website lets you experience conversations between distinct AI agents.</p>
+                             <p className="text-muted-foreground">This website lets you listen to conversations between distinct AI agents.</p>
                              <Alert variant="default" className="text-left border-theme-primary/50">
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
