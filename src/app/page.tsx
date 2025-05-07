@@ -17,7 +17,6 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-// Added Info icon for reasoning tokens
 import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info } from "lucide-react";
 // --- Import required UI components ---
 import {
@@ -28,11 +27,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-// LLMInfo type is implicitly used by groupLLMsByProvider return type
-// LLMInfo now includes requiresOrgVerification? and usesReasoningTokens?
 import { groupLLMsByProvider, LLMInfo } from '@/lib/models';
 // --- Import TTS data ---
-import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models'; // Import the actual providers
+import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 
 // --- Define TTS Types (Locally) ---
 type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
@@ -51,7 +48,7 @@ interface SessionConfig {
 interface StartApiResponse {
     message: string;
     conversationId: string;
-    config?: SessionConfig; // Optional: Echo back the config saved
+    config?: SessionConfig;
 }
 
 // Define structure for user data containing secret versions from Firestore
@@ -81,7 +78,6 @@ export default function Page() {
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
 
-    // Effect to fetch user data
     useEffect(() => {
         if (!user) {
             setUserApiSecrets(null);
@@ -123,7 +119,6 @@ export default function Page() {
     }, [user, userApiSecrets, secretsLoading]);
 
 
-    // Callback to handle starting the session
     const handleStartSession = async (config: SessionConfig) => {
         if (!user) {
             setPageError("User not found. Please sign in again."); return;
@@ -166,7 +161,6 @@ export default function Page() {
         }
     };
 
-    // Callback when conversation stops
     const handleConversationStopped = () => {
         logger.info("Conversation stopped callback triggered on page.");
         setSessionConfig(null);
@@ -174,7 +168,6 @@ export default function Page() {
         setPageError(null);
     };
 
-    // --- Render Logic ---
     if (authLoading || secretsLoading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
@@ -207,7 +200,6 @@ export default function Page() {
                     )
                 ) : (
                     <TooltipProvider delayDuration={100}>
-                        {/* Welcome Section */}
                         <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
                              <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
                              <p className="text-muted-foreground">This website lets you listen to conversations between two LLMs.</p>
@@ -215,18 +207,16 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    {/* Fixed unescaped apostrophe */}
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
                         </div>
 
-                        {/* YouTube Video Embed */}
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
                             <iframe
                                 className="w-full h-full"
-                                src="https://www.youtube.com/embed/52oUvRFdaXE" // Replace with your actual YouTube embed URL if available
+                                src="https://www.youtube.com/embed/52oUvRFdaXE" // Replace with your actual YouTube embed URL
                                 title="Two AIs Conversation Demo"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -235,7 +225,6 @@ export default function Page() {
                             ></iframe>
                         </div>
 
-                        {/* Available LLMs Section */}
                         <Card className="w-full">
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-center text-xl">
@@ -250,7 +239,20 @@ export default function Page() {
                                         <ul className="space-y-1 list-disc list-inside text-sm">
                                             {llms.map((llm) => (
                                                 <li key={llm.id} className="ml-4 flex items-center space-x-2">
-                                                    {/* Icon for Organization Verification */}
+                                                    {/* Reasoning Tokens Icon (Rendered First) */}
+                                                    {llm.usesReasoningTokens && (
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent side="top">
+                                                                <p className="text-xs max-w-[250px]">
+                                                                    This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.
+                                                                </p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
+                                                    {/* Organization Verification Icon (Rendered Second) */}
                                                     {llm.requiresOrgVerification && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
@@ -272,19 +274,6 @@ export default function Page() {
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     )}
-                                                    {/* Icon for Reasoning Tokens */}
-                                                    {llm.usesReasoningTokens && (
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild>
-                                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
-                                                            </TooltipTrigger>
-                                                            <TooltipContent side="top">
-                                                                <p className="text-xs max-w-[250px]">
-                                                                    This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.
-                                                                </p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    )}
                                                     <span>{llm.name}</span>
                                                     {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
                                                     {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
@@ -299,7 +288,6 @@ export default function Page() {
                             </CardContent>
                         </Card>
 
-                        {/* Available TTS Section */}
                         <Card className="w-full">
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-center text-xl">

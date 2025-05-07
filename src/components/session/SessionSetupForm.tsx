@@ -263,13 +263,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {/* Org Verification Icon (Visual Only) */}
-                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
-                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {/* Reasoning Tokens Icon (Visual Only) */}
+                                                                    {/* Reasoning Tokens Icon (Visual Only, Rendered First) */}
                                                                     {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
+                                                                    {/* Org Verification Icon (Visual Only, Rendered Second) */}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
@@ -319,13 +319,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {/* Org Verification Icon (Visual Only) */}
-                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
-                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {/* Reasoning Tokens Icon (Visual Only) */}
+                                                                    {/* Reasoning Tokens Icon (Visual Only, Rendered First) */}
                                                                     {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
+                                                                    {/* Org Verification Icon (Visual Only, Rendered Second) */}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
@@ -355,7 +355,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                         </div>
                         {/* --- Explanation Notes for Icons (permanently displayed if relevant models exist) --- */}
-                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
+                        {ANY_OPENAI_USES_REASONING_TOKENS && ( // Note for Reasoning Tokens displayed first if applicable
+                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                                Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
+                            </p>
+                        )}
+                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( // Note for Org Verification displayed second if applicable
                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
                                 Indicates an OpenAI model requires a verified organization. You can
@@ -367,12 +373,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 >
                                     verify here
                                 </a>.
-                            </p>
-                        )}
-                        {ANY_OPENAI_USES_REASONING_TOKENS && (
-                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
                             </p>
                         )}
                     </div>
