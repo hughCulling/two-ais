@@ -1,4 +1,4 @@
-// src/components/settings/SessionSetupForm.tsx
+// src/components/session/SessionSetupForm.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -17,14 +17,9 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase/clientApp';
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider } from '@/lib/models';
+import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById } from '@/lib/models';
 import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
@@ -32,7 +27,7 @@ import {
     getVoicesForProvider,
     getDefaultVoiceForProvider
 } from '@/lib/tts_models';
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Info } from "lucide-react";
 
 // --- Define TTS Types (using imported types) ---
 type TTSProviderId = TTSProviderInfo['id'];
@@ -62,13 +57,20 @@ interface SessionSetupFormProps {
 const groupedLLMOptions = groupLLMsByProvider();
 
 // --- Determine all potentially required API key IDs ---
-// Updated to include 'together_ai'
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'groq', 'together_ai'];
+
+// --- Determine if notes for org verification or reasoning tokens should be shown (permanently if relevant models exist) ---
+const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
+    llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
+);
+const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
+    llm => llm.provider === 'OpenAI' && llm.usesReasoningTokens
+);
 
 
 // --- Main Component Definition ---
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
-    const { user, loading: authLoading } = useAuth(); // Get user and auth loading state
+    const { user, loading: authLoading } = useAuth();
 
     // --- State Variables ---
     const [agentA_llm, setAgentA_llm] = useState<string>('');
@@ -77,8 +79,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
-    // Ensure AVAILABLE_TTS_PROVIDERS is not empty before accessing index 0
-    const defaultTTSProvider = AVAILABLE_TTS_PROVIDERS.length > 0 ? AVAILABLE_TTS_PROVIDERS[0].id : 'openai'; // Fallback if empty
+    const defaultTTSProvider = AVAILABLE_TTS_PROVIDERS.length > 0 ? AVAILABLE_TTS_PROVIDERS[0].id : 'openai';
     const defaultVoiceA = getDefaultVoiceForProvider(defaultTTSProvider)?.id ?? null;
     const defaultVoiceB = getDefaultVoiceForProvider(defaultTTSProvider)?.id ?? null;
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
@@ -103,17 +104,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     if (userDocSnap.exists()) {
                         const data: DocumentData = userDocSnap.data();
                         const versions: Record<string, string> = data?.apiSecretVersions || {};
-                        // Check status for all defined required keys
                         ALL_REQUIRED_KEY_IDS.forEach(keyId => {
                             const versionValue = versions[keyId];
                             status[keyId] = !!(versionValue && typeof versionValue === 'string' && versionValue.length > 0);
                         });
                     } else {
-                        // If doc doesn't exist, all keys are considered missing
                         ALL_REQUIRED_KEY_IDS.forEach(keyId => { status[keyId] = false; });
                     }
                     setSavedKeyStatus(status);
-                    console.log("Fetched Key Status:", status);
                 } catch (error) {
                     console.error("Error fetching key status:", error);
                     setStatusError("Could not load API key status.");
@@ -124,7 +122,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     setIsLoadingStatus(false);
                 }
             } else if (!authLoading) {
-                // Reset if no user and auth isn't loading
                 const resetStatus: Record<string, boolean> = {};
                 ALL_REQUIRED_KEY_IDS.forEach(keyId => { resetStatus[keyId] = false; });
                 setSavedKeyStatus(resetStatus);
@@ -132,51 +129,40 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             }
         };
         fetchKeyStatus();
-    }, [user, authLoading]); // Dependencies
+    }, [user, authLoading]);
 
-    // Effect to update available voices when TTS provider changes for Agent A
     useEffect(() => {
         const voices = getVoicesForProvider(agentATTSSettings.provider);
         setCurrentExternalVoicesA(voices);
-        // Reset voice selection if current voice is not available for the new provider
         if (agentATTSSettings.voice && !voices.some(v => v.id === agentATTSSettings.voice)) {
             setAgentATTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         } else if (!agentATTSSettings.voice && voices.length > 0) {
-            // Set default voice if none is selected
             setAgentATTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentATTSSettings.provider, agentATTSSettings.voice]); // Dependencies
+    }, [agentATTSSettings.provider, agentATTSSettings.voice]);
 
-    // Effect to update available voices when TTS provider changes for Agent B
     useEffect(() => {
         const voices = getVoicesForProvider(agentBTTSSettings.provider);
         setCurrentExternalVoicesB(voices);
-        // Reset voice selection if current voice is not available for the new provider
         if (agentBTTSSettings.voice && !voices.some(v => v.id === agentBTTSSettings.voice)) {
             setAgentBTTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         } else if (!agentBTTSSettings.voice && voices.length > 0) {
-            // Set default voice if none is selected
             setAgentBTTSSettings(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
         }
-    }, [agentBTTSSettings.provider, agentBTTSSettings.voice]); // Dependencies
+    }, [agentBTTSSettings.provider, agentBTTSSettings.voice]);
 
     // --- Event Handlers ---
     const handleStartClick = () => {
-        // Find the selected LLM info objects
-        const agentAOption = AVAILABLE_LLMS.find(llm => llm.id === agentA_llm);
-        const agentBOption = AVAILABLE_LLMS.find(llm => llm.id === agentB_llm);
+        const agentAOption = getLLMInfoById(agentA_llm);
+        const agentBOption = getLLMInfoById(agentB_llm);
 
-        // Basic validation: ensure models are selected
         if (!agentAOption || !agentBOption) {
             alert("Please select a model for both Agent A and Agent B.");
             return;
         }
 
-        // --- Key Check using apiKeySecretName ---
         const agentARequiredLLMKey = agentAOption.apiKeySecretName;
         const agentBRequiredLLMKey = agentBOption.apiKeySecretName;
-
-        // Check if the required keys are present based on fetched status
         const isAgentALLMKeyMissing = !savedKeyStatus[agentARequiredLLMKey];
         const isAgentBLLMKeyMissing = !savedKeyStatus[agentBRequiredLLMKey];
 
@@ -189,9 +175,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             alert(missingKeysMsg + ".");
             return;
         }
-        // --- End Key Check ---
 
-        // TTS validation (if enabled)
         if (ttsEnabled) {
              if (!agentATTSSettings.voice) {
                  alert(`Please select a voice for Agent A's TTS provider (${agentATTSSettings.provider}) or disable TTS.`);
@@ -203,7 +187,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
              }
         }
 
-        // Call the parent component's start function with the full config
         onStartSession({
             agentA_llm,
             agentB_llm,
@@ -213,11 +196,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         });
     };
 
-    // Function to check if an LLM option should be disabled based on key status
     const isLLMOptionDisabled = (llm: LLMInfo): boolean => {
-        const requiredKey = llm.apiKeySecretName; // Get the secret name directly
-        if (!requiredKey) return true; // Should not happen if models.ts is correct
-        return isLoadingStatus || !savedKeyStatus[requiredKey]; // Check status using the correct key ID
+        const requiredKey = llm.apiKeySecretName;
+        if (!requiredKey) return true;
+        return isLoadingStatus || !savedKeyStatus[requiredKey];
     };
 
     const handleTtsToggle = (checked: boolean | 'indeterminate') => {
@@ -237,15 +219,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     };
 
     const isTTSProviderDisabled = (provider: TTSProviderInfo): boolean => {
-        // Example: Disable OpenAI TTS if the 'openai' key is missing
         if (provider.id === 'openai') {
             return isLoadingStatus || !savedKeyStatus['openai'];
         }
-        // Add checks for other TTS providers requiring keys here
-        // if (provider.id === 'elevenlabs') {
-        //     return isLoadingStatus || !savedKeyStatus['elevenlabs']; // Assuming 'elevenlabs' is the key ID
-        // }
-        return false; // Default to enabled if no specific key check needed
+        return false;
     };
 
     const isStartDisabled = isLoading || isLoadingStatus || !agentA_llm || !agentB_llm || !user;
@@ -286,29 +263,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {/* --- Org Verification Warning Popover --- */}
-                                                                    {llm.requiresOrgVerification && !isDisabled && (
-                                                                        <Popover>
-                                                                            <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                                                                <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-2" side="top">
-                                                                                <p className="text-xs max-w-[200px]">
-                                                                                    Requires verified OpenAI org.
-                                                                                    <a
-                                                                                        href="https://platform.openai.com/settings/organization/general"
-                                                                                        target="_blank"
-                                                                                        rel="noopener noreferrer"
-                                                                                        className="underline text-blue-500 hover:text-blue-600 ml-1"
-                                                                                    >
-                                                                                        Verify here
-                                                                                    </a>
-                                                                                    .
-                                                                                </p>
-                                                                            </PopoverContent>
-                                                                        </Popover>
+                                                                    {/* Org Verification Icon (Visual Only) */}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
-                                                                    {/* --- End Org Verification Warning --- */}
+                                                                    {/* Reasoning Tokens Icon (Visual Only) */}
+                                                                    {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
@@ -316,13 +278,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                {/* Display pricing note if available */}
                                                                 {!isDisabled && llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
                                                                         ({llm.pricing.note})
                                                                     </span>
                                                                 )}
-                                                                {/* Display token pricing if note doesn't exist */}
                                                                 {!isDisabled && !llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                                         ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
@@ -337,7 +297,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectContent>
                                 </Select>
                             </div>
-                            {/* Agent B LLM Selector (Repeat the same logic) */}
+                            {/* Agent B LLM Selector */}
                             <div className="space-y-2">
                                 <Label htmlFor="agentB-llm">Agent B Model</Label>
                                 <Select value={agentB_llm} onValueChange={setAgentB_llm} disabled={isLoading || isLoadingStatus || !user}>
@@ -359,29 +319,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                     {/* --- Org Verification Warning Popover --- */}
-                                                                    {llm.requiresOrgVerification && !isDisabled && (
-                                                                        <Popover>
-                                                                            <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                                                                <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-2" side="top">
-                                                                                <p className="text-xs max-w-[200px]">
-                                                                                    Requires verified OpenAI org.
-                                                                                    <a
-                                                                                        href="https://platform.openai.com/settings/organization/general"
-                                                                                        target="_blank"
-                                                                                        rel="noopener noreferrer"
-                                                                                        className="underline text-blue-500 hover:text-blue-600 ml-1"
-                                                                                    >
-                                                                                        Verify here
-                                                                                    </a>
-                                                                                    .
-                                                                                </p>
-                                                                            </PopoverContent>
-                                                                        </Popover>
+                                                                    {/* Org Verification Icon (Visual Only) */}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
-                                                                     {/* --- End Org Verification Warning --- */}
+                                                                    {/* Reasoning Tokens Icon (Visual Only) */}
+                                                                    {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
@@ -389,13 +334,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                 {/* Display pricing note if available */}
                                                                  {!isDisabled && llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
                                                                         ({llm.pricing.note})
                                                                     </span>
                                                                 )}
-                                                                {/* Display token pricing if note doesn't exist */}
                                                                 {!isDisabled && !llm.pricing.note && (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
                                                                         ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
@@ -411,20 +354,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </Select>
                             </div>
                         </div>
-                        {/* --- Added Explanation Note for Warning Icon --- */}
-                        <p className="text-xs text-muted-foreground px-1 flex items-center">
-                             <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
-                             Indicates model requires a verified OpenAI organization. You can
-                             <a
-                                href="https://platform.openai.com/settings/organization/general"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline text-blue-500 hover:text-blue-600 ml-1"
-                            >
-                                verify here
-                            </a>.
-                        </p>
-                        {/* --- End Explanation Note --- */}
+                        {/* --- Explanation Notes for Icons (permanently displayed if relevant models exist) --- */}
+                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
+                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
+                                Indicates an OpenAI model requires a verified organization. You can
+                                <a
+                                    href="https://platform.openai.com/settings/organization/general"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline text-blue-500 hover:text-blue-600 ml-1"
+                                >
+                                    verify here
+                                </a>.
+                            </p>
+                        )}
+                        {ANY_OPENAI_USES_REASONING_TOKENS && (
+                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                                Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
+                            </p>
+                        )}
                     </div>
 
 
@@ -558,5 +508,4 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     );
 };
 
-// --- Ensure only ONE default export ---
 export default SessionSetupForm;

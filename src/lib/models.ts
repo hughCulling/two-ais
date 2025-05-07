@@ -15,6 +15,7 @@ export interface LLMInfo {
     apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
     requiresOrgVerification?: boolean; // Flag for models requiring organization verification
+    usesReasoningTokens?: boolean; // New: Flag for models using reasoning tokens
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -124,6 +125,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        usesReasoningTokens: true,
     },
     {
         id: 'o3',
@@ -135,6 +137,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: true,
+        usesReasoningTokens: true,
     },
     {
         id: 'o3-mini',
@@ -146,6 +149,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        usesReasoningTokens: true,
     },
     {
         id: 'o1',
@@ -157,6 +161,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        usesReasoningTokens: true,
     },
 
     // === Google ===

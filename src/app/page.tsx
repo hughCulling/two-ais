@@ -17,8 +17,8 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-// Added AlertTriangle
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle } from "lucide-react";
+// Added Info icon for reasoning tokens
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info } from "lucide-react";
 // --- Import required UI components ---
 import {
   Alert,
@@ -29,7 +29,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
 // LLMInfo type is implicitly used by groupLLMsByProvider return type
-// LLMInfo now includes requiresOrgVerification?
+// LLMInfo now includes requiresOrgVerification? and usesReasoningTokens?
 import { groupLLMsByProvider, LLMInfo } from '@/lib/models';
 // --- Import TTS data ---
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models'; // Import the actual providers
@@ -226,7 +226,7 @@ export default function Page() {
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
                             <iframe
                                 className="w-full h-full"
-                                src="https://www.youtube.com/embed/52oUvRFdaXE"
+                                src="https://www.youtube.com/embed/52oUvRFdaXE" // Replace with your actual YouTube embed URL if available
                                 title="Two AIs Conversation Demo"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -250,6 +250,7 @@ export default function Page() {
                                         <ul className="space-y-1 list-disc list-inside text-sm">
                                             {llms.map((llm) => (
                                                 <li key={llm.id} className="ml-4 flex items-center space-x-2">
+                                                    {/* Icon for Organization Verification */}
                                                     {llm.requiresOrgVerification && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
@@ -267,6 +268,19 @@ export default function Page() {
                                                                         verify here
                                                                     </a>
                                                                     .
+                                                                </p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
+                                                    {/* Icon for Reasoning Tokens */}
+                                                    {llm.usesReasoningTokens && (
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent side="top">
+                                                                <p className="text-xs max-w-[250px]">
+                                                                    This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.
                                                                 </p>
                                                             </TooltipContent>
                                                         </Tooltip>
