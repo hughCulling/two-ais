@@ -9,6 +9,8 @@ import SessionSetupForm from '@/components/session/SessionSetupForm';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
+// --- Import Theme hook ---
+import { useTheme } from 'next-themes'; // Import useTheme
 // --- Import Tooltip components ---
 import {
     Tooltip,
@@ -69,15 +71,25 @@ const groupedLLMs = groupLLMsByProvider();
 // Get TTS providers outside the component
 const availableTTS = AVAILABLE_TTS_PROVIDERS;
 
+// --- YouTube Video URLs ---
+const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE"; 
+const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/embed/pkN_uU-nDdk"; 
+
+
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
+    const { resolvedTheme } = useTheme(); // Get the resolved theme from next-themes
+
     const [isStartingSession, setIsStartingSession] = useState(false);
     const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
     const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
     const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
+    // Initialize with light mode, will be updated by useEffect based on resolvedTheme
+    const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
 
+    // Effect to fetch user data
     useEffect(() => {
         if (!user) {
             setUserApiSecrets(null);
@@ -117,6 +129,14 @@ export default function Page() {
              }
         }
     }, [user, userApiSecrets, secretsLoading]);
+
+    // Effect to set video URL based on the resolved application theme
+    useEffect(() => {
+        // resolvedTheme might be undefined on initial server render, then determined on client
+        if (resolvedTheme) {
+            setCurrentVideoUrl(resolvedTheme === 'dark' ? YOUTUBE_VIDEO_URL_DARK_MODE : YOUTUBE_VIDEO_URL_LIGHT_MODE);
+        }
+    }, [resolvedTheme]); // Re-run when resolvedTheme changes
 
 
     const handleStartSession = async (config: SessionConfig) => {
@@ -207,17 +227,18 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    {/* Corrected unescaped apostrophe here */}
                                     To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
                         </div>
 
+                        {/* YouTube Video Embed - Now uses dynamic URL based on resolvedTheme */}
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
                             <iframe
                                 className="w-full h-full"
-                                src="https://www.youtube.com/embed/52oUvRFdaXE" // Replace with your actual YouTube embed URL
+                                key={currentVideoUrl} // Force re-render when URL changes
+                                src={currentVideoUrl}
                                 title="Two AIs Conversation Demo"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -240,7 +261,6 @@ export default function Page() {
                                         <ul className="space-y-1 list-disc list-inside text-sm">
                                             {llms.map((llm) => (
                                                 <li key={llm.id} className="ml-4 flex items-center space-x-2">
-                                                    {/* Reasoning Tokens Icon (Rendered First) */}
                                                     {llm.usesReasoningTokens && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
@@ -253,7 +273,6 @@ export default function Page() {
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     )}
-                                                    {/* Organization Verification Icon (Rendered Second) */}
                                                     {llm.requiresOrgVerification && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
