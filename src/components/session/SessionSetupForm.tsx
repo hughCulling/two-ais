@@ -35,7 +35,7 @@ type TTSProviderId = TTSProviderInfo['id'];
 // Interface for storing TTS settings for one agent
 interface AgentTTSSettings {
     provider: TTSProviderId;
-    voice: string | null; // Stores the voice ID or name
+    voice: string | null; 
 }
 
 // --- SessionConfig Interface ---
@@ -49,8 +49,8 @@ interface SessionConfig {
 
 // Props for the SessionSetupForm component
 interface SessionSetupFormProps {
-    onStartSession: (config: SessionConfig) => void; // Callback when the user starts a session
-    isLoading: boolean; // Indicates if the session start process is ongoing
+    onStartSession: (config: SessionConfig) => void; 
+    isLoading: boolean; 
 }
 
 // Pre-group LLM options for efficiency
@@ -59,12 +59,15 @@ const groupedLLMOptions = groupLLMsByProvider();
 // --- Determine all potentially required API key IDs ---
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'groq', 'together_ai'];
 
-// --- Determine if notes for org verification or reasoning tokens should be shown (permanently if relevant models exist) ---
+// --- Determine if notes for special model characteristics should be shown (permanently if relevant models exist) ---
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
     llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
 );
 const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
     llm => llm.provider === 'OpenAI' && llm.usesReasoningTokens
+);
+const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
+    llm => llm.provider === 'Google' && llm.usesReasoningTokens 
 );
 
 
@@ -263,11 +266,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {/* Reasoning Tokens Icon (Visual Only, Rendered First) */}
-                                                                    {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                    {/* Reasoning/Thinking Tokens Icon (Visual Only, Rendered First) */}
+                                                                    {llm.usesReasoningTokens && !isDisabled && (
                                                                         <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
                                                                     )}
-                                                                    {/* Org Verification Icon (Visual Only, Rendered Second) */}
+                                                                    {/* Org Verification Icon (Visual Only, Rendered Second for OpenAI) */}
                                                                     {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
@@ -278,15 +281,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                {!isDisabled && llm.pricing.note && (
+                                                                {/* Display actual pricing note or standard pricing */}
+                                                                {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note})
+                                                                        ({llm.pricing.note}) {/* Display the actual note content */}
                                                                     </span>
-                                                                )}
-                                                                {!isDisabled && !llm.pricing.note && (
-                                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                        ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
-                                                                    </span>
+                                                                ) : (
+                                                                    !isDisabled && (
+                                                                        <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
+                                                                            ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
+                                                                        </span>
+                                                                    )
                                                                 )}
                                                             </div>
                                                         </SelectItem>
@@ -319,11 +324,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {/* Reasoning Tokens Icon (Visual Only, Rendered First) */}
-                                                                    {llm.usesReasoningTokens && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                    {/* Reasoning/Thinking Tokens Icon (Visual Only, Rendered First) */}
+                                                                    {llm.usesReasoningTokens && !isDisabled && (
                                                                         <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
                                                                     )}
-                                                                    {/* Org Verification Icon (Visual Only, Rendered Second) */}
+                                                                    {/* Org Verification Icon (Visual Only, Rendered Second for OpenAI) */}
                                                                     {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
@@ -334,15 +339,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
                                                                 </div>
-                                                                 {!isDisabled && llm.pricing.note && (
+                                                                {/* Display actual pricing note or standard pricing */}
+                                                                {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note})
+                                                                        ({llm.pricing.note}) {/* Display the actual note content */}
                                                                     </span>
-                                                                )}
-                                                                {!isDisabled && !llm.pricing.note && (
-                                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                        ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
-                                                                    </span>
+                                                                ) : (
+                                                                    !isDisabled && (
+                                                                        <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
+                                                                            ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
+                                                                        </span>
+                                                                    )
                                                                 )}
                                                             </div>
                                                         </SelectItem>
@@ -355,13 +362,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                         </div>
                         {/* --- Explanation Notes for Icons (permanently displayed if relevant models exist) --- */}
-                        {ANY_OPENAI_USES_REASONING_TOKENS && ( // Note for Reasoning Tokens displayed first if applicable
+                        {ANY_OPENAI_USES_REASONING_TOKENS && ( 
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
                             </p>
                         )}
-                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( // Note for Org Verification displayed second if applicable
+                        {/* Updated note for Google models for consistency */}
+                        {ANY_GOOGLE_MODEL_USES_THINKING && ( 
+                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                                Indicates a Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat.
+                            </p>
+                        )}
+                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( 
                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
                                 Indicates an OpenAI model requires a verified organization. You can

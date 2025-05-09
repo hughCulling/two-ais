@@ -4,18 +4,18 @@
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'TogetherAI'; // Groq has been removed
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'TogetherAI';
     contextWindow: number; // Context window size in tokens
     pricing: {
-        input: number; // Price per 1 million input tokens (in USD)
-        output: number; // Price per 1 million output tokens (in USD)
-        note?: string; // Optional note
+        input: number; // Price per 1 million input tokens (in USD) - For simple cases or as a primary input cost
+        output: number; // Price per 1 million output tokens (in USD) - For simple cases or as a primary output cost
+        note?: string; // Optional note for complex pricing
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
     apiKeySecretName: string; // The Secret Manager secret *key ID*
-    status?: 'stable' | 'preview' | 'experimental' | 'beta'; // Optional status indicator
-    requiresOrgVerification?: boolean; // Flag for models requiring organization verification
-    usesReasoningTokens?: boolean; // New: Flag for models using reasoning tokens
+    status?: 'stable' | 'preview' | 'experimental' | 'beta';
+    requiresOrgVerification?: boolean;
+    usesReasoningTokens?: boolean; // Used for OpenAI reasoning & Google thinking budgets
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -166,30 +166,40 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
 
     // === Google ===
     {
-        id: 'gemini-2.5-pro-preview-03-25',
+        id: 'gemini-2.5-pro-preview-03-25', 
         name: 'Gemini 2.5 Pro',
         provider: 'Google',
         contextWindow: 2000000,
-        pricing: { input: 1.25, output: 10.00, note: 'Higher rate for >200k tokens' },
+        pricing: { 
+            input: 1.25, 
+            output: 10.00, 
+            note: '$1.25 (≤200k tkns), $2.50 (>200k tkns) / $10.00 (≤200k tkns), $15.00 (>200k tkns) MTok' 
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
+        usesReasoningTokens: true, 
     },
     {
-        id: 'gemini-2.5-flash-preview-04-17',
+        id: 'gemini-2.5-flash-preview-04-17', 
         name: 'Gemini 2.5 Flash',
         provider: 'Google',
         contextWindow: 2000000,
-        pricing: { input: 0.15, output: 3.50, note: 'Output uses Thinking rate' },
+        pricing: { 
+            input: 0.15, 
+            output: 3.50, 
+            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok.' 
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
+        usesReasoningTokens: true, 
     },
     {
         id: 'gemini-2.0-flash',
         name: 'Gemini 2.0 Flash',
         provider: 'Google',
-        contextWindow: 0, // Placeholder - Needs verification
+        contextWindow: 0, 
         pricing: { input: 0.10, output: 0.40 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -199,7 +209,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-2.0-flash-lite',
         name: 'Gemini 2.0 Flash-Lite',
         provider: 'Google',
-        contextWindow: 0, // Placeholder - Needs verification
+        contextWindow: 0, 
         pricing: { input: 0.075, output: 0.30 },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -210,17 +220,26 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 1.5 Pro',
         provider: 'Google',
         contextWindow: 1000000,
-        pricing: { input: 1.25, output: 5.00, note: 'Higher rate for >128k tokens' },
+        pricing: { 
+            input: 1.25, // Base rate for prompts <= 128k tokens
+            output: 5.00, // Base rate for prompts <= 128k tokens
+            note: '$1.25 (≤128k tkns), $2.50 (>128k tkns) / $5.00 (≤128k tkns), $10.00 (>128k tkns) MTok'
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
+        // usesReasoningTokens: false, // Not explicitly mentioned for this model's pricing
     },
     {
         id: 'gemini-1.5-flash-latest',
         name: 'Gemini 1.5 Flash',
         provider: 'Google',
         contextWindow: 1000000,
-        pricing: { input: 0.075, output: 0.30, note: 'Higher rate for >128k tokens' },
+        pricing: { 
+            input: 0.075, 
+            output: 0.30, 
+            note: '$0.075 (≤128k tkns), $0.15 (>128k tkns) / $0.30 (≤128k tkns), $0.60 (>128k tkns) MTok'
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -229,14 +248,19 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         id: 'gemini-1.5-flash-8b',
         name: 'Gemini 1.5 Flash-8B',
         provider: 'Google',
-        contextWindow: 0, // Placeholder - Needs verification
-        pricing: { input: 0.0375, output: 0.15, note: 'Higher rate for >128k tokens' },
+        contextWindow: 0, 
+        pricing: { 
+            input: 0.0375, 
+            output: 0.15,  
+            note: '$0.0375 (≤128k tkns), $0.075 (>128k tkns) / $0.15 (≤128k tkns), $0.30 (>128k tkns) MTok'
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
     },
 
     // === Anthropic ===
+    // ... (Anthropic models remain unchanged) ...
     {
         id: 'claude-3-7-sonnet-20250219',
         name: 'Claude 3.7 Sonnet',
@@ -299,7 +323,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
     },
 
-    // === XAI (Grok - the model by xAI, not the Groq company) ===
+    // === XAI (Grok) ===
+    // ... (XAI models remain unchanged) ...
     {
         id: 'grok-3-beta',
         name: 'Grok 3 Beta',
@@ -341,7 +366,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'beta',
     },
 
-    // === Together.ai (Llama & other models) ===
+    // === Together.ai ===
+    // ... (TogetherAI models remain unchanged) ...
     {
         id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
         name: 'Llama 4 Scout (TogetherAI)',
@@ -350,7 +376,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { input: 0.18, output: 0.59 },
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
-        status: 'stable', // Assuming stable unless noted otherwise
+        status: 'stable',
     },
     {
         id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',

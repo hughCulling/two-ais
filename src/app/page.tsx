@@ -73,12 +73,19 @@ const availableTTS = AVAILABLE_TTS_PROVIDERS;
 
 // --- YouTube Video URLs ---
 const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE"; 
-const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/embed/pkN_uU-nDdk"; 
+const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/watch?v=wLhDRFsTPGQ&t=1s"; 
 
+// Helper function to format pricing
+const formatPrice = (price: number) => {
+    return price.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 3,
+    });
+};
 
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
-    const { resolvedTheme } = useTheme(); // Get the resolved theme from next-themes
+    const { resolvedTheme } = useTheme(); 
 
     const [isStartingSession, setIsStartingSession] = useState(false);
     const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
@@ -86,10 +93,8 @@ export default function Page() {
     const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
-    // Initialize with light mode, will be updated by useEffect based on resolvedTheme
     const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
 
-    // Effect to fetch user data
     useEffect(() => {
         if (!user) {
             setUserApiSecrets(null);
@@ -130,13 +135,11 @@ export default function Page() {
         }
     }, [user, userApiSecrets, secretsLoading]);
 
-    // Effect to set video URL based on the resolved application theme
     useEffect(() => {
-        // resolvedTheme might be undefined on initial server render, then determined on client
         if (resolvedTheme) {
             setCurrentVideoUrl(resolvedTheme === 'dark' ? YOUTUBE_VIDEO_URL_DARK_MODE : YOUTUBE_VIDEO_URL_LIGHT_MODE);
         }
-    }, [resolvedTheme]); // Re-run when resolvedTheme changes
+    }, [resolvedTheme]); 
 
 
     const handleStartSession = async (config: SessionConfig) => {
@@ -227,17 +230,16 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
                         </div>
 
-                        {/* YouTube Video Embed - Now uses dynamic URL based on resolvedTheme */}
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
                             <iframe
                                 className="w-full h-full"
-                                key={currentVideoUrl} // Force re-render when URL changes
+                                key={currentVideoUrl} 
                                 src={currentVideoUrl}
                                 title="Two AIs Conversation Demo"
                                 frameBorder="0"
@@ -261,25 +263,30 @@ export default function Page() {
                                         <ul className="space-y-1 list-disc list-inside text-sm">
                                             {llms.map((llm) => (
                                                 <li key={llm.id} className="ml-4 flex items-center space-x-2">
+                                                    {/* Reasoning/Thinking Tokens Icon (Rendered First) */}
                                                     {llm.usesReasoningTokens && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
                                                                 <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
                                                             </TooltipTrigger>
-                                                            <TooltipContent side="top">
-                                                                <p className="text-xs max-w-[250px]">
-                                                                    This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.
+                                                            <TooltipContent side="top" className="max-w-[250px]"> 
+                                                                <p className="text-xs"> 
+                                                                    {llm.provider === 'Google' 
+                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                    }
                                                                 </p>
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     )}
+                                                    {/* Organization Verification Icon (Rendered Second) */}
                                                     {llm.requiresOrgVerification && (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
                                                                 <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
                                                             </TooltipTrigger>
-                                                            <TooltipContent side="top">
-                                                                <p className="text-xs max-w-[200px]">
+                                                            <TooltipContent side="top" className="max-w-[200px]"> 
+                                                                <p className="text-xs">
                                                                     Requires verified OpenAI organization. You can
                                                                     <a
                                                                         href="https://platform.openai.com/settings/organization/general"
@@ -297,9 +304,16 @@ export default function Page() {
                                                     <span>{llm.name}</span>
                                                     {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
                                                     {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
-                                                    <span className="text-xs text-muted-foreground">
-                                                        (${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok)
-                                                    </span>
+                                                    {/* Display actual pricing note or standard pricing */}
+                                                    {llm.pricing.note ? (
+                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
+                                                            ({llm.pricing.note}) 
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-xs text-muted-foreground">
+                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                        </span>
+                                                    )}
                                                 </li>
                                             ))}
                                         </ul>
