@@ -230,7 +230,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
@@ -272,7 +272,7 @@ export default function Page() {
                                                             <TooltipContent side="top" className="max-w-[250px]"> 
                                                                 <p className="text-xs"> 
                                                                     {llm.provider === 'Google' 
-                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat." // Corrected: 'thinking budget'. The 'thinking'
                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                     }
                                                                 </p>

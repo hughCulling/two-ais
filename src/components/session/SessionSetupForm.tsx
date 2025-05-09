@@ -70,6 +70,13 @@ const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'Google' && llm.usesReasoningTokens 
 );
 
+// Helper function to format pricing
+const formatPrice = (price: number) => {
+    return price.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 3,
+    });
+};
 
 // --- Main Component Definition ---
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
@@ -284,12 +291,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 {/* Display actual pricing note or standard pricing */}
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note}) {/* Display the actual note content */}
+                                                                        ({llm.pricing.note}) 
                                                                     </span>
                                                                 ) : (
                                                                     !isDisabled && (
                                                                         <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                            ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
+                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok
                                                                         </span>
                                                                     )
                                                                 )}
@@ -342,12 +349,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 {/* Display actual pricing note or standard pricing */}
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note}) {/* Display the actual note content */}
+                                                                        ({llm.pricing.note}) 
                                                                     </span>
                                                                 ) : (
                                                                     !isDisabled && (
                                                                         <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                            ${llm.pricing.input.toFixed(2)} / ${llm.pricing.output.toFixed(2)} MTok
+                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok
                                                                         </span>
                                                                     )
                                                                 )}
@@ -372,7 +379,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         {ANY_GOOGLE_MODEL_USES_THINKING && ( 
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates a Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat.
+                                Indicates a Google model uses a &apos;thinking budget&apos;. The &apos;thinking&apos; output is billed but is not visible in the chat.
                             </p>
                         )}
                         {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( 
