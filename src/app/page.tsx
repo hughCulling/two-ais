@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react"; // Added Chevrons
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react"; 
 // --- Import required UI components ---
 import {
   Alert,
@@ -29,7 +29,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; // LLMInfo includes category
+import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; 
 // --- Import TTS data ---
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 // --- Import Collapsible components ---
@@ -93,13 +93,12 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         'Reasoning models',
         'Cost-optimized models',
         'Older GPT models',
-        // Add other OpenAI specific categories here in desired order
     ];
 
     const grouped: Record<string, LLMInfo[]> = {};
 
     models.forEach(model => {
-        const category = model.category || 'Other Models'; // Default category if none provided
+        const category = model.category || 'Other Models'; 
         if (!grouped[category]) {
             grouped[category] = [];
         }
@@ -118,7 +117,7 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         }
     } else {
         categoryKeys.sort((a, b) => {
-            if (a === 'Other Models') return 1; // Push 'Other Models' to the end
+            if (a === 'Other Models') return 1; 
             if (b === 'Other Models') return -1;
             return a.localeCompare(b);
         });
@@ -290,7 +289,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -341,10 +340,10 @@ export default function Page() {
                                                                             <TooltipTrigger asChild>
                                                                                 <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
                                                                             </TooltipTrigger>
-                                                                            <TooltipContent side="top" className="w-auto max-w-[230px] p-2"> {/* Adjusted max-width */}
+                                                                            <TooltipContent side="top" className="w-auto max-w-[230px] p-2"> 
                                                                                 <p className="text-xs"> 
                                                                                     {llm.provider === 'Google' 
-                                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat." // Escaped 'thinking budget' and 'thinking'
                                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                     }
                                                                                 </p>
