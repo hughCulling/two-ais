@@ -294,7 +294,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -373,22 +373,22 @@ export default function Page() {
                                                                                     </a>
                                                                                     .
                                                                                 </p>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    )}
-                                                                    <span>{llm.name}</span>
-                                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
-                                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
-                                                                    {llm.pricing.note ? (
-                                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
-                                                                            ({llm.pricing.note}) 
-                                                                        </span>
-                                                                    ) : (
-                                                                        <span className="text-xs text-muted-foreground">
-                                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
-                                                                        </span>
-                                                                    )}
-                                                                </li>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
+                                                    <span>{llm.name}</span>
+                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
+                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
+                                                    {llm.pricing.note ? (
+                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
+                                                            ({llm.pricing.note}) 
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-xs text-muted-foreground">
+                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                        </span>
+                                                    )}
+                                                </li>
                                                             ))}
                                                         </ul>
                                                     </div>
