@@ -97,7 +97,6 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
     ];
 
     const grouped: Record<string, LLMInfo[]> = {};
-    // const uncategorized: LLMInfo[] = []; // Removed unused variable
 
     models.forEach(model => {
         const category = model.category || 'Other Models'; // Default category if none provided
@@ -107,8 +106,6 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         grouped[category].push(model);
     });
     
-    // For OpenAI, sort categories according to predefined order, then alphabetically for others
-    // For other providers, or if no specific order, sort all categories alphabetically.
     const sortedGrouped: Record<string, LLMInfo[]> = {};
     let categoryKeys = Object.keys(grouped);
 
@@ -146,7 +143,6 @@ export default function Page() {
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
     const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
-    // Default all provider collapsibles to open
     const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
         Object.keys(groupedLLMsByProvider).reduce((acc, provider) => {
             acc[`provider-${provider.replace(/\s+/g, '-')}`] = true;
@@ -294,7 +290,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -345,7 +341,7 @@ export default function Page() {
                                                                             <TooltipTrigger asChild>
                                                                                 <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
                                                                             </TooltipTrigger>
-                                                                            <TooltipContent side="top" className="max-w-[250px]"> 
+                                                                            <TooltipContent side="top" className="w-auto max-w-[230px] p-2"> {/* Adjusted max-width */}
                                                                                 <p className="text-xs"> 
                                                                                     {llm.provider === 'Google' 
                                                                                         ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
@@ -360,7 +356,7 @@ export default function Page() {
                                                                             <TooltipTrigger asChild>
                                                                                 <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
                                                                             </TooltipTrigger>
-                                                                            <TooltipContent side="top" className="max-w-[200px]"> 
+                                                                            <TooltipContent side="top" className="w-auto max-w-[200px] p-2"> 
                                                                                 <p className="text-xs">
                                                                                     Requires verified OpenAI organization. You can
                                                                                     <a
