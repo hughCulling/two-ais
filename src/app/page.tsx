@@ -10,7 +10,7 @@ import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
 // --- Import Theme hook ---
-import { useTheme } from 'next-themes'; // Import useTheme
+import { useTheme } from 'next-themes'; 
 // --- Import Tooltip components ---
 import {
     Tooltip,
@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info } from "lucide-react";
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react"; // Added Chevrons
 // --- Import required UI components ---
 import {
   Alert,
@@ -29,9 +29,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-import { groupLLMsByProvider, LLMInfo } from '@/lib/models';
+import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; // LLMInfo includes category
 // --- Import TTS data ---
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
+// --- Import Collapsible components ---
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 // --- Define TTS Types (Locally) ---
 type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
@@ -67,7 +69,7 @@ const logger = {
 };
 
 // Get grouped LLM data outside the component
-const groupedLLMs = groupLLMsByProvider();
+const groupedLLMsByProvider = groupLLMsByProvider();
 // Get TTS providers outside the component
 const availableTTS = AVAILABLE_TTS_PROVIDERS;
 
@@ -83,6 +85,56 @@ const formatPrice = (price: number) => {
     });
 };
 
+// Helper function to group models by category within a provider
+const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => {
+    // Define desired order of categories, particularly for OpenAI
+    const openAICategoryOrder = [ 
+        'Flagship chat models',
+        'Reasoning models',
+        'Cost-optimized models',
+        'Older GPT models',
+        // Add other OpenAI specific categories here in desired order
+    ];
+
+    const grouped: Record<string, LLMInfo[]> = {};
+    const uncategorized: LLMInfo[] = [];
+
+    models.forEach(model => {
+        const category = model.category || 'Other Models'; // Default category if none provided
+        if (!grouped[category]) {
+            grouped[category] = [];
+        }
+        grouped[category].push(model);
+    });
+    
+    // For OpenAI, sort categories according to predefined order, then alphabetically for others
+    // For other providers, or if no specific order, sort all categories alphabetically.
+    const sortedGrouped: Record<string, LLMInfo[]> = {};
+    let categoryKeys = Object.keys(grouped);
+
+    if (models.length > 0 && models[0].provider === 'OpenAI') {
+        const orderedKeys = openAICategoryOrder.filter(cat => grouped[cat]);
+        const remainingKeys = categoryKeys.filter(cat => !openAICategoryOrder.includes(cat) && cat !== 'Other Models').sort();
+        categoryKeys = [...orderedKeys, ...remainingKeys];
+        if (grouped['Other Models']) {
+            categoryKeys.push('Other Models');
+        }
+    } else {
+        categoryKeys.sort((a, b) => {
+            if (a === 'Other Models') return 1; // Push 'Other Models' to the end
+            if (b === 'Other Models') return -1;
+            return a.localeCompare(b);
+        });
+    }
+    
+    categoryKeys.forEach(cat => {
+        sortedGrouped[cat] = grouped[cat].sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    return sortedGrouped;
+};
+
+
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
     const { resolvedTheme } = useTheme(); 
@@ -94,6 +146,18 @@ export default function Page() {
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
     const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
+    // Default all provider collapsibles to open
+    const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
+        Object.keys(groupedLLMsByProvider).reduce((acc, provider) => {
+            acc[`provider-${provider.replace(/\s+/g, '-')}`] = true;
+            return acc;
+        }, {} as Record<string, boolean>)
+    );
+
+    const toggleCollapsible = (id: string) => {
+        setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
 
     useEffect(() => {
         if (!user) {
@@ -257,69 +321,82 @@ export default function Page() {
                                     Currently Available LLMs
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                {Object.entries(groupedLLMs).map(([provider, llms]: [string, LLMInfo[]]) => (
-                                    <div key={provider}>
-                                        <h3 className="text-lg font-semibold mb-2 border-b pb-1">{provider}</h3>
-                                        <ul className="space-y-1 list-disc list-inside text-sm">
-                                            {llms.map((llm) => (
-                                                <li key={llm.id} className="ml-4 flex items-center space-x-2">
-                                                    {/* Reasoning/Thinking Tokens Icon (Rendered First) */}
-                                                    {llm.usesReasoningTokens && (
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild>
-                                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
-                                                            </TooltipTrigger>
-                                                            <TooltipContent side="top" className="max-w-[250px]"> 
-                                                                <p className="text-xs"> 
-                                                                    {llm.provider === 'Google' 
-                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
-                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
-                                                                    }
-                                                                </p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    )}
-                                                    {/* Organization Verification Icon (Rendered Second) */}
-                                                    {llm.requiresOrgVerification && (
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild>
-                                                                <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent side="top" className="max-w-[200px]"> 
-                                                                <p className="text-xs">
-                                                                    Requires verified OpenAI organization. You can
-                                                                    <a
-                                                                        href="https://platform.openai.com/settings/organization/general"
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="underline text-blue-500 hover:text-blue-600 ml-1"
-                                                                    >
-                                                                        verify here
-                                                                    </a>
-                                                                    .
-                                                                </p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    )}
-                                                    <span>{llm.name}</span>
-                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
-                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
-                                                    {/* Display actual pricing note or standard pricing */}
-                                                    {llm.pricing.note ? (
-                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
-                                                            ({llm.pricing.note}) 
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-xs text-muted-foreground">
-                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
-                                                        </span>
-                                                    )}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
+                            <CardContent className="space-y-6">
+                                {Object.entries(groupedLLMsByProvider).map(([provider, providerModels]: [string, LLMInfo[]]) => {
+                                    const modelsByCategory = groupModelsByCategory(providerModels);
+                                    const providerCollapsibleId = `provider-${provider.replace(/\s+/g, '-')}`;
+                                    const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+
+                                    return (
+                                        <Collapsible key={provider} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                                            <CollapsibleTrigger className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                                                <span>{provider}</span>
+                                                {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                                            </CollapsibleTrigger>
+                                            <CollapsibleContent className="space-y-3 pl-2 pt-1">
+                                                {Object.entries(modelsByCategory).map(([category, categoryModels]) => (
+                                                    <div key={category} className="ml-2">
+                                                        <h4 className="text-md font-semibold text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h4>
+                                                        <ul className="space-y-1 list-disc list-inside text-sm pl-2">
+                                                            {categoryModels.map((llm) => (
+                                                                <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                    {llm.usesReasoningTokens && (
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger asChild>
+                                                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent side="top" className="max-w-[250px]"> 
+                                                                                <p className="text-xs"> 
+                                                                                    {llm.provider === 'Google' 
+                                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                                    }
+                                                                                </p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    {llm.requiresOrgVerification && (
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger asChild>
+                                                                                <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent side="top" className="max-w-[200px]"> 
+                                                                                <p className="text-xs">
+                                                                                    Requires verified OpenAI organization. You can
+                                                                                    <a
+                                                                                        href="https://platform.openai.com/settings/organization/general"
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        className="underline text-blue-500 hover:text-blue-600 ml-1"
+                                                                                    >
+                                                                                        verify here
+                                                                                    </a>
+                                                                                    .
+                                                                                </p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    <span>{llm.name}</span>
+                                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
+                                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
+                                                                    {llm.pricing.note ? (
+                                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
+                                                                            ({llm.pricing.note}) 
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                                        </span>
+                                                                    )}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                ))}
+                                            </CollapsibleContent>
+                                        </Collapsible>
+                                    );
+                                })}
                             </CardContent>
                         </Card>
 

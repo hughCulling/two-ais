@@ -7,8 +7,8 @@ export interface LLMInfo {
     provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'TogetherAI';
     contextWindow: number; // Context window size in tokens
     pricing: {
-        input: number; // Price per 1 million input tokens (in USD) - For simple cases or as a primary input cost
-        output: number; // Price per 1 million output tokens (in USD) - For simple cases or as a primary output cost
+        input: number; // Price per 1 million input tokens (in USD)
+        output: number; // Price per 1 million output tokens (in USD)
         note?: string; // Optional note for complex pricing
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
@@ -16,6 +16,7 @@ export interface LLMInfo {
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
     usesReasoningTokens?: boolean; // Used for OpenAI reasoning & Google thinking budgets
+    category?: string; // New: For categorizing models by purpose/capability
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -23,7 +24,7 @@ export interface LLMInfo {
 export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
      {
-        id: 'chatgpt-4o-latest',
+        id: 'chatgpt-4o-latest', // Maps to ChatGPT-4o in OpenAI docs
         name: 'ChatGPT-4o',
         provider: 'OpenAI',
         contextWindow: 128000,
@@ -32,9 +33,10 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        category: 'Flagship chat models',
     },
     {
-        id: 'gpt-4o',
+        id: 'gpt-4o', // Maps to GPT-4o in OpenAI docs
         name: 'GPT-4o',
         provider: 'OpenAI',
         contextWindow: 128000,
@@ -42,6 +44,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        category: 'Flagship chat models',
     },
     {
         id: 'gpt-4o-mini',
@@ -53,6 +56,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        category: 'Cost-optimized models',
     },
     {
         id: 'gpt-4.1',
@@ -63,6 +67,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        category: 'Flagship chat models',
     },
      {
         id: 'gpt-4.1-mini',
@@ -74,6 +79,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        category: 'Cost-optimized models',
     },
     {
         id: 'gpt-4.1-nano',
@@ -85,6 +91,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
+        category: 'Cost-optimized models',
     },
     {
         id: 'gpt-4-turbo',
@@ -95,6 +102,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        category: 'Older GPT models',
     },
     {
         id: 'gpt-4',
@@ -105,6 +113,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        category: 'Older GPT models',
     },
     {
         id: 'gpt-3.5-turbo',
@@ -115,6 +124,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
+        category: 'Older GPT models',
     },
     {
         id: 'o4-mini',
@@ -126,6 +136,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         usesReasoningTokens: true,
+        category: 'Reasoning models', // Also cost-optimized, but reasoning is primary
     },
     {
         id: 'o3',
@@ -138,6 +149,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: true,
         usesReasoningTokens: true,
+        category: 'Reasoning models',
     },
     {
         id: 'o3-mini',
@@ -150,6 +162,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         usesReasoningTokens: true,
+        category: 'Reasoning models', // Also cost-optimized
     },
     {
         id: 'o1',
@@ -162,9 +175,11 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         usesReasoningTokens: true,
+        category: 'Reasoning models',
     },
 
     // === Google ===
+    // Categories for Google models can be added later if desired
     {
         id: 'gemini-2.5-pro-preview-03-25', 
         name: 'Gemini 2.5 Pro',
@@ -221,14 +236,13 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         provider: 'Google',
         contextWindow: 1000000,
         pricing: { 
-            input: 1.25, // Base rate for prompts <= 128k tokens
-            output: 5.00, // Base rate for prompts <= 128k tokens
+            input: 1.25, 
+            output: 5.00, 
             note: '$1.25 (≤128k tkns), $2.50 (>128k tkns) / $5.00 (≤128k tkns), $10.00 (>128k tkns) MTok'
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
-        // usesReasoningTokens: false, // Not explicitly mentioned for this model's pricing
     },
     {
         id: 'gemini-1.5-flash-latest',
@@ -260,7 +274,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Anthropic ===
-    // ... (Anthropic models remain unchanged) ...
+    // ... (Anthropic models) ...
     {
         id: 'claude-3-7-sonnet-20250219',
         name: 'Claude 3.7 Sonnet',
@@ -324,7 +338,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === XAI (Grok) ===
-    // ... (XAI models remain unchanged) ...
+    // ... (XAI models) ...
     {
         id: 'grok-3-beta',
         name: 'Grok 3 Beta',
@@ -367,7 +381,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Together.ai ===
-    // ... (TogetherAI models remain unchanged) ...
+    // ... (TogetherAI models) ...
     {
         id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
         name: 'Llama 4 Scout (TogetherAI)',
