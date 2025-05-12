@@ -73,7 +73,7 @@ const availableTTS = AVAILABLE_TTS_PROVIDERS;
 
 // --- YouTube Video URLs ---
 const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE"; 
-const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/embed/pkN_uU-nDdk"; 
+const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/watch?v=wLhDRFsTPGQ&t=1s"; 
 
 // Helper function to format pricing
 const formatPrice = (price: number) => {
@@ -231,6 +231,7 @@ export default function Page() {
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
                                     To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
@@ -272,7 +273,7 @@ export default function Page() {
                                                             <TooltipContent side="top" className="max-w-[250px]"> 
                                                                 <p className="text-xs"> 
                                                                     {llm.provider === 'Google' 
-                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat." // Corrected: 'thinking budget'. The 'thinking'
+                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                     }
                                                                 </p>
