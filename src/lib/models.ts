@@ -16,7 +16,7 @@ export interface LLMInfo {
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
     usesReasoningTokens?: boolean; // Used for OpenAI reasoning & Google thinking budgets
-    category?: string; // New: For categorizing models by purpose/capability
+    category?: string; // For categorizing models by purpose/capability
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -24,7 +24,7 @@ export interface LLMInfo {
 export const AVAILABLE_LLMS: LLMInfo[] = [
     // === OpenAI ===
      {
-        id: 'chatgpt-4o-latest', // Maps to ChatGPT-4o in OpenAI docs
+        id: 'chatgpt-4o-latest',
         name: 'ChatGPT-4o',
         provider: 'OpenAI',
         contextWindow: 128000,
@@ -36,7 +36,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         category: 'Flagship chat models',
     },
     {
-        id: 'gpt-4o', // Maps to GPT-4o in OpenAI docs
+        id: 'gpt-4o',
         name: 'GPT-4o',
         provider: 'OpenAI',
         contextWindow: 128000,
@@ -136,7 +136,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         usesReasoningTokens: true,
-        category: 'Reasoning models', // Also cost-optimized, but reasoning is primary
+        category: 'Reasoning models',
     },
     {
         id: 'o3',
@@ -162,7 +162,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         usesReasoningTokens: true,
-        category: 'Reasoning models', // Also cost-optimized
+        category: 'Reasoning models', 
     },
     {
         id: 'o1',
@@ -179,7 +179,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Google ===
-    // Categories for Google models can be added later if desired
     {
         id: 'gemini-2.5-pro-preview-03-25', 
         name: 'Gemini 2.5 Pro',
@@ -194,6 +193,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'google_ai',
         status: 'preview',
         usesReasoningTokens: true, 
+        category: 'Gemini 2.5 Series',
     },
     {
         id: 'gemini-2.5-flash-preview-04-17', 
@@ -203,12 +203,13 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.15, 
             output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok.' 
+            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok' 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'preview',
         usesReasoningTokens: true, 
+        category: 'Gemini 2.5 Series',
     },
     {
         id: 'gemini-2.0-flash',
@@ -219,6 +220,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental',
+        category: 'Gemini 2.0 Series',
     },
     {
         id: 'gemini-2.0-flash-lite',
@@ -229,6 +231,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental',
+        category: 'Gemini 2.0 Series',
     },
     {
         id: 'gemini-1.5-pro-latest',
@@ -243,6 +246,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
+        category: 'Gemini 1.5 Series',
     },
     {
         id: 'gemini-1.5-flash-latest',
@@ -257,6 +261,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
+        category: 'Gemini 1.5 Series',
     },
     {
         id: 'gemini-1.5-flash-8b',
@@ -271,6 +276,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
+        category: 'Gemini 1.5 Series',
     },
 
     // === Anthropic ===

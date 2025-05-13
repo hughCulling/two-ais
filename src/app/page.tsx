@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; 
 import { useAuth } from '@/context/AuthContext';
 import SessionSetupForm from '@/components/session/SessionSetupForm';
 import { ChatInterface } from '@/components/chat/ChatInterface';
@@ -34,6 +34,7 @@ import { groupLLMsByProvider, LLMInfo } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 // --- Import Collapsible components ---
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils'; 
 
 // --- Define TTS Types (Locally) ---
 type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
@@ -87,12 +88,16 @@ const formatPrice = (price: number) => {
 
 // Helper function to group models by category within a provider
 const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => {
-    // Define desired order of categories, particularly for OpenAI
     const openAICategoryOrder = [ 
         'Flagship chat models',
         'Reasoning models',
         'Cost-optimized models',
         'Older GPT models',
+    ];
+    const googleCategoryOrder = [
+        'Gemini 2.5 Series',
+        'Gemini 2.0 Series',
+        'Gemini 1.5 Series',
     ];
 
     const grouped: Record<string, LLMInfo[]> = {};
@@ -107,15 +112,24 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
     
     const sortedGrouped: Record<string, LLMInfo[]> = {};
     let categoryKeys = Object.keys(grouped);
+    let currentProviderOrder: string[] = [];
 
-    if (models.length > 0 && models[0].provider === 'OpenAI') {
-        const orderedKeys = openAICategoryOrder.filter(cat => grouped[cat]);
-        const remainingKeys = categoryKeys.filter(cat => !openAICategoryOrder.includes(cat) && cat !== 'Other Models').sort();
+    if (models.length > 0) {
+        if (models[0].provider === 'OpenAI') {
+            currentProviderOrder = openAICategoryOrder;
+        } else if (models[0].provider === 'Google') {
+            currentProviderOrder = googleCategoryOrder;
+        }
+    }
+
+    if (currentProviderOrder.length > 0) {
+        const orderedKeys = currentProviderOrder.filter(cat => grouped[cat]);
+        const remainingKeys = categoryKeys.filter(cat => !currentProviderOrder.includes(cat) && cat !== 'Other Models').sort();
         categoryKeys = [...orderedKeys, ...remainingKeys];
         if (grouped['Other Models']) {
-            categoryKeys.push('Other Models');
+            categoryKeys.push('Other Models'); 
         }
-    } else {
+    } else { 
         categoryKeys.sort((a, b) => {
             if (a === 'Other Models') return 1; 
             if (b === 'Other Models') return -1;
@@ -124,10 +138,82 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
     }
     
     categoryKeys.forEach(cat => {
-        sortedGrouped[cat] = grouped[cat].sort((a, b) => a.name.localeCompare(b.name));
+        if (grouped[cat]) { 
+            sortedGrouped[cat] = grouped[cat].sort((a, b) => a.name.localeCompare(b.name));
+        }
     });
 
     return sortedGrouped;
+};
+
+// Component for truncatable text with conditional tooltip
+interface TruncatableNoteProps {
+    noteText: string;
+    tooltipMaxWidth?: string; 
+}
+
+const TruncatableNote: React.FC<TruncatableNoteProps> = ({ 
+    noteText, 
+    tooltipMaxWidth = "max-w-xs" // Default max-width for the tooltip popup
+}) => {
+    const [isActuallyOverflowing, setIsActuallyOverflowing] = useState(false);
+    const textRef = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (textRef.current) {
+                // Check if the element is rendered and has dimensions
+                // and if its scrollWidth (full content width) is greater than its clientWidth (visible width)
+                if ((textRef.current.offsetWidth > 0 || textRef.current.offsetHeight > 0) && 
+                    textRef.current.scrollWidth > textRef.current.clientWidth) {
+                    setIsActuallyOverflowing(true);
+                } else {
+                    setIsActuallyOverflowing(false); 
+                }
+            }
+        };
+        
+        // Check after a slight delay to allow layout to settle, and on resize
+        const timeoutId = setTimeout(checkOverflow, 150); // Slightly increased delay
+        window.addEventListener('resize', checkOverflow);
+
+        // Re-check when noteText changes as well, as content length affects overflow
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', checkOverflow);
+        };
+    }, [noteText]); // Dependency array includes noteText
+
+    // The span will always attempt to be on one line and truncate if it doesn't fit.
+    // `min-w-0` is important for flex children that need to truncate.
+    // `block` or `inline-block` is needed for `truncate` to work.
+    const noteSpan = (
+        <span 
+            ref={textRef} 
+            className={cn(
+                "text-xs text-muted-foreground block truncate min-w-0", // Use block for better width calculation in flex
+                isActuallyOverflowing && "cursor-help" 
+            )}
+        >
+            ({noteText})
+        </span>
+    );
+
+    if (isActuallyOverflowing) {
+        return (
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    {/* The TooltipTrigger needs a single child, which is our span */}
+                    {noteSpan}
+                </TooltipTrigger>
+                <TooltipContent side="top" className={`w-auto p-2 ${tooltipMaxWidth}`}>
+                    <p className="text-xs">{noteText}</p>
+                </TooltipContent>
+            </Tooltip>
+        );
+    }
+
+    return noteSpan; // Render the span directly if JS hasn't detected overflow
 };
 
 
@@ -289,7 +375,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -343,7 +429,7 @@ export default function Page() {
                                                                             <TooltipContent side="top" className="w-auto max-w-[230px] p-2"> 
                                                                                 <p className="text-xs"> 
                                                                                     {llm.provider === 'Google' 
-                                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat." // Escaped 'thinking budget' and 'thinking'
+                                                                                        ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
                                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                     }
                                                                                 </p>
@@ -371,19 +457,19 @@ export default function Page() {
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     )}
-                                                    <span>{llm.name}</span>
-                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600">Preview</Badge>}
-                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600">Experimental</Badge>}
-                                                    {llm.pricing.note ? (
-                                                        <span className="text-xs text-muted-foreground" title={llm.pricing.note}>
-                                                            ({llm.pricing.note}) 
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-xs text-muted-foreground">
-                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
-                                                        </span>
-                                                    )}
-                                                </li>
+                                                                    <span className="whitespace-nowrap">{llm.name}</span> 
+                                                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>} 
+                                                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>} 
+                                                                    
+                                                                    {/* Use TruncatableNote for pricing notes */}
+                                                                    {llm.pricing.note ? (
+                                                                        <TruncatableNote noteText={llm.pricing.note} />
+                                                                    ) : (
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                                        </span>
+                                                                    )}
+                                                                </li>
                                                             ))}
                                                         </ul>
                                                     </div>
