@@ -99,6 +99,11 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         'Gemini 2.0 Series',
         'Gemini 1.5 Series',
     ];
+    const anthropicCategoryOrder = [ // New order for Anthropic
+        'Claude 3.7 Series',
+        'Claude 3.5 Series',
+        'Claude 3 Series',
+    ];
 
     const grouped: Record<string, LLMInfo[]> = {};
 
@@ -119,6 +124,8 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
             currentProviderOrder = openAICategoryOrder;
         } else if (models[0].provider === 'Google') {
             currentProviderOrder = googleCategoryOrder;
+        } else if (models[0].provider === 'Anthropic') { // Added Anthropic
+            currentProviderOrder = anthropicCategoryOrder;
         }
     }
 
@@ -154,7 +161,7 @@ interface TruncatableNoteProps {
 
 const TruncatableNote: React.FC<TruncatableNoteProps> = ({ 
     noteText, 
-    tooltipMaxWidth = "max-w-xs" // Default max-width for the tooltip popup
+    tooltipMaxWidth = "max-w-xs" 
 }) => {
     const [isActuallyOverflowing, setIsActuallyOverflowing] = useState(false);
     const textRef = useRef<HTMLSpanElement>(null);
@@ -162,8 +169,6 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
     useEffect(() => {
         const checkOverflow = () => {
             if (textRef.current) {
-                // Check if the element is rendered and has dimensions
-                // and if its scrollWidth (full content width) is greater than its clientWidth (visible width)
                 if ((textRef.current.offsetWidth > 0 || textRef.current.offsetHeight > 0) && 
                     textRef.current.scrollWidth > textRef.current.clientWidth) {
                     setIsActuallyOverflowing(true);
@@ -173,25 +178,20 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
             }
         };
         
-        // Check after a slight delay to allow layout to settle, and on resize
-        const timeoutId = setTimeout(checkOverflow, 150); // Slightly increased delay
+        const timeoutId = setTimeout(checkOverflow, 150); 
         window.addEventListener('resize', checkOverflow);
 
-        // Re-check when noteText changes as well, as content length affects overflow
         return () => {
             clearTimeout(timeoutId);
             window.removeEventListener('resize', checkOverflow);
         };
-    }, [noteText]); // Dependency array includes noteText
+    }, [noteText]); 
 
-    // The span will always attempt to be on one line and truncate if it doesn't fit.
-    // `min-w-0` is important for flex children that need to truncate.
-    // `block` or `inline-block` is needed for `truncate` to work.
     const noteSpan = (
         <span 
             ref={textRef} 
             className={cn(
-                "text-xs text-muted-foreground block truncate min-w-0", // Use block for better width calculation in flex
+                "text-xs text-muted-foreground block truncate min-w-0", 
                 isActuallyOverflowing && "cursor-help" 
             )}
         >
@@ -203,7 +203,6 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
         return (
             <Tooltip>
                 <TooltipTrigger asChild>
-                    {/* The TooltipTrigger needs a single child, which is our span */}
                     {noteSpan}
                 </TooltipTrigger>
                 <TooltipContent side="top" className={`w-auto p-2 ${tooltipMaxWidth}`}>
@@ -213,7 +212,7 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
         );
     }
 
-    return noteSpan; // Render the span directly if JS hasn't detected overflow
+    return noteSpan; 
 };
 
 
@@ -430,7 +429,9 @@ export default function Page() {
                                                                                 <p className="text-xs"> 
                                                                                     {llm.provider === 'Google' 
                                                                                         ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
-                                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                                        : llm.provider === 'Anthropic' // Added Anthropic specific message
+                                                                                            ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
+                                                                                            : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                     }
                                                                                 </p>
                                                                             </TooltipContent>
@@ -461,7 +462,6 @@ export default function Page() {
                                                                     {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>} 
                                                                     {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>} 
                                                                     
-                                                                    {/* Use TruncatableNote for pricing notes */}
                                                                     {llm.pricing.note ? (
                                                                         <TruncatableNote noteText={llm.pricing.note} />
                                                                     ) : (

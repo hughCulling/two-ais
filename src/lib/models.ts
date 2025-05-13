@@ -15,8 +15,8 @@ export interface LLMInfo {
     apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
-    usesReasoningTokens?: boolean; // Used for OpenAI reasoning & Google thinking budgets
-    category?: string; // For categorizing models by purpose/capability
+    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic extended thinking
+    category?: string; // For categorizing models by purpose/capability/series
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -280,16 +280,17 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Anthropic ===
-    // ... (Anthropic models) ...
     {
         id: 'claude-3-7-sonnet-20250219',
         name: 'Claude 3.7 Sonnet',
         provider: 'Anthropic',
         contextWindow: 200000,
-        pricing: { input: 3.00, output: 15.00 },
+        pricing: { input: 3.00, output: 15.00 }, 
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
-        status: 'stable',
+        status: 'stable', 
+        usesReasoningTokens: true,
+        category: 'Claude 3.7 Series',
     },
     {
         id: 'claude-3-5-sonnet-20240620',
@@ -300,6 +301,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
+        category: 'Claude 3.5 Series',
     },
      {
         id: 'claude-3-5-haiku-20241022',
@@ -310,17 +312,19 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
+        category: 'Claude 3.5 Series',
     },
     {
-        id: 'claude-3-5-sonnet-20241022',
+        id: 'claude-3-5-sonnet-20241022', 
         name: 'Claude 3.5 Sonnet v2',
         provider: 'Anthropic',
         contextWindow: 200000,
-        pricing: { input: 3.00, output: 15.00, note: 'Pricing assumed same as 2024-06-20 version' },
+        pricing: { input: 3.00, output: 15.00 }, // Removed the note
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
         requiresOrgVerification: false,
+        category: 'Claude 3.5 Series',
     },
     {
         id: 'claude-3-opus-20240229',
@@ -331,6 +335,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
+        category: 'Claude 3 Series',
     },
      {
         id: 'claude-3-haiku-20240307',
@@ -341,6 +346,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
+        category: 'Claude 3 Series',
     },
 
     // === XAI (Grok) ===

@@ -69,6 +69,10 @@ const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
 const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'Google' && llm.usesReasoningTokens 
 );
+const ANY_ANTHROPIC_MODEL_USES_THINKING = AVAILABLE_LLMS.some( // New constant for Anthropic
+    llm => llm.provider === 'Anthropic' && llm.usesReasoningTokens
+);
+
 
 // Helper function to format pricing
 const formatPrice = (price: number) => {
@@ -375,11 +379,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
                             </p>
                         )}
-                        {/* Updated note for Google models for consistency */}
                         {ANY_GOOGLE_MODEL_USES_THINKING && ( 
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates a Google model uses a &apos;thinking budget&apos;. The &apos;thinking&apos; output is billed but is not visible in the chat.
+                            </p>
+                        )}
+                        {ANY_ANTHROPIC_MODEL_USES_THINKING && ( 
+                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                                Indicates an Anthropic model uses &apos;extended thinking&apos;. The &apos;thinking&apos; output is billed but may not be visible in the chat.
                             </p>
                         )}
                         {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( 
