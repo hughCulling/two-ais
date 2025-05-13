@@ -438,7 +438,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Meta Llama 3.3 70B Instruct Turbo Free',
         provider: 'TogetherAI',
         contextWindow: 131072, 
-        pricing: { input: 0.00, output: 0.00, note: 'Free' }, // Updated note
+        pricing: { input: 0.00, output: 0.00, note: 'Free' }, 
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
@@ -559,11 +559,45 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Meta Llama Vision Free',
         provider: 'TogetherAI',
         contextWindow: 8192, 
-        pricing: { input: 0.00, output: 0.00, note: 'Free' }, // Updated note
+        pricing: { input: 0.00, output: 0.00, note: 'Free' }, 
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
         category: 'Llama Vision Models', 
+    },
+    // Google Gemma Models via TogetherAI
+    {
+        id: 'google/gemma-2-27b-it',
+        name: 'Gemma-2 Instruct (27B)',
+        provider: 'TogetherAI',
+        contextWindow: 8192,
+        pricing: { input: 0.80, output: 0.80 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Gemma 2 Series', // More specific category
+    },
+    {
+        id: 'google/gemma-2-9b-it',
+        name: 'Gemma-2 Instruct (9B)',
+        provider: 'TogetherAI',
+        contextWindow: 8192,
+        pricing: { input: 0.30, output: 0.30 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Gemma 2 Series', // More specific category
+    },
+    {
+        id: 'google/gemma-2b-it',
+        name: 'Gemma Instruct (2B)',
+        provider: 'TogetherAI',
+        contextWindow: 8192,
+        pricing: { input: 0.10, output: 0.10 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Gemma Series', // More specific category
     },
 ];
 
