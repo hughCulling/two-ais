@@ -4,7 +4,7 @@
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'XAI' | 'TogetherAI';
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI'; // Corrected XAI to xAI
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -15,7 +15,7 @@ export interface LLMInfo {
     apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
-    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic extended thinking
+    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking
     category?: string; // For categorizing models by purpose/capability/series
 }
 
@@ -203,7 +203,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.15, 
             output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok' 
+            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok.' 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -319,7 +319,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Claude 3.5 Sonnet v2',
         provider: 'Anthropic',
         contextWindow: 200000,
-        pricing: { input: 3.00, output: 15.00 }, // Removed the note
+        pricing: { input: 3.00, output: 15.00 },
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
@@ -349,47 +349,54 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         category: 'Claude 3 Series',
     },
 
-    // === XAI (Grok) ===
-    // ... (XAI models) ...
+    // === xAI (Grok - the model by xAI, not the Groq company) ===
     {
         id: 'grok-3-beta',
         name: 'Grok 3 Beta',
-        provider: 'XAI',
+        provider: 'xAI', // Corrected provider name
         contextWindow: 131072,
         pricing: { input: 3.00, output: 15.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
-        apiKeySecretName: 'xai',
+        apiKeySecretName: 'xai', // Ensure this matches your secret name
         status: 'beta',
+        category: 'Grok 3 Series',
+        usesReasoningTokens: false, // As per "Has reasoning: No"
     },
     {
         id: 'grok-3-fast-beta',
         name: 'Grok 3 Fast Beta',
-        provider: 'XAI',
+        provider: 'xAI', // Corrected provider name
         contextWindow: 131072,
         pricing: { input: 5.00, output: 25.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
+        category: 'Grok 3 Series', // Assuming same category, just faster
+        usesReasoningTokens: false, // Assuming same as non-fast version
     },
     {
         id: 'grok-3-mini-beta',
         name: 'Grok 3 Mini Beta',
-        provider: 'XAI',
+        provider: 'xAI', // Corrected provider name
         contextWindow: 131072,
         pricing: { input: 0.30, output: 0.50 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
+        category: 'Grok 3 Mini Series',
+        usesReasoningTokens: true, // As per "Has reasoning: Yes"
     },
     {
         id: 'grok-3-mini-fast-beta',
         name: 'Grok 3 Mini Fast Beta',
-        provider: 'XAI',
+        provider: 'xAI', // Corrected provider name
         contextWindow: 131072,
         pricing: { input: 0.60, output: 4.00 },
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
+        category: 'Grok 3 Mini Series', // Assuming same category, just faster
+        usesReasoningTokens: true, // Assuming same as non-fast mini version
     },
 
     // === Together.ai ===

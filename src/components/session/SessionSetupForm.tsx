@@ -69,8 +69,11 @@ const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
 const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'Google' && llm.usesReasoningTokens 
 );
-const ANY_ANTHROPIC_MODEL_USES_THINKING = AVAILABLE_LLMS.some( // New constant for Anthropic
+const ANY_ANTHROPIC_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'Anthropic' && llm.usesReasoningTokens
+);
+const ANY_XAI_MODEL_USES_THINKING = AVAILABLE_LLMS.some( // New constant for xAI
+    llm => llm.provider === 'xAI' && llm.usesReasoningTokens
 );
 
 
@@ -389,6 +392,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates an Anthropic model uses &apos;extended thinking&apos;. The &apos;thinking&apos; output is billed but may not be visible in the chat.
+                            </p>
+                        )}
+                        {ANY_XAI_MODEL_USES_THINKING && ( 
+                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                                Indicates an xAI model uses &apos;thinking&apos;. Thinking traces may be accessible and output is billed.
                             </p>
                         )}
                         {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( 
