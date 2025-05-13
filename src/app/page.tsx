@@ -108,14 +108,14 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         'Grok 3 Series',
         'Grok 3 Mini Series',
     ];
-    const togetherAICategoryOrder = [ // Updated order for TogetherAI Llama series
+    const togetherAICategoryOrder = [ 
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
         'Llama Vision Models', 
-        'Meta Llama Models', // Fallback if no specific series match for a Meta model
+        'Meta Llama Models', 
     ];
 
 
@@ -393,7 +393,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
