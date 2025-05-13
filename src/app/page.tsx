@@ -104,7 +104,7 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
         'Claude 3.5 Series',
         'Claude 3 Series',
     ];
-    const xAICategoryOrder = [ // New order for xAI
+    const xAICategoryOrder = [ 
         'Grok 3 Series',
         'Grok 3 Mini Series',
     ];
@@ -132,7 +132,7 @@ const groupModelsByCategory = (models: LLMInfo[]): Record<string, LLMInfo[]> => 
             currentProviderOrder = googleCategoryOrder;
         } else if (providerName === 'Anthropic') { 
             currentProviderOrder = anthropicCategoryOrder;
-        } else if (providerName === 'xAI') { // Added xAI
+        } else if (providerName === 'xAI') { 
             currentProviderOrder = xAICategoryOrder;
         }
     }
@@ -382,7 +382,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -439,7 +439,7 @@ export default function Page() {
                                                                                         ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
                                                                                         : llm.provider === 'Anthropic'
                                                                                             ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
-                                                                                            : llm.provider === 'xAI' // Added xAI specific message
+                                                                                            : llm.provider === 'xAI' 
                                                                                                 ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
                                                                                                 : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                     }
