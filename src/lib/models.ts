@@ -203,7 +203,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.15, 
             output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok.' 
+            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok' 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
