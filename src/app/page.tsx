@@ -109,17 +109,14 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Grok 3 Mini Series',
     ];
     const togetherAICategoryOrder = [ 
-        // Meta Llama Models - ordered by version/type
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
         'Llama Vision Models', 
-        // Google Gemma Models
-        'Gemma 2 Series',   
-        'Gemma Series',     
-        'Meta Llama Models', // Fallback for any other Meta models if not fitting a series
+        'Google Gemma Models', 
+        'Meta Llama Models', 
     ];
 
 
@@ -241,7 +238,6 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
 const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta Llama';
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google Gemma';
-    // Add other brand checks here if you add more model families from TogetherAI (e.g., Qwen, DeepSeek)
     return null; 
 };
 
@@ -404,7 +400,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -463,22 +459,12 @@ export default function Page() {
                                                     }
 
                                                     return (
-                                                    <React.Fragment key={`${category}-${index}`}>
+                                                    <React.Fragment key={`${category}-${index}`}> {/* Corrected key prop */}
                                                         {brandHeadingElement}
                                                         <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}> 
                                                             <h5 className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h5>
                                                             <ul className="space-y-1 list-disc list-inside text-sm pl-2">
-                                                                {categoryModels.map((llm) => {
-                                                                    let displayName = llm.name;
-                                                                    if (providerName === 'TogetherAI' && lastDisplayedBrand) {
-                                                                        if (lastDisplayedBrand === 'Meta Llama' && (llm.name.toLowerCase().startsWith('meta llama') || llm.name.toLowerCase().startsWith('llama '))) {
-                                                                            displayName = llm.name.replace(/^(meta\s+llama\s+|llama\s+)/i, '');
-                                                                        } else if (lastDisplayedBrand === 'Google Gemma' && llm.name.toLowerCase().startsWith('gemma')) {
-                                                                            displayName = llm.name.replace(/^gemma\s*-?\s*/i, '');
-                                                                        }
-                                                                    }
-
-                                                                    return (
+                                                                {categoryModels.map((llm) => (
                                                                     <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
                                                                         {llm.usesReasoningTokens && (
                                                                             <Tooltip>
@@ -520,7 +506,7 @@ export default function Page() {
                                                                 </TooltipContent>
                                                             </Tooltip>
                                                         )}
-                                                                        <span className="whitespace-nowrap">{displayName}</span> 
+                                                                        <span className="whitespace-nowrap">{llm.name}</span> 
                                                                         {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>} 
                                                                         {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>} 
                                                                         {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">Beta</Badge>} 
@@ -533,8 +519,7 @@ export default function Page() {
                                                                             </span>
                                                                         )}
                                                                     </li>
-                                                                );
-                                                                })}
+                                                                ))}
                                                             </ul>
                                                         </div>
                                                     </React.Fragment>
