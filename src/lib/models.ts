@@ -15,7 +15,7 @@ export interface LLMInfo {
     apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
-    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking
+    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking, Qwen reasoning
     category?: string; // For categorizing models by purpose/capability/series
 }
 
@@ -722,6 +722,97 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable', 
         category: 'Mistral Models',
+    },
+    // Qwen Models via TogetherAI (Added here)
+    {
+        id: 'Qwen/Qwen3-235B-A22B-fp8-tput',
+        name: 'Qwen3 235B A22B FP8 Throughput',
+        provider: 'TogetherAI',
+        contextWindow: 40960,
+        pricing: { input: 0.20, output: 0.60 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen3 Series',
+        usesReasoningTokens: true,
+    },
+    {
+        id: 'Qwen/QwQ-32B',
+        name: 'Qwen QwQ-32B',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 1.20, output: 1.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen QwQ Series',
+        usesReasoningTokens: true,
+    },
+    {
+        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        name: 'Qwen2.5-VL (72B) Instruct',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 1.95, output: 8.00 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2.5 Vision Series',
+    },
+    {
+        id: 'Qwen/Qwen2-VL-72B-Instruct',
+        name: 'Qwen2-VL (72B) Instruct',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 1.20, output: 1.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2 Vision Series',
+    },
+    {
+        id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+        name: 'Qwen 2.5 Coder 32B Instruct',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 0.80, output: 0.80 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2.5 Coder Series',
+    },
+    {
+        id: 'Qwen/Qwen2.5-72B-Instruct-Turbo',
+        name: 'Qwen2.5 72B Instruct Turbo',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 1.20, output: 1.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2.5 Series',
+    },
+    {
+        id: 'Qwen/Qwen2.5-7B-Instruct-Turbo',
+        name: 'Qwen2.5 7B Instruct Turbo',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 0.30, output: 0.30 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2.5 Series',
+    },
+    {
+        id: 'Qwen/Qwen2-72B-Instruct',
+        name: 'Qwen 2 Instruct (72B)',
+        provider: 'TogetherAI',
+        contextWindow: 32768,
+        pricing: { input: 0.90, output: 0.90 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        category: 'Qwen2 Series',
     },
 ];
 

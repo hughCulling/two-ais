@@ -126,6 +126,15 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
         'DeepSeek Models', // Fallback
+        // Qwen Models
+        'Qwen3 Series',
+        'Qwen QwQ Series',
+        'Qwen2.5 Series',
+        'Qwen2.5 Vision Series',
+        'Qwen2.5 Coder Series',
+        'Qwen2 Series',
+        'Qwen2 Vision Series',
+        'Qwen Models', // Fallback
         // Mistral Models
         'Mistral Models',
     ];
@@ -251,6 +260,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google Gemma';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
     if (categoryName.startsWith('Mistral')) return 'MistralAI';
+    if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen'; // Added Qwen
     return null; 
 };
 
@@ -413,7 +423,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
