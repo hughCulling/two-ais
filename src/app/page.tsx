@@ -423,7 +423,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -502,7 +502,7 @@ export default function Page() {
                                                                                                 ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
                                                                                                 : llm.provider === 'xAI' 
                                                                                                     ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
-                                                                                                    : llm.provider === 'TogetherAI' && llm.category?.includes('Qwen')
+                                                                                                    : llm.provider === 'TogetherAI' && llm.category?.includes('Qwen') 
                                                                                                         ? "This Qwen model (via TogetherAI) uses 'reasoning/thinking'. Output is billed accordingly."
                                                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
