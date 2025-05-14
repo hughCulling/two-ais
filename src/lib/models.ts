@@ -400,6 +400,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Together.ai ===
+    // Meta Llama Models
     {
         id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
         name: 'Llama 4 Scout Instruct (17Bx16E)',
@@ -665,6 +666,62 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable', 
         category: 'DeepSeek R1 Distill Series',
+    },
+    // Mistral Models via TogetherAI
+    {
+        id: 'mistralai/Mistral-Small-24B-Instruct-2501',
+        name: 'Mistral Small (24B) Instruct 25.01',
+        provider: 'TogetherAI',
+        contextWindow: 131072, 
+        pricing: { input: 0.80, output: 0.80 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Mistral Models',
+    },
+    {
+        id: 'mistralai/Mistral-7B-Instruct-v0.1',
+        name: 'Mistral (7B) Instruct v0.1',
+        provider: 'TogetherAI',
+        contextWindow: 8192, 
+        pricing: { input: 0.20, output: 0.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Mistral Models',
+    },
+    {
+        id: 'mistralai/Mistral-7B-Instruct-v0.2',
+        name: 'Mistral (7B) Instruct v0.2',
+        provider: 'TogetherAI',
+        contextWindow: 32768, 
+        pricing: { input: 0.20, output: 0.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Mistral Models',
+    },
+    {
+        id: 'mistralai/Mistral-7B-Instruct-v0.3',
+        name: 'Mistral (7B) Instruct v0.3',
+        provider: 'TogetherAI',
+        contextWindow: 32768, 
+        pricing: { input: 0.20, output: 0.20 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Mistral Models',
+    },
+    {
+        id: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+        name: 'Mixtral-8x7B Instruct v0.1',
+        provider: 'TogetherAI',
+        contextWindow: 32768, 
+        pricing: { input: 0.60, output: 0.60 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable', 
+        category: 'Mistral Models',
     },
 ];
 

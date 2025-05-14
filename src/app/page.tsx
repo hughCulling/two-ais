@@ -109,22 +109,25 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Grok 3 Mini Series',
     ];
     const togetherAICategoryOrder = [ 
-        // Meta Llama Models - ordered by version/type
+        // Meta Llama Models
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
         'Llama Vision Models', 
-        'Meta Llama Models', // Fallback for any other Meta models
+        'Meta Llama Models', // Fallback
         // Google Gemma Models
         'Gemma 2 Series',   
         'Gemma Series',     
+        'Google Gemma Models', // Fallback
         // DeepSeek Models
         'DeepSeek R1 Series',
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
-        'DeepSeek Models', // Fallback for any other DeepSeek models
+        'DeepSeek Models', // Fallback
+        // Mistral Models
+        'Mistral Models',
     ];
 
 
@@ -247,6 +250,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta Llama';
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google Gemma';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
+    if (categoryName.startsWith('Mistral')) return 'MistralAI';
     return null; 
 };
 
@@ -409,7 +413,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
