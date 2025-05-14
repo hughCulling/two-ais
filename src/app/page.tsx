@@ -260,7 +260,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google Gemma';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
     if (categoryName.startsWith('Mistral')) return 'MistralAI';
-    if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen'; // Added Qwen
+    if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen';
     return null; 
 };
 
@@ -502,7 +502,9 @@ export default function Page() {
                                                                                                 ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
                                                                                                 : llm.provider === 'xAI' 
                                                                                                     ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
-                                                                                                    : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                                                    : llm.provider === 'TogetherAI' && llm.category?.includes('Qwen')
+                                                                                                        ? "This Qwen model (via TogetherAI) uses 'reasoning/thinking'. Output is billed accordingly."
+                                                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
                                                                                     </p>
                                                                                 </TooltipContent>
