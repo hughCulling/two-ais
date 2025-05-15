@@ -5,18 +5,18 @@ import { type NextRequest } from 'next/server';
 // Firebase Admin, Auth, Firestore, Secret Manager Setup
 import { initializeApp, getApps, cert, App, ServiceAccount } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
-import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore'; 
+import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // LangChain Imports
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatXAI } from "@langchain/xai"; // Corrected to lowercase xAI if the library expects that
+import { ChatXAI } from "@langchain/xai";
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 
 // --- Import LLM Info Helper ---
-import { getLLMInfoById } from '@/lib/models'; 
+import { getLLMInfoById } from '@/lib/models';
 
 // --- Initialize Services (Keep existing logic) ---
 let firebaseAdminApp: App | null = null;
@@ -24,8 +24,7 @@ let dbAdmin: Firestore | null = null;
 let secretManagerClient: SecretManagerServiceClient | null = null;
 
 function initializeServices() {
-    // Check if services are already initialized to avoid re-initialization
-     if (getApps().length > 0) {
+    if (getApps().length > 0) {
         if (!firebaseAdminApp) firebaseAdminApp = getApps()[0];
         if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
         if (!secretManagerClient) {
@@ -50,7 +49,6 @@ function initializeServices() {
              console.error("API Route: JSON PARSE ERROR:", parseError);
              throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY JSON.");
         }
-        // Handle escaped newlines in private key if necessary
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rawPrivateKey = (serviceAccount as any).private_key;
         if (typeof rawPrivateKey === 'string') {
@@ -59,17 +57,13 @@ function initializeServices() {
         } else {
              throw new Error("Parsed service account key 'private_key' is not a string.");
         }
-        // Basic validation of parsed key
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!serviceAccount || !(serviceAccount as any).client_email || !(serviceAccount as any).private_key || !(serviceAccount as any).project_id) {
             throw new Error("Parsed service account key is missing required fields after processing.");
         }
-        // Initialize Firebase Admin
         firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) });
         console.log("API Route: Firebase Admin SDK Initialized.");
-        // Initialize Firestore
         dbAdmin = getFirestore(firebaseAdminApp);
-        // Initialize Secret Manager Client
         secretManagerClient = new SecretManagerServiceClient({
             credentials: {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,7 +77,6 @@ function initializeServices() {
         console.log("API Route: Secret Manager Client Initialized.");
     } catch (error) {
         console.error("API Route: Failed to initialize services:", error);
-        // Ensure services are null if initialization fails
         firebaseAdminApp = null;
         dbAdmin = null;
         secretManagerClient = null;
@@ -96,10 +89,10 @@ initializeServices();
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
      if (!secretManagerClient) {
         console.error("API Route: Secret Manager Client not available when trying to get secret.");
-         initializeServices(); 
+         initializeServices();
          if (!secretManagerClient) {
              console.error("API Route: Re-initialization failed, Secret Manager Client still not available.");
-             return null; 
+             return null;
          }
          console.log("API Route: Secret Manager Client re-initialized successfully in getApiKeyFromSecret.");
     }
@@ -116,9 +109,9 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
         }
         let apiKey: string;
         if (typeof payloadData === "string") {
-            apiKey = payloadData; 
+            apiKey = payloadData;
         } else if (payloadData instanceof Uint8Array) {
-            apiKey = Buffer.from(payloadData).toString("utf8"); 
+            apiKey = Buffer.from(payloadData).toString("utf8");
         } else {
             console.error(`API Route: Unexpected type for secret payload: ${typeof payloadData}`);
             return null;
@@ -130,16 +123,23 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
     }
 }
 
-// --- Define TTS Types (Mirroring frontend) ---
-const AVAILABLE_TTS_PROVIDERS_API = [ // Renamed to avoid conflict if imported from elsewhere
-    { id: 'none', name: 'None' }, 
-    { id: 'browser', name: 'Browser Built-in' },
-    { id: 'openai', name: 'OpenAI TTS' },
+// --- Define TTS Types (Mirroring frontend and backend expectations) ---
+// This list should include all valid provider IDs that the frontend can send.
+const VALID_TTS_PROVIDER_IDS_API = [
+    "none",
+    "browser", // Though you might have removed this from the frontend UI, keeping for backend compatibility if old data exists
+    "openai",
+    "google-cloud" // Added "google-cloud"
 ] as const;
-type TTSProviderIdApi = typeof AVAILABLE_TTS_PROVIDERS_API[number]['id'];
-interface AgentTTSSettingsApi { // Renamed to avoid conflict
+type TTSProviderIdApi = typeof VALID_TTS_PROVIDER_IDS_API[number];
+
+interface AgentTTSSettingsApi {
     provider: TTSProviderIdApi;
     voice: string | null;
+    // This field is sent from the frontend:
+    // For OpenAI, it's the 'id' of the TTSModelDetail (e.g., 'openai-tts-1').
+    // For Google, it's the 'id' of the conceptual TTSModelDetail (e.g., 'google-standard-voices').
+    selectedTtsModelId?: string;
 }
 
 // --- Updated Request Body Interface ---
@@ -147,8 +147,8 @@ interface StartConversationRequest {
     agentA_llm: string;
     agentB_llm: string;
     ttsEnabled: boolean;
-    agentA_tts: AgentTTSSettingsApi; // Use renamed type
-    agentB_tts: AgentTTSSettingsApi; // Use renamed type
+    agentA_tts: AgentTTSSettingsApi;
+    agentB_tts: AgentTTSSettingsApi;
 }
 
 // --- POST Handler ---
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
 
     if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
          console.error("API Route: Services not initialized at start of POST handler.");
-         initializeServices(); 
+         initializeServices();
          if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
             console.error("API Route: Re-initialization failed again. Services unavailable.");
             return NextResponse.json({ error: "Server configuration error - services not initialized" }, { status: 500 });
@@ -190,23 +190,44 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
         const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts } = requestBody;
-        if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
+
+        // Validate core fields
+        if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== "boolean" || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
             return NextResponse.json({ error: "Missing required configuration fields (LLMs or TTS settings)" }, { status: 400 });
         }
-         if (!AVAILABLE_TTS_PROVIDERS_API.some(p => p.id === agentA_tts.provider) || !AVAILABLE_TTS_PROVIDERS_API.some(p => p.id === agentB_tts.provider)) {
-             console.warn(`API Route: Invalid TTS provider specified: A=${agentA_tts.provider}, B=${agentB_tts.provider}`);
+
+        // Validate TTS provider IDs
+        if (!VALID_TTS_PROVIDER_IDS_API.includes(agentA_tts.provider) || !VALID_TTS_PROVIDER_IDS_API.includes(agentB_tts.provider)) {
+             console.warn(`API Route: Invalid TTS provider specified: AgentA=${agentA_tts.provider}, AgentB=${agentB_tts.provider}`);
              return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
-         }
-        console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS=${agentA_tts.provider}, AgentB TTS=${agentB_tts.provider}`);
+        }
+
+        // Validate TTS settings if enabled
+        if (ttsEnabled) {
+            const validateAgentTtsApi = (settings: AgentTTSSettingsApi, agentName: string): string | null => {
+                if (settings.provider !== "none") {
+                    if (!settings.selectedTtsModelId) {
+                        return `Missing TTS model selection for ${agentName} (${settings.provider}).`;
+                    }
+                    if (!settings.voice) {
+                        return `Missing TTS voice selection for ${agentName} (${settings.provider}).`;
+                    }
+                }
+                return null;
+            };
+            const agentAErr = validateAgentTtsApi(agentA_tts, "Agent A");
+            if (agentAErr) return NextResponse.json({ error: agentAErr }, { status: 400 });
+            const agentBErr = validateAgentTtsApi(agentB_tts, "Agent B");
+            if (agentBErr) return NextResponse.json({ error: agentBErr }, { status: 400 });
+        }
+
+
+        console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS Prov=${agentA_tts.provider}, Model=${agentA_tts.selectedTtsModelId}, Voice=${agentA_tts.voice}, AgentB TTS Prov=${agentB_tts.provider}, Model=${agentB_tts.selectedTtsModelId}, Voice=${agentB_tts.voice}`);
+
 
         const agentALLMInfo = getLLMInfoById(agentA_llm);
         const agentBLLMInfo = getLLMInfoById(agentB_llm);
-
-        console.log(`API Route: Agent A LLM ID received: ${agentA_llm}`);
-        console.log(`API Route: Agent A LLM Info found:`, agentALLMInfo); 
-        console.log(`API Route: Agent B LLM ID received: ${agentB_llm}`);
-        console.log(`API Route: Agent B LLM Info found:`, agentBLLMInfo); 
 
         if (!agentALLMInfo || !agentBLLMInfo) {
             console.error(`API Route: Invalid model ID received: A=${agentA_llm}, B=${agentB_llm}. Could not find info in models.ts.`);
@@ -215,18 +236,12 @@ export async function POST(request: NextRequest) {
 
         const agentARequiredKey = agentALLMInfo.apiKeySecretName;
         const agentBRequiredKey = agentBLLMInfo.apiKeySecretName;
-        
-        console.log(`API Route: Agent A Required Key Name derived: ${agentARequiredKey}`);
-        console.log(`API Route: Agent B Required Key Name derived: ${agentBRequiredKey}`);
 
         if (!agentARequiredKey || !agentBRequiredKey) {
              console.error(`API Route: Could not determine required API key secret name for one or both agents: A=${agentARequiredKey} (from provider ${agentALLMInfo.provider}), B=${agentBRequiredKey} (from provider ${agentBLLMInfo.provider})`);
              return NextResponse.json({ error: "Internal configuration error mapping provider to key ID." }, { status: 500 });
         }
-        console.log(`API Route: Required Keys: Agent A (${agentALLMInfo.provider}) needs '${agentARequiredKey}', Agent B (${agentBLLMInfo.provider}) needs '${agentBRequiredKey}'`);
 
-        let agentASecretVersion: string | null = null;
-        let agentBSecretVersion: string | null = null;
         let userApiSecretVersions: Record<string, string> = {};
         try {
             if (!dbAdmin) {
@@ -239,8 +254,8 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "User profile not found" }, { status: 404 });
             }
             userApiSecretVersions = userDocSnap.data()?.apiSecretVersions || {};
-            agentASecretVersion = userApiSecretVersions[agentARequiredKey] || null;
-            agentBSecretVersion = userApiSecretVersions[agentBRequiredKey] || null;
+            const agentASecretVersion = userApiSecretVersions[agentARequiredKey] || null;
+            const agentBSecretVersion = userApiSecretVersions[agentBRequiredKey] || null;
 
             if (!agentASecretVersion) {
                 console.error(`API Route: Missing secret version name for key type '${agentARequiredKey}' (Provider: ${agentALLMInfo.provider}) for user ${userId}`);
@@ -250,51 +265,27 @@ export async function POST(request: NextRequest) {
                 console.error(`API Route: Missing secret version name for key type '${agentBRequiredKey}' (Provider: ${agentBLLMInfo.provider}) for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentBLLMInfo.provider} not found in settings.` }, { status: 404 });
             }
-            console.log(`API Route: Found secret versions: A=${agentASecretVersion}, B=${agentBSecretVersion}`);
         } catch (firestoreError) {
             console.error(`API Route: Firestore error fetching secret versions for user ${userId}:`, firestoreError);
             return NextResponse.json({ error: "Error retrieving API key configuration." }, { status: 500 });
         }
 
-        const apiKeyA = await getApiKeyFromSecret(agentASecretVersion);
-        const apiKeyB = (agentASecretVersion === agentBSecretVersion) ? apiKeyA : await getApiKeyFromSecret(agentBSecretVersion);
+        // Key validation (simplified, actual validation happens on first use by LangChain/TTS clients)
+        // const apiKeyA = await getApiKeyFromSecret(userApiSecretVersions[agentARequiredKey]);
+        // const apiKeyB = (userApiSecretVersions[agentARequiredKey] === userApiSecretVersions[agentBRequiredKey])
+        //                 ? apiKeyA
+        //                 : await getApiKeyFromSecret(userApiSecretVersions[agentBRequiredKey]);
 
-        if (!apiKeyA || !apiKeyB) {
-            console.error(`API Route: Failed to retrieve API keys from Secret Manager. Key A found: ${!!apiKeyA}, Key B found: ${!!apiKeyB}`);
-            return NextResponse.json({ error: "Failed to retrieve one or more API keys from secure storage." }, { status: 500 });
-        }
-        console.log("API Route: API Keys retrieved successfully.");
+        // if (!apiKeyA || !apiKeyB) {
+        //     console.error(`API Route: Failed to retrieve API keys from Secret Manager. Key A found: ${!!apiKeyA}, Key B found: ${!!apiKeyB}`);
+        //     return NextResponse.json({ error: "Failed to retrieve one or more API keys from secure storage." }, { status: 500 });
+        // }
+        // console.log("API Route: API Keys retrieved successfully for validation (validation itself is deferred).");
 
-        try {
-             console.log(`API Route: Initializing Agent A: ${agentALLMInfo.provider} with model ${agentA_llm}`);
-             switch (agentALLMInfo.provider) {
-                 case "OpenAI": new ChatOpenAI({ apiKey: apiKeyA, modelName: agentA_llm }); break;
-                 case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyA, model: agentA_llm }); break;
-                 case "Anthropic": new ChatAnthropic({ apiKey: apiKeyA, modelName: agentA_llm }); break;
-                 case "xAI": new ChatXAI({ apiKey: apiKeyA, model: agentA_llm }); break; // Corrected to "xAI"
-                 case "TogetherAI":
-                     new ChatTogetherAI({ apiKey: apiKeyA, modelName: agentA_llm }); 
-                     break;
-                 default: throw new Error(`Unsupported provider for Agent A: ${agentALLMInfo.provider}`);
-             }
 
-             console.log(`API Route: Initializing Agent B: ${agentBLLMInfo.provider} with model ${agentB_llm}`);
-             switch (agentBLLMInfo.provider) {
-                 case "OpenAI": new ChatOpenAI({ apiKey: apiKeyB, modelName: agentB_llm }); break;
-                 case "Google": new ChatGoogleGenerativeAI({ apiKey: apiKeyB, model: agentB_llm }); break;
-                 case "Anthropic": new ChatAnthropic({ apiKey: apiKeyB, modelName: agentB_llm }); break;
-                 case "xAI": new ChatXAI({ apiKey: apiKeyB, model: agentB_llm }); break; // Corrected to "xAI"
-                 case "TogetherAI":
-                     new ChatTogetherAI({ apiKey: apiKeyB, modelName: agentB_llm }); 
-                     break;
-                 default: throw new Error(`Unsupported provider for Agent B: ${agentBLLMInfo.provider}`);
-             }
-             console.log("API Route: LangChain models initialized successfully for validation.");
-        } catch (initError) {
-             console.error("API Route: Error initializing LangChain models:", initError);
-             const errorDetail = initError instanceof Error ? initError.message : "Unknown initialization error";
-             return NextResponse.json({ error: `Failed to validate AI models/keys: ${errorDetail}` }, { status: 500 });
-        }
+        // Deferring actual LangChain model initialization to the Cloud Function
+        // to avoid cold start issues and potential key exposure here if not careful.
+        // This API route will now primarily focus on validating the config and creating the conversation document.
 
         try {
             if (!dbAdmin) {
@@ -303,19 +294,34 @@ export async function POST(request: NextRequest) {
             const newConversationRef = dbAdmin.collection("conversations").doc();
             const conversationId = newConversationRef.id;
 
+            // Prepare ttsSettings for Firestore, ensuring it matches AgentTTSSettingsBackend structure
+            // The frontend's `selectedTtsModelId` (e.g., 'openai-tts-1', 'google-standard-voices')
+            // is passed directly to the backend function's `selectedTtsModelId`.
+            const finalAgentATts = {
+                provider: agentA_tts.provider,
+                voice: agentA_tts.voice,
+                selectedTtsModelId: agentA_tts.selectedTtsModelId, // Pass this through
+            };
+            const finalAgentBTts = {
+                provider: agentB_tts.provider,
+                voice: agentB_tts.voice,
+                selectedTtsModelId: agentB_tts.selectedTtsModelId, // Pass this through
+            };
+
+
             const conversationData = {
                 userId: userId,
                 agentA_llm: agentA_llm,
                 agentB_llm: agentB_llm,
-                turn: "agentA", 
-                status: "running", 
-                apiSecretVersions: userApiSecretVersions, 
-                createdAt: FieldValue.serverTimestamp(), 
-                lastActivity: FieldValue.serverTimestamp(), 
-                ttsSettings: {
+                turn: "agentA",
+                status: "running",
+                apiSecretVersions: userApiSecretVersions, // Store all user's key versions for the backend function
+                createdAt: FieldValue.serverTimestamp(),
+                lastActivity: FieldValue.serverTimestamp(),
+                ttsSettings: { // Ensure this structure matches ConversationTTSSettingsBackend
                     enabled: ttsEnabled,
-                    agentA: agentA_tts, 
-                    agentB: agentB_tts, 
+                    agentA: finalAgentATts,
+                    agentB: finalAgentBTts,
                 }
             };
 

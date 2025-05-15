@@ -1,7 +1,7 @@
 // src/components/session/SessionSetupForm.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import {
@@ -24,21 +24,23 @@ import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
     TTSVoice,
-    getVoicesForProvider,
-    getDefaultVoiceForProvider,
-    TTSModelDetail, 
-    getTTSProviderInfoById 
-} from '@/lib/tts_models';
+    // getVoicesForProvider, // We'll use provider.availableVoices directly
+    // getDefaultVoiceForProvider, // Custom logic for default
+    TTSModelDetail,
+    getTTSProviderInfoById
+} from '@/lib/tts_models'; // Ensure this path is correct and using the latest version
 import { AlertTriangle, Info } from "lucide-react";
 
-// --- Define TTS Types (using imported types) ---
-type TTSProviderOptionId = TTSProviderInfo['id'] | 'none'; // Removed 'browser'
+// --- Define TTS Types ---
+type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
 
 // Interface for storing TTS settings for one agent
 interface AgentTTSSettings {
     provider: TTSProviderOptionId;
-    voice: string | null; 
-    ttsApiModelId?: TTSModelDetail['apiModelId']; 
+    voice: string | null; // Stores the actual voice ID (e.g., 'alloy', 'en-US-Wavenet-A')
+    // For OpenAI, this is the apiModelId like 'tts-1'.
+    // For Google, this is the 'id' of the conceptual TTSModelDetail (e.g., 'google-standard-voices').
+    selectedTtsModelId?: string;
 }
 
 // --- SessionConfig Interface ---
@@ -52,15 +54,15 @@ interface SessionConfig {
 
 // Props for the SessionSetupForm component
 interface SessionSetupFormProps {
-    onStartSession: (config: SessionConfig) => void; 
-    isLoading: boolean; 
+    onStartSession: (config: SessionConfig) => void;
+    isLoading: boolean;
 }
 
 // Pre-group LLM options for efficiency
 const groupedLLMOptions = groupLLMsByProvider();
 
 // --- Determine all potentially required API key IDs ---
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai']; // Removed 'groq'
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey']; // Added googleCloudApiKey
 
 // --- Determine if notes for special model characteristics should be shown ---
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
@@ -70,15 +72,15 @@ const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
     llm => llm.provider === 'OpenAI' && llm.usesReasoningTokens
 );
 const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'Google' && llm.usesReasoningTokens 
+    llm => llm.provider === 'Google' && llm.usesReasoningTokens
 );
 const ANY_ANTHROPIC_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'Anthropic' && llm.usesReasoningTokens
 );
-const ANY_XAI_MODEL_USES_THINKING = AVAILABLE_LLMS.some( 
+const ANY_XAI_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'xAI' && llm.usesReasoningTokens
 );
-const ANY_QWEN_MODEL_USES_THINKING = AVAILABLE_LLMS.some( 
+const ANY_QWEN_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'TogetherAI' && llm.category?.includes('Qwen') && llm.usesReasoningTokens
 );
 
@@ -102,23 +104,28 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
-    
-    const openAIProviderInfo = getTTSProviderInfoById('openai'); // Get OpenAI provider info
-    const initialOpenAITTSModelId = openAIProviderInfo?.models[0]?.apiModelId; 
+
+    // Get provider info at the top level for easy access
+    const openAIProviderInfo = getTTSProviderInfoById('openai');
+    const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
+
+    const getDefaultOpenAITTSModel = () => openAIProviderInfo?.models[0];
+    const getDefaultOpenAIVoices = () => openAIProviderInfo?.availableVoices || [];
+    const getDefaultOpenAIDefaultVoiceId = () => getDefaultOpenAIVoices()[0]?.id ?? null;
 
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
-        provider: 'openai', // Default to OpenAI or first available
-        voice: getDefaultVoiceForProvider('openai')?.id ?? null,
-        ttsApiModelId: initialOpenAITTSModelId,
+        provider: 'openai',
+        voice: getDefaultOpenAIDefaultVoiceId(),
+        selectedTtsModelId: getDefaultOpenAITTSModel()?.id, // Use internal ID for consistency
     });
     const [agentBTTSSettings, setAgentBTTSSettings] = useState<AgentTTSSettings>({
-        provider: 'openai', // Default to OpenAI or first available
-        voice: getDefaultVoiceForProvider('openai')?.id ?? null,
-        ttsApiModelId: initialOpenAITTSModelId,
+        provider: 'openai',
+        voice: getDefaultOpenAIDefaultVoiceId(),
+        selectedTtsModelId: getDefaultOpenAITTSModel()?.id,
     });
 
-    const [currentExternalVoicesA, setCurrentExternalVoicesA] = useState<TTSVoice[]>(getVoicesForProvider('openai'));
-    const [currentExternalVoicesB, setCurrentExternalVoicesB] = useState<TTSVoice[]>(getVoicesForProvider('openai'));
+    const [currentVoicesA, setCurrentVoicesA] = useState<TTSVoice[]>(getDefaultOpenAIVoices());
+    const [currentVoicesB, setCurrentVoicesB] = useState<TTSVoice[]>(getDefaultOpenAIVoices());
 
 
     // --- Effects ---
@@ -161,40 +168,78 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         fetchKeyStatus();
     }, [user, authLoading]);
 
-    
-    const updateVoicesAndModelForAgent = (agentSetter: React.Dispatch<React.SetStateAction<AgentTTSSettings>>, providerId: TTSProviderOptionId) => {
+
+    const updateTTSConfigForProvider = useCallback((
+        agentSettingsSetter: React.Dispatch<React.SetStateAction<AgentTTSSettings>>,
+        voicesListSetter: React.Dispatch<React.SetStateAction<TTSVoice[]>>,
+        providerId: TTSProviderOptionId
+    ) => {
         if (providerId === 'none') {
-            agentSetter(prev => ({ ...prev, provider: providerId, voice: null, ttsApiModelId: undefined }));
-            if (agentSetter === setAgentATTSSettings) setCurrentExternalVoicesA([]);
-            else setCurrentExternalVoicesB([]);
-        } else { // Assumes 'openai' or other future providers from AVAILABLE_TTS_PROVIDERS
-            const voices = getVoicesForProvider(providerId as TTSProviderInfo['id']);
-            const defaultVoice = voices[0]?.id ?? null;
-            const providerInfo = getTTSProviderInfoById(providerId as TTSProviderInfo['id']);
-            // Default to the first model of the selected provider
-            const defaultApiModelId = providerInfo?.models[0]?.apiModelId;
-
-            agentSetter(prev => ({ 
-                ...prev, 
-                provider: providerId, 
-                voice: defaultVoice,
-                ttsApiModelId: defaultApiModelId 
+            agentSettingsSetter(prev => ({ ...prev, provider: 'none', voice: null, selectedTtsModelId: undefined }));
+            voicesListSetter([]);
+        } else if (providerId === 'openai' && openAIProviderInfo) {
+            const defaultModel = openAIProviderInfo.models[0];
+            const voices = openAIProviderInfo.availableVoices;
+            agentSettingsSetter(prev => ({
+                ...prev,
+                provider: 'openai',
+                selectedTtsModelId: defaultModel?.id, // Use our internal model ID
+                voice: voices[0]?.id ?? null,
             }));
-
-            if (agentSetter === setAgentATTSSettings) setCurrentExternalVoicesA(voices);
-            else setCurrentExternalVoicesB(voices);
+            voicesListSetter(voices);
+        } else if (providerId === 'google-cloud' && googleCloudProviderInfo) {
+            const defaultConceptualModel = googleCloudProviderInfo.models[0];
+            let voices: TTSVoice[] = [];
+            if (defaultConceptualModel?.voiceFilterCriteria && googleCloudProviderInfo.availableVoices) {
+                voices = googleCloudProviderInfo.availableVoices.filter(defaultConceptualModel.voiceFilterCriteria);
+            }
+            agentSettingsSetter(prev => ({
+                ...prev,
+                provider: 'google-cloud',
+                selectedTtsModelId: defaultConceptualModel?.id, // This is the conceptual model ID
+                voice: voices[0]?.id ?? null,
+            }));
+            voicesListSetter(voices);
         }
-    };
-    
+    }, [openAIProviderInfo, googleCloudProviderInfo]);
+
     useEffect(() => {
-        updateVoicesAndModelForAgent(setAgentATTSSettings, agentATTSSettings.provider);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agentATTSSettings.provider]);
-    
+        updateTTSConfigForProvider(setAgentATTSSettings, setCurrentVoicesA, agentATTSSettings.provider);
+    }, [agentATTSSettings.provider, updateTTSConfigForProvider]);
+
     useEffect(() => {
-        updateVoicesAndModelForAgent(setAgentBTTSSettings, agentBTTSSettings.provider);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agentBTTSSettings.provider]);
+        updateTTSConfigForProvider(setAgentBTTSSettings, setCurrentVoicesB, agentBTTSSettings.provider);
+    }, [agentBTTSSettings.provider, updateTTSConfigForProvider]);
+
+
+    // Effect for Google Conceptual Model change (selectedTtsModelId for Google)
+    const updateVoicesForGoogleModel = useCallback((
+        agentSettingsSetter: React.Dispatch<React.SetStateAction<AgentTTSSettings>>,
+        voicesListSetter: React.Dispatch<React.SetStateAction<TTSVoice[]>>,
+        settings: AgentTTSSettings // current settings for the agent
+    ) => {
+        if (settings.provider === 'google-cloud' && settings.selectedTtsModelId && googleCloudProviderInfo) {
+            const conceptualModel = googleCloudProviderInfo.models.find(m => m.id === settings.selectedTtsModelId);
+            let voices: TTSVoice[] = [];
+            if (conceptualModel?.voiceFilterCriteria && googleCloudProviderInfo.availableVoices) {
+                voices = googleCloudProviderInfo.availableVoices.filter(conceptualModel.voiceFilterCriteria);
+            }
+            voicesListSetter(voices);
+            // Update voice to the first in the new list if current is not valid or null
+            const currentVoiceIsValid = voices.some(v => v.id === settings.voice);
+            if (!currentVoiceIsValid) {
+                agentSettingsSetter(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
+            }
+        }
+    }, [googleCloudProviderInfo]);
+
+    useEffect(() => {
+        updateVoicesForGoogleModel(setAgentATTSSettings, setCurrentVoicesA, agentATTSSettings);
+    }, [agentATTSSettings.provider, agentATTSSettings.selectedTtsModelId, updateVoicesForGoogleModel]);
+
+    useEffect(() => {
+        updateVoicesForGoogleModel(setAgentBTTSSettings, setCurrentVoicesB, agentBTTSSettings);
+    }, [agentBTTSSettings.provider, agentBTTSSettings.selectedTtsModelId, updateVoicesForGoogleModel]);
 
 
     // --- Event Handlers ---
@@ -223,24 +268,25 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
 
         if (ttsEnabled) {
-             if (agentATTSSettings.provider !== 'none' && !agentATTSSettings.voice) {
-                 alert(`Please select a voice for Agent A's TTS provider (${agentATTSSettings.provider}) or disable TTS.`);
-                 return;
-             }
-             if (agentATTSSettings.provider === 'openai' && !agentATTSSettings.ttsApiModelId) {
-                alert(`Please select a specific TTS model for Agent A (OpenAI TTS).`);
-                return;
-             }
-             if (agentBTTSSettings.provider !== 'none' && !agentBTTSSettings.voice) {
-                  alert(`Please select a voice for Agent B's TTS provider (${agentBTTSSettings.provider}) or disable TTS.`);
-                  return;
-             }
-             if (agentBTTSSettings.provider === 'openai' && !agentBTTSSettings.ttsApiModelId) {
-                alert(`Please select a specific TTS model for Agent B (OpenAI TTS).`);
-                return;
-             }
-        }
+            const validateAgentTTS = (settings: AgentTTSSettings, agentName: string): boolean => {
+                if (settings.provider !== 'none' && !settings.voice) {
+                    alert(`Please select a voice for ${agentName}'s TTS provider or disable TTS.`);
+                    return false;
+                }
+                if (settings.provider !== 'none' && !settings.selectedTtsModelId) {
+                     alert(`Please select a TTS model for ${agentName} or disable TTS.`);
+                     return false;
+                }
+                return true;
+            };
 
+            if (!validateAgentTTS(agentATTSSettings, 'Agent A')) return;
+            if (!validateAgentTTS(agentBTTSSettings, 'Agent B')) return;
+        }
+        
+        // Prepare final config, resolving conceptual Google model ID to actual voice properties if needed by backend
+        // For now, sending selectedTtsModelId (which is conceptual for Google) and the actual voice ID.
+        // The backend will use the voice ID for Google API calls.
         onStartSession({
             agentA_llm,
             agentB_llm,
@@ -252,26 +298,38 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     const isLLMOptionDisabled = (llm: LLMInfo): boolean => {
         const requiredKey = llm.apiKeySecretName;
-        if (!requiredKey) return true;
+        if (!requiredKey) return true; // Should not happen if models.ts is correct
         return isLoadingStatus || !savedKeyStatus[requiredKey];
     };
 
     const handleTtsToggle = (checked: boolean | 'indeterminate') => {
-         setTtsEnabled(Boolean(checked));
+        setTtsEnabled(Boolean(checked));
     };
 
-    const handleTTSProviderChange = (agent: 'A' | 'B', providerId: TTSProviderOptionId) => {
+    const handleTTSProviderChange = (agent: 'A' | 'B', newProviderId: TTSProviderOptionId) => {
         const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
-        updateVoicesAndModelForAgent(setter, providerId);
+        setter(prev => ({
+            ...prev,
+            provider: newProviderId,
+            selectedTtsModelId: undefined, // Reset model when provider changes
+            voice: null,                   // Reset voice when provider changes
+        }));
+        // useEffect for provider change will handle updating voices and default model
     };
-    
-    const handleOpenAITTSModelChange = (agent: 'A' | 'B', apiModelId: TTSModelDetail['apiModelId']) => {
+
+    const handleTTSModelChange = (agent: 'A' | 'B', ttsModelId: string) => {
+        // ttsModelId is the 'id' from TTSModelDetail (e.g., 'openai-tts-1', 'google-standard-voices')
         const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
-        setter(prev => ({ ...prev, ttsApiModelId: apiModelId }));
+        setter(prev => ({
+            ...prev,
+            selectedTtsModelId: ttsModelId,
+            voice: null, // Reset voice when model changes, useEffect will pick default
+        }));
+        // useEffect for selectedTtsModelId change (especially for Google) will update voices
     };
 
     const handleExternalVoiceChange = (agent: 'A' | 'B', voiceId: string) => {
-         const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
+        const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
         setter(prev => ({ ...prev, voice: voiceId }));
     };
 
@@ -287,6 +345,91 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     };
 
     const isStartDisabled = isLoading || isLoadingStatus || !agentA_llm || !agentB_llm || !user;
+
+    const renderTTSConfigForAgent = (
+        agentIdentifier: 'A' | 'B',
+        agentTTSSettings: AgentTTSSettings,
+        currentVoices: TTSVoice[]
+    ) => {
+        const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
+        const selectedProviderInfo = getTTSProviderInfoById(agentTTSSettings.provider as TTSProviderInfo['id']);
+
+        return (
+            <div className="space-y-3 p-4 border rounded-md bg-background/50">
+                <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
+                <div className="space-y-2">
+                    <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-provider`}>Provider</Label>
+                    <Select
+                        value={agentTTSSettings.provider}
+                        onValueChange={(value: TTSProviderOptionId) => handleTTSProviderChange(agentIdentifier, value)}
+                        disabled={!user || isLoadingStatus}
+                    >
+                        <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-provider`} className="w-full">
+                            <SelectValue placeholder="Select TTS Provider" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {AVAILABLE_TTS_PROVIDERS.map(p => {
+                                const isDisabled = isTTSProviderDisabled(p.id);
+                                return (
+                                    <SelectItem key={p.id} value={p.id} disabled={isDisabled}>
+                                        {p.name}
+                                        {isDisabled && ' (Key Missing)'}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {selectedProviderInfo && agentTTSSettings.provider !== 'none' && (
+                    <>
+                        <div className="space-y-2">
+                            <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-model`}>
+                                {selectedProviderInfo.name} Model
+                            </Label>
+                            <Select
+                                value={agentTTSSettings.selectedTtsModelId || ''}
+                                onValueChange={(value: string) => handleTTSModelChange(agentIdentifier, value)}
+                                disabled={!user || selectedProviderInfo.models.length === 0}
+                            >
+                                <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-model`} className="w-full">
+                                    <SelectValue placeholder={`Select ${selectedProviderInfo.name} Model`} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {selectedProviderInfo.models.map(m => (
+                                        <SelectItem key={m.id} value={m.id}>{m.name} ({m.pricingText})</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>Voice</Label>
+                            <Select
+                                value={agentTTSSettings.voice || ''}
+                                onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
+                                disabled={!user || currentVoices.length === 0 || !agentTTSSettings.selectedTtsModelId}
+                            >
+                                <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
+                                    <SelectValue placeholder="Select Voice" />
+                                </SelectTrigger>
+                                <SelectContent className="max-h-60"> {/* Added max-h for long lists */}
+                                    {currentVoices.map(v => (
+                                        <SelectItem key={v.id} value={v.id}>
+                                            {v.name} {v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                            {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">(Preview)</span> : ''}
+                                            {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </>
+                )}
+            </div>
+        );
+    };
+
 
     // --- Render the form ---
     return (
@@ -339,7 +482,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 </div>
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note}) 
+                                                                        ({llm.pricing.note})
                                                                     </span>
                                                                 ) : (
                                                                     !isDisabled && (
@@ -394,7 +537,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 </div>
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
-                                                                        ({llm.pricing.note}) 
+                                                                        ({llm.pricing.note})
                                                                     </span>
                                                                 ) : (
                                                                     !isDisabled && (
@@ -414,37 +557,37 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                         </div>
                         {/* --- Explanation Notes for Icons --- */}
-                        {ANY_OPENAI_USES_REASONING_TOKENS && ( 
+                        {ANY_OPENAI_USES_REASONING_TOKENS && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
                             </p>
                         )}
-                        {ANY_GOOGLE_MODEL_USES_THINKING && ( 
+                        {ANY_GOOGLE_MODEL_USES_THINKING && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates a Google model uses a &apos;thinking budget&apos;. The &apos;thinking&apos; output is billed but is not visible in the chat.
                             </p>
                         )}
-                        {ANY_ANTHROPIC_MODEL_USES_THINKING && ( 
+                        {ANY_ANTHROPIC_MODEL_USES_THINKING && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates an Anthropic model uses &apos;extended thinking&apos;. The &apos;thinking&apos; output is billed but may not be visible in the chat.
                             </p>
                         )}
-                        {ANY_XAI_MODEL_USES_THINKING && ( 
+                        {ANY_XAI_MODEL_USES_THINKING && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates an xAI model uses &apos;thinking&apos;. Thinking traces may be accessible and output is billed.
                             </p>
                         )}
-                         {ANY_QWEN_MODEL_USES_THINKING && ( 
+                         {ANY_QWEN_MODEL_USES_THINKING && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                                 Indicates a Qwen model (via TogetherAI) uses &apos;reasoning/thinking&apos;. Output is billed accordingly.
                             </p>
                         )}
-                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && ( 
+                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
                                 Indicates an OpenAI model requires a verified organization. You can
@@ -470,140 +613,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </div>
                         {ttsEnabled && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                                {/* Agent A TTS Settings */}
-                                <div className="space-y-3 p-4 border rounded-md bg-background/50">
-                                    <h3 className="font-semibold text-center mb-3">Agent A TTS</h3>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="agent-a-tts-provider">Provider</Label>
-                                        <Select 
-                                            value={agentATTSSettings.provider} 
-                                            onValueChange={(value: TTSProviderOptionId) => handleTTSProviderChange('A', value)} 
-                                            disabled={!user || isLoadingStatus}
-                                        >
-                                            <SelectTrigger id="agent-a-tts-provider" className="w-full">
-                                                <SelectValue placeholder="Select TTS Provider" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="none">None</SelectItem>
-                                                {/* <SelectItem value="browser">Browser Built-in</SelectItem> Removed */}
-                                                {AVAILABLE_TTS_PROVIDERS.map(p => {
-                                                    const isDisabled = isTTSProviderDisabled(p.id);
-                                                    return (
-                                                        <SelectItem key={p.id} value={p.id} disabled={isDisabled}>
-                                                            {p.name}
-                                                            {isDisabled && ' (Key Missing)'}
-                                                        </SelectItem>
-                                                    );
-                                                })}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    {agentATTSSettings.provider === 'openai' && openAIProviderInfo && (
-                                        <>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="agent-a-openai-tts-model">OpenAI TTS Model</Label>
-                                                <Select
-                                                    value={agentATTSSettings.ttsApiModelId || ''}
-                                                    onValueChange={(value: TTSModelDetail['apiModelId']) => handleOpenAITTSModelChange('A', value)}
-                                                    disabled={!user}
-                                                >
-                                                    <SelectTrigger id="agent-a-openai-tts-model" className="w-full">
-                                                        <SelectValue placeholder="Select OpenAI TTS Model" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {openAIProviderInfo.models.map(m => (
-                                                            <SelectItem key={m.id} value={m.apiModelId}>{m.name} ({m.pricingText})</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="agent-a-openai-voice">Voice</Label>
-                                                <Select
-                                                    value={agentATTSSettings.voice || ''}
-                                                    onValueChange={(value) => handleExternalVoiceChange('A', value)}
-                                                    disabled={!user || currentExternalVoicesA.length === 0}
-                                                >
-                                                    <SelectTrigger id="agent-a-openai-voice" className="w-full">
-                                                        <SelectValue placeholder="Select Voice" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                            {currentExternalVoicesA.map(v => (
-                                                                <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
-                                                            ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                                {/* Agent B TTS Settings (mirrors Agent A) */}
-                                <div className="space-y-3 p-4 border rounded-md bg-background/50">
-                                    <h3 className="font-semibold text-center mb-3">Agent B TTS</h3>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="agent-b-tts-provider">Provider</Label>
-                                        <Select 
-                                            value={agentBTTSSettings.provider} 
-                                            onValueChange={(value: TTSProviderOptionId) => handleTTSProviderChange('B', value)} 
-                                            disabled={!user || isLoadingStatus}
-                                        >
-                                            <SelectTrigger id="agent-b-tts-provider" className="w-full">
-                                                <SelectValue placeholder="Select TTS Provider" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="none">None</SelectItem>
-                                                {/* <SelectItem value="browser">Browser Built-in</SelectItem> Removed */}
-                                                {AVAILABLE_TTS_PROVIDERS.map(p => {
-                                                    const isDisabled = isTTSProviderDisabled(p.id);
-                                                    return (
-                                                        <SelectItem key={p.id} value={p.id} disabled={isDisabled}>
-                                                            {p.name}
-                                                            {isDisabled && ' (Key Missing)'}
-                                                        </SelectItem>
-                                                    );
-                                                })}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    {agentBTTSSettings.provider === 'openai' && openAIProviderInfo && (
-                                        <>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="agent-b-openai-tts-model">OpenAI TTS Model</Label>
-                                                <Select
-                                                    value={agentBTTSSettings.ttsApiModelId || ''}
-                                                    onValueChange={(value: TTSModelDetail['apiModelId']) => handleOpenAITTSModelChange('B', value)}
-                                                    disabled={!user}
-                                                >
-                                                    <SelectTrigger id="agent-b-openai-tts-model" className="w-full">
-                                                        <SelectValue placeholder="Select OpenAI TTS Model" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {openAIProviderInfo.models.map(m => (
-                                                            <SelectItem key={m.id} value={m.apiModelId}>{m.name} ({m.pricingText})</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="agent-b-openai-voice">Voice</Label>
-                                                <Select
-                                                    value={agentBTTSSettings.voice || ''}
-                                                    onValueChange={(value) => handleExternalVoiceChange('B', value)}
-                                                    disabled={!user || currentExternalVoicesB.length === 0}
-                                                >
-                                                    <SelectTrigger id="agent-b-openai-voice" className="w-full">
-                                                        <SelectValue placeholder="Select Voice" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                            {currentExternalVoicesB.map(v => (
-                                                                <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
-                                                            ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
+                                {renderTTSConfigForAgent('A', agentATTSSettings, currentVoicesA)}
+                                {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
                             </div>
                         )}
                     </div>

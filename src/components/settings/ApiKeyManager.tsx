@@ -17,7 +17,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import Icons ---
-import { Terminal, CheckCircle, Info } from "lucide-react"; // Added Info icon
+import { Terminal, CheckCircle, Info, ExternalLink } from "lucide-react"; // Added ExternalLink
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
@@ -25,6 +25,7 @@ interface ApiKeyInput {
     label: string; // User-friendly label for the input
     value: string; // Current value entered by the user
     tooltip: string; // Tooltip help text
+    learnMoreLink?: string; // Optional link for more details
 }
 
 // Interface for the data sent to the Firebase Function
@@ -51,139 +52,108 @@ const initialApiKeys: ApiKeyInput[] = [
         id: 'openai',
         label: 'OpenAI API Key',
         value: '',
-        tooltip: 'Requires OpenAI account. Usage may incur costs. Find keys at platform.openai.com/api-keys'
+        tooltip: 'Used for OpenAI models (GPT series, TTS, etc.). Requires an OpenAI account. Usage may incur costs. Find keys at platform.openai.com/api-keys.',
+        learnMoreLink: 'https://platform.openai.com/api-keys'
     },
     {
-        id: 'google_ai',
-        label: 'Google AI API Key',
+        id: 'google_ai', // This ID is used by SessionSetupForm (via tts_models.ts if apiKeyId is 'google_ai')
+        label: 'Google Cloud API Key', // Updated label
         value: '',
-        tooltip: 'Requires Google account. Often free tier available. Create keys at aistudio.google.com/app/apikey'
+        tooltip: "Your general Google Cloud API Key. Used for AI Studio (Gemini models) and other Google Cloud services like Text-to-Speech. Ensure relevant APIs (e.g., 'Vertex AI API' for Gemini, 'Cloud Text-to-Speech API' for TTS) are enabled in your Google Cloud Console project. Create keys in AI Studio or Google Cloud Console.",
+        learnMoreLink: 'https://console.cloud.google.com/apis/library'
     },
     {
         id: 'anthropic',
         label: 'Anthropic API Key',
         value: '',
-        tooltip: 'Requires Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys'
+        tooltip: 'Used for Anthropic Claude models. Requires an Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys.',
+        learnMoreLink: 'https://console.anthropic.com/settings/keys'
     },
     {
         id: 'xai',
         label: 'XAI (Grok) API Key',
         value: '',
-        tooltip: 'Requires xAI account. Find keys at console.x.ai (or similar). Costs may apply.'
+        tooltip: 'Used for Grok models from xAI. Requires an xAI account. Find keys at console.x.ai (or similar). Costs may apply.',
+        learnMoreLink: 'https://console.x.ai' // Placeholder, actual link might differ
     },
-    // --- Removed Groq Entry ---
-    // {
-    //     id: 'groq',
-    //     label: 'Groq API Key',
-    //     value: '',
-    //     tooltip: 'Required for Llama models via Groq. Find keys at console.groq.com/keys'
-    // },
-    // --- End Removed Groq Entry ---
     {
-        id: 'together_ai', // Matches the apiKeySecretName in models.ts
+        id: 'together_ai',
         label: 'TogetherAI API Key',
         value: '',
-        tooltip: 'Required for Llama models via TogetherAI. Find keys at api.together.ai/settings/api-keys'
+        tooltip: 'Used for various open-source models hosted by TogetherAI. Find keys at api.together.ai/settings/api-keys.',
+        learnMoreLink: 'https://api.together.ai/settings/api-keys'
     },
 ];
 
 const ApiKeyManager: React.FC = () => {
-    const { user, loading: authLoading } = useAuth(); // Get user and auth loading state
+    const { user, loading: authLoading } = useAuth();
 
-    // State for the API key input fields, initialized from the stable definition
     const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(initialApiKeys);
-    // State to hold success/error messages per API key ID
     const [statusMessages, setStatusMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
-    // State to track if the save operation is in progress
     const [isSaving, setIsSaving] = useState(false);
-    // State for displaying general errors (e.g., auth issues, load failures)
     const [generalError, setGeneralError] = useState<string | null>(null);
-    // State to track which keys are already saved (based on Firestore check)
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
-    // State to track if the initial key status load is happening
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
 
-    // Effect to fetch the saved status of API keys from Firestore when user changes
     useEffect(() => {
         const fetchKeyStatus = async () => {
-            if (user) { // Only run if user is logged in
+            if (user) {
                 setIsLoadingStatus(true);
-                setGeneralError(null); // Clear previous errors
+                setGeneralError(null);
                 try {
-                    const userDocRef = doc(db, 'users', user.uid); // Reference to the user's document
-                    const userDocSnap = await getDoc(userDocRef); // Fetch the document
-                    const status: Record<string, boolean> = {}; // Initialize status object
-
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    const status: Record<string, boolean> = {};
                     if (userDocSnap.exists()) {
-                        const data = userDocSnap.data(); // Get document data
-                        // Safely access apiSecretVersions, default to empty object if null/undefined
+                        const data = userDocSnap.data();
                         const versions = data?.apiSecretVersions || {};
-                        // Check each key defined in initialApiKeys
                         initialApiKeys.forEach(key => {
-                            // A key is considered saved if its ID exists in versions and the value is a non-empty string
                             status[key.id] = !!(versions[key.id] && typeof versions[key.id] === 'string' && versions[key.id].length > 0);
                         });
                     } else {
-                        // If user document doesn't exist, assume no keys are saved
                         initialApiKeys.forEach(key => { status[key.id] = false; });
-                        console.log("User document does not exist yet for API key status check.");
                     }
-                    console.log("Fetched Key Status:", status); // Log fetched status
-                    setSavedKeyStatus(status); // Update the saved status state
+                    setSavedKeyStatus(status);
                 } catch (error) {
                     console.error("Error fetching user document for key status:", error);
                     setGeneralError("Could not load saved key status. Please try refreshing.");
-                    // Reset status on error
                     const resetStatus: Record<string, boolean> = {};
                     initialApiKeys.forEach(key => { resetStatus[key.id] = false; });
                     setSavedKeyStatus(resetStatus);
                 } finally {
-                    setIsLoadingStatus(false); // Mark loading as complete
+                    setIsLoadingStatus(false);
                 }
             } else if (!authLoading) {
-                // If no user and auth is not loading, reset status and loading state
                 const resetStatus: Record<string, boolean> = {};
                 initialApiKeys.forEach(key => { resetStatus[key.id] = false; });
                 setSavedKeyStatus(resetStatus);
                 setIsLoadingStatus(false);
             }
         };
-
-        console.log("Fetching user data for API secrets..."); // Log when effect runs
         fetchKeyStatus();
-    // Effect dependencies remain the same
     }, [user, authLoading]);
 
-    // Handler for input field changes
     const handleInputChange = (id: string, value: string) => {
         setApiKeys(prevKeys =>
             prevKeys.map(key => (key.id === id ? { ...key, value } : key))
         );
-        // Clear status message for the specific key being edited
         setStatusMessages(prev => {
             const newStatus = { ...prev };
             delete newStatus[id];
             return newStatus;
         });
-        setGeneralError(null); // Clear general error when user types
+        setGeneralError(null);
     };
 
-    // Callback function to handle saving the API keys via Firebase Function
     const saveKeys = useCallback(async () => {
-         // Basic checks before proceeding
          if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app || !initializedFunctions) {
              setGeneralError("Authentication issue or Firebase services not ready. Please ensure you are logged in.");
              return;
         }
-
         setIsSaving(true);
         setGeneralError(null);
         const currentStatusMessages: Record<string, { type: 'success' | 'error'; message: string }> = {};
-
-        // Reference to the Cloud Function (name is 'saveApiKey')
         const saveApiKeyFunction = httpsCallable<SaveApiKeyRequest, SaveApiKeySuccessResponse | SaveApiKeyErrorResponse>(initializedFunctions, 'saveApiKey');
-
-        // Filter only keys that have a new value entered
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
         if (keysToSave.length === 0) {
@@ -191,10 +161,8 @@ const ApiKeyManager: React.FC = () => {
             setIsSaving(false);
             return;
         }
-
-        // Ensure user token is fresh before making calls
         try {
-            await user.getIdToken(true); // Force token refresh
+            await user.getIdToken(true);
         } catch (tokenError) {
             console.error("Error refreshing ID token:", tokenError);
             setGeneralError("Failed to refresh authentication token. Please try logging out and back in.");
@@ -202,38 +170,26 @@ const ApiKeyManager: React.FC = () => {
             return;
         }
 
-        const newlySavedKeys: Record<string, boolean> = {}; // Track which keys were successfully saved in this batch
-
-        // Call the function for each key with a value
+        const newlySavedKeys: Record<string, boolean> = {};
         const promises = keysToSave.map(async (apiKeyInput) => {
             const service = apiKeyInput.id;
             const apiKey = apiKeyInput.value;
             const dataToSend: SaveApiKeyRequest = { service, apiKey };
-
             try {
-                console.log(`Calling saveApiKey function for service: ${service}`);
                 const result = await saveApiKeyFunction(dataToSend);
                 const data = result.data;
-
-                // Check response structure for success or error
                 if (typeof data === 'object' && data !== null && 'message' in data && !('error' in data)) {
                     const successData = data as SaveApiKeySuccessResponse;
-                    console.log(`Successfully saved/updated key for service: ${successData.service}`);
                     currentStatusMessages[service] = { type: 'success', message: successData.message };
-                    newlySavedKeys[service] = true; // Mark as newly saved
-                    // Clear the input field on success
+                    newlySavedKeys[service] = true;
                     setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
                 } else if (typeof data === 'object' && data !== null && 'error' in data) {
                     const errorMsg = (data as SaveApiKeyErrorResponse)?.error || 'Unknown error structure received.';
-                    console.error(`Error saving key for ${service} (from function response):`, errorMsg);
                     currentStatusMessages[service] = { type: 'error', message: `Error: ${errorMsg}` };
                 } else {
-                     console.error(`Unexpected response structure received for ${service}:`, data);
                      currentStatusMessages[service] = { type: 'error', message: "Received an unexpected response from the server." };
                 }
-
             } catch (error) {
-                console.error(`Caught error calling function for service ${service}:`, error);
                 let errorMessage = `Failed to save ${service} key.`;
                  if (error instanceof FunctionsError) {
                       errorMessage = `Function Error: ${error.message} (Code: ${error.code})`;
@@ -244,41 +200,27 @@ const ApiKeyManager: React.FC = () => {
             }
         });
 
-        // Wait for all save attempts to complete
         await Promise.all(promises);
-
-        // Update the saved status indicator based on newly saved keys
         setSavedKeyStatus(prevStatus => ({ ...prevStatus, ...newlySavedKeys }));
-        // Display the status messages from the operations
         setStatusMessages(currentStatusMessages);
-        setIsSaving(false); // Mark saving as complete
+        setIsSaving(false);
 
-        // Set a general error if any individual save failed
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
-        if (hasErrors) {
-            if (!generalError) { // Avoid overwriting a more specific general error
-                 setGeneralError("Some API keys could not be saved. Please check the details below.");
-            }
-        } else {
-             if (!generalError) { // Clear general error only if no new errors occurred
-                 setGeneralError(null);
-             }
+        if (hasErrors && !generalError) {
+            setGeneralError("Some API keys could not be saved. Please check the details below.");
+        } else if (!hasErrors && !generalError) {
+            setGeneralError(null);
         }
-    // Dependencies for the useCallback
-    }, [apiKeys, user, authLoading, generalError, setGeneralError, setStatusMessages, setSavedKeyStatus, setApiKeys]);
+    }, [apiKeys, user, authLoading, generalError]);
 
 
-    // Display loading message while fetching initial key status
     if (isLoadingStatus && !authLoading) {
          return <p className="text-center text-sm text-muted-foreground p-4">Loading key status...</p>;
     }
 
-    // Render the main component UI
     return (
-        // --- TooltipProvider wrapper ---
         <TooltipProvider delayDuration={100}>
             <div className="space-y-6">
-                {/* General Error Alert */}
                 {generalError && (
                     <Alert variant="destructive">
                         <Terminal className="h-4 w-4" />
@@ -287,43 +229,46 @@ const ApiKeyManager: React.FC = () => {
                     </Alert>
                 )}
 
-                {/* API Key Input Section */}
                 <div className="space-y-4">
-                    {/* Map over initialApiKeys to render each input field */}
-                    {initialApiKeys.map(({ id, label, tooltip }) => { // Destructure tooltip content
+                    {initialApiKeys.map(({ id, label, tooltip, learnMoreLink }) => {
                         const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
                         const isSaved = savedKeyStatus[id] === true;
                         const showSavedPlaceholder = isSaved && currentKeyValue === '';
 
                         return (
-                            <div key={id} className="space-y-2">
-                                {/* --- Label and Tooltip Trigger --- */}
+                            <div key={id} className="space-y-2 pb-2">
                                 <div className="flex items-center space-x-1.5">
                                     <Label htmlFor={id}>{label}</Label>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            {/* Using Info icon as the trigger */}
                                             <Info className="h-4 w-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
                                         </TooltipTrigger>
-                                        <TooltipContent className="max-w-xs"> {/* Added max-width */}
-                                            {/* Display tooltip text */}
-                                            <p className="text-xs">{tooltip}</p> {/* Made text smaller */}
+                                        <TooltipContent className="max-w-xs">
+                                            <p className="text-xs">{tooltip}</p>
+                                            {learnMoreLink && (
+                                                <a
+                                                    href={learnMoreLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs text-blue-500 hover:text-blue-600 underline mt-1 flex items-center"
+                                                >
+                                                    Learn more <ExternalLink className="h-3 w-3 ml-1" />
+                                                </a>
+                                            )}
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
-                                {/* --- End Label and Tooltip Trigger --- */}
 
                                 <div className="flex items-center space-x-2">
                                     <Input
                                         id={id}
-                                        type="password" // Keep type as password
+                                        type="password"
                                         value={currentKeyValue}
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
                                         placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${label}`}
                                         disabled={isSaving || authLoading || isLoadingStatus}
                                         className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
                                     />
-                                    {/* Display checkmark if key is saved */}
                                     {isSaved && (
                                         <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" aria-label="Key saved indicator"/>
                                     )}
@@ -331,7 +276,27 @@ const ApiKeyManager: React.FC = () => {
                                  <p className="text-xs text-muted-foreground px-1">
                                      {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely using Google Secret Manager."}
                                  </p>
-                                {/* Status Alert for this specific key */}
+
+                                {/* Specific note for Google AI Key regarding TTS */}
+                                {id === 'google_ai' && (
+                                    <Alert variant="default" className="mt-2 bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-700">
+                                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                        <AlertTitle className="text-blue-700 dark:text-blue-300">Using Google Text-to-Speech (TTS)</AlertTitle>
+                                        <AlertDescription className="text-blue-600 dark:text-blue-400">
+                                            To use Google TTS voices, ensure the <strong className="font-semibold">&quot;Cloud Text-to-Speech API&quot;</strong> is enabled
+                                            in the same Google Cloud Project associated with this API key. You can manage APIs
+                                            <a
+                                                href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline hover:text-blue-700 dark:hover:text-blue-200 font-medium"
+                                            >
+                                                &nbsp;here <ExternalLink className="inline h-3 w-3" />
+                                            </a>.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+
                                 {statusMessages[id] && (
                                     <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
                                         {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" /> : <Terminal className="h-4 w-4" />}
@@ -344,7 +309,6 @@ const ApiKeyManager: React.FC = () => {
                     })}
                 </div>
 
-                {/* Save Button */}
                 <Button
                     onClick={saveKeys}
                     disabled={isSaving || authLoading || !user || isLoadingStatus}
@@ -353,11 +317,10 @@ const ApiKeyManager: React.FC = () => {
                     {isSaving ? 'Saving...' : 'Save / Update Keys'}
                 </Button>
 
-                 {/* Auth Status Messages */}
                  {authLoading && <p className="text-center text-sm text-muted-foreground">Checking authentication status...</p>}
                  {!authLoading && !user && <p className="text-center text-sm text-destructive">Please log in to manage API keys.</p>}
             </div>
-        </TooltipProvider> // --- End TooltipProvider wrapper ---
+        </TooltipProvider>
     );
 };
 

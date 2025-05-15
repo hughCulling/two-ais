@@ -9,6 +9,7 @@ import { getStorage } from "firebase-admin/storage";
 
 // --- TTS Client Imports ---
 import OpenAI from "openai";
+import { TextToSpeechClient } from "@google-cloud/text-to-speech"; // Added Google TTS Client
 
 // LangChain Imports
 import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
@@ -20,23 +21,30 @@ import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 
-// --- Initialization of Firebase Admin and Secret Manager Client ---
+// --- Initialization of Firebase Admin and Clients ---
 if (admin.apps.length === 0) {
   admin.initializeApp();
   logger.info("Firebase Admin SDK Initialized in Cloud Function.");
 }
 const db = admin.firestore();
 
-// Declare secretManagerClient at the module scope
 let secretManagerClient: SecretManagerServiceClient | null = null;
 try {
     secretManagerClient = new SecretManagerServiceClient();
     logger.info("Secret Manager Client Initialized globally.");
 } catch(error) {
     logger.error("Failed to initialize Secret Manager Client globally:", error);
-    // Depending on your error handling strategy, you might want to throw here
-    // or ensure functions that depend on it can handle it being null.
 }
+
+// Added Google TextToSpeechClient
+let textToSpeechClient: TextToSpeechClient | null = null;
+try {
+    textToSpeechClient = new TextToSpeechClient();
+    logger.info("Google TextToSpeech Client Initialized globally.");
+} catch (error) {
+    logger.error("Failed to initialize Google TextToSpeech Client globally:", error);
+}
+
 
 const defaultBucketName = process.env.FIREBASE_STORAGE_BUCKET || admin.app().options.storageBucket || "two-ais.appspot.com";
 const storageBucket = getStorage().bucket(defaultBucketName);
@@ -50,30 +58,42 @@ if (!projectId) {
 
 
 // --- Interfaces ---
-interface AgentTTSSettingsBackend { 
-    provider: "openai" | "none" | "browser"; 
-    voice: string | null; 
-    ttsApiModelId?: 'tts-1' | 'tts-1-hd' | 'gpt-4o-mini-tts'; 
+interface AgentTTSSettingsBackend {
+    provider: "openai" | "none" | "browser" | "google-cloud"; // Added "google-cloud"
+    voice: string | null; // For OpenAI: 'alloy', etc. For Google: 'en-US-Wavenet-A', etc.
+    // This field comes from the frontend.
+    // For OpenAI, it's 'openai-tts-1', 'openai-tts-1-hd', etc. (maps to actual API model).
+    // For Google, it's the conceptual model ID like 'google-standard-voices'.
+    selectedTtsModelId?: string;
 }
-interface ConversationTTSSettingsBackend { 
-    enabled: boolean; 
-    agentA: AgentTTSSettingsBackend; 
-    agentB: AgentTTSSettingsBackend; 
+interface ConversationTTSSettingsBackend {
+    enabled: boolean;
+    agentA: AgentTTSSettingsBackend;
+    agentB: AgentTTSSettingsBackend;
 }
-interface LLMInfo { 
-    id: string; 
-    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI"; 
-    apiKeySecretName: string; 
+interface LLMInfo {
+    id: string;
+    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI";
+    apiKeySecretName: string;
 }
 interface GcpError extends Error { code?: number | string; details?: string; }
+
+// Interface for expected LLM error details
+interface LLMErrorDetails {
+    status?: number | string;
+    code?: number | string;
+    param?: string;
+    type?: string;
+}
+
 interface ConversationData {
-    agentA_llm: string; 
-    agentB_llm: string; 
+    agentA_llm: string;
+    agentB_llm: string;
     turn: "agentA" | "agentB";
-    apiSecretVersions: { [key: string]: string }; 
+    apiSecretVersions: { [key: string]: string };
     status?: "running" | "stopped" | "error";
-    userId?: string; 
-    ttsSettings?: ConversationTTSSettingsBackend; 
+    userId?: string;
+    ttsSettings?: ConversationTTSSettingsBackend;
     waitingForTTSEndSignal?: boolean;
     errorContext?: string;
 }
@@ -84,7 +104,7 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
-     if (id.startsWith("grok-")) return "xAI"; 
+     if (id.startsWith("grok-")) return "xAI";
      if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("mistralai/") || id.includes("Qwen/")) return "TogetherAI";
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
@@ -92,13 +112,22 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
 
 function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): string | null {
     if (provider === "OpenAI") return "openai";
-    if (provider === "Google") return "google_ai";
+    if (provider === "Google") return "google_ai"; // This is the key for Google LLMs (Gemini)
     if (provider === "Anthropic") return "anthropic";
-    if (provider === "xAI") return "xai"; 
-    if (provider === "TogetherAI") return "together_ai"; 
+    if (provider === "xAI") return "xai";
+    if (provider === "TogetherAI") return "together_ai";
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
+
+// Helper to get the API key ID for TTS based on provider
+function getTTSApiKeyId(provider: AgentTTSSettingsBackend["provider"]): string | null {
+    if (provider === "openai") return "openai"; // OpenAI TTS uses the same key as OpenAI LLMs
+    if (provider === "google-cloud") return "google_ai"; // Google TTS uses the same key as Google LLMs (Gemini)
+    // Add other providers if they have separate keys or share keys
+    return null;
+}
+
 
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
      if (!secretManagerClient) {
@@ -108,7 +137,7 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
              logger.info("Re-initialized Secret Manager Client in getApiKeyFromSecret.");
         } catch(error) {
              logger.error("Failed to re-initialize Secret Manager Client in getApiKeyFromSecret:", error);
-             return null; // Critical failure if client cannot be initialized
+             return null;
         }
     }
     if (!secretVersionName || typeof secretVersionName !== "string" || !secretVersionName.includes("/secrets/")) {
@@ -129,7 +158,7 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
              return apiKey;
         } else {
              logger.error(`Secret payload for ${secretVersionName} has unexpected type: ${typeof payloadData}`);
-             if (typeof payloadData === "string") { // Fallback for string payload, though buffer is expected
+             if (typeof payloadData === "string") {
                  return payloadData;
              }
              return null;
@@ -144,7 +173,7 @@ async function getApiKeyFromSecret(secretVersionName: string): Promise<string | 
     }
 }
 async function storeApiKeyAsSecret(userId: string, service: string, apiKey: string): Promise<string> {
-    const currentProjectId = process.env.GCLOUD_PROJECT || projectId; // Use globally checked projectId
+    const currentProjectId = process.env.GCLOUD_PROJECT || projectId;
     if (!currentProjectId) {
         logger.error("GCLOUD_PROJECT env var missing inside storeApiKeyAsSecret.");
         throw new HttpsError("internal", "Project ID not configured for Secret Manager.");
@@ -161,7 +190,8 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
     }
     const sanitizedUserId = userId.replace(/[^a-zA-Z0-9-_]/g, "_");
     const sanitizedService = service.replace(/[^a-zA-Z0-9-_]/g, "_");
-    const secretId = `user-${sanitizedUserId}-${sanitizedService}-key`;
+    // Corrected line 115: Using double quotes for string concatenation
+    const secretId = "user-" + sanitizedUserId + "-" + sanitizedService + "-key";
     const parent = `projects/${currentProjectId}`;
     const secretPath = `${parent}/secrets/${secretId}`;
     logger.info(`Attempting to store key in Secret Manager: ${secretPath}`);
@@ -176,7 +206,7 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
                      grpcCode = (error as { code: number }).code;
                 }
             }
-            if (grpcCode === 5) { // GRPC code 5 = NOT_FOUND
+            if (grpcCode === 5) {
                 logger.info(`Secret ${secretId} not found. Creating new secret.`);
                 await secretManagerClient.createSecret({
                     parent: parent,
@@ -186,7 +216,7 @@ async function storeApiKeyAsSecret(userId: string, service: string, apiKey: stri
                 logger.info(`Secret ${secretId} created successfully.`);
             } else {
                 logger.error(`Unexpected error getting secret ${secretId}:`, error);
-                throw error; // Re-throw if it's not a "NOT_FOUND" error
+                throw error;
             }
         }
         const [version] = await secretManagerClient.addSecretVersion({
@@ -253,7 +283,7 @@ async function _triggerAgentResponse(
     logger.info(`_triggerAgentResponse called for ${agentToRespond} in conversation ${conversationId}`);
 
     let conversationData: ConversationData;
-    let llmApiKey: string | null = null; 
+    let llmApiKey: string | null = null;
 
     try {
         const conversationSnap = await conversationRef.get();
@@ -282,7 +312,7 @@ async function _triggerAgentResponse(
         } catch (error) { throw new Error(`Failed to fetch message history: ${error}`); }
 
         const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
-        const llmProvider = getProviderFromId(agentModelId); 
+        const llmProvider = getProviderFromId(agentModelId);
         const llmFirestoreKeyId = getFirestoreKeyIdFromProvider(llmProvider);
         if (!llmProvider || !llmFirestoreKeyId) { throw new Error(`Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.`); }
         const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
@@ -293,7 +323,7 @@ async function _triggerAgentResponse(
             logger.info(`Successfully retrieved API key for LLM provider ${llmProvider} in _triggerAgentResponse.`);
         } catch(error) { throw new Error(`Failed to retrieve API key for ${agentToRespond} (${llmProvider}): ${error}`); }
 
-        let chatModel: BaseChatModel; 
+        let chatModel: BaseChatModel;
         try {
             const modelName = agentModelId;
             if (llmProvider === "OpenAI") chatModel = new ChatOpenAI({ apiKey: llmApiKey, modelName: modelName });
@@ -302,8 +332,8 @@ async function _triggerAgentResponse(
             else if (llmProvider === "xAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName });
             else if (llmProvider === "TogetherAI") {
                  chatModel = new ChatTogetherAI({
-                     apiKey: llmApiKey, 
-                     modelName: modelName, 
+                     apiKey: llmApiKey,
+                     modelName: modelName,
                  });
             }
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
@@ -322,10 +352,11 @@ async function _triggerAgentResponse(
             logger.info(`Processed response from ${agentToRespond} in _triggerAgentResponse: ${responseContent.substring(0,100)}...`);
 
         } catch (error) {
-            logger.error(`LLM call failed for ${agentToRespond} (${agentModelId}). Raw Error:`, error); 
+            logger.error(`LLM call failed for ${agentToRespond} (${agentModelId}). Raw Error:`, error);
             const errorMessage = error instanceof Error ? error.message : String(error);
             if (error && typeof error === "object") {
-                const errorDetails = error as any;
+                // Corrected line 348: Using LLMErrorDetails interface
+                const errorDetails = error as LLMErrorDetails;
                 logger.error("LLM Error Details: Status=" + errorDetails.status + ", Code=" + errorDetails.code + ", Param=" + errorDetails.param + ", Type=" + errorDetails.type);
             }
             throw new Error(`LLM call failed for ${agentToRespond} (${agentModelId}). Error: ${errorMessage}`);
@@ -335,79 +366,103 @@ async function _triggerAgentResponse(
         let ttsGenerated = false;
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
-        
-        if (ttsSettings?.enabled && agentSettings && agentSettings.provider === "openai") {
-            const textToSpeak = responseContent;
-            const selectedVoice = agentSettings.voice;
-            // Use the selected TTS API model ID from agentSettings, or default to 'tts-1' if not provided
-            const ttsApiModel = agentSettings.ttsApiModelId || 'tts-1'; 
-            logger.info(`[TTS Attempt] Provider: OpenAI, Model: ${ttsApiModel}, Voice: ${selectedVoice}, Text Length: ${textToSpeak?.length}`);
-            
-            try {
-                let audioBuffer: Buffer | null = null;
-                let ttsApiKey: string | null = null;
-                const ttsSecretVersionName = conversationData.apiSecretVersions["openai"]; 
-                logger.info(`[TTS Key Check] Looking for OpenAI key version: ${ttsSecretVersionName}`);
+        const textToSpeak = responseContent; // Text to speak is the LLM's response
+
+        if (ttsSettings?.enabled && agentSettings && agentSettings.provider !== "none" && agentSettings.voice && textToSpeak) {
+            let audioBuffer: Buffer | null = null;
+            let ttsApiKey: string | null = null;
+            const ttsApiKeyId = getTTSApiKeyId(agentSettings.provider); // Get the correct key ID for TTS
+
+            if (!ttsApiKeyId) {
+                logger.error(`[TTS Error] Unsupported TTS provider or no API key ID mapping for: ${agentSettings.provider}. Skipping TTS.`);
+            } else {
+                const ttsSecretVersionName = conversationData.apiSecretVersions[ttsApiKeyId];
+                logger.info(`[TTS Key Check] Provider: ${agentSettings.provider}, Key ID: ${ttsApiKeyId}, Version Ref: ${ttsSecretVersionName}`);
 
                 if (!ttsSecretVersionName) {
-                    logger.error("[TTS Error] OpenAI TTS selected, but OpenAI API key reference ('openai') missing in apiSecretVersions. Skipping TTS.");
+                    logger.error(`[TTS Error] TTS selected, but API key reference ('${ttsApiKeyId}') missing in apiSecretVersions. Skipping TTS.`);
                 } else {
                     ttsApiKey = await getApiKeyFromSecret(ttsSecretVersionName);
                     if (!ttsApiKey) {
-                        logger.error(`[TTS Error] Failed to retrieve OpenAI API key for TTS (version: ${ttsSecretVersionName}). Skipping TTS.`);
+                        logger.error(`[TTS Error] Failed to retrieve API key for TTS (provider: ${agentSettings.provider}, version: ${ttsSecretVersionName}). Skipping TTS.`);
                     } else {
-                         logger.info("[TTS Key Check] Successfully retrieved OpenAI API key for TTS.");
+                         logger.info(`[TTS Key Check] Successfully retrieved API key for TTS provider: ${agentSettings.provider}.`);
                     }
                 }
+            }
 
-                if (ttsApiKey && selectedVoice && ttsApiModel) { 
-                    logger.info("[TTS API Call] Initializing OpenAI client for TTS...");
-                    let openai: OpenAI | null = null;
+            if (ttsApiKey && agentSettings.voice) { // Ensure API key and voice are present
+                if (agentSettings.provider === "openai") {
+                    const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+                    // Corrected lines 388-390: Using double quotes
+                    const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
+                                             agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
+                                             "tts-1";
+
+                    logger.info(`[TTS Attempt] Provider: OpenAI, Model: ${openAIModelApiId}, Voice: ${openAIVoice}, Text Length: ${textToSpeak.length}`);
                     try {
-                        openai = new OpenAI({ apiKey: ttsApiKey });
-                        logger.info(`[TTS API Call] OpenAI client initialized. Calling audio.speech.create with model: ${ttsApiModel}...`);
+                        const openai = new OpenAI({ apiKey: ttsApiKey });
                         const mp3 = await openai.audio.speech.create({
-                            model: ttsApiModel, 
-                            voice: selectedVoice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer", 
+                            model: openAIModelApiId,
+                            voice: openAIVoice,
                             input: textToSpeak,
                             response_format: "mp3",
                         });
-                        logger.info("[TTS API Call] audio.speech.create successful.");
                         audioBuffer = Buffer.from(await mp3.arrayBuffer());
-                        logger.info(`[TTS Success] OpenAI TTS generated for ${agentToRespond}. Model: ${ttsApiModel}, Voice: ${selectedVoice}`);
+                        logger.info(`[TTS Success] OpenAI TTS generated for ${agentToRespond}. Model: ${openAIModelApiId}, Voice: ${openAIVoice}`);
                     } catch (openaiClientError) {
-                         logger.error("[TTS API Call Error] Error during OpenAI client init or speech creation:", openaiClientError);
-                         if (openaiClientError instanceof Error) {
-                             logger.error(`[TTS API Call Error Details] Name: ${openaiClientError.name}, Message: ${openaiClientError.message}, Stack: ${openaiClientError.stack}`);
-                         }
+                         logger.error("[TTS API Call Error - OpenAI] Error during speech creation:", openaiClientError);
                          audioBuffer = null;
                     }
-                } else {
-                    if (!selectedVoice) logger.warn("[TTS Skip] OpenAI TTS selected but no voice specified.");
-                    if (!ttsApiModel) logger.warn("[TTS Skip] OpenAI TTS selected but no API model specified by frontend."); 
-                    if (!ttsApiKey) logger.warn("[TTS Skip] OpenAI TTS selected but API key was not retrieved.");
+                } else if (agentSettings.provider === "google-cloud") {
+                    if (!textToSpeechClient) {
+                        logger.error("[TTS Error - Google] TextToSpeechClient not initialized. Skipping Google TTS.");
+                    } else {
+                        const googleVoiceName = agentSettings.voice; // e.g., en-US-Wavenet-A
+                        const languageCode = googleVoiceName.split("-").slice(0, 2).join("-"); // Extract 'en-US' from 'en-US-Wavenet-A'
+
+                        logger.info(`[TTS Attempt] Provider: Google, Voice: ${googleVoiceName}, Language: ${languageCode}, Text Length: ${textToSpeak.length}`);
+                        try {
+                            const request = {
+                                input: { text: textToSpeak },
+                                voice: { languageCode: languageCode, name: googleVoiceName },
+                                audioConfig: { audioEncoding: "MP3" as const },
+                            };
+                            const [response] = await textToSpeechClient.synthesizeSpeech(request);
+                            if (response.audioContent instanceof Uint8Array) {
+                                audioBuffer = Buffer.from(response.audioContent);
+                                logger.info(`[TTS Success] Google TTS generated for ${agentToRespond}. Voice: ${googleVoiceName}`);
+                            } else {
+                                logger.error("[TTS Error - Google] Audio content is not Uint8Array:", response.audioContent);
+                            }
+                        } catch (googleTtsError) {
+                            logger.error("[TTS API Call Error - Google] Error during speech creation:", googleTtsError);
+                            audioBuffer = null;
+                        }
+                    }
                 }
 
                 if (audioBuffer) {
                     logger.info("[TTS Upload] Attempting to upload audio buffer...");
-                    const currentMessageId = admin.firestore().collection("dummy").doc().id;
+                    const currentMessageId = admin.firestore().collection("dummy").doc().id; // Generate a unique ID for the audio file
                     const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.mp3`;
                     const file = storageBucket.file(audioFileName);
                     await file.save(audioBuffer, { metadata: { contentType: "audio/mpeg" } });
-                    await file.makePublic();
+                    await file.makePublic(); // Make the file publicly accessible
                     audioUrl = file.publicUrl();
                     ttsGenerated = true;
                     logger.info(`[TTS Upload Success] TTS audio uploaded for ${agentToRespond} to: ${audioUrl}`);
                 } else {
                      logger.warn("[TTS Upload Skip] No audio buffer generated, skipping upload.");
                 }
-            } catch (ttsError) {
-                logger.error(`[TTS Block Error] Error during TTS generation or upload for ${agentToRespond} (${agentSettings.provider}):`, ttsError);
-                audioUrl = null; ttsGenerated = false;
+            } else {
+                if (!ttsApiKey) logger.warn(`[TTS Skip] API key not available for provider: ${agentSettings.provider}`);
+                if (!agentSettings.voice) logger.warn(`[TTS Skip] No voice selected for provider: ${agentSettings.provider}`);
             }
         } else {
-             logger.info(`[TTS Skip] Conditions not met. Global enabled: ${ttsSettings?.enabled}, Provider: ${agentSettings?.provider}`);
+             logger.info(`[TTS Skip] Conditions not met. Global enabled: ${ttsSettings?.enabled}, Provider: ${agentSettings?.provider}, Voice: ${agentSettings?.voice}, Text: ${!!textToSpeak}`);
         }
+
 
         const nextTurn = agentToRespond === "agentA" ? "agentB" : "agentA";
         const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null } = {
@@ -426,7 +481,7 @@ async function _triggerAgentResponse(
                 logger.info(`Setting waitingForTTSEndSignal = true for conversation ${conversationId}.`);
             } else {
                 updateData.turn = nextTurn;
-                updateData.waitingForTTSEndSignal = false; 
+                updateData.waitingForTTSEndSignal = false;
                 logger.info(`No TTS generated or TTS disabled. Updating turn to ${nextTurn} immediately.`);
             }
             await conversationRef.update(updateData);
@@ -552,7 +607,7 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
 
                 if (data.waitingForTTSEndSignal !== true) {
                     logger.warn(`Received next turn request for ${conversationId}, but it wasn't waiting for a TTS signal (flag is ${data.waitingForTTSEndSignal}). Ignoring.`);
-                    nextTurn = null; 
+                    nextTurn = null;
                     return;
                 }
 
@@ -574,9 +629,9 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
                     lastActivity: admin.firestore.FieldValue.serverTimestamp()
                 });
                 logger.info(`Cleared waitingForTTSEndSignal flag and set turn to ${nextTurn} for conversation ${conversationId}.`);
-            }); 
+            });
 
-            if (nextTurn !== null) { 
+            if (nextTurn !== null) {
                  logger.info(`Signalling agent ${nextTurn} to respond for ${conversationId} via requestNextTurn.`);
                  await _triggerAgentResponse(conversationId, nextTurn, conversationRef, messagesRef);
             } else {
