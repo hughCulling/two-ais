@@ -126,7 +126,7 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
         'DeepSeek Models',
-        'Mistral AI Models',
+        'Mistral Models', // Based on the immersive, will use this. User's latest paste had "Mistral AI Models"
         'Qwen3 Series',
         'Qwen QwQ Series',
         'Qwen2.5 Series',
@@ -257,7 +257,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta';
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
-    if (categoryName.startsWith('Mistral')) return 'Mistral AI';
+    if (categoryName.startsWith('Mistral')) return 'MistralAI'; // Immersive version (no space)
     if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen';
     return null;
 };
@@ -427,8 +427,8 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in.
-                                    {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in.
+                                    {' '}Detailed instructions for each provider can be found on the <span>Settings / API Keys</span> page after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
@@ -501,15 +501,15 @@ export default function Page() {
                                                                                 <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
                                                                                     <p className="text-xs">
                                                                                         {llm.provider === 'Google'
-                                                                                            ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                            ? "This Google model uses a &apos;thinking budget&apos;. The &apos;thinking&apos; output is billed but is not visible in the chat."
                                                                                             : llm.provider === 'Anthropic'
-                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                                ? "This Anthropic model uses &apos;extended thinking&apos;. The &apos;thinking&apos; output is billed but may not be visible in the chat."
                                                                                                 : llm.provider === 'xAI'
-                                                                                                    ? "This xAI model uses 'thinking'. This output is billed but is not visible in the chat."
+                                                                                                    ? "This xAI model uses &apos;thinking&apos;. Thinking traces may be accessible and output is billed."
                                                                                                     : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen'))
-                                                                                                        ? "This Qwen model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
+                                                                                                        ? "This Qwen model (via TogetherAI) uses &apos;reasoning/thinking&apos;. Output is billed accordingly."
                                                                                                         : (llm.provider === 'TogetherAI' && llm.category?.includes('DeepSeek'))
-                                                                                                            ? "This DeepSeek model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
+                                                                                                            ? "This DeepSeek model (via TogetherAI) uses &apos;reasoning/thinking&apos;. Output is billed but may not be visible in the chat."
                                                                                                             : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
                                                                                     </p>
