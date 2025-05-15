@@ -428,7 +428,7 @@ export default function Page() {
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
                                     To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in.
-                                    {' '}Detailed instructions for each provider can be found on the <span>Settings / API Keys</span> page after signing in.
+                                    {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
                              <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
