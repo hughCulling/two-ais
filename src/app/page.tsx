@@ -31,7 +31,7 @@ import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
 import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; 
 // --- Import TTS data ---
-import { AVAILABLE_TTS_PROVIDERS, TTSProviderInfo, TTSModelDetail } from '@/lib/tts_models'; 
+import { AVAILABLE_TTS_PROVIDERS, TTSProviderInfo, TTSModelDetail } from '@/lib/tts_models';
 // --- Import Collapsible components ---
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils'; 
@@ -582,10 +582,9 @@ export default function Page() {
                                                 <CollapsibleContent className="space-y-2 pl-4">
                                                     <ul className="space-y-1 list-disc list-inside text-sm">
                                                         {provider.models.map((model) => (
-                                                            <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5"> {/* Applied LLM item styling */}
-                                                                <span className="whitespace-nowrap">{model.name}</span> {/* Model name */}
-                                                                <span className="text-xs text-muted-foreground">({model.pricingText})</span> {/* Pricing text in parentheses */}
-                                                                {/* Description removed from direct display */}
+                                                            <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                <span className="whitespace-nowrap">{model.name}</span>
+                                                                <span className="text-xs text-muted-foreground">({model.pricingText})</span>
                                                             </li>
                                                         ))}
                                                     </ul>
