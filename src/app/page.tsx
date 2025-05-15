@@ -79,7 +79,7 @@ const availableTTSProviders = AVAILABLE_TTS_PROVIDERS;
 
 // --- YouTube Video URLs ---
 const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE";
-const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/watch?v=wLhDRFsTPGQ&t=1s";
+const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/embed/pkN_uU-nDdk";
 
 // Helper function to format pricing
 const formatPrice = (price: number) => {
