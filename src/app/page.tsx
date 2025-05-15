@@ -126,7 +126,7 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
         'DeepSeek Models',
-        'Mistral Models', // Based on the immersive, will use this. User's latest paste had "Mistral AI Models"
+        'Mistral AI Models', // Based on the immersive, will use this. User's latest paste had "Mistral AI Models"
         'Qwen3 Series',
         'Qwen QwQ Series',
         'Qwen2.5 Series',
@@ -257,7 +257,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
     if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta';
     if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
-    if (categoryName.startsWith('Mistral')) return 'MistralAI'; // Immersive version (no space)
+    if (categoryName.startsWith('Mistral')) return 'Mistral AI'; // Immersive version (no space)
     if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen';
     return null;
 };
