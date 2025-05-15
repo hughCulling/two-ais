@@ -503,13 +503,13 @@ export default function Page() {
                                                                                         {llm.provider === 'Google'
                                                                                             ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
                                                                                             : llm.provider === 'Anthropic'
-                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
+                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but is not visible in the chat."
                                                                                                 : llm.provider === 'xAI'
-                                                                                                    ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
+                                                                                                    ? "This xAI model uses 'thinking'. This output is billed but is not visible in the chat."
                                                                                                     : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen'))
-                                                                                                        ? "This Qwen model (via TogetherAI) uses 'reasoning/thinking'. Output is billed accordingly."
+                                                                                                        ? "This Qwen model uses 'reasoning/thinking'. This output is billed but is not visible in the chat."
                                                                                                         : (llm.provider === 'TogetherAI' && llm.category?.includes('DeepSeek'))
-                                                                                                            ? "This DeepSeek model (via TogetherAI) uses 'reasoning/thinking'. Output is billed but may not be visible in the chat."
+                                                                                                            ? "This DeepSeek model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
                                                                                                             : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
                                                                                     </p>
