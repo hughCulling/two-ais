@@ -112,21 +112,24 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Grok 3 Mini Series',
     ];
     const togetherAICategoryOrder = [ 
+        // Meta Llama Models
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
         'Llama Vision Models', 
-        'Meta Llama Models', 
+        'Meta Llama Models', // Fallback
+        // Google Gemma Models
         'Gemma 2 Series',   
         'Gemma Series',     
-        'Google Gemma Models', 
+        'Google Gemma Models', // Fallback
+        // DeepSeek Models
         'DeepSeek R1 Series',
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
-        'DeepSeek Models', 
-        'Mistral Models',
+        'DeepSeek Models', // Fallback
+        // Qwen Models
         'Qwen3 Series',
         'Qwen QwQ Series',
         'Qwen2.5 Series',
@@ -134,7 +137,9 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Qwen2.5 Coder Series',
         'Qwen2 Series',
         'Qwen2 Vision Series',
-        'Qwen Models',
+        'Qwen Models', // Fallback
+        // Mistral Models
+        'Mistral Models',
     ];
 
 
@@ -427,7 +432,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -584,7 +589,7 @@ export default function Page() {
                                                         {provider.models.map((model) => (
                                                             <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
                                                                 <span className="whitespace-nowrap">{model.name}</span>
-                                                                <span className="text-xs text-muted-foreground">({model.pricingText})</span>
+                                                                <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
                                                             </li>
                                                         ))}
                                                     </ul>
