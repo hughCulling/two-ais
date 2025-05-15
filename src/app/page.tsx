@@ -31,22 +31,25 @@ import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
 import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; 
 // --- Import TTS data ---
-import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
+import { AVAILABLE_TTS_PROVIDERS, TTSProviderInfo, TTSModelDetail } from '@/lib/tts_models'; 
 // --- Import Collapsible components ---
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils'; 
 
 // --- Define TTS Types (Locally) ---
-type LocalTTSProviderId = 'none' | 'browser' | 'openai' | 'google' | 'elevenlabs';
-interface AgentTTSSettings { provider: LocalTTSProviderId; voice: string | null; }
+interface AgentTTSSettingsConfig { 
+    provider: TTSProviderInfo['id'] | 'browser' | 'none'; 
+    voice: string | null; 
+    ttsApiModelId?: TTSModelDetail['apiModelId']; 
+}
 
 // --- Updated SessionConfig Interface ---
 interface SessionConfig {
     agentA_llm: string;
     agentB_llm: string;
     ttsEnabled: boolean;
-    agentA_tts: AgentTTSSettings;
-    agentB_tts: AgentTTSSettings;
+    agentA_tts: AgentTTSSettingsConfig; 
+    agentB_tts: AgentTTSSettingsConfig; 
 }
 
 // Interface for the expected structure of the API response from /api/conversation/start
@@ -72,7 +75,7 @@ const logger = {
 // Get grouped LLM data outside the component
 const groupedLLMsByProvider = groupLLMsByProvider();
 // Get TTS providers outside the component
-const availableTTS = AVAILABLE_TTS_PROVIDERS;
+const availableTTSProviders = AVAILABLE_TTS_PROVIDERS; 
 
 // --- YouTube Video URLs ---
 const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE"; 
@@ -109,24 +112,21 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Grok 3 Mini Series',
     ];
     const togetherAICategoryOrder = [ 
-        // Meta Llama Models
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
         'Llama Vision Models', 
-        'Meta Llama Models', // Fallback
-        // Google Gemma Models
+        'Meta Llama Models', 
         'Gemma 2 Series',   
         'Gemma Series',     
-        'Google Gemma Models', // Fallback
-        // DeepSeek Models
+        'Google Gemma Models', 
         'DeepSeek R1 Series',
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
-        'DeepSeek Models', // Fallback
-        // Qwen Models
+        'DeepSeek Models', 
+        'Mistral Models',
         'Qwen3 Series',
         'Qwen QwQ Series',
         'Qwen2.5 Series',
@@ -134,9 +134,7 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Qwen2.5 Coder Series',
         'Qwen2 Series',
         'Qwen2 Vision Series',
-        'Qwen Models', // Fallback
-        // Mistral Models
-        'Mistral Models',
+        'Qwen Models',
     ];
 
 
@@ -277,10 +275,16 @@ export default function Page() {
     const [pageError, setPageError] = useState<string | null>(null);
     const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
     const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
-        Object.keys(groupedLLMsByProvider).reduce((acc, provider) => {
-            acc[`provider-${provider.replace(/\s+/g, '-')}`] = true;
-            return acc;
-        }, {} as Record<string, boolean>)
+        () => {
+            const initialOpenState: Record<string, boolean> = {};
+            Object.keys(groupedLLMsByProvider).forEach(provider => {
+                initialOpenState[`provider-${provider.replace(/\s+/g, '-')}`] = true;
+            });
+            availableTTSProviders.forEach(ttsProvider => { 
+                 initialOpenState[`tts-provider-${ttsProvider.id.replace(/\s+/g, '-')}`] = true;
+            });
+            return initialOpenState;
+        }
     );
 
     const toggleCollapsible = (id: string) => {
@@ -423,7 +427,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -502,7 +506,7 @@ export default function Page() {
                                                                                                 ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
                                                                                                 : llm.provider === 'xAI' 
                                                                                                     ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
-                                                                                                    : llm.provider === 'TogetherAI' && llm.category?.includes('Qwen') 
+                                                                                                    : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen')) 
                                                                                                         ? "This Qwen model (via TogetherAI) uses 'reasoning/thinking'. Output is billed accordingly."
                                                                                                         : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
@@ -563,15 +567,32 @@ export default function Page() {
                                     Currently Available TTS
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2">
-                                {availableTTS.length > 0 ? (
-                                    <ul className="space-y-1 list-disc list-inside text-sm">
-                                        {availableTTS.map((tts) => (
-                                            <li key={tts.id} className="ml-4">
-                                                {tts.name}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <CardContent className="space-y-4">
+                                {availableTTSProviders.length > 0 ? (
+                                    availableTTSProviders.map((provider) => {
+                                        const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
+                                        const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true; 
+
+                                        return (
+                                            <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                                                <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                                                    <span>{provider.name}</span>
+                                                    {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent className="space-y-2 pl-4">
+                                                    <ul className="space-y-1 list-disc list-inside text-sm">
+                                                        {provider.models.map((model) => (
+                                                            <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5"> {/* Applied LLM item styling */}
+                                                                <span className="whitespace-nowrap">{model.name}</span> {/* Model name */}
+                                                                <span className="text-xs text-muted-foreground">({model.pricingText})</span> {/* Pricing text in parentheses */}
+                                                                {/* Description removed from direct display */}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </CollapsibleContent>
+                                            </Collapsible>
+                                        );
+                                    })
                                 ) : (
                                     <p className="text-center text-muted-foreground text-sm">No TTS options currently available.</p>
                                 )}
