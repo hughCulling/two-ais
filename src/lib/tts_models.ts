@@ -50,7 +50,7 @@ export interface TTSProviderInfo {
 export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
     {
         id: 'openai',
-        name: 'OpenAI TTS',
+        name: 'OpenAI',
         requiresOwnKey: false, // Uses the main OpenAI LLM key
         models: [
             { 

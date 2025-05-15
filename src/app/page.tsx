@@ -3,14 +3,14 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import SessionSetupForm from '@/components/session/SessionSetupForm';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
 // --- Import Theme hook ---
-import { useTheme } from 'next-themes'; 
+import { useTheme } from 'next-themes';
 // --- Import Tooltip components ---
 import {
     Tooltip,
@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react"; 
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react";
 // --- Import required UI components ---
 import {
   Alert,
@@ -29,18 +29,18 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // --- Import LLM data and grouping function ---
-import { groupLLMsByProvider, LLMInfo } from '@/lib/models'; 
+import { groupLLMsByProvider, LLMInfo } from '@/lib/models';
 // --- Import TTS data ---
 import { AVAILABLE_TTS_PROVIDERS, TTSProviderInfo, TTSModelDetail } from '@/lib/tts_models';
 // --- Import Collapsible components ---
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { cn } from '@/lib/utils'; 
+import { cn } from '@/lib/utils';
 
 // --- Define TTS Types (Locally) ---
-interface AgentTTSSettingsConfig { 
-    provider: TTSProviderInfo['id'] | 'browser' | 'none'; 
-    voice: string | null; 
-    ttsApiModelId?: TTSModelDetail['apiModelId']; 
+interface AgentTTSSettingsConfig {
+    provider: TTSProviderInfo['id'] | 'browser' | 'none';
+    voice: string | null;
+    ttsApiModelId?: TTSModelDetail['apiModelId'];
 }
 
 // --- Updated SessionConfig Interface ---
@@ -48,8 +48,8 @@ interface SessionConfig {
     agentA_llm: string;
     agentB_llm: string;
     ttsEnabled: boolean;
-    agentA_tts: AgentTTSSettingsConfig; 
-    agentB_tts: AgentTTSSettingsConfig; 
+    agentA_tts: AgentTTSSettingsConfig;
+    agentB_tts: AgentTTSSettingsConfig;
 }
 
 // Interface for the expected structure of the API response from /api/conversation/start
@@ -75,11 +75,11 @@ const logger = {
 // Get grouped LLM data outside the component
 const groupedLLMsByProvider = groupLLMsByProvider();
 // Get TTS providers outside the component
-const availableTTSProviders = AVAILABLE_TTS_PROVIDERS; 
+const availableTTSProviders = AVAILABLE_TTS_PROVIDERS;
 
 // --- YouTube Video URLs ---
-const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE"; 
-const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/watch?v=wLhDRFsTPGQ&t=1s"; 
+const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE";
+const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/watch?v=wLhDRFsTPGQ&t=1s";
 
 // Helper function to format pricing
 const formatPrice = (price: number) => {
@@ -91,7 +91,7 @@ const formatPrice = (price: number) => {
 
 // Helper function to group models by category within a provider
 const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
-    const openAICategoryOrder = [ 
+    const openAICategoryOrder = [
         'Flagship chat models',
         'Reasoning models',
         'Cost-optimized models',
@@ -102,34 +102,31 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Gemini 2.0 Series',
         'Gemini 1.5 Series',
     ];
-    const anthropicCategoryOrder = [ 
+    const anthropicCategoryOrder = [
         'Claude 3.7 Series',
         'Claude 3.5 Series',
         'Claude 3 Series',
     ];
-    const xAICategoryOrder = [ 
+    const xAICategoryOrder = [
         'Grok 3 Series',
         'Grok 3 Mini Series',
     ];
-    const togetherAICategoryOrder = [ 
-        // Meta Llama Models
+    const togetherAICategoryOrder = [
         'Llama 4 Series',
         'Llama 3.3 Series',
         'Llama 3.2 Series',
         'Llama 3.1 Series',
         'Llama 3 Series',
-        'Llama Vision Models', 
-        'Meta Llama Models', // Fallback
-        // Google Gemma Models
-        'Gemma 2 Series',   
-        'Gemma Series',     
-        'Google Gemma Models', // Fallback
-        // DeepSeek Models
+        'Llama Vision Models',
+        'Meta Llama Models',
+        'Gemma 2 Series',
+        'Gemma Series',
+        'Google Gemma Models',
         'DeepSeek R1 Series',
         'DeepSeek V3 Series',
         'DeepSeek R1 Distill Series',
-        'DeepSeek Models', // Fallback
-        // Qwen Models
+        'DeepSeek Models',
+        'Mistral AI Models',
         'Qwen3 Series',
         'Qwen QwQ Series',
         'Qwen2.5 Series',
@@ -137,22 +134,20 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         'Qwen2.5 Coder Series',
         'Qwen2 Series',
         'Qwen2 Vision Series',
-        'Qwen Models', // Fallback
-        // Mistral Models
-        'Mistral Models',
+        'Qwen Models',
     ];
 
 
     const byCategory: Record<string, LLMInfo[]> = {};
 
     models.forEach(model => {
-        const category = model.category || 'Other Models'; 
+        const category = model.category || 'Other Models';
         if (!byCategory[category]) {
             byCategory[category] = [];
         }
         byCategory[category].push(model);
     });
-    
+
     let orderedCategories = Object.keys(byCategory);
     let currentProviderOrder: string[] = [];
 
@@ -162,11 +157,11 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
             currentProviderOrder = openAICategoryOrder;
         } else if (providerName === 'Google') {
             currentProviderOrder = googleCategoryOrder;
-        } else if (providerName === 'Anthropic') { 
+        } else if (providerName === 'Anthropic') {
             currentProviderOrder = anthropicCategoryOrder;
-        } else if (providerName === 'xAI') { 
+        } else if (providerName === 'xAI') {
             currentProviderOrder = xAICategoryOrder;
-        } else if (providerName === 'TogetherAI') { 
+        } else if (providerName === 'TogetherAI') {
             currentProviderOrder = togetherAICategoryOrder;
         }
     }
@@ -176,18 +171,18 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
         const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== 'Other Models').sort();
         orderedCategories = [...orderedKeysFromProviderList, ...remainingKeys];
         if (byCategory['Other Models'] && !orderedCategories.includes('Other Models')) {
-            orderedCategories.push('Other Models'); 
+            orderedCategories.push('Other Models');
         }
-    } else { 
+    } else {
         orderedCategories.sort((a, b) => {
-            if (a === 'Other Models') return 1; 
+            if (a === 'Other Models') return 1;
             if (b === 'Other Models') return -1;
             return a.localeCompare(b);
         });
     }
-    
+
     orderedCategories.forEach(cat => {
-        if (byCategory[cat]) { 
+        if (byCategory[cat]) {
             byCategory[cat].sort((a, b) => a.name.localeCompare(b.name));
         }
     });
@@ -198,12 +193,12 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
 // Component for truncatable text with conditional tooltip
 interface TruncatableNoteProps {
     noteText: string;
-    tooltipMaxWidth?: string; 
+    tooltipMaxWidth?: string;
 }
 
-const TruncatableNote: React.FC<TruncatableNoteProps> = ({ 
-    noteText, 
-    tooltipMaxWidth = "max-w-xs" 
+const TruncatableNote: React.FC<TruncatableNoteProps> = ({
+    noteText,
+    tooltipMaxWidth = "max-w-xs"
 }) => {
     const [isActuallyOverflowing, setIsActuallyOverflowing] = useState(false);
     const textRef = useRef<HTMLSpanElement>(null);
@@ -211,30 +206,30 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
     useEffect(() => {
         const checkOverflow = () => {
             if (textRef.current) {
-                if ((textRef.current.offsetWidth > 0 || textRef.current.offsetHeight > 0) && 
+                if ((textRef.current.offsetWidth > 0 || textRef.current.offsetHeight > 0) &&
                     textRef.current.scrollWidth > textRef.current.clientWidth) {
                     setIsActuallyOverflowing(true);
                 } else {
-                    setIsActuallyOverflowing(false); 
+                    setIsActuallyOverflowing(false);
                 }
             }
         };
-        
-        const timeoutId = setTimeout(checkOverflow, 150); 
+
+        const timeoutId = setTimeout(checkOverflow, 150);
         window.addEventListener('resize', checkOverflow);
 
         return () => {
             clearTimeout(timeoutId);
             window.removeEventListener('resize', checkOverflow);
         };
-    }, [noteText]); 
+    }, [noteText]);
 
     const noteSpan = (
-        <span 
-            ref={textRef} 
+        <span
+            ref={textRef}
             className={cn(
-                "text-xs text-muted-foreground block truncate min-w-0", 
-                isActuallyOverflowing && "cursor-help" 
+                "text-xs text-muted-foreground block truncate min-w-0",
+                isActuallyOverflowing && "cursor-help"
             )}
         >
             ({noteText})
@@ -254,23 +249,23 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
         );
     }
 
-    return noteSpan; 
+    return noteSpan;
 };
 
 // Helper to determine the "brand" for TogetherAI categories
 const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
-    if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta Llama';
-    if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google Gemma';
+    if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta';
+    if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google';
     if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
-    if (categoryName.startsWith('Mistral')) return 'MistralAI';
+    if (categoryName.startsWith('Mistral')) return 'Mistral AI';
     if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen';
-    return null; 
+    return null;
 };
 
 
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
-    const { resolvedTheme } = useTheme(); 
+    const { resolvedTheme } = useTheme();
 
     const [isStartingSession, setIsStartingSession] = useState(false);
     const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
@@ -278,14 +273,14 @@ export default function Page() {
     const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
-    const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE); 
+    const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE);
     const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
         () => {
             const initialOpenState: Record<string, boolean> = {};
             Object.keys(groupedLLMsByProvider).forEach(provider => {
                 initialOpenState[`provider-${provider.replace(/\s+/g, '-')}`] = true;
             });
-            availableTTSProviders.forEach(ttsProvider => { 
+            availableTTSProviders.forEach(ttsProvider => {
                  initialOpenState[`tts-provider-${ttsProvider.id.replace(/\s+/g, '-')}`] = true;
             });
             return initialOpenState;
@@ -341,7 +336,7 @@ export default function Page() {
         if (resolvedTheme) {
             setCurrentVideoUrl(resolvedTheme === 'dark' ? YOUTUBE_VIDEO_URL_DARK_MODE : YOUTUBE_VIDEO_URL_LIGHT_MODE);
         }
-    }, [resolvedTheme]); 
+    }, [resolvedTheme]);
 
 
     const handleStartSession = async (config: SessionConfig) => {
@@ -432,7 +427,7 @@ export default function Page() {
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
                                 <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google AI, Anthropic) after signing in.
+                                    To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in.
                                     {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
                                 </AlertDescription>
                              </Alert>
@@ -442,7 +437,7 @@ export default function Page() {
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
                             <iframe
                                 className="w-full h-full"
-                                key={currentVideoUrl} 
+                                key={currentVideoUrl}
                                 src={currentVideoUrl}
                                 title="Two AIs Conversation Demo"
                                 frameBorder="0"
@@ -464,7 +459,7 @@ export default function Page() {
                                     const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels);
                                     const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                                     const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
-                                    let lastDisplayedBrand: string | null = null; 
+                                    let lastDisplayedBrand: string | null = null;
 
                                     return (
                                         <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
@@ -473,17 +468,17 @@ export default function Page() {
                                                 {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
                                             </CollapsibleTrigger>
                                             <CollapsibleContent className="space-y-3 pl-2 pt-1">
-                                                {orderedCategories.map((category, index) => { 
+                                                {orderedCategories.map((category, index) => {
                                                     const categoryModels = modelsByCategory[category];
                                                     if (!categoryModels) return null;
 
                                                     let brandHeadingElement = null;
                                                     if (providerName === 'TogetherAI') {
-                                                        const currentBrandName = getTogetherAIBrandDisplay(category); 
+                                                        const currentBrandName = getTogetherAIBrandDisplay(category);
                                                         if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                                                             brandHeadingElement = (
-                                                                <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0"> 
-                                                                    {currentBrandName} Models
+                                                                <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
+                                                                    {currentBrandName} {/* Display just the brand name */}
                                                                 </h4>
                                                             );
                                                             lastDisplayedBrand = currentBrandName;
@@ -493,7 +488,7 @@ export default function Page() {
                                                     return (
                                                     <React.Fragment key={`${category}-${index}`}>
                                                         {brandHeadingElement}
-                                                        <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}> 
+                                                        <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}>
                                                             <h5 className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h5>
                                                             <ul className="space-y-1 list-disc list-inside text-sm pl-2">
                                                                 {categoryModels.map((llm) => (
@@ -503,17 +498,19 @@ export default function Page() {
                                                                                 <TooltipTrigger asChild>
                                                                                     <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
                                                                                 </TooltipTrigger>
-                                                                                <TooltipContent side="top" className="w-auto max-w-[230px] p-2"> 
-                                                                                    <p className="text-xs"> 
-                                                                                        {llm.provider === 'Google' 
+                                                                                <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
+                                                                                    <p className="text-xs">
+                                                                                        {llm.provider === 'Google'
                                                                                             ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
                                                                                             : llm.provider === 'Anthropic'
-                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but may not be visible in the chat."
-                                                                                                : llm.provider === 'xAI' 
-                                                                                                    ? "This xAI model uses 'thinking'. Thinking traces may be accessible and output is billed."
-                                                                                                    : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen')) 
-                                                                                                        ? "This Qwen model (via TogetherAI) uses 'reasoning/thinking'. Output is billed accordingly."
-                                                                                                        : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                                : llm.provider === 'xAI'
+                                                                                                    ? "This xAI model uses 'thinking'. This output is billed but is not visible in the chat."
+                                                                                                    : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen'))
+                                                                                                        ? "This Qwen model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
+                                                                                                        : (llm.provider === 'TogetherAI' && llm.category?.includes('DeepSeek'))
+                                                                                                            ? "This DeepSeek model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
+                                                                                                            : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
                                                                                         }
                                                                                     </p>
                                                                                 </TooltipContent>
@@ -524,7 +521,7 @@ export default function Page() {
                                                                                 <TooltipTrigger asChild>
                                                                                     <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
                                                                                 </TooltipTrigger>
-                                                                                <TooltipContent side="top" className="w-auto max-w-[200px] p-2"> 
+                                                                                <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
                                                                                     <p className="text-xs">
                                                                                         Requires verified OpenAI organization. You can
                                                                                         <a
@@ -540,11 +537,11 @@ export default function Page() {
                                                                 </TooltipContent>
                                                             </Tooltip>
                                                         )}
-                                                                        <span className="whitespace-nowrap">{llm.name}</span> 
-                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>} 
-                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>} 
-                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">Beta</Badge>} 
-                                                                        
+                                                                        <span className="whitespace-nowrap">{llm.name}</span>
+                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>}
+                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>}
+                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">Beta</Badge>}
+
                                                                         {llm.pricing.note ? (
                                                                             <TruncatableNote noteText={llm.pricing.note} />
                                                                         ) : (
@@ -576,7 +573,7 @@ export default function Page() {
                                 {availableTTSProviders.length > 0 ? (
                                     availableTTSProviders.map((provider) => {
                                         const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
-                                        const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true; 
+                                        const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
 
                                         return (
                                             <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">

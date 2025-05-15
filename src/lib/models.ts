@@ -15,7 +15,7 @@ export interface LLMInfo {
     apiKeySecretName: string; // The Secret Manager secret *key ID*
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
-    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking, Qwen reasoning
+    usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking, Qwen/DeepSeek reasoning
     category?: string; // For categorizing models by purpose/capability/series
 }
 
@@ -182,7 +182,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     {
         id: 'gemini-2.5-pro-preview-03-25', 
         name: 'Gemini 2.5 Pro',
-        provider: 'Google',
+        provider: 'Google', 
         contextWindow: 2000000,
         pricing: { 
             input: 1.25, 
@@ -203,7 +203,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.15, 
             output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok.' 
+            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) MTok' // Removed trailing period
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -400,7 +400,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
 
     // === Together.ai ===
-    // Meta Llama Models
     {
         id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
         name: 'Llama 4 Scout Instruct (17Bx16E)',
@@ -611,6 +610,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable', 
         category: 'DeepSeek R1 Series',
+        usesReasoningTokens: true, 
     },
     {
         id: 'deepseek-ai/DeepSeek-V3', 
@@ -677,7 +677,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral Models',
+        category: 'Mistral AI Models',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.1',
@@ -688,7 +688,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral Models',
+        category: 'Mistral AI Models',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.2',
@@ -699,7 +699,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral Models',
+        category: 'Mistral AI Models',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.3',
@@ -710,7 +710,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral Models',
+        category: 'Mistral AI Models',
     },
     {
         id: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -721,9 +721,9 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral Models',
+        category: 'Mistral AI Models',
     },
-    // Qwen Models via TogetherAI (Added here)
+    // Qwen Models via TogetherAI
     {
         id: 'Qwen/Qwen3-235B-A22B-fp8-tput',
         name: 'Qwen3 235B A22B FP8 Throughput',
@@ -732,9 +732,9 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { input: 0.20, output: 0.60 },
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
-        status: 'stable',
+        status: 'stable', 
         category: 'Qwen3 Series',
-        usesReasoningTokens: true,
+        usesReasoningTokens: true, 
     },
     {
         id: 'Qwen/QwQ-32B',
@@ -746,7 +746,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable',
         category: 'Qwen QwQ Series',
-        usesReasoningTokens: true,
+        usesReasoningTokens: true, 
     },
     {
         id: 'Qwen/Qwen2.5-VL-72B-Instruct',
