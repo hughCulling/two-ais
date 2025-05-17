@@ -215,21 +215,21 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gpt-4o-mini-tts',
                 name: 'GPT-4o mini TTS',
                 description: 'Powered by GPT-4o mini. Max 2000 input tokens.',
-                pricingText: '$0.60/M input text tokens + $12/M output audio tokens (approx.)'
+                pricingText: '$0.60/M input text tokens + $12/M output audio tokens'
             },
             {
                 id: 'openai-tts-1',
                 apiModelId: 'tts-1',
                 name: 'TTS-1',
                 description: 'Optimized for speed.',
-                pricingText: '$15.00 / 1M input characters (approx.)'
+                pricingText: '$15.00 / 1M input characters'
             },
             {
                 id: 'openai-tts-1-hd',
                 apiModelId: 'tts-1-hd',
                 name: 'TTS-1 HD',
                 description: 'Optimized for quality.',
-                pricingText: '$30.00 / 1M input characters (approx.)'
+                pricingText: '$30.00 / 1M input characters'
             },
         ],
         availableVoices: OPENAI_TTS_VOICES,
