@@ -208,28 +208,28 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         id: 'openai',
         name: 'OpenAI',
         requiresOwnKey: false, // Uses the main OpenAI LLM key
-        apiKeyId: 'openai', // Matches the id in ApiKeyManager for OpenAI key status check
+        apiKeyId: 'openai',
         models: [
             {
                 id: 'openai-gpt-4o-mini-tts',
                 apiModelId: 'gpt-4o-mini-tts',
                 name: 'GPT-4o mini TTS',
                 description: 'Powered by GPT-4o mini. Max 2000 input tokens.',
-                pricingText: '$0.60/M input text tokens + $12/M output audio tokens'
+                pricingText: '$0.60/M input text tokens + $12/M output audio tokens' // Removed (approx.)
             },
             {
                 id: 'openai-tts-1',
                 apiModelId: 'tts-1',
                 name: 'TTS-1',
                 description: 'Optimized for speed.',
-                pricingText: '$15.00 / 1M input characters'
+                pricingText: '$15.00 / 1M input tokens' // Removed (approx.)
             },
             {
                 id: 'openai-tts-1-hd',
                 apiModelId: 'tts-1-hd',
                 name: 'TTS-1 HD',
                 description: 'Optimized for quality.',
-                pricingText: '$30.00 / 1M input characters'
+                pricingText: '$30.00 / 1M input tokens' // Removed (approx.)
             },
         ],
         availableVoices: OPENAI_TTS_VOICES,
@@ -238,30 +238,30 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         id: 'google-cloud',
         name: 'Google Cloud TTS',
         requiresOwnKey: true,
-        apiKeyId: 'google_ai', // <<<< CORRECTED HERE to match ApiKeyManager's 'google_ai' id
-        models: [ // Conceptual models for Google to fit the UI: Provider -> Model -> Voice
+        apiKeyId: 'google_ai',
+        models: [
             {
                 id: 'google-standard-voices',
-                apiModelId: 'google-standard', // Conceptual
+                apiModelId: 'google-standard',
                 name: 'Standard Voices',
                 description: 'Cost-effective voices for general use.',
-                pricingText: '$4.00 / 1M characters (approx.)',
+                pricingText: '$4.00 / 1M characters', // Updated price
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Standard',
             },
             {
                 id: 'google-wavenet-voices',
-                apiModelId: 'google-wavenet', // Conceptual
+                apiModelId: 'google-wavenet',
                 name: 'WaveNet Voices',
                 description: 'High-quality, natural-sounding voices.',
-                pricingText: '$16.00 / 1M characters (approx.)',
+                pricingText: '$16.00 / 1M characters', // Updated price
                 voiceFilterCriteria: (voice) => voice.voiceType === 'WaveNet',
             },
             {
                 id: 'google-neural2-voices',
-                apiModelId: 'google-neural2', // Conceptual
+                apiModelId: 'google-neural2',
                 name: 'Neural2, Casual & Polyglot Voices',
                 description: 'Advanced voices including specialized styles (Neural2, Casual, Polyglot).',
-                pricingText: '$16.00 / 1M characters (approx.)',
+                pricingText: '$16.00 / 1M characters', // Updated price (Neural2 & Polyglot)
                 voiceFilterCriteria: (voice) =>
                     voice.voiceType === 'Neural2' ||
                     voice.voiceType === 'Neural2 (Casual)' ||
@@ -269,32 +269,29 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
             },
             {
                 id: 'google-studio-voices',
-                apiModelId: 'google-studio', // Conceptual
+                apiModelId: 'google-studio',
                 name: 'Studio & News Voices',
                 description: 'Highest-quality voices for narration and professional use (Studio, News).',
-                pricingText: '$160.00 / 1M characters (approx.)', // Studio can be much higher for long audio
+                pricingText: '$160.00 / 1M characters', // Updated price
                 voiceFilterCriteria: (voice) =>
                     voice.voiceType === 'Studio' ||
                     voice.voiceType === 'Studio (News)',
             },
             {
-                id: 'google-chirp-hd-voices',
-                apiModelId: 'google-chirp-hd', // Conceptual
-                name: 'Chirp HD Voices (Preview)',
-                description: 'Latest generation conversational voices (Preview). Some limitations apply.',
-                pricingText: '$16.00 / 1M characters (approx.)',
-                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD',
+                id: 'google-chirp-hd-voices', // This is Chirp 3 HD, maps to the $30 price.
+                apiModelId: 'google-chirp-hd',
+                name: 'Chirp 3 HD Voices', // Updated name to be specific
+                description: 'Latest generation conversational voices. Nuanced, engaging.',
+                pricingText: '$30.00 / 1M characters', // Updated price for Chirp 3 HD
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' || voice.voiceType === 'Chirp3 HD', // Match both for now
             },
-            {
-                id: 'google-chirp3-hd-voices',
-                apiModelId: 'google-chirp3-hd', // Conceptual
-                name: 'Chirp3 HD Voices',
-                description: 'Nuanced, conversational voices for engaging experiences.',
-                pricingText: '$16.00 / 1M characters (approx.)',
-                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp3 HD',
-            },
+            // Note: The original 'google-chirp3-hd-voices' entry might be redundant if 'google-chirp-hd-voices' now covers Chirp 3 HD.
+            // For clarity and to match the pricing table, I've focused 'google-chirp-hd-voices' on the $30/M Chirp 3 HD.
+            // If there's a separate "Chirp HD (Preview)" at $16/M, we might need another entry or adjust.
+            // Based on your provided text, "Chirp 3: HD voices" is $30/M.
+            // "Polyglot (Preview)" is $16/M and is covered under Neural2.
         ],
-        availableVoices: GOOGLE_ENGLISH_TTS_VOICES, // This list contains ALL Google English voices
+        availableVoices: GOOGLE_ENGLISH_TTS_VOICES,
     },
 ];
 
