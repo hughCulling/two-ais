@@ -8,12 +8,12 @@ import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
 import { getFirestore, Firestore, FieldValue } from 'firebase-admin/firestore';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
-// LangChain Imports
-import { ChatOpenAI } from "@langchain/openai";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatXAI } from "@langchain/xai";
-import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+// LangChain Imports - These were unused in this specific API route
+// import { ChatOpenAI } from "@langchain/openai";
+// import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+// import { ChatAnthropic } from "@langchain/anthropic";
+// import { ChatXAI } from "@langchain/xai";
+// import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models';
@@ -85,60 +85,21 @@ function initializeServices() {
 initializeServices();
 
 
-// --- getApiKeyFromSecret Helper (Keep existing logic) ---
-async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
-     if (!secretManagerClient) {
-        console.error("API Route: Secret Manager Client not available when trying to get secret.");
-         initializeServices();
-         if (!secretManagerClient) {
-             console.error("API Route: Re-initialization failed, Secret Manager Client still not available.");
-             return null;
-         }
-         console.log("API Route: Secret Manager Client re-initialized successfully in getApiKeyFromSecret.");
-    }
-    if (!secretVersionName) {
-        console.warn("API Route: getApiKeyFromSecret called with empty secretVersionName.");
-        return null;
-    }
-    try {
-        const [version] = await secretManagerClient.accessSecretVersion({ name: secretVersionName });
-        const payloadData = version.payload?.data;
-        if (!payloadData) {
-            console.warn(`API Route: Secret version ${secretVersionName} payload is empty.`);
-            return null;
-        }
-        let apiKey: string;
-        if (typeof payloadData === "string") {
-            apiKey = payloadData;
-        } else if (payloadData instanceof Uint8Array) {
-            apiKey = Buffer.from(payloadData).toString("utf8");
-        } else {
-            console.error(`API Route: Unexpected type for secret payload: ${typeof payloadData}`);
-            return null;
-        }
-        return apiKey;
-    } catch (error) {
-        console.error(`API Route: Failed to access secret version ${secretVersionName}:`, error);
-        return null;
-    }
-}
+// --- getApiKeyFromSecret Helper was removed as it's unused in this file ---
+
 
 // --- Define TTS Types (Mirroring frontend and backend expectations) ---
-// This list should include all valid provider IDs that the frontend can send.
 const VALID_TTS_PROVIDER_IDS_API = [
     "none",
-    "browser", // Though you might have removed this from the frontend UI, keeping for backend compatibility if old data exists
+    "browser",
     "openai",
-    "google-cloud" // Added "google-cloud"
+    "google-cloud"
 ] as const;
 type TTSProviderIdApi = typeof VALID_TTS_PROVIDER_IDS_API[number];
 
 interface AgentTTSSettingsApi {
     provider: TTSProviderIdApi;
     voice: string | null;
-    // This field is sent from the frontend:
-    // For OpenAI, it's the 'id' of the TTSModelDetail (e.g., 'openai-tts-1').
-    // For Google, it's the 'id' of the conceptual TTSModelDetail (e.g., 'google-standard-voices').
     selectedTtsModelId?: string;
 }
 
@@ -191,19 +152,16 @@ export async function POST(request: NextRequest) {
         }
         const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts } = requestBody;
 
-        // Validate core fields
-        if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== "boolean" || !agentA_tts || !agentB_tts) {
+        if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
             return NextResponse.json({ error: "Missing required configuration fields (LLMs or TTS settings)" }, { status: 400 });
         }
 
-        // Validate TTS provider IDs
         if (!VALID_TTS_PROVIDER_IDS_API.includes(agentA_tts.provider) || !VALID_TTS_PROVIDER_IDS_API.includes(agentB_tts.provider)) {
              console.warn(`API Route: Invalid TTS provider specified: AgentA=${agentA_tts.provider}, AgentB=${agentB_tts.provider}`);
              return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
         }
 
-        // Validate TTS settings if enabled
         if (ttsEnabled) {
             const validateAgentTtsApi = (settings: AgentTTSSettingsApi, agentName: string): string | null => {
                 if (settings.provider !== "none") {
@@ -222,9 +180,7 @@ export async function POST(request: NextRequest) {
             if (agentBErr) return NextResponse.json({ error: agentBErr }, { status: 400 });
         }
 
-
         console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS Prov=${agentA_tts.provider}, Model=${agentA_tts.selectedTtsModelId}, Voice=${agentA_tts.voice}, AgentB TTS Prov=${agentB_tts.provider}, Model=${agentB_tts.selectedTtsModelId}, Voice=${agentB_tts.voice}`);
-
 
         const agentALLMInfo = getLLMInfoById(agentA_llm);
         const agentBLLMInfo = getLLMInfoById(agentB_llm);
@@ -270,22 +226,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Error retrieving API key configuration." }, { status: 500 });
         }
 
-        // Key validation (simplified, actual validation happens on first use by LangChain/TTS clients)
-        // const apiKeyA = await getApiKeyFromSecret(userApiSecretVersions[agentARequiredKey]);
-        // const apiKeyB = (userApiSecretVersions[agentARequiredKey] === userApiSecretVersions[agentBRequiredKey])
-        //                 ? apiKeyA
-        //                 : await getApiKeyFromSecret(userApiSecretVersions[agentBRequiredKey]);
-
-        // if (!apiKeyA || !apiKeyB) {
-        //     console.error(`API Route: Failed to retrieve API keys from Secret Manager. Key A found: ${!!apiKeyA}, Key B found: ${!!apiKeyB}`);
-        //     return NextResponse.json({ error: "Failed to retrieve one or more API keys from secure storage." }, { status: 500 });
-        // }
-        // console.log("API Route: API Keys retrieved successfully for validation (validation itself is deferred).");
-
-
-        // Deferring actual LangChain model initialization to the Cloud Function
-        // to avoid cold start issues and potential key exposure here if not careful.
-        // This API route will now primarily focus on validating the config and creating the conversation document.
+        // Key validation is deferred to the Cloud Function.
 
         try {
             if (!dbAdmin) {
@@ -294,20 +235,16 @@ export async function POST(request: NextRequest) {
             const newConversationRef = dbAdmin.collection("conversations").doc();
             const conversationId = newConversationRef.id;
 
-            // Prepare ttsSettings for Firestore, ensuring it matches AgentTTSSettingsBackend structure
-            // The frontend's `selectedTtsModelId` (e.g., 'openai-tts-1', 'google-standard-voices')
-            // is passed directly to the backend function's `selectedTtsModelId`.
             const finalAgentATts = {
                 provider: agentA_tts.provider,
                 voice: agentA_tts.voice,
-                selectedTtsModelId: agentA_tts.selectedTtsModelId, // Pass this through
+                selectedTtsModelId: agentA_tts.selectedTtsModelId,
             };
             const finalAgentBTts = {
                 provider: agentB_tts.provider,
                 voice: agentB_tts.voice,
-                selectedTtsModelId: agentB_tts.selectedTtsModelId, // Pass this through
+                selectedTtsModelId: agentB_tts.selectedTtsModelId,
             };
-
 
             const conversationData = {
                 userId: userId,
@@ -315,10 +252,10 @@ export async function POST(request: NextRequest) {
                 agentB_llm: agentB_llm,
                 turn: "agentA",
                 status: "running",
-                apiSecretVersions: userApiSecretVersions, // Store all user's key versions for the backend function
+                apiSecretVersions: userApiSecretVersions,
                 createdAt: FieldValue.serverTimestamp(),
                 lastActivity: FieldValue.serverTimestamp(),
-                ttsSettings: { // Ensure this structure matches ConversationTTSSettingsBackend
+                ttsSettings: {
                     enabled: ttsEnabled,
                     agentA: finalAgentATts,
                     agentB: finalAgentBTts,
