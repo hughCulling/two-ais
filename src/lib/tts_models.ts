@@ -7,13 +7,12 @@ export interface TTSVoice {
     name: string; // User-friendly display name (e.g., "Alloy", "US WaveNet A (F) [WaveNet]")
     gender?: 'Male' | 'Female' | 'Neutral'; // Optional gender information
     languageCodes?: string[]; // Optional BCP-47 language codes supported (e.g., ['en-US'])
-    voiceType?: string; // Optional: Specific type/tier of voice (e.g., "Standard", "WaveNet", "Chirp HD")
+    voiceType?: string; // Optional: Specific type/tier of voice (e.g., "Standard", "WaveNet", "Chirp HD", "Polyglot", "Neural2 (Casual)", "Studio (News)")
     status?: 'GA' | 'Preview' | 'Experimental'; // Optional: Launch stage
     notes?: string; // Optional: Important considerations
 }
 
 // --- Standard OpenAI Voices ---
-// The TTS endpoint provides 11 built‑in voices
 export const OPENAI_TTS_VOICES: TTSVoice[] = [
     { id: 'alloy', name: 'Alloy' },
     { id: 'ash', name: 'Ash' },
@@ -25,9 +24,6 @@ export const OPENAI_TTS_VOICES: TTSVoice[] = [
     { id: 'onyx', name: 'Onyx' },
     { id: 'sage', name: 'Sage' },
     { id: 'shimmer', name: 'Shimmer' },
-    // Note: The 11th voice mentioned in docs "Echo, Fable, Onyx, Nova, and Shimmer" are 5, plus alloy, ash, ballad, coral, sage = 10.
-    // The image shows 6. The text says 11. I will list the 10 explicitly named.
-    // If there's an 11th specific one, we can add it.
 ];
 
 // --- Google Cloud English TTS Voices (ALL English voices) ---
@@ -65,7 +61,7 @@ export const GOOGLE_ENGLISH_TTS_VOICES: TTSVoice[] = [
     { id: 'en-AU-News-E', name: 'AU News E (F)', gender: 'Female', languageCodes: ['en-AU'], voiceType: 'Studio (News)', status: 'GA', notes: 'SSML limited (no mark, emphasis, prosody pitch, lang).' },
     { id: 'en-AU-News-F', name: 'AU News F (F)', gender: 'Female', languageCodes: ['en-AU'], voiceType: 'Studio (News)', status: 'GA', notes: 'SSML limited.' },
     { id: 'en-AU-News-G', name: 'AU News G (M)', gender: 'Male', languageCodes: ['en-AU'], voiceType: 'Studio (News)', status: 'GA', notes: 'SSML limited.' },
-    { id: 'en-AU-Polyglot-1', name: 'AU Polyglot 1 (M)', gender: 'Male', languageCodes: ['en-AU'], voiceType: 'Polyglot', status: 'GA' }, // Neural2 based
+    { id: 'en-AU-Polyglot-1', name: 'AU Polyglot 1 (M)', gender: 'Male', languageCodes: ['en-AU'], voiceType: 'Polyglot', status: 'GA' },
     { id: 'en-AU-Chirp-HD-D', name: 'AU Chirp HD D (M)', gender: 'Male', languageCodes: ['en-AU'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
     { id: 'en-AU-Chirp-HD-F', name: 'AU Chirp HD F (F)', gender: 'Female', languageCodes: ['en-AU'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
     { id: 'en-AU-Chirp-HD-O', name: 'AU Chirp HD O (F)', gender: 'Female', languageCodes: ['en-AU'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
@@ -170,8 +166,8 @@ export const GOOGLE_ENGLISH_TTS_VOICES: TTSVoice[] = [
     { id: 'en-US-News-N', name: 'US News N (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Studio (News)', status: 'GA', notes: 'SSML limited.' },
     { id: 'en-US-Studio-O', name: 'US Studio O (F)', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Studio', status: 'GA', notes: 'SSML limited.' },
     { id: 'en-US-Studio-Q', name: 'US Studio Q (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Studio', status: 'GA', notes: 'SSML limited.' },
-    { id: 'en-US-Casual-K', name: 'US Casual K (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Neural2 (Casual)', status: 'GA' }, // Neural2 based
-    { id: 'en-US-Polyglot-1', name: 'US Polyglot 1 (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Polyglot', status: 'GA' }, // Neural2 based
+    { id: 'en-US-Casual-K', name: 'US Casual K (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Neural2 (Casual)', status: 'GA' },
+    { id: 'en-US-Polyglot-1', name: 'US Polyglot 1 (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Polyglot', status: 'GA' },
     { id: 'en-US-Chirp-HD-D', name: 'US Chirp HD D (M)', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
     { id: 'en-US-Chirp-HD-F', name: 'US Chirp HD F (F)', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
     { id: 'en-US-Chirp-HD-O', name: 'US Chirp HD O (F)', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Chirp HD', status: 'Preview', notes: 'Conversational. May hallucinate. No SSML/rate/pitch/A-Law.' },
@@ -183,21 +179,20 @@ export const GOOGLE_ENGLISH_TTS_VOICES: TTSVoice[] = [
 
 // --- Interface for specific TTS model details within a provider ---
 export interface TTSModelDetail {
-    id: string; // Internal unique ID for this model variant for your app (e.g., "openai-tts-1", "google-standard-voices")
-    apiModelId: string; // Actual model ID for API (e.g. 'tts-1') or conceptual group ID (e.g. 'google-standard')
-    name: string; // User-friendly display name, e.g., "TTS-1", "Google Standard Voices"
+    id: string;
+    apiModelId: string;
+    name: string;
     description: string;
-    pricingText: string; // Formatted pricing string for display
-    // Field to help filter voices for this conceptual model, if applicable
+    pricingText: string;
     voiceFilterCriteria?: (voice: TTSVoice) => boolean;
 }
 
 // --- TTS Provider Interface ---
 export interface TTSProviderInfo {
-    id: 'openai' | 'google-cloud'; // Expandable
-    name: string; // User-friendly display name
+    id: 'openai' | 'google-cloud';
+    name: string;
     requiresOwnKey: boolean;
-    apiKeyId?: string; // Identifier for the API key in your system
+    apiKeyId?: string;
     models: TTSModelDetail[];
     availableVoices: TTSVoice[];
 }
@@ -207,7 +202,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
     {
         id: 'openai',
         name: 'OpenAI',
-        requiresOwnKey: false, // Uses the main OpenAI LLM key
+        requiresOwnKey: false,
         apiKeyId: 'openai',
         models: [
             {
@@ -215,21 +210,21 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gpt-4o-mini-tts',
                 name: 'GPT-4o mini TTS',
                 description: 'Powered by GPT-4o mini. Max 2000 input tokens.',
-                pricingText: '$0.60/M input text tokens + $12/M output audio tokens' // Removed (approx.)
+                pricingText: '$0.60/M input text tokens + $12/M output audio tokens'
             },
             {
                 id: 'openai-tts-1',
                 apiModelId: 'tts-1',
                 name: 'TTS-1',
                 description: 'Optimized for speed.',
-                pricingText: '$15.00 / 1M input tokens' // Removed (approx.)
+                pricingText: '$15.00 / 1M input characters'
             },
             {
                 id: 'openai-tts-1-hd',
                 apiModelId: 'tts-1-hd',
                 name: 'TTS-1 HD',
                 description: 'Optimized for quality.',
-                pricingText: '$30.00 / 1M input tokens' // Removed (approx.)
+                pricingText: '$30.00 / 1M input characters'
             },
         ],
         availableVoices: OPENAI_TTS_VOICES,
@@ -245,7 +240,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-standard',
                 name: 'Standard Voices',
                 description: 'Cost-effective voices for general use.',
-                pricingText: '$4.00 / 1M characters', // Updated price
+                pricingText: '$4.00 / 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Standard',
             },
             {
@@ -253,102 +248,95 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-wavenet',
                 name: 'WaveNet Voices',
                 description: 'High-quality, natural-sounding voices.',
-                pricingText: '$16.00 / 1M characters', // Updated price
+                pricingText: '$16.00 / 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'WaveNet',
             },
             {
-                id: 'google-neural2-voices',
-                apiModelId: 'google-neural2',
-                name: 'Neural2, Casual & Polyglot Voices',
-                description: 'Advanced voices including specialized styles (Neural2, Casual, Polyglot).',
-                pricingText: '$16.00 / 1M characters', // Updated price (Neural2 & Polyglot)
-                voiceFilterCriteria: (voice) =>
-                    voice.voiceType === 'Neural2' ||
-                    voice.voiceType === 'Neural2 (Casual)' ||
-                    voice.voiceType === 'Polyglot',
+                id: 'google-neural2-voices', // Renamed for clarity
+                apiModelId: 'google-neural2', // Renamed for clarity
+                name: 'Neural2 Voices',
+                description: 'Advanced Neural2 voices for general purpose.',
+                pricingText: '$16.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2',
             },
             {
-                id: 'google-studio-voices',
-                apiModelId: 'google-studio',
-                name: 'Studio & News Voices',
-                description: 'Highest-quality voices for narration and professional use (Studio, News).',
-                pricingText: '$160.00 / 1M characters', // Updated price
-                voiceFilterCriteria: (voice) =>
-                    voice.voiceType === 'Studio' ||
-                    voice.voiceType === 'Studio (News)',
+                id: 'google-casual-voices', // Newly separated
+                apiModelId: 'google-casual', // Newly separated
+                name: 'Casual Voices (Neural2)',
+                description: 'Neural2 voices with a casual speaking style.',
+                pricingText: '$16.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2 (Casual)',
             },
             {
-                id: 'google-chirp-hd-voices', // This is Chirp 3 HD, maps to the $30 price.
-                apiModelId: 'google-chirp-hd',
-                name: 'Chirp 3 HD Voices', // Updated name to be specific
-                description: 'Latest generation conversational voices. Nuanced, engaging.',
-                pricingText: '$30.00 / 1M characters', // Updated price for Chirp 3 HD
-                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' || voice.voiceType === 'Chirp3 HD', // Match both for now
+                id: 'google-polyglot-voices',
+                apiModelId: 'google-polyglot',
+                name: 'Polyglot (Preview) Voices',
+                description: 'Voices designed to speak multiple languages fluently (Neural2-based).',
+                pricingText: '$16.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Polyglot',
             },
-            // Note: The original 'google-chirp3-hd-voices' entry might be redundant if 'google-chirp-hd-voices' now covers Chirp 3 HD.
-            // For clarity and to match the pricing table, I've focused 'google-chirp-hd-voices' on the $30/M Chirp 3 HD.
-            // If there's a separate "Chirp HD (Preview)" at $16/M, we might need another entry or adjust.
-            // Based on your provided text, "Chirp 3: HD voices" is $30/M.
-            // "Polyglot (Preview)" is $16/M and is covered under Neural2.
+            {
+                id: 'google-studio-voices', // Renamed for clarity
+                apiModelId: 'google-studio', // Renamed for clarity
+                name: 'Studio Voices',
+                description: 'Highest-quality voices for narration and professional use.',
+                pricingText: '$160.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Studio',
+            },
+            {
+                id: 'google-news-voices', // Newly separated
+                apiModelId: 'google-news',   // Newly separated
+                name: 'News Voices (Studio)',
+                description: 'Studio-quality voices optimized for news narration.',
+                pricingText: '$160.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Studio (News)',
+            },
+            {
+                id: 'google-chirp-hd-preview-voices',
+                apiModelId: 'google-chirp-hd-preview',
+                name: 'Chirp HD Voices (Preview)',
+                description: 'Earlier preview of conversational voices. Some limitations apply.',
+                pricingText: '$16.00 / 1M characters (estimate, confirm with Google)',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' && voice.status === 'Preview',
+            },
+            {
+                id: 'google-chirp3-hd-ga-voices',
+                apiModelId: 'google-chirp3-hd-ga',
+                name: 'Chirp3 HD Voices (GA)',
+                description: 'Latest GA conversational voices. Nuanced, engaging.',
+                pricingText: '$30.00 / 1M characters',
+                voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp3 HD',
+            },
         ],
         availableVoices: GOOGLE_ENGLISH_TTS_VOICES,
     },
 ];
 
 // --- Helper Functions ---
-
-/**
- * Finds TTS provider information by its unique ID.
- */
 export function getTTSProviderInfoById(id: TTSProviderInfo['id']): TTSProviderInfo | undefined {
     return AVAILABLE_TTS_PROVIDERS.find(p => p.id === id);
 }
-
-/**
- * Gets the list of ALL voices for a specific TTS provider ID.
- * For Google, this will return all ~230 English voices.
- * The UI will need to filter this list based on the selected conceptual "model" (TTSModelDetail).
- */
 export function getVoicesForProvider(providerId: TTSProviderInfo['id']): TTSVoice[] {
     const provider = getTTSProviderInfoById(providerId);
     return provider ? provider.availableVoices : [];
 }
-
-/**
- * Gets a specific voice by its ID from a provider's available voices.
- */
 export function getVoiceById(providerId: TTSProviderInfo['id'], voiceId: string): TTSVoice | undefined {
     const voices = getVoicesForProvider(providerId);
     return voices.find(v => v.id === voiceId);
 }
-
-/**
- * Gets the default voice for a given provider ID.
- * Returns the first voice in the list, or null if no voices are available.
- */
 export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): TTSVoice | null {
     const provider = getTTSProviderInfoById(providerId);
     if (!provider) return null;
-
-    // For OpenAI, use the first voice from its specific list
     if (providerId === 'openai') {
-        return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null; // Defaults to 'alloy'
+        return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
-
-    // For Google, pick a sensible default from the broader list, e.g., a US WaveNet voice
     if (providerId === 'google-cloud') {
         const preferredGoogleDefault = provider.availableVoices.find(v => v.id === 'en-US-Wavenet-A');
         if (preferredGoogleDefault) return preferredGoogleDefault;
-        // Fallback to the first Google voice if the preferred isn't found (should always be there with the full list)
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
-    
     return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
 }
-
-/**
- * Gets a specific TTS model detail by its unique app ID (e.g., 'openai-tts-1', 'google-standard-voices').
- */
 export function getTTSModelDetailByAppId(appModelId: string): { provider: TTSProviderInfo, model: TTSModelDetail } | undefined {
     for (const provider of AVAILABLE_TTS_PROVIDERS) {
         const foundModel = provider.models.find(m => m.id === appModelId);
@@ -358,11 +346,6 @@ export function getTTSModelDetailByAppId(appModelId: string): { provider: TTSPro
     }
     return undefined;
 }
-
-/**
- * Gets a specific TTS model detail by its API model ID (e.g., 'tts-1', or conceptual 'google-standard').
- * This might be useful if the backend only knows the apiModelId.
- */
 export function getTTSModelDetailByApiModelId(apiModelId: string): { provider: TTSProviderInfo, model: TTSModelDetail } | undefined {
     for (const provider of AVAILABLE_TTS_PROVIDERS) {
         const foundModel = provider.models.find(m => m.apiModelId === apiModelId);
