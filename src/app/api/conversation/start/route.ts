@@ -93,7 +93,8 @@ const VALID_TTS_PROVIDER_IDS_API = [
     "none",
     "browser",
     "openai",
-    "google-cloud"
+    "google-cloud",
+    "elevenlabs"
 ] as const;
 type TTSProviderIdApi = typeof VALID_TTS_PROVIDER_IDS_API[number];
 

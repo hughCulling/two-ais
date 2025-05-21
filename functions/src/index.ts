@@ -6,6 +6,7 @@ import * as admin from "firebase-admin";
 import { FieldValue, DocumentReference, CollectionReference } from "firebase-admin/firestore";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { getStorage } from "firebase-admin/storage";
+import axios from "axios";
 
 // --- TTS Client Imports ---
 import OpenAI from "openai";
@@ -59,11 +60,12 @@ if (!projectId) {
 
 // --- Interfaces ---
 interface AgentTTSSettingsBackend {
-    provider: "openai" | "none" | "browser" | "google-cloud"; // Added "google-cloud"
-    voice: string | null; // For OpenAI: 'alloy', etc. For Google: 'en-US-Wavenet-A', etc.
+    provider: "openai" | "none" | "browser" | "google-cloud" | "elevenlabs";
+    voice: string | null; // For OpenAI: 'alloy', etc. For Google: 'en-US-Wavenet-A', etc. For Eleven Labs: voice_id
     // This field comes from the frontend.
     // For OpenAI, it's 'openai-tts-1', 'openai-tts-1-hd', etc. (maps to actual API model).
     // For Google, it's the conceptual model ID like 'google-standard-voices'.
+    // For Eleven Labs, it's e.g., 'elevenlabs-multilingual-v2'
     selectedTtsModelId?: string;
 }
 interface ConversationTTSSettingsBackend {
@@ -124,6 +126,7 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
 function getTTSApiKeyId(provider: AgentTTSSettingsBackend["provider"]): string | null {
     if (provider === "openai") return "openai"; // OpenAI TTS uses the same key as OpenAI LLMs
     if (provider === "google-cloud") return "google_ai"; // Google TTS uses the same key as Google LLMs (Gemini)
+    if (provider === "elevenlabs") return "elevenlabs"; // Eleven Labs TTS uses a dedicated key
     // Add other providers if they have separate keys or share keys
     return null;
 }
@@ -439,6 +442,65 @@ async function _triggerAgentResponse(
                             logger.error("[TTS API Call Error - Google] Error during speech creation:", googleTtsError);
                             audioBuffer = null;
                         }
+                    }
+                }
+                // Add Eleven Labs TTS support
+                else if (agentSettings.provider === "elevenlabs") {
+                    const elevenLabsVoiceId = agentSettings.voice;
+                    let modelId = "eleven_multilingual_v2"; // Default model
+                    
+                    // Map the frontend conceptual model ID to the actual API model ID
+                    if (agentSettings.selectedTtsModelId === "elevenlabs-flash-v2-5") {
+                        modelId = "eleven_flash_v2_5";
+                    } else if (agentSettings.selectedTtsModelId === "elevenlabs-turbo-v2-5") {
+                        modelId = "eleven_turbo_v2_5";
+                    }
+                    
+                    logger.info(`[TTS Attempt] Provider: Eleven Labs, Model: ${modelId}, Voice ID: ${elevenLabsVoiceId}, Text Length: ${textToSpeak.length}`);
+                    
+                    try {
+                        // API endpoint for Eleven Labs text-to-speech
+                        const elevenlabsApiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${elevenLabsVoiceId}`;
+                        
+                        // Configure headers with API key
+                        const headers = {
+                            "xi-api-key": ttsApiKey,
+                            "Content-Type": "application/json",
+                            "Accept": "audio/mpeg"
+                        };
+                        
+                        // Configure request body
+                        const requestBody = {
+                            text: textToSpeak,
+                            model_id: modelId,
+                            voice_settings: {
+                                stability: 0.5,        // Mid-range stability for natural speech with consistent style
+                                similarity_boost: 0.75 // Slightly higher similarity for more faithful voice reproduction
+                            }
+                        };
+                        
+                        // Make the API request
+                        const response = await axios({
+                            method: "post",
+                            url: elevenlabsApiUrl,
+                            headers: headers,
+                            data: requestBody,
+                            responseType: "arraybuffer"
+                        });
+                        
+                        if (response.data) {
+                            audioBuffer = Buffer.from(response.data);
+                            logger.info(`[TTS Success] Eleven Labs TTS generated for ${agentToRespond}. Model: ${modelId}, Voice ID: ${elevenLabsVoiceId}`);
+                        } else {
+                            logger.error("[TTS Error - Eleven Labs] No audio data returned");
+                        }
+                    } catch (elevenLabsError: Error | unknown) {
+                        logger.error("[TTS API Call Error - Eleven Labs] Error during speech creation:", elevenLabsError);
+                        if (elevenLabsError && typeof elevenLabsError === "object" && "response" in elevenLabsError) {
+                            const errorWithResponse = elevenLabsError as { response: { status: number, data: unknown } };
+                            logger.error(`[TTS Error - Eleven Labs] Status: ${errorWithResponse.response.status}, Data: ${JSON.stringify(errorWithResponse.response.data)}`);
+                        }
+                        audioBuffer = null;
                     }
                 }
 

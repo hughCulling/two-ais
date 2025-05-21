@@ -53,7 +53,7 @@ interface SessionSetupFormProps {
 }
 
 const groupedLLMOptions = groupLLMsByProvider();
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey'];
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs'];
 
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
     llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
@@ -92,6 +92,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
+    const elevenLabsProviderInfo = getTTSProviderInfoById('elevenlabs');
 
     const getDefaultOpenAITTSModel = () => openAIProviderInfo?.models[0];
     const getDefaultOpenAIVoices = () => openAIProviderInfo?.availableVoices || [];
@@ -181,8 +182,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 voice: voices[0]?.id ?? null,
             }));
             voicesListSetter(voices);
+        } else if (providerId === 'elevenlabs' && elevenLabsProviderInfo) {
+            const defaultModel = elevenLabsProviderInfo.models[0];
+            const voices = elevenLabsProviderInfo.availableVoices;
+            agentSettingsSetter(prev => ({
+                ...prev,
+                provider: 'elevenlabs',
+                selectedTtsModelId: defaultModel?.id,
+                voice: voices[0]?.id ?? null,
+            }));
+            voicesListSetter(voices);
         }
-    }, [openAIProviderInfo, googleCloudProviderInfo]);
+    }, [openAIProviderInfo, googleCloudProviderInfo, elevenLabsProviderInfo]);
 
     useEffect(() => {
         // This effect runs when the provider for Agent A changes.
@@ -215,6 +226,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     }, [googleCloudProviderInfo]);
 
+    const updateVoicesForElevenLabsModel = useCallback((
+        agentSettingsSetter: React.Dispatch<React.SetStateAction<AgentTTSSettings>>,
+        voicesListSetter: React.Dispatch<React.SetStateAction<TTSVoice[]>>,
+        settings: AgentTTSSettings // current settings for the agent
+    ) => {
+        if (settings.provider === 'elevenlabs' && settings.selectedTtsModelId && elevenLabsProviderInfo) {
+            const conceptualModel = elevenLabsProviderInfo.models.find(m => m.id === settings.selectedTtsModelId);
+            let voices: TTSVoice[] = [];
+            if (conceptualModel?.voiceFilterCriteria && elevenLabsProviderInfo.availableVoices) {
+                voices = elevenLabsProviderInfo.availableVoices.filter(conceptualModel.voiceFilterCriteria);
+            } else {
+                voices = elevenLabsProviderInfo.availableVoices;
+            }
+            voicesListSetter(voices);
+            const currentVoiceIsValid = voices.some(v => v.id === settings.voice);
+            if (!currentVoiceIsValid) {
+                agentSettingsSetter(prev => ({ ...prev, voice: voices[0]?.id ?? null }));
+            }
+        }
+    }, [elevenLabsProviderInfo]);
+
     useEffect(() => {
         // This effect updates the voice list for Agent A when the selected Google conceptual model changes.
         if (agentATTSSettings.provider === 'google-cloud') {
@@ -228,6 +260,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             updateVoicesForGoogleModel(setAgentBTTSSettings, setCurrentVoicesB, agentBTTSSettings);
         }
     }, [agentBTTSSettings.provider, agentBTTSSettings.selectedTtsModelId, updateVoicesForGoogleModel, agentBTTSSettings]);
+
+    useEffect(() => {
+        // This effect updates the voice list for Agent A when the selected Eleven Labs model changes.
+        if (agentATTSSettings.provider === 'elevenlabs') {
+            updateVoicesForElevenLabsModel(setAgentATTSSettings, setCurrentVoicesA, agentATTSSettings);
+        }
+    }, [agentATTSSettings.provider, agentATTSSettings.selectedTtsModelId, updateVoicesForElevenLabsModel, agentATTSSettings]);
+
+    useEffect(() => {
+        // This effect updates the voice list for Agent B when the selected Eleven Labs model changes.
+        if (agentBTTSSettings.provider === 'elevenlabs') {
+            updateVoicesForElevenLabsModel(setAgentBTTSSettings, setCurrentVoicesB, agentBTTSSettings);
+        }
+    }, [agentBTTSSettings.provider, agentBTTSSettings.selectedTtsModelId, updateVoicesForElevenLabsModel, agentBTTSSettings]);
 
     const handleStartClick = () => {
         const agentAOption = getLLMInfoById(agentA_llm);

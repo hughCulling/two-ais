@@ -63,6 +63,13 @@ const initialApiKeys: ApiKeyInput[] = [
         learnMoreLink: 'https://console.cloud.google.com/apis/library'
     },
     {
+        id: 'elevenlabs',
+        label: 'Eleven Labs API Key',
+        value: '',
+        tooltip: 'Used for Eleven Labs Text-to-Speech voices. Create a free account at elevenlabs.io to get started or upgrade for more features. Generate your API key from your Eleven Labs dashboard.',
+        learnMoreLink: 'https://elevenlabs.io/app/settings/api-keys'
+    },
+    {
         id: 'anthropic',
         label: 'Anthropic API Key',
         value: '',
@@ -292,6 +299,25 @@ const ApiKeyManager: React.FC = () => {
                                                 className="underline hover:text-blue-700 dark:hover:text-blue-200 font-medium"
                                             >
                                                 &nbsp;here <ExternalLink className="inline h-3 w-3" />
+                                            </a>.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+
+                                {/* Specific note for Eleven Labs API key */}
+                                {id === 'elevenlabs' && (
+                                    <Alert variant="default" className="mt-2 bg-purple-50 border-purple-200 dark:bg-purple-900/30 dark:border-purple-700">
+                                        <Info className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                                        <AlertTitle className="text-purple-700 dark:text-purple-300">Using Eleven Labs Text-to-Speech</AlertTitle>
+                                        <AlertDescription className="text-purple-600 dark:text-purple-400">
+                                            Eleven Labs offers several models with different quality and speed. For best results, try the Multilingual V2 model for rich emotional expression or Flash V2.5 for ultra-low latency. Get your API key from your
+                                            <a
+                                                href="https://elevenlabs.io/app/settings/api-keys"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline hover:text-purple-700 dark:hover:text-purple-200 font-medium"
+                                            >
+                                                &nbsp;Eleven Labs dashboard <ExternalLink className="inline h-3 w-3" />
                                             </a>.
                                         </AlertDescription>
                                     </Alert>

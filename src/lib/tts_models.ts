@@ -176,6 +176,27 @@ export const GOOGLE_ENGLISH_TTS_VOICES: TTSVoice[] = [
     } as TTSVoice)),
 ];
 
+// --- Eleven Labs Voices ---
+export const ELEVENLABS_TTS_VOICES: TTSVoice[] = [
+    // Premium Voices
+    { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Professional, versatile female voice with American accent.' },
+    { id: 'AZnzlk1XvdvUeBnXmlld', name: 'Domi', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Energetic, confident female voice.' },
+    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Soft, expressive female voice.' },
+    { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Friendly, confident male voice with rich tone.' },
+    { id: 'MF3mGyEYCl7XYWbV9V6O', name: 'Elli', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Mature, authoritative female voice.' },
+    { id: 'TxGEqnHWrfWFTfGW9XjX', name: 'Josh', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Young adult male voice with neutral American accent.' },
+    { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Deep, strong male voice with unique character.' },
+    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Clear, professional male voice.' },
+    { id: 'yoZ06aMxZJJ28mfd3POQ', name: 'Sam', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Conversational, relaxed male voice.' },
+    
+    // Instant Voices
+    { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Friendly, engaging male voice for quick projects.' },
+    { id: 'XB0fDUnXU5powFXDhCwa', name: 'Dorothy', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Clear, mature female voice.' },
+    { id: 'bVMeCyTHy58xNoL34h3p', name: 'Matilda', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Youthful, gentle female voice.' },
+    { id: 'flq6f7yk4E4fJM5XTYuZ', name: 'Gregory', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Deep, authoritative male voice.' },
+    { id: 'jsCqWAovK2LkecY7zXl4', name: 'Daniel', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Professional, versatile male voice.' },
+    { id: 't0jbNlBVZ17f02VDIeMI', name: 'Serena', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Smooth, articulate female voice.' },
+];
 
 // --- Interface for specific TTS model details within a provider ---
 export interface TTSModelDetail {
@@ -189,7 +210,7 @@ export interface TTSModelDetail {
 
 // --- TTS Provider Interface ---
 export interface TTSProviderInfo {
-    id: 'openai' | 'google-cloud';
+    id: 'openai' | 'google-cloud' | 'elevenlabs';
     name: string;
     requiresOwnKey: boolean;
     apiKeyId?: string;
@@ -310,6 +331,39 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         ],
         availableVoices: GOOGLE_ENGLISH_TTS_VOICES,
     },
+    {
+        id: 'elevenlabs',
+        name: 'Eleven Labs',
+        requiresOwnKey: true,
+        apiKeyId: 'elevenlabs',
+        models: [
+            {
+                id: 'elevenlabs-multilingual-v2',
+                apiModelId: 'eleven_multilingual_v2',
+                name: 'Multilingual V2',
+                description: 'Our most lifelike, emotionally rich speech synthesis model with 29 languages.',
+                pricingText: '$0.006 / 1K characters (Premium)',
+                voiceFilterCriteria: (voice) => true, // Works with all voices
+            },
+            {
+                id: 'elevenlabs-flash-v2-5',
+                apiModelId: 'eleven_flash_v2_5',
+                name: 'Flash V2.5',
+                description: 'Ultra-fast model (~75ms latency) with 32 languages and a 40K character limit.',
+                pricingText: '$0.003 / 1K characters (50% cheaper)',
+                voiceFilterCriteria: (voice) => true, // Works with all voices
+            },
+            {
+                id: 'elevenlabs-turbo-v2-5',
+                apiModelId: 'eleven_turbo_v2_5',
+                name: 'Turbo V2.5',
+                description: 'High quality, low-latency model (250-300ms) with 32 languages and a 40K character limit.',
+                pricingText: '$0.003 / 1K characters (50% cheaper)',
+                voiceFilterCriteria: (voice) => true, // Works with all voices
+            },
+        ],
+        availableVoices: ELEVENLABS_TTS_VOICES,
+    },
 ];
 
 // --- Helper Functions ---
@@ -327,14 +381,24 @@ export function getVoiceById(providerId: TTSProviderInfo['id'], voiceId: string)
 export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): TTSVoice | null {
     const provider = getTTSProviderInfoById(providerId);
     if (!provider) return null;
+    
     if (providerId === 'openai') {
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
+    
     if (providerId === 'google-cloud') {
         const preferredGoogleDefault = provider.availableVoices.find(v => v.id === 'en-US-Wavenet-A');
         if (preferredGoogleDefault) return preferredGoogleDefault;
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
+    
+    if (providerId === 'elevenlabs') {
+        // Rachel is a good default - professional female voice
+        const preferredElevenLabsDefault = provider.availableVoices.find(v => v.id === '21m00Tcm4TlvDq8ikWAM'); // Rachel
+        if (preferredElevenLabsDefault) return preferredElevenLabsDefault;
+        return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
+    }
+    
     return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
 }
 export function getTTSModelDetailByAppId(appModelId: string): { provider: TTSProviderInfo, model: TTSModelDetail } | undefined {
