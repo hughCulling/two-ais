@@ -343,7 +343,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'Multilingual V2',
                 description: 'Our most lifelike, emotionally rich speech synthesis model with 29 languages.',
                 pricingText: '$0.006 / 1K characters (Premium)',
-                voiceFilterCriteria: (voice) => true, // Works with all voices
+                voiceFilterCriteria: () => true, // Works with all voices
             },
             {
                 id: 'elevenlabs-flash-v2-5',
@@ -351,7 +351,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'Flash V2.5',
                 description: 'Ultra-fast model (~75ms latency) with 32 languages and a 40K character limit.',
                 pricingText: '$0.003 / 1K characters (50% cheaper)',
-                voiceFilterCriteria: (voice) => true, // Works with all voices
+                voiceFilterCriteria: () => true, // Works with all voices
             },
             {
                 id: 'elevenlabs-turbo-v2-5',
@@ -359,7 +359,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'Turbo V2.5',
                 description: 'High quality, low-latency model (250-300ms) with 32 languages and a 40K character limit.',
                 pricingText: '$0.003 / 1K characters (50% cheaper)',
-                voiceFilterCriteria: (voice) => true, // Works with all voices
+                voiceFilterCriteria: () => true, // Works with all voices
             },
         ],
         availableVoices: ELEVENLABS_TTS_VOICES,
