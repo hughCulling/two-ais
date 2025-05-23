@@ -155,29 +155,38 @@ export const uk = {
     
     // Auth pages
     auth: {
-        sign_in_with_google: "Увійти через Google",
-        sign_in_with_github: "Увійти через GitHub",
-        sign_in_with_email: "Увійти через електронну пошту",
-        email_address: "Адреса електронної пошти",
-        password: "Пароль",
-        forgot_password: "Забули пароль?",
-        send_reset_link: "Надіслати посилання для скидання",
-        magic_link_sent: "Магічне посилання надіслано!",
-        check_your_email: "Перевірте свою електронну пошту, щоб знайти магічне посилання.",
-        sign_in: "Увійти",
-        sign_up: "Зареєструватися",
-        create_account: "Створити обліковий запис",
-        by_signing_in_you_agree_to_our: "Входячи, ви погоджуєтеся з нашими",
-        terms_of_service: "Умовами надання послуг",
-        and: "та",
-        privacy_policy: "Політикою конфіденційності",
+        login: {
+            title: "Увійти до Two AIs", // Corresponds to 'Sign in to Two AIs'
+            emailPlaceholder: "Електронна пошта", // Corresponds to 'Email'
+            passwordPlaceholder: "Пароль", // Corresponds to 'Password'
+            signIn: "Увійти", // Corresponds to 'Sign In'
+            signInWithGoogle: "Увійти через Google", // Corresponds to 'Sign in with Google'
+            noAccount: "Немає облікового запису?", // Corresponds to "Don't have an account?"
+            signUp: "Зареєструватися", // Corresponds to 'Sign up'
+            forgotPassword: "Забули пароль?", // Corresponds to 'Forgot password?'
+        },
+        signup: {
+            title: "Створити обліковий запис", // Corresponds to 'Create an account'
+            emailPlaceholder: "Електронна пошта", // Corresponds to 'Email'
+            passwordPlaceholder: "Пароль (принаймні 6 символів)", // Corresponds to 'Password (at least 6 characters)'
+            signUp: "Зареєструватися", // Corresponds to 'Sign Up'
+            signUpWithGoogle: "Зареєструватися через Google", // Corresponds to 'Sign up with Google'
+            hasAccount: "Вже є обліковий запис?", // Corresponds to 'Already have an account?'
+            signIn: "Увійти", // Corresponds to 'Sign in'
+        },
         errors: {
-            invalidCredentials: "Неправильна адреса електронної пошти або пароль",
-            userNotFound: "Користувача не знайдено",
-            weakPassword: "Пароль має містити принаймні 6 символів",
-            emailInUse: "Ця адреса електронної пошти вже використовується",
-            generic: "Сталася помилка. Будь ласка, спробуйте ще раз."
+            invalidCredentials: "Неправильна адреса електронної пошти або пароль", // Corresponds to 'Invalid email or password'
+            userNotFound: "Користувача не знайдено", // Corresponds to 'User not found'
+            weakPassword: "Пароль має містити принаймні 6 символів", // Corresponds to 'Password should be at least 6 characters'
+            emailInUse: "Ця адреса електронної пошти вже використовується", // Corresponds to 'Email already in use'
+            generic: "Сталася помилка. Будь ласка, спробуйте ще раз.", // Corresponds to 'An error occurred. Please try again.'
         }
+        // The following keys from the old uk.ts 'auth' object are intentionally removed 
+        // or moved into the nested 'login' and 'signup' objects to align with en.ts structure:
+        // sign_in_with_google, sign_in_with_github, sign_in_with_email, email_address, 
+        // password, forgot_password, send_reset_link, magic_link_sent, check_your_email, 
+        // sign_in (top level), sign_up (top level), create_account, 
+        // by_signing_in_you_agree_to_our, terms_of_service, and, privacy_policy
     },
 
     // Landing Page
