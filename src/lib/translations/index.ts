@@ -6,12 +6,13 @@ import { ja } from './ja';
 import { zh } from './zh';
 import { ar } from './ar';
 import { pt } from './pt';
+import { hi } from './hi';
 
 // Type for our translation structure
 export type TranslationKeys = typeof en;
 
 // All translations will follow the same structure as English
-export const translations: Record<string, TranslationKeys> = {
+export const translations = {
     en,
     es,
     fr,
@@ -20,10 +21,12 @@ export const translations: Record<string, TranslationKeys> = {
     zh,
     ar,
     pt,
+    hi,
     // Other languages will be added here as they're created
 };
 
-// Get translation for a specific language code
-export function getTranslation(languageCode: string): TranslationKeys {
-    return translations[languageCode] || translations.en;
-} 
+export type LanguageCode = keyof typeof translations;
+
+export const getTranslation = (lang: LanguageCode) => {
+    return translations[lang] || translations.en;
+}; 
