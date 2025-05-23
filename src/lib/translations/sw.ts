@@ -169,29 +169,33 @@ export const sw = {
         }
     },
     auth: {
-        sign_in_with_google: "Ingia na Google",
-        sign_in_with_github: "Ingia na GitHub",
-        sign_in_with_email: "Ingia na barua pepe",
-        email_address: "Anwani ya barua pepe",
-        password: "Nenosiri",
-        forgot_password: "Umesahau nenosiri?",
-        send_reset_link: "Tuma kiungo cha kuweka upya",
-        magic_link_sent: "Kiungo cha uchawi kimetumwa!",
-        check_your_email: "Angalia barua pepe yako kwa kiungo cha uchawi.",
-        sign_in: "Ingia",
-        sign_up: "Jisajili",
-        create_account: "Fungua akaunti",
-        by_signing_in_you_agree_to_our: "Kwa kuingia, unakubaliana na",
-        terms_of_service: "Sheria na Masharti yetu",
-        and: "na",
-        privacy_policy: "Sera yetu ya Faragha",
+        login: {
+            title: "Ingia kwenye Two AIs", // Placeholder, derived from en.ts
+            emailPlaceholder: "Anwani ya barua pepe", // Was auth.email_address
+            passwordPlaceholder: "Nenosiri", // Was auth.password
+            signIn: "Ingia", // Was auth.sign_in
+            signInWithGoogle: "Ingia na Google", // Was auth.sign_in_with_google
+            noAccount: "Huna akaunti?", // Placeholder
+            signUp: "Jisajili", // Was auth.sign_up
+            forgotPassword: "Umesahau nenosiri?", // Was auth.forgot_password
+        },
+        signup: {
+            title: "Fungua akaunti", // Was auth.create_account
+            emailPlaceholder: "Anwani ya barua pepe", // Was auth.email_address (repeated)
+            passwordPlaceholder: "Nenosiri (angalau herufi 6)", // Placeholder, derived from en.ts
+            signUp: "Jisajili", // Was auth.sign_up (repeated)
+            signUpWithGoogle: "Jisajili na Google", // Placeholder, derived from en.ts
+            hasAccount: "Tayari una akaunti?", // Placeholder
+            signIn: "Ingia", // Was auth.sign_in (repeated)
+        },
         errors: {
-            invalidCredentials: "Anwani ya barua pepe au nenosiri si sahihi",
-            userNotFound: "Mtumiaji hajapatikana",
-            weakPassword: "Nenosiri lazima liwe na angalau herufi 6",
-            emailInUse: "Anwani hii ya barua pepe tayari inatumika",
-            generic: "Hitilafu imetokea. Tafadhali jaribu tena."
+            invalidCredentials: "Anwani ya barua pepe au nenosiri si sahihi", // from auth.errors.invalidCredentials
+            userNotFound: "Mtumiaji hajapatikana", // from auth.errors.userNotFound
+            weakPassword: "Nenosiri lazima liwe na angalau herufi 6", // from auth.errors.weakPassword
+            emailInUse: "Anwani hii ya barua pepe tayari inatumika", // from auth.errors.emailInUse
+            generic: "Hitilafu imetokea. Tafadhali jaribu tena." // from auth.errors.generic
         }
+        // Omitted keys from old sw.ts auth: sign_in_with_github, sign_in_with_email, send_reset_link, magic_link_sent, check_your_email, by_signing_in_you_agree_to_our, terms_of_service, and, privacy_policy
     },
     landing: {
         hero_title: "AI Mbili. Mazungumzo Moja.",

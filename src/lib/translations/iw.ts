@@ -170,29 +170,34 @@ export const iw = {
         }
     },
     auth: {
-        sign_in_with_google: "התחבר עם Google",
-        sign_in_with_github: "התחבר עם GitHub",
-        sign_in_with_email: "התחבר עם אימייל",
-        email_address: "כתובת אימייל",
-        password: "סיסמה",
-        forgot_password: "שכחת סיסמה?",
-        send_reset_link: "שלח קישור לאיפוס",
-        magic_link_sent: "קישור קסם נשלח!",
-        check_your_email: "בדוק את האימייל שלך עבור קישור הקסם.",
-        sign_in: "התחבר",
-        sign_up: "הירשם",
-        create_account: "צור חשבון",
-        by_signing_in_you_agree_to_our: "על ידי התחברות, אתה מסכים ל",
-        terms_of_service: "תנאי השירות",
-        and: "ו",
-        privacy_policy: "מדיניות הפרטיות",
+        login: {
+            title: "התחבר ל-Two AIs", // Placeholder, derived from en.ts
+            emailPlaceholder: "כתובת אימייל", // Was auth.email_address
+            passwordPlaceholder: "סיסמה", // Was auth.password
+            signIn: "התחבר", // Was auth.sign_in
+            signInWithGoogle: "התחבר עם Google", // Was auth.sign_in_with_google
+            noAccount: "אין לך חשבון?", // Placeholder
+            signUp: "הירשם", // Was auth.sign_up
+            forgotPassword: "שכחת סיסמה?", // Was auth.forgot_password
+        },
+        signup: {
+            title: "צור חשבון", // Was auth.create_account
+            emailPlaceholder: "כתובת אימייל", // Was auth.email_address (repeated, but context is signup)
+            passwordPlaceholder: "סיסמה (לפחות 6 תווים)", // Placeholder, derived from en.ts
+            signUp: "הירשם", // Was auth.sign_up (repeated, but context is signup action)
+            signUpWithGoogle: "הירשם עם Google", // Placeholder, derived from en.ts (Google sign up)
+            hasAccount: "כבר יש לך חשבון?", // Placeholder
+            signIn: "התחבר", // Was auth.sign_in (repeated, link to sign in)
+        },
         errors: {
-            invalidCredentials: "כתובת אימייל או סיסמה שגויים",
-            userNotFound: "משתמש לא נמצא",
-            weakPassword: "הסיסמה חייבת להכיל לפחות 6 תווים",
-            emailInUse: "כתובת אימייל זו כבר בשימוש",
-            generic: "אירעה שגיאה. אנא נסה שוב."
+            invalidCredentials: "כתובת אימייל או סיסמה שגויים", // from auth.errors.invalidCredentials
+            userNotFound: "משתמש לא נמצא", // from auth.errors.userNotFound
+            weakPassword: "הסיסמה חייבת להכיל לפחות 6 תווים", // from auth.errors.weakPassword
+            emailInUse: "כתובת אימייל זו כבר בשימוש", // from auth.errors.emailInUse
+            generic: "אירעה שגיאה. אנא נסה שוב." // from auth.errors.generic
         }
+        // Omitted keys from old iw.ts auth: sign_in_with_github, sign_in_with_email, send_reset_link, magic_link_sent, check_your_email, by_signing_in_you_agree_to_our, terms_of_service, and, privacy_policy
+        // These don't directly map to the en.ts structure for auth.login, auth.signup, or auth.errors
     },
     landing: {
         hero_title: "שני AIs. שיחה אחת.",
