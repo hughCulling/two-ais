@@ -5,13 +5,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from 'next-themes';
+import { useLanguage } from '@/context/LanguageContext';
 import SessionSetupForm from '@/components/session/SessionSetupForm';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { db } from '@/lib/firebase/clientApp';
 import { doc, getDoc, FirestoreError } from 'firebase/firestore';
 // --- Import Theme hook ---
-import { useTheme } from 'next-themes';
-// --- Import Tooltip components ---
 import {
     Tooltip,
     TooltipContent,
@@ -50,6 +50,7 @@ interface SessionConfig {
     ttsEnabled: boolean;
     agentA_tts: AgentTTSSettingsConfig;
     agentB_tts: AgentTTSSettingsConfig;
+    language?: string;
 }
 
 // Interface for the expected structure of the API response from /api/conversation/start
@@ -266,6 +267,7 @@ const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
     const { resolvedTheme } = useTheme();
+    const { language } = useLanguage();
 
     const [isStartingSession, setIsStartingSession] = useState(false);
     const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
@@ -354,10 +356,17 @@ export default function Page() {
         try {
             const idToken = await user.getIdToken();
             logger.info("Obtained ID Token for API call.");
+            
+            // Add language to the config
+            const configWithLanguage = {
+                ...config,
+                language: language.code
+            };
+            
             const response = await fetch('/api/conversation/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
-                body: JSON.stringify(config),
+                body: JSON.stringify(configWithLanguage),
             });
             if (!response.ok) {
                 let errorMsg = `API Error: ${response.status} ${response.statusText}`;
@@ -369,7 +378,7 @@ export default function Page() {
             logger.info("API Response received:", result);
             if (!result.conversationId) { throw new Error("API response successful but did not include a conversationId."); }
             logger.info(`Session setup successful via API. Conversation ID: ${result.conversationId}`);
-            setSessionConfig(config);
+            setSessionConfig(configWithLanguage);
             setActiveConversationId(result.conversationId);
         } catch (error) {
             logger.error("Failed to start session:", error);

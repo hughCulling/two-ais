@@ -1,0 +1,160 @@
+// src/lib/translations/en.ts
+export const en = {
+    // Header
+    header: {
+        appName: 'Two AIs',
+        settings: 'Settings',
+        signIn: 'Sign In',
+        signOut: 'Sign Out',
+    },
+
+    // Language names (for display in language selector)
+    languages: {
+        ar: 'Arabic',
+        bn: 'Bengali',
+        bg: 'Bulgarian',
+        zh: 'Chinese',
+        hr: 'Croatian',
+        cs: 'Czech',
+        da: 'Danish',
+        nl: 'Dutch',
+        en: 'English',
+        et: 'Estonian',
+        fi: 'Finnish',
+        fr: 'French',
+        de: 'German',
+        el: 'Greek',
+        iw: 'Hebrew',
+        hi: 'Hindi',
+        hu: 'Hungarian',
+        id: 'Indonesian',
+        it: 'Italian',
+        ja: 'Japanese',
+        ko: 'Korean',
+        lv: 'Latvian',
+        lt: 'Lithuanian',
+        no: 'Norwegian',
+        pl: 'Polish',
+        pt: 'Portuguese',
+        ro: 'Romanian',
+        ru: 'Russian',
+        sr: 'Serbian',
+        sk: 'Slovak',
+        sl: 'Slovenian',
+        es: 'Spanish',
+        sw: 'Swahili',
+        sv: 'Swedish',
+        th: 'Thai',
+        tr: 'Turkish',
+        uk: 'Ukrainian',
+        vi: 'Vietnamese',
+    },
+
+    // Settings page
+    settings: {
+        title: 'Settings',
+        sections: {
+            appearance: 'Appearance',
+            apiKeys: 'API Keys',
+            language: 'Language',
+        },
+        appearance: {
+            theme: 'Theme',
+            light: 'Light',
+            dark: 'Dark',
+            system: 'System',
+        },
+        language: {
+            title: 'Language',
+            description: 'Choose your preferred language for the interface',
+            conversationLanguage: 'Conversation Language',
+            conversationLanguageDescription: 'The language used for AI conversations will match your interface language',
+        },
+        apiKeys: {
+            title: 'API Keys',
+            description: 'Manage your API keys for different AI providers',
+            saved: 'Saved',
+            notSet: 'Not set',
+            setKey: 'Set key',
+            updateKey: 'Update key',
+            removeKey: 'Remove key',
+            getKeyInstructions: 'Get your API key',
+        },
+    },
+
+    // Main page
+    main: {
+        title: 'AI Conversation',
+        setupForm: {
+            title: 'Set up your conversation',
+            agentA: 'Agent A',
+            agentB: 'Agent B',
+            model: 'Model',
+            selectModel: 'Select a model',
+            tts: {
+                title: 'Text-to-Speech',
+                enable: 'Enable Text-to-Speech',
+                provider: 'TTS Provider',
+                selectProvider: 'Select TTS provider',
+                voice: 'Voice',
+                selectVoice: 'Select voice',
+                model: 'TTS Model',
+                selectModel: 'Select TTS model',
+            },
+            startConversation: 'Start Conversation',
+            conversationPrompt: 'Start the conversation.',
+        },
+        conversation: {
+            thinking: 'thinking...',
+            stop: 'Stop',
+            restart: 'Restart Conversation',
+        },
+        pricing: {
+            estimatedCost: 'Estimated cost',
+            perMillionTokens: 'per million tokens',
+            input: 'Input',
+            output: 'Output',
+        },
+    },
+
+    // Auth pages
+    auth: {
+        login: {
+            title: 'Sign in to Two AIs',
+            emailPlaceholder: 'Email',
+            passwordPlaceholder: 'Password',
+            signIn: 'Sign In',
+            signInWithGoogle: 'Sign in with Google',
+            noAccount: "Don't have an account?",
+            signUp: 'Sign up',
+            forgotPassword: 'Forgot password?',
+        },
+        signup: {
+            title: 'Create an account',
+            emailPlaceholder: 'Email',
+            passwordPlaceholder: 'Password (at least 6 characters)',
+            signUp: 'Sign Up',
+            signUpWithGoogle: 'Sign up with Google',
+            hasAccount: 'Already have an account?',
+            signIn: 'Sign in',
+        },
+        errors: {
+            invalidCredentials: 'Invalid email or password',
+            userNotFound: 'User not found',
+            weakPassword: 'Password should be at least 6 characters',
+            emailInUse: 'Email already in use',
+            generic: 'An error occurred. Please try again.',
+        },
+    },
+
+    // Common
+    common: {
+        loading: 'Loading...',
+        error: 'Error',
+        save: 'Save',
+        cancel: 'Cancel',
+        delete: 'Delete',
+        confirm: 'Confirm',
+        or: 'or',
+    },
+}; 

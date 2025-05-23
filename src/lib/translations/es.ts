@@ -1,0 +1,160 @@
+// src/lib/translations/es.ts
+export const es = {
+    // Header
+    header: {
+        appName: 'Two AIs',
+        settings: 'Configuración',
+        signIn: 'Iniciar sesión',
+        signOut: 'Cerrar sesión',
+    },
+
+    // Language names (for display in language selector)
+    languages: {
+        ar: 'Árabe',
+        bn: 'Bengalí',
+        bg: 'Búlgaro',
+        zh: 'Chino',
+        hr: 'Croata',
+        cs: 'Checo',
+        da: 'Danés',
+        nl: 'Holandés',
+        en: 'Inglés',
+        et: 'Estonio',
+        fi: 'Finés',
+        fr: 'Francés',
+        de: 'Alemán',
+        el: 'Griego',
+        iw: 'Hebreo',
+        hi: 'Hindi',
+        hu: 'Húngaro',
+        id: 'Indonesio',
+        it: 'Italiano',
+        ja: 'Japonés',
+        ko: 'Coreano',
+        lv: 'Letón',
+        lt: 'Lituano',
+        no: 'Noruego',
+        pl: 'Polaco',
+        pt: 'Portugués',
+        ro: 'Rumano',
+        ru: 'Ruso',
+        sr: 'Serbio',
+        sk: 'Eslovaco',
+        sl: 'Esloveno',
+        es: 'Español',
+        sw: 'Suajili',
+        sv: 'Sueco',
+        th: 'Tailandés',
+        tr: 'Turco',
+        uk: 'Ucraniano',
+        vi: 'Vietnamita',
+    },
+
+    // Settings page
+    settings: {
+        title: 'Configuración',
+        sections: {
+            appearance: 'Apariencia',
+            apiKeys: 'Claves API',
+            language: 'Idioma',
+        },
+        appearance: {
+            theme: 'Tema',
+            light: 'Claro',
+            dark: 'Oscuro',
+            system: 'Sistema',
+        },
+        language: {
+            title: 'Idioma',
+            description: 'Elige tu idioma preferido para la interfaz',
+            conversationLanguage: 'Idioma de conversación',
+            conversationLanguageDescription: 'El idioma utilizado para las conversaciones de IA coincidirá con el idioma de tu interfaz',
+        },
+        apiKeys: {
+            title: 'Claves API',
+            description: 'Administra tus claves API para diferentes proveedores de IA',
+            saved: 'Guardada',
+            notSet: 'No configurada',
+            setKey: 'Configurar clave',
+            updateKey: 'Actualizar clave',
+            removeKey: 'Eliminar clave',
+            getKeyInstructions: 'Obtener tu clave API',
+        },
+    },
+
+    // Main page
+    main: {
+        title: 'Conversación de IA',
+        setupForm: {
+            title: 'Configura tu conversación',
+            agentA: 'Agente A',
+            agentB: 'Agente B',
+            model: 'Modelo',
+            selectModel: 'Selecciona un modelo',
+            tts: {
+                title: 'Texto a voz',
+                enable: 'Habilitar texto a voz',
+                provider: 'Proveedor TTS',
+                selectProvider: 'Seleccionar proveedor TTS',
+                voice: 'Voz',
+                selectVoice: 'Seleccionar voz',
+                model: 'Modelo TTS',
+                selectModel: 'Seleccionar modelo TTS',
+            },
+            startConversation: 'Iniciar conversación',
+            conversationPrompt: 'Comienza la conversación.',
+        },
+        conversation: {
+            thinking: 'pensando...',
+            stop: 'Detener',
+            restart: 'Reiniciar conversación',
+        },
+        pricing: {
+            estimatedCost: 'Costo estimado',
+            perMillionTokens: 'por millón de tokens',
+            input: 'Entrada',
+            output: 'Salida',
+        },
+    },
+
+    // Auth pages
+    auth: {
+        login: {
+            title: 'Inicia sesión en Dos IAs',
+            emailPlaceholder: 'Correo electrónico',
+            passwordPlaceholder: 'Contraseña',
+            signIn: 'Iniciar sesión',
+            signInWithGoogle: 'Iniciar sesión con Google',
+            noAccount: '¿No tienes una cuenta?',
+            signUp: 'Regístrate',
+            forgotPassword: '¿Olvidaste tu contraseña?',
+        },
+        signup: {
+            title: 'Crear una cuenta',
+            emailPlaceholder: 'Correo electrónico',
+            passwordPlaceholder: 'Contraseña (al menos 6 caracteres)',
+            signUp: 'Registrarse',
+            signUpWithGoogle: 'Registrarse con Google',
+            hasAccount: '¿Ya tienes una cuenta?',
+            signIn: 'Iniciar sesión',
+        },
+        errors: {
+            invalidCredentials: 'Correo electrónico o contraseña inválidos',
+            userNotFound: 'Usuario no encontrado',
+            weakPassword: 'La contraseña debe tener al menos 6 caracteres',
+            emailInUse: 'El correo electrónico ya está en uso',
+            generic: 'Ocurrió un error. Por favor, inténtalo de nuevo.',
+        },
+    },
+
+    // Common
+    common: {
+        loading: 'Cargando...',
+        error: 'Error',
+        save: 'Guardar',
+        cancel: 'Cancelar',
+        delete: 'Eliminar',
+        confirm: 'Confirmar',
+        or: 'o',
+    },
+}; 

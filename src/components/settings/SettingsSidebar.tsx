@@ -4,17 +4,20 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils'; // Make sure your utils file is here
-
-// Define the navigation items - Appearance first
-const navigation = [
-    { name: 'Appearance', href: '/settings/appearance' },
-    { name: 'API Keys', href: '/settings/api-keys' },
-    // Add more settings links here later (e.g., Profile, Billing)
-    // { name: 'Profile', href: '/settings/profile' },
-];
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SettingsSidebar() {
     const pathname = usePathname(); // Get current path to highlight active link
+    const t = useTranslation();
+
+    // Define the navigation items - Appearance first
+    const navigation = [
+        { name: t.settings.sections.appearance, href: '/settings/appearance' },
+        { name: t.settings.sections.language, href: '/settings/language' },
+        { name: t.settings.sections.apiKeys, href: '/settings/api-keys' },
+        // Add more settings links here later (e.g., Profile, Billing)
+        // { name: 'Profile', href: '/settings/profile' },
+    ];
 
     return (
         // Sidebar container - adjust width/padding as needed

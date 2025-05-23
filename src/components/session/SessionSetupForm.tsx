@@ -45,6 +45,7 @@ interface SessionConfig {
     ttsEnabled: boolean;
     agentA_tts: AgentTTSSettings;
     agentB_tts: AgentTTSSettings;
+    language?: string;
 }
 
 interface SessionSetupFormProps {

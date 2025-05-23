@@ -6,10 +6,12 @@
 import { useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase/clientApp'; // Adjust path as needed
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SignOutButton() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const t = useTranslation();
 
     const handleSignOut = async () => {
         setError(null);
@@ -42,7 +44,7 @@ export default function SignOutButton() {
                 disabled={loading}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-offset-gray-800"
             >
-                {loading ? 'Signing Out...' : 'Sign Out'}
+                {loading ? `${t.header.signOut}...` : t.header.signOut}
             </button>
             {error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>}
         </div>

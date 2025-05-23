@@ -7,10 +7,13 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext'; // Adjust path if needed
 import SignOutButton from '@/components/auth/SignOutButton'; // Adjust path if needed
 import { ThemeSwitcher } from '@/components/theme-switcher';
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { useTranslation } from '@/hooks/useTranslation';
 import { UserCircle } from 'lucide-react'; // Import an icon for user
 
 export default function Header() {
     const { user, loading } = useAuth();
+    const t = useTranslation();
 
     // Common classes for navigation links/buttons for easier clicking
     const navItemClasses = "px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
@@ -22,12 +25,15 @@ export default function Header() {
                     {/* Logo/Home Link */}
                     <div className="flex-shrink-0">
                         <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400">
-                            Two AIs
+                            {t.header.appName}
                         </Link>
                     </div>
 
                     {/* Right-aligned Navigation Links and Auth Status */}
                     <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
+                        {/* Language Selector */}
+                        <LanguageSelector showIcon={false} className="hidden sm:flex" />
+                        
                         {/* Theme Switcher */}
                         <ThemeSwitcher />
 
@@ -49,7 +55,7 @@ export default function Header() {
                                 {/* --- End User Info --- */}
 
                                 <Link href="/settings" className={navItemClasses}>
-                                    Settings
+                                    {t.header.settings}
                                 </Link>
                                 <div className="px-1"> {/* Wrapper to align button padding visually */}
                                     <SignOutButton />
@@ -58,7 +64,7 @@ export default function Header() {
                         ) : (
                             // Link for logged-out users
                             <Link href="/login" className={navItemClasses}>
-                                Sign In
+                                {t.header.signIn}
                             </Link>
                         )}
                     </div>
