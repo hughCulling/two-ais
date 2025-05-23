@@ -19,6 +19,7 @@ cd ..
 
 Third, create your .env.local file with the following fields and populate them with your own values: 
 
+```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=
@@ -29,6 +30,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY=
 FIREBASE_SERVICE_ACCOUNT_KEY=
 TEST_VAR=
+```
 
 Finally, run the local server to test at localhost:3000:
 
