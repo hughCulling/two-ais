@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight } from "lucide-react";
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 // --- Import required UI components ---
 import {
   Alert,
@@ -35,6 +35,8 @@ import { AVAILABLE_TTS_PROVIDERS, TTSProviderInfo, TTSModelDetail } from '@/lib/
 // --- Import Collapsible components ---
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
+// --- Import language support ---
+import { isLanguageSupported } from '@/lib/model-language-support';
 
 // --- Define TTS Types (Locally) ---
 interface AgentTTSSettingsConfig {
@@ -547,6 +549,26 @@ export default function Page() {
                                                             </Tooltip>
                                                         )}
                                                                         <span className="whitespace-nowrap">{llm.name}</span>
+                                                                        {/* Language support indicator */}
+                                                                        {isLanguageSupported(llm.provider, language.code) ? (
+                                                                            <Tooltip>
+                                                                                <TooltipTrigger asChild>
+                                                                                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                                </TooltipTrigger>
+                                                                                <TooltipContent side="top">
+                                                                                    <p className="text-xs">Supports {language.nativeName}</p>
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
+                                                                        ) : (
+                                                                            <Tooltip>
+                                                                                <TooltipTrigger asChild>
+                                                                                    <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                                </TooltipTrigger>
+                                                                                <TooltipContent side="top">
+                                                                                    <p className="text-xs">May not support {language.nativeName}</p>
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
+                                                                        )}
                                                                         {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>}
                                                                         {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>}
                                                                         {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">Beta</Badge>}

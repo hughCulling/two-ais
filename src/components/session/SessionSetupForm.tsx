@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { db } from '@/lib/firebase/clientApp';
 import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById } from '@/lib/models';
 import {
@@ -27,7 +28,8 @@ import {
     // TTSModelDetail, // Removed unused import
     getTTSProviderInfoById
 } from '@/lib/tts_models';
-import { AlertTriangle, Info } from "lucide-react";
+import { isLanguageSupported } from '@/lib/model-language-support';
+import { AlertTriangle, Info, Check, X } from "lucide-react";
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
@@ -84,6 +86,7 @@ const formatPrice = (price: number) => {
 
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
     const { user, loading: authLoading } = useAuth();
+    const { language } = useLanguage();
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
@@ -487,11 +490,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 <SelectLabel>{provider}</SelectLabel>
                                                 {llms.map((llm: LLMInfo) => {
                                                     const isDisabled = isLLMOptionDisabled(llm);
+                                                    const supportsLanguage = isLanguageSupported(llm.provider, language.code);
                                                     return (
                                                         <SelectItem
                                                             key={llm.id}
                                                             value={llm.id}
-                                                            disabled={isDisabled}
+                                                            disabled={isDisabled || !supportsLanguage}
                                                             className="pr-2 py-2"
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
@@ -502,12 +506,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
+                                                                    {supportsLanguage ? (
+                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                    ) : (
+                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
                                                                         {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
+                                                                    {!supportsLanguage && <span className="text-xs text-muted-foreground">(No {language.nativeName})</span>}
                                                                 </div>
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
@@ -542,11 +552,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 <SelectLabel>{provider}</SelectLabel>
                                                 {llms.map((llm: LLMInfo) => {
                                                     const isDisabled = isLLMOptionDisabled(llm);
+                                                    const supportsLanguage = isLanguageSupported(llm.provider, language.code);
                                                     return (
                                                         <SelectItem
                                                             key={llm.id}
                                                             value={llm.id}
-                                                            disabled={isDisabled}
+                                                            disabled={isDisabled || !supportsLanguage}
                                                             className="pr-2 py-2"
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
@@ -557,12 +568,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
                                                                         <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
                                                                     )}
+                                                                    {supportsLanguage ? (
+                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                    ) : (
+                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
                                                                         {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
                                                                     </span>
                                                                     {isDisabled && !isLoadingStatus && <span className="text-xs text-muted-foreground">(Key Missing)</span>}
+                                                                    {!supportsLanguage && <span className="text-xs text-muted-foreground">(No {language.nativeName})</span>}
                                                                 </div>
                                                                 {!isDisabled && llm.pricing.note ? (
                                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={llm.pricing.note}>
@@ -630,6 +647,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </a>.
                             </p>
                         )}
+                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                            <Check className="h-3 w-3 text-green-600 mr-1 flex-shrink-0"/>
+                            <X className="h-3 w-3 text-red-600 mr-1 flex-shrink-0"/>
+                            Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
+                        </p>
                     </div>
 
                     {/* TTS Configuration Section */}
