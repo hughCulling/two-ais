@@ -105,19 +105,28 @@ export const sw = {
         }
     },
     main: {
-        new_chat: "Gumzo jipya",
-        new_session: "Kipindi kipya",
-        no_sessions: "Hakuna vipindi bado.",
-        search_sessions: "Tafuta vipindi",
-        confirm_delete_session: "Una uhakika unataka kufuta kipindi hiki?",
-        session_deleted: "Kipindi kimefutwa",
-        session_setup: {
+        title: "Mazungumzo ya AI",
+        setupForm: {
             title: "Usanidi wa Kipindi",
+            agentA: "Ajenti A",
+            agentB: "Ajenti B",
+            model: "Mfumo",
+            selectModel: "Chagua muundo",
+            tts: {
+                title: "Matini-kwa-Hotuba",
+                enable: "Washa Matini-kwa-Hotuba",
+                provider: "Mtoa TTS",
+                selectProvider: "Chagua mtoa TTS",
+                voice: "Sauti",
+                selectVoice: "Chagua sauti",
+                model: "Mfumo wa TTS",
+                selectModel: "Chagua mfumo wa TTS",
+            },
+            startConversation: "Anza Mazungumzo",
+            conversationPrompt: "Anzisha mazungumzo.",
             select_ai_models: "Chagua Miundo ya AI",
             model_1: "Mfumo 1",
             model_2: "Mfumo 2",
-            start_session: "Anza Kipindi",
-            model_selection_placeholder: "Chagua muundo",
             system_prompt: "Kidokezo cha Mfumo (si lazima)",
             system_prompt_placeholder: "Bainisha tabia au muktadha wa AI",
             upload_documents: "Pakia Hati (si lazima)",
@@ -132,8 +141,10 @@ export const sw = {
             model_language_support_note_title: "Kumbuka kuhusu Usaidizi wa Lugha:",
             model_language_support_note_text: " Ikiwa muundo wa AI hauauni lugha uliyochagua, utatumia Kiingereza kwa chaguo-msingi kwa majibu yake. Hata hivyo, bado unaweza kuwasiliana nayo katika lugha uliyochagua. Alama (✓) inaonyesha usaidizi kamili wa lugha, huku alama (✕) ikionyesha usaidizi mdogo au hakuna, na kusababisha tabia chaguo-msingi ya Kiingereza."
         },
-        session: {
-            title: "Kipindi cha AI",
+        conversation: {
+            thinking: "inafikiria...",
+            stop: "Simamisha",
+            restart: "Anzisha Upya Mazungumzo",
             chat_with_model_1: "Piga gumzo na {modelName}",
             chat_with_model_2: "Piga gumzo na {modelName}",
             type_your_message: "Andika ujumbe wako...",
@@ -150,16 +161,12 @@ export const sw = {
             view_chat_layout: "Mpangilio wa gumzo wima",
             hide_chat_layout: "Mpangilio wa gumzo mlalo"
         },
-        "general.continue": "Endelea",
-        "general.finish": "Maliza",
-        "general.next": "Ifuatayo",
-        "general.previous": "Iliyotangulia",
-        "general.send": "Tuma",
-        "general.delete": "Futa",
-        "general.reset": "Weka upya",
-        "general.save": "Hifadhi",
-        "general.view_all": "Tazama yote",
-        "general.copied_to_clipboard": "Imenakiliwa kwenye ubao wa kunakili"
+        pricing: {
+            estimatedCost: "Gharama inayokadiriwa",
+            perMillionTokens: "kwa kila tokeni milioni",
+            input: "Ingizo",
+            output: "Pato",
+        }
     },
     auth: {
         sign_in_with_google: "Ingia na Google",

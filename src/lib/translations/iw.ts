@@ -105,19 +105,29 @@ export const iw = {
         }
     },
     main: {
-        new_chat: "צ\'אט חדש",
-        new_session: "סשן חדש",
-        no_sessions: "אין סשנים עדיין.",
-        search_sessions: "חפש סשנים",
-        confirm_delete_session: "האם אתה בטוח שברצונך למחוק את הסשן הזה?",
-        session_deleted: "הסשן נמחק",
-        session_setup: {
+        title: "שיחת AI",
+        setupForm: {
             title: "הגדרת סשן",
+            agentA: "סוכן א",
+            agentB: "סוכן ב",
+            model: "דגם",
+            selectModel: "בחר דגם",
+            tts: {
+                title: "טקסט לדיבור",
+                enable: "אפשר טקסט לדיבור",
+                provider: "ספק TTS",
+                selectProvider: "בחר ספק TTS",
+                voice: "קול",
+                selectVoice: "בחר קול",
+                model: "דגם TTS",
+                selectModel: "בחר דגם TTS",
+            },
+            startConversation: "התחל שיחה",
+            conversationPrompt: "התחל את השיחה.",
             select_ai_models: "בחר דגמי AI",
             model_1: "דגם 1",
             model_2: "דגם 2",
             start_session: "התחל סשן",
-            model_selection_placeholder: "בחר דגם",
             system_prompt: "הנחיית מערכת (אופציונלי)",
             system_prompt_placeholder: "הגדר את ההתנהגות או ההקשר של ה-AI",
             upload_documents: "העלה מסמכים (אופציונלי)",
@@ -130,10 +140,12 @@ export const iw = {
             model_supports_selected_language: "הדגם תומך בשפה הנבחרת.",
             model_does_not_support_selected_language: "הדגם אינו תומך בשפה הנבחרת. השיחות יתנהלו באנגלית.",
             model_language_support_note_title: "הערה על תמיכת שפות:",
-            model_language_support_note_text: " אם דגם AI אינו תומך בשפה הנבחרת שלך, הוא ישתמש באנגלית כברירת מחדל עבור התגובות שלו. עם זאת, אתה עדיין יכול לתקשר איתו בשפה שבחרת. הסמל (✓) מציין תמיכה מלאה בשפה, בעוד הסמל (✕) מציין תמיכה מוגבלת או לא קיימת, וכתוצאה מכך התנהגות ברירת מחדל לאנגלית."
+            model_language_support_note_text: " אם דגם AI אינו תומך בשפה הנבחרת שלך, הוא ישתמש באנגלית כברירת מחדל עבור התגובות שלו. עם זאת, אתה עדיין יכול לתקשר איתו בשפה שבחרת. הסמל (✓) מציין תמיכה מלאה בשפה, בעוד הסמל (✕) מציין תמיכה מוגבלת או לא קיימת, וכתוצאה מכך התנהגות ברירת מחדל לאנגלית.",
         },
-        session: {
-            title: "סשן AI",
+        conversation: {
+            thinking: "חושב...",
+            stop: "עצור",
+            restart: "התחל שיחה מחדש",
             chat_with_model_1: "צ\'אט עם {modelName}",
             chat_with_model_2: "צ\'אט עם {modelName}",
             type_your_message: "הקלד את ההודעה שלך...",
@@ -150,16 +162,12 @@ export const iw = {
             view_chat_layout: "פריסת צ\'אט אנכית",
             hide_chat_layout: "פריסת צ\'אט אופקית"
         },
-        "general.continue": "המשך",
-        "general.finish": "סיים",
-        "general.next": "הבא",
-        "general.previous": "הקודם",
-        "general.send": "שלח",
-        "general.delete": "מחק",
-        "general.reset": "אפס",
-        "general.save": "שמור",
-        "general.view_all": "הצג הכל",
-        "general.copied_to_clipboard": "הועתק ללוח"
+        pricing: {
+            estimatedCost: "עלות משוערת",
+            perMillionTokens: "למיליון טוקנים",
+            input: "קלט",
+            output: "פלט",
+        }
     },
     auth: {
         sign_in_with_google: "התחבר עם Google",
