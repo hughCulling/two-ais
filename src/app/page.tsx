@@ -37,6 +37,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils';
 // --- Import language support ---
 import { isLanguageSupported } from '@/lib/model-language-support';
+import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 
 // --- Define TTS Types (Locally) ---
 interface AgentTTSSettingsConfig {
@@ -93,58 +94,59 @@ const formatPrice = (price: number) => {
 };
 
 // Helper function to group models by category within a provider
-const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
+const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
+    const t = getTranslation(langCode) as TranslationKeys;
     const openAICategoryOrder = [
-        'Flagship chat models',
-        'Reasoning models',
-        'Cost-optimized models',
-        'Older GPT models',
+        t.modelCategory_FlagshipChat,
+        t.modelCategory_Reasoning,
+        t.modelCategory_CostOptimized,
+        t.modelCategory_OlderGPT,
     ];
     const googleCategoryOrder = [
-        'Gemini 2.5 Series',
-        'Gemini 2.0 Series',
-        'Gemini 1.5 Series',
+        t.modelCategory_Gemini2_5,
+        t.modelCategory_Gemini2_0,
+        t.modelCategory_Gemini1_5,
     ];
     const anthropicCategoryOrder = [
-        'Claude 3.7 Series',
-        'Claude 3.5 Series',
-        'Claude 3 Series',
+        t.modelCategory_Claude3_7,
+        t.modelCategory_Claude3_5,
+        t.modelCategory_Claude3,
     ];
     const xAICategoryOrder = [
-        'Grok 3 Series',
-        'Grok 3 Mini Series',
+        t.modelCategory_Grok3,
+        t.modelCategory_Grok3Mini,
     ];
     const togetherAICategoryOrder = [
-        'Llama 4 Series',
-        'Llama 3.3 Series',
-        'Llama 3.2 Series',
-        'Llama 3.1 Series',
-        'Llama 3 Series',
-        'Llama Vision Models',
-        'Meta Llama Models',
-        'Gemma 2 Series',
-        'Gemma Series',
-        'Google Gemma Models',
-        'DeepSeek R1 Series',
-        'DeepSeek V3 Series',
-        'DeepSeek R1 Distill Series',
-        'DeepSeek Models',
-        'Mistral AI Models', // Based on the immersive, will use this. User's latest paste had "Mistral AI Models"
-        'Qwen3 Series',
-        'Qwen QwQ Series',
-        'Qwen2.5 Series',
-        'Qwen2.5 Vision Series',
-        'Qwen2.5 Coder Series',
-        'Qwen2 Series',
-        'Qwen2 Vision Series',
-        'Qwen Models',
+        t.modelCategory_Llama4,
+        t.modelCategory_Llama3_3,
+        t.modelCategory_Llama3_2,
+        t.modelCategory_Llama3_1,
+        t.modelCategory_Llama3,
+        t.modelCategory_LlamaVision,
+        t.modelCategory_MetaLlama,
+        t.modelCategory_Gemma2,
+        t.modelCategory_Gemma,
+        t.modelCategory_GoogleGemma,
+        t.modelCategory_DeepSeekR1,
+        t.modelCategory_DeepSeekV3,
+        t.modelCategory_DeepSeekR1Distill,
+        t.modelCategory_DeepSeekModels,
+        t.modelCategory_MistralAIModels,
+        t.modelCategory_Qwen3,
+        t.modelCategory_QwQwQ,
+        t.modelCategory_Qwen2_5,
+        t.modelCategory_Qwen2_5Vision,
+        t.modelCategory_Qwen2_5Coder,
+        t.modelCategory_Qwen2,
+        t.modelCategory_Qwen2Vision,
+        t.modelCategory_QwenModels,
     ];
 
 
     const byCategory: Record<string, LLMInfo[]> = {};
 
     models.forEach(model => {
-        const category = model.category || 'Other Models';
+        const category = model.category || t.modelCategory_OtherModels;
         if (!byCategory[category]) {
             byCategory[category] = [];
         }
@@ -171,15 +173,15 @@ const groupModelsByCategory = (models: LLMInfo[]): { orderedCategories: string[]
 
     if (currentProviderOrder.length > 0) {
         const orderedKeysFromProviderList = currentProviderOrder.filter(cat => byCategory[cat]);
-        const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== 'Other Models').sort();
+        const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== t.modelCategory_OtherModels).sort();
         orderedCategories = [...orderedKeysFromProviderList, ...remainingKeys];
-        if (byCategory['Other Models'] && !orderedCategories.includes('Other Models')) {
-            orderedCategories.push('Other Models');
+        if (byCategory[t.modelCategory_OtherModels] && !orderedCategories.includes(t.modelCategory_OtherModels)) {
+            orderedCategories.push(t.modelCategory_OtherModels);
         }
     } else {
         orderedCategories.sort((a, b) => {
-            if (a === 'Other Models') return 1;
-            if (b === 'Other Models') return -1;
+            if (a === t.modelCategory_OtherModels) return 1;
+            if (b === t.modelCategory_OtherModels) return -1;
             return a.localeCompare(b);
         });
     }
@@ -205,6 +207,8 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
 }) => {
     const [isActuallyOverflowing, setIsActuallyOverflowing] = useState(false);
     const textRef = useRef<HTMLSpanElement>(null);
+    const { language } = useLanguage();
+    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
 
     useEffect(() => {
         const checkOverflow = () => {
@@ -235,7 +239,7 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
                 isActuallyOverflowing && "cursor-help"
             )}
         >
-            ({noteText})
+            {t.page_TruncatableNoteFormat.replace('{noteText}', noteText)}
         </span>
     );
 
@@ -270,6 +274,7 @@ export default function Page() {
     const { user, loading: authLoading } = useAuth();
     const { resolvedTheme } = useTheme();
     const { language } = useLanguage();
+    const t = getTranslation(language.code) as TranslationKeys;
 
     const [isStartingSession, setIsStartingSession] = useState(false);
     const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
@@ -323,7 +328,7 @@ export default function Page() {
                 })
                 .catch((err: FirestoreError) => {
                     logger.error("Error fetching user document:", err);
-                    setPageError(`Failed to load user data: ${err.message}. Please try refreshing.`);
+                    setPageError(t.page_ErrorLoadingUserData.replace("{errorMessage}", err.message));
                     setUserApiSecrets(null);
                 })
                 .finally(() => {
@@ -345,10 +350,10 @@ export default function Page() {
 
     const handleStartSession = async (config: SessionConfig) => {
         if (!user) {
-            setPageError("User not found. Please sign in again."); return;
+            setPageError(t.page_ErrorUserNotFound); return;
         }
         if (userApiSecrets === null) {
-            setPageError("User API key configuration could not be loaded. Please refresh or check settings."); return;
+            setPageError(t.page_ErrorUserApiKeyConfig); return;
         }
         logger.info("Attempting to start session via API with full config:", config);
         setIsStartingSession(true);
@@ -371,20 +376,20 @@ export default function Page() {
                 body: JSON.stringify(configWithLanguage),
             });
             if (!response.ok) {
-                let errorMsg = `API Error: ${response.status} ${response.statusText}`;
+                let errorMsg = t.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText);
                 try { const errorData = await response.json(); errorMsg = errorData.error || errorMsg; }
-                catch (parseError) { logger.warn("Could not parse error response JSON:", parseError); errorMsg = `API Error: ${response.status} ${response.statusText}`; }
+                catch (parseError) { logger.warn("Could not parse error response JSON:", parseError); errorMsg = t.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText); }
                 throw new Error(errorMsg);
             }
             const result: StartApiResponse = await response.json();
             logger.info("API Response received:", result);
-            if (!result.conversationId) { throw new Error("API response successful but did not include a conversationId."); }
+            if (!result.conversationId) { throw new Error(t.page_ErrorSessionIdMissing); }
             logger.info(`Session setup successful via API. Conversation ID: ${result.conversationId}`);
             setSessionConfig(configWithLanguage);
             setActiveConversationId(result.conversationId);
         } catch (error) {
             logger.error("Failed to start session:", error);
-            setPageError(`Error starting session: ${error instanceof Error ? error.message : String(error)}`);
+            setPageError(t.page_ErrorStartingSessionGeneric.replace("{errorMessage}", error instanceof Error ? error.message : String(error)));
             setSessionConfig(null);
             setActiveConversationId(null);
         } finally {
@@ -402,7 +407,7 @@ export default function Page() {
     if (authLoading || secretsLoading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-muted-foreground animate-pulse">Loading user data...</p>
+                <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
             </main>
         );
     }
@@ -412,7 +417,7 @@ export default function Page() {
             {pageError && (
                  <Alert variant="destructive" className="mb-6 max-w-3xl w-full flex-shrink-0">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
+                  <AlertTitle>{t.page_ErrorAlertTitle}</AlertTitle>
                   <AlertDescription>{pageError}</AlertDescription>
                 </Alert>
             )}
@@ -432,17 +437,16 @@ export default function Page() {
                 ) : (
                     <TooltipProvider delayDuration={100}>
                         <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
-                             <h1 className="text-2xl font-bold">Welcome to Two AIs</h1>
-                             <p className="text-muted-foreground">This website lets you listen to conversations between two LLMs.</p>
+                             <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
+                             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
                              <Alert variant="default" className="text-left border-theme-primary/50">
                                 <KeyRound className="h-4 w-4 text-theme-primary" />
-                                <AlertTitle className="font-semibold">API Keys Required</AlertTitle>
+                                <AlertTitle className="font-semibold">{t.page_ApiKeysRequiredTitle}</AlertTitle>
                                 <AlertDescription>
-                                    To run conversations, you&apos;ll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in.
-                                    {' '}Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.
+                                    {t.page_ApiKeysRequiredDescription}
                                 </AlertDescription>
                              </Alert>
-                             <p className="text-muted-foreground pt-2">To start your own session, you can sign in or create an account using the link in the header.</p>
+                             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
                         </div>
 
                         <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
@@ -450,7 +454,7 @@ export default function Page() {
                                 className="w-full h-full"
                                 key={currentVideoUrl}
                                 src={currentVideoUrl}
-                                title="Two AIs Conversation Demo"
+                                title={t.page_VideoTitle}
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerPolicy="strict-origin-when-cross-origin"
@@ -462,12 +466,12 @@ export default function Page() {
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-center text-xl">
                                     <BrainCircuit className="mr-2 h-5 w-5" />
-                                    Currently Available LLMs
+                                    {t.page_AvailableLLMsTitle}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {Object.entries(groupedLLMsByProvider).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
-                                    const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels);
+                                    const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, language.code);
                                     const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                                     const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                                     let lastDisplayedBrand: string | null = null;
@@ -512,16 +516,16 @@ export default function Page() {
                                                                                 <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
                                                                                     <p className="text-xs">
                                                                                         {llm.provider === 'Google'
-                                                                                            ? "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                            ? t.page_TooltipGoogleThinkingBudget
                                                                                             : llm.provider === 'Anthropic'
-                                                                                                ? "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but is not visible in the chat."
+                                                                                                ? t.page_TooltipAnthropicExtendedThinking
                                                                                                 : llm.provider === 'xAI'
-                                                                                                    ? "This xAI model uses 'thinking'. This output is billed but is not visible in the chat."
+                                                                                                    ? t.page_TooltipXaiThinking
                                                                                                     : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen'))
-                                                                                                        ? "This Qwen model uses 'reasoning/thinking'. This output is billed but is not visible in the chat."
+                                                                                                        ? t.page_TooltipQwenReasoning
                                                                                                         : (llm.provider === 'TogetherAI' && llm.category?.includes('DeepSeek'))
-                                                                                                            ? "This DeepSeek model uses 'reasoning/thinking'. Output is billed but is not visible in the chat."
-                                                                                                            : 'This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.'
+                                                                                                            ? t.page_TooltipDeepSeekReasoning
+                                                                                                            : t.page_TooltipGenericReasoning
                                                                                         }
                                                                                     </p>
                                                                                 </TooltipContent>
@@ -534,7 +538,7 @@ export default function Page() {
                                                                                 </TooltipTrigger>
                                                                                 <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
                                                                                     <p className="text-xs">
-                                                                                        Requires verified OpenAI organization. You can
+                                                                                        {t.page_TooltipRequiresVerification.split("verify here")[0]}
                                                                                         <a
                                                                                             href="https://platform.openai.com/settings/organization/general"
                                                                                             target="_blank"
@@ -543,7 +547,7 @@ export default function Page() {
                                                                                         >
                                                                                             verify here
                                                                                         </a>
-                                                                                        .
+                                                                                        {t.page_TooltipRequiresVerification.split("verify here")[1]}
                                                                                     </p>
                                                                 </TooltipContent>
                                                             </Tooltip>
@@ -556,7 +560,7 @@ export default function Page() {
                                                                                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
                                                                                 </TooltipTrigger>
                                                                                 <TooltipContent side="top">
-                                                                                    <p className="text-xs">Supports {language.nativeName}</p>
+                                                                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         ) : (
@@ -565,13 +569,13 @@ export default function Page() {
                                                                                     <X className="h-3 w-3 text-red-600 flex-shrink-0" />
                                                                                 </TooltipTrigger>
                                                                                 <TooltipContent side="top">
-                                                                                    <p className="text-xs">May not support {language.nativeName}</p>
+                                                                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         )}
-                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">Preview</Badge>}
-                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">Experimental</Badge>}
-                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">Beta</Badge>}
+                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
+                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
+                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
 
                                                                         {llm.pricing.note ? (
                                                                             <TruncatableNote noteText={llm.pricing.note} />
@@ -597,7 +601,7 @@ export default function Page() {
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-center text-xl">
                                     <Volume2 className="mr-2 h-5 w-5" />
-                                    Currently Available TTS
+                                    {t.page_AvailableTTSTitle}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -626,7 +630,7 @@ export default function Page() {
                                         );
                                     })
                                 ) : (
-                                    <p className="text-center text-muted-foreground text-sm">No TTS options currently available.</p>
+                                    <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
                                 )}
                             </CardContent>
                         </Card>

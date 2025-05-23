@@ -3,6 +3,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { httpsCallable, FunctionsError } from 'firebase/functions';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { getTranslation, TranslationKeys } from '@/lib/translations';
 // Import firebase instances - assume these are stable references
 import { app, auth as firebaseAuth, db, functions as initializedFunctions } from '@/lib/firebase/clientApp';
 import { Input } from "@/components/ui/input";
@@ -17,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import Icons ---
-import { Terminal, CheckCircle, Info, ExternalLink } from "lucide-react"; // Added ExternalLink
+import { Terminal, CheckCircle, Info, ExternalLink, AlertTriangle } from "lucide-react"; // Added ExternalLink and AlertTriangle
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
@@ -94,8 +96,37 @@ const initialApiKeys: ApiKeyInput[] = [
 
 const ApiKeyManager: React.FC = () => {
     const { user, loading: authLoading } = useAuth();
+    const { language } = useLanguage();
+    const t = getTranslation(language.code) as TranslationKeys;
 
-    const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(initialApiKeys);
+    const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(() =>
+        initialApiKeys.map(key => {
+            let translatedLabel = key.label;
+            let translatedTooltip = key.tooltip;
+
+            if (key.id === 'openai') {
+                // Example: label will be dynamically set based on savedKeyStatus later
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for OpenAI (platform.openai.com/api-keys)';
+            }
+            if (key.id === 'google_ai') {
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Google Cloud (console.cloud.google.com/apis/library)';
+            }
+            if (key.id === 'elevenlabs') {
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Eleven Labs (elevenlabs.io)';
+            }
+            if (key.id === 'anthropic') {
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Anthropic (console.anthropic.com/settings/keys)';
+            }
+            if (key.id === 'xai') {
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for XAI Grok (console.x.ai)';
+            }
+            if (key.id === 'together_ai') {
+                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for TogetherAI (api.together.ai/settings/api-keys)';
+            }
+            return { ...key, label: translatedLabel, tooltip: translatedTooltip }; // Label will be updated in the render based on saved status
+        })
+    );
+
     const [statusMessages, setStatusMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
     const [isSaving, setIsSaving] = useState(false);
     const [generalError, setGeneralError] = useState<string | null>(null);
@@ -123,7 +154,7 @@ const ApiKeyManager: React.FC = () => {
                     setSavedKeyStatus(status);
                 } catch (error) {
                     console.error("Error fetching user document for key status:", error);
-                    setGeneralError("Could not load saved key status. Please try refreshing.");
+                    setGeneralError(t.page_ErrorLoadingUserData.replace('{errorMessage}', error instanceof Error ? error.message : String(error)));
                     const resetStatus: Record<string, boolean> = {};
                     initialApiKeys.forEach(key => { resetStatus[key.id] = false; });
                     setSavedKeyStatus(resetStatus);
@@ -138,7 +169,7 @@ const ApiKeyManager: React.FC = () => {
             }
         };
         fetchKeyStatus();
-    }, [user, authLoading]);
+    }, [user, authLoading, t]);
 
     const handleInputChange = (id: string, value: string) => {
         setApiKeys(prevKeys =>
@@ -154,7 +185,7 @@ const ApiKeyManager: React.FC = () => {
 
     const saveKeys = useCallback(async () => {
          if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app || !initializedFunctions) {
-             setGeneralError("Authentication issue or Firebase services not ready. Please ensure you are logged in.");
+             setGeneralError(t.auth.errors.generic);
              return;
         }
         setIsSaving(true);
@@ -164,7 +195,7 @@ const ApiKeyManager: React.FC = () => {
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
         if (keysToSave.length === 0) {
-            setGeneralError("No new API keys entered to save.");
+            setGeneralError(t.settings.apiKeys.noNewKeys);
             setIsSaving(false);
             return;
         }
@@ -172,7 +203,7 @@ const ApiKeyManager: React.FC = () => {
             await user.getIdToken(true);
         } catch (tokenError) {
             console.error("Error refreshing ID token:", tokenError);
-            setGeneralError("Failed to refresh authentication token. Please try logging out and back in.");
+            setGeneralError(t.auth.errors.generic + " (Token refresh failed)");
             setIsSaving(false);
             return;
         }
@@ -191,17 +222,17 @@ const ApiKeyManager: React.FC = () => {
                     newlySavedKeys[service] = true;
                     setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
                 } else if (typeof data === 'object' && data !== null && 'error' in data) {
-                    const errorMsg = (data as SaveApiKeyErrorResponse)?.error || 'Unknown error structure received.';
-                    currentStatusMessages[service] = { type: 'error', message: `Error: ${errorMsg}` };
+                    const errorMsg = (data as SaveApiKeyErrorResponse)?.error || t.common.error;
+                    currentStatusMessages[service] = { type: 'error', message: `${t.common.error}: ${errorMsg}` };
                 } else {
-                     currentStatusMessages[service] = { type: 'error', message: "Received an unexpected response from the server." };
+                     currentStatusMessages[service] = { type: 'error', message: t.settings.apiKeys.unexpectedResponse };
                 }
             } catch (error) {
-                let errorMessage = `Failed to save ${service} key.`;
+                let errorMessage = t.settings.apiKeys.failedToSaveKey.replace('{serviceName}', service);
                  if (error instanceof FunctionsError) {
-                      errorMessage = `Function Error: ${error.message} (Code: ${error.code})`;
+                      errorMessage = `${t.common.error}: ${error.message} (Code: ${error.code})`;
                  } else if (error instanceof Error) {
-                     errorMessage = `Error: ${error.message}`;
+                     errorMessage = `${t.common.error}: ${error.message}`;
                  }
                 currentStatusMessages[service] = { type: 'error', message: errorMessage };
             }
@@ -214,15 +245,15 @@ const ApiKeyManager: React.FC = () => {
 
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
         if (hasErrors && !generalError) {
-            setGeneralError("Some API keys could not be saved. Please check the details below.");
+            setGeneralError(t.settings.apiKeys.someKeysNotSaved);
         } else if (!hasErrors && !generalError) {
             setGeneralError(null);
         }
-    }, [apiKeys, user, authLoading, generalError]);
+    }, [apiKeys, user, authLoading, generalError, t]);
 
 
     if (isLoadingStatus && !authLoading) {
-         return <p className="text-center text-sm text-muted-foreground p-4">Loading key status...</p>;
+         return <p className="text-center text-sm text-muted-foreground p-4">{t.common.loading} {t.settings.apiKeys.keyStatus}</p>;
     }
 
     return (
@@ -231,21 +262,28 @@ const ApiKeyManager: React.FC = () => {
                 {generalError && (
                     <Alert variant="destructive">
                         <Terminal className="h-4 w-4" />
-                        <AlertTitle>Error</AlertTitle>
+                        <AlertTitle>{t.common.error}</AlertTitle>
                         <AlertDescription>{generalError}</AlertDescription>
                     </Alert>
                 )}
 
                 <div className="space-y-4">
-                    {initialApiKeys.map(({ id, label, tooltip, learnMoreLink }) => {
+                    {apiKeys.map(({ id, label: initialLabel, tooltip, learnMoreLink }) => {
                         const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
                         const isSaved = savedKeyStatus[id] === true;
                         const showSavedPlaceholder = isSaved && currentKeyValue === '';
+                        
+                        // Dynamically set the label text here based on translation and saved status
+                        let displayLabel = isSaved ? t.settings.apiKeys.updateKey : t.settings.apiKeys.setKey;
+                        // Append service name to the label (e.g., "Update OpenAI Key", "Set Google Cloud Key")
+                        // This assumes initialApiKeys has the original English names for appending.
+                        const serviceName = initialApiKeys.find(k => k.id === id)?.label.replace(' API Key', '') || id;
+                        displayLabel += ` ${serviceName}`;
 
                         return (
                             <div key={id} className="space-y-2 pb-2">
                                 <div className="flex items-center space-x-1.5">
-                                    <Label htmlFor={id}>{label}</Label>
+                                    <Label htmlFor={id}>{displayLabel}</Label>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Info className="h-4 w-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
@@ -272,7 +310,7 @@ const ApiKeyManager: React.FC = () => {
                                         type="password"
                                         value={currentKeyValue}
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
-                                        placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${label}`}
+                                        placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${initialLabel}`}
                                         disabled={isSaving || authLoading || isLoadingStatus}
                                         className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
                                     />

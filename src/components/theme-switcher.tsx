@@ -4,6 +4,8 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/context/LanguageContext";
+import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from "@/lib/translations";
 
 // Assuming you might use shadcn/ui components, otherwise adapt UI as needed
 import { Button } from "@/components/ui/button"; // Adjust path if needed
@@ -20,6 +22,8 @@ import {
 export function ThemeSwitcher() {
     // useTheme hook from next-themes
     const { setTheme } = useTheme();
+    const { language } = useLanguage();
+    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
 
     return (
     <DropdownMenu>
@@ -34,13 +38,13 @@ export function ThemeSwitcher() {
         <DropdownMenuContent align="end">
         {/* Menu items to set the theme */}
         <DropdownMenuItem onClick={() => setTheme("light")}>
-            Light
+            {t.settings.appearance.light}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-            Dark
+            {t.settings.appearance.dark}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-            System
+            {t.settings.appearance.system}
         </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>

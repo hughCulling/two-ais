@@ -4,8 +4,13 @@
 'use client'; // ApiKeyManager uses client hooks
 
 import ApiKeyManager from '@/components/settings/ApiKeyManager'; // Adjust path if needed
+import { useLanguage } from '@/context/LanguageContext'; // Added
+import { getTranslation, TranslationKeys } from '@/lib/translations'; // Added
 
 export default function ApiKeysPage() {
+    const { language } = useLanguage(); // Added
+    const t = getTranslation(language.code) as TranslationKeys; // Added
+
     // No useAuth, useEffect, loading, or redirect logic needed here.
     // The SettingsLayout ensures the user is authenticated before rendering this page.
     return (
@@ -14,10 +19,10 @@ export default function ApiKeysPage() {
              <div className="space-y-1.5">
                  {/* Page title */}
                  <h1 className="text-2xl font-semibold leading-none tracking-tight">
-                    API Keys
+                    {t.settings.apiKeys.title}
                  </h1>
                  <p className="text-sm text-muted-foreground">
-                    Manage your external service API keys here. Securely stored.
+                    {t.settings.apiKeys.description}
                  </p>
              </div>
 

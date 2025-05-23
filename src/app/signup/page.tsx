@@ -8,10 +8,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import SignUpForm from '@/components/auth/SignUpForm';
+import { useLanguage } from '@/context/LanguageContext';
+import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 
 export default function SignupPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
+    const { language } = useLanguage();
+    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
 
     // Redirect if user is already logged in
     useEffect(() => {
@@ -25,7 +29,7 @@ export default function SignupPage() {
     if (loading) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+                <p className="text-gray-500 dark:text-gray-400">{t.common.loading}</p>
             </main>
         );
     }
@@ -41,13 +45,13 @@ export default function SignupPage() {
             <div className="w-full max-w-md space-y-6">
                 <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md space-y-6">
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
-                        Create Account
+                        {t.auth.signup.title}
                     </h1>
                     <SignUpForm />
                      <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                        Already have an account?{' '}
+                        {t.auth.signup.hasAccount}{' '}
                         <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                            Sign In
+                            {t.auth.signup.signIn}
                         </Link>
                     </p>
                 </div>
