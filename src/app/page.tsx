@@ -295,8 +295,6 @@ export default function Page() {
             return initialOpenState;
         }
     );
-    const [isLoadingStatus, setIsLoadingStatus] = useState(true);
-    const [userHasApiKeys, setUserHasApiKeys] = useState(false);
 
     const toggleCollapsible = (id: string) => {
         setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
@@ -304,43 +302,44 @@ export default function Page() {
 
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            if (user) {
-                setIsLoadingStatus(true);
-                setPageError(null);
-                try {
-                    const userDocRef = doc(db, 'users', user.uid);
-                    const userDocSnap = await getDoc(userDocRef);
-                    if (userDocSnap.exists()) {
-                        const userData = userDocSnap.data() as UserData;
-                        const versions = userData?.apiSecretVersions || {};
-                        const hasKeys = Object.values(versions).some(version => typeof version === 'string' && version.length > 0);
-                        setUserHasApiKeys(hasKeys);
+        if (!user) {
+            setUserApiSecrets(null);
+            setSessionConfig(null);
+            setActiveConversationId(null);
+            setSecretsLoading(false);
+            setPageError(null);
+            return;
+        }
+        if (user && userApiSecrets === null) {
+            setSecretsLoading(true);
+            setPageError(null);
+            const userDocRef = doc(db, "users", user.uid);
+            logger.info("Fetching user data for API secrets...");
+            getDoc(userDocRef)
+                .then((docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data() as UserData;
+                        setUserApiSecrets(data.apiSecretVersions || {});
+                        logger.info("User API secret versions loaded.");
                     } else {
-                        logger.warn("User document not found for UID:", user.uid);
-                        setUserHasApiKeys(false); 
+                        logger.warn(`User document not found for user ${user.uid}. Assuming no API keys saved yet.`);
+                        setUserApiSecrets({});
                     }
-                } catch (error) {
-                    logger.error("Error fetching user data:", error);
-                    if (error instanceof FirestoreError && error.code === 'unavailable') {
-                        setPageError(t.page_ErrorLoadingUserData.replace('{errorMessage}', "Network error or Firestore unavailable. Please check your connection."));
-                    } else if (error instanceof Error) {
-                        setPageError(t.page_ErrorLoadingUserData.replace('{errorMessage}', error.message));
-                    } else {
-                        setPageError(t.page_ErrorLoadingUserData.replace('{errorMessage}', String(error)));
-                    }
-                    setUserHasApiKeys(false);
-                } finally {
+                })
+                .catch((err: FirestoreError) => {
+                    logger.error("Error fetching user document:", err);
+                    setPageError(t.page_ErrorLoadingUserData.replace("{errorMessage}", err.message));
+                    setUserApiSecrets(null);
+                })
+                .finally(() => {
                     setSecretsLoading(false);
-                }
-            } else if (!authLoading) {
-                setUserHasApiKeys(false);
+                });
+        } else if (user && userApiSecrets !== null) {
+             if (secretsLoading) {
                 setSecretsLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, [user, authLoading, t, t.page_ErrorLoadingUserData]);
+             }
+        }
+    }, [user, userApiSecrets, secretsLoading]);
 
     useEffect(() => {
         if (resolvedTheme) {

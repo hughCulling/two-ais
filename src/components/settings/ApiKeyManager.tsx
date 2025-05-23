@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import Icons ---
-import { Terminal, CheckCircle, Info, ExternalLink } from "lucide-react"; // Added ExternalLink
+import { Terminal, CheckCircle, Info, ExternalLink, AlertTriangle } from "lucide-react"; // Added ExternalLink and AlertTriangle
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
@@ -101,6 +101,7 @@ const ApiKeyManager: React.FC = () => {
 
     const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(() =>
         initialApiKeys.map(key => {
+            let translatedLabel = key.label;
             let translatedTooltip = key.tooltip;
 
             if (key.id === 'openai') {
@@ -122,7 +123,7 @@ const ApiKeyManager: React.FC = () => {
             if (key.id === 'together_ai') {
                 translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for TogetherAI (api.together.ai/settings/api-keys)';
             }
-            return { ...key, tooltip: translatedTooltip }; // Label will be updated in the render based on saved status
+            return { ...key, label: translatedLabel, tooltip: translatedTooltip }; // Label will be updated in the render based on saved status
         })
     );
 
