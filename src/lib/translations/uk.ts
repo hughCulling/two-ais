@@ -111,69 +111,46 @@ export const uk = {
         }
     },
 
-    // Main page (Dashboard, Session Setup, Session)
+    // Main page
     main: {
-        // Dashboard
-        new_chat: "Новий чат",
-        new_session: "Нова сесія",
-        no_sessions: "Сесій ще немає.",
-        search_sessions: "Пошук сесій",
-        confirm_delete_session: "Ви впевнені, що хочете видалити цю сесію?",
-        session_deleted: "Сесію видалено",
-
-        // Session Setup
-        session_setup: {
-            title: "Налаштування сесії",
-            select_ai_models: "Виберіть моделі ШІ",
-            model_1: "Модель 1",
-            model_2: "Модель 2",
-            start_session: "Почати сесію",
-            model_selection_placeholder: "Виберіть модель",
-            system_prompt: "Системна підказка (необовʼязково)",
-            system_prompt_placeholder: "Визначте поведінку або контекст ШІ",
-            upload_documents: "Завантажити документи (необовʼязково)",
-            upload_instructions: "Перетягніть файли сюди або натисніть, щоб вибрати файли (до 5 МБ кожен).",
-            supported_file_types: "Підтримувані типи файлів: PDF, DOCX, TXT, MD",
-            file_too_large: "Файл завеликий. Максимальний розмір – 5 МБ.",
-            invalid_file_type: "Недійсний тип файлу.",
-            file_upload_error: "Помилка завантаження файлу.",
-            remove_file: "Видалити файл",
-            model_supports_selected_language: "Модель підтримує вибрану мову.",
-            model_does_not_support_selected_language: "Модель не підтримує вибрану мову. Розмови вестимуться англійською.",
-            model_language_support_note_title: "Примітка щодо підтримки мов:",
-            model_language_support_note_text: " Якщо модель ШІ не підтримує вибрану вами мову, вона за замовчуванням використовуватиме англійську для своїх відповідей. Однак ви все одно можете спілкуватися з нею вибраною мовою. Символ (✓) означає повну підтримку мови, тоді як символ (✕) означає обмежену або відсутню підтримку, що призводить до поведінки за замовчуванням англійською."
+        title: "Розмова зі ШІ", // Corresponds to 'AI Conversation'
+        setupForm: {
+            title: "Налаштуйте свою розмову", // Corresponds to 'Set up your conversation'
+            agentA: "Агент А", // Corresponds to 'Agent A'
+            agentB: "Агент Б", // Corresponds to 'Agent B'
+            model: "Модель", // Corresponds to 'Model'
+            selectModel: "Виберіть модель", // Corresponds to 'Select a model'
+            tts: {
+                title: "Текст-в-мовлення", // Corresponds to 'Text-to-Speech'
+                enable: "Увімкнути Текст-в-мовлення", // Corresponds to 'Enable Text-to-Speech'
+                provider: "Постачальник TTS", // Corresponds to 'TTS Provider'
+                selectProvider: "Виберіть постачальника TTS", // Corresponds to 'Select TTS provider'
+                voice: "Голос", // Corresponds to 'Voice'
+                selectVoice: "Виберіть голос", // Corresponds to 'Select voice'
+                model: "Модель TTS", // Corresponds to 'TTS Model'
+                selectModel: "Виберіть модель TTS", // Corresponds to 'Select TTS model'
+            },
+            startConversation: "Почати розмову", // Corresponds to 'Start Conversation'
+            conversationPrompt: "Почніть розмову.", // Corresponds to 'Start the conversation.'
         },
-
-        // Session
-        session: {
-            title: "Сесія ШІ",
-            chat_with_model_1: "Чат з {modelName}",
-            chat_with_model_2: "Чат з {modelName}",
-            type_your_message: "Введіть ваше повідомлення...",
-            stop_generating: "Зупинити генерацію",
-            clear_chat: "Очистити чат",
-            confirm_clear_chat: "Ви впевнені, що хочете очистити цей чат?",
-            chat_cleared: "Чат очищено",
-            ai_is_typing: "ШІ друкує...",
-            error_generating_response: "Помилка генерації відповіді.",
-            new_session: "Нова сесія", // Duplicates dashboard.new_session - consider removing one
-            view_settings: "Переглянути налаштування",
-            share_session: "Поділитися сесією",
-            session_id_copied: "ID сесії скопійовано!",
-            view_chat_layout: "Вертикальне розташування чату",
-            hide_chat_layout: "Горизонтальне розташування чату"
+        conversation: {
+            thinking: "думає...", // Corresponds to 'thinking...'
+            stop: "Зупинити", // Corresponds to 'Stop'
+            restart: "Перезапустити розмову", // Corresponds to 'Restart Conversation'
         },
-        // General for main pages if not fitting elsewhere
-        "general.continue": "Продовжити",
-        "general.finish": "Завершити",
-        "general.next": "Далі",
-        "general.previous": "Назад",
-        "general.send": "Надіслати",
-        "general.delete": "Видалити",
-        "general.reset": "Скинути",
-        "general.save": "Зберегти",
-        "general.view_all": "Переглянути все",
-        "general.copied_to_clipboard": "Скопійовано в буфер обміну"
+        pricing: {
+            estimatedCost: "Орієнтовна вартість", // Corresponds to 'Estimated cost'
+            perMillionTokens: "за мільйон токенів", // Corresponds to 'per million tokens'
+            input: "Вхід", // Corresponds to 'Input'
+            output: "Вихід", // Corresponds to 'Output'
+        }
+        // The following keys from the old uk.ts 'main' object are intentionally removed 
+        // to align with en.ts structure:
+        // new_chat, new_session, no_sessions, search_sessions, confirm_delete_session, 
+        // session_deleted, session_setup (object), session (object), 
+        // "general.continue", "general.finish", "general.next", "general.previous", 
+        // "general.send", "general.delete", "general.reset", "general.view_all", 
+        // "general.copied_to_clipboard"
     },
     
     // Auth pages
