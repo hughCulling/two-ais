@@ -77,9 +77,9 @@ export const el = {
             saved: 'Αποθηκεύτηκε',
             notSet: 'Δεν έχει οριστεί',
             setKey: 'Ορισμός κλειδιού',
-            updateKey: 'Ενημέρωση κλειδιού',
+            updateKey: 'Αλλαγή κλειδιού',
             removeKey: 'Κατάργηση κλειδιού',
-            getKeyInstructions: 'Αποκτήστε το κλειδί API σας',
+            getKeyInstructions: 'Get your API key',
             // --- New keys for ApiKeyManager.tsx ---
             noNewKeys: "Δεν έχουν εισαχθεί νέα κλειδιά API για αποθήκευση.",
             unexpectedResponse: "Ελήφθη μη αναμενόμενη απάντηση από τον διακομιστή.",

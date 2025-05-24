@@ -70,21 +70,6 @@ export const fi = {
             description: 'Valitse haluamasi kieli käyttöliittymälle',
             conversationLanguage: 'Keskustelukieli',
             conversationLanguageDescription: 'Tekoälykeskusteluissa käytetty kieli vastaa käyttöliittymän kieltä',
-            getKeyInstructions: 'Hanki API-avaimesi',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Uusia API-avaimia ei ole syötetty tallennettavaksi.",
-            unexpectedResponse: "Palvelimelta saatiin odottamaton vastaus.",
-            failedToSaveKey: "Avaimen {serviceName} tallentaminen epäonnistui.",
-            someKeysNotSaved: "Joitakin API-avaimia ei voitu tallentaa. Tarkista alla olevat tiedot.",
-            keyStatus: "avaimen tila...",
-            apiKeySecurelySaved: "API-avain tallennettu turvallisesti",
-            confirmRemoveTitle: "Vahvista poisto",
-            confirmRemoveDescription: "Haluatko varmasti poistaa API-avaimen palvelulle {serviceName}? Toimintoa ei voi kumota.",
-            failedToRemoveKey: "Avaimen {serviceName} poistaminen epäonnistui.",
-            successfullyRemovedKey: "Avain {serviceName} poistettu onnistuneesti.",
-            keyNotSet: "Avaimen tila: Ei asetettu",
-            keySet: "Avaimen tila: Asetettu",
-            saveButton: "Tallenna API-avain/avaimet"
         },
         apiKeys: {
             title: 'API-avaimet',
@@ -94,6 +79,21 @@ export const fi = {
             setKey: 'Aseta avain',
             updateKey: 'Päivitä avain',
             removeKey: 'Poista avain',
+            getKeyInstructions: 'Hanki API-avaimesi', // TODO: Translate
+            // --- New keys for ApiKeyManager.tsx ---
+            noNewKeys: "Uusia API-avaimia ei ole syötetty tallennettavaksi.", // TODO: Translate
+            unexpectedResponse: "Palvelimelta saatiin odottamaton vastaus.", // TODO: Translate
+            failedToSaveKey: "Avaimen {serviceName} tallentaminen epäonnistui.", // TODO: Translate
+            someKeysNotSaved: "Joitakin API-avaimia ei voitu tallentaa. Tarkista alla olevat tiedot.", // TODO: Translate
+            keyStatus: "avaimen tila...", // TODO: Translate
+            apiKeySecurelySaved: "API-avain tallennettu turvallisesti", // TODO: Translate
+            confirmRemoveTitle: "Vahvista poisto", // TODO: Translate
+            confirmRemoveDescription: "Haluatko varmasti poistaa API-avaimen palvelulle {serviceName}? Toimintoa ei voi kumota.", // TODO: Translate
+            failedToRemoveKey: "Avaimen {serviceName} poistaminen epäonnistui.", // TODO: Translate
+            successfullyRemovedKey: "Avain {serviceName} poistettu onnistuneesti.", // TODO: Translate
+            keyNotSet: "Avaimen tila: Ei asetettu", // TODO: Translate
+            keySet: "Avaimen tila: Asetettu", // TODO: Translate
+            saveButton: "Tallenna API-avain/avaimet" // TODO: Translate
         },
     },
 

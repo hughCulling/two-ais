@@ -63,6 +63,7 @@ export const sr = {
             light: 'Светла',
             dark: 'Тамна',
             system: 'Систем',
+            description: "Prilagodite izgled i osećaj aplikacije."
         },
         language: {
             title: 'Језик',
@@ -141,6 +142,7 @@ export const sr = {
             noAccount: "Немате налог?",
             signUp: 'Региструјте се',
             forgotPassword: 'Заборављена лозинка?',
+            orContinueWith: "Или наставите са",
             signingIn: "Пријављивање..."
         },
         signup: {

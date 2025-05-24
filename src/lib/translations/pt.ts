@@ -70,7 +70,6 @@ export const pt = {
             description: 'Escolha seu idioma preferido para a interface',
             conversationLanguage: 'Idioma da conversa',
             conversationLanguageDescription: 'O idioma usado para conversas de IA corresponderá ao idioma da sua interface',
-            getKeyInstructions: 'Obtenha sua chave de API',
         },
         apiKeys: {
             title: 'Chaves API',
@@ -80,20 +79,21 @@ export const pt = {
             setKey: 'Definir chave',
             updateKey: 'Atualizar chave',
             removeKey: 'Remover chave',
+            getKeyInstructions: 'TRANSLATE: Get your API key',
             // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Nenhuma nova chave de API inserida para salvar.",
-            unexpectedResponse: "Recebida uma resposta inesperada do servidor.",
-            failedToSaveKey: "Falha ao salvar a chave {serviceName}.",
-            someKeysNotSaved: "Algumas chaves de API não puderam ser salvas. Verifique os detalhes abaixo.",
-            keyStatus: "status da chave...",
-            apiKeySecurelySaved: "Chave de API salva com segurança",
-            confirmRemoveTitle: "Confirmar remoção",
-            confirmRemoveDescription: "Tem certeza de que deseja remover a chave de API para {serviceName}? Esta ação não pode ser desfeita.",
-            failedToRemoveKey: "Falha ao remover a chave {serviceName}.",
-            successfullyRemovedKey: "Chave {serviceName} removida com sucesso.",
-            keyNotSet: "Status da chave: não definida",
-            keySet: "Status da chave: definida",
-            saveButton: "Salvar chave(s) de API"
+            noNewKeys: "TRANSLATE: No new API keys entered to save.",
+            unexpectedResponse: "TRANSLATE: Received an unexpected response from the server.",
+            failedToSaveKey: "TRANSLATE: Failed to save {serviceName} key.",
+            someKeysNotSaved: "TRANSLATE: Some API keys could not be saved. Please check the details below.",
+            keyStatus: "TRANSLATE: key status...",
+            apiKeySecurelySaved: "TRANSLATE: API Key saved securely",
+            confirmRemoveTitle: "TRANSLATE: Confirm removal",
+            confirmRemoveDescription: "TRANSLATE: Are you sure you want to remove the API key for {serviceName}? This action cannot be undone.",
+            failedToRemoveKey: "TRANSLATE: Failed to remove {serviceName} key.",
+            successfullyRemovedKey: "TRANSLATE: Successfully removed {serviceName} key.",
+            keyNotSet: "TRANSLATE: Key Status: not defined",
+            keySet: "TRANSLATE: Key Status: defined",
+            saveButton: "TRANSLATE: Save API Key(s)"
         },
     },
 
@@ -143,6 +143,7 @@ export const pt = {
             noAccount: 'Não tem uma conta?',
             signUp: 'Cadastre-se',
             forgotPassword: 'Esqueceu a senha?',
+            orContinueWith: "Ou continue com",
             signingIn: "Entrando..."
         },
         signup: {

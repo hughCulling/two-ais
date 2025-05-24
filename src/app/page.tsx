@@ -339,7 +339,7 @@ export default function Page() {
                 setSecretsLoading(false);
              }
         }
-    }, [user, userApiSecrets, secretsLoading]);
+    }, [user, userApiSecrets, secretsLoading, t.page_ErrorLoadingUserData]);
 
     useEffect(() => {
         if (resolvedTheme) {

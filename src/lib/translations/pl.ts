@@ -94,6 +94,20 @@ export const pl = {
             setKey: 'Ustaw klucz',
             updateKey: 'Zaktualizuj klucz',
             removeKey: 'Usuń klucz',
+            getKeyInstructions: "Get your API key",
+            noNewKeys: "No new API keys entered to save.",
+            unexpectedResponse: "Received an unexpected response from the server.",
+            failedToSaveKey: "Failed to save {serviceName} key.",
+            someKeysNotSaved: "Some API keys could not be saved. Please check the details below.",
+            keyStatus: "key status...",
+            apiKeySecurelySaved: "API Key Securely Saved",
+            confirmRemoveTitle: "Confirm Removal",
+            confirmRemoveDescription: "Are you sure you want to remove the API key for {serviceName}? This action cannot be undone.",
+            failedToRemoveKey: "Failed to remove {serviceName} key.",
+            successfullyRemovedKey: "Successfully removed {serviceName} key.",
+            keyNotSet: "Key Status: Not Set",
+            keySet: "Key Status: Set",
+            saveButton: "Save API Key(s)"
         },
     },
 
@@ -143,6 +157,7 @@ export const pl = {
             noAccount: "Nie masz konta?",
             signUp: 'Zarejestruj się',
             forgotPassword: 'Zapomniałeś hasła?',
+            orContinueWith: "Lub kontynuuj za pomocą",
             signingIn: "Logowanie..."
         },
         signup: {

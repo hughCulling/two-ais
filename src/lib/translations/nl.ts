@@ -143,6 +143,7 @@ export const nl = {
             noAccount: "Geen account?",
             signUp: 'Registreren',
             forgotPassword: 'Wachtwoord vergeten?',
+            orContinueWith: "Of ga verder met",
             signingIn: "Inloggen..."
         },
         signup: {

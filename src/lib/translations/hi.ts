@@ -70,21 +70,6 @@ export const hi = {
             description: 'इंटरफ़ेस के लिए अपनी पसंदीदा भाषा चुनें',
             conversationLanguage: 'वार्तालाप भाषा',
             conversationLanguageDescription: 'AI वार्तालापों के लिए उपयोग की जाने वाली भाषा आपकी इंटरफ़ेस भाषा से मेल खाएगी',
-            getKeyInstructions: 'अपनी API कुंजी प्राप्त करें',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "सहेजने के लिए कोई नई API कुंजी दर्ज नहीं की गई है।",
-            unexpectedResponse: "सर्वर से एक अप्रत्याशित प्रतिक्रिया मिली।",
-            failedToSaveKey: "{serviceName} कुंजी सहेजने में विफल।",
-            someKeysNotSaved: "कुछ API कुंजियाँ सहेजी नहीं जा सकीं। कृपया नीचे विवरण देखें।",
-            keyStatus: "कुंजी स्थिति...",
-            apiKeySecurelySaved: "API कुंजी सुरक्षित रूप से सहेजी गई",
-            confirmRemoveTitle: "हटाने की पुष्टि करें",
-            confirmRemoveDescription: "क्या आप वाकई {serviceName} के लिए API कुंजी हटाना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।",
-            failedToRemoveKey: "{serviceName} कुंजी हटाने में विफल।",
-            successfullyRemovedKey: "{serviceName} कुंजी सफलतापूर्वक हटा दी गई।",
-            keyNotSet: "कुंजी स्थिति: सेट नहीं है",
-            keySet: "कुंजी स्थिति: सेट है",
-            saveButton: "API कुंजी सहेजें"
         },
         apiKeys: {
             title: 'API कुंजी',
@@ -158,6 +143,7 @@ export const hi = {
             noAccount: "खाता नहीं है?",
             signUp: 'साइन अप करें',
             forgotPassword: 'पासवर्ड भूल गए?',
+            orContinueWith: "या इसके साथ जारी रखें",
             signingIn: "साइन इन हो रहा है..."
         },
         signup: {
@@ -206,27 +192,7 @@ export const hi = {
         cancel: 'रद्द करें',
         delete: 'हटाएं',
         confirm: 'पुष्टि करें',
-        or: 'या',
-        MoreInformation: "और जानकारी",
-        Example: "उदाहरण:",
-        ShowMore: "और दिखाओ",
-        ShowLess: "कम दिखाएं",
-        AwaitingApproval: "अनुमोदन की प्रतीक्षा है...",
-        OpenInNewTab: "नए टैब में खोलें",
-        AdvancedSettings: "उन्नत सेटिंग्स",
-        Name: "नाम",
-        Created: "बनाया गया",
-        Updated: "अद्यतन किया गया",
-        Launched: "लॉन्च किया गया",
-        Docs: "दस्तावेज़",
-        Blog: "ब्लॉग",
-        Pricing: "मूल्य निर्धारण",
-        Terms: "शर्तें",
-        Privacy: "गोपनीयता",
-        Changelog: "चेंजलॉग",
-        Copy: "प्रतिलिपि",
-        Copied: "प्रतिलिपि बनाई गई",
-        TryAgain: "पुनः प्रयास करें"
+        or: 'या'
     },
 
     // In Settings > API Keys > Provider specific sections
@@ -299,13 +265,13 @@ export const hi = {
     page_TooltipGenericReasoning: "यह मॉडल तर्क टोकन का उपयोग करता है जो चैट में दिखाई नहीं देते हैं लेकिन आउटपुट टोकन के रूप में बिल किए जाते हैं।",
     page_TooltipRequiresVerification: "सत्यापित OpenAI संगठन की आवश्यकता है। आप यहां सत्यापित कर सकते हैं।",
     page_TooltipSupportsLanguage: "{languageName} का समर्थन करता है",
-    page_TooltipMayNotSupportLanguage: "{languageName} का समर्थन नहीं कर सकता है",
+    page_TooltipMayNotSupportLanguage: "यह मॉडल बातचीत के लिए {languageName} का पूरी तरह से समर्थन नहीं कर सकता है।",
     page_BadgePreview: "पूर्वावलोकन",
-    page_BadgeExperimental: "प्रायोगिक",
+    page_BadgeExperimental: "प्रयोगात्मक",
     page_BadgeBeta: "बीटा",
     page_AvailableTTSTitle: "वर्तमान में उपलब्ध TTS",
     page_NoTTSOptions: "वर्तमान में कोई TTS विकल्प उपलब्ध नहीं है।",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "ध्यान दें: {noteText}",
 
     // API Key Management specific (ApiKeyManager.tsx)
     apiKeyManager_EnterNewKey: "नई {serviceName} API कुंजी दर्ज करें",

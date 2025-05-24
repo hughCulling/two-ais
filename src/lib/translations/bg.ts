@@ -63,7 +63,7 @@ export const bg = {
             light: 'Светла',
             dark: 'Тъмна',
             system: 'Системна',
-            description: "Персонализирайте изгледа и усещането на приложението."
+            description: "Customize the look and feel of the application."
         },
         language: {
             title: 'Език',
@@ -264,11 +264,14 @@ export const bg = {
     page_TooltipGenericReasoning: "Този модел използва токени за разсъждение, които не се виждат в чата, но се таксуват като изходни токени.",
     page_TooltipRequiresVerification: "Изисква потвърдена организация на OpenAI. Можете да потвърдите тук.",
     page_TooltipSupportsLanguage: "Поддържа {languageName}",
-    page_TooltipMayNotSupportLanguage: "Може да не поддържа {languageName}",
+    page_TooltipMayNotSupportLanguage: "Този модел може да не поддържа напълно {languageName} за разговор.",
     page_BadgePreview: "Преглед",
     page_BadgeExperimental: "Експериментален",
     page_BadgeBeta: "Бета",
     page_AvailableTTSTitle: "Налични в момента TTS",
     page_NoTTSOptions: "В момента няма налични TTS опции.",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "Забележка: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 }; 

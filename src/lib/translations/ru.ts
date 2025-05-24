@@ -70,21 +70,6 @@ export const ru = {
             description: 'Выберите предпочитаемый язык интерфейса',
             conversationLanguage: 'Язык беседы',
             conversationLanguageDescription: 'Язык, используемый для разговоров с ИИ, будет соответствовать языку вашего интерфейса',
-            getKeyInstructions: 'Получите свой API-ключ',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Новые ключи API для сохранения не введены.",
-            unexpectedResponse: "Получен непредвиденный ответ от сервера.",
-            failedToSaveKey: "Не удалось сохранить ключ {serviceName}.",
-            someKeysNotSaved: "Некоторые ключи API не удалось сохранить. Пожалуйста, проверьте детали ниже.",
-            keyStatus: "статус ключа...",
-            apiKeySecurelySaved: "Ключ API надежно сохранен",
-            confirmRemoveTitle: "Подтвердить удаление",
-            confirmRemoveDescription: "Вы уверены, что хотите удалить ключ API для {serviceName}? Это действие нельзя отменить.",
-            failedToRemoveKey: "Не удалось удалить ключ {serviceName}.",
-            successfullyRemovedKey: "Ключ {serviceName} успешно удален.",
-            keyNotSet: "Статус ключа: Не установлен",
-            keySet: "Статус ключа: Установлен",
-            saveButton: "Сохранить ключ(и) API"
         },
         apiKeys: {
             title: 'Ключи API',
@@ -158,6 +143,7 @@ export const ru = {
             noAccount: "Нет учетной записи?",
             signUp: 'Зарегистрироваться',
             forgotPassword: 'Забыли пароль?',
+            orContinueWith: "Или продолжить с",
             signingIn: "Вход..."
         },
         signup: {

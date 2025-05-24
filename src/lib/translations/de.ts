@@ -77,9 +77,9 @@ export const de = {
             saved: 'Gespeichert',
             notSet: 'Nicht festgelegt',
             setKey: 'Schlüssel festlegen',
-            updateKey: 'Schlüssel aktualisieren',
+            updateKey: 'Setze Schlüssel',
             removeKey: 'Schlüssel entfernen',
-            getKeyInstructions: 'Holen Sie sich Ihren API-Schlüssel',
+            getKeyInstructions: 'TRANSLATE: Get your API key',
             // --- New keys for ApiKeyManager.tsx ---
             noNewKeys: "Es wurden keine neuen API-Schlüssel zum Speichern eingegeben.",
             unexpectedResponse: "Eine unerwartete Antwort vom Server wurde empfangen.",

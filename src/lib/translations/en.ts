@@ -264,13 +264,16 @@ export const en = {
     page_TooltipGenericReasoning: "This model uses reasoning tokens that are not visible in the chat but are billed as output tokens.",
     page_TooltipRequiresVerification: "Requires verified OpenAI organization. You can verify here.", // Note: 'verify here' will be a link
     page_TooltipSupportsLanguage: "Supports {languageName}",
-    page_TooltipMayNotSupportLanguage: "May not support {languageName}",
+    page_TooltipMayNotSupportLanguage: "This model may not fully support {languageName} for conversation.",
     page_BadgePreview: "Preview",
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "Currently Available TTS",
     page_NoTTSOptions: "No TTS options currently available.",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "Note: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE --------------- 
 }; 

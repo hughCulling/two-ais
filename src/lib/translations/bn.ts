@@ -63,7 +63,7 @@ export const bn = {
             light: 'হালকা',
             dark: 'অন্ধকার',
             system: 'সিস্টেম',
-            description: "অ্যাপ্লিকেশনটির চেহারা এবং অনুভূতি কাস্টমাইজ করুন।"
+            description: "Customize the look and feel of the application."
         },
         language: {
             title: 'ভাষা',
@@ -265,11 +265,14 @@ export const bn = {
     page_TooltipGenericReasoning: "এই মডেলটি এমন যুক্তির টোকেন ব্যবহার করে যা চ্যাটে দৃশ্যমান নয় তবে আউটপুট টোকেন হিসাবে বিল করা হয়।",
     page_TooltipRequiresVerification: "যাচাইকৃত ওপেনএআই সংস্থা প্রয়োজন। আপনি এখানে যাচাই করতে পারেন।",
     page_TooltipSupportsLanguage: "{languageName} সমর্থন করে",
-    page_TooltipMayNotSupportLanguage: "{languageName} সমর্থন নাও করতে পারে",
+    page_TooltipMayNotSupportLanguage: "এই মডেলটি কথোপকথনের জন্য {languageName} সম্পূর্ণভাবে সমর্থন নাও করতে পারে।",
     page_BadgePreview: "প্রিভিউ",
     page_BadgeExperimental: "পরীক্ষামূলক",
     page_BadgeBeta: "বিটা",
     page_AvailableTTSTitle: "বর্তমানে উপলব্ধ টিটিএস",
     page_NoTTSOptions: "বর্তমানে কোনও টিটিএস বিকল্প উপলব্ধ নেই।",
-    page_TruncatableNoteFormat: "({noteText})"
+    page_TruncatableNoteFormat: "নোট: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 }; 

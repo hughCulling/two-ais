@@ -63,6 +63,7 @@ export const uk = {
             light: 'Світла',
             dark: 'Темна',
             system: 'Системна',
+            description: "Налаштуйте вигляд і відчуття програми."
         },
         language: {
             title: 'Мова',
@@ -142,6 +143,7 @@ export const uk = {
             noAccount: "Немає облікового запису?",
             signUp: 'Зареєструватися',
             forgotPassword: 'Забули пароль?',
+            orContinueWith: "Або продовжити з",
             signingIn: "Вхід..."
         },
         signup: {

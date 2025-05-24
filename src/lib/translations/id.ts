@@ -73,14 +73,14 @@ export const id = {
             signingIn: "Masuk..."
         },
         apiKeys: {
-            title: 'Kunci API',
-            description: 'Kelola kunci API Anda untuk berbagai penyedia AI',
-            saved: 'Disimpan',
-            notSet: 'Belum diatur',
-            setKey: 'Atur kunci',
-            updateKey: 'Perbarui kunci',
-            removeKey: 'Hapus kunci',
-            getKeyInstructions: 'Dapatkan kunci API Anda',
+            title: 'API Keys',
+            description: 'Manage your API keys for different AI providers',
+            saved: 'Saved',
+            notSet: 'Not set',
+            setKey: 'Set key',
+            updateKey: 'Update key',
+            removeKey: 'Remove key',
+            getKeyInstructions: 'Get your API key',
             noNewKeys: "No new API keys entered to save.",
             unexpectedResponse: "Received an unexpected response from the server.",
             failedToSaveKey: "Failed to save {serviceName} key.",
@@ -143,6 +143,8 @@ export const id = {
             noAccount: "Belum punya akun?",
             signUp: 'Daftar',
             forgotPassword: 'Lupa kata sandi?',
+            orContinueWith: "Atau lanjutkan dengan",
+            signingIn: "Masuk..."
         },
         signup: {
             title: 'Buat akun',

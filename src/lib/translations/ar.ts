@@ -59,11 +59,11 @@ export const ar = {
             language: 'اللغة',
         },
         appearance: {
-            theme: 'السمة',
+            theme: 'المظهر',
             light: 'فاتح',
             dark: 'داكن',
             system: 'النظام',
-            description: "خصص شكل ومظهر التطبيق."
+            description: "Customize the look and feel of the application."
         },
         language: {
             title: 'اللغة',
@@ -79,7 +79,7 @@ export const ar = {
             setKey: 'تعيين المفتاح',
             updateKey: 'تحديث المفتاح',
             removeKey: 'إزالة المفتاح',
-            getKeyInstructions: 'احصل على مفتاح API الخاص بك',
+            getKeyInstructions: 'TRANSLATE: Get your API key',
             noNewKeys: "لم يتم إدخال مفاتيح API جديدة للحفظ.",
             unexpectedResponse: "تم استلام رد غير متوقع من الخادم.",
             failedToSaveKey: "فشل حفظ مفتاح {serviceName}.",
@@ -142,7 +142,7 @@ export const ar = {
             noAccount: 'ليس لديك حساب؟',
             signUp: 'إنشاء حساب',
             forgotPassword: 'نسيت كلمة المرور؟',
-            orContinueWith: "أو المتابعة باستخدام",
+            orContinueWith: "Or continue with", // TODO: Translate
             signingIn: "جارٍ تسجيل الدخول..."
         },
         signup: {
@@ -264,11 +264,14 @@ export const ar = {
     page_TooltipGenericReasoning: "يستخدم هذا النموذج رموز استدلال غير مرئية في الدردشة ولكن يتم إصدار فاتورة لها كرموز إخراج.",
     page_TooltipRequiresVerification: "يتطلب مؤسسة OpenAI تم التحقق منها. يمكنك التحقق هنا.",
     page_TooltipSupportsLanguage: "يدعم {languageName}",
-    page_TooltipMayNotSupportLanguage: "قد لا يدعم {languageName}",
+    page_TooltipMayNotSupportLanguage: "قد لا يدعم هذا النموذج {languageName} بشكل كامل للمحادثة.",
     page_BadgePreview: "معاينة",
     page_BadgeExperimental: "تجريبي",
     page_BadgeBeta: "تجريبي",
     page_AvailableTTSTitle: "TTS المتاح حاليًا",
     page_NoTTSOptions: "لا توجد خيارات TTS متاحة حاليًا.",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "ملاحظة: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 }; 

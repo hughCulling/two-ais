@@ -63,6 +63,7 @@ export const sl = {
             light: 'Svetla',
             dark: 'Temna',
             system: 'Sistemska',
+            description: "Prilagodite videz in občutek aplikacije."
         },
         language: {
             title: 'Jezik',
@@ -71,14 +72,14 @@ export const sl = {
             conversationLanguageDescription: 'Jezik, uporabljen za pogovore z UI, se bo ujemal z jezikom vašega vmesnika',
         },
         apiKeys: {
-            title: 'API ključi',
-            description: 'Upravljajte svoje API ključe za različne ponudnike UI',
-            saved: 'Shranjeno',
-            notSet: 'Ni nastavljeno',
-            setKey: 'Nastavi ključ',
-            updateKey: 'Posodobi ključ',
-            removeKey: 'Odstrani ključ',
-            getKeyInstructions: 'Pridobite svoj API ključ',
+            title: 'API Keys',
+            description: 'Manage your API keys for different AI providers',
+            saved: 'Saved',
+            notSet: 'Not set',
+            setKey: 'Set key',
+            updateKey: 'Update key',
+            removeKey: 'Remove key',
+            getKeyInstructions: 'Get your API key',
             noNewKeys: "No new API keys entered to save.",
             unexpectedResponse: "Received an unexpected response from the server.",
             failedToSaveKey: "Failed to save {serviceName} key.",
@@ -141,6 +142,7 @@ export const sl = {
             noAccount: "Nimate računa?",
             signUp: 'Registracija',
             forgotPassword: 'Ste pozabili geslo?',
+            orContinueWith: "Ali nadaljujte z",
             signingIn: "Prijavljanje..."
         },
         signup: {

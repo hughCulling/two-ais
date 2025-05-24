@@ -158,6 +158,7 @@ export const ro = {
             noAccount: "Nu aveți cont?",
             signUp: 'Înregistrare',
             forgotPassword: 'Ați uitat parola?',
+            orContinueWith: "Sau continuați cu",
             signingIn: "Conectare..."
         },
         signup: {

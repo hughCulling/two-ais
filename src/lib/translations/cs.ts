@@ -59,11 +59,11 @@ export const cs = {
             language: 'Jazyk',
         },
         appearance: {
-            theme: 'Motiv',
+            theme: 'Vzhled',
             light: 'Světlý',
             dark: 'Tmavý',
             system: 'Systémový',
-            description: "Přizpůsobte vzhled a dojem z aplikace."
+            description: "Customize the look and feel of the application."
         },
         language: {
             title: 'Jazyk',
@@ -265,11 +265,14 @@ export const cs = {
     page_TooltipGenericReasoning: "Tento model používá tokeny pro uvažování, které nejsou viditelné в chatu, ale jsou účtovány jako výstupní tokeny.",
     page_TooltipRequiresVerification: "Vyžaduje ověřenou organizaci OpenAI. Můžete ověřit zde.",
     page_TooltipSupportsLanguage: "Podporuje {languageName}",
-    page_TooltipMayNotSupportLanguage: "Nemusí podporovat {languageName}",
+    page_TooltipMayNotSupportLanguage: "Tento model nemusí plně podporovat {languageName} pro konverzaci.",
     page_BadgePreview: "Náhled",
     page_BadgeExperimental: "Experimentální",
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "Aktuálně dostupné TTS",
     page_NoTTSOptions: "Momentálně nejsou k dispozici žádné možnosti TTS.",
-    page_TruncatableNoteFormat: "({noteText})"
+    page_TruncatableNoteFormat: "Poznámka: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 }; 

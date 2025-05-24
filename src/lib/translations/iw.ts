@@ -178,6 +178,7 @@ export const iw = {
             noAccount: "אין לך חשבון?",
             signUp: "הירשם",
             forgotPassword: "שכחת סיסמה?",
+            orContinueWith: "Or continue with",
             signingIn: "מתחבר..."
         },
         signup: {

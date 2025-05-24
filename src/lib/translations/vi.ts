@@ -70,21 +70,6 @@ export const vi = {
             description: 'Chọn ngôn ngữ ưa thích của bạn cho giao diện',
             conversationLanguage: 'Ngôn ngữ trò chuyện',
             conversationLanguageDescription: 'Ngôn ngữ được sử dụng cho các cuộc trò chuyện AI sẽ khớp với ngôn ngữ giao diện của bạn',
-            getKeyInstructions: 'Lấy khóa API của bạn',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Không có khóa API mới nào được nhập để lưu.",
-            unexpectedResponse: "Đã nhận được phản hồi không mong muốn từ máy chủ.",
-            failedToSaveKey: "Không thể lưu khóa {serviceName}.",
-            someKeysNotSaved: "Một số khóa API không thể lưu. Vui lòng kiểm tra chi tiết bên dưới.",
-            keyStatus: "trạng thái khóa...",
-            apiKeySecurelySaved: "Khóa API đã được lưu an toàn",
-            confirmRemoveTitle: "Xác nhận xóa",
-            confirmRemoveDescription: "Bạn có chắc chắn muốn xóa khóa API cho {serviceName} không? Hành động này không thể hoàn tác.",
-            failedToRemoveKey: "Không thể xóa khóa {serviceName}.",
-            successfullyRemovedKey: "Đã xóa thành công khóa {serviceName}.",
-            keyNotSet: "Trạng thái khóa: Chưa đặt",
-            keySet: "Trạng thái khóa: Đã đặt",
-            saveButton: "Lưu (các) khóa API"
         },
         apiKeys: {
             title: 'Khóa API',
@@ -158,6 +143,7 @@ export const vi = {
             noAccount: "Chưa có tài khoản?",
             signUp: 'Đăng ký',
             forgotPassword: 'Quên mật khẩu?',
+            orContinueWith: "Hoặc tiếp tục với",
             signingIn: "Đang đăng nhập..."
         },
         signup: {

@@ -264,13 +264,16 @@ export const fr = {
     page_TooltipGenericReasoning: "Ce modèle utilise des jetons de raisonnement qui ne sont pas visibles dans le chat mais sont facturés comme jetons de sortie.",
     page_TooltipRequiresVerification: "Nécessite une organisation OpenAI vérifiée. Vous pouvez vérifier ici.",
     page_TooltipSupportsLanguage: "Prend en charge {languageName}",
-    page_TooltipMayNotSupportLanguage: "Peut ne pas prendre en charge {languageName}",
+    page_TooltipMayNotSupportLanguage: "Ce modèle peut ne pas prendre entièrement en charge {languageName} pour la conversation.",
     page_BadgePreview: "Aperçu",
     page_BadgeExperimental: "Expérimental",
-    page_BadgeBeta: "Beta",
+    page_BadgeBeta: "Bêta",
     page_AvailableTTSTitle: "TTS actuellement disponible",
     page_NoTTSOptions: "Aucune option TTS actuellement disponible.",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "Note : {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE ---------------
 }; 

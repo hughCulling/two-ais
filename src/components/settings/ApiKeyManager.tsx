@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import Icons ---
-import { Terminal, CheckCircle, Info, ExternalLink, AlertTriangle } from "lucide-react"; // Added ExternalLink and AlertTriangle
+import { Terminal, CheckCircle, Info, ExternalLink } from "lucide-react"; // Added ExternalLink
 
 // Interface for the structure of API key input fields
 interface ApiKeyInput {
@@ -101,7 +101,7 @@ const ApiKeyManager: React.FC = () => {
 
     const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(() =>
         initialApiKeys.map(key => {
-            let translatedLabel = key.label;
+            const translatedLabel = key.label;
             let translatedTooltip = key.tooltip;
 
             if (key.id === 'openai') {

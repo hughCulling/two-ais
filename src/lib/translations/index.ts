@@ -85,6 +85,6 @@ export const translations = {
 
 export type LanguageCode = keyof typeof translations;
 
-export const getTranslation = (lang: LanguageCode) => {
+export const getTranslation = (lang: LanguageCode): TranslationKeys => {
     return translations[lang] || translations.en;
 };

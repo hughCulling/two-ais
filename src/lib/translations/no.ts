@@ -143,6 +143,7 @@ export const no = {
             noAccount: "Har du ikke konto?",
             signUp: 'Registrer deg',
             forgotPassword: 'Glemt passord?',
+            orContinueWith: "Eller fortsett med",
             signingIn: "Logger inn..."
         },
         signup: {

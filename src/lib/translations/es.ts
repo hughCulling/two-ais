@@ -75,13 +75,12 @@ export const es = {
             title: 'Claves API',
             description: 'Administra tus claves API para diferentes proveedores de IA',
             saved: 'Guardada',
-            notSet: 'No configurada',
-            setKey: 'Configurar clave',
+            notSet: 'No establecida',
+            setKey: 'Establecer clave',
             updateKey: 'Actualizar clave',
             removeKey: 'Eliminar clave',
-            getKeyInstructions: 'Obtenga su clave de API',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "No se han introducido nuevas claves API para guardar.",
+            getKeyInstructions: 'TRANSLATE: Get your API key',
+            noNewKeys: "No se ingresaron nuevas claves API para guardar.",
             unexpectedResponse: "Se recibió una respuesta inesperada del servidor.",
             failedToSaveKey: "Error al guardar la clave de {serviceName}.",
             someKeysNotSaved: "Algunas claves API no pudieron guardarse. Por favor, comprueba los detalles a continuación.",
@@ -265,13 +264,16 @@ export const es = {
     page_TooltipGenericReasoning: "Este modelo utiliza tokens de razonamiento que no son visibles en el chat pero se facturan como tokens de salida.",
     page_TooltipRequiresVerification: "Requiere organización de OpenAI verificada. Puedes verificar aquí.",
     page_TooltipSupportsLanguage: "Soporta {languageName}",
-    page_TooltipMayNotSupportLanguage: "Puede que no soporte {languageName}",
-    page_BadgePreview: "Vista Previa",
+    page_TooltipMayNotSupportLanguage: "Este modelo puede no ser totalmente compatible con {languageName} para la conversación.",
+    page_BadgePreview: "Vista previa",
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "TTS Actualmente Disponibles",
     page_NoTTSOptions: "No hay opciones de TTS disponibles actualmente.",
-    page_TruncatableNoteFormat: "({noteText})",
+    page_TruncatableNoteFormat: "Nota: {noteText}",
+
+    // Text To Speech specific voice names (if needed globally)
+    ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE ---------------
 }; 
