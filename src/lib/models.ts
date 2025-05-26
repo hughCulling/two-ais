@@ -16,7 +16,7 @@ export interface LLMInfo {
     status?: 'stable' | 'preview' | 'experimental' | 'beta';
     requiresOrgVerification?: boolean;
     usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking, Qwen/DeepSeek reasoning
-    category?: string; // For categorizing models by purpose/capability/series
+    categoryKey?: string; // For categorizing models by purpose/capability/series
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -33,7 +33,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
-        category: 'Flagship chat models',
+        categoryKey: 'modelCategory_FlagshipChat',
     },
     {
         id: 'gpt-4o',
@@ -44,7 +44,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        category: 'Flagship chat models',
+        categoryKey: 'modelCategory_FlagshipChat',
     },
     {
         id: 'gpt-4o-mini',
@@ -56,7 +56,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
-        category: 'Cost-optimized models',
+        categoryKey: 'modelCategory_CostOptimized',
     },
     {
         id: 'gpt-4.1',
@@ -67,7 +67,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        category: 'Flagship chat models',
+        categoryKey: 'modelCategory_FlagshipChat',
     },
      {
         id: 'gpt-4.1-mini',
@@ -79,7 +79,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
-        category: 'Cost-optimized models',
+        categoryKey: 'modelCategory_CostOptimized',
     },
     {
         id: 'gpt-4.1-nano',
@@ -91,7 +91,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         requiresOrgVerification: false,
-        category: 'Cost-optimized models',
+        categoryKey: 'modelCategory_CostOptimized',
     },
     {
         id: 'gpt-4-turbo',
@@ -102,7 +102,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        category: 'Older GPT models',
+        categoryKey: 'modelCategory_OlderGPT',
     },
     {
         id: 'gpt-4',
@@ -113,7 +113,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        category: 'Older GPT models',
+        categoryKey: 'modelCategory_OlderGPT',
     },
     {
         id: 'gpt-3.5-turbo',
@@ -124,7 +124,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
         apiKeySecretName: 'openai',
         status: 'stable',
-        category: 'Older GPT models',
+        categoryKey: 'modelCategory_OlderGPT',
     },
     {
         id: 'o4-mini',
@@ -136,7 +136,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         usesReasoningTokens: true,
-        category: 'Reasoning models',
+        categoryKey: 'modelCategory_Reasoning',
     },
     {
         id: 'o3',
@@ -149,7 +149,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: true,
         usesReasoningTokens: true,
-        category: 'Reasoning models',
+        categoryKey: 'modelCategory_Reasoning',
     },
     {
         id: 'o3-mini',
@@ -162,7 +162,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         usesReasoningTokens: true,
-        category: 'Reasoning models', 
+        categoryKey: 'modelCategory_Reasoning', 
     },
     {
         id: 'o1',
@@ -175,7 +175,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         usesReasoningTokens: true,
-        category: 'Reasoning models',
+        categoryKey: 'modelCategory_Reasoning',
     },
 
     // === Google ===
@@ -193,7 +193,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'google_ai',
         status: 'preview',
         usesReasoningTokens: true, 
-        category: 'Gemini 2.5 Series',
+        categoryKey: 'modelCategory_Gemini2_5',
     },
     {
         id: 'gemini-2.5-flash-preview-04-17', 
@@ -209,7 +209,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'google_ai',
         status: 'preview',
         usesReasoningTokens: true, 
-        category: 'Gemini 2.5 Series',
+        categoryKey: 'modelCategory_Gemini2_5',
     },
     {
         id: 'gemini-2.0-flash',
@@ -220,7 +220,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental',
-        category: 'Gemini 2.0 Series',
+        categoryKey: 'modelCategory_Gemini2_0',
     },
     {
         id: 'gemini-2.0-flash-lite',
@@ -231,7 +231,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'experimental',
-        category: 'Gemini 2.0 Series',
+        categoryKey: 'modelCategory_Gemini2_0',
     },
     {
         id: 'gemini-1.5-pro-latest',
@@ -246,7 +246,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
-        category: 'Gemini 1.5 Series',
+        categoryKey: 'modelCategory_Gemini1_5',
     },
     {
         id: 'gemini-1.5-flash-latest',
@@ -261,7 +261,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
-        category: 'Gemini 1.5 Series',
+        categoryKey: 'modelCategory_Gemini1_5',
     },
     {
         id: 'gemini-1.5-flash-8b',
@@ -276,7 +276,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
-        category: 'Gemini 1.5 Series',
+        categoryKey: 'modelCategory_Gemini1_5',
     },
 
     // === Anthropic ===
@@ -290,7 +290,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable', 
         usesReasoningTokens: true,
-        category: 'Claude 3.7 Series',
+        categoryKey: 'modelCategory_Claude3_7',
     },
     {
         id: 'claude-3-5-sonnet-20240620',
@@ -301,7 +301,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
-        category: 'Claude 3.5 Series',
+        categoryKey: 'modelCategory_Claude3_5',
     },
      {
         id: 'claude-3-5-haiku-20241022',
@@ -312,7 +312,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
-        category: 'Claude 3.5 Series',
+        categoryKey: 'modelCategory_Claude3_5',
     },
     {
         id: 'claude-3-5-sonnet-20241022', 
@@ -324,7 +324,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
         requiresOrgVerification: false,
-        category: 'Claude 3.5 Series',
+        categoryKey: 'modelCategory_Claude3_5',
     },
     {
         id: 'claude-3-opus-20240229',
@@ -335,7 +335,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
-        category: 'Claude 3 Series',
+        categoryKey: 'modelCategory_Claude3',
     },
      {
         id: 'claude-3-haiku-20240307',
@@ -346,7 +346,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
         apiKeySecretName: 'anthropic',
         status: 'stable',
-        category: 'Claude 3 Series',
+        categoryKey: 'modelCategory_Claude3',
     },
 
     // === xAI (Grok) ===
@@ -359,7 +359,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai', 
         status: 'beta',
-        category: 'Grok 3 Series',
+        categoryKey: 'modelCategory_Grok3',
         usesReasoningTokens: false, 
     },
     {
@@ -371,7 +371,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
-        category: 'Grok 3 Series', 
+        categoryKey: 'modelCategory_Grok3', 
         usesReasoningTokens: false, 
     },
     {
@@ -383,7 +383,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
-        category: 'Grok 3 Mini Series',
+        categoryKey: 'modelCategory_Grok3Mini',
         usesReasoningTokens: true, 
     },
     {
@@ -395,7 +395,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://docs.x.ai/',
         apiKeySecretName: 'xai',
         status: 'beta',
-        category: 'Grok 3 Mini Series', 
+        categoryKey: 'modelCategory_Grok3Mini', 
         usesReasoningTokens: true, 
     },
 
@@ -409,7 +409,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Llama 4 Series',
+        categoryKey: 'modelCategory_Llama4',
     },
     {
         id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -420,7 +420,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 4 Series',
+        categoryKey: 'modelCategory_Llama4',
     },
     {
         id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
@@ -431,7 +431,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.3 Series',
+        categoryKey: 'modelCategory_Llama3_3',
     },
     { 
         id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
@@ -442,7 +442,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.3 Series',
+        categoryKey: 'modelCategory_Llama3_3',
     },
     {
         id: 'meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo',
@@ -453,7 +453,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.1 Series',
+        categoryKey: 'modelCategory_Llama3_1',
     },
     {
         id: 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo',
@@ -464,7 +464,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.1 Series',
+        categoryKey: 'modelCategory_Llama3_1',
     },
     { 
         id: 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo',
@@ -475,7 +475,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.1 Series',
+        categoryKey: 'modelCategory_Llama3_1',
     },
     {
         id: 'meta-llama/Llama-3.2-3B-Instruct-Turbo',
@@ -486,7 +486,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.2 Series',
+        categoryKey: 'modelCategory_Llama3_2',
     },
     { 
         id: 'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
@@ -497,7 +497,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.2 Series', 
+        categoryKey: 'modelCategory_Llama3_2', 
     },
     { 
         id: 'meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo',
@@ -508,7 +508,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3.2 Series', 
+        categoryKey: 'modelCategory_Llama3_2', 
     },
     {
         id: 'meta-llama/Meta-Llama-3-70B-Instruct-Turbo', 
@@ -519,7 +519,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3 Series',
+        categoryKey: 'modelCategory_Llama3',
     },
     {
         id: 'meta-llama/Meta-Llama-3-8B-Instruct-Lite',
@@ -530,7 +530,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3 Series',
+        categoryKey: 'modelCategory_Llama3',
     },
     {
         id: 'meta-llama/Llama-3-70b-chat-hf', 
@@ -541,7 +541,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3 Series',
+        categoryKey: 'modelCategory_Llama3',
     },
     {
         id: 'meta-llama/Llama-3-8b-chat-hf', 
@@ -552,7 +552,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama 3 Series',
+        categoryKey: 'modelCategory_Llama3',
     },
     { 
         id: 'meta-llama/Llama-Vision-Free',
@@ -563,7 +563,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Llama Vision Models', 
+        categoryKey: 'modelCategory_LlamaVision', 
     },
     // Google Gemma Models via TogetherAI
     {
@@ -575,7 +575,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Gemma 2 Series',
+        categoryKey: 'modelCategory_Gemma2',
     },
     {
         id: 'google/gemma-2-9b-it',
@@ -586,7 +586,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Gemma 2 Series',
+        categoryKey: 'modelCategory_Gemma2',
     },
     {
         id: 'google/gemma-2b-it',
@@ -597,7 +597,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Gemma Series',
+        categoryKey: 'modelCategory_Gemma',
     },
     // DeepSeek Models via TogetherAI
     {
@@ -609,7 +609,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek R1 Series',
+        categoryKey: 'modelCategory_DeepSeekR1',
         usesReasoningTokens: true, 
     },
     {
@@ -621,7 +621,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek V3 Series',
+        categoryKey: 'modelCategory_DeepSeekV3',
     },
     {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
@@ -632,7 +632,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek R1 Distill Series',
+        categoryKey: 'modelCategory_DeepSeekR1Distill',
     },
     {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
@@ -643,7 +643,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek R1 Distill Series',
+        categoryKey: 'modelCategory_DeepSeekR1Distill',
     },
     {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
@@ -654,7 +654,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek R1 Distill Series',
+        categoryKey: 'modelCategory_DeepSeekR1Distill',
     },
     {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free',
@@ -665,7 +665,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'DeepSeek R1 Distill Series',
+        categoryKey: 'modelCategory_DeepSeekR1Distill',
     },
     // Mistral Models via TogetherAI
     {
@@ -677,7 +677,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral AI Models',
+        categoryKey: 'modelCategory_MistralAIModels',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.1',
@@ -688,7 +688,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral AI Models',
+        categoryKey: 'modelCategory_MistralAIModels',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.2',
@@ -699,7 +699,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral AI Models',
+        categoryKey: 'modelCategory_MistralAIModels',
     },
     {
         id: 'mistralai/Mistral-7B-Instruct-v0.3',
@@ -710,7 +710,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral AI Models',
+        categoryKey: 'modelCategory_MistralAIModels',
     },
     {
         id: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -721,7 +721,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Mistral AI Models',
+        categoryKey: 'modelCategory_MistralAIModels',
     },
     // Qwen Models via TogetherAI
     {
@@ -733,7 +733,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable', 
-        category: 'Qwen3 Series',
+        categoryKey: 'modelCategory_Qwen3',
         usesReasoningTokens: true, 
     },
     {
@@ -745,7 +745,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen QwQ Series',
+        categoryKey: 'modelCategory_QwQwQ',
         usesReasoningTokens: true, 
     },
     {
@@ -757,7 +757,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2.5 Vision Series',
+        categoryKey: 'modelCategory_Qwen2_5Vision',
     },
     {
         id: 'Qwen/Qwen2-VL-72B-Instruct',
@@ -768,7 +768,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2 Vision Series',
+        categoryKey: 'modelCategory_Qwen2Vision',
     },
     {
         id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
@@ -779,7 +779,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2.5 Coder Series',
+        categoryKey: 'modelCategory_Qwen2_5Coder',
     },
     {
         id: 'Qwen/Qwen2.5-72B-Instruct-Turbo',
@@ -790,7 +790,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2.5 Series',
+        categoryKey: 'modelCategory_Qwen2_5',
     },
     {
         id: 'Qwen/Qwen2.5-7B-Instruct-Turbo',
@@ -801,7 +801,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2.5 Series',
+        categoryKey: 'modelCategory_Qwen2_5',
     },
     {
         id: 'Qwen/Qwen2-72B-Instruct',
@@ -812,7 +812,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        category: 'Qwen2 Series',
+        categoryKey: 'modelCategory_Qwen2',
     },
 ];
 

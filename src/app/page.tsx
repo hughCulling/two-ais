@@ -39,6 +39,9 @@ import { cn } from '@/lib/utils';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 
+// Define a more specific type for model category translation keys
+type ModelCategoryTranslationKey = Extract<keyof TranslationKeys, `modelCategory_${string}`>;
+
 // --- Define TTS Types (Locally) ---
 interface AgentTTSSettingsConfig {
     provider: TTSProviderInfo['id'] | 'browser' | 'none';
@@ -146,11 +149,12 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
     const byCategory: Record<string, LLMInfo[]> = {};
 
     models.forEach(model => {
-        const category = model.category || t.modelCategory_OtherModels;
-        if (!byCategory[category]) {
-            byCategory[category] = [];
+        const categoryKey = (model.categoryKey || 'modelCategory_OtherModels') as ModelCategoryTranslationKey;
+        const translatedCategory = t[categoryKey] || categoryKey;
+        if (!byCategory[translatedCategory]) {
+            byCategory[translatedCategory] = [];
         }
-        byCategory[category].push(model);
+        byCategory[translatedCategory].push(model);
     });
 
     let orderedCategories = Object.keys(byCategory);
@@ -171,17 +175,19 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
         }
     }
 
+    const translatedOtherModelsCategory = t.modelCategory_OtherModels;
+
     if (currentProviderOrder.length > 0) {
         const orderedKeysFromProviderList = currentProviderOrder.filter(cat => byCategory[cat]);
-        const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== t.modelCategory_OtherModels).sort();
+        const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== translatedOtherModelsCategory).sort();
         orderedCategories = [...orderedKeysFromProviderList, ...remainingKeys];
-        if (byCategory[t.modelCategory_OtherModels] && !orderedCategories.includes(t.modelCategory_OtherModels)) {
-            orderedCategories.push(t.modelCategory_OtherModels);
+        if (byCategory[translatedOtherModelsCategory] && !orderedCategories.includes(translatedOtherModelsCategory)) {
+            orderedCategories.push(translatedOtherModelsCategory);
         }
     } else {
         orderedCategories.sort((a, b) => {
-            if (a === t.modelCategory_OtherModels) return 1;
-            if (b === t.modelCategory_OtherModels) return -1;
+            if (a === translatedOtherModelsCategory) return 1;
+            if (b === translatedOtherModelsCategory) return -1;
             return a.localeCompare(b);
         });
     }
@@ -260,12 +266,14 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
 };
 
 // Helper to determine the "brand" for TogetherAI categories
-const getTogetherAIBrandDisplay = (categoryName: string): string | null => {
-    if (categoryName.startsWith('Llama') || categoryName.includes('Meta Llama')) return 'Meta';
-    if (categoryName.startsWith('Gemma') || categoryName.includes('Google Gemma')) return 'Google';
-    if (categoryName.startsWith('DeepSeek')) return 'DeepSeek';
-    if (categoryName.startsWith('Mistral')) return 'Mistral AI'; // Immersive version (no space)
-    if (categoryName.startsWith('Qwen') || categoryName.startsWith('QwQ')) return 'Qwen';
+const getTogetherAIBrandDisplay = (categoryKey: string | undefined, langCode: AppLanguageCode): string | null => {
+    if (!categoryKey) return null;
+    // We need to compare with the *keys* now, not the translated display names
+    if (categoryKey.startsWith('modelCategory_Llama') || categoryKey === 'modelCategory_MetaLlama') return 'Meta';
+    if (categoryKey.startsWith('modelCategory_Gemma') || categoryKey === 'modelCategory_GoogleGemma') return 'Google';
+    if (categoryKey.startsWith('modelCategory_DeepSeek')) return 'DeepSeek';
+    if (categoryKey === 'modelCategory_MistralAIModels') return 'Mistral AI'; 
+    if (categoryKey.startsWith('modelCategory_Qwen') || categoryKey === 'modelCategory_QwQwQ') return 'Qwen';
     return null;
 };
 
@@ -489,11 +497,16 @@ export default function Page() {
 
                                                     let brandHeadingElement = null;
                                                     if (providerName === 'TogetherAI') {
-                                                        const currentBrandName = getTogetherAIBrandDisplay(category);
+                                                        const modelCategoryKey = providerModels.find(m => {
+                                                            const key = (m.categoryKey || 'modelCategory_OtherModels') as ModelCategoryTranslationKey;
+                                                            const translated = t[key] || key;
+                                                            return translated === category;
+                                                        })?.categoryKey;
+                                                        const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey, language.code) : null;
                                                         if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                                                             brandHeadingElement = (
                                                                 <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
-                                                                    {currentBrandName} {/* Display just the brand name */}
+                                                                    {currentBrandName}
                                                                 </h4>
                                                             );
                                                             lastDisplayedBrand = currentBrandName;
@@ -521,9 +534,9 @@ export default function Page() {
                                                                                                 ? t.page_TooltipAnthropicExtendedThinking
                                                                                                 : llm.provider === 'xAI'
                                                                                                     ? t.page_TooltipXaiThinking
-                                                                                                    : (llm.provider === 'TogetherAI' && llm.category?.includes('Qwen'))
+                                                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
                                                                                                         ? t.page_TooltipQwenReasoning
-                                                                                                        : (llm.provider === 'TogetherAI' && llm.category?.includes('DeepSeek'))
+                                                                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
                                                                                                             ? t.page_TooltipDeepSeekReasoning
                                                                                                             : t.page_TooltipGenericReasoning
                                                                                         }
