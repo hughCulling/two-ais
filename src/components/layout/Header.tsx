@@ -32,7 +32,7 @@ export default function Header() {
                     {/* Right-aligned Navigation Links and Auth Status */}
                     <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
                         {/* Language Selector */}
-                        <LanguageSelector showIcon={false} className="hidden sm:flex" />
+                        <LanguageSelector showIcon={true} className="hidden sm:flex" />
                         
                         {/* Theme Switcher */}
                         <ThemeSwitcher />
