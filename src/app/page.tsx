@@ -266,8 +266,9 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
 };
 
 // Helper to determine the "brand" for TogetherAI categories
-const getTogetherAIBrandDisplay = (categoryKey: string | undefined, langCode: AppLanguageCode): string | null => {
+const getTogetherAIBrandDisplay = (categoryKey: string | undefined): string | null => {
     if (!categoryKey) return null;
+    // const t = getTranslation(langCode) as TranslationKeys; // t is not used here currently
     // We need to compare with the *keys* now, not the translated display names
     if (categoryKey.startsWith('modelCategory_Llama') || categoryKey === 'modelCategory_MetaLlama') return 'Meta';
     if (categoryKey.startsWith('modelCategory_Gemma') || categoryKey === 'modelCategory_GoogleGemma') return 'Google';
@@ -502,7 +503,7 @@ export default function Page() {
                                                             const translated = t[key] || key;
                                                             return translated === category;
                                                         })?.categoryKey;
-                                                        const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey, language.code) : null;
+                                                        const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
                                                         if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                                                             brandHeadingElement = (
                                                                 <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">

@@ -74,7 +74,7 @@ const ANY_XAI_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
     llm => llm.provider === 'xAI' && llm.usesReasoningTokens
 );
 const ANY_QWEN_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'TogetherAI' && llm.category?.includes('Qwen') && llm.usesReasoningTokens
+    llm => llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen') && llm.usesReasoningTokens
 );
 
 const formatPrice = (price: number) => {
