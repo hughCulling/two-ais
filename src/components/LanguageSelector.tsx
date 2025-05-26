@@ -10,6 +10,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Globe } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface LanguageSelectorProps {
     showIcon?: boolean;
@@ -18,6 +19,7 @@ interface LanguageSelectorProps {
 
 export function LanguageSelector({ showIcon = true, className = '' }: LanguageSelectorProps) {
     const { language, setLanguage } = useLanguage();
+    const t = useTranslation();
 
     const handleLanguageChange = (languageCode: string) => {
         const selectedLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === languageCode);
@@ -38,7 +40,9 @@ export function LanguageSelector({ showIcon = true, className = '' }: LanguageSe
                         <SelectItem key={lang.code} value={lang.code}>
                             <span className="font-medium">{lang.nativeName}</span>
                             {lang.code !== language.code && (
-                                <span className="ml-2 text-sm text-gray-500">({lang.name})</span>
+                                <span className="ml-2 text-sm text-gray-500">
+                                    ({t.languages[lang.code as keyof typeof t.languages] || lang.name})
+                                </span>
                             )}
                         </SelectItem>
                     ))}
