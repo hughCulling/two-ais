@@ -63,7 +63,7 @@ export default function Header() {
                             </>
                         ) : (
                             // Link for logged-out users
-                            <Link href="/login" className={navItemClasses}>
+            <Link href="/login" className={`${navItemClasses} min-w-[6rem] text-center`}>
                                 {t.header.signIn}
                             </Link>
                         )}
