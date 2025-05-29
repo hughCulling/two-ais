@@ -142,7 +142,7 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      if (id.startsWith("grok-")) return "xAI";
-     if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("mistralai/") || id.includes("Qwen/")) return "TogetherAI";
+     if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("Qwen/")) return "TogetherAI";
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
 }

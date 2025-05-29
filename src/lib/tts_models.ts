@@ -1039,7 +1039,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gemini-2.5-pro-preview-tts',
                 name: 'Gemini 2.5 Pro Preview TTS',
                 description: 'High-quality, controllable, single- and multi-speaker text-to-speech audio generation. Uses Gemini API.',
-                pricingText: '$0.50/M text tokens + $10.00/M audio tokens',
+                pricingText: '$1.0/M text tokens + $20.00/M audio tokens',
                 supportedLanguages: [
                     'ar-EG', 'de-DE', 'en-US', 'es-US', 'fr-FR', 'hi-IN', 'id-ID', 'it-IT',
                     'ja-JP', 'ko-KR', 'pt-BR', 'ru-RU', 'nl-NL', 'pl-PL', 'th-TH', 'tr-TR',

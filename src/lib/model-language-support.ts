@@ -184,16 +184,6 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
                 notes: 'Assumed English/Chinese based on parent model series website options.'
             },
             {
-                modelId: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-                supportedLanguages: ['en', 'fr', 'it', 'de', 'es'],
-                notes: 'Based on official Mistral AI documentation for Mixtral 8x7B.'
-            },
-            {
-                modelId: 'mistralai/Mistral-Small-24B-Instruct-2501',
-                supportedLanguages: ['en'],
-                notes: 'Documented as multilingual (European, East Asian, Middle Eastern languages) but specific languages beyond English are not listed. Defaulting to English.'
-            },
-            {
                 modelId: 'Qwen/Qwen3-235B-A22B-fp8-tput',
                 supportedLanguages: ['zh', 'en', 'fr', 'es', 'pt', 'de', 'it', 'ru', 'ja', 'ko', 'vi', 'th', 'ar'],
                 notes: 'Qwen3 series. Supports 100+ languages; explicitly listed are based on Qwen2.5 details. Check Qwen3 docs for full capabilities.'

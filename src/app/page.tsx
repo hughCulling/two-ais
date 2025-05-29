@@ -112,6 +112,7 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
         t.modelCategory_Gemini1_5,
     ];
     const anthropicCategoryOrder = [
+        "Claude 4 Series",
         t.modelCategory_Claude3_7,
         t.modelCategory_Claude3_5,
         t.modelCategory_Claude3,
@@ -135,7 +136,6 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1Distill,
         t.modelCategory_DeepSeekModels,
-        t.modelCategory_MistralAIModels,
         t.modelCategory_Qwen3,
         t.modelCategory_QwQwQ,
         t.modelCategory_Qwen2_5,
@@ -151,7 +151,15 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
 
     models.forEach(model => {
         const categoryKey = (model.categoryKey || 'modelCategory_OtherModels') as ModelCategoryTranslationKey;
-        const translatedCategory = t[categoryKey] || categoryKey;
+        let translatedCategory: string;
+        
+        // Handle temporary Claude 4 category
+        if ((categoryKey as string) === 'claude4_temp') {
+            translatedCategory = "Claude 4 Series";
+        } else {
+            translatedCategory = t[categoryKey] || categoryKey;
+        }
+        
         if (!byCategory[translatedCategory]) {
             byCategory[translatedCategory] = [];
         }
@@ -195,7 +203,29 @@ const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { 
 
     orderedCategories.forEach(cat => {
         if (byCategory[cat]) {
-            byCategory[cat].sort((a, b) => a.name.localeCompare(b.name));
+            byCategory[cat].sort((a, b) => {
+                // Custom sorting for Claude models to order by power tier: Haiku → Sonnet → Opus
+                if (a.provider === 'Anthropic' && b.provider === 'Anthropic') {
+                    const getClaudeTier = (name: string) => {
+                        if (name.includes('Haiku')) return 0;
+                        if (name.includes('Sonnet')) return 1;
+                        if (name.includes('Opus')) return 2;
+                        return 3; // fallback for other Claude models
+                    };
+                    
+                    const tierA = getClaudeTier(a.name);
+                    const tierB = getClaudeTier(b.name);
+                    
+                    if (tierA !== tierB) {
+                        return tierA - tierB;
+                    }
+                    // If same tier, sort alphabetically
+                    return a.name.localeCompare(b.name);
+                }
+                
+                // Default alphabetical sorting for non-Claude models
+                return a.name.localeCompare(b.name);
+            });
         }
     });
 
@@ -274,7 +304,6 @@ const getTogetherAIBrandDisplay = (categoryKey: string | undefined): string | nu
     if (categoryKey.startsWith('modelCategory_Llama') || categoryKey === 'modelCategory_MetaLlama') return 'Meta';
     if (categoryKey.startsWith('modelCategory_Gemma') || categoryKey === 'modelCategory_GoogleGemma') return 'Google';
     if (categoryKey.startsWith('modelCategory_DeepSeek')) return 'DeepSeek';
-    if (categoryKey === 'modelCategory_MistralAIModels') return 'Mistral AI'; 
     if (categoryKey.startsWith('modelCategory_Qwen') || categoryKey === 'modelCategory_QwQwQ') return 'Qwen';
     return null;
 };
@@ -523,6 +552,37 @@ export default function Page() {
                                                             <ul className="space-y-1 list-disc list-inside text-sm pl-2">
                                                                 {categoryModels.map((llm) => (
                                                                     <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                        <span className="whitespace-nowrap">{llm.name}</span>
+                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
+                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
+                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+
+                                                                        {llm.pricing.note ? (
+                                                                            <TruncatableNote noteText={llm.pricing.note} />
+                                                                        ) : (
+                                                                            <span className="text-xs text-muted-foreground">
+                                                                                (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                                            </span>
+                                                                        )}
+                                                                        {isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                                                            <Tooltip>
+                                                                                <TooltipTrigger asChild>
+                                                                                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                                </TooltipTrigger>
+                                                                                <TooltipContent side="top">
+                                                                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
+                                                                        ) : (
+                                                                            <Tooltip>
+                                                                                <TooltipTrigger asChild>
+                                                                                    <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                                </TooltipTrigger>
+                                                                                <TooltipContent side="top">
+                                                                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
+                                                                        )}
                                                                         {llm.usesReasoningTokens && (
                                                                             <Tooltip>
                                                                                 <TooltipTrigger asChild>
@@ -567,37 +627,7 @@ export default function Page() {
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         )}
-                                                                        {isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                                                            <Tooltip>
-                                                                                <TooltipTrigger asChild>
-                                                                                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                                                                </TooltipTrigger>
-                                                                                <TooltipContent side="top">
-                                                                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                                                                </TooltipContent>
-                                                                            </Tooltip>
-                                                                        ) : (
-                                                                            <Tooltip>
-                                                                                <TooltipTrigger asChild>
-                                                                                    <X className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                                                                </TooltipTrigger>
-                                                                                <TooltipContent side="top">
-                                                                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                                                                </TooltipContent>
-                                                                            </Tooltip>
-                                                                        )}
-                                                                        <span className="whitespace-nowrap">{llm.name}</span>
-                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
-                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
-                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
-
-                                                                        {llm.pricing.note ? (
-                                                                            <TruncatableNote noteText={llm.pricing.note} />
-                                                                        ) : (
-                                                                            <span className="text-xs text-muted-foreground">
-                                                                                (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
-                                                                            </span>
-                                                                        )}
+                                                                        
                                                                     </li>
                                                                 ))}
                                                             </ul>

@@ -293,7 +293,7 @@ export const en = {
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "Currently Available TTS",
     page_NoTTSOptions: "No TTS options currently available.",
-    page_TruncatableNoteFormat: "Note: {noteText}",
+    page_TruncatableNoteFormat: "({noteText})",
 
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
