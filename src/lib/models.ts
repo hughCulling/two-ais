@@ -196,7 +196,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Gemini2_5',
     },
     {
-        id: 'gemini-2.5-flash-preview-04-17', 
+        id: 'gemini-2.5-flash-preview-05-20', 
         name: 'Gemini 2.5 Flash',
         provider: 'Google',
         contextWindow: 2000000,

@@ -109,7 +109,7 @@ const CONVERSATION_PROMPTS: Record<string, string> = {
     id: "Mulai percakapan.",
     it: "Inizia la conversazione.",
     ja: "会話を始めてください。",
-    ko: "대화를 시작하세요.",
+    ko: "대화를 시작하세요。",
     lv: "Sāciet sarunu.",
     lt: "Pradėkite pokalbį.",
     no: "Start samtalen.",
@@ -127,15 +127,40 @@ const CONVERSATION_PROMPTS: Record<string, string> = {
     tr: "Konuşmayı başlatın.",
     uk: "Почніть розмову.",
     vi: "Bắt đầu cuộc trò chuyện.",
+    mt: "Ibda l-konversazzjoni.",
+    bs: "Započnite razgovor.",
+    ca: "Comença la conversa.",
+    gu: "વાતચીત શરૂ કરો.",
+    hy: "Սկսեք խոսակցությունը:",
+    is: "Byrjaðu samtalið.",
+    ka: "საუბრის დაწყება.",
+    kk: "Әңгімені бастаңыз.",
+    kn: "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ.",
+    mk: "Започнете го разговорот.",
+    ml: "സംഭാഷണം ആരംഭിക്കുക.",
+    mr: "संभाषण सुरू करा.",
+    ms: "Mulakan perbualan.",
+    my: "စကားစတင်ပါ။",
+    pa: "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।",
+    so: "Bilow wada hadalka.",
+    sq: "Filloni bisedën.",
+    ta: "உரையாடலைத் தொடங்கு.",
+    te: "సంభాషణను ప్రారంభించండి.",
+    tl: "Simulan ang pag-uusap.",
+    ur: "گفتگو شروع کریں۔",
+    am: "ውይይቱን ጀምር።",
+    mn: "Яриаг эхлүүл.",
+    fa: "مکالمه را شروع کنید"
 };
 
 // --- Define TTS Types (Mirroring frontend and backend expectations) ---
 const VALID_TTS_PROVIDER_IDS_API = [
-    "none",
-    "browser",
     "openai",
     "google-cloud",
-    "elevenlabs"
+    "elevenlabs",
+    "google-gemini",
+    "none",
+    "browser"
 ] as const;
 type TTSProviderIdApi = typeof VALID_TTS_PROVIDER_IDS_API[number];
 
@@ -143,6 +168,7 @@ interface AgentTTSSettingsApi {
     provider: TTSProviderIdApi;
     voice: string | null;
     selectedTtsModelId?: string;
+    ttsApiModelId?: string;
 }
 
 // --- Updated Request Body Interface ---
@@ -282,11 +308,13 @@ export async function POST(request: NextRequest) {
                 provider: agentA_tts.provider,
                 voice: agentA_tts.voice,
                 selectedTtsModelId: agentA_tts.selectedTtsModelId,
+                ttsApiModelId: agentA_tts.ttsApiModelId,
             };
             const finalAgentBTts = {
                 provider: agentB_tts.provider,
                 voice: agentB_tts.voice,
                 selectedTtsModelId: agentB_tts.selectedTtsModelId,
+                ttsApiModelId: agentB_tts.ttsApiModelId,
             };
 
             const conversationData = {

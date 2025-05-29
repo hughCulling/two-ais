@@ -37,6 +37,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils';
 // --- Import language support ---
 import { isLanguageSupported } from '@/lib/model-language-support';
+import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 
 // Define a more specific type for model category translation keys
@@ -563,12 +564,10 @@ export default function Page() {
                                                                                         </a>
                                                                                         {t.page_TooltipRequiresVerification.split("verify here")[1]}
                                                                                     </p>
-                                                                </TooltipContent>
-                                                            </Tooltip>
-                                                        )}
-                                                                        <span className="whitespace-nowrap">{llm.name}</span>
-                                                                        {/* Language support indicator */}
-                                                                        {isLanguageSupported(llm.provider, language.code) ? (
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
+                                                                        )}
+                                                                        {isLanguageSupported(llm.provider, language.code, llm.id) ? (
                                                                             <Tooltip>
                                                                                 <TooltipTrigger asChild>
                                                                                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
@@ -587,6 +586,7 @@ export default function Page() {
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         )}
+                                                                        <span className="whitespace-nowrap">{llm.name}</span>
                                                                         {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
                                                                         {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
                                                                         {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
@@ -632,12 +632,34 @@ export default function Page() {
                                                 </CollapsibleTrigger>
                                                 <CollapsibleContent className="space-y-2 pl-4">
                                                     <ul className="space-y-1 list-disc list-inside text-sm">
-                                                        {provider.models.map((model) => (
-                                                            <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
-                                                                <span className="whitespace-nowrap">{model.name}</span>
-                                                                <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
-                                                            </li>
-                                                        ))}
+                                                        {provider.models.map((model) => {
+                                                            const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
+                                                            return (
+                                                                <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                    {supportsLanguage ? (
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger asChild>
+                                                                                <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent side="top">
+                                                                                <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    ) : (
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger asChild>
+                                                                                <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent side="top">
+                                                                                <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    <span className="whitespace-nowrap">{model.name}</span>
+                                                                    <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
+                                                                </li>
+                                                            );
+                                                        })}
                                                     </ul>
                                                 </CollapsibleContent>
                                             </Collapsible>

@@ -36,6 +36,30 @@ import { sr } from './sr';
 import { iw } from './iw';
 import { uk } from './uk';
 import { sw } from './sw';
+import { mt } from './mt';
+import { bs } from './bs';
+import { ca } from './ca';
+import { gu } from './gu';
+import { hy } from './hy';
+import { is as is_IS } from './is';
+import { ka } from './ka';
+import { kk } from './kk';
+import { kn } from './kn';
+import { mk } from './mk';
+import { ml } from './ml';
+import { mr } from './mr';
+import { ms } from './ms';
+import { my } from './my';
+import { pa } from './pa';
+import { so } from './so';
+import { sq } from './sq';
+import { ta } from './ta';
+import { te } from './te';
+import { tl } from './tl';
+import { ur } from './ur';
+import { am } from './am';
+import { mn } from './mn';
+import { fa } from './fa';
 
 // Type for our translation structure
 export type TranslationKeys = typeof en;
@@ -80,6 +104,30 @@ export const translations = {
     iw,
     uk,
     sw,
+    mt,
+    bs,
+    ca,
+    gu,
+    hy,
+    is: is_IS,
+    ka,
+    kk,
+    kn,
+    mk,
+    ml,
+    mr,
+    ms,
+    my,
+    pa,
+    so,
+    sq,
+    ta,
+    te,
+    tl,
+    ur,
+    am,
+    mn,
+    fa,
     // Other languages will be added here as they're created
 };
 

@@ -60,13 +60,14 @@ if (!projectId) {
 
 // --- Interfaces ---
 interface AgentTTSSettingsBackend {
-    provider: "openai" | "none" | "browser" | "google-cloud" | "elevenlabs";
+    provider: "openai" | "none" | "browser" | "google-cloud" | "elevenlabs" | "google-gemini";
     voice: string | null; // For OpenAI: 'alloy', etc. For Google: 'en-US-Wavenet-A', etc. For Eleven Labs: voice_id
     // This field comes from the frontend.
     // For OpenAI, it's 'openai-tts-1', 'openai-tts-1-hd', etc. (maps to actual API model).
     // For Google, it's the conceptual model ID like 'google-standard-voices'.
     // For Eleven Labs, it's e.g., 'elevenlabs-multilingual-v2'
     selectedTtsModelId?: string;
+    ttsApiModelId?: string;      // API-specific ID, e.g., 'tts-1', 'gemini-2.5-flash-preview-tts'
 }
 interface ConversationTTSSettingsBackend {
     enabled: boolean;
@@ -102,6 +103,40 @@ interface ConversationData {
 // --- End Interfaces ---
 
 // --- Helper Functions (Defined ONCE) ---
+
+// Helper function to convert raw PCM data to WAV format
+function createWavBuffer(pcmData: Buffer, channels = 1, sampleRate = 24000, bitsPerSample = 16): Buffer {
+    const dataLength = pcmData.length;
+    const bufferLength = 44 + dataLength; // WAV header is 44 bytes + data
+    const buffer = Buffer.alloc(bufferLength);
+    
+    let offset = 0;
+    
+    // RIFF chunk descriptor
+    buffer.write("RIFF", offset); offset += 4;
+    buffer.writeUInt32LE(bufferLength - 8, offset); offset += 4; // File size - 8
+    buffer.write("WAVE", offset); offset += 4;
+    
+    // fmt sub-chunk
+    buffer.write("fmt ", offset); offset += 4;
+    buffer.writeUInt32LE(16, offset); offset += 4; // Sub-chunk size (16 for PCM)
+    buffer.writeUInt16LE(1, offset); offset += 2; // Audio format (1 for PCM)
+    buffer.writeUInt16LE(channels, offset); offset += 2; // Number of channels
+    buffer.writeUInt32LE(sampleRate, offset); offset += 4; // Sample rate
+    buffer.writeUInt32LE(sampleRate * channels * bitsPerSample / 8, offset); offset += 4; // Byte rate
+    buffer.writeUInt16LE(channels * bitsPerSample / 8, offset); offset += 2; // Block align
+    buffer.writeUInt16LE(bitsPerSample, offset); offset += 2; // Bits per sample
+    
+    // data sub-chunk
+    buffer.write("data", offset); offset += 4;
+    buffer.writeUInt32LE(dataLength, offset); offset += 4; // Data size
+    
+    // Copy PCM data
+    pcmData.copy(buffer, offset);
+    
+    return buffer;
+}
+
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
@@ -124,11 +159,20 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
 
 // Helper to get the API key ID for TTS based on provider
 function getTTSApiKeyId(provider: AgentTTSSettingsBackend["provider"]): string | null {
-    if (provider === "openai") return "openai"; // OpenAI TTS uses the same key as OpenAI LLMs
-    if (provider === "google-cloud") return "google_ai"; // Google TTS uses the same key as Google LLMs (Gemini)
-    if (provider === "elevenlabs") return "elevenlabs"; // Eleven Labs TTS uses a dedicated key
-    // Add other providers if they have separate keys or share keys
-    return null;
+    switch (provider) {
+        case "openai":
+            return "openai";
+        case "google-cloud":
+            return "google_ai"; // Changed from googleCloudApiKey to align with tts_models.ts
+        case "elevenlabs":
+            return "elevenlabs";
+        case "google-gemini":
+            return "google_ai"; // Changed from gemini_api_key to google_ai
+        case "browser":
+        case "none":
+        default:
+            return null;
+    }
 }
 
 
@@ -397,7 +441,6 @@ async function _triggerAgentResponse(
             if (ttsApiKey && agentSettings.voice) { // Ensure API key and voice are present
                 if (agentSettings.provider === "openai") {
                     const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
-                    // Corrected lines 388-390: Using double quotes
                     const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
                                              agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
                                              "tts-1";
@@ -440,6 +483,105 @@ async function _triggerAgentResponse(
                             }
                         } catch (googleTtsError) {
                             logger.error("[TTS API Call Error - Google] Error during speech creation:", googleTtsError);
+                            audioBuffer = null;
+                        }
+                    }
+                }
+                // Add Google Gemini TTS support
+                else if (agentSettings.provider === "google-gemini") {
+                    const geminiVoiceId = agentSettings.voice; // e.g., "Achernar"
+                    // Use ttsApiModelId if available (preferred), otherwise fallback to selectedTtsModelId
+                    const geminiModelApiId = agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId;
+
+                    if (!geminiModelApiId) {
+                        logger.error("[TTS Error - Gemini] Model API ID (ttsApiModelId or selectedTtsModelId) is missing for Google Gemini TTS. Skipping.");
+                    } else {
+                        logger.info(`[TTS Attempt] Provider: Google Gemini, Model: ${geminiModelApiId}, Voice: ${geminiVoiceId}, Text Length: ${textToSpeak.length}`);
+                        try {
+                            logger.info(`[TTS Info - Gemini] Using Gemini generateContent API for TTS. Model: ${geminiModelApiId}, Voice: ${geminiVoiceId}`);
+
+                            // Ensure we're using the correct model name for TTS
+                            const ttsModelName = geminiModelApiId.includes("tts") ? geminiModelApiId : "gemini-2.5-flash-preview-tts";
+                            logger.info(`[TTS Info - Gemini] Using TTS model: ${ttsModelName}`);
+
+                            // Correct endpoint for Gemini TTS - uses generateContent, not synthesizeSpeech
+                            const geminiTtsApiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ttsModelName}:generateContent?key=${ttsApiKey}`;
+
+                            // Correct request body format for Gemini TTS based on latest documentation
+                            const geminiTtsRequestBody = {
+                                contents: [{
+                                    parts: [{
+                                        text: textToSpeak
+                                    }]
+                                }],
+                                generationConfig: {
+                                    responseModalities: ["AUDIO"],
+                                    speechConfig: {
+                                        voiceConfig: {
+                                            prebuiltVoiceConfig: {
+                                                voiceName: geminiVoiceId
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            
+                            logger.info("[TTS Request Body - Gemini]:", JSON.stringify(geminiTtsRequestBody, null, 2));
+                            logger.info(`[TTS Endpoint - Gemini]: ${geminiTtsApiEndpoint}`);
+
+                            const geminiResponse = await axios({
+                                method: "post",
+                                url: geminiTtsApiEndpoint,
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                data: geminiTtsRequestBody,
+                                responseType: "json", 
+                                timeout: 30000, // 30 second timeout
+                            });
+
+                            logger.info(`[TTS Response Status - Gemini]: ${geminiResponse.status}`);
+
+                            // Check for correct response structure
+                            if (geminiResponse.data && 
+                                geminiResponse.data.candidates && 
+                                geminiResponse.data.candidates[0] && 
+                                geminiResponse.data.candidates[0].content && 
+                                geminiResponse.data.candidates[0].content.parts && 
+                                geminiResponse.data.candidates[0].content.parts[0] && 
+                                geminiResponse.data.candidates[0].content.parts[0].inlineData && 
+                                geminiResponse.data.candidates[0].content.parts[0].inlineData.data) {
+                                
+                                const audioData = geminiResponse.data.candidates[0].content.parts[0].inlineData.data;
+                                const rawPcmBuffer = Buffer.from(audioData, "base64");
+                                
+                                // Convert raw PCM data to proper WAV format with headers
+                                // Gemini TTS returns 16-bit PCM at 24kHz sample rate, mono
+                                audioBuffer = createWavBuffer(rawPcmBuffer, 1, 24000, 16);
+                                
+                                logger.info(`[TTS Success] Google Gemini TTS generated for ${agentToRespond}. Model: ${ttsModelName}, Voice: ${geminiVoiceId}, Raw PCM size: ${rawPcmBuffer.length} bytes, WAV size: ${audioBuffer.length} bytes`);
+                            } else {
+                                logger.error("[TTS Error - Gemini] No audio data in response or invalid response structure:");
+                                logger.error("Response structure:", JSON.stringify(geminiResponse.data, null, 2));
+                                audioBuffer = null;
+                            }
+
+                        } catch (geminiTtsError: Error | unknown) {
+                            logger.error("[TTS API Call Error - Google Gemini] Error during speech creation:", geminiTtsError);
+                            if (axios.isAxiosError(geminiTtsError) && geminiTtsError.response) {
+                                logger.error(`[TTS Error - Gemini] Status: ${geminiTtsError.response.status}, Status Text: ${geminiTtsError.response.statusText}`);
+                                logger.error("[TTS Error - Gemini] Response Headers:", JSON.stringify(geminiTtsError.response.headers, null, 2));
+                                logger.error("[TTS Error - Gemini] Response Data:", JSON.stringify(geminiTtsError.response.data, null, 2));
+                                
+                                // Specific handling for 404 errors
+                                if (geminiTtsError.response.status === 404) {
+                                    logger.error(`[TTS Error - Gemini] 404 Not Found. Check if model name '${agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId}' is correct and TTS feature is available.`);
+                                    logger.error(`[TTS Error - Gemini] Tried endpoint: ${geminiTtsError.config?.url}`);
+                                }
+                            } else if (geminiTtsError instanceof Error) {
+                                logger.error(`[TTS Error - Gemini] Error message: ${geminiTtsError.message}`);
+                                logger.error(`[TTS Error - Gemini] Error stack: ${geminiTtsError.stack}`);
+                            }
                             audioBuffer = null;
                         }
                     }
@@ -507,9 +649,21 @@ async function _triggerAgentResponse(
                 if (audioBuffer) {
                     logger.info("[TTS Upload] Attempting to upload audio buffer...");
                     const currentMessageId = admin.firestore().collection("dummy").doc().id; // Generate a unique ID for the audio file
-                    const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.mp3`;
+                    
+                    // Determine file extension and content type based on TTS provider
+                    let fileExtension = "mp3";
+                    let contentType = "audio/mpeg";
+                    
+                    if (agentSettings.provider === "google-gemini") {
+                        // Gemini TTS returns PCM audio in WAV format (16-bit, 24kHz, mono)
+                        fileExtension = "wav";
+                        contentType = "audio/wav";
+                        logger.info("[TTS Upload] Using WAV format for Google Gemini TTS");
+                    }
+                    
+                    const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.${fileExtension}`;
                     const file = storageBucket.file(audioFileName);
-                    await file.save(audioBuffer, { metadata: { contentType: "audio/mpeg" } });
+                    await file.save(audioBuffer, { metadata: { contentType: contentType } });
                     await file.makePublic(); // Make the file publicly accessible
                     audioUrl = file.publicUrl();
                     ttsGenerated = true;
