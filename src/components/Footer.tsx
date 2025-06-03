@@ -2,7 +2,6 @@ import React from 'react';
 // Assuming your SVG is saved as github-mark.svg in src/assets/icons/
 // If you have SVGR configured (common in Next.js), this import should work.
 // Otherwise, you might need to adjust your Next.js config for SVGs.
-import GithubLogo from '@/assets/icons/github-mark.svg'; 
 
 const Footer = () => {
   return (
