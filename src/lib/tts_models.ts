@@ -990,7 +990,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_multilingual_v2',
                 name: 'Multilingual V2',
                 description: 'Our most lifelike model with rich emotional expression. (10,000 character limit)',
-                pricingText: '$0.006 / 1K characters', // Pricing confirmed from "Flagship models" card and general pricing link
+                pricingText: '$6.00 / 1M characters', // Pricing confirmed from "Flagship models" card and general pricing link
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru']
             },
@@ -999,7 +999,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_flash_v2_5',
                 name: 'Flash V2.5',
                 description: 'Ultra-fast model optimized for real-time use (~75ms latency). (40,000 character limit)',
-                pricingText: '$0.003 / 1K characters', // "50% lower price" -> $0.003/1k
+                pricingText: '$3.00 / 1M characters', // "50% lower price" -> $0.003/1k
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
             },
@@ -1008,7 +1008,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_turbo_v2_5',
                 name: 'Turbo V2.5',
                 description: 'High quality, low-latency model with a good balance of quality and speed (~250ms-300ms). (40,000 character limit)',
-                pricingText: '$0.003 / 1K characters', // "50% lower price" -> $0.003/1k
+                pricingText: '$3.00 / 1M characters', // "50% lower price" -> $0.003/1k
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
             },
