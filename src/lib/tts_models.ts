@@ -867,7 +867,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gpt-4o-mini-tts',
                 name: 'GPT-4o mini TTS',
                 description: 'Newest and most reliable model for intelligent realtime applications. Can be prompted for accent, emotion, intonation, speed, tone, etc.',
-                pricingText: '$0.60 per 1M input text tokens + $12 per 1M output audio tokens',
+                pricingText: '$0.60 per 1M text tokens + $12 per 1M audio tokens',
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
             },
             {
@@ -875,7 +875,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'tts-1',
                 name: 'TTS-1',
                 description: 'Optimized for real-time use cases and speed.',
-                pricingText: '$15.00 per 1M input characters',
+                pricingText: '$15.00 per 1M tokens',
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
             },
             {
@@ -883,7 +883,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'tts-1-hd',
                 name: 'TTS-1 HD',
                 description: 'Optimized for quality.',
-                pricingText: '$30.00 per 1M input characters',
+                pricingText: '$30.00 per 1M tokens',
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
             },
         ],
@@ -963,7 +963,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-chirp-hd-preview',
                 name: 'Chirp HD Voices (Preview)',
                 description: 'Earlier preview of conversational voices. Some limitations apply.',
-                pricingText: '$16.00 per 1M characters (estimate, confirm with Google)',
+                pricingText: 'Couldn\'t verify',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' && voice.status === 'Preview',
                 supportedLanguages: ['en-AU', 'en-GB', 'en-IN', 'en-US']
             },
@@ -990,7 +990,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_multilingual_v2',
                 name: 'Multilingual V2',
                 description: 'Our most lifelike model with rich emotional expression. (10,000 character limit)',
-                pricingText: '$6.00 per 1M characters', // Pricing confirmed from "Flagship models" card and general pricing link
+                pricingText: '$300.00 per 1M characters', // Pricing confirmed from "Flagship models" card and general pricing link
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru']
             },
@@ -999,7 +999,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_flash_v2_5',
                 name: 'Flash V2.5',
                 description: 'Ultra-fast model optimized for real-time use (~75ms latency). (40,000 character limit)',
-                pricingText: '$3.00 per 1M characters', // "50% lower price" -> $0.003/1k
+                pricingText: '$150.00 per 1M characters', // "50% lower price" -> $0.003/1k
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
             },
@@ -1008,7 +1008,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_turbo_v2_5',
                 name: 'Turbo V2.5',
                 description: 'High quality, low-latency model with a good balance of quality and speed (~250ms-300ms). (40,000 character limit)',
-                pricingText: '$3.00 per 1M characters', // "50% lower price" -> $0.003/1k
+                pricingText: 'Couldn\'t verify', // "50% lower price" -> $0.003/1k
                 voiceFilterCriteria: () => true, // Works with all voices
                 supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
             },

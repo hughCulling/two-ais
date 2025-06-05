@@ -669,6 +669,8 @@ export default function Page() {
                                                             const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
                                                             return (
                                                                 <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                    <span className="whitespace-nowrap">{model.name}</span>
+                                                                    <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
                                                                     {supportsLanguage ? (
                                                                         <Tooltip>
                                                                             <TooltipTrigger asChild>
@@ -688,8 +690,6 @@ export default function Page() {
                                                                             </TooltipContent>
                                                                         </Tooltip>
                                                                     )}
-                                                                    <span className="whitespace-nowrap">{model.name}</span>
-                                                                    <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
                                                                 </li>
                                                             );
                                                         })}
