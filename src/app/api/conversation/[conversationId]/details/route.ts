@@ -48,19 +48,36 @@ interface Message {
     // Add other potential message fields if necessary, e.g., name, agentId
 }
 
+// Define a more specific type for TTS settings based on its likely structure
+interface TTSAgentConfig {
+    provider: string;
+    voice: string | null;
+    selectedTtsModelId?: string;
+    ttsApiModelId?: string;
+}
+
+interface ConversationTTSSettings {
+    enabled: boolean;
+    agentA: TTSAgentConfig;
+    agentB: TTSAgentConfig;
+}
+
 interface ConversationDetails {
     conversationId: string;
     createdAt: string; // ISO string
     agentA_llm: string;
     agentB_llm: string;
     language: string;
-    ttsSettings?: any; // Using 'any' for now, can be more specific based on actual structure
+    ttsSettings?: ConversationTTSSettings; // Use the more specific type
     messages: Message[];
     // other config fields like apiSecretVersions might not be needed for display
 }
 
-export async function GET(request: NextRequest, { params }: { params: { conversationId: string } }) {
-    const { conversationId } = params;
+export async function GET(
+    request: NextRequest, 
+    { params }: { params: Promise<{ conversationId: string }> }
+) {
+    const { conversationId } = await params;
     console.log(`API route /api/conversation/${conversationId}/details hit`);
 
     if (!dbAdmin || !firebaseAdminApp) {
@@ -83,7 +100,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
         let decodedToken: DecodedIdToken;
         try {
             decodedToken = await getAuth(firebaseAdminApp).verifyIdToken(idToken);
-        } catch (error) {
+        } catch {
             return NextResponse.json({ error: "Unauthorized: Invalid token" }, { status: 401 });
         }
         const userId = decodedToken.uid;

@@ -3,13 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox } from 'lucide-react';
-import { format } from 'date-fns'; // For formatting dates
-import { enUS } from 'date-fns/locale'; // Import enUS locale
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
 interface ConversationSummary {
     conversationId: string;
@@ -21,20 +19,16 @@ interface ConversationSummary {
 
 export default function HistoryPage() {
     const { user, loading: authLoading } = useAuth();
-    const { language } = useLanguage();
-    // const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
 
     const [conversations, setConversations] = useState<ConversationSummary[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (authLoading) return; // Wait for auth state to resolve
+        if (authLoading) return;
 
         if (!user) {
             setLoading(false);
-            // Potentially redirect to login or show a message
-            // For now, just stop loading if no user.
             setError("You must be logged in to view history.");
             return;
         }
@@ -42,7 +36,7 @@ export default function HistoryPage() {
         async function fetchHistory() {
             setLoading(true);
             setError(null);
-            if (!user) { // More explicit check
+            if (!user) {
                 setError("User not available for fetching history.");
                 setLoading(false);
                 return;
@@ -69,7 +63,7 @@ export default function HistoryPage() {
         }
 
         fetchHistory();
-    }, [user, authLoading]); // Removed t from dependencies
+    }, [user, authLoading]);
 
     if (authLoading || loading) {
         return (
@@ -117,7 +111,7 @@ export default function HistoryPage() {
                             <CardTitle>No Conversations Yet</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground">You haven't had any conversations yet. Start one to see it here!</p>
+                            <p className="text-muted-foreground">You haven&apos;t had any conversations yet. Start one to see it here!</p>
                         </CardContent>
                     </Card>
                 )}
@@ -127,7 +121,7 @@ export default function HistoryPage() {
                         {conversations.map((convo) => {
                             let formattedDate = 'Invalid Date';
                             try {
-                                formattedDate = format(new Date(convo.createdAt), 'PPP p', { locale: enUS }); // Use enUS
+                                formattedDate = format(new Date(convo.createdAt), 'PPP p', { locale: enUS });
                             } catch (e) {
                                 console.error("Error formatting date:", e, "Input was:", convo.createdAt);
                             }

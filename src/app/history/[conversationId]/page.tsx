@@ -4,16 +4,12 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
-import { getLLMInfoById, LLMInfo } from '@/lib/models'; // To display model names
+import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Bot, UserCircle, Loader2, AlertTriangle, Info, Languages, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale'; // Import enUS locale
+import { enUS } from 'date-fns/locale';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from '@/components/ui/separator';
 
@@ -22,14 +18,12 @@ interface Message {
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
     content: string;
     timestamp: string; // ISO string
-    // agentId?: 'agentA' | 'agentB'; // If we decide to store which agent sent assistant messages
 }
 
 interface TTSConfig {
     provider: string;
     voice?: string | null;
     selectedTtsModelId?: string;
-    // ttsApiModelId is also available but might not be needed for display
 }
 interface AgentTTSSettings {
     enabled: boolean;
@@ -49,7 +43,6 @@ interface ConversationDetails {
 
 export default function ChatHistoryViewerPage() {
     const { user, loading: authLoading } = useAuth();
-    const { language: appLanguage } = useLanguage();
     const params = useParams();
     const router = useRouter();
     const conversationId = params.conversationId as string;
@@ -73,7 +66,7 @@ export default function ChatHistoryViewerPage() {
         async function fetchDetails() {
             setLoading(true);
             setError(null);
-            if (!user) { // More explicit check
+            if (!user) {
                 setError("User not available for fetching details.");
                 setLoading(false);
                 return;
@@ -100,9 +93,9 @@ export default function ChatHistoryViewerPage() {
         }
 
         fetchDetails();
-    }, [user, authLoading, conversationId]); // Removed t from dependencies
+    }, [user, authLoading, conversationId]);
 
-    const getRoleDisplayName = (role: Message['role'], messageContent: string) => {
+    const getRoleDisplayName = (role: Message['role']) => {
         if (role === 'system') return "System";
         if (role === 'user' || role === 'human') return "You";
         return "Assistant";
@@ -163,7 +156,7 @@ export default function ChatHistoryViewerPage() {
         );
     }
 
-    const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: enUS }); // Use enUS
+    const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: enUS });
 
     return (
         <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
@@ -239,16 +232,12 @@ export default function ChatHistoryViewerPage() {
                                 {details.messages.map((msg, index) => {
                                     const isUser = msg.role === 'user' || msg.role === 'human';
                                     const isSystem = msg.role === 'system';
-                                    // First system message styling could be different if needed
-                                    // const isFirstSystemMessage = isSystem && index === 0;
                                     
-                                    // Hide initial system prompt "Start the conversation."
-                                    // This might need to be more robust based on actual system prompts
                                     if (isSystem && (msg.content.toLowerCase().includes("start the conversation") || msg.content.toLowerCase().includes("beginnen sie das gespräch"))) {
-                                      if (details.messages.length > 1) return null; // only hide if there are other messages
+                                      if (details.messages.length > 1) return null;
                                     }
 
-                                    const formattedTime = format(new Date(msg.timestamp), 'p', { locale: enUS }); // Use enUS
+                                    const formattedTime = format(new Date(msg.timestamp), 'p', { locale: enUS });
 
                                     return (
                                         <div key={msg.id || index} className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
@@ -262,7 +251,7 @@ export default function ChatHistoryViewerPage() {
                                                 {isUser && <UserCircle className="h-6 w-6 mb-1 text-muted-foreground flex-shrink-0" />}
                                            </div>
                                             <p className={`text-xs text-muted-foreground mt-1 ${isUser ? 'mr-8' : isSystem ? 'ml-0' : 'ml-8'}`}>
-                                                {getRoleDisplayName(msg.role, msg.content)} - {formattedTime}
+                                                {getRoleDisplayName(msg.role)} - {formattedTime}
                                             </p>
                                         </div>
                                     );
