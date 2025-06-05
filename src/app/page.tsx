@@ -507,6 +507,9 @@ export default function Page() {
                                     <BrainCircuit className="mr-2 h-5 w-5" />
                                     {t.page_AvailableLLMsTitle}
                                 </CardTitle>
+                                <p className="text-xs text-muted-foreground text-center mt-1">
+                                    Prices last verified on 2025-06-04
+                                </p>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {Object.entries(groupedLLMsByProvider).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
@@ -561,7 +564,7 @@ export default function Page() {
                                                                             <TruncatableNote noteText={llm.pricing.note} />
                                                                         ) : (
                                                                             <span className="text-xs text-muted-foreground">
-                                                                                (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok)
+                                                                                (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens)
                                                                             </span>
                                                                         )}
                                                                         {isLanguageSupported(llm.provider, language.code, llm.id) ? (
