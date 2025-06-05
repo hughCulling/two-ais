@@ -563,7 +563,7 @@ export default function Page() {
                                                                         {llm.pricing.note ? (
                                                                             <TruncatableNote noteText={llm.pricing.note} />
                                                                         ) : (
-                                                                            <span className="text-xs text-muted-foreground">
+                                                                            <span className="text-xs text-muted-foreground truncate min-w-0">
                                                                                 (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens)
                                                                             </span>
                                                                         )}
@@ -670,7 +670,7 @@ export default function Page() {
                                                             return (
                                                                 <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
                                                                     <span className="whitespace-nowrap">{model.name}</span>
-                                                                    <span className="text-xs text-muted-foreground" title={model.description}>({model.pricingText})</span>
+                                                                    <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({model.pricingText})</span>
                                                                     {supportsLanguage ? (
                                                                         <Tooltip>
                                                                             <TooltipTrigger asChild>
