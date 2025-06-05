@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, History } from "lucide-react";
 // --- Import required UI components ---
 import {
   Alert,
@@ -39,6 +39,8 @@ import { cn } from '@/lib/utils';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Define a more specific type for model category translation keys
 type ModelCategoryTranslationKey = Extract<keyof TranslationKeys, `modelCategory_${string}`>;
@@ -463,10 +465,22 @@ export default function Page() {
             <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
                 {user ? (
                     !sessionConfig || !activeConversationId ? (
-                         <SessionSetupForm
-                             onStartSession={handleStartSession}
-                             isLoading={isStartingSession}
-                         />
+                        <>
+                            <SessionSetupForm
+                                onStartSession={handleStartSession}
+                                isLoading={isStartingSession}
+                            />
+                            <div className="mt-6 w-full max-w-md flex justify-center">
+                                <Link href="/history" passHref legacyBehavior>
+                                    <a className="w-full">
+                                        <Button variant="outline" className="w-full">
+                                            <History className="mr-2 h-4 w-4" />
+                                            View Chat History
+                                        </Button>
+                                    </a>
+                                </Link>
+                            </div>
+                        </>
                     ) : (
                         <ChatInterface
                             conversationId={activeConversationId}
