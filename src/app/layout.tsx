@@ -3,9 +3,11 @@
 
 import type { Metadata } from "next";
 import { AuthProvider } from '@/context/AuthContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 // --- Reverted Font Import ---
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from '@/components/layout/Header';
+import Footer from '@/components/Footer';
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
@@ -87,12 +89,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <Header />
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <Header />
+              {children}
+              <Footer />
+              <Analytics />
+              <SpeedInsights />
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

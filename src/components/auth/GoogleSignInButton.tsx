@@ -8,6 +8,8 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth, db } from '@/lib/firebase/clientApp';
+import { useLanguage } from '@/context/LanguageContext'; // Added
+import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations'; // Added
 
 // Simple SVG Google Icon component
 const GoogleIcon = () => (
@@ -17,6 +19,8 @@ const GoogleIcon = () => (
 export default function GoogleSignInButton() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const { language } = useLanguage(); // Added
+    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys; // Added
 
     const handleGoogleSignIn = async () => {
         setError(null);
@@ -24,7 +28,7 @@ export default function GoogleSignInButton() {
 
         if (!auth || !db) {
             console.error("Firebase auth or db not initialized.");
-            setError("Initialization error. Please try again later.");
+            setError(t.auth.errors.initialization);
             setLoading(false);
             return;
         }
@@ -54,16 +58,16 @@ export default function GoogleSignInButton() {
                         console.log("Firestore document created successfully for new Google user.");
                     } catch (writeError: unknown) { // Catch Firestore write error
                             console.error("Error writing new user document to Firestore:", writeError);
-                            const message = (writeError instanceof Error) ? writeError.message : 'An unknown error occurred during profile save.';
-                            setError(`Signed in, but failed to save profile data: ${message}`);
+                            const message = (writeError instanceof Error) ? writeError.message : t.auth.errors.unknownGoogleSignInError; // Using a generic fallback
+                            setError(`${t.auth.errors.profileSaveFailedPrefix}${message}`);
                     }
                 } else {
                     console.log("Existing user document found in Firestore.");
                 }
             } catch (firestoreCheckError: unknown) { // Catch Firestore get/set error
                     console.error("Error checking/writing user document in Firestore:", firestoreCheckError);
-                    const message = (firestoreCheckError instanceof Error) ? firestoreCheckError.message : 'An unknown error occurred accessing profile data.';
-                    setError(`Signed in, but failed to check/save profile data: ${message}`);
+                    const message = (firestoreCheckError instanceof Error) ? firestoreCheckError.message : t.auth.errors.unknownGoogleSignInError; // Using a generic fallback
+                    setError(`${t.auth.errors.profileCheckSaveFailedPrefix}${message}`);
             }
 
         } catch (authError: unknown) { // Catch Auth popup error
@@ -74,14 +78,14 @@ export default function GoogleSignInButton() {
                     console.log('Google Sign-In popup closed by user.');
                     // Optionally set a non-error message or just do nothing
                  } else if (authError.code === 'auth/account-exists-with-different-credential') {
-                    setError('An account already exists with this email using a different sign-in method.');
+                    setError(t.auth.errors.accountExistsWithDifferentCredential);
                  } else {
-                    setError(`Google Sign-In failed: ${authError.message}`);
+                    setError(`${t.auth.errors.googleSignInFailedPrefix}${authError.message}`);
                  }
             } else if (authError instanceof Error) {
-                 setError(`Google Sign-In failed: ${authError.message}`);
+                 setError(`${t.auth.errors.googleSignInFailedPrefix}${authError.message}`);
             } else {
-                setError('An unknown error occurred during Google Sign-In.');
+                setError(t.auth.errors.unknownGoogleSignInError);
             }
         } finally {
             setLoading(false);
@@ -92,7 +96,7 @@ export default function GoogleSignInButton() {
         <div>
             <button onClick={handleGoogleSignIn} disabled={loading} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800">
                 <GoogleIcon />
-                {loading ? 'Signing In...' : 'Sign In with Google'}
+                {loading ? t.auth.login.signingIn : t.auth.login.signInWithGoogle}
             </button>
             {error && <p className="mt-2 text-xs text-center text-red-600 dark:text-red-400">{error}</p>}
         </div>

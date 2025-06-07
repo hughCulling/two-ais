@@ -87,14 +87,80 @@ initializeServices();
 
 // --- getApiKeyFromSecret Helper was removed as it's unused in this file ---
 
+// --- Define conversation prompts in different languages ---
+const CONVERSATION_PROMPTS: Record<string, string> = {
+    en: "Start the conversation.",
+    ar: "ابدأ المحادثة.",
+    bn: "কথোপকথন শুরু করুন।",
+    bg: "Започнете разговора.",
+    zh: "开始对话。",
+    hr: "Započnite razgovor.",
+    cs: "Zahajte konverzaci.",
+    da: "Start samtalen.",
+    nl: "Start het gesprek.",
+    et: "Alustage vestlust.",
+    fi: "Aloita keskustelu.",
+    fr: "Commencez la conversation.",
+    de: "Beginnen Sie das Gespräch.",
+    el: "Ξεκινήστε τη συνομιλία.",
+    iw: "התחל את השיחה.",
+    hi: "बातचीत शुरू करें।",
+    hu: "Kezdje el a beszélgetést.",
+    id: "Mulai percakapan.",
+    it: "Inizia la conversazione.",
+    ja: "会話を始めてください。",
+    ko: "대화를 시작하세요。",
+    lv: "Sāciet sarunu.",
+    lt: "Pradėkite pokalbį.",
+    no: "Start samtalen.",
+    pl: "Rozpocznij rozmowę.",
+    pt: "Inicie a conversa.",
+    ro: "Începeți conversația.",
+    ru: "Начните разговор.",
+    sr: "Започните разговор.",
+    sk: "Začnite konverzáciu.",
+    sl: "Začnite pogovor.",
+    es: "Comienza la conversación.",
+    sw: "Anza mazungumzo.",
+    sv: "Starta konversationen.",
+    th: "เริ่มการสนทนา",
+    tr: "Konuşmayı başlatın.",
+    uk: "Почніть розмову.",
+    vi: "Bắt đầu cuộc trò chuyện.",
+    mt: "Ibda l-konversazzjoni.",
+    bs: "Započnite razgovor.",
+    ca: "Comença la conversa.",
+    gu: "વાતચીત શરૂ કરો.",
+    hy: "Սկսեք խոսակցությունը:",
+    is: "Byrjaðu samtalið.",
+    ka: "საუბრის დაწყება.",
+    kk: "Әңгімені бастаңыз.",
+    kn: "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ.",
+    mk: "Започнете го разговорот.",
+    ml: "സംഭാഷണം ആരംഭിക്കുക.",
+    mr: "संभाषण सुरू करा.",
+    ms: "Mulakan perbualan.",
+    my: "စကားစတင်ပါ။",
+    pa: "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।",
+    so: "Bilow wada hadalka.",
+    sq: "Filloni bisedën.",
+    ta: "உரையாடலைத் தொடங்கு.",
+    te: "సంభాషణను ప్రారంభించండి.",
+    tl: "Simulan ang pag-uusap.",
+    ur: "گفتگو شروع کریں۔",
+    am: "ውይይቱን ጀምር።",
+    mn: "Яриаг эхлүүл.",
+    fa: "مکالمه را شروع کنید"
+};
 
 // --- Define TTS Types (Mirroring frontend and backend expectations) ---
 const VALID_TTS_PROVIDER_IDS_API = [
-    "none",
-    "browser",
     "openai",
     "google-cloud",
-    "elevenlabs"
+    "elevenlabs",
+    "google-gemini",
+    "none",
+    "browser"
 ] as const;
 type TTSProviderIdApi = typeof VALID_TTS_PROVIDER_IDS_API[number];
 
@@ -102,6 +168,7 @@ interface AgentTTSSettingsApi {
     provider: TTSProviderIdApi;
     voice: string | null;
     selectedTtsModelId?: string;
+    ttsApiModelId?: string;
 }
 
 // --- Updated Request Body Interface ---
@@ -111,6 +178,7 @@ interface StartConversationRequest {
     ttsEnabled: boolean;
     agentA_tts: AgentTTSSettingsApi;
     agentB_tts: AgentTTSSettingsApi;
+    language?: string; // Add optional language parameter
 }
 
 // --- POST Handler ---
@@ -151,7 +219,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en' } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -181,7 +249,7 @@ export async function POST(request: NextRequest) {
             if (agentBErr) return NextResponse.json({ error: agentBErr }, { status: 400 });
         }
 
-        console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS Prov=${agentA_tts.provider}, Model=${agentA_tts.selectedTtsModelId}, Voice=${agentA_tts.voice}, AgentB TTS Prov=${agentB_tts.provider}, Model=${agentB_tts.selectedTtsModelId}, Voice=${agentB_tts.voice}`);
+        console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS Prov=${agentA_tts.provider}, Model=${agentA_tts.selectedTtsModelId}, Voice=${agentA_tts.voice}, AgentB TTS Prov=${agentB_tts.provider}, Model=${agentB_tts.selectedTtsModelId}, Voice=${agentB_tts.voice}, Language=${language}`);
 
         const agentALLMInfo = getLLMInfoById(agentA_llm);
         const agentBLLMInfo = getLLMInfoById(agentB_llm);
@@ -240,11 +308,13 @@ export async function POST(request: NextRequest) {
                 provider: agentA_tts.provider,
                 voice: agentA_tts.voice,
                 selectedTtsModelId: agentA_tts.selectedTtsModelId,
+                ttsApiModelId: agentA_tts.ttsApiModelId,
             };
             const finalAgentBTts = {
                 provider: agentB_tts.provider,
                 voice: agentB_tts.voice,
                 selectedTtsModelId: agentB_tts.selectedTtsModelId,
+                ttsApiModelId: agentB_tts.ttsApiModelId,
             };
 
             const conversationData = {
@@ -253,6 +323,7 @@ export async function POST(request: NextRequest) {
                 agentB_llm: agentB_llm,
                 turn: "agentA",
                 status: "running",
+                language: language, // Store the language for the conversation
                 apiSecretVersions: userApiSecretVersions,
                 createdAt: FieldValue.serverTimestamp(),
                 lastActivity: FieldValue.serverTimestamp(),
@@ -264,15 +335,17 @@ export async function POST(request: NextRequest) {
             };
 
             await newConversationRef.set(conversationData);
-            console.log(`API Route: Created conversation document with TTS settings: ${conversationId}`);
+            console.log(`API Route: Created conversation document with TTS settings and language: ${conversationId}`);
 
-            const initialPrompt = "Start the conversation.";
+            // Use the appropriate language prompt, fallback to English if not found
+            const initialPrompt = CONVERSATION_PROMPTS[language] || CONVERSATION_PROMPTS.en;
+            
             await newConversationRef.collection("messages").add({
                 role: "system",
                 content: initialPrompt,
                 timestamp: FieldValue.serverTimestamp(),
             });
-             console.log(`API Route: Added initial system message for conversation: ${conversationId}`);
+             console.log(`API Route: Added initial system message for conversation in ${language}: ${conversationId}`);
 
              return NextResponse.json({
                  message: "Conversation created successfully.",
