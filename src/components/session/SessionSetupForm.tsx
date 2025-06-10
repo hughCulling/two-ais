@@ -62,20 +62,8 @@ const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'togeth
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
     llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
 );
-const ANY_OPENAI_USES_REASONING_TOKENS = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'OpenAI' && llm.usesReasoningTokens
-);
-const ANY_GOOGLE_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'Google' && llm.usesReasoningTokens
-);
-const ANY_ANTHROPIC_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'Anthropic' && llm.usesReasoningTokens
-);
-const ANY_XAI_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'xAI' && llm.usesReasoningTokens
-);
-const ANY_QWEN_MODEL_USES_THINKING = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen') && llm.usesReasoningTokens
+const ANY_MODEL_USES_REASONING = AVAILABLE_LLMS.some(
+    llm => llm.usesReasoningTokens
 );
 
 const formatPrice = (price: number) => {
@@ -571,7 +559,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 ) : (
                                                                     !isDisabled && (
                                                                         <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok
+                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens
                                                                         </span>
                                                                     )
                                                                 )}
@@ -620,17 +608,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {llm.usesReasoningTokens && !isDisabled && (
-                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
-                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {supportsLanguage ? (
-                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                                                    ) : (
-                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
@@ -646,10 +623,23 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                 ) : (
                                                                     !isDisabled && (
                                                                         <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0">
-                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} MTok
+                                                                            ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens
                                                                         </span>
                                                                     )
                                                                 )}
+                                                                <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
+                                                                    {supportsLanguage ? (
+                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                    ) : (
+                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                    )}
+                                                                    {llm.usesReasoningTokens && !isDisabled && (
+                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </SelectItem>
                                                     );
@@ -661,34 +651,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                         </div>
                         {/* Explanation Notes */}
-                        {ANY_OPENAI_USES_REASONING_TOKENS && (
+                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                            <Check className="h-3 w-3 text-green-600 mr-1 flex-shrink-0"/>
+                            <X className="h-3 w-3 text-red-600 mr-1 flex-shrink-0"/>
+                            Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
+                        </p>
+                        {ANY_MODEL_USES_REASONING && (
                              <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                                 <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates an OpenAI model uses reasoning tokens (not visible in chat, billed as output).
-                            </p>
-                        )}
-                        {ANY_GOOGLE_MODEL_USES_THINKING && (
-                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates a Google model uses a &apos;thinking budget&apos;. The &apos;thinking&apos; output is billed but is not visible in the chat.
-                            </p>
-                        )}
-                        {ANY_ANTHROPIC_MODEL_USES_THINKING && (
-                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates an Anthropic model uses &apos;extended thinking&apos;. The &apos;thinking&apos; output is billed but may not be visible in the chat.
-                            </p>
-                        )}
-                        {ANY_XAI_MODEL_USES_THINKING && (
-                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates an xAI model uses &apos;thinking&apos;. Thinking traces may be accessible and output is billed.
-                            </p>
-                        )}
-                         {ANY_QWEN_MODEL_USES_THINKING && (
-                             <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                                Indicates a Qwen model (via TogetherAI) uses &apos;reasoning/thinking&apos;. Output is billed accordingly.
+                                Indicates a model uses &apos;thinking&apos; or &apos;reasoning&apos; tokens. This output is billed but is not visible in the chat.
                             </p>
                         )}
                         {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
@@ -705,11 +676,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </a>.
                             </p>
                         )}
-                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                        {/* <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                             <Check className="h-3 w-3 text-green-600 mr-1 flex-shrink-0"/>
                             <X className="h-3 w-3 text-red-600 mr-1 flex-shrink-0"/>
                             Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
-                        </p>
+                        </p> */}
                     </div>
 
                     {/* TTS Configuration Section */}
