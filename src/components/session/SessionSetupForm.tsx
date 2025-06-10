@@ -556,17 +556,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         >
                                                             <div className="flex justify-between items-center w-full text-sm">
                                                                 <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
-                                                                    {llm.usesReasoningTokens && !isDisabled && (
-                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
-                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
-                                                                    )}
-                                                                    {supportsLanguage ? (
-                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                                                    ) : (
-                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                                                    )}
                                                                     <span className="truncate font-medium" title={llm.name}>
                                                                         {llm.name}
                                                                         {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
@@ -586,6 +575,19 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                         </span>
                                                                     )
                                                                 )}
+                                                                <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
+                                                                    {supportsLanguage ? (
+                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                    ) : (
+                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                    )}
+                                                                    {llm.usesReasoningTokens && !isDisabled && (
+                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0"/>
+                                                                    )}
+                                                                    {llm.requiresOrgVerification && llm.provider === 'OpenAI' && !isDisabled && (
+                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0"/>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </SelectItem>
                                                     );
