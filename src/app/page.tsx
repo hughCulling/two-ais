@@ -19,7 +19,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // --- Import required icons ---
-import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, History } from "lucide-react";
+import { AlertCircle, BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 // --- Import required UI components ---
 import {
   Alert,
@@ -39,8 +39,6 @@ import { cn } from '@/lib/utils';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 // Define a more specific type for model category translation keys
 type ModelCategoryTranslationKey = Extract<keyof TranslationKeys, `modelCategory_${string}`>;
