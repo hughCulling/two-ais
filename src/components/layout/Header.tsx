@@ -31,10 +31,17 @@ export default function Header() {
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
-                    <div className="flex-shrink-0">
+                    <div className="flex items-center space-x-4 flex-shrink-0">
                         <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400">
                             {t.header.appName}
                         </Link>
+                        {/* View Previous Chats button (desktop, left, only if logged in) */}
+                        {user && !loading && (
+                            <Link href="/history" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                View Previous Chats
+                            </Link>
+                        )}
                     </div>
 
                     {/* --- Desktop Navigation & Auth --- */}
@@ -108,6 +115,9 @@ export default function Header() {
                                     </span>
                                 </div>
                             </div>
+                            <Link href="/history" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
+                                <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>View Previous Chats</span>
+                            </Link>
                             <Link href="/settings" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
                                 Settings {/* {t.header.settings} */}
                             </Link>

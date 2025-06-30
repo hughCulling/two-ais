@@ -470,16 +470,6 @@ export default function Page() {
                                 onStartSession={handleStartSession}
                                 isLoading={isStartingSession}
                             />
-                            <div className="mt-6 w-full max-w-md flex justify-center">
-                                <Link href="/history" passHref legacyBehavior>
-                                    <a className="w-full">
-                                        <Button variant="outline" className="w-full">
-                                            <History className="mr-2 h-4 w-4" />
-                                            View Chat History
-                                        </Button>
-                                    </a>
-                                </Link>
-                            </div>
                         </>
                     ) : (
                         <ChatInterface
