@@ -315,11 +315,20 @@ export function ChatInterface({
                         setIsAudioPlaying(true);
                     })
                     .catch(err => {
-                        logger.error(`Error playing audio for message ${messageIdToPlay}:`, err);
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                        // Signal backend even on playback error to avoid getting stuck
-                        handleAudioEnd(messageIdToPlay);
+                        if (err && err.name === "AbortError") {
+                            logger.debug(`Audio playback aborted for message ${messageIdToPlay}. This is expected if playback was interrupted.`);
+                            // Do not set error or signal backend for AbortError
+                            setIsAudioPlaying(false);
+                            setCurrentlyPlayingMsgId(null);
+                            // Optionally, still call handleAudioEnd to keep backend in sync
+                            handleAudioEnd(messageIdToPlay);
+                        } else {
+                            logger.error(`Error playing audio for message ${messageIdToPlay}:`, err);
+                            setIsAudioPlaying(false);
+                            setCurrentlyPlayingMsgId(null);
+                            // Signal backend even on playback error to avoid getting stuck
+                            handleAudioEnd(messageIdToPlay);
+                        }
                     });
             }
         }
@@ -468,10 +477,26 @@ export function ChatInterface({
                     }
                 }}
                 onError={(e) => {
-                     logger.error("Audio playback error:", e);
-                     if (currentlyPlayingMsgId) {
-                         handleAudioEnd(currentlyPlayingMsgId);
-                     }
+                    // Type assertion to HTMLAudioElement to access the error property
+                    const audioElem = e.currentTarget as HTMLAudioElement;
+                    const audioError = audioElem.error;
+                    // MEDIA_ERR_ABORTED (code 3) means the fetching process for the media resource was aborted by the user agent at the user's request.
+                    if (audioError && audioError.code === 3) {
+                        logger.debug("Audio playback error: MEDIA_ERR_ABORTED (expected if playback was interrupted by user action).");
+                        setIsAudioPlaying(false);
+                        setCurrentlyPlayingMsgId(null);
+                        // Optionally, still call handleAudioEnd to keep backend in sync
+                        if (currentlyPlayingMsgId) {
+                            handleAudioEnd(currentlyPlayingMsgId);
+                        }
+                    } else {
+                        logger.error("Audio playback error:", e);
+                        setIsAudioPlaying(false);
+                        setCurrentlyPlayingMsgId(null);
+                        if (currentlyPlayingMsgId) {
+                            handleAudioEnd(currentlyPlayingMsgId);
+                        }
+                    }
                 }}
                 style={{ display: 'none' }}
             />
