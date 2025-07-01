@@ -22,6 +22,10 @@ import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 
+// --- TTS Utility Imports ---
+import { getTTSInputChunks } from './tts_utils';
+import { getBackendTTSModelById } from './tts_models';
+
 // --- Initialization of Firebase Admin and Clients ---
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -411,9 +415,10 @@ async function _triggerAgentResponse(
 
         let audioUrl: string | null = null;
         let ttsGenerated = false;
+        let ttsWasSplit = false; // New: flag for UI if audio was split
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
-        const textToSpeak = responseContent; // Text to speak is the LLM's response
+        const textToSpeak = responseContent;
 
         if (ttsSettings?.enabled && agentSettings && agentSettings.provider !== "none" && agentSettings.voice && textToSpeak) {
             let audioBuffer: Buffer | null = null;
@@ -438,253 +443,173 @@ async function _triggerAgentResponse(
                 }
             }
 
-            if (ttsApiKey && agentSettings.voice) { // Ensure API key and voice are present
-                if (agentSettings.provider === "openai") {
-                    const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
-                    const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
-                                             agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
-                                             "tts-1";
-
-                    logger.info(`[TTS Attempt] Provider: OpenAI, Model: ${openAIModelApiId}, Voice: ${openAIVoice}, Text Length: ${textToSpeak.length}`);
-                    try {
-                        const openai = new OpenAI({ apiKey: ttsApiKey });
-                        const mp3 = await openai.audio.speech.create({
-                            model: openAIModelApiId,
-                            voice: openAIVoice,
-                            input: textToSpeak,
-                            response_format: "mp3",
-                        });
-                        audioBuffer = Buffer.from(await mp3.arrayBuffer());
-                        logger.info(`[TTS Success] OpenAI TTS generated for ${agentToRespond}. Model: ${openAIModelApiId}, Voice: ${openAIVoice}`);
-                    } catch (openaiClientError) {
-                         logger.error("[TTS API Call Error - OpenAI] Error during speech creation:", openaiClientError);
-                         audioBuffer = null;
-                    }
-                } else if (agentSettings.provider === "google-cloud") {
-                    if (!textToSpeechClient) {
-                        logger.error("[TTS Error - Google] TextToSpeechClient not initialized. Skipping Google TTS.");
-                    } else {
-                        const googleVoiceName = agentSettings.voice; // e.g., en-US-Wavenet-A
-                        const languageCode = googleVoiceName.split("-").slice(0, 2).join("-"); // Extract 'en-US' from 'en-US-Wavenet-A'
-
-                        logger.info(`[TTS Attempt] Provider: Google, Voice: ${googleVoiceName}, Language: ${languageCode}, Text Length: ${textToSpeak.length}`);
-                        try {
-                            const request = {
-                                input: { text: textToSpeak },
-                                voice: { languageCode: languageCode, name: googleVoiceName },
-                                audioConfig: { audioEncoding: "MP3" as const },
-                            };
-                            const [response] = await textToSpeechClient.synthesizeSpeech(request);
-                            if (response.audioContent instanceof Uint8Array) {
-                                audioBuffer = Buffer.from(response.audioContent);
-                                logger.info(`[TTS Success] Google TTS generated for ${agentToRespond}. Voice: ${googleVoiceName}`);
-                            } else {
-                                logger.error("[TTS Error - Google] Audio content is not Uint8Array:", response.audioContent);
-                            }
-                        } catch (googleTtsError) {
-                            logger.error("[TTS API Call Error - Google] Error during speech creation:", googleTtsError);
-                            audioBuffer = null;
-                        }
-                    }
+            if (ttsApiKey && agentSettings && agentSettings.voice) {
+                // --- New: TTS Input Splitting Logic ---
+                const ttsModel = getBackendTTSModelById(agentSettings.selectedTtsModelId || agentSettings.ttsApiModelId || '');
+                let inputLimitType = 'characters';
+                let inputLimitValue = 4096;
+                let encodingName = 'cl100k_base';
+                if (ttsModel) {
+                  inputLimitType = ttsModel.inputLimitType;
+                  inputLimitValue = ttsModel.inputLimitValue;
+                  if (ttsModel.encodingName) encodingName = ttsModel.encodingName;
                 }
-                // Add Google Gemini TTS support
-                else if (agentSettings.provider === "google-gemini") {
-                    const geminiVoiceId = agentSettings.voice; // e.g., "Achernar"
-                    // Use ttsApiModelId if available (preferred), otherwise fallback to selectedTtsModelId
-                    const geminiModelApiId = agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId;
-
-                    if (!geminiModelApiId) {
-                        logger.error("[TTS Error - Gemini] Model API ID (ttsApiModelId or selectedTtsModelId) is missing for Google Gemini TTS. Skipping.");
-                    } else {
-                        logger.info(`[TTS Attempt] Provider: Google Gemini, Model: ${geminiModelApiId}, Voice: ${geminiVoiceId}, Text Length: ${textToSpeak.length}`);
-                        try {
-                            logger.info(`[TTS Info - Gemini] Using Gemini generateContent API for TTS. Model: ${geminiModelApiId}, Voice: ${geminiVoiceId}`);
-
-                            // Ensure we're using the correct model name for TTS
-                            const ttsModelName = geminiModelApiId.includes("tts") ? geminiModelApiId : "gemini-2.5-flash-preview-tts";
-                            logger.info(`[TTS Info - Gemini] Using TTS model: ${ttsModelName}`);
-
-                            // Correct endpoint for Gemini TTS - uses generateContent, not synthesizeSpeech
-                            const geminiTtsApiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ttsModelName}:generateContent?key=${ttsApiKey}`;
-
-                            // Correct request body format for Gemini TTS based on latest documentation
-                            const geminiTtsRequestBody = {
-                                contents: [{
-                                    parts: [{
-                                        text: textToSpeak
-                                    }]
-                                }],
-                                generationConfig: {
-                                    responseModalities: ["AUDIO"],
-                                    speechConfig: {
-                                        voiceConfig: {
-                                            prebuiltVoiceConfig: {
-                                                voiceName: geminiVoiceId
-                                            }
-                                        }
-                                    }
-                                }
-                            };
-                            
-                            logger.info("[TTS Request Body - Gemini]:", JSON.stringify(geminiTtsRequestBody, null, 2));
-                            logger.info(`[TTS Endpoint - Gemini]: ${geminiTtsApiEndpoint}`);
-
-                            const geminiResponse = await axios({
-                                method: "post",
-                                url: geminiTtsApiEndpoint,
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                data: geminiTtsRequestBody,
-                                responseType: "json", 
-                                timeout: 30000, // 30 second timeout
-                            });
-
-                            logger.info(`[TTS Response Status - Gemini]: ${geminiResponse.status}`);
-
-                            // Check for correct response structure
-                            if (geminiResponse.data && 
-                                geminiResponse.data.candidates && 
-                                geminiResponse.data.candidates[0] && 
-                                geminiResponse.data.candidates[0].content && 
-                                geminiResponse.data.candidates[0].content.parts && 
-                                geminiResponse.data.candidates[0].content.parts[0] && 
-                                geminiResponse.data.candidates[0].content.parts[0].inlineData && 
-                                geminiResponse.data.candidates[0].content.parts[0].inlineData.data) {
-                                
-                                const audioData = geminiResponse.data.candidates[0].content.parts[0].inlineData.data;
-                                const rawPcmBuffer = Buffer.from(audioData, "base64");
-                                
-                                // Convert raw PCM data to proper WAV format with headers
-                                // Gemini TTS returns 16-bit PCM at 24kHz sample rate, mono
-                                audioBuffer = createWavBuffer(rawPcmBuffer, 1, 24000, 16);
-                                
-                                logger.info(`[TTS Success] Google Gemini TTS generated for ${agentToRespond}. Model: ${ttsModelName}, Voice: ${geminiVoiceId}, Raw PCM size: ${rawPcmBuffer.length} bytes, WAV size: ${audioBuffer.length} bytes`);
-                            } else {
-                                logger.error("[TTS Error - Gemini] No audio data in response or invalid response structure:");
-                                logger.error("Response structure:", JSON.stringify(geminiResponse.data, null, 2));
-                                audioBuffer = null;
-                            }
-
-                        } catch (geminiTtsError: Error | unknown) {
-                            logger.error("[TTS API Call Error - Google Gemini] Error during speech creation:", geminiTtsError);
-                            if (axios.isAxiosError(geminiTtsError) && geminiTtsError.response) {
-                                logger.error(`[TTS Error - Gemini] Status: ${geminiTtsError.response.status}, Status Text: ${geminiTtsError.response.statusText}`);
-                                logger.error("[TTS Error - Gemini] Response Headers:", JSON.stringify(geminiTtsError.response.headers, null, 2));
-                                logger.error("[TTS Error - Gemini] Response Data:", JSON.stringify(geminiTtsError.response.data, null, 2));
-                                
-                                // Specific handling for 404 errors
-                                if (geminiTtsError.response.status === 404) {
-                                    logger.error(`[TTS Error - Gemini] 404 Not Found. Check if model name '${agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId}' is correct and TTS feature is available.`);
-                                    logger.error(`[TTS Error - Gemini] Tried endpoint: ${geminiTtsError.config?.url}`);
-                                }
-                            } else if (geminiTtsError instanceof Error) {
-                                logger.error(`[TTS Error - Gemini] Error message: ${geminiTtsError.message}`);
-                                logger.error(`[TTS Error - Gemini] Error stack: ${geminiTtsError.stack}`);
-                            }
-                            audioBuffer = null;
-                        }
-                    }
+                // Split text as needed
+                const ttsChunks = getTTSInputChunks(
+                  textToSpeak,
+                  inputLimitType as import('./tts_models').TTSInputLimitType,
+                  inputLimitValue,
+                  encodingName as import('@dqbd/tiktoken').TiktokenEncoding | undefined
+                );
+                if (ttsChunks.length > 1) {
+                  ttsWasSplit = true;
+                  logger.info(`[TTS Split] Text for ${agentToRespond} split into ${ttsChunks.length} chunks for TTS model ${ttsModel?.name || agentSettings.selectedTtsModelId}`);
                 }
-                // Add Eleven Labs TTS support
-                else if (agentSettings.provider === "elevenlabs") {
-                    const elevenLabsVoiceId = agentSettings.voice;
-                    let modelId = "eleven_multilingual_v2"; // Default model
-                    
-                    // Map the frontend conceptual model ID to the actual API model ID
-                    if (agentSettings.selectedTtsModelId === "elevenlabs-flash-v2-5") {
+                // Generate audio for each chunk and concatenate if possible
+                const audioBuffers: Buffer[] = [];
+                for (let i = 0; i < ttsChunks.length; i++) {
+                  const chunkText = ttsChunks[i];
+                  let chunkBuffer: Buffer | null = null;
+                  try {
+                    if (agentSettings.provider === "openai") {
+                      const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+                      const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
+                                               agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
+                                               "tts-1";
+                      const openai = new OpenAI({ apiKey: ttsApiKey });
+                      const mp3 = await openai.audio.speech.create({
+                        model: openAIModelApiId,
+                        voice: openAIVoice,
+                        input: chunkText,
+                        response_format: "mp3",
+                      });
+                      chunkBuffer = Buffer.from(await mp3.arrayBuffer());
+                    } else if (agentSettings.provider === "google-cloud") {
+                      if (!textToSpeechClient) throw new Error("Google TextToSpeechClient not initialized");
+                      const googleVoiceName = agentSettings.voice;
+                      const languageCode = googleVoiceName.split("-").slice(0, 2).join("-");
+                      const request = {
+                        input: { text: chunkText },
+                        voice: { languageCode: languageCode, name: googleVoiceName },
+                        audioConfig: { audioEncoding: "MP3" as const },
+                      };
+                      const [response] = await textToSpeechClient.synthesizeSpeech(request);
+                      if (response.audioContent instanceof Uint8Array) {
+                        chunkBuffer = Buffer.from(response.audioContent);
+                      } else {
+                        throw new Error("Google TTS audio content is not Uint8Array");
+                      }
+                    } else if (agentSettings.provider === "google-gemini") {
+                      const geminiVoiceId = agentSettings.voice;
+                      const geminiModelApiId = agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId;
+                      const ttsModelName = geminiModelApiId && geminiModelApiId.includes("tts") ? geminiModelApiId : "gemini-2.5-flash-preview-tts";
+                      const geminiTtsApiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ttsModelName}:generateContent?key=${ttsApiKey}`;
+                      const geminiTtsRequestBody = {
+                        contents: [{ parts: [{ text: chunkText }] }],
+                        generationConfig: {
+                          responseModalities: ["AUDIO"],
+                          speechConfig: {
+                            voiceConfig: { prebuiltVoiceConfig: { voiceName: geminiVoiceId } }
+                          }
+                        }
+                      };
+                      const geminiResponse = await axios({
+                        method: "post",
+                        url: geminiTtsApiEndpoint,
+                        headers: { "Content-Type": "application/json" },
+                        data: geminiTtsRequestBody,
+                        responseType: "json",
+                        timeout: 30000,
+                      });
+                      if (geminiResponse.data &&
+                        geminiResponse.data.candidates &&
+                        geminiResponse.data.candidates[0] &&
+                        geminiResponse.data.candidates[0].content &&
+                        geminiResponse.data.candidates[0].content.parts &&
+                        geminiResponse.data.candidates[0].content.parts[0] &&
+                        geminiResponse.data.candidates[0].content.parts[0].inlineData &&
+                        geminiResponse.data.candidates[0].content.parts[0].inlineData.data) {
+                        const audioData = geminiResponse.data.candidates[0].content.parts[0].inlineData.data;
+                        const rawPcmBuffer = Buffer.from(audioData, "base64");
+                        chunkBuffer = createWavBuffer(rawPcmBuffer, 1, 24000, 16);
+                      } else {
+                        throw new Error("Gemini TTS: No audio data in response or invalid response structure");
+                      }
+                    } else if (agentSettings.provider === "elevenlabs") {
+                      const elevenLabsVoiceId = agentSettings.voice;
+                      let modelId = "eleven_multilingual_v2";
+                      if (agentSettings.selectedTtsModelId === "elevenlabs-flash-v2-5") {
                         modelId = "eleven_flash_v2_5";
-                    } else if (agentSettings.selectedTtsModelId === "elevenlabs-turbo-v2-5") {
+                      } else if (agentSettings.selectedTtsModelId === "elevenlabs-turbo-v2-5") {
                         modelId = "eleven_turbo_v2_5";
+                      }
+                      const elevenlabsApiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${elevenLabsVoiceId}`;
+                      const headers = {
+                        "xi-api-key": ttsApiKey,
+                        "Content-Type": "application/json",
+                        "Accept": "audio/mpeg"
+                      };
+                      const requestBody = {
+                        text: chunkText,
+                        model_id: modelId,
+                        voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+                      };
+                      const response = await axios({
+                        method: "post",
+                        url: elevenlabsApiUrl,
+                        headers: headers,
+                        data: requestBody,
+                        responseType: "arraybuffer"
+                      });
+                      if (response.data) {
+                        chunkBuffer = Buffer.from(response.data);
+                      } else {
+                        throw new Error("ElevenLabs TTS: No audio data returned");
+                      }
                     }
-                    
-                    logger.info(`[TTS Attempt] Provider: Eleven Labs, Model: ${modelId}, Voice ID: ${elevenLabsVoiceId}, Text Length: ${textToSpeak.length}`);
-                    
-                    try {
-                        // API endpoint for Eleven Labs text-to-speech
-                        const elevenlabsApiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${elevenLabsVoiceId}`;
-                        
-                        // Configure headers with API key
-                        const headers = {
-                            "xi-api-key": ttsApiKey,
-                            "Content-Type": "application/json",
-                            "Accept": "audio/mpeg"
-                        };
-                        
-                        // Configure request body
-                        const requestBody = {
-                            text: textToSpeak,
-                            model_id: modelId,
-                            voice_settings: {
-                                stability: 0.5,        // Mid-range stability for natural speech with consistent style
-                                similarity_boost: 0.75 // Slightly higher similarity for more faithful voice reproduction
-                            }
-                        };
-                        
-                        // Make the API request
-                        const response = await axios({
-                            method: "post",
-                            url: elevenlabsApiUrl,
-                            headers: headers,
-                            data: requestBody,
-                            responseType: "arraybuffer"
-                        });
-                        
-                        if (response.data) {
-                            audioBuffer = Buffer.from(response.data);
-                            logger.info(`[TTS Success] Eleven Labs TTS generated for ${agentToRespond}. Model: ${modelId}, Voice ID: ${elevenLabsVoiceId}`);
-                        } else {
-                            logger.error("[TTS Error - Eleven Labs] No audio data returned");
-                        }
-                    } catch (elevenLabsError: Error | unknown) {
-                        logger.error("[TTS API Call Error - Eleven Labs] Error during speech creation:", elevenLabsError);
-                        if (elevenLabsError && typeof elevenLabsError === "object" && "response" in elevenLabsError) {
-                            const errorWithResponse = elevenLabsError as { response: { status: number, data: unknown } };
-                            logger.error(`[TTS Error - Eleven Labs] Status: ${errorWithResponse.response.status}, Data: ${JSON.stringify(errorWithResponse.response.data)}`);
-                        }
-                        audioBuffer = null;
-                    }
+                  } catch (err) {
+                    logger.error(`[TTS Chunk Error] Failed to generate audio for chunk ${i + 1}/${ttsChunks.length}:`, err);
+                    chunkBuffer = null;
+                  }
+                  if (chunkBuffer) audioBuffers.push(chunkBuffer);
                 }
-
+                // Concatenate audio buffers if possible (for MP3, just Buffer.concat; for WAV, also Buffer.concat)
+                if (audioBuffers.length > 0) {
+                  audioBuffer = Buffer.concat(audioBuffers);
+                  ttsGenerated = true;
+                }
+            }
+            if (ttsApiKey && agentSettings && agentSettings.voice) {
                 if (audioBuffer) {
                     logger.info("[TTS Upload] Attempting to upload audio buffer...");
-                    const currentMessageId = admin.firestore().collection("dummy").doc().id; // Generate a unique ID for the audio file
-                    
-                    // Determine file extension and content type based on TTS provider
+                    const currentMessageId = admin.firestore().collection("dummy").doc().id;
                     let fileExtension = "mp3";
                     let contentType = "audio/mpeg";
-                    
                     if (agentSettings.provider === "google-gemini") {
-                        // Gemini TTS returns PCM audio in WAV format (16-bit, 24kHz, mono)
                         fileExtension = "wav";
                         contentType = "audio/wav";
                         logger.info("[TTS Upload] Using WAV format for Google Gemini TTS");
                     }
-                    
                     const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.${fileExtension}`;
                     const file = storageBucket.file(audioFileName);
                     await file.save(audioBuffer, { metadata: { contentType: contentType } });
-                    await file.makePublic(); // Make the file publicly accessible
+                    await file.makePublic();
                     audioUrl = file.publicUrl();
-                    ttsGenerated = true;
                     logger.info(`[TTS Upload Success] TTS audio uploaded for ${agentToRespond} to: ${audioUrl}`);
                 } else {
-                     logger.warn("[TTS Upload Skip] No audio buffer generated, skipping upload.");
+                    logger.warn("[TTS Upload Skip] No audio buffer generated, skipping upload.");
                 }
-            } else {
-                if (!ttsApiKey) logger.warn(`[TTS Skip] API key not available for provider: ${agentSettings.provider}`);
-                if (!agentSettings.voice) logger.warn(`[TTS Skip] No voice selected for provider: ${agentSettings.provider}`);
             }
-        } else {
-             logger.info(`[TTS Skip] Conditions not met. Global enabled: ${ttsSettings?.enabled}, Provider: ${agentSettings?.provider}, Voice: ${agentSettings?.voice}, Text: ${!!textToSpeak}`);
+        } else if (agentSettings) {
+            if (!agentSettings.voice) logger.warn(`[TTS Skip] No voice selected for provider: ${agentSettings.provider}`);
         }
 
-
         const nextTurn = agentToRespond === "agentA" ? "agentB" : "agentA";
-        const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null } = {
+        const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null; ttsWasSplit?: boolean } = {
             role: agentToRespond, content: responseContent, timestamp: admin.firestore.FieldValue.serverTimestamp(),
         };
         if (audioUrl) { responseMessage.audioUrl = audioUrl; }
+        if (ttsWasSplit) { responseMessage.ttsWasSplit = true; }
 
         try {
             const messageDocRef = await messagesRef.add(responseMessage);
