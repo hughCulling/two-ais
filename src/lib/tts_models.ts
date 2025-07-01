@@ -751,6 +751,8 @@ export interface TTSModelDetail {
     pricingText: string;
     voiceFilterCriteria?: (voice: TTSVoice) => boolean;
     supportedLanguages?: string[]; // BCP-47 or ISO 639-1 codes
+    inputLimitType?: 'tokens' | 'characters' | 'bytes'; // Optional: How the input limit is measured
+    inputLimitValue?: number; // Optional: The maximum allowed per request
 }
 
 // --- TTS Provider Interface ---
@@ -868,7 +870,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'GPT-4o mini TTS',
                 description: 'Newest and most reliable model for intelligent realtime applications. Can be prompted for accent, emotion, intonation, speed, tone, etc.',
                 pricingText: '$0.60 per 1M text tokens + $12 per 1M audio tokens',
-                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
+                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
+                inputLimitType: 'tokens',
+                inputLimitValue: 2000,
             },
             {
                 id: 'openai-tts-1',
@@ -876,7 +880,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'TTS-1',
                 description: 'Optimized for real-time use cases and speed.',
                 pricingText: '$15.00 per 1M tokens',
-                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
+                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
+                inputLimitType: 'characters',
+                inputLimitValue: 4096,
             },
             {
                 id: 'openai-tts-1-hd',
@@ -884,7 +890,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 name: 'TTS-1 HD',
                 description: 'Optimized for quality.',
                 pricingText: '$30.00 per 1M tokens',
-                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy']
+                supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
+                inputLimitType: 'characters',
+                inputLimitValue: 4096,
             },
         ],
         availableVoices: OPENAI_TTS_VOICES,
@@ -902,7 +910,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Cost-effective voices for general use.',
                 pricingText: '$4.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Standard',
-                supportedLanguages: ['af-ZA', 'ar-XA', 'bg-BG', 'bn-IN', 'ca-ES', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'eu-ES', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gl-ES', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'is-IS', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'lt-LT', 'lv-LV', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sr-RS', 'sv-SE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'vi-VN', 'yue-HK']
+                supportedLanguages: ['af-ZA', 'ar-XA', 'bg-BG', 'bn-IN', 'ca-ES', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'eu-ES', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gl-ES', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'is-IS', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'lt-LT', 'lv-LV', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sr-RS', 'sv-SE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'vi-VN', 'yue-HK'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-wavenet-voices',
@@ -911,7 +921,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'High-quality, natural-sounding voices.',
                 pricingText: '$16.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'WaveNet',
-                supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sv-SE', 'ta-IN', 'tr-TR', 'uk-UA', 'vi-VN']
+                supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sv-SE', 'ta-IN', 'tr-TR', 'uk-UA', 'vi-VN'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-neural2-voices',
@@ -920,7 +932,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Advanced Neural2 voices for general purpose.',
                 pricingText: '$16.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2',
-                supportedLanguages: ['de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fil-PH', 'fr-CA', 'fr-FR', 'hi-IN', 'it-IT', 'ja-JP', 'ko-KR', 'pt-BR', 'th-TH', 'vi-VN']
+                supportedLanguages: ['de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fil-PH', 'fr-CA', 'fr-FR', 'hi-IN', 'it-IT', 'ja-JP', 'ko-KR', 'pt-BR', 'th-TH', 'vi-VN'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-casual-voices',
@@ -929,7 +943,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Neural2 voices with a casual speaking style.',
                 pricingText: '$16.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2 (Casual)',
-                supportedLanguages: ['en-US']
+                supportedLanguages: ['en-US'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-polyglot-voices',
@@ -938,7 +954,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Voices designed to speak multiple languages fluently (Neural2-based).',
                 pricingText: '$16.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Polyglot',
-                supportedLanguages: ['de-DE', 'en-AU', 'en-US', 'es-ES', 'fr-FR', 'it-IT', 'pt-BR']
+                supportedLanguages: ['de-DE', 'en-AU', 'en-US', 'es-ES', 'fr-FR', 'it-IT', 'pt-BR'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-studio-voices',
@@ -947,7 +965,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Highest-quality voices for narration and professional use.',
                 pricingText: '$160.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Studio',
-                supportedLanguages: ['de-DE', 'en-GB', 'en-US', 'es-US', 'fr-FR']
+                supportedLanguages: ['de-DE', 'en-GB', 'en-US', 'es-US', 'fr-FR'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-news-voices',
@@ -956,7 +976,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Studio-quality voices optimized for news narration.',
                 pricingText: '$160.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Studio (News)',
-                supportedLanguages: ['en-AU', 'en-GB', 'en-US', 'es-US']
+                supportedLanguages: ['en-AU', 'en-GB', 'en-US', 'es-US'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-chirp-hd-preview-voices',
@@ -965,7 +987,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Earlier preview of conversational voices. Some limitations apply.',
                 pricingText: 'Couldn\'t verify',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' && voice.status === 'Preview',
-                supportedLanguages: ['en-AU', 'en-GB', 'en-IN', 'en-US']
+                supportedLanguages: ['en-AU', 'en-GB', 'en-IN', 'en-US'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
             {
                 id: 'google-chirp3-hd-ga-voices',
@@ -974,7 +998,9 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 description: 'Latest GA conversational voices. Nuanced, engaging.',
                 pricingText: '$30.00 per 1M characters',
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp3 HD',
-                supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fr-CA', 'fr-FR', 'gu-IN', 'hi-IN', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'ru-RU', 'sw-KE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'ur-IN', 'vi-VN']
+                supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fr-CA', 'fr-FR', 'gu-IN', 'hi-IN', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'ru-RU', 'sw-KE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'ur-IN', 'vi-VN'],
+                inputLimitType: 'bytes',
+                inputLimitValue: 5000,
             },
         ],
         availableVoices: GOOGLE_TTS_VOICES,
@@ -990,27 +1016,33 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'eleven_multilingual_v2',
                 name: 'Multilingual V2',
                 description: 'Our most lifelike model with rich emotional expression. (10,000 character limit)',
-                pricingText: '$300.00 per 1M characters', // Pricing confirmed from "Flagship models" card and general pricing link
-                voiceFilterCriteria: () => true, // Works with all voices
-                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru']
+                pricingText: '$300.00 per 1M characters',
+                voiceFilterCriteria: () => true,
+                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru'],
+                inputLimitType: 'characters',
+                inputLimitValue: 10000,
             },
             {
                 id: 'elevenlabs-flash-v2-5',
                 apiModelId: 'eleven_flash_v2_5',
                 name: 'Flash V2.5',
                 description: 'Ultra-fast model optimized for real-time use (~75ms latency). (40,000 character limit)',
-                pricingText: '$150.00 per 1M characters', // "50% lower price" -> $0.003/1k
-                voiceFilterCriteria: () => true, // Works with all voices
-                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
+                pricingText: '$150.00 per 1M characters',
+                voiceFilterCriteria: () => true,
+                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi'],
+                inputLimitType: 'characters',
+                inputLimitValue: 40000,
             },
             {
                 id: 'elevenlabs-turbo-v2-5',
                 apiModelId: 'eleven_turbo_v2_5',
                 name: 'Turbo V2.5',
                 description: 'High quality, low-latency model with a good balance of quality and speed (~250ms-300ms). (40,000 character limit)',
-                pricingText: 'Couldn\'t verify', // "50% lower price" -> $0.003/1k
-                voiceFilterCriteria: () => true, // Works with all voices
-                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi']
+                pricingText: 'Couldn\'t verify',
+                voiceFilterCriteria: () => true,
+                supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi'],
+                inputLimitType: 'characters',
+                inputLimitValue: 40000,
             },
         ],
         availableVoices: ELEVENLABS_TTS_VOICES,
@@ -1019,21 +1051,22 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         id: 'google-gemini',
         name: 'Google Gemini TTS',
         requiresOwnKey: true,
-        apiKeyId: 'google_ai', // Changed from 'gemini_api_key' to 'google_ai'
+        apiKeyId: 'google_ai',
         models: [
             {
-                id: 'gemini-2.5-flash-preview-tts', // Updated to correct model ID
-                apiModelId: 'gemini-2.5-flash-preview-tts', // Updated to match Google's TTS model name
+                id: 'gemini-2.5-flash-preview-tts',
+                apiModelId: 'gemini-2.5-flash-preview-tts',
                 name: 'Gemini 2.5 Flash Preview TTS',
                 description: 'Low latency, controllable, single- and multi-speaker text-to-speech audio generation. Uses Gemini API.',
                 pricingText: '$0.50 per 1M text tokens + $10.00 per 1M audio tokens',
-                supportedLanguages: [ // Based on Gemini TTS documentation
+                supportedLanguages: [
                     'ar-EG', 'de-DE', 'en-US', 'es-US', 'fr-FR', 'hi-IN', 'id-ID', 'it-IT',
                     'ja-JP', 'ko-KR', 'pt-BR', 'ru-RU', 'nl-NL', 'pl-PL', 'th-TH', 'tr-TR',
                     'vi-VN', 'ro-RO', 'uk-UA', 'bn-BD', 'en-IN', 'mr-IN', 'ta-IN', 'te-IN'
                 ],
+                inputLimitType: 'tokens',
+                inputLimitValue: 8000,
             },
-            // Add Gemini 2.5 Pro TTS as well
             {
                 id: 'gemini-2.5-pro-preview-tts',
                 apiModelId: 'gemini-2.5-pro-preview-tts',
@@ -1045,6 +1078,8 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                     'ja-JP', 'ko-KR', 'pt-BR', 'ru-RU', 'nl-NL', 'pl-PL', 'th-TH', 'tr-TR',
                     'vi-VN', 'ro-RO', 'uk-UA', 'bn-BD', 'en-IN', 'mr-IN', 'ta-IN', 'te-IN'
                 ],
+                inputLimitType: 'tokens',
+                inputLimitValue: 8000,
             },
         ],
         availableVoices: GEMINI_TTS_VOICES,

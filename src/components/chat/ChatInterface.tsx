@@ -30,6 +30,7 @@ interface Message {
     content: string;
     timestamp: Timestamp | null;
     audioUrl?: string; // Optional audioUrl
+    ttsWasSplit?: boolean; // Optional: true if audio was split due to TTS input limits
 }
 
 interface ConversationData {
@@ -168,7 +169,8 @@ export function ChatInterface({
                             role: data.role,
                             content: data.content,
                             timestamp: data.timestamp,
-                            audioUrl: data.audioUrl
+                            audioUrl: data.audioUrl,
+                            ttsWasSplit: data.ttsWasSplit
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
@@ -428,6 +430,13 @@ export function ChatInterface({
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }
                                 {msg.content}
+                                {/* Split audio notification */}
+                                {msg.ttsWasSplit && (
+                                  <div className="mt-1 text-[11px] text-orange-600 font-medium flex items-center gap-1">
+                                    <AlertCircle className="inline h-3 w-3 mr-1" />
+                                    Audio was split due to TTS input limit. Some long messages may be truncated or split into multiple parts.
+                                  </div>
+                                )}
                                 {isAudioPlaying && currentlyPlayingMsgId === msg.id && (
                                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
