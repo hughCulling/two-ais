@@ -428,7 +428,13 @@ export default function Page() {
             setActiveConversationId(result.conversationId);
         } catch (error) {
             logger.error("Failed to start session:", error);
-            setPageError(t.page_ErrorStartingSessionGeneric.replace("{errorMessage}", error instanceof Error ? error.message : String(error)));
+            setPageError(
+                t.page_ErrorStartingSessionGeneric.replace(
+                    "{errorMessage}",
+                    (error instanceof Error ? error.message : String(error)) +
+                    " Please try again. If the problem persists, refresh the page."
+                )
+            );
             setSessionConfig(null);
             setActiveConversationId(null);
         } finally {
