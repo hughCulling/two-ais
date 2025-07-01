@@ -23,8 +23,8 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 
 // --- TTS Utility Imports ---
-import { getTTSInputChunks } from './tts_utils';
-import { getBackendTTSModelById } from './tts_models';
+import { getTTSInputChunks } from "./tts_utils";
+import { getBackendTTSModelById } from "./tts_models";
 
 // --- Initialization of Firebase Admin and Clients ---
 if (admin.apps.length === 0) {
@@ -445,10 +445,10 @@ async function _triggerAgentResponse(
 
             if (ttsApiKey && agentSettings && agentSettings.voice) {
                 // --- New: TTS Input Splitting Logic ---
-                const ttsModel = getBackendTTSModelById(agentSettings.selectedTtsModelId || agentSettings.ttsApiModelId || '');
-                let inputLimitType = 'characters';
+                const ttsModel = getBackendTTSModelById(agentSettings.selectedTtsModelId || agentSettings.ttsApiModelId || "");
+                let inputLimitType = "characters";
                 let inputLimitValue = 4096;
-                let encodingName = 'cl100k_base';
+                let encodingName = "cl100k_base";
                 if (ttsModel) {
                   inputLimitType = ttsModel.inputLimitType;
                   inputLimitValue = ttsModel.inputLimitValue;
@@ -457,9 +457,9 @@ async function _triggerAgentResponse(
                 // Split text as needed
                 const ttsChunks = getTTSInputChunks(
                   textToSpeak,
-                  inputLimitType as import('./tts_models').TTSInputLimitType,
+                  inputLimitType as import("./tts_models").TTSInputLimitType,
                   inputLimitValue,
-                  encodingName as import('@dqbd/tiktoken').TiktokenEncoding | undefined
+                  encodingName as import("@dqbd/tiktoken").TiktokenEncoding | undefined
                 );
                 if (ttsChunks.length > 1) {
                   ttsWasSplit = true;
@@ -477,6 +477,8 @@ async function _triggerAgentResponse(
                                                agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
                                                "tts-1";
                       const openai = new OpenAI({ apiKey: ttsApiKey });
+                      // --- DEBUG LOG ---
+                      logger.info(`[TTS Debug] chunkText type: ${typeof chunkText}, isBuffer: ${Buffer.isBuffer(chunkText)}, value:`, chunkText);
                       const mp3 = await openai.audio.speech.create({
                         model: openAIModelApiId,
                         voice: openAIVoice,

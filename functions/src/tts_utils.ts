@@ -8,10 +8,10 @@
 //   - limitValue: max allowed per request
 //   - encodingName: tiktoken encoding (e.g. 'cl100k_base' for OpenAI/Gemini)
 
-import { encoding_for_model, get_encoding, Tiktoken, TiktokenEncoding } from '@dqbd/tiktoken';
+import { get_encoding, TiktokenEncoding } from "@dqbd/tiktoken";
 
 // --- Token Counting ---
-export function countTokens(text: string, encodingName: TiktokenEncoding = 'cl100k_base'): number {
+export function countTokens(text: string, encodingName: TiktokenEncoding = "cl100k_base"): number {
   const enc = get_encoding(encodingName);
   const tokens = enc.encode(text);
   enc.free();
@@ -19,15 +19,23 @@ export function countTokens(text: string, encodingName: TiktokenEncoding = 'cl10
 }
 
 // --- Token Chunking ---
-export function splitTextByTokens(text: string, maxTokens: number, encodingName: TiktokenEncoding = 'cl100k_base'): string[] {
+export function splitTextByTokens(text: string, maxTokens: number, encodingName: TiktokenEncoding = "cl100k_base"): string[] {
   const enc = get_encoding(encodingName);
   const tokens = enc.encode(text);
   const chunks: string[] = [];
   for (let i = 0; i < tokens.length; i += maxTokens) {
     const chunkTokens = tokens.slice(i, i + maxTokens);
-    // enc.decode expects a Uint8Array
-    // @ts-expect-error: tiktoken types may be too strict, but this works in practice
-    chunks.push(enc.decode(new Uint8Array(chunkTokens)));
+    // enc.decode returns Uint8Array, so use TextDecoder to convert to string
+    const decoded = enc.decode(chunkTokens);
+    let chunkStr: string;
+    if (typeof decoded === "string") {
+      chunkStr = decoded;
+    } else if (decoded instanceof Uint8Array) {
+      chunkStr = new TextDecoder("utf-8").decode(decoded);
+    } else {
+      chunkStr = String(decoded);
+    }
+    chunks.push(chunkStr);
   }
   enc.free();
   return chunks;
@@ -35,16 +43,16 @@ export function splitTextByTokens(text: string, maxTokens: number, encodingName:
 
 // --- Byte Counting ---
 export function countBytes(text: string): number {
-  return Buffer.byteLength(text, 'utf8');
+  return Buffer.byteLength(text, "utf8");
 }
 
 // --- Byte Chunking ---
 export function splitTextByBytes(text: string, maxBytes: number): string[] {
   const chunks: string[] = [];
-  let current = '';
+  let current = "";
   for (const char of text) {
-    const charBytes = Buffer.byteLength(char, 'utf8');
-    if (Buffer.byteLength(current, 'utf8') + charBytes > maxBytes) {
+    const charBytes = Buffer.byteLength(char, "utf8");
+    if (Buffer.byteLength(current, "utf8") + charBytes > maxBytes) {
       if (current.length > 0) chunks.push(current);
       current = char;
     } else {
@@ -70,7 +78,7 @@ export function splitTextByCharacters(text: string, maxChars: number): string[] 
 }
 
 // --- General Chunking Utility ---
-export type TTSInputLimitType = 'tokens' | 'characters' | 'bytes';
+export type TTSInputLimitType = "tokens" | "characters" | "bytes";
 
 export function getTTSInputChunks(
   text: string,
@@ -78,11 +86,11 @@ export function getTTSInputChunks(
   limitValue: number,
   encodingName?: TiktokenEncoding
 ): string[] {
-  if (limitType === 'tokens') {
-    return splitTextByTokens(text, limitValue, encodingName || 'cl100k_base');
-  } else if (limitType === 'bytes') {
+  if (limitType === "tokens") {
+    return splitTextByTokens(text, limitValue, encodingName || "cl100k_base");
+  } else if (limitType === "bytes") {
     return splitTextByBytes(text, limitValue);
-  } else if (limitType === 'characters') {
+  } else if (limitType === "characters") {
     return splitTextByCharacters(text, limitValue);
   } else {
     throw new Error(`Unknown TTS input limit type: ${limitType}`);
