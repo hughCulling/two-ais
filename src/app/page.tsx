@@ -58,6 +58,7 @@ interface SessionConfig {
     agentA_tts: AgentTTSSettingsConfig;
     agentB_tts: AgentTTSSettingsConfig;
     language?: string;
+    initialSystemPrompt: string;
 }
 
 // Interface for the expected structure of the API response from /api/conversation/start
@@ -406,7 +407,8 @@ export default function Page() {
             // Add language to the config
             const configWithLanguage = {
                 ...config,
-                language: language.code
+                language: language.code,
+                initialSystemPrompt: config.initialSystemPrompt,
             };
             
             const response = await fetch('/api/conversation/start', {

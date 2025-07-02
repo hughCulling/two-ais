@@ -48,6 +48,7 @@ interface SessionConfig {
     agentA_tts: AgentTTSSettings;
     agentB_tts: AgentTTSSettings;
     language?: string;
+    initialSystemPrompt: string;
 }
 
 interface SessionSetupFormProps {
@@ -262,6 +263,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
+    const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>("Start the conversation.");
 
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
@@ -497,6 +499,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             ttsEnabled,
             agentA_tts: sessionAgentATTSSettings,
             agentB_tts: sessionAgentBTTSSettings,
+            initialSystemPrompt,
         });
     };
 
@@ -756,6 +759,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
                         </div>
                     )}
+                </div>
+                {/* Move initial prompt section here */}
+                <div className="mt-4">
+                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1">Initial System Prompt</label>
+                    <textarea
+                        id="initial-system-prompt"
+                        className="w-full border rounded-md p-2 text-sm min-h-[60px]"
+                        value={initialSystemPrompt}
+                        onChange={e => setInitialSystemPrompt(e.target.value)}
+                        placeholder="Start the conversation."
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">This prompt will be sent as the first message to start the conversation. Leave blank for no prompt.</p>
                 </div>
             </CardContent>
             <CardFooter className="flex flex-col items-center pt-6">

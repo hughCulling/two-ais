@@ -179,6 +179,7 @@ interface StartConversationRequest {
     agentA_tts: AgentTTSSettingsApi;
     agentB_tts: AgentTTSSettingsApi;
     language?: string; // Add optional language parameter
+    initialSystemPrompt?: string; // <-- Add this line
 }
 
 // --- POST Handler ---
@@ -219,7 +220,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en' } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '' } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -331,14 +332,15 @@ export async function POST(request: NextRequest) {
                     enabled: ttsEnabled,
                     agentA: finalAgentATts,
                     agentB: finalAgentBTts,
-                }
+                },
+                initialSystemPrompt: initialSystemPrompt, // <-- Store in Firestore
             };
 
             await newConversationRef.set(conversationData);
             console.log(`API Route: Created conversation document with TTS settings and language: ${conversationId}`);
 
-            // Use the appropriate language prompt, fallback to English if not found
-            const initialPrompt = CONVERSATION_PROMPTS[language] || CONVERSATION_PROMPTS.en;
+            // Use the provided initialSystemPrompt (even if empty)
+            const initialPrompt = initialSystemPrompt;
             
             await newConversationRef.collection("messages").add({
                 role: "system",
