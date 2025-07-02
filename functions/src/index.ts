@@ -13,7 +13,7 @@ import OpenAI from "openai";
 import { TextToSpeechClient } from "@google-cloud/text-to-speech"; // Added Google TTS Client
 
 // LangChain Imports
-import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
+import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -351,14 +351,43 @@ async function _triggerAgentResponse(
 
         let historyMessages: BaseMessage[] = [];
         try {
-            const historyQuery = messagesRef.orderBy("timestamp", "desc").limit(20);
+            const historyQuery = messagesRef.orderBy("timestamp", "asc").limit(20); // Limit to 20 most recent messages in chronological order
             const historySnap = await historyQuery.get();
-            historyMessages = historySnap.docs.map((doc) => {
-                const data = doc.data() as { role: string; content: string };
-                if (data.role === agentToRespond) return new AIMessage({ content: data.content });
-                if (["agentA", "agentB", "user", "system"].includes(data.role)) return new HumanMessage({ content: data.content });
-                logger.warn(`Unknown role found in history: ${data.role}`); return null;
-            }).filter((msg): msg is BaseMessage => msg !== null).reverse();
+            const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
+            const llmProvider = getProviderFromId(agentModelId);
+            if (llmProvider === "TogetherAI") {
+                // Normalize roles for TogetherAI: system, user, assistant, user, assistant, ...
+                const docs = historySnap.docs;
+                let idx = 0;
+                if (docs.length > 0 && docs[0].data().role === "system") {
+                    // First message is system
+                    historyMessages.push(new SystemMessage({ content: docs[0].data().content }));
+                    idx = 1;
+                }
+                // Determine which agent is the 'user' for this turn
+                // The agent who is NOT about to respond is the 'user' in the last message
+                // For the rest, alternate: user, assistant, user, assistant ...
+                let isUser = true;
+                for (let i = idx; i < docs.length; i++) {
+                    const data = docs[i].data() as { role: string; content: string };
+                    if (isUser) {
+                        // Message from the agent who is NOT about to respond
+                        historyMessages.push(new HumanMessage({ content: data.content }));
+                    } else {
+                        // Message from the agent who IS about to respond
+                        historyMessages.push(new AIMessage({ content: data.content }));
+                    }
+                    isUser = !isUser;
+                }
+            } else {
+                // Existing logic for other providers
+                historyMessages = historySnap.docs.map((doc) => {
+                    const data = doc.data() as { role: string; content: string };
+                    if (data.role === agentToRespond) return new AIMessage({ content: data.content });
+                    if (["agentA", "agentB", "user", "system"].includes(data.role)) return new HumanMessage({ content: data.content });
+                    logger.warn(`Unknown role found in history: ${data.role}`); return null;
+                }).filter((msg): msg is BaseMessage => msg !== null);
+            }
             logger.info(`Fetched ${historyMessages.length} messages for history in _triggerAgentResponse.`);
         } catch (error) { throw new Error(`Failed to fetch message history: ${error}`); }
 
