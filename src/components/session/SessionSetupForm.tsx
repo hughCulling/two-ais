@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
@@ -57,7 +55,6 @@ interface SessionSetupFormProps {
     isLoading: boolean;
 }
 
-const groupedLLMOptions = groupLLMsByProvider();
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key'];
 
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
@@ -89,11 +86,9 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
     const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const groupedLLMs = groupLLMsByProvider();
-    const t = { nativeName: language.nativeName };
 
     // Find selected LLM info
     const selectedLLM = value ? getLLMInfoById(value) : undefined;
-    const selectedProviderName = selectedLLM?.provider;
 
     // Handle outside click to close
     useEffect(() => {
@@ -127,7 +122,6 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         // Use the same grouping as landing page
         // Use groupModelsByCategory from main page
         // We'll import it at the top
-        // @ts-ignore
         const { orderedCategories, byCategory } = groupModelsByCategory(models, language.code);
         return { orderedCategories, byCategory };
     };
@@ -506,12 +500,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         });
     };
 
-    const isLLMOptionDisabled = (llm: LLMInfo): boolean => {
-        const requiredKey = llm.apiKeySecretName;
-        if (!requiredKey) return true;
-        return isLoadingStatus || !savedKeyStatus[requiredKey];
-    };
-
     const handleTtsToggle = (checked: boolean | 'indeterminate') => {
         setTtsEnabled(Boolean(checked));
     };
@@ -753,11 +741,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </a>.
                         </p>
                     )}
-                    {/* <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                        <Check className="h-3 w-3 text-green-600 mr-1 flex-shrink-0"/>
-                        <X className="h-3 w-3 text-red-600 mr-1 flex-shrink-0"/>
-                        Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
-                    </p> */}
                 </div>
 
                 {/* TTS Configuration Section */}

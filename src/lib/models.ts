@@ -1,6 +1,8 @@
 // src/lib/models.ts
 // Centralized definition for available Large Language Models
 
+import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from './translations';
+
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
@@ -810,10 +812,8 @@ export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
 }
 
 // Helper function to group models by category within a provider
-export const groupModelsByCategory = (models: LLMInfo[], langCode: string): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
-    // Import getTranslation dynamically to avoid circular deps
-    const { getTranslation } = require('./translations');
-    const t = getTranslation(langCode);
+export const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
+    const t = getTranslation(langCode) as TranslationKeys;
     const openAICategoryOrder = [
         t.modelCategory_FlagshipChat,
         t.modelCategory_Reasoning,
@@ -868,7 +868,10 @@ export const groupModelsByCategory = (models: LLMInfo[], langCode: string): { or
         if (categoryKey === 'claude4_temp') {
             translatedCategory = "Claude 4 Series";
         } else {
-            translatedCategory = t[categoryKey] || categoryKey;
+            const maybeTranslation = (categoryKey in t)
+                ? t[categoryKey as keyof TranslationKeys]
+                : undefined;
+            translatedCategory = (typeof maybeTranslation === 'string') ? maybeTranslation : categoryKey;
         }
         if (!byCategory[translatedCategory]) {
             byCategory[translatedCategory] = [];
