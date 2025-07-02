@@ -16,6 +16,7 @@ export interface BackendTTSModel {
 
 export const BACKEND_TTS_MODELS: BackendTTSModel[] = [
   // --- OpenAI ---
+  // NOTE: OpenAI TTS API enforces a 4096 character limit per request, regardless of token count. Always chunk by characters.
   {
     id: "openai-tts-1",
     apiModelId: "tts-1",
@@ -39,8 +40,8 @@ export const BACKEND_TTS_MODELS: BackendTTSModel[] = [
     apiModelId: "tts-1",
     provider: "openai",
     name: "GPT-4o Mini TTS",
-    inputLimitType: "tokens",
-    inputLimitValue: 2000,
+    inputLimitType: "characters",
+    inputLimitValue: 4096,
     encodingName: "cl100k_base",
   },
   // --- Google Cloud ---

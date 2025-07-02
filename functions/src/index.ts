@@ -708,7 +708,7 @@ export const orchestrateConversation = onDocumentCreated(
 
 // --- Cloud Function: requestNextTurn ---
 export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ success: boolean; message: string }>>(
-    { region: "us-central1", memory: "512MiB", timeoutSeconds: 60 },
+    { region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
     async (request) => {
         logger.info("--- requestNextTurn Function Execution Start ---", { structuredData: true });
 
