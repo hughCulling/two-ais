@@ -808,3 +808,133 @@ export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
     }
     return grouped;
 }
+
+// Helper function to group models by category within a provider
+export const groupModelsByCategory = (models: LLMInfo[], langCode: string): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
+    // Import getTranslation dynamically to avoid circular deps
+    const { getTranslation } = require('./translations');
+    const t = getTranslation(langCode);
+    const openAICategoryOrder = [
+        t.modelCategory_FlagshipChat,
+        t.modelCategory_Reasoning,
+        t.modelCategory_CostOptimized,
+        t.modelCategory_OlderGPT,
+    ];
+    const googleCategoryOrder = [
+        t.modelCategory_Gemini2_5,
+        t.modelCategory_Gemini2_0,
+        t.modelCategory_Gemini1_5,
+    ];
+    const anthropicCategoryOrder = [
+        "Claude 4 Series",
+        t.modelCategory_Claude3_7,
+        t.modelCategory_Claude3_5,
+        t.modelCategory_Claude3,
+    ];
+    const xAICategoryOrder = [
+        t.modelCategory_Grok3,
+        t.modelCategory_Grok3Mini,
+    ];
+    const togetherAICategoryOrder = [
+        t.modelCategory_Llama4,
+        t.modelCategory_Llama3_3,
+        t.modelCategory_Llama3_2,
+        t.modelCategory_Llama3_1,
+        t.modelCategory_Llama3,
+        t.modelCategory_LlamaVision,
+        t.modelCategory_MetaLlama,
+        t.modelCategory_Gemma2,
+        t.modelCategory_Gemma,
+        t.modelCategory_GoogleGemma,
+        t.modelCategory_DeepSeekR1,
+        t.modelCategory_DeepSeekV3,
+        t.modelCategory_DeepSeekR1Distill,
+        t.modelCategory_DeepSeekModels,
+        t.modelCategory_Qwen3,
+        t.modelCategory_QwQwQ,
+        t.modelCategory_Qwen2_5,
+        t.modelCategory_Qwen2_5Vision,
+        t.modelCategory_Qwen2_5Coder,
+        t.modelCategory_Qwen2,
+        t.modelCategory_Qwen2Vision,
+        t.modelCategory_QwenModels,
+    ];
+
+    const byCategory: Record<string, LLMInfo[]> = {};
+
+    models.forEach(model => {
+        const categoryKey = (model.categoryKey || 'modelCategory_OtherModels');
+        let translatedCategory: string;
+        if (categoryKey === 'claude4_temp') {
+            translatedCategory = "Claude 4 Series";
+        } else {
+            translatedCategory = t[categoryKey] || categoryKey;
+        }
+        if (!byCategory[translatedCategory]) {
+            byCategory[translatedCategory] = [];
+        }
+        byCategory[translatedCategory].push(model);
+    });
+
+    let orderedCategories = Object.keys(byCategory);
+    let currentProviderOrder: string[] = [];
+
+    if (models.length > 0) {
+        const providerName = models[0].provider;
+        if (providerName === 'OpenAI') {
+            currentProviderOrder = openAICategoryOrder;
+        } else if (providerName === 'Google') {
+            currentProviderOrder = googleCategoryOrder;
+        } else if (providerName === 'Anthropic') {
+            currentProviderOrder = anthropicCategoryOrder;
+        } else if (providerName === 'xAI') {
+            currentProviderOrder = xAICategoryOrder;
+        } else if (providerName === 'TogetherAI') {
+            currentProviderOrder = togetherAICategoryOrder;
+        }
+    }
+
+    const translatedOtherModelsCategory = t.modelCategory_OtherModels;
+
+    if (currentProviderOrder.length > 0) {
+        const orderedKeysFromProviderList = currentProviderOrder.filter(cat => byCategory[cat]);
+        const remainingKeys = orderedCategories.filter(cat => !currentProviderOrder.includes(cat) && cat !== translatedOtherModelsCategory).sort();
+        orderedCategories = [...orderedKeysFromProviderList, ...remainingKeys];
+        if (byCategory[translatedOtherModelsCategory] && !orderedCategories.includes(translatedOtherModelsCategory)) {
+            orderedCategories.push(translatedOtherModelsCategory);
+        }
+    } else {
+        orderedCategories.sort((a, b) => {
+            if (a === translatedOtherModelsCategory) return 1;
+            if (b === translatedOtherModelsCategory) return -1;
+            return a.localeCompare(b);
+        });
+    }
+
+    orderedCategories.forEach(cat => {
+        if (byCategory[cat]) {
+            byCategory[cat].sort((a, b) => {
+                // Custom sorting for Claude models to order by power tier: Haiku → Sonnet → Opus
+                if (a.provider === 'Anthropic' && b.provider === 'Anthropic') {
+                    const getClaudeTier = (name: string) => {
+                        if (name.includes('Haiku')) return 0;
+                        if (name.includes('Sonnet')) return 1;
+                        if (name.includes('Opus')) return 2;
+                        return 3; // fallback for other Claude models
+                    };
+                    const tierA = getClaudeTier(a.name);
+                    const tierB = getClaudeTier(b.name);
+                    if (tierA !== tierB) {
+                        return tierA - tierB;
+                    }
+                    // If same tier, sort alphabetically
+                    return a.name.localeCompare(b.name);
+                }
+                // Default alphabetical sorting for non-Claude models
+                return a.name.localeCompare(b.name);
+            });
+        }
+    });
+
+    return { orderedCategories, byCategory };
+};
