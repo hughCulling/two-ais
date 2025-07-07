@@ -33,6 +33,9 @@ if (admin.apps.length === 0) {
 }
 const db = admin.firestore();
 
+// --- RTDB Initialization for Streaming ---
+const rtdb = admin.database();
+
 let secretManagerClient: SecretManagerServiceClient | null = null;
 try {
     secretManagerClient = new SecretManagerServiceClient();
@@ -86,12 +89,12 @@ interface LLMInfo {
 interface GcpError extends Error { code?: number | string; details?: string; }
 
 // Interface for expected LLM error details
-interface LLMErrorDetails {
-    status?: number | string;
-    code?: number | string;
-    param?: string;
-    type?: string;
-}
+// interface LLMErrorDetails {
+//     status?: number | string;
+//     code?: number | string;
+//     param?: string;
+//     type?: string;
+// }
 
 interface ConversationData {
     agentA_llm: string;
@@ -420,28 +423,40 @@ async function _triggerAgentResponse(
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in _triggerAgentResponse`);
         } catch (error) { throw new Error(`Failed to initialize LLM "${agentModelId}" for ${agentToRespond}: ${error}`); }
 
-        let responseContent: string | null = null;
+        // --- Streaming logic ---
+        // Generate a messageId for both RTDB and Firestore
+        const messageId = admin.firestore().collection("dummy").doc().id;
+        const rtdbRef = rtdb.ref(`/streamingMessages/${conversationId}/${messageId}`);
+        let responseContent = "";
         try {
-            logger.info(`Invoking ${agentToRespond} (${agentModelId}) with ${historyMessages.length} history messages in _triggerAgentResponse...`);
-            const aiResponse = await chatModel.invoke(historyMessages as BaseLanguageModelInput);
-            if (typeof aiResponse.content === "string") responseContent = aiResponse.content;
-            else if (Array.isArray(aiResponse.content)) responseContent = aiResponse.content.map(item => typeof item === "string" ? item : JSON.stringify(item)).join("\n");
-            else responseContent = String(aiResponse.content);
-
-            if (!responseContent || responseContent.trim() === "") responseContent = "(No content returned)";
-            logger.info(`Processed response from ${agentToRespond} in _triggerAgentResponse: ${responseContent.substring(0,100)}...`);
-
-        } catch (error) {
-            logger.error(`LLM call failed for ${agentToRespond} (${agentModelId}). Raw Error:`, error);
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            if (error && typeof error === "object") {
-                // Corrected line 348: Using LLMErrorDetails interface
-                const errorDetails = error as LLMErrorDetails;
-                logger.error("LLM Error Details: Status=" + errorDetails.status + ", Code=" + errorDetails.code + ", Param=" + errorDetails.param + ", Type=" + errorDetails.type);
+            // Write initial RTDB entry
+            await rtdbRef.set({
+                role: agentToRespond,
+                content: "",
+                status: "streaming",
+                timestamp: Date.now(),
+            });
+            // Use LangChain streaming API
+            const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
+            for await (const chunk of stream) {
+                let token = "";
+                if (typeof chunk === "string") token = chunk;
+                else if (chunk && typeof chunk.content === "string") token = chunk.content;
+                else if (chunk && Array.isArray(chunk.content)) token = chunk.content.map(x => (typeof x === "string" ? x : JSON.stringify(x))).join("");
+                else token = String(chunk);
+                responseContent += token;
+                // Update RTDB with new content
+                await rtdbRef.update({ content: responseContent });
             }
-            throw new Error(`LLM call failed for ${agentToRespond} (${agentModelId}). Error: ${errorMessage}`);
+            // Mark as complete
+            await rtdbRef.update({ status: "complete" });
+        } catch (error) {
+            logger.error(`LLM streaming failed for ${agentToRespond} (${agentModelId}):`, error);
+            await rtdbRef.update({ status: "error", error: error instanceof Error ? error.message : String(error) });
+            throw new Error(`LLM streaming failed for ${agentToRespond} (${agentModelId}): ${error}`);
         }
 
+        // --- TTS and Firestore logic (unchanged, but use messageId) ---
         let audioUrl: string | null = null;
         let ttsGenerated = false;
         let ttsWasSplit = false; // New: flag for UI if audio was split
@@ -643,8 +658,9 @@ async function _triggerAgentResponse(
         if (ttsWasSplit) { responseMessage.ttsWasSplit = true; }
 
         try {
-            const messageDocRef = await messagesRef.add(responseMessage);
-            logger.info(`Agent ${agentToRespond} response saved (message ID: ${messageDocRef.id}). TTS generated: ${ttsGenerated}`);
+            // Write final message to Firestore with the same messageId
+            await messagesRef.doc(messageId).set(responseMessage);
+            logger.info(`Agent ${agentToRespond} response saved (message ID: ${messageId}). TTS generated: ${ttsGenerated}`);
             const updateData: { lastActivity: FieldValue; turn?: string; waitingForTTSEndSignal?: boolean } = {
                 lastActivity: admin.firestore.FieldValue.serverTimestamp()
             };

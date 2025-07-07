@@ -22,6 +22,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
+import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 
 // --- Interfaces ---
 interface Message {
@@ -31,6 +32,7 @@ interface Message {
     timestamp: Timestamp | null;
     audioUrl?: string; // Optional audioUrl
     ttsWasSplit?: boolean; // Optional: true if audio was split due to TTS input limits
+    isStreaming?: boolean;
 }
 
 interface ConversationData {
@@ -54,6 +56,19 @@ interface ConversationData {
 interface ChatInterfaceProps {
     conversationId: string;
     onConversationStopped: () => void;
+}
+
+// RTDB Streaming Message Interface
+interface StreamingMessage {
+    id: string;
+    role: 'agentA' | 'agentB' | 'user' | 'system';
+    content: string;
+    status: 'streaming' | 'complete' | 'error';
+    timestamp: number;
+    audioUrl?: string;
+    ttsWasSplit?: boolean;
+    isStreaming?: boolean;
+    error?: string;
 }
 
 // Basic logger placeholder
@@ -89,6 +104,7 @@ export function ChatInterface({
     const [isStopped, setIsStopped] = useState(false);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
+    const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
 
     // --- Audio Playback State ---
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
@@ -170,7 +186,8 @@ export function ChatInterface({
                             content: data.content,
                             timestamp: data.timestamp,
                             audioUrl: data.audioUrl,
-                            ttsWasSplit: data.ttsWasSplit
+                            ttsWasSplit: data.ttsWasSplit,
+                            isStreaming: data.isStreaming
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
@@ -371,6 +388,59 @@ export function ChatInterface({
     }, [conversationId, isStopping, isStopped, onConversationStopped]); // Keep dependencies
 
 
+    // --- RTDB Streaming Message Listener ---
+    useEffect(() => {
+        if (!conversationId) return;
+        const rtdb = getDatabase();
+        const messagesPath = `/streamingMessages/${conversationId}`;
+        const messagesRef = rtdbRef(rtdb, messagesPath);
+        let unsubscribed = false;
+        const handleValue = (snapshot: { val: () => Record<string, Omit<StreamingMessage, 'id'>> | null }) => {
+            if (unsubscribed) return;
+            const data = snapshot.val();
+            console.log("RTDB streaming message update:", data);
+            if (!data) {
+                setStreamingMessage(null);
+                return;
+            }
+            const messagesArr: StreamingMessage[] = Object.entries(data).map(([id, val]) => ({ id, ...(val as Omit<StreamingMessage, 'id'>) }));
+            if (messagesArr.length === 0) {
+                setStreamingMessage(null);
+                return;
+            }
+            messagesArr.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            const latest = messagesArr.reverse().find(m => m.status === 'streaming' || m.status === 'complete') || null;
+            setStreamingMessage(latest);
+        };
+        onValue(messagesRef, handleValue);
+        return () => {
+            unsubscribed = true;
+            off(messagesRef, 'value', handleValue);
+        };
+    }, [conversationId]);
+
+
+    // --- Merge streaming message with Firestore messages for display ---
+    const mergedMessages = React.useMemo(() => {
+        if (!streamingMessage) return messages;
+        // If Firestore already has this messageId, don't show streaming message
+        if (messages.some(m => m.id === streamingMessage.id)) return messages;
+        // Otherwise, append streaming message as the latest
+        return [
+            ...messages,
+            {
+                id: streamingMessage.id,
+                role: streamingMessage.role,
+                content: streamingMessage.content,
+                timestamp: null,
+                audioUrl: undefined,
+                ttsWasSplit: false,
+                isStreaming: streamingMessage.status === 'streaming',
+            }
+        ];
+    }, [messages, streamingMessage]);
+
+
     // --- Render Logic ---
 
     if (error) {
@@ -419,7 +489,7 @@ export function ChatInterface({
              {/* Scrollable Message Area */}
              <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
                 <div className="space-y-4">
-                    {messages.map((msg) => (
+                    {mergedMessages.map((msg) => (
                         <div
                             key={msg.id}
                             className={`flex ${
@@ -439,6 +509,9 @@ export function ChatInterface({
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }
                                 {msg.content}
+                                {msg.isStreaming && (
+                                  <span className="ml-1 animate-pulse text-primary">▍</span>
+                                )}
                                 {/* Split audio notification */}
                                 {msg.ttsWasSplit && (
                                   <div className="mt-1 text-[11px] text-orange-600 font-medium flex items-center gap-1">
@@ -455,7 +528,7 @@ export function ChatInterface({
                             </div>
                         </div>
                     ))}
-                     {conversationStatus === "running" && messages.length === 0 && !isStopped && (
+                     {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
                         <div className="text-center text-muted-foreground text-sm p-4">Waiting for first message...</div>
                      )}
                       {isStopped && conversationStatus === "stopped" && !error && (
