@@ -1,6 +1,6 @@
 // functions/src/index.ts
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import { FieldValue, DocumentReference, CollectionReference } from "firebase-admin/firestore";
@@ -820,13 +820,13 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
             });
 
             if (nextTurn !== null) {
-                 logger.info(`Signalling agent ${nextTurn} to respond for ${conversationId} via requestNextTurn.`);
-                 await _triggerAgentResponse(conversationId, nextTurn, conversationRef, messagesRef);
+                logger.info(`Next turn set to ${nextTurn} for ${conversationId}. Firestore triggers will handle agent response asynchronously.`);
+                // Do NOT call _triggerAgentResponse here! Firestore onDocumentCreated trigger will handle the next agent's response.
             } else {
-                 logger.info("No next turn determined or state not updated in transaction, not triggering agent response.");
+                logger.info("No next turn determined or state not updated in transaction, not triggering agent response.");
             }
 
-            return { success: true, message: "Conversation turn advanced and next agent triggered." };
+            return { success: true, message: "Conversation turn advanced. Next agent will be triggered by Firestore trigger." };
 
         } catch (error) {
             logger.error(`Error processing requestNextTurn for conversation ${conversationId}:`, error);
@@ -836,3 +836,34 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ succ
     }
 );
 // --- End requestNextTurn ---
+
+// --- Firestore onUpdate Trigger: Continue Conversation After TTS ---
+export const onConversationUpdate = onDocumentUpdated(
+    { document: "conversations/{conversationId}", region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
+    async (event) => {
+        logger.info("--- onConversationUpdate Triggered ---");
+        const { conversationId } = event.params;
+        const before = event.data?.before?.data();
+        const after = event.data?.after?.data();
+        if (!before || !after) {
+            logger.warn("onConversationUpdate: Missing before/after data.");
+            return;
+        }
+        // Only trigger if waitingForTTSEndSignal changed from true to false, and status is running
+        if (
+            before.waitingForTTSEndSignal === true &&
+            after.waitingForTTSEndSignal === false &&
+            after.status === "running"
+        ) {
+            logger.info(`onConversationUpdate: waitingForTTSEndSignal transitioned true -> false for ${conversationId}, status is running. Triggering next agent response.`);
+            // Get Firestore references
+            const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
+            const messagesRef = conversationRef.collection("messages");
+            // Call _triggerAgentResponse for the current turn
+            await _triggerAgentResponse(conversationId, after.turn, conversationRef, messagesRef);
+        } else {
+            logger.info("onConversationUpdate: No relevant state change, not triggering agent response.");
+        }
+    }
+);
+// --- End Firestore onUpdate Trigger ---
