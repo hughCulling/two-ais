@@ -79,6 +79,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://firebase.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firebaseinstallations.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://two-ais.firebaseapp.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
       </head>
       {/* --- Reverted font application back to body tag using cn() --- */}
       <body
