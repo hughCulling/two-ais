@@ -86,9 +86,6 @@ const groupedLLMsByProvider = groupLLMsByProvider();
 // Get TTS providers outside the component
 const availableTTSProviders = AVAILABLE_TTS_PROVIDERS;
 
-// --- YouTube Video URLs ---
-const YOUTUBE_VIDEO_URL_LIGHT_MODE = "https://www.youtube.com/embed/52oUvRFdaXE";
-const YOUTUBE_VIDEO_URL_DARK_MODE = "https://www.youtube.com/embed/pkN_uU-nDdk";
 
 // Helper function to format pricing
 const formatPrice = (price: number) => {
@@ -249,8 +246,8 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
     const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
 
     useEffect(() => {
+        const el = textRef.current;
         const checkOverflow = () => {
-            const el = textRef.current;
             if (el) {
                 setIsActuallyOverflowing(el.scrollWidth > el.clientWidth);
             }
@@ -259,13 +256,13 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
         checkOverflow(); // Initial check
 
         let resizeObserver: ResizeObserver | null = null;
-        if (textRef.current && typeof window !== 'undefined' && 'ResizeObserver' in window) {
+        if (el && typeof window !== 'undefined' && 'ResizeObserver' in window) {
             resizeObserver = new ResizeObserver(checkOverflow);
-            resizeObserver.observe(textRef.current);
+            resizeObserver.observe(el);
         }
 
         return () => {
-            if (resizeObserver && textRef.current) {
+            if (resizeObserver && el) {
                 resizeObserver.disconnect();
             }
         };
@@ -381,7 +378,6 @@ export default function Page() {
     const [userApiSecrets, setUserApiSecrets] = useState<{ [key: string]: string } | null>(null);
     const [secretsLoading, setSecretsLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
-    const [currentVideoUrl, setCurrentVideoUrl] = useState(YOUTUBE_VIDEO_URL_LIGHT_MODE);
     const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
         () => {
             const initialOpenState: Record<string, boolean> = {};
@@ -439,13 +435,6 @@ export default function Page() {
              }
         }
     }, [user, userApiSecrets, secretsLoading, t.page_ErrorLoadingUserData]);
-
-    useEffect(() => {
-        if (resolvedTheme) {
-            setCurrentVideoUrl(resolvedTheme === 'dark' ? YOUTUBE_VIDEO_URL_DARK_MODE : YOUTUBE_VIDEO_URL_LIGHT_MODE);
-        }
-    }, [resolvedTheme]);
-
 
     const handleStartSession = async (config: SessionConfig) => {
         if (!user) {
