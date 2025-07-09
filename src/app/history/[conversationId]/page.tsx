@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Bot, UserCircle, Loader2, AlertTriangle, Info, Languages, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -95,11 +95,6 @@ export default function ChatHistoryViewerPage() {
         fetchDetails();
     }, [user, authLoading, conversationId]);
 
-    const getRoleDisplayName = (role: Message['role']) => {
-        if (role === 'system') return "System";
-        if (role === 'user' || role === 'human') return "You";
-        return "Assistant";
-    };
 
     if (authLoading || loading) {
         return (
