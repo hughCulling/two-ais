@@ -75,6 +75,11 @@ export default function RootLayout({
   return (
     // --- Reverted font application from html tag ---
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://firebase.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://firebaseinstallations.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://two-ais.firebaseapp.com" crossOrigin="anonymous" />
+      </head>
       {/* --- Reverted font application back to body tag using cn() --- */}
       <body
         className={cn(

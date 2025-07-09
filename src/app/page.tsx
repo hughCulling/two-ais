@@ -250,22 +250,24 @@ const TruncatableNote: React.FC<TruncatableNoteProps> = ({
 
     useEffect(() => {
         const checkOverflow = () => {
-            if (textRef.current) {
-                if ((textRef.current.offsetWidth > 0 || textRef.current.offsetHeight > 0) &&
-                    textRef.current.scrollWidth > textRef.current.clientWidth) {
-                    setIsActuallyOverflowing(true);
-                } else {
-                    setIsActuallyOverflowing(false);
-                }
+            const el = textRef.current;
+            if (el) {
+                setIsActuallyOverflowing(el.scrollWidth > el.clientWidth);
             }
         };
 
-        const timeoutId = setTimeout(checkOverflow, 150);
-        window.addEventListener('resize', checkOverflow);
+        checkOverflow(); // Initial check
+
+        let resizeObserver: ResizeObserver | null = null;
+        if (textRef.current && typeof window !== 'undefined' && 'ResizeObserver' in window) {
+            resizeObserver = new ResizeObserver(checkOverflow);
+            resizeObserver.observe(textRef.current);
+        }
 
         return () => {
-            clearTimeout(timeoutId);
-            window.removeEventListener('resize', checkOverflow);
+            if (resizeObserver && textRef.current) {
+                resizeObserver.disconnect();
+            }
         };
     }, [noteText]);
 
