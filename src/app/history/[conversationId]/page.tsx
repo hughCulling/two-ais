@@ -119,7 +119,7 @@ export default function ChatHistoryViewerPage() {
                         <p className="text-destructive-foreground">{error}</p>
                         <Button variant="outline" onClick={() => router.push('/history')}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to History
+                            Back to Previous Chats
                         </Button>
                     </CardContent>
                 </Card>
@@ -142,7 +142,7 @@ export default function ChatHistoryViewerPage() {
                         <Button variant="outline" asChild>
                              <Link href="/history">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to History
+                                Back to Previous Chats
                             </Link>
                         </Button>
                     </CardContent>
@@ -211,7 +211,7 @@ export default function ChatHistoryViewerPage() {
                     <Button variant="outline" asChild>
                         <Link href="/history">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to History
+                            Back to Previous Chats
                         </Link>
                     </Button>
                 </div>
