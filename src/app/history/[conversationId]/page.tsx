@@ -158,6 +158,53 @@ export default function ChatHistoryViewerPage() {
 
     const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: enUS });
 
+    // Add TranscriptMessageBubble component for consistent chat UI
+    const TranscriptMessageBubble: React.FC<{
+        msg: Message;
+        agentALLMInfo?: { name?: string } | null;
+        agentBLLMInfo?: { name?: string } | null;
+    }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
+        const isAgentA = msg.role === 'agentA';
+        const isAgentB = msg.role === 'agentB';
+        const isUser = msg.role === 'user' || msg.role === 'human';
+        const isSystem = msg.role === 'system';
+        // Use same colors/labels as ChatInterface
+        let bubbleClass = '';
+        let label = '';
+        let alignClass = '';
+        if (isAgentA) {
+            bubbleClass = 'bg-muted text-foreground';
+            label = agentALLMInfo?.name ? `Agent A (${agentALLMInfo.name})` : 'Agent A';
+            alignClass = 'justify-start';
+        } else if (isAgentB) {
+            bubbleClass = 'bg-primary text-primary-foreground';
+            label = agentBLLMInfo?.name ? `Agent B (${agentBLLMInfo.name})` : 'Agent B';
+            alignClass = 'justify-end';
+        } else if (isUser) {
+            bubbleClass = 'bg-secondary text-foreground';
+            label = 'You';
+            alignClass = 'justify-end';
+        } else if (isSystem) {
+            bubbleClass = 'bg-muted/60 text-muted-foreground italic';
+            label = 'System';
+            alignClass = 'justify-center';
+        }
+        return (
+            <div className={`flex ${alignClass}`}>
+                <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`}
+                    style={{ marginBottom: '0.5rem' }}>
+                    {(isAgentA || isAgentB) && (
+                        <p className="text-xs font-bold mb-1">{label}</p>
+                    )}
+                    {isUser && (
+                        <p className="text-xs font-bold mb-1">{label}</p>
+                    )}
+                    {msg.content}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
             <div className="w-full max-w-3xl space-y-6">
@@ -228,32 +275,23 @@ export default function ChatHistoryViewerPage() {
                     </CardHeader>
                     <CardContent>
                         <ScrollArea className="h-[500px] w-full pr-4">
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {details.messages.map((msg, index) => {
-                                    const isUser = msg.role === 'user' || msg.role === 'human';
                                     const isSystem = msg.role === 'system';
-                                    
-                                    if (isSystem && (msg.content.toLowerCase().includes("start the conversation") || msg.content.toLowerCase().includes("beginnen sie das gespräch"))) {
-                                      if (details.messages.length > 1) return null;
+                                    if (
+                                        isSystem &&
+                                        (msg.content.toLowerCase().includes("start the conversation") ||
+                                            msg.content.toLowerCase().includes("beginnen sie das gespräch"))
+                                    ) {
+                                        if (details.messages.length > 1) return null;
                                     }
-
-                                    const formattedTime = format(new Date(msg.timestamp), 'p', { locale: enUS });
-
                                     return (
-                                        <div key={msg.id || index} className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
-                                            <div className={`flex items-end space-x-2 max-w-[85%]`}>
-                                                {!isUser && !isSystem && <Bot className="h-6 w-6 mb-1 text-primary flex-shrink-0" />}
-                                                {isSystem && <Info className="h-5 w-5 mb-0.5 text-muted-foreground flex-shrink-0"/>}
-                                                
-                                                <div className={`px-3 py-2 rounded-lg shadow-sm break-words whitespace-pre-wrap ${isUser ? 'bg-primary text-primary-foreground' : isSystem ? 'bg-muted/60 text-muted-foreground italic' : 'bg-secondary'}`}>
-                                                    {msg.content}
-                                                </div>
-                                                {isUser && <UserCircle className="h-6 w-6 mb-1 text-muted-foreground flex-shrink-0" />}
-                                           </div>
-                                            <p className={`text-xs text-muted-foreground mt-1 ${isUser ? 'mr-8' : isSystem ? 'ml-0' : 'ml-8'}`}>
-                                                {getRoleDisplayName(msg.role)} - {formattedTime}
-                                            </p>
-                                        </div>
+                                        <TranscriptMessageBubble
+                                            key={msg.id || index}
+                                            msg={msg}
+                                            agentALLMInfo={agentALLMInfo}
+                                            agentBLLMInfo={agentBLLMInfo}
+                                        />
                                     );
                                 })}
                                 {details.messages.length === 0 && (
