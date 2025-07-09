@@ -340,18 +340,26 @@ const YouTubeFacade: React.FC<YouTubeFacadeProps> = ({ mode, title }) => {
       ) : (
         <button
           type="button"
-          className="w-full h-full flex items-center justify-center focus:outline-none"
+          className="w-full h-full flex items-center justify-center focus:outline-none relative"
           aria-label={`Play video: ${title}`}
           onClick={() => setIsPlayerActive(true)}
-          style={{ background: `url(${thumbnail}) center center / cover no-repeat` }}
         >
-          <span className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" aria-hidden="true" />
+          <img
+            src={thumbnail}
+            alt={title}
+            fetchPriority="high"
+            className="absolute inset-0 w-full h-full object-cover"
+            draggable={false}
+            style={{ zIndex: 0 }}
+          />
+          <span className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" aria-hidden="true" style={{ zIndex: 1 }} />
           <svg
             className="relative z-10 h-16 w-16 text-white drop-shadow-lg group-hover:scale-110 transition-transform"
             viewBox="0 0 68 48"
             width="68"
             height="48"
             aria-hidden="true"
+            style={{ zIndex: 2 }}
           >
             <path
               d="M66.52 7.85a8 8 0 0 0-5.6-5.66C57.12 1.33 34 1.33 34 1.33s-23.12 0-26.92 0a8 8 0 0 0-5.6 5.66A83.2 83.2 0 0 0 0 24a83.2 83.2 0 0 0 1.48 16.15 8 8 0 0 0 5.6 5.66c3.8 1.33 26.92 1.33 26.92 1.33s23.12 0 26.92-1.33a8 8 0 0 0 5.6-5.66A83.2 83.2 0 0 0 68 24a83.2 83.2 0 0 0-1.48-16.15z"
