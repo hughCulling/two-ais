@@ -351,6 +351,7 @@ const YouTubeFacade: React.FC<YouTubeFacadeProps> = ({ mode, title }) => {
             src={thumbnail}
             alt={title}
             fill
+            sizes="(max-width: 768px) 100vw, 768px"
             priority
             className="absolute inset-0 w-full h-full object-cover"
             draggable={false}
