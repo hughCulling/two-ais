@@ -39,6 +39,7 @@ interface ConversationDetails {
     language: string;
     ttsSettings?: AgentTTSSettings;
     messages: Message[];
+    status: 'running' | 'completed' | 'failed'; // Added status for resume logic
 }
 
 export default function ChatHistoryViewerPage() {
@@ -50,6 +51,8 @@ export default function ChatHistoryViewerPage() {
     const [details, setDetails] = useState<ConversationDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [resumeLoading, setResumeLoading] = useState(false);
+    const [resumeError, setResumeError] = useState<string | null>(null);
 
     const agentALLMInfo = useMemo(() => details ? getLLMInfoById(details.agentA_llm) : null, [details]);
     const agentBLLMInfo = useMemo(() => details ? getLLMInfoById(details.agentB_llm) : null, [details]);
@@ -200,6 +203,32 @@ export default function ChatHistoryViewerPage() {
         );
     };
 
+    // Resume conversation handler
+    const handleResumeConversation = async () => {
+        if (!details || !user) return;
+        setResumeLoading(true);
+        setResumeError(null);
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to resume conversation.');
+            }
+            // Redirect to live chat interface (same as after session setup)
+            router.push(`/?resume=${details.conversationId}`);
+        } catch (err) {
+            setResumeError(err instanceof Error ? err.message : String(err));
+        } finally {
+            setResumeLoading(false);
+        }
+    };
+
     return (
         <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
             <div className="w-full max-w-3xl space-y-6">
@@ -215,6 +244,22 @@ export default function ChatHistoryViewerPage() {
                         </Link>
                     </Button>
                 </div>
+                {/* Resume Conversation Button */}
+                {details && details.conversationId && details.agentA_llm && details.agentB_llm && details.language && details.messages &&
+                    details['status'] !== 'running' && (
+                    <div className="mb-2 flex flex-col items-center">
+                        <Button
+                            variant="default"
+                            onClick={handleResumeConversation}
+                            disabled={resumeLoading || !user}
+                        >
+                            {resumeLoading ? 'Resuming...' : 'Resume Conversation'}
+                        </Button>
+                        {resumeError && (
+                            <p className="text-destructive-foreground text-sm mt-2">{resumeError}</p>
+                        )}
+                    </div>
+                )}
 
                 <Card>
                     <CardHeader>

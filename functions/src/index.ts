@@ -25,6 +25,8 @@ import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 // --- TTS Utility Imports ---
 import { getTTSInputChunks } from "./tts_utils";
 import { getBackendTTSModelById } from "./tts_models";
+import { onRequest } from "firebase-functions/v2/https";
+import { triggerAgentResponse } from "./agentOrchestrator";
 
 // --- Initialization of Firebase Admin and Clients ---
 if (admin.apps.length === 0) {
@@ -657,6 +659,14 @@ async function _triggerAgentResponse(
         if (audioUrl) { responseMessage.audioUrl = audioUrl; }
         if (ttsWasSplit) { responseMessage.ttsWasSplit = true; }
 
+        // --- Prevent duplicate agent responses: check last message role ---
+        const lastMsgSnap = await messagesRef.orderBy("timestamp", "desc").limit(1).get();
+        const lastMessage = !lastMsgSnap.empty ? lastMsgSnap.docs[0].data() : null;
+        if (lastMessage && lastMessage.role === agentToRespond) {
+            logger.warn(`[Resume/Duplicate Prevention] Last message is already from ${agentToRespond}. Skipping agent response generation.`);
+            return;
+        }
+
         try {
             // Write final message to Firestore with the same messageId
             await messagesRef.doc(messageId).set(responseMessage);
@@ -867,3 +877,27 @@ export const onConversationUpdate = onDocumentUpdated(
     }
 );
 // --- End Firestore onUpdate Trigger ---
+
+export { getProviderFromId, getFirestoreKeyIdFromProvider, getTTSApiKeyId, getApiKeyFromSecret, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket };
+
+export const triggerAgentResponseHttp = onRequest(
+  { region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
+  async (req, res) => {
+    const conversationId = req.body.conversationId || req.query.conversationId;
+    const turn = req.body.turn || req.query.turn;
+    const forceNextTurn = req.body.forceNextTurn === true || req.query.forceNextTurn === "true";
+    if (!conversationId || !turn) {
+      res.status(400).json({ error: "Missing conversationId or turn" });
+      return;
+    }
+    try {
+      const db = admin.firestore();
+      const conversationRef = db.collection("conversations").doc(conversationId);
+      const messagesRef = conversationRef.collection("messages");
+      await triggerAgentResponse(conversationId, turn, conversationRef, messagesRef, forceNextTurn);
+      res.status(200).json({ message: "Agent response triggered." });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+);

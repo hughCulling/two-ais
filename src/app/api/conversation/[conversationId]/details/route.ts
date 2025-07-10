@@ -70,6 +70,7 @@ interface ConversationDetails {
     language: string;
     ttsSettings?: ConversationTTSSettings; // Use the more specific type
     messages: Message[];
+    status: string; // <-- Added status field
     // other config fields like apiSecretVersions might not be needed for display
 }
 
@@ -157,8 +158,10 @@ export async function GET(
             language: conversationData.language || 'en',
             ttsSettings: conversationData.ttsSettings, // Pass along TTS settings
             messages: messages,
+            status: conversationData.status || 'unknown', // <-- Add status to response
         };
 
+        console.log(`Conversation details API: status=${conversationData?.status}, data=`, conversationData);
         return NextResponse.json(details, { status: 200 });
 
     } catch (error) {
