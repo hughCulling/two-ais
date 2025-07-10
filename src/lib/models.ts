@@ -439,6 +439,18 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Grok3Mini', 
         usesReasoningTokens: true, 
     },
+    {
+        id: 'grok-4-latest',
+        name: 'Grok 4',
+        provider: 'xAI',
+        contextWindow: 256000,
+        pricing: { input: 3.00, output: 15.00 },
+        apiKeyInstructionsUrl: 'https://docs.x.ai/',
+        apiKeySecretName: 'xai',
+        status: 'stable',
+        categoryKey: 'modelCategory_Grok4',
+        usesReasoningTokens: true,
+    },
 
     // === Together.ai ===
     {
@@ -847,6 +859,7 @@ export const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCo
         t.modelCategory_Claude3,
     ];
     const xAICategoryOrder = [
+        'Grok 4 Series',
         t.modelCategory_Grok3,
         t.modelCategory_Grok3Mini,
     ];
@@ -882,6 +895,8 @@ export const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCo
         let translatedCategory: string;
         if (categoryKey === 'claude4_temp') {
             translatedCategory = "Claude 4 Series";
+        } else if (categoryKey === 'modelCategory_Grok4') {
+            translatedCategory = "Grok 4 Series";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]
