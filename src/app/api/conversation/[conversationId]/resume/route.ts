@@ -113,12 +113,13 @@ export async function POST(request: NextRequest) {
         });
         console.log(`Resume endpoint: Updated conversation ${conversationId} to status 'running' and turn '${nextTurn}'.`);
 
-        // Trigger agent response for the current turn with forceNextTurn: true
+        // Trigger agent response for the current turn in the background (fire-and-forget)
         try {
             // Use the local emulator or deployed endpoint as appropriate
             const triggerUrl = process.env.NEXT_PUBLIC_TRIGGER_AGENT_RESPONSE_URL ||
                 'https://us-central1-two-ais.cloudfunctions.net/triggerAgentResponseHttp';
-            const triggerRes = await fetch(triggerUrl, {
+            // Fire-and-forget: do not await, do not block response
+            fetch(triggerUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -126,14 +127,14 @@ export async function POST(request: NextRequest) {
                     turn: nextTurn,
                     forceNextTurn: true
                 })
+            }).catch(err => {
+                console.error('Error triggering agent response after resume:', err);
             });
-            if (!triggerRes.ok) {
-                const errText = await triggerRes.text();
-                console.error('Failed to trigger agent response after resume:', errText);
-            }
         } catch (err) {
             console.error('Error triggering agent response after resume:', err);
+            // Do not block response
         }
+        // Respond to client immediately
         return NextResponse.json({ message: "Conversation resumed successfully.", conversationId }, { status: 200 });
     } catch {
         return NextResponse.json({ error: "Internal server error during resume attempt" }, { status: 500 });
