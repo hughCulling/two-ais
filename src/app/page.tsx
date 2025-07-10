@@ -403,11 +403,14 @@ function ResumeHandler({
     const { language } = useLanguage();
     const t = getTranslation(language.code) as TranslationKeys;
 
+    // New: Track if we've triggered resume and are polling for running status
+    const [pollingForRunning, setPollingForRunning] = useState(false);
+
     useEffect(() => {
         if (!user || !resumeConversationId || activeConversationId || sessionConfig || hasManuallyStopped) return;
         setResumeLoading(true);
         setResumeError(null);
-        const fetchResumeDetails = async () => {
+        const fetchResume = async () => {
             try {
                 const idToken = await user?.getIdToken();
                 const resumeResponse = await fetch(`/api/conversation/${resumeConversationId}/resume`, {
@@ -418,45 +421,59 @@ function ResumeHandler({
                     const errorData = await resumeResponse.json().catch(() => ({}));
                     throw new Error(errorData.error || 'Failed to resume conversation.');
                 }
-                const pollDetails = async () => {
-                    const maxAttempts = 10;
-                    let attempt = 0;
-                    while (attempt < maxAttempts) {
-                        const response = await fetch(`/api/conversation/${resumeConversationId}/details`, {
-                            headers: { 'Authorization': `Bearer ${idToken}` },
-                        });
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.status === 'running') {
-                                setSessionConfig({
-                                    agentA_llm: data.agentA_llm,
-                                    agentB_llm: data.agentB_llm,
-                                    ttsEnabled: data.ttsSettings?.enabled || false,
-                                    agentA_tts: data.ttsSettings?.agentA || { provider: 'none', voice: null },
-                                    agentB_tts: data.ttsSettings?.agentB || { provider: 'none', voice: null },
-                                    language: data.language,
-                                    initialSystemPrompt: data.initialSystemPrompt || '',
-                                });
-                                setActiveConversationId(resumeConversationId);
-                                return;
-                            }
-                        }
-                        attempt++;
-                        await new Promise(res => setTimeout(res, 300));
-                    }
-                    throw new Error('Conversation is not running and cannot be resumed.');
-                };
-                await pollDetails();
+                // Immediately start polling for running status
+                setPollingForRunning(true);
             } catch (err) {
                 setResumeError(err instanceof Error ? err.message : String(err));
             } finally {
                 setResumeLoading(false);
             }
         };
-        fetchResumeDetails();
+        fetchResume();
     }, [user, resumeConversationId, activeConversationId, sessionConfig, hasManuallyStopped, setSessionConfig, setActiveConversationId, setHasManuallyStopped]);
 
-    if (resumeLoading) {
+    // Poll for running status and config
+    useEffect(() => {
+        if (!pollingForRunning || !user || !resumeConversationId || activeConversationId || sessionConfig || hasManuallyStopped) return;
+        let cancelled = false;
+        const pollDetails = async () => {
+            const idToken = await user.getIdToken();
+            const maxAttempts = 20;
+            let attempt = 0;
+            while (attempt < maxAttempts && !cancelled) {
+                const response = await fetch(`/api/conversation/${resumeConversationId}/details`, {
+                    headers: { 'Authorization': `Bearer ${idToken}` },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'running') {
+                        setSessionConfig({
+                            agentA_llm: data.agentA_llm,
+                            agentB_llm: data.agentB_llm,
+                            ttsEnabled: data.ttsSettings?.enabled || false,
+                            agentA_tts: data.ttsSettings?.agentA || { provider: 'none', voice: null },
+                            agentB_tts: data.ttsSettings?.agentB || { provider: 'none', voice: null },
+                            language: data.language,
+                            initialSystemPrompt: data.initialSystemPrompt || '',
+                        });
+                        setActiveConversationId(resumeConversationId);
+                        setPollingForRunning(false);
+                        return;
+                    }
+                }
+                attempt++;
+                await new Promise(res => setTimeout(res, 500));
+            }
+            if (!cancelled) {
+                setResumeError('Conversation did not become active in time. Please try again.');
+                setPollingForRunning(false);
+            }
+        };
+        pollDetails();
+        return () => { cancelled = true; };
+    }, [pollingForRunning, user, resumeConversationId, activeConversationId, sessionConfig, hasManuallyStopped, setSessionConfig, setActiveConversationId]);
+
+    if (resumeLoading || pollingForRunning) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
                 <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
