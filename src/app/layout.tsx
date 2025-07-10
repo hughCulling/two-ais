@@ -28,6 +28,7 @@ const geistMono = Geist_Mono({
 
 // --- Updated Metadata (Kept from previous version) ---
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.two-ais.com'),
   // Revised title v3 - Uses LLMs
   title: "Two AIs",
   // Revised description v3 - More descriptive, uses LLMs
@@ -44,27 +45,28 @@ export const metadata: Metadata = {
     apple: '/icon.png', // Apple touch icon
   },
   // Optional: Add Open Graph and Twitter Card metadata for better social sharing previews
-  // openGraph: {
-  //   title: "Two AIs: Listen to LLMs Converse & Generate AI Podcasts", // Update OG title
-  //   description: "Two AIs allows you to configure and listen to conversations between two LLMs. Enable TTS for an audible AI podcast experience.", // Update OG description
-  //   url: 'https://two-ais.com', // Replace with your actual domain
-  //   siteName: 'Two AIs',
-  //   // images: [ // Add an image URL for previews
-  //   //   {
-  //   //     url: 'https://two-ais.com/og-image.png', // Replace with your image path
-  //   //     width: 1200,
-  //   //     height: 630,
-  //   //   },
-  //   // ],
-  //   locale: 'en_US',
-  //   type: 'website',
-  // },
-  // twitter: {
-  //   card: 'summary_large_image',
-  //   title: "Two AIs: Listen to LLMs Converse & Generate AI Podcasts", // Update Twitter title
-  //   description: "Two AIs allows you to configure and listen to conversations between two LLMs. Enable TTS for an audible AI podcast experience.", // Update Twitter description
-  //   // images: ['https://two-ais.com/twitter-image.png'], // Replace with your image path
-  // },
+  openGraph: {
+    title: "Two AIs", // Update OG title
+    description: "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience. Requires user API keys.", 
+    url: 'https://www.two-ais.com', // Replace with your actual domain
+    siteName: 'Two AIs',
+    images: [
+      {
+        url: '/icon.png',
+        width: 512,
+        height: 512,
+        alt: 'Two AIs Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Two AIs", // Update Twitter title
+    description: "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience. Requires user API keys.",
+    images: ['/icon.png'],
+  },
 };
 
 export default function RootLayout({
@@ -82,6 +84,17 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
         <link rel="preload" as="image" href="/landing-light.webp" />
         <link rel="preload" as="image" href="/landing-dark.webp" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Two AIs",
+              "url": "https://www.two-ais.com"
+            })
+          }}
+        />
       </head>
       {/* --- Reverted font application back to body tag using cn() --- */}
       <body
