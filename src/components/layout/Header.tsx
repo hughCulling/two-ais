@@ -32,12 +32,12 @@ export default function Header() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
-                        <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400">
+                        <Link href="/app" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400">
                             {t.header.appName}
                         </Link>
                         {/* View Previous Chats button (desktop, left, only if logged in) */}
                         {user && !loading && (
-                            <Link href="/history" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                            <Link href="/app/history" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 Previous Chats
                             </Link>
@@ -63,7 +63,7 @@ export default function Header() {
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
-                                <Link href="/settings" className={navItemClasses}>
+                                <Link href="/app/settings" className={navItemClasses}>
                                     {t.header.settings}
                                 </Link>
                                 <div className="px-1">
@@ -115,10 +115,10 @@ export default function Header() {
                                     </span>
                                 </div>
                             </div>
-                            <Link href="/history" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
+                            <Link href="/app/history" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
                                 <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>View Previous Chats</span>
                             </Link>
-                            <Link href="/settings" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
+                            <Link href="/app/settings" className={mobileMenuItemClasses} onClick={handleMobileLinkClick}>
                                 Settings {/* {t.header.settings} */}
                             </Link>
                         </>

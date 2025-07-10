@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 import { getTranslation, TranslationKeys } from '@/lib/translations';
@@ -145,6 +145,11 @@ export default function LandingPage() {
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
   const t = getTranslation(language.code) as TranslationKeys;
+  const [mounted, setMounted] = useState(false); // <-- Add mounted state
+
+  useEffect(() => {
+    setMounted(true);
+  }, []); // <-- Set mounted after mount
   const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
     () => {
       const initialOpenState: Record<string, boolean> = {};
@@ -177,10 +182,14 @@ export default function LandingPage() {
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
-            <YouTubeFacade
-              mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
-              title={t.page_VideoTitle}
-            />
+            {mounted ? (
+              <YouTubeFacade
+                mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
+                title={t.page_VideoTitle}
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
+            )}
           </div>
           <Card className="w-full">
             <CardHeader>

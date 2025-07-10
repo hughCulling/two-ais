@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Bot, UserCircle, Loader2, AlertTriangle, Info, Languages, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -39,6 +39,7 @@ interface ConversationDetails {
     language: string;
     ttsSettings?: AgentTTSSettings;
     messages: Message[];
+    status: 'running' | 'completed' | 'failed'; // Added status for resume logic
 }
 
 export default function ChatHistoryViewerPage() {
@@ -50,6 +51,8 @@ export default function ChatHistoryViewerPage() {
     const [details, setDetails] = useState<ConversationDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [resumeLoading, setResumeLoading] = useState(false);
+    const [resumeError, setResumeError] = useState<string | null>(null);
 
     const agentALLMInfo = useMemo(() => details ? getLLMInfoById(details.agentA_llm) : null, [details]);
     const agentBLLMInfo = useMemo(() => details ? getLLMInfoById(details.agentB_llm) : null, [details]);
@@ -95,11 +98,12 @@ export default function ChatHistoryViewerPage() {
         fetchDetails();
     }, [user, authLoading, conversationId]);
 
-    const getRoleDisplayName = (role: Message['role']) => {
-        if (role === 'system') return "System";
-        if (role === 'user' || role === 'human') return "You";
-        return "Assistant";
-    };
+    useEffect(() => {
+        if (!loading && !user) {
+            router.replace('/');
+        }
+    }, [user, loading, router]);
+
 
     if (authLoading || loading) {
         return (
@@ -122,9 +126,9 @@ export default function ChatHistoryViewerPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-destructive-foreground">{error}</p>
-                        <Button variant="outline" onClick={() => router.push('/history')}>
+                        <Button variant="outline" onClick={() => router.push('/app/history')}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to History
+                            Back to Previous Chats
                         </Button>
                     </CardContent>
                 </Card>
@@ -145,9 +149,9 @@ export default function ChatHistoryViewerPage() {
                     <CardContent className="space-y-4">
                         <p>This conversation could not be found or is not accessible.</p>
                         <Button variant="outline" asChild>
-                             <Link href="/history">
+                             <Link href="/app/history">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to History
+                                Back to Previous Chats
                             </Link>
                         </Button>
                     </CardContent>
@@ -158,6 +162,79 @@ export default function ChatHistoryViewerPage() {
 
     const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: enUS });
 
+    // Add TranscriptMessageBubble component for consistent chat UI
+    const TranscriptMessageBubble: React.FC<{
+        msg: Message;
+        agentALLMInfo?: { name?: string } | null;
+        agentBLLMInfo?: { name?: string } | null;
+    }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
+        const isAgentA = msg.role === 'agentA';
+        const isAgentB = msg.role === 'agentB';
+        const isUser = msg.role === 'user' || msg.role === 'human';
+        const isSystem = msg.role === 'system';
+        // Use same colors/labels as ChatInterface
+        let bubbleClass = '';
+        let label = '';
+        let alignClass = '';
+        if (isAgentA) {
+            bubbleClass = 'bg-muted text-foreground';
+            label = agentALLMInfo?.name ? `Agent A (${agentALLMInfo.name})` : 'Agent A';
+            alignClass = 'justify-start';
+        } else if (isAgentB) {
+            bubbleClass = 'bg-primary text-primary-foreground';
+            label = agentBLLMInfo?.name ? `Agent B (${agentBLLMInfo.name})` : 'Agent B';
+            alignClass = 'justify-end';
+        } else if (isUser) {
+            bubbleClass = 'bg-secondary text-foreground';
+            label = 'You';
+            alignClass = 'justify-end';
+        } else if (isSystem) {
+            bubbleClass = 'bg-muted/60 text-muted-foreground italic';
+            label = 'System';
+            alignClass = 'justify-center';
+        }
+        return (
+            <div className={`flex ${alignClass}`}>
+                <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`}
+                    style={{ marginBottom: '0.5rem' }}>
+                    {(isAgentA || isAgentB) && (
+                        <p className="text-xs font-bold mb-1">{label}</p>
+                    )}
+                    {isUser && (
+                        <p className="text-xs font-bold mb-1">{label}</p>
+                    )}
+                    {msg.content}
+                </div>
+            </div>
+        );
+    };
+
+    // Resume conversation handler
+    const handleResumeConversation = async () => {
+        if (!details || !user) return;
+        setResumeLoading(true);
+        setResumeError(null);
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to resume conversation.');
+            }
+            // Redirect to live chat interface (same as after session setup)
+            router.push(`/app/?resume=${details.conversationId}`);
+        } catch (err) {
+            setResumeError(err instanceof Error ? err.message : String(err));
+        } finally {
+            setResumeLoading(false);
+        }
+    };
+
     return (
         <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
             <div className="w-full max-w-3xl space-y-6">
@@ -167,12 +244,28 @@ export default function ChatHistoryViewerPage() {
                         View Conversation
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link href="/history">
+                        <Link href="/app/history">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to History
+                            Back to Previous Chats
                         </Link>
                     </Button>
                 </div>
+                {/* Resume Conversation Button */}
+                {details && details.conversationId && details.agentA_llm && details.agentB_llm && details.language && details.messages &&
+                    details['status'] !== 'running' && (
+                    <div className="mb-2 flex flex-col items-center">
+                        <Button
+                            variant="default"
+                            onClick={handleResumeConversation}
+                            disabled={resumeLoading || !user}
+                        >
+                            {resumeLoading ? 'Resuming...' : 'Resume Conversation'}
+                        </Button>
+                        {resumeError && (
+                            <p className="text-destructive-foreground text-sm mt-2">{resumeError}</p>
+                        )}
+                    </div>
+                )}
 
                 <Card>
                     <CardHeader>
@@ -228,32 +321,23 @@ export default function ChatHistoryViewerPage() {
                     </CardHeader>
                     <CardContent>
                         <ScrollArea className="h-[500px] w-full pr-4">
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {details.messages.map((msg, index) => {
-                                    const isUser = msg.role === 'user' || msg.role === 'human';
                                     const isSystem = msg.role === 'system';
-                                    
-                                    if (isSystem && (msg.content.toLowerCase().includes("start the conversation") || msg.content.toLowerCase().includes("beginnen sie das gespräch"))) {
-                                      if (details.messages.length > 1) return null;
+                                    if (
+                                        isSystem &&
+                                        (msg.content.toLowerCase().includes("start the conversation") ||
+                                            msg.content.toLowerCase().includes("beginnen sie das gespräch"))
+                                    ) {
+                                        if (details.messages.length > 1) return null;
                                     }
-
-                                    const formattedTime = format(new Date(msg.timestamp), 'p', { locale: enUS });
-
                                     return (
-                                        <div key={msg.id || index} className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
-                                            <div className={`flex items-end space-x-2 max-w-[85%]`}>
-                                                {!isUser && !isSystem && <Bot className="h-6 w-6 mb-1 text-primary flex-shrink-0" />}
-                                                {isSystem && <Info className="h-5 w-5 mb-0.5 text-muted-foreground flex-shrink-0"/>}
-                                                
-                                                <div className={`px-3 py-2 rounded-lg shadow-sm break-words whitespace-pre-wrap ${isUser ? 'bg-primary text-primary-foreground' : isSystem ? 'bg-muted/60 text-muted-foreground italic' : 'bg-secondary'}`}>
-                                                    {msg.content}
-                                                </div>
-                                                {isUser && <UserCircle className="h-6 w-6 mb-1 text-muted-foreground flex-shrink-0" />}
-                                           </div>
-                                            <p className={`text-xs text-muted-foreground mt-1 ${isUser ? 'mr-8' : isSystem ? 'ml-0' : 'ml-8'}`}>
-                                                {getRoleDisplayName(msg.role)} - {formattedTime}
-                                            </p>
-                                        </div>
+                                        <TranscriptMessageBubble
+                                            key={msg.id || index}
+                                            msg={msg}
+                                            agentALLMInfo={agentALLMInfo}
+                                            agentBLLMInfo={agentBLLMInfo}
+                                        />
                                     );
                                 })}
                                 {details.messages.length === 0 && (

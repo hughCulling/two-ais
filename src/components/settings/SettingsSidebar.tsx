@@ -12,9 +12,9 @@ export default function SettingsSidebar() {
 
     // Define the navigation items - Appearance first
     const navigation = [
-        { name: t.settings.sections.appearance, href: '/settings/appearance' },
-        { name: t.settings.sections.language, href: '/settings/language' },
-        { name: t.settings.sections.apiKeys, href: '/settings/api-keys' },
+        { name: t.settings.sections.appearance, href: '/app/settings/appearance' },
+        { name: t.settings.sections.language, href: '/app/settings/language' },
+        { name: t.settings.sections.apiKeys, href: '/app/settings/api-keys' },
         // Add more settings links here later (e.g., Profile, Billing)
         // { name: 'Profile', href: '/settings/profile' },
     ];

@@ -2,11 +2,10 @@
 // Root layout - Updated Metadata for SEO & Reverted Font Handling
 
 import type { Metadata } from "next";
-import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 // --- Reverted Font Import ---
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from '@/components/layout/Header';
+import RootHeaderWrapper from '@/components/RootHeaderWrapper';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -75,7 +74,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // --- Reverted font application from html tag ---
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://firebase.googleapis.com" crossOrigin="anonymous" />
@@ -111,13 +109,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            <AuthProvider>
-              <Header />
-              {children}
-              <Footer />
-              <Analytics />
-              <SpeedInsights />
-            </AuthProvider>
+            <RootHeaderWrapper />
+            {children}
+            <Footer />
+            <Analytics />
+            <SpeedInsights />
           </LanguageProvider>
         </ThemeProvider>
       </body>
