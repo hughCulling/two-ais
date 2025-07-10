@@ -80,6 +80,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://firebaseinstallations.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://two-ais.firebaseapp.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/landing-light.webp" />
+        <link rel="preload" as="image" href="/landing-dark.webp" />
       </head>
       {/* --- Reverted font application back to body tag using cn() --- */}
       <body

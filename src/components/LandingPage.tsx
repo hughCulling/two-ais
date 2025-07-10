@@ -15,6 +15,10 @@ import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { cn } from '@/lib/utils';
 
+   // Replace these with your actual base64 strings!
+   const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
+   const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+
 // TruncatableNote component for pricing notes
 const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
@@ -79,13 +83,13 @@ const formatPrice = (price: number) => {
 // --- YouTube Facade Component ---
 const YOUTUBE_VIDEO_ID_LIGHT = "52oUvRFdaXE";
 const YOUTUBE_VIDEO_ID_DARK = "pkN_uU-nDdk";
-const YOUTUBE_THUMBNAIL_LIGHT = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID_LIGHT}/hqdefault.jpg`;
-const YOUTUBE_THUMBNAIL_DARK = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID_DARK}/hqdefault.jpg`;
 
 const YouTubeFacade: React.FC<{ mode: "light" | "dark"; title: string }> = ({ mode, title }) => {
   const [isPlayerActive, setIsPlayerActive] = useState(false);
+  // Use local webp images for LCP
+  const thumbnail = mode === "dark" ? "/landing-dark.webp" : "/landing-light.webp";
+  const blurDataURL = mode === "dark" ? BLUR_DATA_URL_DARK : BLUR_DATA_URL_LIGHT;
   const videoId = mode === "dark" ? YOUTUBE_VIDEO_ID_DARK : YOUTUBE_VIDEO_ID_LIGHT;
-  const thumbnail = mode === "dark" ? YOUTUBE_THUMBNAIL_DARK : YOUTUBE_THUMBNAIL_LIGHT;
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
   return (
     <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border bg-black relative group">
@@ -113,6 +117,8 @@ const YouTubeFacade: React.FC<{ mode: "light" | "dark"; title: string }> = ({ mo
             sizes="(max-width: 768px) 100vw, 768px"
             priority
             fetchPriority="high"
+            placeholder="blur"
+            blurDataURL={blurDataURL}
             className="absolute inset-0 w-full h-full object-cover"
             draggable={false}
             style={{ zIndex: 0 }}
