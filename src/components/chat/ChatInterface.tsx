@@ -105,14 +105,24 @@ export function ChatInterface({
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
+    const [ttsError, setTtsError] = useState<string | null>(null);
 
     // --- Audio Playback State ---
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
+    const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // --- Handler: User Interaction Detection ---
+    const handleUserInteraction = useCallback(() => {
+        if (!hasUserInteracted) {
+            logger.info("User interaction detected - enabling audio playback");
+            setHasUserInteracted(true);
+        }
+    }, [hasUserInteracted]);
 
     // --- Handler 5: Audio Playback Finished or Error (Defined before Effect 4) ---
     // Use useCallback to stabilize the function reference for the effect dependency array
@@ -173,6 +183,7 @@ export function ChatInterface({
             orderBy("timestamp", "asc")
         );
 
+        let isFirstSnapshot = true;
         const unsubscribe = onSnapshot(messagesQuery,
             (querySnapshot) => {
                 logger.debug(`ChatInterface: Message snapshot received ${querySnapshot.docs.length} docs for ${conversationId}.`);
@@ -194,6 +205,16 @@ export function ChatInterface({
                     }
                 });
                 setMessages(fetchedMessages);
+
+                // --- Mark all existing messages with audioUrl as played on first snapshot ---
+                if (isFirstSnapshot) {
+                    const initialPlayedIds = new Set<string>();
+                    fetchedMessages.forEach(msg => {
+                        if (msg.audioUrl) initialPlayedIds.add(msg.id);
+                    });
+                    setPlayedMessageIds(initialPlayedIds);
+                    isFirstSnapshot = false;
+                }
             },
             (err: FirestoreError) => {
                  logger.error(`Error listening to messages for conversation ${conversationId}:`, err);
@@ -271,6 +292,17 @@ export function ChatInterface({
                          }
                          logger.info(`Conversation ${conversationId} status changed to 'running'.`);
                     }
+                    if (data) {
+                        // setConversationData(data); // Removed as per edit hint
+                        // Check for TTS-related errors in errorContext
+                        if (data.errorContext &&
+                            (data.errorContext.toLowerCase().includes('tts') ||
+                             data.errorContext.toLowerCase().includes('quota'))) {
+                            setTtsError(data.errorContext);
+                        } else {
+                            setTtsError(null);
+                        }
+                    }
                 } else {
                     logger.warn(`Conversation document ${conversationId} does not exist in status listener.`);
                     setError("Conversation data not found. It might have been deleted.");
@@ -311,7 +343,8 @@ export function ChatInterface({
             latestUnplayedAudioMessage &&
             (!isAudioPlaying || currentlyPlayingMsgId !== latestUnplayedAudioMessage.id) &&
             conversationStatus === "running" &&
-            isWaitingForSignal // Check local state reflecting backend's waiting status
+            isWaitingForSignal && // Check local state reflecting backend's waiting status
+            hasUserInteracted // Only play audio after user interaction
         ) {
             const audioSrc = latestUnplayedAudioMessage.audioUrl;
             const messageIdToPlay = latestUnplayedAudioMessage.id;
@@ -350,7 +383,24 @@ export function ChatInterface({
             }
         }
     // Added handleAudioEnd to dependency array
-    }, [messages, isAudioPlaying, currentlyPlayingMsgId, conversationStatus, isWaitingForSignal, playedMessageIds, handleAudioEnd]);
+    }, [messages, isAudioPlaying, currentlyPlayingMsgId, conversationStatus, isWaitingForSignal, playedMessageIds, handleAudioEnd, hasUserInteracted]);
+
+
+    // --- Effect 5: User Interaction Detection ---
+    useEffect(() => {
+        const handleInteraction = () => handleUserInteraction();
+        
+        // Listen for various user interaction events
+        document.addEventListener('click', handleInteraction, { once: true });
+        document.addEventListener('keydown', handleInteraction, { once: true });
+        document.addEventListener('touchstart', handleInteraction, { once: true });
+        
+        return () => {
+            document.removeEventListener('click', handleInteraction);
+            document.removeEventListener('keydown', handleInteraction);
+            document.removeEventListener('touchstart', handleInteraction);
+        };
+    }, [handleUserInteraction]);
 
 
     // --- Handler 4: Stop Conversation Button ---
@@ -486,9 +536,55 @@ export function ChatInterface({
                 </Button>
             </div>
 
-             {/* Scrollable Message Area */}
-             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
-                <div className="space-y-4">
+            {/* TTS Error Banner */}
+            {ttsError && (
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-4 mt-4 rounded-md">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-yellow-700">
+                                <strong>TTS Issue:</strong> {ttsError}
+                            </p>
+                            <p className="text-xs text-yellow-600 mt-1">
+                                Text-to-speech is temporarily unavailable. The conversation will continue without audio.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* User Interaction Prompt for Audio */}
+            {!hasUserInteracted && conversationStatus === "running" && (
+                (() => {
+                    const hasUnplayedAudio = messages.some(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
+                    return hasUnplayedAudio || isWaitingForSignal;
+                })() && (
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mx-4 mt-4 rounded-md">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-blue-700">
+                                <strong>Audio Ready:</strong> Click anywhere or press any key to enable audio playback
+                            </p>
+                            <p className="text-xs text-blue-600 mt-1">
+                                Browser requires user interaction before playing audio automatically.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+
+            {/* Scrollable Message Area */}
+            <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
+               <div className="space-y-4">
                     {mergedMessages.map((msg) => (
                         <div
                             key={msg.id}
@@ -511,6 +607,48 @@ export function ChatInterface({
                                 {msg.content}
                                 {msg.isStreaming && (
                                   <span className="ml-1 animate-pulse text-primary">▍</span>
+                                )}
+                                {/* Manual audio play button for messages with audio */}
+                                {msg.audioUrl && !playedMessageIds.has(msg.id) && !isAudioPlaying && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                if (audioPlayerRef.current && msg.audioUrl) {
+                                                    setHasUserInteracted(true);
+                                                    audioPlayerRef.current.src = msg.audioUrl;
+                                                    audioPlayerRef.current.play()
+                                                        .then(() => {
+                                                            setCurrentlyPlayingMsgId(msg.id);
+                                                            setIsAudioPlaying(true);
+                                                        })
+                                                        .catch(err => {
+                                                            logger.error(`Error playing audio for message ${msg.id}:`, err);
+                                                            setIsAudioPlaying(false);
+                                                            setCurrentlyPlayingMsgId(null);
+                                                            // If playback fails, still signal backend to continue
+                                                            if (isWaitingForSignal) {
+                                                                handleAudioEnd(msg.id);
+                                                            }
+                                                        });
+                                                }
+                                            }}
+                                            className="h-6 px-2 text-xs"
+                                        >
+                                            <Volume2 className="h-3 w-3 mr-1" />
+                                            Play Audio
+                                        </Button>
+                                    </div>
+                                )}
+                                {/* Audio played indicator */}
+                                {msg.audioUrl && playedMessageIds.has(msg.id) && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <span className="text-xs text-muted-foreground flex items-center">
+                                            <Volume2 className="h-3 w-3 mr-1" />
+                                            Audio played
+                                        </span>
+                                    </div>
                                 )}
                                 {/* Split audio notification */}
                                 {msg.ttsWasSplit && (

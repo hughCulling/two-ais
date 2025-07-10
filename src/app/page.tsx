@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
@@ -39,6 +39,9 @@ import { cn } from '@/lib/utils';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
+import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import type { User } from 'firebase/auth';
 
 // Define a more specific type for model category translation keys
 type ModelCategoryTranslationKey = Extract<keyof TranslationKeys, `modelCategory_${string}`>;
@@ -344,10 +347,11 @@ const YouTubeFacade: React.FC<YouTubeFacadeProps> = ({ mode, title }) => {
           aria-label={`Play video: ${title}`}
           onClick={() => setIsPlayerActive(true)}
         >
-          <img
+          <Image
             src={thumbnail}
             alt={title}
-            fetchPriority="high"
+            fill
+            priority
             className="absolute inset-0 w-full h-full object-cover"
             draggable={false}
             style={{ zIndex: 0 }}
@@ -374,6 +378,101 @@ const YouTubeFacade: React.FC<YouTubeFacadeProps> = ({ mode, title }) => {
 };
 
 
+// --- ResumeHandler: Handles resume logic using useSearchParams ---
+function ResumeHandler({
+    user,
+    activeConversationId,
+    sessionConfig,
+    setSessionConfig,
+    setActiveConversationId,
+    hasManuallyStopped,
+    setHasManuallyStopped
+}: {
+    user: User | null;
+    activeConversationId: string | null;
+    sessionConfig: SessionConfig | null;
+    setSessionConfig: (config: SessionConfig | null) => void;
+    setActiveConversationId: (id: string | null) => void;
+    hasManuallyStopped: boolean;
+    setHasManuallyStopped: (v: boolean) => void;
+}) {
+    const searchParams = useSearchParams();
+    const resumeConversationId = searchParams.get('resume');
+    const [resumeLoading, setResumeLoading] = useState(false);
+    const [resumeError, setResumeError] = useState<string | null>(null);
+    const { language } = useLanguage();
+    const t = getTranslation(language.code) as TranslationKeys;
+
+    useEffect(() => {
+        if (!user || !resumeConversationId || activeConversationId || sessionConfig || hasManuallyStopped) return;
+        setResumeLoading(true);
+        setResumeError(null);
+        const fetchResumeDetails = async () => {
+            try {
+                const idToken = await user?.getIdToken();
+                const resumeResponse = await fetch(`/api/conversation/${resumeConversationId}/resume`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${idToken}` },
+                });
+                if (!resumeResponse.ok) {
+                    const errorData = await resumeResponse.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Failed to resume conversation.');
+                }
+                const pollDetails = async () => {
+                    const maxAttempts = 10;
+                    let attempt = 0;
+                    while (attempt < maxAttempts) {
+                        const response = await fetch(`/api/conversation/${resumeConversationId}/details`, {
+                            headers: { 'Authorization': `Bearer ${idToken}` },
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.status === 'running') {
+                                setSessionConfig({
+                                    agentA_llm: data.agentA_llm,
+                                    agentB_llm: data.agentB_llm,
+                                    ttsEnabled: data.ttsSettings?.enabled || false,
+                                    agentA_tts: data.ttsSettings?.agentA || { provider: 'none', voice: null },
+                                    agentB_tts: data.ttsSettings?.agentB || { provider: 'none', voice: null },
+                                    language: data.language,
+                                    initialSystemPrompt: data.initialSystemPrompt || '',
+                                });
+                                setActiveConversationId(resumeConversationId);
+                                return;
+                            }
+                        }
+                        attempt++;
+                        await new Promise(res => setTimeout(res, 300));
+                    }
+                    throw new Error('Conversation is not running and cannot be resumed.');
+                };
+                await pollDetails();
+            } catch (err) {
+                setResumeError(err instanceof Error ? err.message : String(err));
+            } finally {
+                setResumeLoading(false);
+            }
+        };
+        fetchResumeDetails();
+    }, [user, resumeConversationId, activeConversationId, sessionConfig, hasManuallyStopped, setSessionConfig, setActiveConversationId, setHasManuallyStopped]);
+
+    if (resumeLoading) {
+        return (
+            <main className="flex min-h-screen items-center justify-center p-4">
+                <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
+            </main>
+        );
+    }
+    if (resumeError) {
+        return (
+            <main className="flex min-h-screen items-center justify-center p-4">
+                <p className="text-destructive-foreground">{resumeError}</p>
+            </main>
+        );
+    }
+    return null;
+}
+
 export default function Page() {
     const { user, loading: authLoading } = useAuth();
     const { resolvedTheme } = useTheme();
@@ -398,11 +497,12 @@ export default function Page() {
             return initialOpenState;
         }
     );
+    const [hasManuallyStopped, setHasManuallyStopped] = useState(false);
 
+    // Restore toggleCollapsible function
     const toggleCollapsible = (id: string) => {
         setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
     };
-
 
     useEffect(() => {
         if (!user) {
@@ -411,6 +511,7 @@ export default function Page() {
             setActiveConversationId(null);
             setSecretsLoading(false);
             setPageError(null);
+            setHasManuallyStopped(false);
             return;
         }
         if (user && userApiSecrets === null) {
@@ -456,6 +557,7 @@ export default function Page() {
         setPageError(null);
         setSessionConfig(null);
         setActiveConversationId(null);
+        setHasManuallyStopped(false);
         try {
             const idToken = await user.getIdToken();
             logger.info("Obtained ID Token for API call.");
@@ -505,6 +607,13 @@ export default function Page() {
         setSessionConfig(null);
         setActiveConversationId(null);
         setPageError(null);
+        setHasManuallyStopped(true);
+        // Remove the 'resume' query param from the URL
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('resume');
+            window.history.replaceState({}, '', url.pathname + url.search);
+        }
     };
 
     if (authLoading || secretsLoading) {
@@ -516,118 +625,234 @@ export default function Page() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
-            {pageError && (
-                 <Alert variant="destructive" className="mb-6 max-w-3xl w-full flex-shrink-0">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>{t.page_ErrorAlertTitle}</AlertTitle>
-                  <AlertDescription>{pageError}</AlertDescription>
-                </Alert>
-            )}
-            <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
-                {user ? (
-                    !sessionConfig || !activeConversationId ? (
-                        <>
-                            <SessionSetupForm
-                                onStartSession={handleStartSession}
-                                isLoading={isStartingSession}
+        <>
+            <Suspense fallback={null}>
+                <ResumeHandler
+                    user={user}
+                    activeConversationId={activeConversationId}
+                    sessionConfig={sessionConfig}
+                    setSessionConfig={setSessionConfig}
+                    setActiveConversationId={setActiveConversationId}
+                    hasManuallyStopped={hasManuallyStopped}
+                    setHasManuallyStopped={setHasManuallyStopped}
+                />
+            </Suspense>
+            <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
+                {pageError && (
+                     <Alert variant="destructive" className="mb-6 max-w-3xl w-full flex-shrink-0">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>{t.page_ErrorAlertTitle}</AlertTitle>
+                      <AlertDescription>{pageError}</AlertDescription>
+                    </Alert>
+                )}
+                <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
+                    {user ? (
+                        !sessionConfig || !activeConversationId ? (
+                            <>
+                                <SessionSetupForm
+                                    onStartSession={handleStartSession}
+                                    isLoading={isStartingSession}
+                                />
+                            </>
+                        ) : (
+                            <ChatInterface
+                                conversationId={activeConversationId}
+                                onConversationStopped={handleConversationStopped}
                             />
-                        </>
+                        )
                     ) : (
-                        <ChatInterface
-                            conversationId={activeConversationId}
-                            onConversationStopped={handleConversationStopped}
-                        />
-                    )
-                ) : (
-                    <TooltipProvider delayDuration={100}>
-                        <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
-                             <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
-                             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
-                             <Alert variant="default" className="text-left border-theme-primary/50">
-                                <KeyRound className="h-4 w-4 text-theme-primary" />
-                                <AlertTitle className="font-semibold">{t.page_ApiKeysRequiredTitle}</AlertTitle>
-                                <AlertDescription>
-                                    {t.page_ApiKeysRequiredDescription}
-                                </AlertDescription>
-                             </Alert>
-                             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
-                        </div>
+                        <TooltipProvider delayDuration={100}>
+                            <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
+                                 <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
+                                 <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
+                                 <Alert variant="default" className="text-left border-theme-primary/50">
+                                    <KeyRound className="h-4 w-4 text-theme-primary" />
+                                    <AlertTitle className="font-semibold">{t.page_ApiKeysRequiredTitle}</AlertTitle>
+                                    <AlertDescription>
+                                        {t.page_ApiKeysRequiredDescription}
+                                    </AlertDescription>
+                                 </Alert>
+                                 <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
+                            </div>
 
-                        <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
-                            <YouTubeFacade
-                              mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
-                              title={t.page_VideoTitle}
-                            />
-                        </div>
+                            <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
+                                <YouTubeFacade
+                                  mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
+                                  title={t.page_VideoTitle}
+                                />
+                            </div>
 
-                        <Card className="w-full">
-                            <CardHeader>
-                                <CardTitle className="flex items-center justify-center text-xl">
-                                    <BrainCircuit className="mr-2 h-5 w-5" />
-                                    {t.page_AvailableLLMsTitle}
-                                </CardTitle>
-                                <p className="text-xs text-muted-foreground text-center mt-1">
-                                    Prices last verified on 2025-06-04
-                                </p>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                {Object.entries(groupedLLMsByProvider).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
-                                    const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, language.code);
-                                    const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
-                                    const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
-                                    let lastDisplayedBrand: string | null = null;
+                            <Card className="w-full">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center justify-center text-xl">
+                                        <BrainCircuit className="mr-2 h-5 w-5" />
+                                        {t.page_AvailableLLMsTitle}
+                                    </CardTitle>
+                                    <p className="text-xs text-muted-foreground text-center mt-1">
+                                        Prices last verified on 2025-06-04
+                                    </p>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    {Object.entries(groupedLLMsByProvider).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
+                                        const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, language.code);
+                                        const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
+                                        const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+                                        let lastDisplayedBrand: string | null = null;
 
-                                    return (
-                                        <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                                            <CollapsibleTrigger className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
-                                                <span>{providerName}</span>
-                                                {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-                                            </CollapsibleTrigger>
-                                            <CollapsibleContent className="space-y-3 pl-2 pt-1">
-                                                {orderedCategories.map((category, index) => {
-                                                    const categoryModels = modelsByCategory[category];
-                                                    if (!categoryModels) return null;
+                                        return (
+                                            <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                                                <CollapsibleTrigger className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                                                    <span>{providerName}</span>
+                                                    {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent className="space-y-3 pl-2 pt-1">
+                                                    {orderedCategories.map((category, index) => {
+                                                        const categoryModels = modelsByCategory[category];
+                                                        if (!categoryModels) return null;
 
-                                                    let brandHeadingElement = null;
-                                                    if (providerName === 'TogetherAI') {
-                                                        const modelCategoryKey = providerModels.find(m => {
-                                                            const key = (m.categoryKey || 'modelCategory_OtherModels') as ModelCategoryTranslationKey;
-                                                            const translated = t[key] || key;
-                                                            return translated === category;
-                                                        })?.categoryKey;
-                                                        const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
-                                                        if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
-                                                            brandHeadingElement = (
-                                                                <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
-                                                                    {currentBrandName}
-                                                                </h4>
-                                                            );
-                                                            lastDisplayedBrand = currentBrandName;
+                                                        let brandHeadingElement = null;
+                                                        if (providerName === 'TogetherAI') {
+                                                            const modelCategoryKey = providerModels.find(m => {
+                                                                const key = (m.categoryKey || 'modelCategory_OtherModels') as ModelCategoryTranslationKey;
+                                                                const translated = t[key] || key;
+                                                                return translated === category;
+                                                            })?.categoryKey;
+                                                            const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
+                                                            if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
+                                                                brandHeadingElement = (
+                                                                    <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
+                                                                        {currentBrandName}
+                                                                    </h4>
+                                                                );
+                                                                lastDisplayedBrand = currentBrandName;
+                                                            }
                                                         }
-                                                    }
 
-                                                    return (
-                                                    <React.Fragment key={`${category}-${index}`}>
-                                                        {brandHeadingElement}
-                                                        <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}>
-                                                            <h5 className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h5>
-                                                            <ul className="space-y-1 list-disc list-inside text-sm pl-2">
-                                                                {categoryModels.map((llm) => (
-                                                                    <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
-                                                                        <span className="whitespace-nowrap">{llm.name}</span>
-                                                                        {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
-                                                                        {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
-                                                                        {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                                        return (
+                                                        <React.Fragment key={`${category}-${index}`}>
+                                                            {brandHeadingElement}
+                                                            <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}>
+                                                                <h5 className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h5>
+                                                                <ul className="space-y-1 list-disc list-inside text-sm pl-2">
+                                                                    {categoryModels.map((llm) => (
+                                                                        <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                            <span className="whitespace-nowrap">{llm.name}</span>
+                                                                            {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
+                                                                            {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
+                                                                            {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
 
-                                                                        {llm.pricing.note ? (
-                                                                            <TruncatableNote noteText={llm.pricing.note} />
-                                                                        ) : (
-                                                                            <span className="text-xs text-muted-foreground truncate min-w-0">
-                                                                                (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens)
-                                                                            </span>
+                                                                            {llm.pricing.note ? (
+                                                                                <TruncatableNote noteText={llm.pricing.note} />
+                                                                            ) : (
+                                                                                <span className="text-xs text-muted-foreground truncate min-w-0">
+                                                                                    (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens)
+                                                                                </span>
+                                                                            )}
+                                                                            {isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                        <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                                                    </TooltipTrigger>
+                                                                                    <TooltipContent side="top">
+                                                                                        <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                                    </TooltipContent>
+                                                                                </Tooltip>
+                                                                            ) : (
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                        <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                                                    </TooltipTrigger>
+                                                                                    <TooltipContent side="top">
+                                                                                        <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                                                    </TooltipContent>
+                                                                                </Tooltip>
+                                                                            )}
+                                                                            {llm.usesReasoningTokens && (
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                        <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
+                                                                                    </TooltipTrigger>
+                                                                                    <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
+                                                                                        <p className="text-xs">
+                                                                                            {llm.provider === 'Google'
+                                                                                                ? t.page_TooltipGoogleThinkingBudget
+                                                                                                : llm.provider === 'Anthropic'
+                                                                                                    ? t.page_TooltipAnthropicExtendedThinking
+                                                                                                    : llm.provider === 'xAI'
+                                                                                                        ? t.page_TooltipXaiThinking
+                                                                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                                                                            ? t.page_TooltipQwenReasoning
+                                                                                                            : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                                                                                ? t.page_TooltipDeepSeekReasoning
+                                                                                                                : t.page_TooltipGenericReasoning
+                                                                                        }
+                                                                                    </p>
+                                                                                </TooltipContent>
+                                                                            </Tooltip>
                                                                         )}
-                                                                        {isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                                                            {llm.requiresOrgVerification && (
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
+                                                                                    </TooltipTrigger>
+                                                                                    <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                                                                        <p className="text-xs">
+                                                                                            {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                                                                            <a
+                                                                                                href="https://platform.openai.com/settings/organization/general"
+                                                                                                target="_blank"
+                                                                                                rel="noopener noreferrer"
+                                                                                                className="underline text-blue-500 hover:text-blue-600 ml-1"
+                                                                                            >
+                                                                                                verify here
+                                                                                            </a>
+                                                                                            {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                                                                        </p>
+                                                                                    </TooltipContent>
+                                                                                </Tooltip>
+                                                                            )}
+                                                                            
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        </React.Fragment>
+                                                    )})}
+                                                </CollapsibleContent>
+                                            </Collapsible>
+                                        );
+                                    })}
+                                </CardContent>
+                            </Card>
+
+                            <Card className="w-full">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center justify-center text-xl">
+                                        <Volume2 className="mr-2 h-5 w-5" />
+                                        {t.page_AvailableTTSTitle}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {availableTTSProviders.length > 0 ? (
+                                        availableTTSProviders.map((provider) => {
+                                            const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
+                                            const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+
+                                            return (
+                                                <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                                                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                                                        <span>{provider.name}</span>
+                                                        {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                                                    </CollapsibleTrigger>
+                                                    <CollapsibleContent className="space-y-2 pl-4">
+                                                        <ul className="space-y-1 list-disc list-inside text-sm">
+                                                            {provider.models.map((model) => {
+                                                                const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
+                                                                return (
+                                                                    <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                                                                        <span className="whitespace-nowrap">{model.name}</span>
+                                                                        <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({model.pricingText})</span>
+                                                                        {supportsLanguage ? (
                                                                             <Tooltip>
                                                                                 <TooltipTrigger asChild>
                                                                                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
@@ -646,126 +871,23 @@ export default function Page() {
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         )}
-                                                                        {llm.usesReasoningTokens && (
-                                                                            <Tooltip>
-                                                                                <TooltipTrigger asChild>
-                                                                                    <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
-                                                                                </TooltipTrigger>
-                                                                                <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
-                                                                                    <p className="text-xs">
-                                                                                        {llm.provider === 'Google'
-                                                                                            ? t.page_TooltipGoogleThinkingBudget
-                                                                                            : llm.provider === 'Anthropic'
-                                                                                                ? t.page_TooltipAnthropicExtendedThinking
-                                                                                                : llm.provider === 'xAI'
-                                                                                                    ? t.page_TooltipXaiThinking
-                                                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
-                                                                                                        ? t.page_TooltipQwenReasoning
-                                                                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
-                                                                                                            ? t.page_TooltipDeepSeekReasoning
-                                                                                                            : t.page_TooltipGenericReasoning
-                                                                                        }
-                                                                                    </p>
-                                                                                </TooltipContent>
-                                                                            </Tooltip>
-                                                                        )}
-                                                                        {llm.requiresOrgVerification && (
-                                                                            <Tooltip>
-                                                                                <TooltipTrigger asChild>
-                                                                                    <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help"/>
-                                                                                </TooltipTrigger>
-                                                                                <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
-                                                                                    <p className="text-xs">
-                                                                                        {t.page_TooltipRequiresVerification.split("verify here")[0]}
-                                                                                        <a
-                                                                                            href="https://platform.openai.com/settings/organization/general"
-                                                                                            target="_blank"
-                                                                                            rel="noopener noreferrer"
-                                                                                            className="underline text-blue-500 hover:text-blue-600 ml-1"
-                                                                                        >
-                                                                                            verify here
-                                                                                        </a>
-                                                                                        {t.page_TooltipRequiresVerification.split("verify here")[1]}
-                                                                                    </p>
-                                                                                </TooltipContent>
-                                                                            </Tooltip>
-                                                                        )}
-                                                                        
                                                                     </li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    </React.Fragment>
-                                                )})}
-                                            </CollapsibleContent>
-                                        </Collapsible>
-                                    );
-                                })}
-                            </CardContent>
-                        </Card>
-
-                        <Card className="w-full">
-                            <CardHeader>
-                                <CardTitle className="flex items-center justify-center text-xl">
-                                    <Volume2 className="mr-2 h-5 w-5" />
-                                    {t.page_AvailableTTSTitle}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                {availableTTSProviders.length > 0 ? (
-                                    availableTTSProviders.map((provider) => {
-                                        const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
-                                        const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
-
-                                        return (
-                                            <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                                                <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
-                                                    <span>{provider.name}</span>
-                                                    {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-                                                </CollapsibleTrigger>
-                                                <CollapsibleContent className="space-y-2 pl-4">
-                                                    <ul className="space-y-1 list-disc list-inside text-sm">
-                                                        {provider.models.map((model) => {
-                                                            const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
-                                                            return (
-                                                                <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
-                                                                    <span className="whitespace-nowrap">{model.name}</span>
-                                                                    <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({model.pricingText})</span>
-                                                                    {supportsLanguage ? (
-                                                                        <Tooltip>
-                                                                            <TooltipTrigger asChild>
-                                                                                <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                                                            </TooltipTrigger>
-                                                                            <TooltipContent side="top">
-                                                                                <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    ) : (
-                                                                        <Tooltip>
-                                                                            <TooltipTrigger asChild>
-                                                                                <X className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                                                            </TooltipTrigger>
-                                                                            <TooltipContent side="top">
-                                                                                <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    )}
-                                                                </li>
-                                                            );
-                                                        })}
-                                                    </ul>
-                                                </CollapsibleContent>
-                                            </Collapsible>
-                                        );
-                                    })
-                                ) : (
-                                    <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TooltipProvider>
-                )}
-            </div>
-        </main>
+                                                                );
+                                                            })}
+                                                        </ul>
+                                                    </CollapsibleContent>
+                                                </Collapsible>
+                                            );
+                                        })
+                                    ) : (
+                                        <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </TooltipProvider>
+                    )}
+                </div>
+            </main>
+        </>
     );
 }
