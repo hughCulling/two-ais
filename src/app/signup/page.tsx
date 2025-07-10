@@ -10,6 +10,8 @@ import { useAuth } from '@/context/AuthContext';
 import SignUpForm from '@/components/auth/SignUpForm';
 import { useLanguage } from '@/context/LanguageContext';
 import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
+import { AuthProvider } from '@/context/AuthContext';
+import Header from '@/components/layout/Header';
 
 export default function SignupPage() {
     const { user, loading } = useAuth();
@@ -41,21 +43,24 @@ export default function SignupPage() {
 
     // If no user and not loading, show signup form
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
-            <div className="w-full max-w-md space-y-6">
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md space-y-6">
-                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
-                        {t.auth.signup.title}
-                    </h1>
-                    <SignUpForm />
-                     <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                        {t.auth.signup.hasAccount}{' '}
-                        <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                            {t.auth.signup.signIn}
-                        </Link>
-                    </p>
+        <AuthProvider>
+            <Header />
+            <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
+                <div className="w-full max-w-md space-y-6">
+                    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md space-y-6">
+                        <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
+                            {t.auth.signup.title}
+                        </h1>
+                        <SignUpForm />
+                        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                            {t.auth.signup.hasAccount}{' '}
+                            <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                {t.auth.signup.signIn}
+                            </Link>
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </AuthProvider>
     );
 }

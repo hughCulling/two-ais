@@ -60,6 +60,7 @@ interface ConversationSummary {
 
 export async function GET(request: NextRequest) {
     console.log("API route /api/conversations/history hit");
+    console.log("FIREBASE_SERVICE_ACCOUNT_KEY present:", !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 
     if (!dbAdmin || !firebaseAdminApp) {
         console.error("API History Route: Firestore Admin not initialized at start of GET handler.");
@@ -78,11 +79,13 @@ export async function GET(request: NextRequest) {
 
     try {
         const authorization = request.headers.get("Authorization");
+        console.log("Authorization header:", authorization);
         if (!authorization?.startsWith("Bearer ")) {
             console.warn("API History Route: Unauthorized - Missing Bearer token");
             return NextResponse.json({ error: "Unauthorized: Missing Bearer token" }, { status: 401 });
         }
         const idToken = authorization.split("Bearer ")[1];
+        console.log("ID Token received:", idToken ? idToken.substring(0, 20) + '...' : null);
         let decodedToken: DecodedIdToken;
         try {
             decodedToken = await getAuth(firebaseAdminApp).verifyIdToken(idToken);
