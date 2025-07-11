@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
