@@ -1,4 +1,4 @@
-export const sw = {
+const sw = {
     header: {
         appName: "Two AIs", // Keep brand name
         settings: "Mipangilio",
@@ -283,4 +283,5 @@ export const sw = {
     ttsVoice_Ugne: "Ugne",
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default sw; 

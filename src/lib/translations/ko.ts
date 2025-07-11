@@ -1,5 +1,5 @@
 // src/lib/translations/ko.ts
-export const ko = {
+const ko = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const ko = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default ko; 

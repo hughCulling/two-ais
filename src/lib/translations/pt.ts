@@ -1,5 +1,5 @@
 // src/lib/translations/pt.ts
-export const pt = {
+const pt = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const pt = {
     ttsVoice_Ugne: "Ugne", // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default pt; 

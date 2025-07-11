@@ -1,5 +1,5 @@
-// src/lib/translations/en.ts
-export const ka = {
+// src/lib/translations/ka.ts
+const ka = {
     // Header
     header: {
         appName: 'Two AIs',
@@ -299,4 +299,5 @@ export const ka = {
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE --------------- 
-}; 
+};
+export default ka; 

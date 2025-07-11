@@ -1,5 +1,5 @@
-// src/lib/translations/en.ts
-export const is = {
+// src/lib/translations/is.ts
+const is = {
     // Header
     header: {
         appName: 'Two AIs',
@@ -299,4 +299,5 @@ export const is = {
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE --------------- 
-}; 
+};
+export default is; 

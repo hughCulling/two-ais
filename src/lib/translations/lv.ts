@@ -1,5 +1,5 @@
 // src/lib/translations/lv.ts
-export const lv = {
+const lv = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -431,3 +431,4 @@ export const lv = {
 
     // --------------- END OF FILE ---------------
 };
+export default lv;

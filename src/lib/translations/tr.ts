@@ -1,5 +1,5 @@
 // src/lib/translations/tr.ts
-export const tr = {
+const tr = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -429,4 +429,5 @@ export const tr = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default tr; 

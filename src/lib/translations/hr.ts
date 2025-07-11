@@ -1,5 +1,5 @@
 // src/lib/translations/hr.ts
-export const hr = {
+const hr = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const hr = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default hr; 

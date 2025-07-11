@@ -1,5 +1,5 @@
 // src/lib/translations/bg.ts
-export const bg = {
+const bg = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -297,4 +297,5 @@ export const bg = {
 
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
-}; 
+};
+export default bg; 

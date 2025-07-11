@@ -1,5 +1,5 @@
 // src/lib/translations/bn.ts
-export const bn = {
+const bn = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -298,4 +298,5 @@ export const bn = {
 
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
-}; 
+};
+export default bn; 

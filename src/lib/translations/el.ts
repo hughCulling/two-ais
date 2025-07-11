@@ -1,5 +1,5 @@
 // src/lib/translations/el.ts
-export const el = {
+const el = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -429,3 +429,4 @@ export const el = {
     ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 };
+export default el;

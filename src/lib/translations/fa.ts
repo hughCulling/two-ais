@@ -1,5 +1,5 @@
 // src/lib/translations/fa.ts
-export const fa = {
+const fa = {
     // Header
     header: {
         appName: 'Two AIs',
@@ -300,3 +300,4 @@ export const fa = {
 
     // --------------- END OF FILE --------------- 
 };
+export default fa;

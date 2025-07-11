@@ -1,5 +1,5 @@
 // src/lib/translations/zh.ts
-export const zh = {
+const zh = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,3 +430,4 @@ export const zh = {
 
     // --------------- END OF FILE ---------------
 };
+export default zh;
