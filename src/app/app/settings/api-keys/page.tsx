@@ -4,15 +4,13 @@
 'use client'; // ApiKeyManager uses client hooks
 
 import ApiKeyManager from '@/components/settings/ApiKeyManager'; // Adjust path if needed
-import { useLanguage } from '@/context/LanguageContext'; // Added
-import { getTranslation, TranslationKeys } from '@/lib/translations'; // Added
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ApiKeysPage() {
-    const { language } = useLanguage(); // Added
-    const t = getTranslation(language.code) as TranslationKeys; // Added
+    const { t, loading: translationLoading } = useTranslation();
     const { user, loading } = useAuth();
     const router = useRouter();
 
@@ -22,7 +20,7 @@ export default function ApiKeysPage() {
       }
     }, [user, loading, router]);
 
-    if (loading) return null;
+    if (loading || translationLoading || !t) return null;
     if (!user) return null;
 
     // No useAuth, useEffect, loading, or redirect logic needed here.

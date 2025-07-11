@@ -13,9 +13,11 @@ import { UserCircle, Menu, X } from 'lucide-react'; // Import an icon for user
 import { useState } from 'react'; // Import useState
 
 export default function Header() {
-    const { user, loading } = useAuth();
-    const t = useTranslation();
+    const { user, loading: authLoading } = useAuth();
+    const { t, loading } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
+
+    if (loading || !t) return null;
 
     // Common classes for navigation links/buttons for easier clicking
     const navItemClasses = "px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
@@ -36,7 +38,7 @@ export default function Header() {
                             {t.header.appName}
                         </Link>
                         {/* View Previous Chats button (desktop, left, only if logged in) */}
-                        {user && !loading && (
+                        {user && !authLoading && (
                             <Link href="/app/history" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 Previous Chats
@@ -53,7 +55,7 @@ export default function Header() {
                         <ThemeSwitcher />
 
                         {/* --- Auth Status / Links (Desktop) --- */}
-                        {loading ? (
+                        {authLoading ? (
                             <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                         ) : user ? (
                             <>
@@ -100,7 +102,7 @@ export default function Header() {
             {/* --- Mobile Menu Panel --- */}
             <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    {loading ? (
+                    {authLoading ? (
                         <div className="block px-3 py-2">
                             <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
                             <div className="h-8 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -140,7 +142,7 @@ export default function Header() {
                         <ThemeSwitcher />
                     </div>
 
-                    {user && !loading && (
+                    {user && !authLoading && (
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                              <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
                         </div>

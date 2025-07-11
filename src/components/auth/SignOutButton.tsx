@@ -16,7 +16,9 @@ interface SignOutButtonProps {
 export default function SignOutButton({ className, onSignOut }: SignOutButtonProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const t = useTranslation();
+    const { t, loading: translationLoading } = useTranslation();
+
+    if (translationLoading || !t) return null;
 
     const handleSignOut = async () => {
         setError(null);

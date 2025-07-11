@@ -1,138 +1,72 @@
-import { en } from './en';
-import { es } from './es';
-import { fr } from './fr';
-import { de } from './de';
-import { ja } from './ja';
-import { zh } from './zh';
-import { ar } from './ar';
-import { pt } from './pt';
-import { hi } from './hi';
-import { bn } from './bn';
-import { ru } from './ru';
-import { it } from './it';
-import { ko } from './ko';
-import { tr } from './tr';
-import { nl } from './nl';
-import { sv } from './sv';
-import { pl } from './pl';
-import { vi } from './vi';
-import { th } from './th';
-import { id } from './id';
-import { cs } from './cs';
-import { el } from './el';
-import { hu } from './hu';
-import { ro } from './ro';
-import { da } from './da';
-import { fi } from './fi';
-import { no } from './no';
-import { sk } from './sk';
-import { bg } from './bg';
-import { hr } from './hr';
-import { lt } from './lt';
-import { sl } from './sl';
-import { et } from './et';
-import { lv } from './lv';
-import { sr } from './sr';
-import { iw } from './iw';
-import { uk } from './uk';
-import { sw } from './sw';
-import { mt } from './mt';
-import { bs } from './bs';
-import { ca } from './ca';
-import { gu } from './gu';
-import { hy } from './hy';
-import { is as is_IS } from './is';
-import { ka } from './ka';
-import { kk } from './kk';
-import { kn } from './kn';
-import { mk } from './mk';
-import { ml } from './ml';
-import { mr } from './mr';
-import { ms } from './ms';
-import { my } from './my';
-import { pa } from './pa';
-import { so } from './so';
-import { sq } from './sq';
-import { ta } from './ta';
-import { te } from './te';
-import { tl } from './tl';
-import { ur } from './ur';
-import { am } from './am';
-import { mn } from './mn';
-import { fa } from './fa';
+// src/lib/translations/index.ts
+// Dynamically load translation files by language code
 
-// Type for our translation structure
-export type TranslationKeys = typeof en;
+export type TranslationKeys = typeof import('./en').en;
 
-// All translations will follow the same structure as English
-export const translations = {
-    en,
-    es,
-    fr,
-    de,
-    ja,
-    zh,
-    ar,
-    pt,
-    hi,
-    bn,
-    ru,
-    it,
-    ko,
-    tr,
-    nl,
-    sv,
-    pl,
-    vi,
-    th,
-    id,
-    cs,
-    el,
-    hu,
-    ro,
-    da,
-    fi,
-    no,
-    sk,
-    bg,
-    hr,
-    lt,
-    sl,
-    et,
-    lv,
-    sr,
-    iw,
-    uk,
-    sw,
-    mt,
-    bs,
-    ca,
-    gu,
-    hy,
-    is: is_IS,
-    ka,
-    kk,
-    kn,
-    mk,
-    ml,
-    mr,
-    ms,
-    my,
-    pa,
-    so,
-    sq,
-    ta,
-    te,
-    tl,
-    ur,
-    am,
-    mn,
-    fa,
-    // Other languages will be added here as they're created
-};
-
-export type LanguageCode = keyof typeof translations;
-
-export const getTranslation = (lang: LanguageCode): TranslationKeys => {
-    return translations[lang] || translations.en;
-};
+export async function getTranslationAsync(langCode: string): Promise<TranslationKeys> {
+  switch (langCode) {
+    case 'am': return (await import('./am')).am;
+    case 'ar': return (await import('./ar')).ar;
+    case 'bg': return (await import('./bg')).bg;
+    case 'bn': return (await import('./bn')).bn;
+    case 'bs': return (await import('./bs')).bs;
+    case 'ca': return (await import('./ca')).ca;
+    case 'cs': return (await import('./cs')).cs;
+    case 'da': return (await import('./da')).da;
+    case 'de': return (await import('./de')).de;
+    case 'el': return (await import('./el')).el;
+    case 'en': return (await import('./en')).en;
+    case 'es': return (await import('./es')).es;
+    case 'et': return (await import('./et')).et;
+    case 'fa': return (await import('./fa')).fa;
+    case 'fi': return (await import('./fi')).fi;
+    case 'fr': return (await import('./fr')).fr;
+    case 'gu': return (await import('./gu')).gu;
+    case 'hi': return (await import('./hi')).hi;
+    case 'hr': return (await import('./hr')).hr;
+    case 'hu': return (await import('./hu')).hu;
+    case 'hy': return (await import('./hy')).hy;
+    case 'id': return (await import('./id')).id;
+    case 'is': return (await import('./is')).is;
+    case 'it': return (await import('./it')).it;
+    case 'iw': return (await import('./iw')).iw;
+    case 'ja': return (await import('./ja')).ja;
+    case 'ka': return (await import('./ka')).ka;
+    case 'kk': return (await import('./kk')).kk;
+    case 'kn': return (await import('./kn')).kn;
+    case 'ko': return (await import('./ko')).ko;
+    case 'lt': return (await import('./lt')).lt;
+    case 'lv': return (await import('./lv')).lv;
+    case 'mk': return (await import('./mk')).mk;
+    case 'ml': return (await import('./ml')).ml;
+    case 'mn': return (await import('./mn')).mn;
+    case 'mr': return (await import('./mr')).mr;
+    case 'ms': return (await import('./ms')).ms;
+    case 'mt': return (await import('./mt')).mt;
+    case 'my': return (await import('./my')).my;
+    case 'nl': return (await import('./nl')).nl;
+    case 'no': return (await import('./no')).no;
+    case 'pa': return (await import('./pa')).pa;
+    case 'pl': return (await import('./pl')).pl;
+    case 'pt': return (await import('./pt')).pt;
+    case 'ro': return (await import('./ro')).ro;
+    case 'ru': return (await import('./ru')).ru;
+    case 'sk': return (await import('./sk')).sk;
+    case 'sl': return (await import('./sl')).sl;
+    case 'so': return (await import('./so')).so;
+    case 'sq': return (await import('./sq')).sq;
+    case 'sr': return (await import('./sr')).sr;
+    case 'sv': return (await import('./sv')).sv;
+    case 'sw': return (await import('./sw')).sw;
+    case 'ta': return (await import('./ta')).ta;
+    case 'te': return (await import('./te')).te;
+    case 'th': return (await import('./th')).th;
+    case 'tl': return (await import('./tl')).tl;
+    case 'tr': return (await import('./tr')).tr;
+    case 'uk': return (await import('./uk')).uk;
+    case 'ur': return (await import('./ur')).ur;
+    case 'vi': return (await import('./vi')).vi;
+    case 'zh': return (await import('./zh')).zh;
+    default: return (await import('./en')).en;
+  }
+}

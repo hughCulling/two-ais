@@ -9,8 +9,10 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function HeaderPublic() {
-    const t = useTranslation();
+    const { t, loading } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    if (loading || !t) return null;
 
     const mobileMenuItemClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
 

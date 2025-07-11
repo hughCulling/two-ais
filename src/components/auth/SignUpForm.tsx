@@ -9,7 +9,6 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth, db } from '@/lib/firebase/clientApp';
 import { useLanguage } from '@/context/LanguageContext'; // Added
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations'; // Added
 // import { useRouter } from 'next/navigation';
 
 export default function SignUpForm() {
@@ -18,22 +17,22 @@ export default function SignUpForm() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const { language } = useLanguage(); // Added
-    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys; // Added
+    const { translation, loading: langLoading } = useLanguage();
+    if (langLoading || !translation) return null;
     // const router = useRouter();
 
     const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         if (password !== confirmPassword) {
-            setError(t.auth.errors.passwordsDoNotMatch);
+            setError(translation.auth.errors.passwordsDoNotMatch);
             return;
         }
         setLoading(true);
 
         if (!auth || !db) {
             console.error("Firebase auth or db not initialized.");
-            setError(t.auth.errors.initialization);
+            setError(translation.auth.errors.initialization);
             setLoading(false);
             return;
         }
@@ -58,8 +57,8 @@ export default function SignUpForm() {
                 console.log("Firestore document created successfully.");
             } catch (firestoreError: unknown) { // Catch Firestore write error
                 console.error("Error writing document to Firestore:", firestoreError);
-                const message = (firestoreError instanceof Error) ? firestoreError.message : t.auth.errors.unknownProfileSaveError;
-                setError(`${t.auth.errors.accountCreatedProfileSaveFailedPrefix}${message}`);
+                const message = (firestoreError instanceof Error) ? firestoreError.message : translation.auth.errors.unknownProfileSaveError;
+                setError(`${translation.auth.errors.accountCreatedProfileSaveFailedPrefix}${message}`);
             }
 
             // router.push('/dashboard');
@@ -69,18 +68,18 @@ export default function SignUpForm() {
              // Check if it's a FirebaseError to access error.code safely
             if (authError instanceof FirebaseError) {
                 if (authError.code === 'auth/email-already-in-use') {
-                    setError(t.auth.errors.emailAlreadyRegistered);
+                    setError(translation.auth.errors.emailAlreadyRegistered);
                 } else if (authError.code === 'auth/weak-password') {
-                    setError(t.auth.errors.passwordTooShortSignUp);
+                    setError(translation.auth.errors.passwordTooShortSignUp);
                 } else if (authError.code === 'auth/invalid-email') {
-                    setError(t.auth.errors.invalidEmail);
+                    setError(translation.auth.errors.invalidEmail);
                 } else {
-                    setError(`${t.auth.errors.signUpFailedPrefix}${authError.message}`);
+                    setError(`${translation.auth.errors.signUpFailedPrefix}${authError.message}`);
                 }
             } else if (authError instanceof Error) {
-                 setError(`${t.auth.errors.signUpFailedPrefix}${authError.message}`);
+                 setError(`${translation.auth.errors.signUpFailedPrefix}${authError.message}`);
             } else {
-                setError(t.auth.errors.unknownSignUpError);
+                setError(translation.auth.errors.unknownSignUpError);
             }
         } finally {
             setLoading(false);
@@ -92,20 +91,20 @@ export default function SignUpForm() {
         <form onSubmit={handleSignUp} className="space-y-4">
             {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
             <div>
-                <label htmlFor="email-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.auth.signup.emailLabel}</label>
-                <input type="email" id="email-signup" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={t.auth.signup.emailPlaceholder} />
+                <label htmlFor="email-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{translation.auth.signup.emailLabel}</label>
+                <input type="email" id="email-signup" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={translation.auth.signup.emailPlaceholder} />
             </div>
             <div>
-                <label htmlFor="password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.auth.signup.passwordPlaceholder}</label>
-                <input type="password" id="password-signup" name="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete="new-password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={t.auth.signup.passwordPlaceholder.substring(0, t.auth.signup.passwordPlaceholder.indexOf(' ('))} />
+                <label htmlFor="password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{translation.auth.signup.passwordPlaceholder}</label>
+                <input type="password" id="password-signup" name="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete="new-password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={translation.auth.signup.passwordPlaceholder.substring(0, translation.auth.signup.passwordPlaceholder.indexOf(' ('))} />
             </div>
             <div>
-                <label htmlFor="confirm-password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.auth.signup.confirmPasswordPlaceholder}</label>
-                <input type="password" id="confirm-password-signup" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={6} autoComplete="new-password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={t.auth.signup.confirmPasswordPlaceholder} />
+                <label htmlFor="confirm-password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{translation.auth.signup.confirmPasswordPlaceholder}</label>
+                <input type="password" id="confirm-password-signup" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={6} autoComplete="new-password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder={translation.auth.signup.confirmPasswordPlaceholder} />
             </div>
             <div>
                 <button type="submit" disabled={loading} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-offset-gray-800">
-                    {loading ? t.auth.signup.signingUp : t.auth.signup.signUp}
+                    {loading ? translation.auth.signup.signingUp : translation.auth.signup.signUp}
                 </button>
             </div>
         </form>

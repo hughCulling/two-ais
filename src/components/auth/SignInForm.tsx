@@ -7,8 +7,7 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth } from '@/lib/firebase/clientApp';
-import { useLanguage } from '@/context/LanguageContext'; // Added
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations'; // Added
+import { useTranslation } from '@/hooks/useTranslation';
 // import { useRouter } from 'next/navigation';
 
 export default function SignInForm() {
@@ -16,8 +15,8 @@ export default function SignInForm() {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const { language } = useLanguage(); // Added
-    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys; // Added
+    const { t, loading: translationLoading } = useTranslation();
+    if (translationLoading || !t) return null;
     // const router = useRouter();
 
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {

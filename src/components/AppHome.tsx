@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useLanguage } from "@/context/LanguageContext";
 import SessionSetupForm from "@/components/session/SessionSetupForm";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { db } from "@/lib/firebase/clientApp";
 import { doc, getDoc, FirestoreError } from "firebase/firestore";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getTranslation, TranslationKeys } from "@/lib/translations";
+import { useTranslation } from '@/hooks/useTranslation';
 import ResumeHandler from "./ResumeHandler";
 
 // --- Types from page.tsx ---
@@ -43,10 +42,8 @@ const logger = {
 
 export default function AppHome() {
   const { user } = useAuth();
-  const { language } = useLanguage();
-  const t = getTranslation(language.code) as TranslationKeys;
-
-  // All state and logic from the authenticated branch of page.tsx
+  const { t, loading } = useTranslation();
+  // Move all useState/useEffect hooks here
   const [isStartingSession, setIsStartingSession] = useState(false);
   const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
@@ -54,6 +51,9 @@ export default function AppHome() {
   const [secretsLoading, setSecretsLoading] = useState(true);
   const [pageError, setPageError] = useState<string | null>(null);
   const [hasManuallyStopped, setHasManuallyStopped] = useState(false);
+
+  // Extract t!.page_ErrorLoadingUserData to a variable for useEffect dependency
+  const pageErrorLoadingUserData = t?.page_ErrorLoadingUserData;
 
   useEffect(() => {
     if (!user) {
@@ -83,7 +83,7 @@ export default function AppHome() {
             })
             .catch((err: FirestoreError) => {
                 logger.error("Error fetching user document:", err);
-                setPageError(t.page_ErrorLoadingUserData.replace("{errorMessage}", err.message));
+                setPageError(t!.page_ErrorLoadingUserData.replace("{errorMessage}", err.message));
                 setUserApiSecrets(null);
             })
             .finally(() => {
@@ -94,14 +94,14 @@ export default function AppHome() {
             setSecretsLoading(false);
          }
     }
-}, [user, userApiSecrets, secretsLoading, t.page_ErrorLoadingUserData]);
+}, [user, userApiSecrets, secretsLoading, pageErrorLoadingUserData, t]);
 
 const handleStartSession = async (config: SessionConfig) => {
     if (!user) {
-        setPageError(t.page_ErrorUserNotFound); return;
+        setPageError(t!.page_ErrorUserNotFound); return;
     }
     if (userApiSecrets === null) {
-        setPageError(t.page_ErrorUserApiKeyConfig); return;
+        setPageError(t!.page_ErrorUserApiKeyConfig); return;
     }
     logger.info("Attempting to start session via API with full config:", config);
     setIsStartingSession(true);
@@ -114,7 +114,7 @@ const handleStartSession = async (config: SessionConfig) => {
         logger.info("Obtained ID Token for API call.");
         const configWithLanguage = {
             ...config,
-            language: language.code,
+            language: config.language,
             initialSystemPrompt: config.initialSystemPrompt,
         };
         const response = await fetch('/api/conversation/start', {
@@ -123,21 +123,21 @@ const handleStartSession = async (config: SessionConfig) => {
             body: JSON.stringify(configWithLanguage),
         });
         if (!response.ok) {
-            let errorMsg = t.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText);
+            let errorMsg = t!.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText);
             try { const errorData = await response.json(); errorMsg = errorData.error || errorMsg; }
-            catch (parseError) { logger.warn("Could not parse error response JSON:", parseError); errorMsg = t.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText); }
+            catch (parseError) { logger.warn("Could not parse error response JSON:", parseError); errorMsg = t!.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText); }
             throw new Error(errorMsg);
         }
         const result: StartApiResponse = await response.json();
         logger.info("API Response received:", result);
-        if (!result.conversationId) { throw new Error(t.page_ErrorSessionIdMissing); }
+        if (!result.conversationId) { throw new Error(t!.page_ErrorSessionIdMissing); }
         logger.info(`Session setup successful via API. Conversation ID: ${result.conversationId}`);
         setSessionConfig(configWithLanguage);
         setActiveConversationId(result.conversationId);
     } catch (error) {
         logger.error("Failed to start session:", error);
         setPageError(
-            t.page_ErrorStartingSessionGeneric.replace(
+            t!.page_ErrorStartingSessionGeneric.replace(
                 "{errorMessage}",
                 (error instanceof Error ? error.message : String(error)) +
                 " Please try again. If the problem persists, refresh the page."
@@ -163,10 +163,13 @@ const handleConversationStopped = () => {
     }
 };
 
+  if (loading || !t) return null;
+
+  // All state and logic from the authenticated branch of page.tsx
   if (secretsLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center p-4">
-        <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
+        <p className="text-muted-foreground animate-pulse">{t!.page_LoadingUserData}</p>
       </main>
     );
   }
@@ -188,7 +191,7 @@ const handleConversationStopped = () => {
         {pageError && (
           <Alert variant="destructive" className="mb-6 max-w-3xl w-full flex-shrink-0">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{t.page_ErrorAlertTitle}</AlertTitle>
+            <AlertTitle>{t!.page_ErrorAlertTitle}</AlertTitle>
             <AlertDescription>{pageError}</AlertDescription>
           </Alert>
         )}

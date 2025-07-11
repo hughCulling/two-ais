@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys } from '@/lib/translations';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,8 @@ import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { cn } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+import { useTranslation } from '@/hooks/useTranslation';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -23,8 +24,7 @@ import { cn } from '@/lib/utils';
 const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);
-  const { language } = useLanguage();
-  const t = getTranslation(language.code) as TranslationKeys;
+  const { t, loading } = useTranslation();
   React.useEffect(() => {
     const el = textRef.current;
     const checkOverflow = () => {
@@ -38,6 +38,7 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
     }
     return () => { if (resizeObserver && el) resizeObserver.disconnect(); };
   }, [noteText]);
+  if (loading || !t) return null;
   const noteSpan = (
     <span
       ref={textRef}
@@ -80,72 +81,16 @@ const formatPrice = (price: number) => {
   });
 };
 
-// --- YouTube Facade Component ---
-const YOUTUBE_VIDEO_ID_LIGHT = "52oUvRFdaXE";
-const YOUTUBE_VIDEO_ID_DARK = "pkN_uU-nDdk";
 
-const YouTubeFacade: React.FC<{ mode: "light" | "dark"; title: string }> = ({ mode, title }) => {
-  const [isPlayerActive, setIsPlayerActive] = useState(false);
-  // Use local webp images for LCP
-  const thumbnail = mode === "dark" ? "/landing-dark.webp" : "/landing-light.webp";
-  const blurDataURL = mode === "dark" ? BLUR_DATA_URL_DARK : BLUR_DATA_URL_LIGHT;
-  const videoId = mode === "dark" ? YOUTUBE_VIDEO_ID_DARK : YOUTUBE_VIDEO_ID_LIGHT;
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-  return (
-    <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border bg-black relative group">
-      {isPlayerActive ? (
-        <iframe
-          className="w-full h-full"
-          src={embedUrl}
-          title={title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <button
-          type="button"
-          className="w-full h-full flex items-center justify-center focus:outline-none relative"
-          aria-label={`Play video: ${title}`}
-          onClick={() => setIsPlayerActive(true)}
-        >
-          <Image
-            src={thumbnail}
-            alt={title}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            priority
-            fetchPriority="high"
-            placeholder="blur"
-            blurDataURL={blurDataURL}
-            className="absolute inset-0 w-full h-full object-cover"
-            draggable={false}
-            style={{ zIndex: 0 }}
-          />
-          <span className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" aria-hidden="true" style={{ zIndex: 1 }} />
-          <svg
-            className="relative z-10 h-16 w-16 text-white drop-shadow-lg group-hover:scale-110 transition-transform"
-            viewBox="0 0 68 48"
-            width="68"
-            height="48"
-            aria-hidden="true"
-            style={{ zIndex: 2 }}
-          >
-            <path d="M66.52 7.85a8 8 0 0 0-5.6-5.66C57.12 1.33 34 1.33 34 1.33s-23.12 0-26.92 0a8 8 0 0 0-5.6 5.66A83.2 83.2 0 0 0 0 24a83.2 83.2 0 0 0 1.48 16.15 8 8 0 0 0 5.6 5.66c3.8 1.33 26.92 1.33 26.92 1.33s23.12 0 26.92-1.33a8 8 0 0 0 5.6-5.66A83.2 83.2 0 0 0 68 24a83.2 83.2 0 0 0-1.48-16.15z" fill="#f00" />
-            <path d="M45 24 27 14v20z" fill="#fff" />
-          </svg>
-        </button>
-      )}
-    </div>
-  );
-};
+
+const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 
 export default function LandingPage() {
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
-  const t = getTranslation(language.code) as TranslationKeys;
+  const { t, loading } = useTranslation();
   const [mounted, setMounted] = useState(false); // <-- Add mounted state
+  const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -165,6 +110,7 @@ export default function LandingPage() {
   const toggleCollapsible = (id: string) => {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
+  if (loading || !t) return null;
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
       <TooltipProvider delayDuration={100}>
@@ -182,41 +128,44 @@ export default function LandingPage() {
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">
-            {/* SSR: Always render the dark image for everyone */}
-            <Image
-              src="/landing-dark.webp"
-              alt={t.page_VideoTitle}
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              priority
-              fetchPriority="high"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL_DARK}
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-              draggable={false}
-              style={{ zIndex: 0 }}
-            />
-            {/* After hydration, if theme is light, overlay the light image */}
-            {mounted && resolvedTheme === 'light' && (
-              <Image
-                src="/landing-light.webp"
-                alt={t.page_VideoTitle}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                priority
-                fetchPriority="high"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL_LIGHT}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-                draggable={false}
-                style={{ zIndex: 1 }}
-              />
+            {!isPlayerActive && (
+              <>
+                <Image
+                  src="/landing-dark.webp"
+                  alt={t.page_VideoTitle}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  priority
+                  fetchPriority="high"
+                  placeholder="blur"
+                  blurDataURL={BLUR_DATA_URL_DARK}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                  draggable={false}
+                  style={{ zIndex: 0 }}
+                />
+                {mounted && resolvedTheme === 'light' && (
+                  <Image
+                    src="/landing-light.webp"
+                    alt={t.page_VideoTitle}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 768px"
+                    priority
+                    fetchPriority="high"
+                    placeholder="blur"
+                    blurDataURL={BLUR_DATA_URL_LIGHT}
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                    draggable={false}
+                    style={{ zIndex: 1 }}
+                  />
+                )}
+              </>
             )}
-            {/* YouTube player logic remains unchanged */}
             {mounted && (
               <YouTubeFacade
                 mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
                 title={t.page_VideoTitle}
+                isPlayerActive={isPlayerActive}
+                onActivatePlayer={() => setIsPlayerActive(true)}
               />
             )}
           </div>
@@ -232,7 +181,7 @@ export default function LandingPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {Object.entries(groupLLMsByProvider()).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
-                const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, language.code);
+                const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, t);
                 const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                 let lastDisplayedBrand: string | null = null;
