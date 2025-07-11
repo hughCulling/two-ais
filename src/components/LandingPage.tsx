@@ -181,14 +181,43 @@ export default function LandingPage() {
             </Alert>
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
-          <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border">
-            {mounted ? (
+          <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">
+            {/* SSR: Always render the dark image for everyone */}
+            <Image
+              src="/landing-dark.webp"
+              alt={t.page_VideoTitle}
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              priority
+              fetchPriority="high"
+              placeholder="blur"
+              blurDataURL={BLUR_DATA_URL_DARK}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+              draggable={false}
+              style={{ zIndex: 0 }}
+            />
+            {/* After hydration, if theme is light, overlay the light image */}
+            {mounted && resolvedTheme === 'light' && (
+              <Image
+                src="/landing-light.webp"
+                alt={t.page_VideoTitle}
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                priority
+                fetchPriority="high"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL_LIGHT}
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                draggable={false}
+                style={{ zIndex: 1 }}
+              />
+            )}
+            {/* YouTube player logic remains unchanged */}
+            {mounted && (
               <YouTubeFacade
                 mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
                 title={t.page_VideoTitle}
               />
-            ) : (
-              <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
             )}
           </div>
           <Card className="w-full">

@@ -76,12 +76,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://firebase.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://firebaseinstallations.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://two-ais.firebaseapp.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preload" as="image" href="/landing-light.webp" />
-        <link rel="preload" as="image" href="/landing-dark.webp" />
+        <link
+          rel="preload"
+          as="image"
+          href="/_next/image?url=%2Flanding-dark.webp&w=828&q=75"
+          imageSrcSet="/_next/image?url=%2Flanding-dark.webp&w=640&q=75 640w, /_next/image?url=%2Flanding-dark.webp&w=750&q=75 750w, /_next/image?url=%2Flanding-dark.webp&w=828&q=75 828w, /_next/image?url=%2Flanding-dark.webp&w=1080&q=75 1080w, /_next/image?url=%2Flanding-dark.webp&w=1200&q=75 1200w, /_next/image?url=%2Flanding-dark.webp&w=1920&q=75 1920w, /_next/image?url=%2Flanding-dark.webp&w=2048&q=75 2048w, /_next/image?url=%2Flanding-dark.webp&w=3840&q=75 3840w"
+          imageSizes="(max-width: 768px) 100vw, 768px"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
