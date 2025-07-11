@@ -1,5 +1,5 @@
 // src/lib/translations/id.ts
-export const id = {
+const id = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const id = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default id; 

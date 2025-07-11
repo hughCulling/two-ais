@@ -1,5 +1,5 @@
 // src/lib/translations/uk.ts
-export const uk = {
+const uk = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const uk = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default uk; 

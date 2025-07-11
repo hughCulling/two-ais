@@ -1,5 +1,5 @@
 // src/lib/translations/cs.ts
-export const cs = {
+const cs = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -298,4 +298,5 @@ export const cs = {
 
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
-}; 
+};
+export default cs; 

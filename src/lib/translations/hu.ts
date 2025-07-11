@@ -1,5 +1,5 @@
 // src/lib/translations/hu.ts
-export const hu = {
+const hu = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -427,4 +427,5 @@ export const hu = {
     ttsVoice_Anna: "Anna", // Keep name (Estonian)
     ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-}; 
+};
+export default hu; 

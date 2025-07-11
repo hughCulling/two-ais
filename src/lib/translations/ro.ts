@@ -1,5 +1,5 @@
 // src/lib/translations/ro.ts
-export const ro = {
+const ro = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -429,4 +429,5 @@ export const ro = {
     ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
     // --------------- END OF FILE ---------------
-}; 
+};
+export default ro; 

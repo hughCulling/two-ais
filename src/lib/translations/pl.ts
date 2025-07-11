@@ -1,5 +1,5 @@
 // src/lib/translations/pl.ts
-export const pl = {
+const pl = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -428,4 +428,5 @@ export const pl = {
     ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
     // --------------- END OF FILE ---------------
-}; 
+};
+export default pl; 

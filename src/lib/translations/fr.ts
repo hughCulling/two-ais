@@ -1,4 +1,5 @@
-export const fr = {
+// src/lib/translations/fr.ts
+const fr = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -299,4 +300,5 @@ export const fr = {
     ttsVoice_Ugne: "Ugne", // TODO: Translate - Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default fr; 

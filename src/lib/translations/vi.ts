@@ -1,5 +1,5 @@
 // src/lib/translations/vi.ts
-export const vi = {
+const vi = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const vi = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default vi; 

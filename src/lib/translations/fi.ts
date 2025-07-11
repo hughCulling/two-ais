@@ -1,5 +1,5 @@
 // src/lib/translations/fi.ts
-export const fi = {
+const fi = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const fi = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default fi; 

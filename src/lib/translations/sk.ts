@@ -1,5 +1,5 @@
 // src/lib/translations/sk.ts
-export const sk = {
+const sk = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -429,4 +429,5 @@ export const sk = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default sk; 

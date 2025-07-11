@@ -1,5 +1,5 @@
 // src/lib/translations/no.ts
-export const no = {
+const no = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const no = {
     ttsVoice_Ugne: "Ugne", // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default no; 

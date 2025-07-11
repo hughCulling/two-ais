@@ -1,5 +1,5 @@
-// src/lib/translations/en.ts
-export const pa = {
+// src/lib/translations/pa.ts
+const pa = {
     // Header
     header: {
         appName: 'Two AIs',
@@ -299,4 +299,5 @@ export const pa = {
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
     // --------------- END OF FILE --------------- 
-}; 
+};
+export default pa; 

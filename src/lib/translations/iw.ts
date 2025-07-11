@@ -1,4 +1,4 @@
-export const iw = {
+const iw = {
     header: {
         appName: "Two AIs", // Keep brand name
         settings: "הגדרות",
@@ -491,4 +491,5 @@ export const iw = {
     ttsVoice_Anna: "Anna",
     ttsVoice_Roberts: "Roberts",
     ttsVoice_Ugne: "Ugne"
-}; 
+};
+export default iw; 

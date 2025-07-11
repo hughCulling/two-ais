@@ -1,5 +1,5 @@
 // src/lib/translations/da.ts
-export const da = {
+const da = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const da = {
     ttsVoice_Anna: "Anna", // Keep name (Estonian)
     ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-}; 
+};
+export default da; 

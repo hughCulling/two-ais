@@ -1,5 +1,5 @@
 // src/lib/translations/ja.ts
-export const ja = {
+const ja = {
     // Header
     header: {
         appName: 'Two AIs', // Keep brand name
@@ -430,4 +430,5 @@ export const ja = {
     ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
 
     // --------------- END OF FILE ---------------
-}; 
+};
+export default ja; 
