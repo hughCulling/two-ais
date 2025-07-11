@@ -244,9 +244,9 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                         </Tooltip>
                                                                     )}
                                                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                                                        <Check className="h-3 w-3 text-green-600" />
+                                                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300" />
                                                                     ) : (
-                                                                        <X className="h-3 w-3 text-red-600" />
+                                                                        <X className="h-3 w-3 text-red-700 dark:text-red-300" />
                                                                     )}
                                                                 </span>
                                                             </button>
@@ -649,9 +649,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 <div className="flex justify-between items-center w-full text-sm">
                                                     <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
                                                         {supportsLanguage ? (
-                                                            <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
                                                         ) : (
-                                                            <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                                            <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
                                                         )}
                                                         <span className="truncate font-medium" title={m.name}>
                                                             {m.name}
@@ -732,8 +732,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     </div>
                     {/* Explanation Notes */}
                     <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                        <Check className="h-3 w-3 text-green-600 mr-1 flex-shrink-0"/>
-                        <X className="h-3 w-3 text-red-600 mr-1 flex-shrink-0"/>
+                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0"/>
+                        <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0"/>
                         Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
                     </p>
                     {ANY_MODEL_USES_REASONING && (
@@ -750,7 +750,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 href="https://platform.openai.com/settings/organization/general"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="underline text-blue-500 hover:text-blue-600 ml-1"
+                                className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
                             >
                                 verify here
                             </a>.

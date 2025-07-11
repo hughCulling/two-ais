@@ -549,7 +549,7 @@ export function ChatInterface({
                             <p className="text-sm text-yellow-700">
                                 <strong>TTS Issue:</strong> {ttsError}
                             </p>
-                            <p className="text-xs text-yellow-600 mt-1">
+                            <p className="text-xs text-yellow-800 dark:text-yellow-200 mt-1">
                                 Text-to-speech is temporarily unavailable. The conversation will continue without audio.
                             </p>
                         </div>
@@ -574,7 +574,7 @@ export function ChatInterface({
                             <p className="text-sm text-blue-700">
                                 <strong>Audio Ready:</strong> Click anywhere or press any key to enable audio playback
                             </p>
-                            <p className="text-xs text-blue-600 mt-1">
+                            <p className="text-xs text-blue-800 dark:text-blue-200 mt-1">
                                 Browser requires user interaction before playing audio automatically.
                             </p>
                         </div>
@@ -652,7 +652,7 @@ export function ChatInterface({
                                 )}
                                 {/* Split audio notification */}
                                 {msg.ttsWasSplit && (
-                                  <div className="mt-1 text-[11px] text-orange-600 font-medium flex items-center gap-1">
+                                  <div className="mt-1 text-[11px] text-orange-800 dark:text-orange-200 font-medium flex items-center gap-1">
                                     <AlertCircle className="inline h-3 w-3 mr-1" />
                                     Audio was split due to TTS input limit. Some long messages may be truncated or split into multiple parts.
                                   </div>

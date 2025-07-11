@@ -221,9 +221,9 @@ export default function LandingPage() {
                                 {categoryModels.map((llm) => (
                                   <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
                                     <span className="whitespace-nowrap">{llm.name}</span>
-                                    {llm.status === 'preview' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-orange-600 border-orange-600 flex-shrink-0">{t.page_BadgePreview}</Badge>}
-                                    {llm.status === 'experimental' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-yellow-600 border-yellow-600 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
-                                    {llm.status === 'beta' && <Badge variant="outline" className="text-xs px-1.5 py-0.5 text-sky-600 border-sky-600 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                    {llm.status === 'preview' && <Badge variant="preview" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgePreview}</Badge>}
+                                    {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
+                                    {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
                                     {llm.pricing.note ? (
                                       <TruncatableNote noteText={llm.pricing.note} />
                                     ) : (
@@ -237,7 +237,7 @@ export default function LandingPage() {
                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                          <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
                                         </TooltipTrigger>
                                         <TooltipContent side="top">
                                           <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
@@ -246,7 +246,7 @@ export default function LandingPage() {
                                     ) : (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                          <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
                                         </TooltipTrigger>
                                         <TooltipContent side="top">
                                           <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
@@ -288,7 +288,7 @@ export default function LandingPage() {
                                               href="https://platform.openai.com/settings/organization/general"
                                               target="_blank"
                                               rel="noopener noreferrer"
-                                              className="underline text-blue-500 hover:text-blue-600 ml-1"
+                                              className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
                                             >
                                               verify here
                                             </a>
@@ -339,7 +339,7 @@ export default function LandingPage() {
                                 {supportsLanguage ? (
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                      <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
                                     </TooltipTrigger>
                                     <TooltipContent side="top">
                                       <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
@@ -348,7 +348,7 @@ export default function LandingPage() {
                                 ) : (
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <X className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                      <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
                                     </TooltipTrigger>
                                     <TooltipContent side="top">
                                       <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
