@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -171,10 +171,10 @@ export default function LandingPage() {
           </div>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="flex items-center justify-center text-xl">
+              <h2 className="flex items-center justify-center text-xl font-semibold">
                 <BrainCircuit className="mr-2 h-5 w-5" />
                 {t.page_AvailableLLMsTitle}
-              </CardTitle>
+              </h2>
               <p className="text-xs text-muted-foreground text-center mt-1">
                 Prices last verified on 2025-06-04
               </p>
@@ -205,9 +205,9 @@ export default function LandingPage() {
                           const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
                           if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                             brandHeadingElement = (
-                              <h4 className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
+                              <div className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
                                 {currentBrandName}
-                              </h4>
+                              </div>
                             );
                             lastDisplayedBrand = currentBrandName;
                           }
@@ -216,7 +216,7 @@ export default function LandingPage() {
                           <React.Fragment key={`${category}-${index}`}>
                             {brandHeadingElement}
                             <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}>
-                              <h5 className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</h5>
+                              <div className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</div>
                               <ul className="space-y-1 list-disc list-inside text-sm pl-2">
                                 {categoryModels.map((llm) => (
                                   <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
@@ -312,10 +312,10 @@ export default function LandingPage() {
           </Card>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="flex items-center justify-center text-xl">
+              <h2 className="flex items-center justify-center text-xl font-semibold">
                 <Volume2 className="mr-2 h-5 w-5" />
                 {t.page_AvailableTTSTitle}
-              </CardTitle>
+              </h2>
             </CardHeader>
             <CardContent className="space-y-4">
               {AVAILABLE_TTS_PROVIDERS.length > 0 ? (
