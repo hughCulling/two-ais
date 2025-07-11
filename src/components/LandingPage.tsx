@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys } from '@/lib/translations';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,7 @@ import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
+import { useTranslation } from '@/hooks/useTranslation';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -24,8 +24,7 @@ import dynamic from 'next/dynamic';
 const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);
-  const { language } = useLanguage();
-  const t = getTranslation(language.code) as TranslationKeys;
+  const { t, loading } = useTranslation();
   React.useEffect(() => {
     const el = textRef.current;
     const checkOverflow = () => {
@@ -39,6 +38,7 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
     }
     return () => { if (resizeObserver && el) resizeObserver.disconnect(); };
   }, [noteText]);
+  if (loading || !t) return null;
   const noteSpan = (
     <span
       ref={textRef}
@@ -88,7 +88,7 @@ const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 export default function LandingPage() {
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
-  const t = getTranslation(language.code) as TranslationKeys;
+  const { t, loading } = useTranslation();
   const [mounted, setMounted] = useState(false); // <-- Add mounted state
   const [isPlayerActive, setIsPlayerActive] = useState(false);
 
@@ -110,6 +110,7 @@ export default function LandingPage() {
   const toggleCollapsible = (id: string) => {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
+  if (loading || !t) return null;
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
       <TooltipProvider delayDuration={100}>
@@ -180,7 +181,7 @@ export default function LandingPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {Object.entries(groupLLMsByProvider()).map(([providerName, providerModels]: [string, LLMInfo[]]) => {
-                const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, language.code);
+                const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, t);
                 const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                 let lastDisplayedBrand: string | null = null;

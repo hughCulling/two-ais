@@ -1,7 +1,7 @@
 // src/lib/models.ts
 // Centralized definition for available Large Language Models
 
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from './translations';
+import { TranslationKeys } from './translations';
 
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
@@ -839,8 +839,7 @@ export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
 }
 
 // Helper function to group models by category within a provider
-export const groupModelsByCategory = (models: LLMInfo[], langCode: AppLanguageCode): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
-    const t = getTranslation(langCode) as TranslationKeys;
+export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
     const openAICategoryOrder = [
         t.modelCategory_FlagshipChat,
         t.modelCategory_Reasoning,

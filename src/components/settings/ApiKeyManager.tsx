@@ -3,8 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { httpsCallable, FunctionsError } from 'firebase/functions';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys } from '@/lib/translations';
+import { useTranslation } from '@/hooks/useTranslation';
 // Import firebase instances - assume these are stable references
 import { app, auth as firebaseAuth, db, functions as initializedFunctions } from '@/lib/firebase/clientApp';
 import { Input } from "@/components/ui/input";
@@ -94,39 +93,20 @@ const initialApiKeys: ApiKeyInput[] = [
     },
 ];
 
-const ApiKeyManager: React.FC = () => {
+export default function ApiKeyManager() {
     const { user, loading: authLoading } = useAuth();
-    const { language } = useLanguage();
-    const t = getTranslation(language.code) as TranslationKeys;
+    const { t, loading } = useTranslation();
 
+    // All hooks must be called before any return or conditional
     const [apiKeys, setApiKeys] = useState<ApiKeyInput[]>(() =>
         initialApiKeys.map(key => {
             const translatedLabel = key.label;
-            let translatedTooltip = key.tooltip;
+            const translatedTooltip = key.tooltip;
 
-            if (key.id === 'openai') {
-                // Example: label will be dynamically set based on savedKeyStatus later
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for OpenAI (platform.openai.com/api-keys)';
-            }
-            if (key.id === 'google_ai') {
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Google Cloud (console.cloud.google.com/apis/library)';
-            }
-            if (key.id === 'elevenlabs') {
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Eleven Labs (elevenlabs.io)';
-            }
-            if (key.id === 'anthropic') {
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for Anthropic (console.anthropic.com/settings/keys)';
-            }
-            if (key.id === 'xai') {
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for XAI Grok (console.x.ai)';
-            }
-            if (key.id === 'together_ai') {
-                translatedTooltip = t.settings.apiKeys.getKeyInstructions + ' for TogetherAI (api.together.ai/settings/api-keys)';
-            }
-            return { ...key, label: translatedLabel, tooltip: translatedTooltip }; // Label will be updated in the render based on saved status
+            // These will be updated after t is loaded, but that's fine for initial state
+            return { ...key, label: translatedLabel, tooltip: translatedTooltip };
         })
     );
-
     const [statusMessages, setStatusMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
     const [isSaving, setIsSaving] = useState(false);
     const [generalError, setGeneralError] = useState<string | null>(null);
@@ -154,7 +134,7 @@ const ApiKeyManager: React.FC = () => {
                     setSavedKeyStatus(status);
                 } catch (error) {
                     console.error("Error fetching user document for key status:", error);
-                    setGeneralError(t.page_ErrorLoadingUserData.replace('{errorMessage}', error instanceof Error ? error.message : String(error)));
+                    if (t) setGeneralError(t.page_ErrorLoadingUserData.replace('{errorMessage}', error instanceof Error ? error.message : String(error)));
                     const resetStatus: Record<string, boolean> = {};
                     initialApiKeys.forEach(key => { resetStatus[key.id] = false; });
                     setSavedKeyStatus(resetStatus);
@@ -185,7 +165,7 @@ const ApiKeyManager: React.FC = () => {
 
     const saveKeys = useCallback(async () => {
          if (authLoading || !user || !firebaseAuth.currentUser || firebaseAuth.currentUser.uid !== user.uid || !app || !initializedFunctions) {
-             setGeneralError(t.auth.errors.generic);
+             if (t) setGeneralError(t.auth.errors.generic);
              return;
         }
         setIsSaving(true);
@@ -195,7 +175,7 @@ const ApiKeyManager: React.FC = () => {
         const keysToSave = apiKeys.filter(key => key.value.trim() !== '');
 
         if (keysToSave.length === 0) {
-            setGeneralError(t.settings.apiKeys.noNewKeys);
+            if (t) setGeneralError(t.settings.apiKeys.noNewKeys);
             setIsSaving(false);
             return;
         }
@@ -203,7 +183,7 @@ const ApiKeyManager: React.FC = () => {
             await user.getIdToken(true);
         } catch (tokenError) {
             console.error("Error refreshing ID token:", tokenError);
-            setGeneralError(t.auth.errors.generic + " (Token refresh failed)");
+            if (t) setGeneralError(t.auth.errors.generic + " (Token refresh failed)");
             setIsSaving(false);
             return;
         }
@@ -222,17 +202,17 @@ const ApiKeyManager: React.FC = () => {
                     newlySavedKeys[service] = true;
                     setApiKeys(prev => prev.map(k => k.id === service ? { ...k, value: '' } : k));
                 } else if (typeof data === 'object' && data !== null && 'error' in data) {
-                    const errorMsg = (data as SaveApiKeyErrorResponse)?.error || t.common.error;
-                    currentStatusMessages[service] = { type: 'error', message: `${t.common.error}: ${errorMsg}` };
+                    const errorMsg = (data as SaveApiKeyErrorResponse)?.error || (t ? t.common.error : 'Error');
+                    currentStatusMessages[service] = { type: 'error', message: `${t ? t.common.error : 'Error'}: ${errorMsg}` };
                 } else {
-                     currentStatusMessages[service] = { type: 'error', message: t.settings.apiKeys.unexpectedResponse };
+                     currentStatusMessages[service] = { type: 'error', message: t ? t.settings.apiKeys.unexpectedResponse : 'Unexpected response' };
                 }
             } catch (error) {
-                let errorMessage = t.settings.apiKeys.failedToSaveKey.replace('{serviceName}', service);
+                let errorMessage = t ? t.settings.apiKeys.failedToSaveKey.replace('{serviceName}', service) : 'Failed to save key';
                  if (error instanceof FunctionsError) {
-                      errorMessage = `${t.common.error}: ${error.message} (Code: ${error.code})`;
+                      errorMessage = `${t ? t.common.error : 'Error'}: ${error.message} (Code: ${error.code})`;
                  } else if (error instanceof Error) {
-                     errorMessage = `${t.common.error}: ${error.message}`;
+                     errorMessage = `${t ? t.common.error : 'Error'}: ${error.message}`;
                  }
                 currentStatusMessages[service] = { type: 'error', message: errorMessage };
             }
@@ -245,16 +225,14 @@ const ApiKeyManager: React.FC = () => {
 
         const hasErrors = Object.values(currentStatusMessages).some(status => status.type === 'error');
         if (hasErrors && !generalError) {
-            setGeneralError(t.settings.apiKeys.someKeysNotSaved);
+            if (t) setGeneralError(t.settings.apiKeys.someKeysNotSaved);
         } else if (!hasErrors && !generalError) {
             setGeneralError(null);
         }
     }, [apiKeys, user, authLoading, generalError, t]);
 
-
-    if (isLoadingStatus && !authLoading) {
-         return <p className="text-center text-sm text-muted-foreground p-4">{t.common.loading} {t.settings.apiKeys.keyStatus}</p>;
-    }
+    // Only after all hooks, check for loading/t
+    if (loading || !t) return null;
 
     return (
         <TooltipProvider delayDuration={100}>
@@ -387,5 +365,3 @@ const ApiKeyManager: React.FC = () => {
         </TooltipProvider>
     );
 };
-
-export default ApiKeyManager;

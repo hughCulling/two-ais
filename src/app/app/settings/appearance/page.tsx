@@ -4,15 +4,13 @@
 'use client'; // ThemeSwitcher requires client component
 
 import { ThemeSwitcher } from '@/components/theme-switcher'; // Adjust path if needed
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AppearancePage() {
-    const { language } = useLanguage();
-    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
+    const { t, loading: translationLoading } = useTranslation();
     const { user, loading } = useAuth();
     const router = useRouter();
 
@@ -22,7 +20,7 @@ export default function AppearancePage() {
         }
     }, [user, loading, router]);
 
-    if (loading) return null;
+    if (loading || translationLoading || !t) return null;
     if (!user) return null;
 
     // No useAuth, useEffect, loading, or redirect logic needed here.

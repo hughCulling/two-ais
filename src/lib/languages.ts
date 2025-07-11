@@ -1,9 +1,8 @@
 // src/lib/languages.ts
 // Language configuration for internationalization
-import type { LanguageCode } from '../lib/translations'; // Adjusted import path
 
 export interface Language {
-    code: LanguageCode;     // ISO 639-1 code (e.g., 'en', 'fr')
+    code: string;     // ISO 639-1 code (e.g., 'en', 'fr')
     name: string;           // English name
     nativeName: string;     // Name in the language itself
     direction: 'ltr' | 'rtl'; // Text direction

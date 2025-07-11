@@ -9,8 +9,7 @@ import Link from 'next/link';
 import { useAuth, AuthProvider } from '@/context/AuthContext';
 import SignInForm from '@/components/auth/SignInForm';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function LoginPage() {
     return (
@@ -23,8 +22,7 @@ export default function LoginPage() {
 function LoginPageContent() {
     const { user, loading } = useAuth();
     const router = useRouter();
-    const { language } = useLanguage();
-    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys;
+    const { t, loading: translationLoading } = useTranslation();
 
     // Redirect if user is already logged in
     useEffect(() => {
@@ -35,10 +33,10 @@ function LoginPageContent() {
     }, [user, loading, router]);
 
     // Show loading state
-    if (loading) {
+    if (loading || translationLoading || !t) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-gray-500 dark:text-gray-400">{t.common.loading}</p>
+                <p className="text-gray-500 dark:text-gray-400">Loading...</p>
             </main>
         );
     }

@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 export default function LanguageSettingsPage() {
-    const t = useTranslation();
+    const { t, loading: translationLoading } = useTranslation();
     const { language } = useLanguage();
     const { user, loading } = useAuth();
     const router = useRouter();
@@ -22,7 +22,7 @@ export default function LanguageSettingsPage() {
         }
     }, [user, loading, router]);
 
-    if (loading) return null;
+    if (loading || translationLoading || !t) return null;
     if (!user) return null;
 
     return (

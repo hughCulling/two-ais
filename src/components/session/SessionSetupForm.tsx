@@ -29,6 +29,7 @@ import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from '@/hooks/useTranslation';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
@@ -83,15 +84,14 @@ interface LLMSelectorProps {
 
 const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, label, placeholder }) => {
     const { language } = useLanguage();
+    const { t, loading } = useTranslation();
     const [open, setOpen] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const groupedLLMs = groupLLMsByProvider();
 
-    // Find selected LLM info
-    const selectedLLM = value ? getLLMInfoById(value) : undefined;
+    // All hooks above; now check for loading/t
 
-    // Handle outside click to close
     useEffect(() => {
         if (!open) return;
         const handleClick = (e: MouseEvent) => {
@@ -104,7 +104,6 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         return () => document.removeEventListener('mousedown', handleClick);
     }, [open]);
 
-    // Keyboard navigation: ESC closes
     useEffect(() => {
         if (!open) return;
         const handleKey = (e: KeyboardEvent) => {
@@ -117,13 +116,26 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         return () => document.removeEventListener('keydown', handleKey);
     }, [open]);
 
+    // Instead of returning null, render a placeholder UI if loading or t is missing
+    if (loading || !t) {
+        return (
+            <div className="w-full" ref={dropdownRef}>
+                <label className="block mb-1 font-medium text-sm">{label}</label>
+                <div className="w-full px-3 py-2 border rounded-md bg-muted text-muted-foreground text-sm">Loading...</div>
+            </div>
+        );
+    }
+
+    // Find selected LLM info
+    const selectedLLM = value ? getLLMInfoById(value) : undefined;
+
     // Group models by category for a provider
     const getModelsByCategory = (provider: string) => {
         const models = groupedLLMs[provider] || [];
         // Use the same grouping as landing page
         // Use groupModelsByCategory from main page
         // We'll import it at the top
-        const { orderedCategories, byCategory } = groupModelsByCategory(models, language.code);
+        const { orderedCategories, byCategory } = groupModelsByCategory(models, t);
         return { orderedCategories, byCategory };
     };
 

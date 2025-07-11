@@ -8,8 +8,7 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth, db } from '@/lib/firebase/clientApp';
-import { useLanguage } from '@/context/LanguageContext'; // Added
-import { getTranslation, TranslationKeys, LanguageCode as AppLanguageCode } from '@/lib/translations'; // Added
+import { useTranslation } from '@/hooks/useTranslation'; // Added
 
 // Simple SVG Google Icon component
 const GoogleIcon = () => (
@@ -19,8 +18,9 @@ const GoogleIcon = () => (
 export default function GoogleSignInButton() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const { language } = useLanguage(); // Added
-    const t = getTranslation(language.code as AppLanguageCode) as TranslationKeys; // Added
+    const { t, loading: translationLoading } = useTranslation();
+
+    if (translationLoading || !t) return null;
 
     const handleGoogleSignIn = async () => {
         setError(null);

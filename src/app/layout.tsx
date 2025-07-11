@@ -76,6 +76,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://www.youtube.com" />
         <link
           rel="preload"
           as="image"

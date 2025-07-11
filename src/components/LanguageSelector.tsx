@@ -19,7 +19,7 @@ interface LanguageSelectorProps {
 
 export function LanguageSelector({ showIcon = true, className = '' }: LanguageSelectorProps) {
     const { language, setLanguage } = useLanguage();
-    const t = useTranslation();
+    const { t, loading } = useTranslation();
 
     const handleLanguageChange = (languageCode: string) => {
         const selectedLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === languageCode);
@@ -27,6 +27,10 @@ export function LanguageSelector({ showIcon = true, className = '' }: LanguageSe
             setLanguage(selectedLanguage);
         }
     };
+
+    if (loading || !t) {
+        return <div className={`flex items-center ${className}`}><span>Loading...</span></div>;
+    }
 
     return (
         <div className={`flex items-center ${className}`}>

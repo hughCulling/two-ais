@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useLanguage } from '@/context/LanguageContext';
-import { getTranslation, TranslationKeys } from '@/lib/translations';
+import { useTranslation } from '@/hooks/useTranslation';
 import type { User } from 'firebase/auth';
 
 interface AgentTTSSettingsConfig {
@@ -40,8 +39,7 @@ export default function ResumeHandler({
     const resumeConversationId = searchParams.get('resume');
     const [resumeLoading, setResumeLoading] = useState(false);
     const [resumeError, setResumeError] = useState<string | null>(null);
-    const { language } = useLanguage();
-    const t = getTranslation(language.code) as TranslationKeys;
+    const { t, loading } = useTranslation();
     const [pollingForRunning, setPollingForRunning] = useState(false);
 
     useEffect(() => {
@@ -109,6 +107,7 @@ export default function ResumeHandler({
         return () => { cancelled = true; };
     }, [pollingForRunning, user, resumeConversationId, activeConversationId, sessionConfig, hasManuallyStopped, setSessionConfig, setActiveConversationId]);
 
+    if (loading || !t) return null;
     if (resumeLoading || pollingForRunning) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">

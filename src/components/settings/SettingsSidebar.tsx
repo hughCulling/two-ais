@@ -8,7 +8,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SettingsSidebar() {
     const pathname = usePathname(); // Get current path to highlight active link
-    const t = useTranslation();
+    const { t, loading } = useTranslation();
+
+    if (loading || !t) return null;
 
     // Define the navigation items - Appearance first
     const navigation = [
