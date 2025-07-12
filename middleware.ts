@@ -29,6 +29,7 @@ export function middleware(request: NextRequest) {
   `.replace(/\s{2,}/g, ' ').trim();
 
   response.headers.set('Content-Security-Policy', csp);
+  response.headers.set('X-Frame-Options', 'DENY');
 
   return response;
 }
