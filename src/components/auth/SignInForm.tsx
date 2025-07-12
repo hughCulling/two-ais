@@ -63,19 +63,64 @@ export default function SignInForm() {
     };
 
     return (
-        <form onSubmit={handleSignIn} className="space-y-4">
-            {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+        <form onSubmit={handleSignIn} className="space-y-4" role="form" aria-labelledby="signin-form-title">
+            <div id="signin-form-title" className="sr-only">Sign In Form</div>
+            {error && (
+                <p className="text-sm text-red-600 dark:text-red-400" role="alert" aria-live="assertive">
+                    {error}
+                </p>
+            )}
             <div>
-                <label htmlFor="email-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.auth.login.emailPlaceholder}</label>
-                <input type="email" id="email-signin" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
+                <label htmlFor="email-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t.auth.login.emailPlaceholder}
+                </label>
+                <input 
+                    type="email" 
+                    id="email-signin" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    required 
+                    autoComplete="email" 
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    aria-describedby="email-signin-description"
+                    aria-invalid={error && error.includes('email') ? true : false}
+                />
+                <div id="email-signin-description" className="sr-only">
+                    Enter your email address to sign in to your account
+                </div>
             </div>
             <div>
-                <label htmlFor="password-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.auth.login.passwordPlaceholder}</label>
-                <input type="password" id="password-signin" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
+                <label htmlFor="password-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t.auth.login.passwordPlaceholder}
+                </label>
+                <input 
+                    type="password" 
+                    id="password-signin" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    required 
+                    autoComplete="current-password" 
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    aria-describedby="password-signin-description"
+                    aria-invalid={error && error.includes('password') ? true : false}
+                />
+                <div id="password-signin-description" className="sr-only">
+                    Enter your password to sign in to your account
+                </div>
             </div>
-            <button type="submit" disabled={loading} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-800">
+            <button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-800"
+                aria-label={loading ? "Signing in..." : "Sign in to your account"}
+                aria-describedby="signin-button-description"
+                aria-busy={loading}
+            >
                 {loading ? t.auth.login.signingIn : t.auth.login.signIn}
             </button>
+            <div id="signin-button-description" className="sr-only">
+                Click to sign in to your account using your email and password
+            </div>
         </form>
     );
 }
