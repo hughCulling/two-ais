@@ -56,10 +56,20 @@ export default function SignOutButton({ className, onSignOut }: SignOutButtonPro
                 onClick={handleSignOut}
                 disabled={loading}
                 className={className || defaultButtonClasses}
+                aria-label={loading ? "Signing out..." : "Sign out of your account"}
+                aria-describedby="sign-out-description"
+                aria-busy={loading}
             >
                 {loading ? `${t.header.signOut}...` : t.header.signOut}
             </button>
-            {error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>}
+            <div id="sign-out-description" className="sr-only">
+                Click to sign out of your account. This will log you out and redirect you to the login page.
+            </div>
+            {error && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400" role="alert" aria-live="assertive">
+                    {error}
+                </p>
+            )}
         </div>
     );
 }
