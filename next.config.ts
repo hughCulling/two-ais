@@ -16,12 +16,17 @@ const ContentSecurityPolicy = `
   object-src 'none';
   base-uri 'self';
   form-action 'self';
+  frame-ancestors 'self';
 `;
 
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: ContentSecurityPolicy.replace(/\n/g, ''),
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'SAMEORIGIN',
   },
   // ... you can add other security headers here ...
 ];

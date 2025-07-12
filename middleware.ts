@@ -8,29 +8,7 @@ function generateNonce(length = 16) {
 }
 
 export function middleware(request: NextRequest) {
-  const nonce = generateNonce();
   const response = NextResponse.next();
-
-  // Set the nonce as a cookie (so it can be read in server components)
-  response.cookies.set('csp-nonce', nonce, { path: '/' });
-
-  // Set the CSP header with the nonce
-  const csp = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
-    object-src 'none';
-    base-uri 'self';
-    connect-src 'self';
-    img-src 'self' data:;
-    style-src 'self' 'unsafe-inline';
-    font-src 'self';
-    frame-ancestors 'none';
-    form-action 'self';
-  `.replace(/\s{2,}/g, ' ').trim();
-
-  response.headers.set('Content-Security-Policy', csp);
-  response.headers.set('X-Frame-Options', 'DENY');
-
   return response;
 }
 
