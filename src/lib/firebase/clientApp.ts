@@ -47,11 +47,12 @@ if (typeof window !== 'undefined') {
         try {
             // Check if App Check is already initialized (useful for HMR)
             try {
-                // Set up debug token for development
-                // @ts-expect-error - Debug token is available in development
-                self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN || true;
-                console.log("App Check debug token set for development.");
-
+                // Set up debug token for development only
+                if (process.env.NODE_ENV === 'development') {
+                    // @ts-expect-error - Debug token is available in development
+                    self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN || true;
+                    console.log("App Check debug token set for development.");
+                }
                 appCheck = initializeAppCheck(app, {
                     provider: new ReCaptchaEnterpriseProvider(reCaptchaKey),
                     isTokenAutoRefreshEnabled: true // Auto refresh token

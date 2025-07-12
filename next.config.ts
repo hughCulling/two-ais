@@ -12,7 +12,7 @@ const ContentSecurityPolicy = `
   font-src 'self' https://fonts.gstatic.com;
   media-src 'self' https://storage.googleapis.com;
   connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net https://firebaseinstallations.googleapis.com;
-  frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://two-ais.firebaseapp.com https://*.firebaseio.com;
+  frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://two-ais.firebaseapp.com https://*.firebaseio.com https://accounts.google.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -27,6 +27,11 @@ const securityHeaders = [
   {
     key: 'X-Frame-Options',
     value: 'SAMEORIGIN',
+  },
+  // Add COOP header for origin isolation
+  {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin',
   },
   // ... you can add other security headers here ...
 ];
