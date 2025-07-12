@@ -31,7 +31,7 @@ const securityHeaders = [
   // Add COOP header for origin isolation
   {
     key: 'Cross-Origin-Opener-Policy',
-    value: 'same-origin',
+    value: 'same-origin-allow-popups',
   },
   // ... you can add other security headers here ...
 ];
