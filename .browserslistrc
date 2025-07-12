@@ -1,0 +1,9 @@
+# Modern browsers that support ES2020+ features
+Chrome >= 88
+Firefox >= 85
+Safari >= 14
+Edge >= 88
+
+# Exclude dead browsers and IE11
+not dead
+not ie 11 
