@@ -161,21 +161,22 @@ export default function LandingPage() {
                   draggable={false}
                   style={{ zIndex: 0 }}
                 />
-                {mounted && resolvedTheme === 'light' && (
-                  <Image
-                    src="/landing-light.webp"
-                    alt={t.page_VideoTitle}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 768px"
-                    priority
-                    fetchPriority="high"
-                    placeholder="blur"
-                    blurDataURL={BLUR_DATA_URL_LIGHT}
-                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-                    draggable={false}
-                    style={{ zIndex: 1 }}
-                  />
-                )}
+                <Image
+                  src="/landing-light.webp"
+                  alt={t.page_VideoTitle}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  priority
+                  fetchPriority="high"
+                  placeholder="blur"
+                  blurDataURL={BLUR_DATA_URL_LIGHT}
+                  className={cn(
+                    "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
+                    mounted && resolvedTheme === 'light' ? "opacity-100" : "opacity-0"
+                  )}
+                  draggable={false}
+                  style={{ zIndex: 1 }}
+                />
               </>
             )}
             {mounted && (
