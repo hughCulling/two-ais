@@ -19,6 +19,48 @@ const ContentSecurityPolicy = `
   frame-ancestors 'self';
 `;
 
+// HSTS Configuration - Staged rollout approach for active production deployment
+const getHSTSHeader = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isVercelProduction = process.env.VERCEL_ENV === 'production';
+  const isVercelPreview = process.env.VERCEL_ENV === 'preview';
+  
+  // Stage 1: Development (localhost) - No HSTS
+  if (!isProduction) {
+    console.log('HSTS: Development mode - No HSTS header (allows HTTP for local development)');
+    return null;
+  }
+  
+  // Stage 2: Vercel Preview/Staging - Short max-age, includeSubDomains, no preload
+  if (isProduction && isVercelPreview) {
+    console.log('HSTS: Preview/Staging mode - Short max-age with includeSubDomains (no preload)');
+    return {
+      key: 'Strict-Transport-Security',
+      value: 'max-age=3600; includeSubDomains', // 1 hour
+    };
+  }
+  
+  // Stage 3: Vercel Production - Very conservative HSTS for multiple daily deployments
+  if (isProduction && isVercelProduction) {
+    console.log('HSTS: Production mode - Very conservative HSTS (safe for multiple daily deployments)');
+    return {
+      key: 'Strict-Transport-Security',
+      value: 'max-age=3600; includeSubDomains', // 1 hour - very safe for rapid development
+    };
+  }
+  
+  // Fallback for other production environments
+  if (isProduction) {
+    console.log('HSTS: Production mode (non-Vercel) - Moderate HSTS without preload');
+    return {
+      key: 'Strict-Transport-Security',
+      value: 'max-age=604800; includeSubDomains', // 1 week
+    };
+  }
+  
+  return null;
+};
+
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
@@ -33,7 +75,21 @@ const securityHeaders = [
     key: 'Cross-Origin-Opener-Policy',
     value: 'same-origin-allow-popups',
   },
-  // ... you can add other security headers here ...
+  // HSTS Policy - Conditionally added based on environment
+  ...(getHSTSHeader() ? [getHSTSHeader()!] : []),
+  // Additional security headers
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+  },
+  {
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin',
+  },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=()',
+  },
 ];
 
 const nextConfig: NextConfig = {
