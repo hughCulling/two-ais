@@ -28,6 +28,11 @@ const securityHeaders = [
     key: 'X-Frame-Options',
     value: 'SAMEORIGIN',
   },
+  // Add COOP header for origin isolation
+  {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin',
+  },
   // ... you can add other security headers here ...
 ];
 
