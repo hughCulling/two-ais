@@ -187,7 +187,12 @@ export default function LandingPage() {
             "applicationCategory": "WebApplication",
             "description": "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience.",
             "url": "https://www.two-ais.com/",
-            "image": "https://www.two-ais.com/icon.png"
+            "image": "https://www.two-ais.com/icon.png",
+            "offers": {
+              "@type": "Offer",
+              "price": 0,
+              "priceCurrency": "USD"
+            }
           })
         }}
       />
