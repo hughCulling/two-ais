@@ -140,8 +140,13 @@ export default function LandingPage() {
             "@type": "SoftwareSourceCode",
             "name": "Two AIs",
             "url": "https://www.two-ais.com/"
-          }) + '\n' +
-          JSON.stringify({
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "url": "https://www.two-ais.com/",
