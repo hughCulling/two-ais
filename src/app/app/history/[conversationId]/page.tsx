@@ -320,7 +320,7 @@ export default function ChatHistoryViewerPage() {
                         <CardTitle>Transcript</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ScrollArea className="h-[500px] w-full pr-4">
+                        <ScrollArea className="h-[500px] w-full pr-4" style={{ contain: 'layout style paint' }}>
                             <div className="space-y-4">
                                 {details.messages.map((msg, index) => {
                                     const isSystem = msg.role === 'system';
