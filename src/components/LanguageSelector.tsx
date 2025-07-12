@@ -36,7 +36,7 @@ export function LanguageSelector({ showIcon = true, className = '' }: LanguageSe
         <div className={`flex items-center ${className}`}>
             {showIcon && <Globe className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />}
             <Select value={language.code} onValueChange={handleLanguageChange}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px]" aria-label="Select language">
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
