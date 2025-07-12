@@ -271,11 +271,21 @@ export default function LandingPage() {
                 let lastDisplayedBrand: string | null = null;
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                    <CollapsibleTrigger className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                    <CollapsibleTrigger 
+                      className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                      aria-expanded={isProviderOpen}
+                      aria-controls={`${providerCollapsibleId}-content`}
+                      aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
+                    >
                       <span>{providerName}</span>
-                      {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                      {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="space-y-3 pl-2 pt-1">
+                    <CollapsibleContent 
+                      id={`${providerCollapsibleId}-content`}
+                      className="space-y-3 pl-2 pt-1"
+                      role="region"
+                      aria-labelledby={`${providerCollapsibleId}-trigger`}
+                    >
                       {orderedCategories.map((category, index) => {
                         const categoryModels = modelsByCategory[category];
                         if (!categoryModels) return null;
@@ -408,11 +418,21 @@ export default function LandingPage() {
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                   return (
                     <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                      <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring">
+                      <CollapsibleTrigger 
+                        className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        aria-expanded={isProviderOpen}
+                        aria-controls={`${providerCollapsibleId}-content`}
+                        aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${provider.name} TTS models`}
+                      >
                         <span>{provider.name}</span>
-                        {isProviderOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
                       </CollapsibleTrigger>
-                      <CollapsibleContent className="space-y-2 pl-4">
+                      <CollapsibleContent 
+                        id={`${providerCollapsibleId}-content`}
+                        className="space-y-2 pl-4"
+                        role="region"
+                        aria-labelledby={`${providerCollapsibleId}-trigger`}
+                      >
                         <ul className="space-y-1 list-disc list-inside text-sm">
                           {provider.models.map((model) => {
                             const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);

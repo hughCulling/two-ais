@@ -152,6 +152,79 @@ The application has been enhanced with proper ARIA roles, labels, and descriptio
 >
 ```
 
+### 7. Landing Page Collapsibles (`src/components/LandingPage.tsx`)
+
+**Improvements Made:**
+- Added `aria-expanded` to collapsible triggers
+- Added `aria-controls` to link triggers with their content
+- Added `aria-label` with contextual information for expand/collapse actions
+- Added `role="region"` to collapsible content
+- Added `aria-labelledby` to associate content with triggers
+- Added `aria-hidden="true"` to decorative chevron icons
+- Applied to both LLM provider sections and TTS provider sections
+
+**Key ARIA Attributes:**
+```jsx
+<CollapsibleTrigger 
+  aria-expanded={isProviderOpen}
+  aria-controls={`${providerCollapsibleId}-content`}
+  aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
+>
+<CollapsibleContent 
+  id={`${providerCollapsibleId}-content`}
+  role="region"
+  aria-labelledby={`${providerCollapsibleId}-trigger`}
+>
+```
+
+### 8. Header Components (`src/components/layout/Header.tsx` & `src/components/layout/HeaderPublic.tsx`)
+
+**Improvements Made:**
+- Added `role="banner"` to header elements
+- Added `role="navigation"` with `aria-label` to navigation containers
+- Added `role="group"` to user controls and site controls sections
+- Added `aria-label` to all navigation links with descriptive text
+- Added `aria-hidden="true"` to decorative icons
+- Added `aria-label` to mobile menu button with dynamic text
+- Added `role="navigation"` to mobile menu panel
+- Added `role="status"` and `aria-live="polite"` to loading states
+- Added `aria-labelledby` to mobile menu sections
+
+**Key ARIA Attributes:**
+```jsx
+<header role="banner">
+  <nav role="navigation" aria-label="Main navigation">
+    <div role="group" aria-label="User controls">
+    <button
+      aria-controls="mobile-menu"
+      aria-expanded={isMenuOpen}
+      aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
+    >
+    <div role="navigation" aria-label="Mobile navigation menu">
+```
+
+### 9. Sign Out Button (`src/components/auth/SignOutButton.tsx`)
+
+**Improvements Made:**
+- Added `aria-label` with contextual information
+- Added `aria-describedby` for detailed description
+- Added `aria-busy` to indicate loading state
+- Added `role="alert"` and `aria-live="assertive"` to error messages
+- Added screen reader description for button purpose
+
+**Key ARIA Attributes:**
+```jsx
+<button
+  aria-label={loading ? "Signing out..." : "Sign out of your account"}
+  aria-describedby="sign-out-description"
+  aria-busy={loading}
+>
+<div id="sign-out-description" className="sr-only">
+  Click to sign out of your account. This will log you out and redirect you to the login page.
+</div>
+<p role="alert" aria-live="assertive">{error}</p>
+```
+
 ## Best Practices Implemented
 
 ### 1. Semantic HTML Structure
@@ -175,6 +248,7 @@ The application has been enhanced with proper ARIA roles, labels, and descriptio
 - Used `aria-invalid` for form validation
 - Used `aria-disabled` for disabled states
 - Used `aria-expanded` for expandable content
+- Used `aria-busy` for loading states
 
 ### 5. Screen Reader Support
 - Added comprehensive `aria-label` attributes
@@ -187,6 +261,12 @@ The application has been enhanced with proper ARIA roles, labels, and descriptio
 - Added proper focus management
 - Used semantic tab order
 - Added keyboard event handlers where needed
+
+### 7. Mobile Accessibility
+- Enhanced mobile menu with proper ARIA attributes
+- Added descriptive labels for mobile navigation
+- Ensured touch targets are appropriately sized
+- Added proper focus management for mobile interactions
 
 ## Testing Recommendations
 
@@ -201,6 +281,7 @@ The application has been enhanced with proper ARIA roles, labels, and descriptio
    - Use Enter/Space for activation
    - Use Escape for closing modals/dropdowns
    - Test arrow key navigation in listboxes
+   - Test collapsible sections with keyboard
 
 3. **Automated Testing**
    - Use axe-core for automated accessibility testing
@@ -234,4 +315,4 @@ The implementation follows:
 
 ## Conclusion
 
-The ARIA implementation significantly improves the accessibility of the Two-AIs application, making it usable by people with various disabilities. All custom interactive controls now have proper ARIA roles, labels, and descriptions, ensuring compliance with web accessibility standards. 
+The ARIA implementation significantly improves the accessibility of the Two-AIs application, making it usable by people with various disabilities. All custom interactive controls now have proper ARIA roles, labels, and descriptions, ensuring compliance with web accessibility standards. The recent improvements to collapsible components, header navigation, and form controls further enhance the user experience for assistive technology users. 
