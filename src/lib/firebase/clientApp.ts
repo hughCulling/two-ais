@@ -42,21 +42,28 @@ let appCheck;
 if (typeof window !== 'undefined') {
     // Initialize App Check (only in browser)
     const reCaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY;
+    
     if (reCaptchaKey) {
         try {
             // Check if App Check is already initialized (useful for HMR)
             try {
-                 appCheck = initializeAppCheck(app, {
-                     provider: new ReCaptchaEnterpriseProvider(reCaptchaKey),
-                     isTokenAutoRefreshEnabled: true // Auto refresh token
-                 });
-                 console.log("Firebase App Check (reCAPTCHA Enterprise) initialized.");
+                // Set up debug token for development
+                // @ts-expect-error - Debug token is available in development
+                self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN || true;
+                console.log("App Check debug token set for development.");
+
+                appCheck = initializeAppCheck(app, {
+                    provider: new ReCaptchaEnterpriseProvider(reCaptchaKey),
+                    isTokenAutoRefreshEnabled: true // Auto refresh token
+                });
+                console.log("Firebase App Check (reCAPTCHA Enterprise) initialized.");
             } catch (e) {
-                 // Handle potential re-initialization errors during hot module replacement
-                 console.warn("App Check initialization error (might be HMR):", e);
+                // Handle potential re-initialization errors during hot module replacement
+                console.warn("App Check initialization error (might be HMR):", e);
             }
         } catch (error) {
             console.error("Error initializing Firebase App Check:", error);
+            // Don't throw the error to prevent app crashes
         }
     } else {
         console.warn("NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY is not set. App Check not initialized.");
@@ -116,4 +123,4 @@ if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBA
 // --- End Emulator Connections ---
 
 
-export { app, auth, db, functions, analytics, appCheck }; // Export appCheck if needed elsewhere
+export { app, auth, db, functions, analytics, appCheck };
