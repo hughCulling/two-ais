@@ -131,6 +131,24 @@ export default function LandingPage() {
   if (loading || !t) return null;
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareSourceCode",
+            "name": "Two AIs",
+            "url": "https://www.two-ais.com/"
+          }) + '\n' +
+          JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.two-ais.com/",
+            "name": "Two AIs"
+          })
+        }}
+      />
       <TooltipProvider delayDuration={100}>
         <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
           <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
