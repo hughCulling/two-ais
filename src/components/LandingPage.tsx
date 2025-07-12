@@ -163,9 +163,9 @@ export default function LandingPage() {
             "name": "Two AIs Conversation Demo",
             "description": "A demo of Two AIs, a platform for listening to conversations between two LLMs using TTS.",
             "thumbnailUrl": "https://www.two-ais.com/landing-light.webp",
-            "uploadDate": "2025-04-29", // TODO: Update to actual upload date
-            "contentUrl": "https://www.youtube.com/watch?v=52oUvRFdaXE", // TODO: Update to actual YouTube video URL
-            "embedUrl": "https://www.youtube.com/embed/52oUvRFdaXE?si=1RKDtEhp62ppXPVv", // TODO: Update to actual YouTube embed URL
+            "uploadDate": "2025-04-29T14:12:00+01:00",
+            "contentUrl": "https://www.youtube.com/watch?v=52oUvRFdaXE",
+            "embedUrl": "https://www.youtube.com/embed/52oUvRFdaXE?si=1RKDtEhp62ppXPVv",
             "publisher": {
               "name": "Two AIs",
               "logo": {
