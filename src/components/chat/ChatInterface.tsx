@@ -23,6 +23,7 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
+import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
 
 // --- Interfaces ---
 interface Message {
@@ -115,6 +116,9 @@ export function ChatInterface({
     const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Use optimized scroll hook
+    const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
     // --- Handler: User Interaction Detection ---
     const handleUserInteraction = useCallback(() => {
@@ -327,9 +331,9 @@ export function ChatInterface({
     // --- Effect 3: Auto-scroll ---
     useEffect(() => {
         if (conversationStatus === "running" && !isStopped) {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            scrollToBottom(messagesEndRef.current);
         }
-    }, [messages, conversationStatus, isStopped]); // Keep dependencies
+    }, [messages, conversationStatus, isStopped, scrollToBottom]); // Keep dependencies
 
 
     // --- Effect 4: Handle Automatic Audio Playback ---
@@ -583,7 +587,7 @@ export function ChatInterface({
             ))}
 
             {/* Scrollable Message Area */}
-            <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
+            <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4" style={{ contain: 'layout style paint' }}>
                <div className="space-y-4">
                     {mergedMessages.map((msg) => (
                         <div
@@ -593,6 +597,7 @@ export function ChatInterface({
                                 msg.role === 'agentB' ? 'justify-end' :
                                 'justify-center text-xs text-muted-foreground italic py-1'
                             }`}
+                            style={{ contain: 'layout' }}
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${

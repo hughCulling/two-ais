@@ -25,18 +25,36 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);
   const { t, loading } = useTranslation();
+  
   React.useEffect(() => {
     const el = textRef.current;
+    if (!el) return;
+    
+    // Simple debounced overflow check
+    let timeoutId: NodeJS.Timeout;
     const checkOverflow = () => {
-      if (el) setIsActuallyOverflowing(el.scrollWidth > el.clientWidth);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (el) {
+          setIsActuallyOverflowing(el.scrollWidth > el.clientWidth);
+        }
+      }, 100); // Increased debounce time to reduce reflows
     };
+    
+    // Initial check
     checkOverflow();
+    
+    // Use ResizeObserver with debouncing
     let resizeObserver: ResizeObserver | null = null;
-    if (el && typeof window !== 'undefined' && 'ResizeObserver' in window) {
+    if (typeof window !== 'undefined' && 'ResizeObserver' in window) {
       resizeObserver = new ResizeObserver(checkOverflow);
       resizeObserver.observe(el);
     }
-    return () => { if (resizeObserver && el) resizeObserver.disconnect(); };
+    
+    return () => { 
+      clearTimeout(timeoutId);
+      if (resizeObserver && el) resizeObserver.disconnect(); 
+    };
   }, [noteText]);
   if (loading || !t) return null;
   const noteSpan = (
