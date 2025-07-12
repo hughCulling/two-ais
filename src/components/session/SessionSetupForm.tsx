@@ -153,6 +153,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                 disabled={disabled}
                 aria-haspopup="listbox"
                 aria-expanded={open}
+                aria-label={`${label}: ${selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}`}
             >
                 <span className="truncate">
                     {selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}
@@ -172,6 +173,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                             className="w-full text-left px-4 py-3 hover:bg-accent focus:bg-accent transition-colors flex items-center justify-between"
                                             onClick={() => setSelectedProvider(provider)}
                                             tabIndex={0}
+                                            aria-label={`Select ${provider} provider`}
                                         >
                                             <span className="font-medium">{provider}</span>
                                             <ChevronRight className="h-4 w-4 opacity-60" />
@@ -213,6 +215,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                 onClick={() => supportsLanguage && onChange(llm.id)}
                                                                 disabled={!supportsLanguage}
                                                                 tabIndex={0}
+                                                                aria-label={`${llm.name} (${llm.provider})${!supportsLanguage ? ' - Not supported for current language' : ''}`}
                                                             >
                                                                 <span className="flex-shrink-0 flex items-center min-w-0">
                                                                     <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
