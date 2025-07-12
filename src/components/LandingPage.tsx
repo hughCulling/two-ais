@@ -154,6 +154,43 @@ export default function LandingPage() {
           })
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            "name": "Two AIs Conversation Demo",
+            "description": "A demo of Two AIs, a platform for listening to conversations between two LLMs using TTS.",
+            "thumbnailUrl": "https://www.two-ais.com/landing-light.webp",
+            "uploadDate": "2025-04-29", // TODO: Update to actual upload date
+            "contentUrl": "https://www.youtube.com/watch?v=52oUvRFdaXE", // TODO: Update to actual YouTube video URL
+            "embedUrl": "https://www.youtube.com/embed/52oUvRFdaXE?si=1RKDtEhp62ppXPVv", // TODO: Update to actual YouTube embed URL
+            "publisher": {
+              "name": "Two AIs",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.two-ais.com/icon.png"
+              }
+            }
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Two AIs",
+            "operatingSystem": "All",
+            "applicationCategory": "WebApplication",
+            "description": "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience.",
+            "url": "https://www.two-ais.com/",
+            "image": "https://www.two-ais.com/icon.png"
+          })
+        }}
+      />
       <TooltipProvider delayDuration={100}>
         <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
           <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
