@@ -4,6 +4,28 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const ContentSecurityPolicy = `
+  default-src 'self';
+  script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  img-src 'self' data: https://img.youtube.com https://www.google.com/images/;
+  font-src 'self' https://fonts.gstatic.com;
+  media-src 'self' https://storage.googleapis.com;
+  connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net;
+  frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://two-ais.firebaseapp.com https://*.firebaseio.com;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+`;
+
+const securityHeaders = [
+  {
+    key: 'Content-Security-Policy',
+    value: ContentSecurityPolicy.replace(/\n/g, ''),
+  },
+  // ... you can add other security headers here ...
+];
+
 const nextConfig: NextConfig = {
   // Configure compiler options for modern browsers
   compiler: {
@@ -63,6 +85,14 @@ const nextConfig: NextConfig = {
     }
     
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders,
+      },
+    ];
   },
 };
 
