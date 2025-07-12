@@ -236,16 +236,18 @@ export default function ApiKeyManager() {
 
     return (
         <TooltipProvider delayDuration={100}>
-            <div className="space-y-6">
+            <div className="space-y-6" role="main" aria-labelledby="api-keys-title">
+                <h2 id="api-keys-title" className="text-2xl font-bold">API Key Management</h2>
+                
                 {generalError && (
-                    <Alert variant="destructive">
-                        <Terminal className="h-4 w-4" />
+                    <Alert variant="destructive" role="alert" aria-live="assertive">
+                        <Terminal className="h-4 w-4" aria-hidden="true" />
                         <AlertTitle>{t.common.error}</AlertTitle>
                         <AlertDescription>{generalError}</AlertDescription>
                     </Alert>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-4" role="form" aria-labelledby="api-keys-title">
                     {apiKeys.map(({ id, label: initialLabel, tooltip, learnMoreLink }) => {
                         const currentKeyValue = apiKeys.find(k => k.id === id)?.value ?? '';
                         const isSaved = savedKeyStatus[id] === true;
@@ -259,28 +261,34 @@ export default function ApiKeyManager() {
                         displayLabel += ` ${serviceName}`;
 
                         return (
-                            <div key={id} className="space-y-2 pb-2">
-                                <div className="flex items-center space-x-1.5">
-                                    <Label htmlFor={id}>{displayLabel}</Label>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Info className="h-4 w-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
-                                        </TooltipTrigger>
-                                        <TooltipContent className="max-w-xs">
-                                            <p className="text-xs">{tooltip}</p>
-                                            {learnMoreLink && (
-                                                <a
-                                                    href={learnMoreLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-xs text-blue-500 hover:text-blue-600 underline mt-1 flex items-center"
-                                                >
-                                                    Learn more <ExternalLink className="h-3 w-3 ml-1" />
-                                                </a>
-                                            )}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
+                            <fieldset key={id} className="space-y-2 pb-2 border rounded-lg p-4" role="group" aria-labelledby={`${id}-legend`}>
+                                <legend id={`${id}-legend`} className="text-lg font-semibold px-2">
+                                    <div className="flex items-center space-x-1.5">
+                                        <Label htmlFor={id}>{displayLabel}</Label>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Info 
+                                                    className="h-4 w-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" 
+                                                    aria-label={`Help information for ${serviceName} API key`}
+                                                />
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-xs">
+                                                <p className="text-xs">{tooltip}</p>
+                                                {learnMoreLink && (
+                                                    <a
+                                                        href={learnMoreLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-xs text-blue-500 hover:text-blue-600 underline mt-1 flex items-center"
+                                                        aria-label={`Learn more about ${serviceName} API key (opens in new tab)`}
+                                                    >
+                                                        Learn more <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
+                                                    </a>
+                                                )}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
+                                </legend>
 
                                 <div className="flex items-center space-x-2">
                                     <Input
@@ -291,20 +299,32 @@ export default function ApiKeyManager() {
                                         placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${initialLabel}`}
                                         disabled={isSaving || authLoading || isLoadingStatus}
                                         className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
+                                        aria-describedby={`${id}-description ${id}-status`}
+                                        aria-invalid={statusMessages[id]?.type === 'error'}
                                     />
                                     {isSaved && (
-                                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" aria-label="Key saved indicator"/>
+                                        <CheckCircle 
+                                            className="h-5 w-5 text-green-500 flex-shrink-0" 
+                                            aria-label="Key saved indicator"
+                                            role="img"
+                                            aria-describedby={`${id}-saved-status`}
+                                        />
                                     )}
                                 </div>
-                                 <p className="text-xs text-muted-foreground px-1">
+                                 <p id={`${id}-description`} className="text-xs text-muted-foreground px-1">
                                      {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely using Google Secret Manager."}
                                  </p>
+                                 {isSaved && (
+                                     <div id={`${id}-saved-status`} className="sr-only">
+                                         API key for {serviceName} is currently saved and active.
+                                     </div>
+                                 )}
 
                                 {/* Specific note for Google AI Key regarding TTS */}
                                 {id === 'google_ai' && (
-                                    <Alert variant="default" className="mt-2 bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-700">
-                                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                        <AlertTitle className="text-blue-700 dark:text-blue-300">Using Google Text-to-Speech (TTS)</AlertTitle>
+                                    <Alert variant="default" className="mt-2 bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-700" role="note" aria-labelledby="google-tts-note">
+                                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                                        <AlertTitle id="google-tts-note" className="text-blue-700 dark:text-blue-300">Using Google Text-to-Speech (TTS)</AlertTitle>
                                         <AlertDescription className="text-blue-600 dark:text-blue-400">
                                             To use Google TTS voices, ensure the <strong className="font-semibold">&quot;Cloud Text-to-Speech API&quot;</strong> is enabled
                                             in the same Google Cloud Project associated with this API key. You can manage APIs
@@ -313,8 +333,9 @@ export default function ApiKeyManager() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="underline hover:text-blue-700 dark:hover:text-blue-200 font-medium"
+                                                aria-label="Manage Google Cloud APIs (opens in new tab)"
                                             >
-                                                &nbsp;here <ExternalLink className="inline h-3 w-3" />
+                                                &nbsp;here <ExternalLink className="inline h-3 w-3" aria-hidden="true" />
                                             </a>.
                                         </AlertDescription>
                                     </Alert>
@@ -322,9 +343,9 @@ export default function ApiKeyManager() {
 
                                 {/* Specific note for Eleven Labs API key */}
                                 {id === 'elevenlabs' && (
-                                    <Alert variant="default" className="mt-2 bg-purple-50 border-purple-200 dark:bg-purple-900/30 dark:border-purple-700">
-                                        <Info className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                                        <AlertTitle className="text-purple-700 dark:text-purple-300">Using Eleven Labs Text-to-Speech</AlertTitle>
+                                    <Alert variant="default" className="mt-2 bg-purple-50 border-purple-200 dark:bg-purple-900/30 dark:border-purple-700" role="note" aria-labelledby="elevenlabs-note">
+                                        <Info className="h-4 w-4 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+                                        <AlertTitle id="elevenlabs-note" className="text-purple-700 dark:text-purple-300">Using Eleven Labs Text-to-Speech</AlertTitle>
                                         <AlertDescription className="text-purple-600 dark:text-purple-400">
                                             Eleven Labs offers several models with different quality and speed. For best results, try the Multilingual V2 model for rich emotional expression or Flash V2.5 for ultra-low latency. Get your API key from your
                                             <a
@@ -332,21 +353,28 @@ export default function ApiKeyManager() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="underline hover:text-purple-700 dark:hover:text-purple-200 font-medium"
+                                                aria-label="Eleven Labs dashboard (opens in new tab)"
                                             >
-                                                &nbsp;Eleven Labs dashboard <ExternalLink className="inline h-3 w-3" />
+                                                &nbsp;Eleven Labs dashboard <ExternalLink className="inline h-3 w-3" aria-hidden="true" />
                                             </a>.
                                         </AlertDescription>
                                     </Alert>
                                 )}
 
                                 {statusMessages[id] && (
-                                    <Alert variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} className="mt-2">
-                                        {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" /> : <Terminal className="h-4 w-4" />}
-                                        <AlertTitle>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
-                                        <AlertDescription>{statusMessages[id].message}</AlertDescription>
+                                    <Alert 
+                                        variant={statusMessages[id].type === 'success' ? 'default' : 'destructive'} 
+                                        className="mt-2" 
+                                        role="alert" 
+                                        aria-live="polite"
+                                        aria-labelledby={`${id}-status-title`}
+                                    >
+                                        {statusMessages[id].type === 'success' ? <CheckCircle className="h-4 w-4" aria-hidden="true" /> : <Terminal className="h-4 w-4" aria-hidden="true" />}
+                                        <AlertTitle id={`${id}-status-title`}>{statusMessages[id].type === 'success' ? 'Success' : 'Error'}</AlertTitle>
+                                        <AlertDescription id={`${id}-status`}>{statusMessages[id].message}</AlertDescription>
                                     </Alert>
                                 )}
-                            </div>
+                            </fieldset>
                         );
                     })}
                 </div>
@@ -355,12 +383,17 @@ export default function ApiKeyManager() {
                     onClick={saveKeys}
                     disabled={isSaving || authLoading || !user || isLoadingStatus}
                     className="w-full transition-opacity duration-200"
+                    aria-label={isSaving ? 'Saving API keys...' : 'Save or update all entered API keys'}
+                    aria-describedby="save-button-description"
                 >
                     {isSaving ? 'Saving...' : 'Save / Update Keys'}
                 </Button>
+                <div id="save-button-description" className="sr-only">
+                    Click to save or update all API keys that have been entered. Keys are stored securely and encrypted.
+                </div>
 
-                 {authLoading && <p className="text-center text-sm text-muted-foreground">Checking authentication status...</p>}
-                 {!authLoading && !user && <p className="text-center text-sm text-destructive">Please log in to manage API keys.</p>}
+                 {authLoading && <p className="text-center text-sm text-muted-foreground" role="status" aria-live="polite">Checking authentication status...</p>}
+                 {!authLoading && !user && <p className="text-center text-sm text-destructive" role="alert" aria-live="assertive">Please log in to manage API keys.</p>}
             </div>
         </TooltipProvider>
     );

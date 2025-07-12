@@ -530,14 +530,24 @@ export function ChatInterface({
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">AI Conversation</h2>
                 {isAudioPlaying && currentlyPlayingMsgId && (
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                         <Volume2 className="h-4 w-4 animate-pulse text-primary"/>
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
+                         <Volume2 className="h-4 w-4 animate-pulse text-primary" aria-hidden="true"/>
                          <span>Playing Audio...</span>
                     </div>
                 )}
-                <Button variant="destructive" size="sm" onClick={handleStopConversation} disabled={isStopping || isStopped}>
+                <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={handleStopConversation} 
+                    disabled={isStopping || isStopped}
+                    aria-label={isStopped ? "Conversation already stopped" : (isStopping ? "Stopping conversation..." : "Stop the current conversation")}
+                    aria-describedby="stop-conversation-description"
+                >
                     {isStopped ? "Stopped" : (isStopping ? "Stopping..." : "Stop Conversation")}
                 </Button>
+                <div id="stop-conversation-description" className="sr-only">
+                    Click to stop the current AI conversation. This will prevent further messages from being generated.
+                </div>
             </div>
 
             {/* TTS Error Banner */}
@@ -611,7 +621,7 @@ export function ChatInterface({
                                 ) : null }
                                 {msg.content}
                                 {msg.isStreaming && (
-                                  <span className="ml-1 animate-pulse text-primary">▍</span>
+                                  <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
                                 )}
                                 {/* Manual audio play button for messages with audio */}
                                 {msg.audioUrl && !playedMessageIds.has(msg.id) && !isAudioPlaying && (
@@ -640,17 +650,22 @@ export function ChatInterface({
                                                 }
                                             }}
                                             className="h-6 px-2 text-xs"
+                                            aria-label={`Play audio for ${msg.role === 'agentA' ? 'Agent A' : 'Agent B'} message`}
+                                            aria-describedby={`audio-control-${msg.id}-description`}
                                         >
-                                            <Volume2 className="h-3 w-3 mr-1" />
+                                            <Volume2 className="h-3 w-3 mr-1" aria-hidden="true" />
                                             Play Audio
                                         </Button>
+                                        <div id={`audio-control-${msg.id}-description`} className="sr-only">
+                                            Click to play the audio version of this message. This will enable automatic audio playback for future messages.
+                                        </div>
                                     </div>
                                 )}
                                 {/* Audio played indicator */}
                                 {msg.audioUrl && playedMessageIds.has(msg.id) && (
-                                    <div className="mt-2 flex items-center gap-2">
+                                    <div className="mt-2 flex items-center gap-2" role="status" aria-live="polite">
                                         <span className="text-xs text-muted-foreground flex items-center">
-                                            <Volume2 className="h-3 w-3 mr-1" />
+                                            <Volume2 className="h-3 w-3 mr-1" aria-hidden="true" />
                                             Audio played
                                         </span>
                                     </div>
@@ -658,12 +673,12 @@ export function ChatInterface({
                                 {/* Split audio notification */}
                                 {msg.ttsWasSplit && (
                                   <div className="mt-1 text-[11px] text-orange-800 dark:text-orange-200 font-medium flex items-center gap-1">
-                                    <AlertCircle className="inline h-3 w-3 mr-1" />
+                                    <AlertCircle className="inline h-3 w-3 mr-1" aria-hidden="true" />
                                     Audio was split due to TTS input limit. Some long messages may be truncated or split into multiple parts.
                                   </div>
                                 )}
                                 {isAudioPlaying && currentlyPlayingMsgId === msg.id && (
-                                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
                                     </span>
@@ -672,13 +687,13 @@ export function ChatInterface({
                         </div>
                     ))}
                      {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
-                        <div className="text-center text-muted-foreground text-sm p-4">Waiting for first message...</div>
+                        <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Waiting for first message...</div>
                      )}
                       {isStopped && conversationStatus === "stopped" && !error && (
-                         <div className="text-center text-muted-foreground text-sm p-4">Conversation stopped.</div>
+                         <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Conversation stopped.</div>
                       )}
                        {isWaitingForSignal && !isAudioPlaying && conversationStatus === "running" && (
-                         <div className="text-center text-primary text-sm p-2 animate-pulse">Waiting for audio to finish...</div>
+                         <div className="text-center text-primary text-sm p-2 animate-pulse" role="status" aria-live="polite">Waiting for audio to finish...</div>
                       )}
                      <div ref={messagesEndRef} />
                 </div>
@@ -715,8 +730,8 @@ export function ChatInterface({
                     }
                 }}
                 style={{ display: 'none' }}
+                aria-hidden="true"
             />
         </div>
     );
 }
-

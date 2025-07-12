@@ -88,7 +88,13 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
     const [open, setOpen] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const listboxRef = useRef<HTMLDivElement>(null);
     const groupedLLMs = groupLLMsByProvider();
+
+    // Generate unique IDs for ARIA relationships
+    const listboxId = `llm-selector-${label.toLowerCase().replace(/\s+/g, '-')}-listbox`;
+    const buttonId = `llm-selector-${label.toLowerCase().replace(/\s+/g, '-')}-button`;
 
     // All hooks above; now check for loading/t
 
@@ -110,6 +116,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
             if (e.key === 'Escape') {
                 setOpen(false);
                 setSelectedProvider(null);
+                buttonRef.current?.focus();
             }
         };
         document.addEventListener('keydown', handleKey);
@@ -121,7 +128,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         return (
             <div className="w-full" ref={dropdownRef}>
                 <label className="block mb-1 font-medium text-sm">{label}</label>
-                <div className="w-full px-3 py-2 border rounded-md bg-muted text-muted-foreground text-sm">Loading...</div>
+                <div className="w-full px-3 py-2 border rounded-md bg-muted text-muted-foreground text-sm" role="status" aria-live="polite">Loading...</div>
             </div>
         );
     }
@@ -140,9 +147,11 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
     };
 
     return (
-        <div className="w-full" ref={dropdownRef}>
-            <label className="block mb-1 font-medium text-sm">{label}</label>
+        <div className="w-full" ref={dropdownRef} role="combobox" aria-expanded={open} aria-haspopup="listbox">
+            <label className="block mb-1 font-medium text-sm" id={`${buttonId}-label`}>{label}</label>
             <button
+                ref={buttonRef}
+                id={buttonId}
                 type="button"
                 className={cn(
                     "w-full flex items-center justify-between border rounded-md px-3 py-2 bg-background text-sm shadow-xs transition-colors",
@@ -153,31 +162,46 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                 disabled={disabled}
                 aria-haspopup="listbox"
                 aria-expanded={open}
+                aria-labelledby={`${buttonId}-label`}
+                aria-describedby={listboxId}
                 aria-label={`${label}: ${selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}`}
+                aria-controls={listboxId}
             >
                 <span className="truncate">
                     {selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}
                 </span>
-                <ChevronDown className="ml-2 h-4 w-4 opacity-60" />
+                <ChevronDown className="ml-2 h-4 w-4 opacity-60" aria-hidden="true" />
             </button>
             {open && (
-                <div className="absolute z-50 mt-2 w-full max-w-md bg-popover border rounded-md shadow-lg overflow-auto max-h-96 animate-in fade-in-0" role="listbox">
+                <div 
+                    ref={listboxRef}
+                    id={listboxId}
+                    className="absolute z-50 mt-2 w-full max-w-md bg-popover border rounded-md shadow-lg overflow-auto max-h-96 animate-in fade-in-0" 
+                    role="listbox"
+                    aria-labelledby={`${buttonId}-label`}
+                    aria-activedescendant={selectedLLM ? `option-${selectedLLM.id}` : undefined}
+                >
                     {!selectedProvider ? (
                         // Provider selection view
                         <div>
-                            <div className="p-2 border-b font-semibold text-base">Select Provider</div>
-                            <ul>
+                            <div className="p-2 border-b font-semibold text-base" role="heading" aria-level={2}>Select Provider</div>
+                            <ul role="group" aria-label="AI Providers">
                                 {Object.keys(groupedLLMs).map((provider) => (
-                                    <li key={provider}>
+                                    <li key={provider} role="none">
                                         <button
                                             className="w-full text-left px-4 py-3 hover:bg-accent focus:bg-accent transition-colors flex items-center justify-between"
                                             onClick={() => setSelectedProvider(provider)}
                                             tabIndex={0}
+                                            role="option"
                                             aria-label={`Select ${provider} provider`}
+                                            aria-describedby={`provider-${provider}-description`}
                                         >
                                             <span className="font-medium">{provider}</span>
-                                            <ChevronRight className="h-4 w-4 opacity-60" />
+                                            <ChevronRight className="h-4 w-4 opacity-60" aria-hidden="true" />
                                         </button>
+                                        <div id={`provider-${provider}-description`} className="sr-only">
+                                            Click to view models from {provider}
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
@@ -190,32 +214,41 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                     className="mr-2 p-1 rounded hover:bg-accent"
                                     onClick={() => setSelectedProvider(null)}
                                     aria-label="Back to providers"
+                                    aria-describedby="back-button-description"
                                 >
-                                    <ChevronLeft className="h-4 w-4" />
+                                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                                 </button>
-                                <span className="font-semibold text-base">{selectedProvider}</span>
+                                <span className="font-semibold text-base" role="heading" aria-level={2}>{selectedProvider}</span>
+                                <div id="back-button-description" className="sr-only">
+                                    Click to go back to provider selection
+                                </div>
                             </div>
-                            <div className="overflow-y-auto max-h-80">
+                            <div className="overflow-y-auto max-h-80" role="group" aria-label={`${selectedProvider} models`}>
                                 {(() => {
                                     const { orderedCategories, byCategory } = getModelsByCategory(selectedProvider);
                                     return orderedCategories.map((cat: string) => (
-                                        <div key={cat} className="pt-2 pb-1 px-4">
-                                            <div className="text-xs font-semibold text-muted-foreground mb-1">{cat}</div>
-                                            <ul>
+                                        <div key={cat} className="pt-2 pb-1 px-4" role="group" aria-labelledby={`category-${cat}-label`}>
+                                            <div id={`category-${cat}-label`} className="text-xs font-semibold text-muted-foreground mb-1" role="heading" aria-level={3}>{cat}</div>
+                                            <ul role="group" aria-label={`${cat} models`}>
                                                 {byCategory[cat].map((llm: LLMInfo) => {
                                                     const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                                                    const isSelected = llm.id === value;
                                                     return (
-                                                        <li key={llm.id}>
+                                                        <li key={llm.id} role="none">
                                                             <button
+                                                                id={`option-${llm.id}`}
                                                                 className={cn(
                                                                     "w-full text-left px-2 py-2 rounded flex items-center justify-between",
-                                                                    llm.id === value ? 'bg-primary/10 font-bold' : 'hover:bg-accent',
+                                                                    isSelected ? 'bg-primary/10 font-bold' : 'hover:bg-accent',
                                                                     !supportsLanguage && 'opacity-50 cursor-not-allowed'
                                                                 )}
                                                                 onClick={() => supportsLanguage && onChange(llm.id)}
                                                                 disabled={!supportsLanguage}
                                                                 tabIndex={0}
+                                                                role="option"
+                                                                aria-selected={isSelected}
                                                                 aria-label={`${llm.name} (${llm.provider})${!supportsLanguage ? ' - Not supported for current language' : ''}`}
+                                                                aria-describedby={`model-${llm.id}-description`}
                                                             >
                                                                 <span className="flex-shrink-0 flex items-center min-w-0">
                                                                     <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
@@ -247,12 +280,19 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                         </Tooltip>
                                                                     )}
                                                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300" />
+                                                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300" aria-hidden="true" />
                                                                     ) : (
-                                                                        <X className="h-3 w-3 text-red-700 dark:text-red-300" />
+                                                                        <X className="h-3 w-3 text-red-700 dark:text-red-300" aria-hidden="true" />
                                                                     )}
                                                                 </span>
                                                             </button>
+                                                            <div id={`model-${llm.id}-description`} className="sr-only">
+                                                                {llm.name} from {llm.provider}. 
+                                                                {supportsLanguage ? 'Supports current language.' : 'Does not support current language.'}
+                                                                {llm.status === 'preview' ? ' Preview model.' : ''}
+                                                                {llm.status === 'beta' ? ' Beta model.' : ''}
+                                                                Pricing: ${formatPrice(llm.pricing.input)} per 1M input tokens, ${formatPrice(llm.pricing.output)} per 1M output tokens.
+                                                            </div>
                                                         </li>
                                                     );
                                                 })}
@@ -765,11 +805,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 <hr className="my-6" />
                 <div className="space-y-4">
                     <div className="flex items-center space-x-2">
-                        <Checkbox id="tts-enabled-checkbox" checked={ttsEnabled} onCheckedChange={handleTtsToggle} disabled={!user} />
-                        <Label htmlFor="tts-enabled-checkbox" className="text-base font-medium">Enable Text-to-Speech (TTS)</Label>
+                        <Checkbox 
+                            id="tts-enabled-checkbox" 
+                            checked={ttsEnabled} 
+                            onCheckedChange={handleTtsToggle} 
+                            disabled={!user}
+                            aria-describedby="tts-checkbox-description"
+                        />
+                        <Label 
+                            htmlFor="tts-enabled-checkbox" 
+                            className="text-base font-medium"
+                        >
+                            Enable Text-to-Speech (TTS)
+                        </Label>
+                    </div>
+                    <div id="tts-checkbox-description" className="sr-only">
+                        Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
                     </div>
                     {ttsEnabled && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="tts-settings-label">
+                            <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
                             {renderTTSConfigForAgent('A', agentATTSSettings, currentVoicesA)}
                             {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
                         </div>
@@ -784,21 +839,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         value={initialSystemPrompt}
                         onChange={e => setInitialSystemPrompt(e.target.value)}
                         placeholder="Start the conversation."
+                        aria-describedby="initial-prompt-description"
+                        aria-label="Initial system prompt for starting the conversation"
                     />
-                    <p className="text-xs text-muted-foreground mt-1">This prompt will be sent as the first message to start the conversation. Leave blank for no prompt.</p>
+                    <p id="initial-prompt-description" className="text-xs text-muted-foreground mt-1">
+                        This prompt will be sent as the first message to start the conversation. Leave blank for no prompt.
+                    </p>
                 </div>
             </CardContent>
-            <CardFooter className="flex flex-col items-center pt-6">
-                <Button
-                    onClick={handleStartClick}
-                    disabled={isStartDisabled}
-                    className="w-full max-w-xs"
+            <CardFooter>
+                <Button 
+                    onClick={handleStartClick} 
+                    disabled={isStartDisabled} 
+                    className="w-full"
+                    aria-label={isStartDisabled ? "Cannot start session - please select models for both agents" : "Start a new conversation with the selected settings"}
+                    aria-describedby="start-button-description"
                 >
-                    {isLoading ? 'Starting...' : 'Start Conversation'}
+                    {isLoading ? "Starting..." : "Start Conversation"}
                 </Button>
-                {!user && !authLoading && (
-                    <p className="text-center text-sm text-destructive mt-4">Please sign in to start a conversation.</p>
-                )}
+                <div id="start-button-description" className="sr-only">
+                    Click to begin a new AI conversation with the selected language models and settings.
+                </div>
             </CardFooter>
         </Card>
     );

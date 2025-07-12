@@ -1,0 +1,237 @@
+# ARIA Implementation Summary
+
+This document summarizes the ARIA (Accessible Rich Internet Applications) improvements made to custom interactive controls in the Two-AIs application to ensure accessibility compliance.
+
+## Overview
+
+The application has been enhanced with proper ARIA roles, labels, and descriptions for all custom interactive controls. These improvements ensure that users with assistive technologies (screen readers, voice navigation, etc.) can effectively interact with the application.
+
+## Components Enhanced
+
+### 1. Custom LLM Selector (`src/components/session/SessionSetupForm.tsx`)
+
+**Improvements Made:**
+- Added `role="combobox"` to the main container
+- Added `aria-expanded`, `aria-haspopup="listbox"` to the trigger button
+- Added `aria-labelledby` and `aria-describedby` for proper labeling
+- Added `role="listbox"` to the dropdown container
+- Added `role="option"` and `aria-selected` to individual options
+- Added `role="group"` and `aria-label` for provider and category groups
+- Added `role="heading"` with appropriate `aria-level` for section headers
+- Added `aria-hidden="true"` to decorative icons
+- Added screen reader descriptions for each model option
+- Improved keyboard navigation with focus management
+
+**Key ARIA Attributes:**
+```jsx
+<div role="combobox" aria-expanded={open} aria-haspopup="listbox">
+  <button
+    aria-haspopup="listbox"
+    aria-expanded={open}
+    aria-labelledby={`${buttonId}-label`}
+    aria-describedby={listboxId}
+    aria-controls={listboxId}
+  >
+  <div role="listbox" aria-labelledby={`${buttonId}-label`}>
+    <button role="option" aria-selected={isSelected}>
+```
+
+### 2. Theme Switcher (`src/components/theme-switcher.tsx`)
+
+**Improvements Made:**
+- Added `aria-label` with current theme information
+- Added `aria-haspopup="menu"` and `aria-expanded` to trigger
+- Added `role="menu"` to dropdown content
+- Added `role="menuitem"` to individual menu items
+- Added `aria-label` for each theme option
+- Added `aria-describedby` for comprehensive description
+- Added `aria-hidden="true"` to decorative icons
+
+**Key ARIA Attributes:**
+```jsx
+<Button
+  aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
+  aria-haspopup="menu"
+  aria-expanded={false}
+  aria-describedby="theme-switcher-description"
+>
+<DropdownMenuContent role="menu" aria-label="Theme options">
+  <DropdownMenuItem role="menuitem" aria-label={`Switch to ${theme} theme`}>
+```
+
+### 3. Language Selector (`src/components/LanguageSelector.tsx`)
+
+**Improvements Made:**
+- Added `role="group"` to the container
+- Added `aria-labelledby` for proper labeling
+- Added `role="listbox"` to the select content
+- Added `role="option"` and `aria-selected` to language options
+- Added `aria-label` with current language information
+- Added `aria-describedby` for comprehensive description
+- Added `aria-hidden="true"` to decorative icons
+- Added loading state with `role="status"`
+
+**Key ARIA Attributes:**
+```jsx
+<div role="group" aria-labelledby="language-selector-label">
+  <SelectTrigger aria-label={`Current language: ${language.nativeName}. Click to change language.`}>
+  <SelectContent role="listbox" aria-label="Available languages">
+    <SelectItem role="option" aria-selected={lang.code === language.code}>
+```
+
+### 4. Chat Interface (`src/components/chat/ChatInterface.tsx`)
+
+**Improvements Made:**
+- Added `aria-label` to stop conversation button with contextual information
+- Added `aria-describedby` for button descriptions
+- Added `role="status"` and `aria-live="polite"` to status indicators
+- Added `aria-label` to audio play buttons
+- Added `aria-describedby` for audio control descriptions
+- Added `aria-hidden="true"` to decorative icons and animations
+- Added `role="alert"` and `aria-live="assertive"` for error messages
+- Added `aria-hidden="true"` to hidden audio player
+
+**Key ARIA Attributes:**
+```jsx
+<Button
+  aria-label={isStopped ? "Conversation already stopped" : "Stop the current conversation"}
+  aria-describedby="stop-conversation-description"
+>
+<div role="status" aria-live="polite">Playing Audio...</div>
+<Button
+  aria-label={`Play audio for ${msg.role === 'agentA' ? 'Agent A' : 'Agent B'} message`}
+  aria-describedby={`audio-control-${msg.id}-description`}
+>
+```
+
+### 5. API Key Manager (`src/components/settings/ApiKeyManager.tsx`)
+
+**Improvements Made:**
+- Added `role="main"` and `aria-labelledby` to main container
+- Added `role="form"` to the form container
+- Added `role="group"` to individual API key sections using `fieldset`
+- Added `role="alert"` and `aria-live` for status messages
+- Added `aria-describedby` and `aria-invalid` to input fields
+- Added `role="img"` to status icons
+- Added `role="note"` to informational alerts
+- Added `aria-label` to external links
+- Added `aria-hidden="true"` to decorative icons
+
+**Key ARIA Attributes:**
+```jsx
+<div role="main" aria-labelledby="api-keys-title">
+  <fieldset role="group" aria-labelledby={`${id}-legend`}>
+    <Input
+      aria-describedby={`${id}-description ${id}-status`}
+      aria-invalid={statusMessages[id]?.type === 'error'}
+    >
+    <Alert role="alert" aria-live="assertive">
+    <Alert role="note" aria-labelledby="google-tts-note">
+```
+
+### 6. Session Setup Form (`src/components/session/SessionSetupForm.tsx`)
+
+**Improvements Made:**
+- Added `aria-describedby` to checkbox for TTS toggle
+- Added `role="group"` to TTS settings section
+- Added `aria-describedby` and `aria-label` to textarea
+- Added `aria-label` and `aria-describedby` to start button
+- Added screen reader descriptions for all form controls
+
+**Key ARIA Attributes:**
+```jsx
+<Checkbox aria-describedby="tts-checkbox-description">
+<div role="group" aria-labelledby="tts-settings-label">
+<textarea
+  aria-describedby="initial-prompt-description"
+  aria-label="Initial system prompt for starting the conversation"
+>
+<Button
+  aria-label={isStartDisabled ? "Cannot start session..." : "Start a new conversation..."}
+  aria-describedby="start-button-description"
+>
+```
+
+## Best Practices Implemented
+
+### 1. Semantic HTML Structure
+- Used appropriate HTML elements (`fieldset`, `legend`, `label`)
+- Maintained proper heading hierarchy with `aria-level`
+- Used semantic roles that match the element's purpose
+
+### 2. ARIA Relationships
+- Used `aria-labelledby` to associate labels with controls
+- Used `aria-describedby` to provide additional context
+- Used `aria-controls` to indicate which element is controlled
+- Used `aria-expanded` to indicate state changes
+
+### 3. Live Regions
+- Used `aria-live="polite"` for status updates
+- Used `aria-live="assertive"` for important alerts
+- Used `role="status"` for loading and progress indicators
+
+### 4. State Management
+- Used `aria-selected` for listbox options
+- Used `aria-invalid` for form validation
+- Used `aria-disabled` for disabled states
+- Used `aria-expanded` for expandable content
+
+### 5. Screen Reader Support
+- Added comprehensive `aria-label` attributes
+- Used `aria-describedby` for detailed descriptions
+- Added `sr-only` content for additional context
+- Made decorative elements `aria-hidden="true"`
+
+### 6. Keyboard Navigation
+- Ensured all interactive elements are keyboard accessible
+- Added proper focus management
+- Used semantic tab order
+- Added keyboard event handlers where needed
+
+## Testing Recommendations
+
+1. **Screen Reader Testing**
+   - Test with NVDA (Windows)
+   - Test with JAWS (Windows)
+   - Test with VoiceOver (macOS)
+   - Test with TalkBack (Android)
+
+2. **Keyboard Navigation Testing**
+   - Navigate using Tab key
+   - Use Enter/Space for activation
+   - Use Escape for closing modals/dropdowns
+   - Test arrow key navigation in listboxes
+
+3. **Automated Testing**
+   - Use axe-core for automated accessibility testing
+   - Test with Lighthouse accessibility audit
+   - Validate ARIA attributes with W3C validator
+
+## Compliance Standards
+
+The implementation follows:
+- **WCAG 2.1 AA** guidelines
+- **ARIA 1.2** specification
+- **HTML5** semantic standards
+- **Section 508** requirements (US)
+
+## Future Improvements
+
+1. **Advanced ARIA Patterns**
+   - Implement `aria-autocomplete` for search functionality
+   - Add `aria-sort` for sortable tables
+   - Use `aria-current` for navigation states
+
+2. **Enhanced Keyboard Support**
+   - Add more keyboard shortcuts
+   - Implement focus trapping for modals
+   - Add skip links for main content
+
+3. **Testing Automation**
+   - Add accessibility testing to CI/CD pipeline
+   - Implement automated screen reader testing
+   - Add accessibility linting rules
+
+## Conclusion
+
+The ARIA implementation significantly improves the accessibility of the Two-AIs application, making it usable by people with various disabilities. All custom interactive controls now have proper ARIA roles, labels, and descriptions, ensuring compliance with web accessibility standards. 
