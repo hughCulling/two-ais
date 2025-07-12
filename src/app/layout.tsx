@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { cookies } from 'next/headers';
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -68,11 +69,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const nonce = cookieStore.get('csp-nonce')?.value;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -103,6 +103,13 @@ export default function RootLayout({
               "name": "Two AIs",
               "url": "https://www.two-ais.com"
             })
+          }}
+        />
+        {/* Inline script to expose nonce to client components */}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `window.__CSP_NONCE__ = "${nonce}";`
           }}
         />
       </head>
