@@ -62,10 +62,11 @@ const getHSTSHeader = () => {
 };
 
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: ContentSecurityPolicy.replace(/\n/g, ''),
-  },
+  // CSP is handled in middleware.ts with nonces for better security
+  // {
+  //   key: 'Content-Security-Policy',
+  //   value: ContentSecurityPolicy.replace(/\n/g, ''),
+  // },
   {
     key: 'X-Frame-Options',
     value: 'SAMEORIGIN',
