@@ -147,7 +147,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
     };
 
     return (
-        <div className="w-full" ref={dropdownRef} role="combobox" aria-expanded={open} aria-haspopup="listbox">
+        <div className="w-full" ref={dropdownRef} role="combobox" aria-expanded={open} aria-haspopup="listbox" aria-controls={listboxId}>
             <label className="block mb-1 font-medium text-sm" id={`${buttonId}-label`}>{label}</label>
             <button
                 ref={buttonRef}
@@ -193,6 +193,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                             onClick={() => setSelectedProvider(provider)}
                                             tabIndex={0}
                                             role="option"
+                                            aria-selected={false}
                                             aria-label={`Select ${provider} provider`}
                                             aria-describedby={`provider-${provider}-description`}
                                         >
