@@ -52,7 +52,7 @@ export default function Header() {
                         <LanguageSelector showIcon={true} className="flex" />
                         
                         {/* Theme Switcher */}
-                        <ThemeSwitcher />
+                        <ThemeSwitcher id="desktop" />
 
                         {/* --- Auth Status / Links (Desktop) --- */}
                         {authLoading ? (
@@ -132,15 +132,15 @@ export default function Header() {
                     )}
 
                     {/* Language Selector for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label">
-                        <span id="mobile-language-label" className="mr-2">Language:</span> {/* Hardcoded Label */}
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label-app">
+                        <span id="mobile-language-label-app" className="mr-2">Language:</span> {/* Hardcoded Label */}
                         <LanguageSelector showIcon={false} />
                     </div>
                     
                     {/* Theme Switcher for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label">
-                        <span id="mobile-theme-label">Theme</span> {/* Hardcoded Label */}
-                        <ThemeSwitcher />
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label-app">
+                        <span id="mobile-theme-label-app">Theme</span> {/* Hardcoded Label */}
+                        <ThemeSwitcher id="mobile" />
                     </div>
 
                     {user && !authLoading && (
