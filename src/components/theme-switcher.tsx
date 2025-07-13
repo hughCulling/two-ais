@@ -15,15 +15,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"; // Adjust path if needed
 
+interface ThemeSwitcherProps {
+    id?: string;
+}
+
 /**
  * A component that allows the user to switch between light, dark, and system themes.
  */
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ id }: ThemeSwitcherProps) {
     // useTheme hook from next-themes
     const { setTheme, theme } = useTheme();
     const { t, loading } = useTranslation();
 
     if (loading || !t) return null;
+
+    // Create unique ID for this instance
+    const uniqueId = id ? `theme-switcher-description-${id}` : 'theme-switcher-description';
 
     const getCurrentThemeLabel = () => {
         switch (theme) {
@@ -43,7 +50,7 @@ export function ThemeSwitcher() {
             aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
             aria-haspopup="menu"
             aria-expanded={false}
-            aria-describedby="theme-switcher-description"
+            aria-describedby={uniqueId}
         >
             {/* Sun icon shown in light mode, Moon icon in dark mode */}
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" aria-hidden="true" />
@@ -55,7 +62,7 @@ export function ThemeSwitcher() {
             align="end"
             role="menu"
             aria-label="Theme options"
-            aria-describedby="theme-switcher-description"
+            aria-describedby={uniqueId}
         >
         {/* Menu items to set the theme */}
         <DropdownMenuItem 
@@ -80,7 +87,7 @@ export function ThemeSwitcher() {
             {t.settings.appearance.system}
         </DropdownMenuItem>
         </DropdownMenuContent>
-        <div id="theme-switcher-description" className="sr-only">
+        <div id={uniqueId} className="sr-only">
             Theme switcher. Choose between light, dark, or system theme. System theme automatically matches your operating system preference.
         </div>
     </DropdownMenu>

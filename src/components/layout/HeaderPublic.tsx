@@ -37,7 +37,7 @@ export default function HeaderPublic() {
                         <LanguageSelector showIcon={true} className="flex" />
                         
                         {/* Theme Switcher */}
-                        <ThemeSwitcher />
+                        <ThemeSwitcher id="desktop" />
 
                         {/* --- Auth Links (Desktop) --- */}
                         <Link href="/login" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Sign in to your account">
@@ -74,15 +74,15 @@ export default function HeaderPublic() {
                     </Link>
 
                     {/* Language Selector for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label">
-                        <span id="mobile-language-label" className="mr-2">Language:</span>
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label-public">
+                        <span id="mobile-language-label-public" className="mr-2">Language:</span>
                         <LanguageSelector showIcon={false} />
                     </div>
                     
                     {/* Theme Switcher for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label">
-                        <span id="mobile-theme-label">Theme</span>
-                        <ThemeSwitcher />
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label-public">
+                        <span id="mobile-theme-label-public">Theme</span>
+                        <ThemeSwitcher id="mobile" />
                     </div>
                 </div>
             </div>
