@@ -506,15 +506,38 @@ export function ChatInterface({
               <div className="mt-4 flex flex-col items-start space-y-3">
                   {technicalErrorDetails && (
                       <div className="w-full">
-                          <Button variant="secondary" size="sm" onClick={() => setShowErrorDetails(!showErrorDetails)} className="text-xs h-6 px-2">
+                          <Button 
+                              variant="secondary" 
+                              size="sm" 
+                              onClick={() => setShowErrorDetails(!showErrorDetails)} 
+                              className="text-xs h-6 px-2"
+                              aria-label={showErrorDetails ? "Hide technical error details" : "Show technical error details"}
+                              aria-describedby="error-details-description"
+                          >
                               {showErrorDetails ? 'Hide Details' : 'Show Details'}
-                              {showErrorDetails ? <ChevronUp className="ml-1 h-3 w-3"/> : <ChevronDown className="ml-1 h-3 w-3"/>}
+                              {showErrorDetails ? <ChevronUp className="ml-1 h-3 w-3" aria-hidden="true"/> : <ChevronDown className="ml-1 h-3 w-3" aria-hidden="true"/>}
                           </Button>
+                          <div id="error-details-description" className="sr-only">
+                              Click to {showErrorDetails ? "hide" : "show"} detailed technical information about the error that occurred.
+                          </div>
                           {showErrorDetails && <pre className="mt-1 text-xs whitespace-pre-wrap break-words overflow-auto max-h-32 rounded-md border bg-muted p-2 font-mono w-full min-w-0">{technicalErrorDetails}</pre>}
                       </div>
                   )}
                   {isStopped && onConversationStopped && (
-                       <div><Button variant="outline" size="sm" onClick={onConversationStopped}>Go Back</Button></div>
+                       <div>
+                           <Button 
+                               variant="outline" 
+                               size="sm" 
+                               onClick={onConversationStopped}
+                               aria-label="Return to conversation setup"
+                               aria-describedby="go-back-description"
+                           >
+                               Go Back
+                           </Button>
+                           <div id="go-back-description" className="sr-only">
+                               Click to return to the conversation setup page where you can start a new conversation.
+                           </div>
+                       </div>
                   )}
               </div>
             </Alert>

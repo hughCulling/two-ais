@@ -126,10 +126,18 @@ export default function ChatHistoryViewerPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-destructive-foreground">{error}</p>
-                        <Button variant="outline" onClick={() => router.push('/app/history')}>
-                            <ArrowLeft className="mr-2 h-4 w-4" />
+                        <Button 
+                            variant="outline" 
+                            onClick={() => router.push('/app/history')}
+                            aria-label="Return to conversation history"
+                            aria-describedby="back-to-history-description"
+                        >
+                            <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                             Back to Previous Chats
                         </Button>
+                        <div id="back-to-history-description" className="sr-only">
+                            Click to return to the list of all previous conversations.
+                        </div>
                     </CardContent>
                 </Card>
             </main>
@@ -149,8 +157,8 @@ export default function ChatHistoryViewerPage() {
                     <CardContent className="space-y-4">
                         <p>This conversation could not be found or is not accessible.</p>
                         <Button variant="outline" asChild>
-                             <Link href="/app/history">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
+                             <Link href="/app/history" aria-label="Return to conversation history">
+                                <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                                 Back to Previous Chats
                             </Link>
                         </Button>
@@ -244,8 +252,8 @@ export default function ChatHistoryViewerPage() {
                         View Conversation
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link href="/app/history">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
+                        <Link href="/app/history" aria-label="Return to conversation history">
+                            <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                             Back to Previous Chats
                         </Link>
                     </Button>
@@ -258,9 +266,14 @@ export default function ChatHistoryViewerPage() {
                             variant="default"
                             onClick={handleResumeConversation}
                             disabled={resumeLoading || !user}
+                            aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
+                            aria-describedby="resume-conversation-description"
                         >
                             {resumeLoading ? 'Resuming...' : 'Resume Conversation'}
                         </Button>
+                        <div id="resume-conversation-description" className="sr-only">
+                            Click to continue this conversation from where it left off. This will create a new active session.
+                        </div>
                         {resumeError && (
                             <p className="text-destructive-foreground text-sm mt-2">{resumeError}</p>
                         )}
