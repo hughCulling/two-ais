@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
@@ -103,7 +104,11 @@ const formatPrice = (price: number) => {
 
 const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 
-export default function LandingPage() {
+interface LandingPageProps {
+  nonce: string;
+}
+
+export default function LandingPage({ nonce }: LandingPageProps) {
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
   const { t, loading } = useTranslation();
@@ -134,6 +139,7 @@ export default function LandingPage() {
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -145,6 +151,7 @@ export default function LandingPage() {
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -156,6 +163,7 @@ export default function LandingPage() {
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -178,6 +186,7 @@ export default function LandingPage() {
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
