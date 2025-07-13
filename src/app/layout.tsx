@@ -2,17 +2,16 @@
 // Root layout - Updated Metadata for SEO & Reverted Font Handling
 
 import type { Metadata } from "next";
-import { LanguageProvider } from '@/context/LanguageContext';
 // --- Reverted Font Import ---
 import { Geist, Geist_Mono } from "next/font/google";
-import RootHeaderWrapper from '@/components/RootHeaderWrapper';
-import Footer from '@/components/Footer';
-import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { cookies } from 'next/headers';
+import React from 'react';
+import { LanguageProvider } from "@/context/LanguageContext";
+import { headers } from 'next/headers';
+import PublicHeaderOnLanding from '@/components/PublicHeaderOnLanding';
+import Footer from '@/components/Footer';
+import { ThemeProvider } from '@/components/theme-provider';
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -70,50 +69,32 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const nonce = cookieStore.get('csp-nonce')?.value;
+  // Read the nonce from the request headers
+  const nonce = (await headers()).get('x-nonce') || '';
 
+  return (
+    <HtmlWithNonce nonce={nonce}>
+      <PublicHeaderOnLanding />
+      {children}
+    </HtmlWithNonce>
+  );
+}
+
+function HtmlWithNonce({ children, nonce }: { children: React.ReactNode, nonce: string }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://www.youtube.com" />
-        <link rel="preconnect" href="https://www.two-ais.com" />
-        <link
-          rel="preload"
-          as="image"
-          href="/_next/image?url=%2Flanding-dark.webp&w=828&q=75"
-          imageSrcSet="/_next/image?url=%2Flanding-dark.webp&w=640&q=75 640w, /_next/image?url=%2Flanding-dark.webp&w=750&q=75 750w, /_next/image?url=%2Flanding-dark.webp&w=828&q=75 828w, /_next/image?url=%2Flanding-dark.webp&w=1080&q=75 1080w, /_next/image?url=%2Flanding-dark.webp&w=1200&q=75 1200w, /_next/image?url=%2Flanding-dark.webp&w=1920&q=75 1920w, /_next/image?url=%2Flanding-dark.webp&w=2048&q=75 2048w, /_next/image?url=%2Flanding-dark.webp&w=3840&q=75 3840w"
-          imageSizes="(max-width: 768px) 100vw, 768px"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="/_next/image?url=%2Flanding-light.webp&w=828&q=75"
-          imageSrcSet="/_next/image?url=%2Flanding-light.webp&w=640&q=75 640w, /_next/image?url=%2Flanding-light.webp&w=750&q=75 750w, /_next/image?url=%2Flanding-light.webp&w=828&q=75 828w, /_next/image?url=%2Flanding-light.webp&w=1080&q=75 1080w, /_next/image?url=%2Flanding-light.webp&w=1200&q=75 1200w, /_next/image?url=%2Flanding-light.webp&w=1920&q=75 1920w, /_next/image?url=%2Flanding-light.webp&w=2048&q=75 2048w, /_next/image?url=%2Flanding-light.webp&w=3840&q=75 3840w"
-          imageSizes="(max-width: 768px) 100vw, 768px"
-          fetchPriority="low"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Two AIs",
-              "url": "https://www.two-ais.com"
-            })
-          }}
-        />
-        {/* Inline script to expose nonce to client components */}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `window.__CSP_NONCE__ = "${nonce}";`
-          }}
-        />
+        {/* CSP nonce script: only inject if nonce exists */}
+        {nonce && (
+          <script
+            nonce={nonce}
+            dangerouslySetInnerHTML={{
+              __html: `window.__CSP_NONCE__ = "${nonce}";`
+            }}
+          />
+        )}
+        {/* Place any other <head> content here if needed */}
       </head>
-      {/* --- Reverted font application back to body tag using cn() --- */}
       <body
         className={cn(
           geistSans.variable,
@@ -121,19 +102,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           "min-h-screen font-sans antialiased"
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <LanguageProvider>
-            <RootHeaderWrapper />
             {children}
-            <Footer />
-            <Analytics />
-            <SpeedInsights />
           </LanguageProvider>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
