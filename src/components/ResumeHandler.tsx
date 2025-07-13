@@ -110,15 +110,21 @@ export default function ResumeHandler({
     if (loading || !t) return null;
     if (resumeLoading || pollingForRunning) {
         return (
-            <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
+            <main className="flex min-h-screen items-center justify-center p-4" role="main" aria-labelledby="resume-loading-title">
+                <div role="status" aria-live="polite" aria-busy="true">
+                    <h1 id="resume-loading-title" className="sr-only">Resuming Conversation</h1>
+                    <p className="text-muted-foreground animate-pulse">{t.page_LoadingUserData}</p>
+                </div>
             </main>
         );
     }
     if (resumeError) {
         return (
-            <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-destructive-foreground">{resumeError}</p>
+            <main className="flex min-h-screen items-center justify-center p-4" role="main" aria-labelledby="resume-error-title">
+                <div role="alert" aria-live="assertive">
+                    <h1 id="resume-error-title" className="sr-only">Resume Error</h1>
+                    <p className="text-destructive-foreground">{resumeError}</p>
+                </div>
             </main>
         );
     }

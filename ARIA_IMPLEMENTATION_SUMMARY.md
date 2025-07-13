@@ -303,6 +303,49 @@ The application has been enhanced with proper ARIA roles, labels, and descriptio
   <p role="alert" aria-live="assertive">{error}</p>
 ```
 
+### 13. Settings Sidebar (`src/components/settings/SettingsSidebar.tsx`)
+
+**Improvements Made:**
+- Added `role="complementary"` to the sidebar container
+- Added `aria-labelledby` to associate with navigation title
+- Added `role="navigation"` with `aria-label` to navigation container
+- Added `aria-current="page"` to indicate current active page
+- Added `aria-label` with contextual information for each link
+- Added screen reader title for navigation section
+
+**Key ARIA Attributes:**
+```jsx
+<aside role="complementary" aria-labelledby="settings-navigation-title">
+  <h2 id="settings-navigation-title" className="sr-only">Settings Navigation</h2>
+  <nav role="navigation" aria-label="Settings sections">
+    <Link
+      aria-current={isActive ? 'page' : undefined}
+      aria-label={`${item.name} settings${isActive ? ' (current page)' : ''}`}
+    >
+```
+
+### 14. Resume Handler (`src/components/ResumeHandler.tsx`)
+
+**Improvements Made:**
+- Added `role="main"` to main container
+- Added `aria-labelledby` for proper labeling
+- Added `role="status"` and `aria-live="polite"` to loading state
+- Added `aria-busy="true"` to indicate loading process
+- Added `role="alert"` and `aria-live="assertive"` to error messages
+- Added screen reader titles for loading and error states
+
+**Key ARIA Attributes:**
+```jsx
+<main role="main" aria-labelledby="resume-loading-title">
+  <div role="status" aria-live="polite" aria-busy="true">
+    <h1 id="resume-loading-title" className="sr-only">Resuming Conversation</h1>
+  </div>
+</main>
+<div role="alert" aria-live="assertive">
+  <h1 id="resume-error-title" className="sr-only">Resume Error</h1>
+</div>
+```
+
 ## Best Practices Implemented
 
 ### 1. Semantic HTML Structure
