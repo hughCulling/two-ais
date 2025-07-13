@@ -102,7 +102,7 @@ function HtmlWithNonce({ children, nonce }: { children: React.ReactNode, nonce: 
           "min-h-screen font-sans antialiased"
         )}
       >
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           <LanguageProvider>
             {children}
           </LanguageProvider>
