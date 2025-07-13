@@ -11,15 +11,20 @@ import {
 } from '@/components/ui/select';
 import { Globe } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useId } from 'react';
 
 interface LanguageSelectorProps {
     showIcon?: boolean;
     className?: string;
+    id?: string;
 }
 
-export function LanguageSelector({ showIcon = true, className = '' }: LanguageSelectorProps) {
+export function LanguageSelector({ showIcon = true, className = '', id }: LanguageSelectorProps) {
     const { language, setLanguage } = useLanguage();
     const { t, loading } = useTranslation();
+    const generatedId = useId();
+    const labelId = id || `language-selector-label-${generatedId}`;
+    const descriptionId = `language-selector-description-${generatedId}`;
 
     const handleLanguageChange = (languageCode: string) => {
         const selectedLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === languageCode);
@@ -37,20 +42,20 @@ export function LanguageSelector({ showIcon = true, className = '' }: LanguageSe
     }
 
     return (
-        <div className={`flex items-center ${className}`} role="group" aria-labelledby="language-selector-label">
+        <div className={`flex items-center ${className}`} role="group" aria-labelledby={labelId}>
             {showIcon && (
                 <Globe 
                     className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" 
                     aria-hidden="true"
-                    aria-describedby="language-selector-description"
+                    aria-describedby={descriptionId}
                 />
             )}
-            <div id="language-selector-label" className="sr-only">Language Selection</div>
+            <div id={labelId} className="sr-only">Language Selection</div>
             <Select value={language.code} onValueChange={handleLanguageChange}>
                 <SelectTrigger 
                     className="w-[180px]" 
                     aria-label={`Current language: ${language.nativeName}. Click to change language.`}
-                    aria-describedby="language-selector-description"
+                    aria-describedby={descriptionId}
                 >
                     <SelectValue />
                 </SelectTrigger>
@@ -73,7 +78,7 @@ export function LanguageSelector({ showIcon = true, className = '' }: LanguageSe
                     ))}
                 </SelectContent>
             </Select>
-            <div id="language-selector-description" className="sr-only">
+            <div id={descriptionId} className="sr-only">
                 Language selector. Choose your preferred language for the interface. The current language is {language.nativeName}.
             </div>
         </div>
