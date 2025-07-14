@@ -99,6 +99,11 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
                 notes: 'Defaulted to English-only due to no specific multilingual documentation found.'
             },
             {
+                modelId: 'google/gemma-3n-E4B-it',
+                supportedLanguages: ['en'],
+                notes: 'Defaulted to English-only for TogetherAI Gemma 3N E4B Instruct.'
+            },
+            {
                 modelId: 'meta-llama/Llama-3.2-3B-Instruct-Turbo',
                 supportedLanguages: ['en'],
                 notes: 'Defaulted to English-only due to no specific multilingual documentation found.'

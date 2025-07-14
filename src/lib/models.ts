@@ -499,6 +499,17 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable', 
         categoryKey: 'modelCategory_Gemma2',
     },
+    {
+        id: 'google/gemma-3n-E4B-it',
+        name: 'Gemma 3N E4B Instruct',
+        provider: 'TogetherAI',
+        contextWindow: 32000, // 32K tokens, per documentation
+        pricing: { input: 0.02, output: 0.04 },
+        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+        apiKeySecretName: 'together_ai',
+        status: 'stable',
+        categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
+    },
     // DeepSeek Models via TogetherAI
     {
         id: 'deepseek-ai/DeepSeek-R1',
@@ -708,6 +719,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Gemini2_5,
         t.modelCategory_Gemini2_0,
         t.modelCategory_Gemini1_5,
+        'Gemma 3n model', // Move Gemma 3n here from TogetherAI
     ];
     const anthropicCategoryOrder = [
         "Claude 4 models",
@@ -731,6 +743,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Gemma2,
         t.modelCategory_Gemma,
         t.modelCategory_GoogleGemma,
+        'Gemma 3n model', // Ensure Gemma 3N is ordered with its own heading
         t.modelCategory_DeepSeekR1,
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1Distill,
@@ -754,6 +767,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             translatedCategory = "Claude 4 models";
         } else if (categoryKey === 'modelCategory_Grok4') {
             translatedCategory = "Grok 4 models";
+        } else if (categoryKey === 'modelCategory_Gemma3n') {
+            translatedCategory = "Gemma 3n model";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]
