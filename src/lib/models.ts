@@ -967,19 +967,17 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             } else if (byCategory[cat][0]?.provider === 'Anthropic' && byCategory[cat][0]?.provider === 'Anthropic') {
-                const getClaudeTier = (name: string) => {
-                    if (name.includes('Haiku')) return 0;
-                    if (name.includes('Sonnet')) return 1;
-                    if (name.includes('Opus')) return 2;
-                    return 3; // fallback for other Claude models
+                const anthropicOrder = ['Opus', 'Sonnet', 'Haiku'];
+                const getAnthropicTier = (name: string) => {
+                    for (let i = 0; i < anthropicOrder.length; i++) {
+                        if (name.includes(anthropicOrder[i])) return i;
+                    }
+                    return anthropicOrder.length;
                 };
                 byCategory[cat].sort((a, b) => {
-                    const tierA = getClaudeTier(a.name);
-                    const tierB = getClaudeTier(b.name);
-                    if (tierA !== tierB) {
-                        return tierA - tierB;
-                    }
-                    // If same tier, sort alphabetically
+                    const tierA = getAnthropicTier(a.name);
+                    const tierB = getAnthropicTier(b.name);
+                    if (tierA !== tierB) return tierA - tierB;
                     return a.name.localeCompare(b.name);
                 });
             } else {
