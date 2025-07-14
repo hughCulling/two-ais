@@ -945,15 +945,29 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
 
     orderedCategories.forEach(cat => {
         if (byCategory[cat]) {
-            byCategory[cat].sort((a, b) => {
-                // Custom sorting for Claude models to order by power tier: Haiku → Sonnet → Opus
-                if (a.provider === 'Anthropic' && b.provider === 'Anthropic') {
-                    const getClaudeTier = (name: string) => {
-                        if (name.includes('Haiku')) return 0;
-                        if (name.includes('Sonnet')) return 1;
-                        if (name.includes('Opus')) return 2;
-                        return 3; // fallback for other Claude models
-                    };
+            // Custom sorting for Claude models to order by power tier: Haiku → Sonnet → Opus
+            if (models.length > 0 && models[0].provider === 'Google' && cat === t.modelCategory_Gemini2_5) {
+                // Custom sort for Gemini 2.5: Flash Lite Preview, Flash, Pro
+                const getGemini2_5Tier = (name: string) => {
+                    if (name.toLowerCase().includes('lite')) return 0;
+                    if (name.toLowerCase().includes('flash')) return 1;
+                    if (name.toLowerCase().includes('pro')) return 2;
+                    return 3;
+                };
+                byCategory[cat].sort((a, b) => {
+                    const tierA = getGemini2_5Tier(a.name);
+                    const tierB = getGemini2_5Tier(b.name);
+                    if (tierA !== tierB) return tierA - tierB;
+                    return a.name.localeCompare(b.name);
+                });
+            } else if (byCategory[cat][0]?.provider === 'Anthropic' && byCategory[cat][0]?.provider === 'Anthropic') {
+                const getClaudeTier = (name: string) => {
+                    if (name.includes('Haiku')) return 0;
+                    if (name.includes('Sonnet')) return 1;
+                    if (name.includes('Opus')) return 2;
+                    return 3; // fallback for other Claude models
+                };
+                byCategory[cat].sort((a, b) => {
                     const tierA = getClaudeTier(a.name);
                     const tierB = getClaudeTier(b.name);
                     if (tierA !== tierB) {
@@ -961,10 +975,11 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     }
                     // If same tier, sort alphabetically
                     return a.name.localeCompare(b.name);
-                }
+                });
+            } else {
                 // Default alphabetical sorting for non-Claude models
-                return a.name.localeCompare(b.name);
-            });
+                byCategory[cat].sort((a, b) => a.name.localeCompare(b.name));
+            }
         }
     });
 
