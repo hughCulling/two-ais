@@ -500,15 +500,15 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Gemma2',
     },
     {
-        id: 'google/gemma-2b-it',
-        name: 'Gemma Instruct (2B)',
+        id: 'google/gemma-3n-E4B-it',
+        name: 'Gemma 3N E4B Instruct',
         provider: 'TogetherAI',
-        contextWindow: 8192,
-        pricing: { input: 0.10, output: 0.10 }, 
+        contextWindow: 32000, // 32K tokens, per documentation
+        pricing: { input: 0.02, output: 0.04 },
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',
-        categoryKey: 'modelCategory_Gemma',
+        categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
     },
     // DeepSeek Models via TogetherAI
     {
@@ -739,9 +739,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Llama3,
         t.modelCategory_LlamaVision,
         t.modelCategory_MetaLlama,
+        t.modelCategory_GoogleGemma,
         t.modelCategory_Gemma2,
         t.modelCategory_Gemma,
-        t.modelCategory_GoogleGemma,
+        'Gemma 3n model',
         t.modelCategory_DeepSeekR1,
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1Distill,
@@ -765,6 +766,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             translatedCategory = "Claude 4 models";
         } else if (categoryKey === 'modelCategory_Grok4') {
             translatedCategory = "Grok 4 models";
+        } else if (categoryKey === 'modelCategory_Gemma3n') {
+            translatedCategory = "Gemma 3n model";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]

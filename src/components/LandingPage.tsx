@@ -86,7 +86,12 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
 const getTogetherAIBrandDisplay = (categoryKey: string | undefined): string | null => {
   if (!categoryKey) return null;
   if (categoryKey.startsWith('modelCategory_Llama') || categoryKey === 'modelCategory_MetaLlama') return 'Meta';
-  if (categoryKey.startsWith('modelCategory_Gemma') || categoryKey === 'modelCategory_GoogleGemma') return 'Google';
+  if (
+    categoryKey.startsWith('modelCategory_Gemma') ||
+    categoryKey === 'modelCategory_GoogleGemma' ||
+    categoryKey === 'Gemma 3n model' ||
+    categoryKey === 'modelCategory_Gemma3n' // Add this line for Gemma 3N
+  ) return 'Google';
   if (categoryKey.startsWith('modelCategory_DeepSeek')) return 'DeepSeek';
   if (categoryKey.startsWith('modelCategory_Qwen') || categoryKey === 'modelCategory_QwQwQ') return 'Qwen';
   return null;
@@ -306,6 +311,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             return translated === category;
                           })?.categoryKey;
                           const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
+                          // Debug output
+                          console.log('TogetherAI category:', category, 'modelCategoryKey:', modelCategoryKey, 'currentBrandName:', currentBrandName);
                           if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                             brandHeadingElement = (
                               <div className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
