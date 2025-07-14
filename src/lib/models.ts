@@ -998,6 +998,22 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
+            // Custom sort for Gemini 2.5: Pro, Flash, then Flash Lite/Native
+            if (models.length > 0 && models[0].provider === 'Google' && cat === t.modelCategory_Gemini2_5) {
+                const gemini2_5Order = [
+                    'gemini-2.5-pro',
+                    'gemini-2.5-flash',
+                    'gemini-2.5-flash-lite-preview-06-17'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = gemini2_5Order.indexOf(a.id);
+                    const idxB = gemini2_5Order.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
         }
     });
 
