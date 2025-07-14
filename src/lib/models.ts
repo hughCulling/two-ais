@@ -841,8 +841,8 @@ export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
 // Helper function to group models by category within a provider
 export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
     const openAICategoryOrder = [
-        t.modelCategory_FlagshipChat,
         t.modelCategory_Reasoning,
+        t.modelCategory_FlagshipChat,
         t.modelCategory_CostOptimized,
         t.modelCategory_OlderGPT,
     ];
@@ -945,19 +945,25 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
 
     orderedCategories.forEach(cat => {
         if (byCategory[cat]) {
-            // Custom sorting for Claude models to order by power tier: Haiku → Sonnet → Opus
-            if (models.length > 0 && models[0].provider === 'Google' && cat === t.modelCategory_Gemini2_5) {
-                // Custom sort for Gemini 2.5: Flash Lite Preview, Flash, Pro
-                const getGemini2_5Tier = (name: string) => {
-                    if (name.toLowerCase().includes('lite')) return 0;
-                    if (name.toLowerCase().includes('flash')) return 1;
-                    if (name.toLowerCase().includes('pro')) return 2;
-                    return 3;
-                };
+            // Custom sorting for OpenAI Flagship Chat models
+            if (models.length > 0 && models[0].provider === 'OpenAI' && cat === t.modelCategory_FlagshipChat) {
+                const openAIFlagshipOrder = ['gpt-4.1', 'gpt-4o', 'chatgpt-4o-latest'];
                 byCategory[cat].sort((a, b) => {
-                    const tierA = getGemini2_5Tier(a.name);
-                    const tierB = getGemini2_5Tier(b.name);
-                    if (tierA !== tierB) return tierA - tierB;
+                    const idxA = openAIFlagshipOrder.indexOf(a.id);
+                    const idxB = openAIFlagshipOrder.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            } else if (models.length > 0 && models[0].provider === 'OpenAI' && cat === t.modelCategory_Reasoning) {
+                const openAIReasoningOrder = ['o4-mini', 'o3', 'o3-mini', 'o1'];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = openAIReasoningOrder.indexOf(a.id);
+                    const idxB = openAIReasoningOrder.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
                     return a.name.localeCompare(b.name);
                 });
             } else if (byCategory[cat][0]?.provider === 'Anthropic' && byCategory[cat][0]?.provider === 'Anthropic') {
@@ -979,6 +985,18 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             } else {
                 // Default alphabetical sorting for non-Claude models
                 byCategory[cat].sort((a, b) => a.name.localeCompare(b.name));
+            }
+            // Custom sorting for OpenAI Older GPT models
+            if (models.length > 0 && models[0].provider === 'OpenAI' && cat === t.modelCategory_OlderGPT) {
+                const openAIOlderOrder = ['gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo'];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = openAIOlderOrder.indexOf(a.id);
+                    const idxB = openAIOlderOrder.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
             }
         }
     });
