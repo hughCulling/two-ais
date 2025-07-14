@@ -852,13 +852,13 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Gemini1_5,
     ];
     const anthropicCategoryOrder = [
-        "Claude 4 Series",
+        "Claude 4 models",
         t.modelCategory_Claude3_7,
         t.modelCategory_Claude3_5,
         t.modelCategory_Claude3,
     ];
     const xAICategoryOrder = [
-        'Grok 4 Series',
+        'Grok 4 models',
         t.modelCategory_Grok3,
         t.modelCategory_Grok3Mini,
     ];
@@ -893,9 +893,9 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         const categoryKey = (model.categoryKey || 'modelCategory_OtherModels');
         let translatedCategory: string;
         if (categoryKey === 'claude4_temp') {
-            translatedCategory = "Claude 4 Series";
+            translatedCategory = "Claude 4 models";
         } else if (categoryKey === 'modelCategory_Grok4') {
-            translatedCategory = "Grok 4 Series";
+            translatedCategory = "Grok 4 models";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]
@@ -1006,6 +1006,53 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                 byCategory[cat].sort((a, b) => {
                     const idxA = gemini2_5Order.indexOf(a.id);
                     const idxB = gemini2_5Order.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+            // Custom sorting for Llama 4 models
+            if (models.length > 0 && models[0].provider === 'TogetherAI' && cat === t.modelCategory_Llama4) {
+                const llama4Order = [
+                    'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+                    'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = llama4Order.indexOf(a.id);
+                    const idxB = llama4Order.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+            // Custom sorting for Llama 3.2 models
+            if (models.length > 0 && models[0].provider === 'TogetherAI' && cat === t.modelCategory_Llama3_2) {
+                const llama32Order = [
+                    'meta-llama/Llama-3.2-3B-Instruct-Turbo',
+                    'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
+                    'meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = llama32Order.indexOf(a.id);
+                    const idxB = llama32Order.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+            // Custom sorting for Llama 3.1 models
+            if (models.length > 0 && models[0].provider === 'TogetherAI' && cat === t.modelCategory_Llama3_1) {
+                const llama31Order = [
+                    'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo',
+                    'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo',
+                    'meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = llama31Order.indexOf(a.id);
+                    const idxB = llama31Order.indexOf(b.id);
                     if (idxA !== -1 && idxB !== -1) return idxA - idxB;
                     if (idxA !== -1) return -1;
                     if (idxB !== -1) return 1;
