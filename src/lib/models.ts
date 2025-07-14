@@ -719,7 +719,6 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Gemini2_5,
         t.modelCategory_Gemini2_0,
         t.modelCategory_Gemini1_5,
-        'Gemma 3n model', // Move Gemma 3n here from TogetherAI
     ];
     const anthropicCategoryOrder = [
         "Claude 4 models",
@@ -740,10 +739,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Llama3,
         t.modelCategory_LlamaVision,
         t.modelCategory_MetaLlama,
+        t.modelCategory_GoogleGemma,
         t.modelCategory_Gemma2,
         t.modelCategory_Gemma,
-        t.modelCategory_GoogleGemma,
-        'Gemma 3n model', // Ensure Gemma 3N is ordered with its own heading
+        'Gemma 3n model',
         t.modelCategory_DeepSeekR1,
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1Distill,
