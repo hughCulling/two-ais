@@ -85,14 +85,15 @@ function HtmlWithNonce({ children, nonce }: { children: React.ReactNode, nonce: 
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* CSP nonce script: only inject if nonce exists */}
-        {nonce && (
+        {nonce ? (
           <script
             nonce={nonce}
+            suppressHydrationWarning
             dangerouslySetInnerHTML={{
               __html: `window.__CSP_NONCE__ = "${nonce}";`
             }}
           />
-        )}
+        ) : null}
         {/* Place any other <head> content here if needed */}
       </head>
       <body
