@@ -499,17 +499,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable', 
         categoryKey: 'modelCategory_Gemma2',
     },
-    {
-        id: 'google/gemma-2b-it',
-        name: 'Gemma Instruct (2B)',
-        provider: 'TogetherAI',
-        contextWindow: 8192,
-        pricing: { input: 0.10, output: 0.10 }, 
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable',
-        categoryKey: 'modelCategory_Gemma',
-    },
     // DeepSeek Models via TogetherAI
     {
         id: 'deepseek-ai/DeepSeek-R1',
