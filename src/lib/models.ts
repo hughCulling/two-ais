@@ -334,17 +334,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Claude3_7',
     },
     {
-        id: 'claude-3-5-sonnet-20240620',
-        name: 'Claude Sonnet 3.5',
-        provider: 'Anthropic',
-        contextWindow: 200000,
-        pricing: { input: 3.00, output: 15.00 },
-        apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
-        apiKeySecretName: 'anthropic',
-        status: 'stable',
-        categoryKey: 'modelCategory_Claude3_5',
-    },
-     {
         id: 'claude-3-5-haiku-20241022',
         name: 'Claude Haiku 3.5',
         provider: 'Anthropic',
@@ -357,7 +346,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'claude-3-5-sonnet-20241022', 
-        name: 'Claude Sonnet 3.5 v2',
+        name: 'Claude Sonnet 3.5',
         provider: 'Anthropic',
         contextWindow: 200000,
         pricing: { input: 3.00, output: 15.00 },
