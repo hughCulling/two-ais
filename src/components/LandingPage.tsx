@@ -305,10 +305,22 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         if (!categoryModels) return null;
                         let brandHeadingElement = null;
                         if (providerName === 'TogetherAI') {
+                          // Use the same translation logic as groupModelsByCategory for category matching
                           const modelCategoryKey = providerModels.find(m => {
-                            const key = (m.categoryKey || 'modelCategory_OtherModels');
-                            const translated = (key in t && typeof t[key as keyof typeof t] === "string") ? t[key as keyof typeof t] as string : key;
-                            return translated === category;
+                            let translatedCategory: string;
+                            if (m.categoryKey === 'claude4_temp') {
+                              translatedCategory = "Claude 4 models";
+                            } else if (m.categoryKey === 'modelCategory_Grok4') {
+                              translatedCategory = "Grok 4 models";
+                            } else if (m.categoryKey === 'modelCategory_Gemma3n') {
+                              translatedCategory = "Gemma 3n model";
+                            } else {
+                              const maybeTranslation = (m.categoryKey && m.categoryKey in t)
+                                ? t[m.categoryKey as keyof typeof t]
+                                : undefined;
+                              translatedCategory = (typeof maybeTranslation === 'string') ? maybeTranslation : (m.categoryKey || 'modelCategory_OtherModels');
+                            }
+                            return translatedCategory === category;
                           })?.categoryKey;
                           const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
                           // Debug output

@@ -740,9 +740,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_LlamaVision,
         t.modelCategory_MetaLlama,
         t.modelCategory_GoogleGemma,
+        // Place Gemma 3n above Gemma 2
+        'Gemma 3n model',
         t.modelCategory_Gemma2,
         t.modelCategory_Gemma,
-        'Gemma 3n model',
         t.modelCategory_DeepSeekR1,
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1Distill,
