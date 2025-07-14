@@ -148,7 +148,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
 
     return (
         <div className="w-full" ref={dropdownRef} role="combobox" aria-expanded={open} aria-haspopup="listbox" aria-controls={listboxId}>
-            <label className="block mb-1 font-medium text-sm" id={`${buttonId}-label`}>{label}</label>
+            <label className="block mb-1 font-medium text-sm" htmlFor={buttonId}>{label}</label>
             <button
                 ref={buttonRef}
                 id={buttonId}
@@ -162,7 +162,6 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                 disabled={disabled}
                 aria-haspopup="listbox"
                 aria-expanded={open}
-                aria-labelledby={`${buttonId}-label`}
                 aria-describedby={listboxId}
                 aria-label={`${label}: ${selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}`}
                 aria-controls={listboxId}

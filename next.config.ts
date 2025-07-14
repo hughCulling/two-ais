@@ -156,8 +156,24 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
-        headers: securityHeaders,
+        // This will match all paths EXCEPT /__/auth/handler
+        source: '/((?!__/auth/handler).*)',
+        headers: securityHeaders, // Your original security headers including COOP
+      },
+      {
+        // This will ONLY match /__/auth/handler and will NOT have the COOP header
+        source: '/__/auth/handler',
+        headers: [
+          // You can include other, non-COOP headers here if you wish
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+        ],
       },
     ];
   },
