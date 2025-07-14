@@ -323,8 +323,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             return translatedCategory === category;
                           })?.categoryKey;
                           const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
-                          // Debug output
-                          console.log('TogetherAI category:', category, 'modelCategoryKey:', modelCategoryKey, 'currentBrandName:', currentBrandName);
                           if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                             brandHeadingElement = (
                               <div className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
