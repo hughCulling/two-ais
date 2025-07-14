@@ -844,7 +844,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         aria-label="Initial system prompt for starting the conversation"
                     />
                     <p id="initial-prompt-description" className="text-xs text-muted-foreground mt-1">
-                        This prompt will be sent as the first message to start the conversation. Leave blank for no prompt.
+                        This prompt will be sent as the first message to start the conversation. If you leave it blank, there will be no prompt.
                     </p>
                 </div>
             </CardContent>
