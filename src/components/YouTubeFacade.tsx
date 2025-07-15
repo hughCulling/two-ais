@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 const YOUTUBE_VIDEO_ID_LIGHT = "52oUvRFdaXE";
 const YOUTUBE_VIDEO_ID_DARK = "pkN_uU-nDdk";
@@ -11,9 +11,59 @@ const YouTubeFacade: React.FC<{
 }> = ({ mode, title, isPlayerActive, onActivatePlayer }) => {
   const videoId = mode === "dark" ? YOUTUBE_VIDEO_ID_DARK : YOUTUBE_VIDEO_ID_LIGHT;
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  
+  // Suppress CORS errors in console
+  useEffect(() => {
+    if (isPlayerActive && iframeRef.current) {
+      const originalError = console.error;
+      const originalWarn = console.warn;
+      const originalOnError = window.onerror;
+      
+      // Temporarily suppress CORS-related errors
+      const suppressCorsErrors = (args: any[]) => {
+        const message = args[0]?.toString() || '';
+        if (message.includes('CORS') || 
+            message.includes('access control checks') ||
+            message.includes('youtube.com/api/stats') ||
+            message.includes('youtube.com/youtubei/v1/log_event') ||
+            message.includes('Fetch API cannot load') ||
+            message.includes('XMLHttpRequest cannot load') ||
+            message.includes('youtube.com/api/stats/qoe') ||
+            message.includes('youtube.com/api/stats/watchtime') ||
+            message.includes('youtube.com/api/stats/atr')) {
+          return; // Suppress these errors
+        }
+        originalError.apply(console, args);
+      };
+      
+      // Global error handler for YouTube-related errors
+      const globalErrorHandler = (message: string | Event, source?: string, lineno?: number, colno?: number, error?: Error) => {
+        const errorMessage = typeof message === 'string' ? message : message.toString();
+        if (errorMessage.includes('youtube.com') || 
+            errorMessage.includes('CORS') || 
+            errorMessage.includes('access control checks')) {
+          return true; // Prevent default error handling
+        }
+        return false; // Allow other errors to be handled normally
+      };
+      
+      console.error = suppressCorsErrors;
+      window.onerror = globalErrorHandler;
+      
+      return () => {
+        console.error = originalError;
+        console.warn = originalWarn;
+        window.onerror = originalOnError;
+      };
+    }
+  }, [isPlayerActive]);
+  
   if (isPlayerActive) {
     return (
       <iframe
+        ref={iframeRef}
+        key={videoId} // Force recreation only when video ID changes
         className="w-full h-full"
         src={embedUrl}
         title={title}
@@ -24,6 +74,7 @@ const YouTubeFacade: React.FC<{
       ></iframe>
     );
   }
+  
   return (
     <button
       type="button"
