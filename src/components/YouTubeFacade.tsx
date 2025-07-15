@@ -21,7 +21,7 @@ const YouTubeFacade: React.FC<{
       const originalOnError = window.onerror;
       
       // Temporarily suppress CORS-related errors
-      const suppressCorsErrors = (args: any[]) => {
+      const suppressCorsErrors = (args: unknown[]) => {
         const message = args[0]?.toString() || '';
         if (message.includes('CORS') || 
             message.includes('access control checks') ||
@@ -38,7 +38,8 @@ const YouTubeFacade: React.FC<{
       };
       
       // Global error handler for YouTube-related errors
-      const globalErrorHandler = (message: string | Event, source?: string, lineno?: number, colno?: number, error?: Error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const globalErrorHandler = (message: string | Event, _source?: string, _lineno?: number, _colno?: number, _error?: Error) => {
         const errorMessage = typeof message === 'string' ? message : message.toString();
         if (errorMessage.includes('youtube.com') || 
             errorMessage.includes('CORS') || 
