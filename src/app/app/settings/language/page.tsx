@@ -55,9 +55,7 @@ export default function LanguageSettingsPage() {
                             <div className="space-y-1 text-sm">
                                 <p className="font-medium">Language Support Information</p>
                                 <p className="text-muted-foreground">
-                                    All languages listed are supported by Google Gemini models. 
-                                    Support for other AI models may vary. The conversation between 
-                                    AI agents will be conducted in your selected language.
+                                    The conversation between AI agents will be conducted in your selected language.
                                 </p>
                             </div>
                         </div>
