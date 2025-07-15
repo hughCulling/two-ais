@@ -45,6 +45,7 @@ export default function SettingsLayout({
     return (
     <div className="container mx-auto flex max-w-5xl flex-col p-4 pt-16 md:flex-row md:p-8 md:pt-24">
         <SettingsSidebar />
+        {/* Only use <main> here. Children should NOT use <main> to avoid multiple main landmarks. */}
         <main className="flex-1 md:pl-6 w-full">
         {children} {/* Render the actual settings page */}
         </main>
