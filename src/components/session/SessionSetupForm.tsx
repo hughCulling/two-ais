@@ -689,19 +689,19 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 disabled={isDisabled}
                                                 className="pr-2 py-2"
                                             >
-                                                <div className="flex justify-between items-center w-full text-sm">
-                                                    <div className="flex items-center space-x-1.5 mr-2 overflow-hidden">
+                                                <div className="flex justify-between items-center w-full text-sm min-w-0">
+                                                    <div className="flex items-center space-x-1.5 mr-2 min-w-0 flex-1">
                                                         {supportsLanguage ? (
                                                             <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
                                                         ) : (
                                                             <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
                                                         )}
-                                                        <span className="truncate font-medium" title={m.name}>
+                                                        <span className="truncate font-medium min-w-0" title={m.name}>
                                                             {m.name}
                                                         </span>
-                                                        {!supportsLanguage && <span className="text-xs text-muted-foreground">(No {language.nativeName})</span>}
+                                                        {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0">(No {language.nativeName})</span>}
                                                     </div>
-                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0" title={m.description}>
+                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0 truncate max-w-[8rem]" title={m.description}>
                                                         ({m.pricingText})
                                                     </span>
                                                 </div>
@@ -743,8 +743,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     return (
         <Card className="w-full max-w-2xl">
             <CardHeader>
-                <CardTitle>Start a New Conversation</CardTitle>
-                <CardDescription>Select the LLM and optional Text-to-Speech settings for each agent.</CardDescription>
+                <CardTitle>Session Setup Form</CardTitle>
+                <CardDescription>Here you can select the LLM and optional TTS settings for each agent.</CardDescription>
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                 {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
             </CardHeader>
