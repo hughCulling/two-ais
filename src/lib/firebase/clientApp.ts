@@ -37,55 +37,52 @@ const functions = getFunctions(app, 'us-central1'); // Specify the region
 // Initialize client-side only services (App Check, Analytics)
 let analytics;
 let appCheck;
+let appCheckInitialized = false;
 
-// ** Check if running in the browser before initializing client-side services **
-if (typeof window !== 'undefined') {
-    // Initialize App Check (only in browser)
+/**
+ * Lazily initialize Firebase App Check (reCAPTCHA Enterprise) only when needed.
+ * Safe to call multiple times; will only initialize once.
+ */
+async function ensureAppCheckInitialized() {
+    if (appCheckInitialized || typeof window === 'undefined') return;
     const reCaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY;
-    
-    if (reCaptchaKey) {
-        try {
-            // Check if App Check is already initialized (useful for HMR)
-            try {
-                // Set up debug token for development only
-                if (process.env.NODE_ENV === 'development') {
-                    // @ts-expect-error - Debug token is available in development
-                    self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN || true;
-                    console.log("App Check debug token set for development.");
-                }
-                appCheck = initializeAppCheck(app, {
-                    provider: new ReCaptchaEnterpriseProvider(reCaptchaKey),
-                    isTokenAutoRefreshEnabled: true // Auto refresh token
-                });
-                console.log("Firebase App Check (reCAPTCHA Enterprise) initialized.");
-            } catch (e) {
-                // Handle potential re-initialization errors during hot module replacement
-                console.warn("App Check initialization error (might be HMR):", e);
-            }
-        } catch (error) {
-            console.error("Error initializing Firebase App Check:", error);
-            // Don't throw the error to prevent app crashes
-        }
-    } else {
+    if (!reCaptchaKey) {
         console.warn("NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY is not set. App Check not initialized.");
+        return;
     }
+    try {
+        if (process.env.NODE_ENV === 'development') {
+            // @ts-expect-error - Debug token is available in development
+            self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN || true;
+            console.log("App Check debug token set for development.");
+        }
+        appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider(reCaptchaKey),
+            isTokenAutoRefreshEnabled: true
+        });
+        appCheckInitialized = true;
+        console.log("Firebase App Check (reCAPTCHA Enterprise) initialized (lazy).");
+    } catch (e) {
+        console.warn("App Check initialization error (lazy):", e);
+    }
+}
 
-    // Initialize Analytics (only in browser)
+// Initialize Analytics (only in browser)
+if (typeof window !== 'undefined') {
     isAnalyticsSupported().then((supported) => {
         if (supported && firebaseConfig.measurementId) {
-            // Check if Analytics is already initialized (useful for HMR)
-             try {
-                 analytics = getAnalytics(app);
-                 console.log("Firebase Analytics initialized.");
-             } catch (e) {
-                 console.warn("Analytics initialization error (might be HMR):", e);
-             }
+            try {
+                analytics = getAnalytics(app);
+                console.log("Firebase Analytics initialized.");
+            } catch (e) {
+                console.warn("Analytics initialization error (might be HMR):", e);
+            }
         } else {
             console.log("Firebase Analytics not supported or measurementId missing.");
         }
     });
 } else {
-    console.log("Skipping App Check and Analytics initialization (server-side).");
+    console.log("Skipping Analytics initialization (server-side).\n");
 }
 
 
@@ -124,4 +121,4 @@ if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBA
 // --- End Emulator Connections ---
 
 
-export { app, auth, db, functions, analytics, appCheck };
+export { app, auth, db, functions, analytics, appCheck, ensureAppCheckInitialized };

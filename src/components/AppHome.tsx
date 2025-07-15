@@ -3,8 +3,8 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
 import SessionSetupForm from "@/components/session/SessionSetupForm";
 import { ChatInterface } from "@/components/chat/ChatInterface";
-import { db } from "@/lib/firebase/clientApp";
-import { doc, getDoc, FirestoreError } from "firebase/firestore";
+import { db, ensureAppCheckInitialized } from "@/lib/firebase/clientApp";
+import { doc, getDoc } from "firebase/firestore";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useTranslation } from '@/hooks/useTranslation';
@@ -68,10 +68,12 @@ export default function AppHome() {
     if (user && userApiSecrets === null) {
         setSecretsLoading(true);
         setPageError(null);
-        const userDocRef = doc(db, "users", user.uid);
-        logger.info("Fetching user data for API secrets...");
-        getDoc(userDocRef)
-            .then((docSnap) => {
+        const fetchUserData = async () => {
+            await ensureAppCheckInitialized();
+            const userDocRef = doc(db, "users", user.uid);
+            logger.info("Fetching user data for API secrets...");
+            try {
+                const docSnap = await getDoc(userDocRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as UserData;
                     setUserApiSecrets(data.apiSecretVersions || {});
@@ -80,15 +82,19 @@ export default function AppHome() {
                     logger.warn(`User document not found for user ${user.uid}. Assuming no API keys saved yet.`);
                     setUserApiSecrets({});
                 }
-            })
-            .catch((err: FirestoreError) => {
+            } catch (err: unknown) {
                 logger.error("Error fetching user document:", err);
-                setPageError(t!.page_ErrorLoadingUserData.replace("{errorMessage}", err.message));
+                const errorMessage =
+                  err && typeof err === "object" && "message" in err
+                    ? String((err as { message: unknown }).message)
+                    : String(err);
+                setPageError(t!.page_ErrorLoadingUserData.replace("{errorMessage}", errorMessage));
                 setUserApiSecrets(null);
-            })
-            .finally(() => {
+            } finally {
                 setSecretsLoading(false);
-            });
+            }
+        };
+        fetchUserData();
     } else if (user && userApiSecrets !== null) {
          if (secretsLoading) {
             setSecretsLoading(false);

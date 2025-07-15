@@ -1,6 +1,6 @@
 // src/components/chat/ChatInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
+import { db, functions as clientFunctions, ensureAppCheckInitialized } from '@/lib/firebase/clientApp'; // Import client Functions instance
 import { httpsCallable, FunctionsError } from 'firebase/functions'; // Import httpsCallable
 import {
     collection,
@@ -82,15 +82,14 @@ const logger = {
 
 // --- Define the callable function ---
 let requestNextTurnFunction: ReturnType<typeof httpsCallable> | null = null;
-try {
+(async () => {
+    await ensureAppCheckInitialized();
     if (clientFunctions) {
         requestNextTurnFunction = httpsCallable(clientFunctions, 'requestNextTurn');
     } else {
         logger.error("Firebase Functions client instance not available for requestNextTurn.");
     }
-} catch (err) {
-     logger.error("Error initializing requestNextTurn callable function:", err);
-}
+})();
 
 
 export function ChatInterface({
