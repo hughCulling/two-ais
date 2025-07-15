@@ -53,7 +53,7 @@ const initialApiKeys: ApiKeyInput[] = [
         id: 'openai',
         label: 'OpenAI API Key',
         value: '',
-        tooltip: 'Used for OpenAI models (GPT series, TTS, etc.). Requires an OpenAI account. Usage may incur costs. Find keys at platform.openai.com/api-keys.',
+        tooltip: 'Used for OpenAI models (GPT series, TTS, etc.). Requires an OpenAI account. Usage will incur costs. Find keys at platform.openai.com/api-keys.',
         learnMoreLink: 'https://platform.openai.com/api-keys'
     },
     {
@@ -237,7 +237,6 @@ export default function ApiKeyManager() {
     return (
         <TooltipProvider delayDuration={100}>
             <div className="space-y-6" role="main" aria-labelledby="api-keys-title">
-                <h2 id="api-keys-title" className="text-2xl font-bold">API Key Management</h2>
                 
                 {generalError && (
                     <Alert variant="destructive" role="alert" aria-live="assertive">

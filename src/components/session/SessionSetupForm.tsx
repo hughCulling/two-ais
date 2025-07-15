@@ -723,13 +723,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         <SelectValue placeholder={currentAgentVoices.length > 0 ? "Select Voice" : `No voices for ${language.nativeName}`} />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
-                                        {currentAgentVoices.map(v => (
-                                            <SelectItem key={v.id} value={v.id}>
-                                                {v.name} {v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                                {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">(Preview)</span> : ''}
-                                                {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
-                                            </SelectItem>
-                                        ))}
+                                        {currentAgentVoices.map(v => {
+                                            // Only show gender letter if provider is not Google Cloud or Google Gemini
+                                            const providerId = currentAgentTTSSettings.provider;
+                                            const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini';
+                                            return (
+                                                <SelectItem key={v.id} value={v.id}>
+                                                    {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">(Preview)</span> : ''}
+                                                    {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                                </SelectItem>
+                                            );
+                                        })}
                                     </SelectContent>
                                 </Select>
                             </div>
