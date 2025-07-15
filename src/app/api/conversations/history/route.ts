@@ -78,6 +78,10 @@ export async function GET(request: NextRequest) {
     }
 
     try {
+        const { searchParams } = new URL(request.url);
+        const limit = parseInt(searchParams.get('limit') || '20', 10); // Default 20
+        const offset = parseInt(searchParams.get('offset') || '0', 10); // Default 0
+
         const authorization = request.headers.get("Authorization");
         console.log("Authorization header:", authorization);
         if (!authorization?.startsWith("Bearer ")) {
@@ -97,14 +101,31 @@ export async function GET(request: NextRequest) {
         console.log(`API History Route: Authenticated user: ${userId}`);
 
         const conversationsRef = dbAdmin.collection("conversations");
-        const querySnapshot = await conversationsRef
-            .where("userId", "==", userId)
-            .orderBy("createdAt", "desc") // Show newest first
-            .get();
+        // Get total count for pagination
+        const totalSnapshot = await conversationsRef.where("userId", "==", userId).get();
+        const totalCount = totalSnapshot.size;
 
-        if (querySnapshot.empty) {
-            return NextResponse.json([], { status: 200 }); // No conversations found
+        // Paginated query
+        let query = conversationsRef
+            .where("userId", "==", userId)
+            .orderBy("createdAt", "desc")
+            .limit(limit);
+
+        // Firestore does not support offset efficiently, but for small numbers it's fine
+        if (offset > 0) {
+            // Get the document to start after
+            const offsetSnapshot = await conversationsRef
+                .where("userId", "==", userId)
+                .orderBy("createdAt", "desc")
+                .limit(offset)
+                .get();
+            const docs = offsetSnapshot.docs;
+            if (docs.length > 0) {
+                query = query.startAfter(docs[docs.length - 1]);
+            }
         }
+
+        const querySnapshot = await query.get();
 
         const conversations: ConversationSummary[] = [];
         querySnapshot.forEach(doc => {
@@ -121,7 +142,7 @@ export async function GET(request: NextRequest) {
             });
         });
 
-        return NextResponse.json(conversations, { status: 200 });
+        return NextResponse.json({ conversations, totalCount }, { status: 200 });
 
     } catch (error) {
         console.error("API History Route: Unhandled error in /api/conversations/history:", error);

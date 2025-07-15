@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -18,13 +18,41 @@ interface ConversationSummary {
     language: string;
 }
 
+// Helper to generate smart pagination with ellipses
+function getPagination(current: number, total: number, delta = 2) {
+    const range: (number | string)[] = [];
+    const rangeWithDots: (number | string)[] = [];
+    let l: number | undefined = undefined;
+
+    for (let i = 1; i <= total; i++) {
+        if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
+            range.push(i);
+        }
+    }
+    for (let i = 0; i < range.length; i++) {
+        if (l !== undefined) {
+            if ((range[i] as number) - l === 2) {
+                rangeWithDots.push(l + 1);
+            } else if ((range[i] as number) - l > 2) {
+                rangeWithDots.push('...');
+            }
+        }
+        rangeWithDots.push(range[i]);
+        l = range[i] as number;
+    }
+    return rangeWithDots;
+}
+
 export default function HistoryPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
 
-    // All hooks must be called before any return
+    const PAGE_SIZE = 20;
     const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+    const [totalCount, setTotalCount] = useState<number | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [historyLoading, setHistoryLoading] = useState(true);
+    const [pageLoading, setPageLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -33,35 +61,46 @@ export default function HistoryPage() {
         }
     }, [user, loading, router]);
 
+    const fetchPage = useCallback(async (page: number) => {
+        if (!user) return;
+        if (page === 1) setHistoryLoading(true);
+        else setPageLoading(true);
+        setError(null);
+        try {
+            const idToken = await user.getIdToken();
+            const offset = (page - 1) * PAGE_SIZE;
+            const response = await fetch(`/api/conversations/history?limit=${PAGE_SIZE}&offset=${offset}`, {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: "An error occurred while fetching history." }));
+                throw new Error(errorData.error || `Error fetching history: ${response.status}`);
+            }
+            const data = await response.json();
+            setConversations(data.conversations);
+            setTotalCount(data.totalCount);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred while fetching history.");
+        }
+        if (page === 1) setHistoryLoading(false);
+        else setPageLoading(false);
+    }, [user]);
+
     useEffect(() => {
         if (!user || loading) return;
+        fetchPage(currentPage);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user, loading, currentPage, fetchPage]);
 
-        async function fetchHistory() {
-            setHistoryLoading(true);
-            setError(null);
-            try {
-                if (!user) throw new Error("User not available for fetching history.");
-                const idToken = await user.getIdToken();
-                const response = await fetch('/api/conversations/history', {
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                    },
-                });
+    const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 1;
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ error: "An error occurred while fetching history." }));
-                    throw new Error(errorData.error || `Error fetching history: ${response.status}`);
-                }
-                const data: ConversationSummary[] = await response.json();
-                setConversations(data);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "An error occurred while fetching history.");
-            }
-            setHistoryLoading(false);
+    const handlePageChange = (page: number) => {
+        if (page !== currentPage && page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
         }
-
-        fetchHistory();
-    }, [user, loading]);
+    };
 
     // Now safe to return early
     if (loading) return null;
@@ -142,6 +181,25 @@ export default function HistoryPage() {
                                 </Link>
                             );
                         })}
+                        {totalPages > 1 && (
+                            <div className="flex justify-center mt-6 gap-2 flex-wrap">
+                                {getPagination(currentPage, totalPages, 2).map((item, idx) =>
+                                    typeof item === 'number' ? (
+                                        <Button
+                                            key={item}
+                                            variant={item === currentPage ? 'default' : 'outline'}
+                                            onClick={() => handlePageChange(item)}
+                                            disabled={pageLoading && item === currentPage}
+                                            className={item === currentPage ? 'font-bold' : ''}
+                                        >
+                                            {item}
+                                        </Button>
+                                    ) : (
+                                        <span key={`ellipsis-${idx}`} className="px-2 py-1 text-gray-400 select-none">{item}</span>
+                                    )
+                                )}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
