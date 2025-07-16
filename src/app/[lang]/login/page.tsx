@@ -10,6 +10,7 @@ import { useAuth, AuthProvider } from '@/context/AuthContext';
 import SignInForm from '@/components/auth/SignInForm';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginPage() {
     return (
@@ -23,12 +24,13 @@ function LoginPageContent() {
     const { user, loading } = useAuth();
     const router = useRouter();
     const { t, loading: translationLoading } = useTranslation();
+    const { language } = useLanguage();
 
     // Redirect if user is already logged in
     useEffect(() => {
         if (!loading && user) {
             console.log("LoginPage: User already logged in, redirecting...");
-            router.push('/app'); // Redirect to authenticated app section
+            router.push(`/${language.code}/app`); // Redirect to authenticated app section
         }
     }, [user, loading, router]);
 
@@ -67,7 +69,7 @@ function LoginPageContent() {
                         <GoogleSignInButton />
                         <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                             {t.auth.login.noAccount}{' '}
-                            <Link href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                            <Link href={`/${language.code}/signup`} className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
                                 {t.auth.login.signUp}
                             </Link>
                         </p>

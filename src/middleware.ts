@@ -1,6 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 
-export function middleware() {
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Only redirect the root path
+  if (pathname === '/') {
+    const acceptLang = request.headers.get('accept-language') || '';
+    const supportedCodes = SUPPORTED_LANGUAGES.map((l) => l.code);
+    let matched = 'en';
+    if (acceptLang) {
+      const langs = acceptLang.split(',').map((l) => l.split(';')[0].trim());
+      const found = langs.find((l) => supportedCodes.includes(l));
+      if (found) matched = found;
+    }
+    return NextResponse.redirect(new URL(`/${matched}`, request.url));
+  }
+
+  // --- Existing CSP/nonce logic ---
   // Generate a secure random nonce (16 bytes, base64)
   const array = new Uint8Array(16);
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
