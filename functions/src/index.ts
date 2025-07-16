@@ -1,6 +1,6 @@
 // functions/src/index.ts
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import { FieldValue, DocumentReference, CollectionReference } from "firebase-admin/firestore";
@@ -349,8 +349,8 @@ async function _triggerAgentResponse(
         }
         conversationData = conversationSnap.data()!;
 
-        if (conversationData.status !== "running" || conversationData.waitingForTTSEndSignal === true) {
-             logger.info(`Conversation ${conversationId} status is ${conversationData.status} or waitingForTTSEndSignal is true. Aborting _triggerAgentResponse.`);
+        if (conversationData.status !== "running") {
+             logger.info(`Conversation ${conversationId} status is ${conversationData.status}. Aborting _triggerAgentResponse.`);
              return;
         }
 
@@ -671,19 +671,13 @@ async function _triggerAgentResponse(
             // Write final message to Firestore with the same messageId
             await messagesRef.doc(messageId).set(responseMessage);
             logger.info(`Agent ${agentToRespond} response saved (message ID: ${messageId}). TTS generated: ${ttsGenerated}`);
-            const updateData: { lastActivity: FieldValue; turn?: string; waitingForTTSEndSignal?: boolean } = {
+            const updateData: { lastActivity: FieldValue; turn?: string } = {
                 lastActivity: admin.firestore.FieldValue.serverTimestamp()
             };
-            if (ttsGenerated) {
-                updateData.waitingForTTSEndSignal = true;
-                logger.info(`Setting waitingForTTSEndSignal = true for conversation ${conversationId}.`);
-            } else {
-                updateData.turn = nextTurn;
-                updateData.waitingForTTSEndSignal = false;
-                logger.info(`No TTS generated or TTS disabled. Updating turn to ${nextTurn} immediately.`);
-            }
+            updateData.turn = nextTurn;
+            logger.info(`Updating turn to ${nextTurn} for conversation ${conversationId}.`);
             await conversationRef.update(updateData);
-            logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn. Waiting for TTS signal: ${ttsGenerated}`);
+            logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn.`);
         } catch (error) { throw new Error(`Failed to save ${agentToRespond}'s response or update conversation state: ${error}`); }
 
     } catch (error) {
@@ -735,10 +729,6 @@ export const orchestrateConversation = onDocumentCreated(
              await conversationRef.update({ status: "error", errorContext: "Invalid conversation LLM configuration." }).catch(err => logger.error("Failed to update status:", err));
              return;
         }
-         if (conversationData.waitingForTTSEndSignal === true) {
-            logger.info(`Conversation ${conversationId} is waiting for TTS end signal. Exiting orchestrator (onDocumentCreated).`);
-            return;
-         }
         if (conversationData.status !== "running") {
             logger.info(`Conversation ${conversationId} status is not 'running' ("${conversationData.status}"). Exiting.`);
             return;
@@ -760,123 +750,6 @@ export const orchestrateConversation = onDocumentCreated(
 });
 // --- End orchestrateConversation ---
 
-
-// --- Cloud Function: requestNextTurn ---
-export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ success: boolean; message: string }>>(
-    { region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
-    async (request) => {
-        logger.info("--- requestNextTurn Function Execution Start ---", { structuredData: true });
-
-        if (!request.auth?.uid) {
-            logger.error("Authentication check failed: No auth context.");
-            throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-        }
-        const userId = request.auth.uid;
-        const { conversationId } = request.data;
-
-        if (!conversationId || typeof conversationId !== "string") {
-            throw new HttpsError("invalid-argument", "Conversation ID is required.");
-        }
-
-        logger.info(`Processing requestNextTurn for user: ${userId}, conversation: ${conversationId}`);
-        const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
-        const messagesRef = conversationRef.collection("messages");
-
-        try {
-            let nextTurn: "agentA" | "agentB" | null = null;
-
-            await db.runTransaction(async (transaction) => {
-                const convSnap = await transaction.get(conversationRef);
-                if (!convSnap.exists) {
-                    logger.error(`Conversation document ${conversationId} not found in transaction.`);
-                    throw new HttpsError("not-found", "Conversation not found.");
-                }
-
-                const data = convSnap.data();
-                if (!data) {
-                     logger.error(`Conversation document ${conversationId} has no data in transaction.`);
-                     throw new HttpsError("internal", "Conversation data missing.");
-                }
-
-                if (data.userId !== userId) {
-                     logger.error(`User ${userId} attempted to trigger next turn for conversation ${conversationId} owned by ${data.userId}.`);
-                     throw new HttpsError("permission-denied", "You do not have permission to modify this conversation.");
-                }
-
-                if (data.waitingForTTSEndSignal !== true) {
-                    logger.warn(`Received next turn request for ${conversationId}, but it wasn't waiting for a TTS signal (flag is ${data.waitingForTTSEndSignal}). Ignoring.`);
-                    nextTurn = null;
-                    return;
-                }
-
-                const messagesQuery = messagesRef.orderBy("timestamp", "desc").limit(1);
-                const lastMessageSnap = await transaction.get(messagesQuery);
-
-                if (lastMessageSnap.empty) {
-                     logger.warn(`No messages found in ${conversationId} when determining next turn after TTS signal. Defaulting to agentA.`);
-                     nextTurn = "agentA";
-                } else {
-                     const lastMessageRole = lastMessageSnap.docs[0].data().role;
-                     nextTurn = lastMessageRole === "agentA" ? "agentB" : "agentA";
-                }
-                logger.info(`Determined next turn for ${conversationId} after TTS signal is: ${nextTurn}`);
-
-                transaction.update(conversationRef, {
-                    waitingForTTSEndSignal: false,
-                    turn: nextTurn,
-                    lastActivity: admin.firestore.FieldValue.serverTimestamp()
-                });
-                logger.info(`Cleared waitingForTTSEndSignal flag and set turn to ${nextTurn} for conversation ${conversationId}.`);
-            });
-
-            if (nextTurn !== null) {
-                logger.info(`Next turn set to ${nextTurn} for ${conversationId}. Firestore triggers will handle agent response asynchronously.`);
-                // Do NOT call _triggerAgentResponse here! Firestore onDocumentCreated trigger will handle the next agent's response.
-            } else {
-                logger.info("No next turn determined or state not updated in transaction, not triggering agent response.");
-            }
-
-            return { success: true, message: "Conversation turn advanced. Next agent will be triggered by Firestore trigger." };
-
-        } catch (error) {
-            logger.error(`Error processing requestNextTurn for conversation ${conversationId}:`, error);
-            if (error instanceof HttpsError) throw error;
-            throw new HttpsError("internal", "An unexpected error occurred while advancing the conversation turn.");
-        }
-    }
-);
-// --- End requestNextTurn ---
-
-// --- Firestore onUpdate Trigger: Continue Conversation After TTS ---
-export const onConversationUpdate = onDocumentUpdated(
-    { document: "conversations/{conversationId}", region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
-    async (event) => {
-        logger.info("--- onConversationUpdate Triggered ---");
-        const { conversationId } = event.params;
-        const before = event.data?.before?.data();
-        const after = event.data?.after?.data();
-        if (!before || !after) {
-            logger.warn("onConversationUpdate: Missing before/after data.");
-            return;
-        }
-        // Only trigger if waitingForTTSEndSignal changed from true to false, and status is running
-        if (
-            before.waitingForTTSEndSignal === true &&
-            after.waitingForTTSEndSignal === false &&
-            after.status === "running"
-        ) {
-            logger.info(`onConversationUpdate: waitingForTTSEndSignal transitioned true -> false for ${conversationId}, status is running. Triggering next agent response.`);
-            // Get Firestore references
-            const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
-            const messagesRef = conversationRef.collection("messages");
-            // Call _triggerAgentResponse for the current turn
-            await _triggerAgentResponse(conversationId, after.turn, conversationRef, messagesRef);
-        } else {
-            logger.info("onConversationUpdate: No relevant state change, not triggering agent response.");
-        }
-    }
-);
-// --- End Firestore onUpdate Trigger ---
 
 export { getProviderFromId, getFirestoreKeyIdFromProvider, getTTSApiKeyId, getApiKeyFromSecret, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket };
 

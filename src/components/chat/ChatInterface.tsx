@@ -128,49 +128,48 @@ export function ChatInterface({
         }
     }, [hasUserInteracted]);
 
-    // --- Handler 5: Audio Playback Finished or Error (Defined before Effect 4) ---
-    // Use useCallback to stabilize the function reference for the effect dependency array
-    const handleAudioEnd = useCallback(async (messageId: string) => {
-        logger.info(`Audio ended or failed for message ${messageId}.`);
+    // --- Refactored: Audio End Handler (no param, uses state) ---
+    const handleAudioEnd = useCallback(() => {
+        if (!currentlyPlayingMsgId) return;
+        logger.info(`Audio ended or failed for message ${currentlyPlayingMsgId}.`);
         setIsAudioPlaying(false);
+        setPlayedMessageIds(prev => {
+            const newSet = new Set(prev).add(currentlyPlayingMsgId);
+            logger.info(`[AUDIO END/ERROR] Marking message as played: ${currentlyPlayingMsgId}. playedMessageIds now:`, Array.from(newSet));
+            return newSet;
+        });
         setCurrentlyPlayingMsgId(null);
-
-        // Mark this message as played to prevent duplicate signals.
-        setPlayedMessageIds(prev => new Set(prev).add(messageId));
 
         // --- Call requestNextTurn Cloud Function ---
         if (!requestNextTurnFunction) {
-             logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
-             setError("Error: Cannot communicate with backend to continue conversation.");
-             return;
+            logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
+            setError("Error: Cannot communicate with backend to continue conversation.");
+            return;
         }
-         if (!conversationId) {
-             logger.error("Cannot call requestNextTurn without conversationId.");
-             return;
-         }
-         // Only call if the backend is actually waiting (based on local state)
-         // Check local state first for responsiveness, backend state confirms later
-         if (!isWaitingForSignal) {
-             logger.warn(`handleAudioEnd called for ${messageId}, but local state indicates backend wasn't waiting for signal. Skipping call.`);
-             return;
-         }
-
+        if (!conversationId) {
+            logger.error("Cannot call requestNextTurn without conversationId.");
+            return;
+        }
+        if (!isWaitingForSignal) {
+            logger.warn(`handleAudioEnd called for ${currentlyPlayingMsgId}, but local state indicates backend wasn't waiting for signal. Skipping call.`);
+            return;
+        }
         logger.info(`Calling requestNextTurn for conversation ${conversationId}...`);
-        try {
-            const result = await requestNextTurnFunction({ conversationId });
-            logger.info("requestNextTurn successful:", result.data);
-            // State will update via the status listener when backend clears the flag
-        } catch (error) {
-            logger.error("Error calling requestNextTurn function:", error);
-            let errorMsg = "Failed to signal backend to continue.";
-            if (error instanceof FunctionsError) {
-                errorMsg = `Error signalling backend: ${error.message} (Code: ${error.code})`;
-            } else if (error instanceof Error) {
-                 errorMsg = `Error signalling backend: ${error.message}`;
-            }
-            setError(errorMsg);
-        }
-    }, [conversationId, isWaitingForSignal]); // Dependencies for the callback
+        requestNextTurnFunction({ conversationId })
+            .then(result => {
+                logger.info("requestNextTurn successful:", result.data);
+            })
+            .catch(error => {
+                logger.error("Error calling requestNextTurn function:", error);
+                let errorMsg = "Failed to signal backend to continue.";
+                if (error instanceof FunctionsError) {
+                    errorMsg = `Error signalling backend: ${error.message} (Code: ${error.code})`;
+                } else if (error instanceof Error) {
+                    errorMsg = `Error signalling backend: ${error.message}`;
+                }
+                setError(errorMsg);
+            });
+    }, [currentlyPlayingMsgId, conversationId, isWaitingForSignal]);
 
 
     // --- Effect 1: Listen for Messages ---
@@ -209,14 +208,9 @@ export function ChatInterface({
                     }
                 });
                 setMessages(fetchedMessages);
-
-                // --- Mark all existing messages with audioUrl as played on first snapshot ---
+                // --- Removed initialPlayedIds logic: do not mark any messages as played on initial snapshot ---
                 if (isFirstSnapshot) {
-                    const initialPlayedIds = new Set<string>();
-                    fetchedMessages.forEach(msg => {
-                        if (msg.audioUrl) initialPlayedIds.add(msg.id);
-                    });
-                    setPlayedMessageIds(initialPlayedIds);
+                    setPlayedMessageIds(new Set());
                     isFirstSnapshot = false;
                 }
             },
@@ -336,58 +330,19 @@ export function ChatInterface({
     }, [messages, conversationStatus, isStopped, scrollToBottom]); // Keep dependencies
 
 
-    // --- Effect 4: Handle Automatic Audio Playback ---
+    // --- Dedicated Audio Event Listeners Effect ---
     useEffect(() => {
-        const latestUnplayedAudioMessage = messages
-            .slice()
-            .reverse()
-            .find(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
-
-        if (
-            latestUnplayedAudioMessage &&
-            (!isAudioPlaying || currentlyPlayingMsgId !== latestUnplayedAudioMessage.id) &&
-            conversationStatus === "running" &&
-            isWaitingForSignal && // Check local state reflecting backend's waiting status
-            hasUserInteracted // Only play audio after user interaction
-        ) {
-            const audioSrc = latestUnplayedAudioMessage.audioUrl;
-            const messageIdToPlay = latestUnplayedAudioMessage.id;
-
-            logger.info(`Attempting to play audio for message ${messageIdToPlay}: ${audioSrc}`);
-
-            if (audioPlayerRef.current && audioSrc) {
-                if (isAudioPlaying) {
-                    audioPlayerRef.current.pause();
-                    logger.debug("Paused previous audio.");
-                }
-
-                audioPlayerRef.current.src = audioSrc;
-                audioPlayerRef.current.play()
-                    .then(() => {
-                        logger.info(`Audio playback started for message ${messageIdToPlay}.`);
-                        setCurrentlyPlayingMsgId(messageIdToPlay);
-                        setIsAudioPlaying(true);
-                    })
-                    .catch(err => {
-                        if (err && err.name === "AbortError") {
-                            logger.debug(`Audio playback aborted for message ${messageIdToPlay}. This is expected if playback was interrupted.`);
-                            // Do not set error or signal backend for AbortError
-                            setIsAudioPlaying(false);
-                            setCurrentlyPlayingMsgId(null);
-                            // Optionally, still call handleAudioEnd to keep backend in sync
-                            handleAudioEnd(messageIdToPlay);
-                        } else {
-                            logger.error(`Error playing audio for message ${messageIdToPlay}:`, err);
-                            setIsAudioPlaying(false);
-                            setCurrentlyPlayingMsgId(null);
-                            // Signal backend even on playback error to avoid getting stuck
-                            handleAudioEnd(messageIdToPlay);
-                        }
-                    });
-            }
-        }
-    // Added handleAudioEnd to dependency array
-    }, [messages, isAudioPlaying, currentlyPlayingMsgId, conversationStatus, isWaitingForSignal, playedMessageIds, handleAudioEnd, hasUserInteracted]);
+        const audioElem = audioPlayerRef.current;
+        if (!audioElem) return;
+        const onEnded = () => handleAudioEnd();
+        const onError = () => handleAudioEnd();
+        audioElem.addEventListener('ended', onEnded);
+        audioElem.addEventListener('error', onError);
+        return () => {
+            audioElem.removeEventListener('ended', onEnded);
+            audioElem.removeEventListener('error', onError);
+        };
+    }, [handleAudioEnd]);
 
 
     // --- Effect 5: User Interaction Detection ---
@@ -479,20 +434,83 @@ export function ChatInterface({
         if (!streamingMessage) return messages;
         // If Firestore already has this messageId, don't show streaming message
         if (messages.some(m => m.id === streamingMessage.id)) return messages;
-        // Otherwise, append streaming message as the latest
-        return [
-            ...messages,
-            {
-                id: streamingMessage.id,
-                role: streamingMessage.role,
-                content: streamingMessage.content,
-                timestamp: null,
-                audioUrl: undefined,
-                ttsWasSplit: false,
-                isStreaming: streamingMessage.status === 'streaming',
+        // Only append streaming message if it is the next message to be revealed
+        // Find the index of the last played message
+        let lastPlayedIdx = -1;
+        for (let i = 0; i < messages.length; i++) {
+            const msg = messages[i];
+            if (msg.audioUrl) {
+                if (!playedMessageIds.has(msg.id)) {
+                    break;
+                }
             }
-        ];
-    }, [messages, streamingMessage]);
+            lastPlayedIdx = i;
+        }
+        // Only show streaming message if it is the next message after the last played
+        if (lastPlayedIdx === messages.length - 1) {
+            return [
+                ...messages,
+                {
+                    id: streamingMessage.id,
+                    role: streamingMessage.role,
+                    content: streamingMessage.content,
+                    timestamp: null,
+                    audioUrl: undefined,
+                    ttsWasSplit: false,
+                    isStreaming: streamingMessage.status === 'streaming',
+                }
+            ];
+        }
+        return messages;
+    }, [messages, streamingMessage, playedMessageIds]);
+
+    // --- Only show up to the latest message whose audio has been played (or has no audio) ---
+    const visibleMessages = React.useMemo(() => {
+        if (!mergedMessages.length) return mergedMessages;
+        // Find the index of the first message with unplayed audio
+        let cutoffIdx = mergedMessages.length - 1;
+        for (let i = 0; i < mergedMessages.length; i++) {
+            const msg = mergedMessages[i];
+            if (msg.audioUrl && !playedMessageIds.has(msg.id)) {
+                // Only show up to and including this message
+                cutoffIdx = i;
+                break;
+            }
+        }
+        // If all audio messages have been played, show all
+        // If there is an unplayed audio message, do not show any messages after it (including streaming)
+        return mergedMessages.slice(0, cutoffIdx + 1);
+    }, [mergedMessages, playedMessageIds]);
+
+    // --- Consolidated Audio Playback Effect ---
+    useEffect(() => {
+        if (!hasUserInteracted || isAudioPlaying) return;
+        // Find the first visible message with unplayed audio
+        const nextAudioMsg = visibleMessages.find(
+            (msg) => msg.audioUrl && !playedMessageIds.has(msg.id)
+        );
+        if (nextAudioMsg && audioPlayerRef.current) {
+            audioPlayerRef.current.src = nextAudioMsg.audioUrl!;
+            audioPlayerRef.current.play()
+                .then(() => {
+                    setCurrentlyPlayingMsgId(nextAudioMsg.id);
+                    setIsAudioPlaying(true);
+                })
+                .catch((err) => {
+                    if (err && err.name === "AbortError") {
+                        // Suppress AbortError: this is expected if playback was interrupted (e.g., by stop button)
+                        setIsAudioPlaying(false);
+                        setCurrentlyPlayingMsgId(null);
+                        handleAudioEnd();
+                    } else {
+                        logger.error(`Error auto-playing audio for message ${nextAudioMsg.id}:`, err);
+                        setIsAudioPlaying(false);
+                        setCurrentlyPlayingMsgId(null);
+                        handleAudioEnd();
+                    }
+                });
+        }
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, handleAudioEnd]);
 
 
     // --- Render Logic ---
@@ -622,7 +640,7 @@ export function ChatInterface({
             {/* Scrollable Message Area */}
             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4" style={{ contain: 'layout style paint' }}>
                <div className="space-y-4">
-                    {mergedMessages.map((msg) => (
+                    {visibleMessages.map((msg) => (
                         <div
                             key={msg.id}
                             className={`flex ${
@@ -646,44 +664,7 @@ export function ChatInterface({
                                 {msg.isStreaming && (
                                   <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
                                 )}
-                                {/* Manual audio play button for messages with audio */}
-                                {msg.audioUrl && !playedMessageIds.has(msg.id) && !isAudioPlaying && (
-                                    <div className="mt-2 flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => {
-                                                if (audioPlayerRef.current && msg.audioUrl) {
-                                                    setHasUserInteracted(true);
-                                                    audioPlayerRef.current.src = msg.audioUrl;
-                                                    audioPlayerRef.current.play()
-                                                        .then(() => {
-                                                            setCurrentlyPlayingMsgId(msg.id);
-                                                            setIsAudioPlaying(true);
-                                                        })
-                                                        .catch(err => {
-                                                            logger.error(`Error playing audio for message ${msg.id}:`, err);
-                                                            setIsAudioPlaying(false);
-                                                            setCurrentlyPlayingMsgId(null);
-                                                            // If playback fails, still signal backend to continue
-                                                            if (isWaitingForSignal) {
-                                                                handleAudioEnd(msg.id);
-                                                            }
-                                                        });
-                                                }
-                                            }}
-                                            className="h-6 px-2 text-xs"
-                                            aria-label={`Play audio for ${msg.role === 'agentA' ? 'Agent A' : 'Agent B'} message`}
-                                            aria-describedby={`audio-control-${msg.id}-description`}
-                                        >
-                                            <Volume2 className="h-3 w-3 mr-1" aria-hidden="true" />
-                                            Play Audio
-                                        </Button>
-                                        <div id={`audio-control-${msg.id}-description`} className="sr-only">
-                                            Click to play the audio version of this message. This will enable automatic audio playback for future messages.
-                                        </div>
-                                    </div>
-                                )}
+                                {/* Removed manual audio play button logic */}
                                 {/* Audio played indicator */}
                                 {msg.audioUrl && playedMessageIds.has(msg.id) && (
                                     <div className="mt-2 flex items-center gap-2" role="status" aria-live="polite">
@@ -709,49 +690,19 @@ export function ChatInterface({
                             </div>
                         </div>
                     ))}
-                     {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
+                    {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
                         <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Waiting for first message...</div>
-                     )}
-                      {isStopped && conversationStatus === "stopped" && !error && (
-                         <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Conversation stopped.</div>
-                      )}
-                       {isWaitingForSignal && !isAudioPlaying && conversationStatus === "running" && (
-                         <div className="text-center text-primary text-sm p-2 animate-pulse" role="status" aria-live="polite">Waiting for audio to finish...</div>
-                      )}
-                     <div ref={messagesEndRef} />
+                    )}
+                    {isStopped && conversationStatus === "stopped" && !error && (
+                        <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Conversation stopped.</div>
+                    )}
+                    <div ref={messagesEndRef} />
                 </div>
             </ScrollArea>
 
             {/* Hidden Audio Player */}
             <audio
                 ref={audioPlayerRef}
-                onEnded={() => {
-                    if (currentlyPlayingMsgId) {
-                        handleAudioEnd(currentlyPlayingMsgId);
-                    }
-                }}
-                onError={(e) => {
-                    // Type assertion to HTMLAudioElement to access the error property
-                    const audioElem = e.currentTarget as HTMLAudioElement;
-                    const audioError = audioElem.error;
-                    // MEDIA_ERR_ABORTED (code 3) means the fetching process for the media resource was aborted by the user agent at the user's request.
-                    if (audioError && audioError.code === 3) {
-                        logger.debug("Audio playback error: MEDIA_ERR_ABORTED (expected if playback was interrupted by user action).");
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                        // Optionally, still call handleAudioEnd to keep backend in sync
-                        if (currentlyPlayingMsgId) {
-                            handleAudioEnd(currentlyPlayingMsgId);
-                        }
-                    } else {
-                        logger.error("Audio playback error:", e);
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                        if (currentlyPlayingMsgId) {
-                            handleAudioEnd(currentlyPlayingMsgId);
-                        }
-                    }
-                }}
                 style={{ display: 'none' }}
                 aria-hidden="true"
             />
