@@ -39,8 +39,8 @@ export async function triggerAgentResponse(
             logger.error(`Conversation ${conversationId} has no data in triggerAgentResponse.`);
             return;
         }
-        if (conversationData.status !== "running" || conversationData.waitingForTTSEndSignal === true) {
-            logger.info(`Conversation ${conversationId} status is ${conversationData.status} or waitingForTTSEndSignal is true. Aborting triggerAgentResponse.`);
+        if (conversationData.status !== "running") {
+            logger.info(`Conversation ${conversationId} status is ${conversationData.status}. Aborting triggerAgentResponse.`);
             return;
         }
         let historyMessages: BaseMessage[] = [];
@@ -363,19 +363,13 @@ export async function triggerAgentResponse(
             // Write final message to Firestore with the same messageId
             await messagesRef.doc(messageId).set(responseMessage);
             logger.info(`Agent ${agentToRespond} response saved to Firestore (message ID: ${messageId}). TTS generated: ${ttsGenerated}`);
-            const updateData: { lastActivity: FieldValue; turn?: string; waitingForTTSEndSignal?: boolean } = {
+            const updateData: { lastActivity: FieldValue; turn?: string } = {
                 lastActivity: admin.firestore.FieldValue.serverTimestamp()
             };
-            if (ttsGenerated) {
-                updateData.waitingForTTSEndSignal = true;
-                logger.info(`Setting waitingForTTSEndSignal = true for conversation ${conversationId}.`);
-            } else {
-                updateData.turn = nextTurn;
-                updateData.waitingForTTSEndSignal = false;
-                logger.info(`No TTS generated or TTS disabled. Updating turn to ${nextTurn} immediately.`);
-            }
+            updateData.turn = nextTurn;
+            logger.info(`Updating turn to ${nextTurn} for conversation ${conversationId}.`);
             await conversationRef.update(updateData);
-            logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn. Waiting for TTS signal: ${ttsGenerated}`);
+            logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn.`);
         } catch (err) {
             logger.error(`Failed to write agent response to Firestore (message ID: ${messageId}):`, err);
             logger.error("responseMessage object that failed to write:", { responseMessage });
