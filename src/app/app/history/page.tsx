@@ -124,7 +124,7 @@ export default function HistoryPage() {
                         Conversation History
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link href="/">
+                        <Link href="/app">
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back to Main
                         </Link>
