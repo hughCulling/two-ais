@@ -11,10 +11,12 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
 import { UserCircle, Menu, X } from 'lucide-react'; // Import an icon for user
 import { useState } from 'react'; // Import useState
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Header() {
     const { user, loading: authLoading } = useAuth();
     const { t, loading } = useTranslation();
+    const { language } = useLanguage();
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
 
     if (loading || !t) return null;
@@ -34,12 +36,12 @@ export default function Header() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
-                        <Link href="/app" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" aria-label="Go to Two AIs application">
+                        <Link href={`/${language.code}/app`} className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" aria-label="Go to Two AIs application">
                             {t.header.appName}
                         </Link>
                         {/* View Previous Chats button (desktop, left, only if logged in) */}
                         {user && !authLoading && (
-                            <Link href="/app/history" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center" aria-label="View previous conversations">
+                            <Link href={`/${language.code}/app/history`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center" aria-label="View previous conversations">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 Previous Chats
                             </Link>
@@ -65,7 +67,7 @@ export default function Header() {
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
-                                <Link href="/app/settings" className={navItemClasses} aria-label="Go to settings">
+                                <Link href={`/${language.code}/app/settings`} className={navItemClasses} aria-label="Go to settings">
                                     {t.header.settings}
                                 </Link>
                                 <div className="px-1">
@@ -73,7 +75,7 @@ export default function Header() {
                                 </div>
                             </>
                         ) : (
-                            <Link href="/login" className={navItemClasses} aria-label="Sign in to your account">
+                            <Link href={`/${language.code}/login`} className={navItemClasses} aria-label="Sign in to your account">
                                 {t.header.signIn}
                             </Link>
                         )}
@@ -118,15 +120,15 @@ export default function Header() {
                                     </span>
                                 </div>
                             </div>
-                            <Link href="/app/history" className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="View previous conversations">
+                            <Link href={`/${language.code}/app/history`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="View previous conversations">
                                 <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>View Previous Chats</span>
                             </Link>
-                            <Link href="/app/settings" className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
+                            <Link href={`/${language.code}/app/settings`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
                                 Settings {/* {t.header.settings} */}
                             </Link>
                         </>
                     ) : (
-                        <Link href="/login" className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                        <Link href={`/${language.code}/login`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
                             Sign In {/* {t.header.signIn} */}
                         </Link>
                     )}

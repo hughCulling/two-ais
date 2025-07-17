@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox } from 'lucide-react';
@@ -46,6 +47,7 @@ function getPagination(current: number, total: number, delta = 2) {
 export default function HistoryPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
+    const { language } = useLanguage();
 
     const PAGE_SIZE = 20;
     const [conversations, setConversations] = useState<ConversationSummary[]>([]);
@@ -124,7 +126,7 @@ export default function HistoryPage() {
                         Conversation History
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link href="/app">
+                        <Link href={`/${language.code}/app`}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back to Main
                         </Link>
@@ -167,7 +169,7 @@ export default function HistoryPage() {
                                 console.error("Error formatting date:", e, "Input was:", convo.createdAt);
                             }
                             return (
-                                <Link key={convo.conversationId} href={`/app/history/${convo.conversationId}`} passHref legacyBehavior>
+                                <Link key={convo.conversationId} href={`/${language.code}/app/history/${convo.conversationId}`} passHref legacyBehavior>
                                     <a className="block hover:no-underline">
                                         <Card className="hover:shadow-md transition-shadow duration-200 cursor-pointer">
                                             <CardHeader>

@@ -15,31 +15,34 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 interface LanguageProviderProps {
     children: ReactNode;
+    lang?: string;
 }
 
-export function LanguageProvider({ children }: LanguageProviderProps) {
-    const [language, setLanguageState] = useState<Language>(getDefaultLanguage());
+export function LanguageProvider({ children, lang }: LanguageProviderProps) {
+    const [language, setLanguageState] = useState<Language>(() => {
+        if (lang) {
+            const urlLang = getLanguageByCode(lang);
+            if (urlLang) return urlLang;
+        }
+        const savedLanguageCode = typeof window !== 'undefined' ? localStorage.getItem('selectedLanguage') : null;
+        if (savedLanguageCode) {
+            const savedLanguage = getLanguageByCode(savedLanguageCode);
+            if (savedLanguage) return savedLanguage;
+        }
+        return getDefaultLanguage();
+    });
     const [translation, setTranslation] = useState<TranslationKeys | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Load language preference and translation from localStorage on mount
+    // Update language when URL lang prop changes
     useEffect(() => {
-        const savedLanguageCode = localStorage.getItem('selectedLanguage');
-        let initialLanguage = getDefaultLanguage();
-        if (savedLanguageCode) {
-            const savedLanguage = getLanguageByCode(savedLanguageCode);
-            if (savedLanguage) {
-                initialLanguage = savedLanguage;
-                document.documentElement.dir = savedLanguage.direction;
+        if (lang) {
+            const urlLang = getLanguageByCode(lang);
+            if (urlLang && urlLang.code !== language.code) {
+                setLanguageState(urlLang);
             }
         }
-        setLanguageState(initialLanguage);
-        setLoading(true);
-        getTranslationAsync(initialLanguage.code).then(t => {
-            setTranslation(t);
-            setLoading(false);
-        });
-    }, []);
+    }, [lang, language.code]);
 
     // Load translation when language changes
     useEffect(() => {

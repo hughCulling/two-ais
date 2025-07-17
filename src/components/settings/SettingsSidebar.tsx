@@ -5,18 +5,20 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils'; // Make sure your utils file is here
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function SettingsSidebar() {
     const pathname = usePathname(); // Get current path to highlight active link
     const { t, loading } = useTranslation();
+    const { language } = useLanguage();
 
     if (loading || !t) return null;
 
     // Define the navigation items - Appearance first
     const navigation = [
-        { name: t.settings.sections.appearance, href: '/app/settings/appearance' },
-        { name: t.settings.sections.language, href: '/app/settings/language' },
-        { name: t.settings.sections.apiKeys, href: '/app/settings/api-keys' },
+        { name: t.settings.sections.appearance, href: `/${language.code}/app/settings/appearance` },
+        { name: t.settings.sections.language, href: `/${language.code}/app/settings/language` },
+        { name: t.settings.sections.apiKeys, href: `/${language.code}/app/settings/api-keys` },
         // Add more settings links here later (e.g., Profile, Billing)
         // { name: 'Profile', href: '/settings/profile' },
     ];

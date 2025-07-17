@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/context/LanguageContext';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function HeaderPublic() {
     const { t, loading } = useTranslation();
+    const { language } = useLanguage();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     if (loading || !t) return null;
@@ -26,7 +28,7 @@ export default function HeaderPublic() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
-                        <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" aria-label="Go to Two AIs homepage">
+                        <Link href={`/${language.code}`} className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" aria-label="Go to Two AIs homepage">
                             Two AIs
                         </Link>
                     </div>
@@ -40,7 +42,7 @@ export default function HeaderPublic() {
                         <ThemeSwitcher id="desktop" />
 
                         {/* --- Auth Links (Desktop) --- */}
-                        <Link href="/login" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Sign in to your account">
+                        <Link href={`/${language.code}/login`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Sign in to your account">
                             Sign In
                         </Link>
                     </div>
@@ -69,7 +71,7 @@ export default function HeaderPublic() {
             {/* --- Mobile Menu Panel --- */}
             <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" role="navigation" aria-label="Mobile navigation menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <Link href="/login" className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                    <Link href={`/${language.code}/login`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
                         Sign In
                     </Link>
 

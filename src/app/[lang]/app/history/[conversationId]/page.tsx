@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
@@ -46,6 +47,7 @@ export default function ChatHistoryViewerPage() {
     const { user, loading: authLoading } = useAuth();
     const params = useParams();
     const router = useRouter();
+    const { language } = useLanguage();
     const conversationId = params.conversationId as string;
 
     const [details, setDetails] = useState<ConversationDetails | null>(null);
@@ -128,7 +130,7 @@ export default function ChatHistoryViewerPage() {
                         <p className="text-destructive-foreground">{error}</p>
                         <Button 
                             variant="outline" 
-                            onClick={() => router.push('/app/history')}
+                            onClick={() => router.push(`/${language.code}/app/history`)}
                             aria-label="Return to conversation history"
                             aria-describedby="back-to-history-description"
                         >
@@ -157,7 +159,7 @@ export default function ChatHistoryViewerPage() {
                     <CardContent className="space-y-4">
                         <p>This conversation could not be found or is not accessible.</p>
                         <Button variant="outline" asChild>
-                             <Link href="/app/history" aria-label="Return to conversation history">
+                             <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
                                 <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                                 Back to Previous Chats
                             </Link>
@@ -235,7 +237,7 @@ export default function ChatHistoryViewerPage() {
                 throw new Error(result.error || 'Failed to resume conversation.');
             }
             // Redirect to live chat interface (same as after session setup)
-            router.push(`/app/?resume=${details.conversationId}`);
+            router.push(`/${language.code}/app/?resume=${details.conversationId}`);
         } catch (err) {
             setResumeError(err instanceof Error ? err.message : String(err));
         } finally {
@@ -252,7 +254,7 @@ export default function ChatHistoryViewerPage() {
                         View Conversation
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link href="/app/history" aria-label="Return to conversation history">
+                        <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
                             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                             Back to Previous Chats
                         </Link>

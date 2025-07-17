@@ -21,7 +21,7 @@ export default function SignupPage() {
 function SignupPageContent() {
     const { user, loading } = useAuth();
     const router = useRouter();
-    const { translation, loading: langLoading } = useLanguage();
+    const { translation, loading: langLoading, language } = useLanguage();
 
     useEffect(() => {
         if (!loading && user) {
@@ -49,7 +49,7 @@ function SignupPageContent() {
                     <SignUpForm />
                     <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                         {translation.auth.signup.hasAccount}{' '}
-                        <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                        <Link href={`/${language.code}/login`} className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
                             {translation.auth.signup.signIn}
                         </Link>
                     </p>
