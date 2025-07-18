@@ -1,432 +1,323 @@
-// src/lib/translations/pl.ts
+// pl.ts
 const pl = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Ustawienia',
-        signIn: 'Zaloguj się',
-        signOut: 'Wyloguj się',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Ustawienia",
+        "signIn": "Zalogować się",
+        "signOut": "Wyloguj się",
+        "previousChats": "Poprzednie czaty"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "kannada",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "my": "Birmańczyk",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Ustawienia',
-        sections: {
-            appearance: 'Wygląd',
-            apiKeys: 'Klucze API',
-            language: 'Język',
+    "settings": {
+        "title": "Ustawienia",
+        "sections": {
+            "appearance": "Wygląd",
+            "apiKeys": "API Klawiatura",
+            "language": "Język"
         },
-        appearance: {
-            theme: 'Motyw',
-            light: 'Jasny',
-            dark: 'Ciemny',
-            system: 'Systemowy',
-            description: "Dostosuj wygląd i działanie aplikacji."
+        "appearance": {
+            "theme": "Temat",
+            "light": "Światło",
+            "dark": "Ciemny",
+            "system": "System",
+            "description": "Dostosuj wygląd i działanie aplikacji."
         },
-        language: {
-            title: 'Język',
-            description: 'Wybierz preferowany język interfejsu',
-            conversationLanguage: 'Język rozmowy',
-            conversationLanguageDescription: 'Język używany do rozmów AI będzie odpowiadał językowi interfejsu',
+        "language": {
+            "title": "Język",
+            "description": "Wybierz preferowany język interfejsu",
+            "conversationLanguage": "Język konwersacyjny",
+            "conversationLanguageDescription": "Język używany do AI rozmowy będą dostosowane do języka Twojego interfejsu",
+            "supportedLanguages": "Obsługiwane języki",
+            "languageSupportInformation": "Informacje o obsłudze języków",
+            "aiAgentsLanguageDescription": "Rozmowa między AI Rozmowy z agentami będą prowadzone w wybranym przez Ciebie języku."
         },
-        apiKeys: {
-            title: 'Klucze API',
-            description: 'Zarządzaj swoimi kluczami API dla różnych dostawców AI',
-            saved: 'Zapisano',
-            notSet: 'Nie ustawiono',
-            setKey: 'Ustaw klucz',
-            updateKey: 'Zaktualizuj klucz',
-            removeKey: 'Usuń klucz',
-            getKeyInstructions: 'Zdobądź swój klucz API',
-            noNewKeys: "Nie wprowadzono nowych kluczy API do zapisania.",
-            unexpectedResponse: "Otrzymano nieoczekiwaną odpowiedź z serwera.",
-            failedToSaveKey: "Nie udało się zapisać klucza {serviceName}.",
-            someKeysNotSaved: "Niektórych kluczy API nie udało się zapisać. Sprawdź szczegóły poniżej.",
-            keyStatus: "status klucza...",
-            apiKeySecurelySaved: "Klucz API bezpiecznie zapisany",
-            confirmRemoveTitle: "Potwierdź usunięcie",
-            confirmRemoveDescription: "Czy na pewno chcesz usunąć klucz API dla {serviceName}? Tej czynności nie można cofnąć.",
-            failedToRemoveKey: "Nie udało się usunąć klucza {serviceName}.",
-            successfullyRemovedKey: "Pomyślnie usunięto klucz {serviceName}.",
-            keyNotSet: "Status klucza: nie ustawiono",
-            keySet: "Status klucza: ustawiono",
-            saveButton: "Zapisz klucz(e) API"
-        },
+        "apiKeys": {
+            "title": "API Klawiatura",
+            "description": "Zarządzaj swoim API klucze do różnych AI dostawcy",
+            "saved": "Zapisano",
+            "notSet": "Nie ustawiono",
+            "setKey": "Ustaw klucz",
+            "updateKey": "Aktualizuj klucz",
+            "removeKey": "Wyjmij klucz",
+            "getKeyInstructions": "Zdobądź swoje API klawisz",
+            "noNewKeys": "Brak nowych API klawisze wciśnięte w celu zapisania.",
+            "unexpectedResponse": "Otrzymano nieoczekiwaną odpowiedź z serwera.",
+            "failedToSaveKey": "Nie udało się zapisać klucza {serviceName}.",
+            "someKeysNotSaved": "Niektóre API Nie udało się zapisać kluczy. Sprawdź szczegóły poniżej.",
+            "keyStatus": "status klucza...",
+            "apiKeySecurelySaved": "API Klucz bezpiecznie zapisany",
+            "confirmRemoveTitle": "Potwierdź usunięcie",
+            "confirmRemoveDescription": "Czy na pewno chcesz usunąć API Klucz dla {serviceName}? Tej czynności nie można cofnąć.",
+            "failedToRemoveKey": "Nie udało się usunąć klucza {serviceName}.",
+            "successfullyRemovedKey": "Pomyślnie usunięto klucz {serviceName}.",
+            "keyNotSet": "Status klucza: Nie ustawiono",
+            "keySet": "Status klucza: Ustaw",
+            "saveButton": "Ratować API Klawiatura)",
+            "enteringNewKeyOverwrites": "Wprowadzenie nowego klucza spowoduje nadpisanie zapisanego klucza.",
+            "keyStoredSecurely": "Twój klucz będzie bezpiecznie przechowywany za pomocą Google Tajny menadżer."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'Rozmowa AI',
-        setupForm: {
-            title: 'Skonfiguruj swoją rozmowę',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Model',
-            selectModel: 'Wybierz model',
-            tts: {
-                title: 'Tekst na mowę',
-                enable: 'Włącz tekst na mowę',
-                provider: 'Dostawca TTS',
-                selectProvider: 'Wybierz dostawcę TTS',
-                voice: 'Głos',
-                selectVoice: 'Wybierz głos',
-                model: 'Model TTS',
-                selectModel: 'Wybierz model TTS',
+    "main": {
+        "title": "AI Rozmowa",
+        "setupForm": {
+            "title": "Skonfiguruj swoją rozmowę",
+            "agentA": "Agent A",
+            "agentB": "Agent B",
+            "model": "Model",
+            "selectModel": "Wybierz model",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Włączać Text-to-Speech",
+                "provider": "TTS Dostawca",
+                "selectProvider": "Wybierać TTS dostawca",
+                "voice": "Głos",
+                "selectVoice": "Wybierz głos",
+                "model": "TTS Model",
+                "selectModel": "Wybierać TTS model"
             },
-            startConversation: 'Rozpocznij rozmowę',
-            conversationPrompt: 'Rozpocznij rozmowę.',
+            "startConversation": "Rozpocznij rozmowę",
+            "conversationPrompt": "Rozpocznij rozmowę."
         },
-        conversation: {
-            thinking: 'myśli...',
-            stop: 'Zatrzymaj',
-            restart: 'Zacznij rozmowę od nowa',
+        "conversation": {
+            "thinking": "myślący...",
+            "stop": "Zatrzymywać się",
+            "restart": "Rozpocznij ponownie rozmowę"
         },
-        pricing: {
-            estimatedCost: 'Szacowany koszt',
-            perMillionTokens: 'za milion tokenów',
-            input: 'Wejście',
-            output: 'Wyjście',
-        },
+        "pricing": {
+            "estimatedCost": "Szacowany koszt",
+            "perMillionTokens": "na milion tokenów",
+            "input": "Wejście",
+            "output": "Wyjście"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Zaloguj się do Two AIs', // Keep brand name
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Hasło',
-            signIn: 'Zaloguj się',
-            signInWithGoogle: 'Zaloguj się przez Google',
-            noAccount: "Nie masz konta?",
-            signUp: 'Zarejestruj się',
-            forgotPassword: 'Zapomniałeś hasła?',
-            orContinueWith: "Lub kontynuuj za pomocą",
-            signingIn: "Logowanie..."
+    "auth": {
+        "login": {
+            "title": "Zaloguj się do Two AIs",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Hasło",
+            "signIn": "Zalogować się",
+            "signInWithGoogle": "Zaloguj się za pomocą Google",
+            "noAccount": "Nie masz konta?",
+            "signUp": "Zapisać się",
+            "forgotPassword": "Zapomniałeś hasła?",
+            "orContinueWith": "Lub kontynuuj",
+            "signingIn": "Logowanie..."
         },
-        signup: {
-            title: 'Utwórz konto',
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Hasło (co najmniej 6 znaków)',
-            signUp: 'Zarejestruj się',
-            signUpWithGoogle: 'Zarejestruj się przez Google',
-            hasAccount: 'Masz już konto?',
-            signIn: 'Zaloguj się',
-            emailLabel: "Adres e-mail",
-            confirmPasswordPlaceholder: "Potwierdź hasło",
-            signingUp: "Rejestracja..."
+        "signup": {
+            "title": "Utwórz konto",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Hasło (co najmniej 6 znaków)",
+            "signUp": "Zapisać się",
+            "signUpWithGoogle": "Zarejestruj się za pomocą Google",
+            "hasAccount": "Masz już konto?",
+            "signIn": "Zalogować się",
+            "emailLabel": "Email adres",
+            "confirmPasswordPlaceholder": "Potwierdź hasło",
+            "signingUp": "Rejestracja..."
         },
-        errors: {
-            invalidCredentials: 'Nieprawidłowy adres e-mail lub hasło',
-            userNotFound: 'Użytkownik nie znaleziony',
-            weakPassword: 'Hasło musi mieć co najmniej 6 znaków',
-            emailInUse: 'Adres e-mail jest już używany',
-            generic: 'Wystąpił błąd. Spróbuj ponownie.',
-            initialization: "Błąd inicjalizacji. Spróbuj ponownie później.",
-            invalidEmail: "Wprowadź prawidłowy adres e-mail.",
-            tooManyRequests: "Dostęp tymczasowo zablokowany z powodu zbyt wielu nieudanych prób logowania. Zresetuj hasło lub spróbuj ponownie później.",
-            signInFailedPrefix: "Logowanie nie powiodło się: ",
-            unknownSignInError: "Wystąpił nieznany błąd podczas logowania.",
-            profileSaveFailedPrefix: "Zalogowano, ale nie udało się zapisać danych profilu: ",
-            profileCheckSaveFailedPrefix: "Zalogowano, ale nie udało się sprawdzić/zapisać danych profilu: ",
-            accountExistsWithDifferentCredential: "Konto z tym adresem e-mail już istnieje i korzysta z innej metody logowania.",
-            googleSignInFailedPrefix: "Logowanie przez Google nie powiodło się: ",
-            unknownGoogleSignInError: "Wystąpił nieznany błąd podczas logowania przez Google.",
-            passwordsDoNotMatch: "Hasła nie są zgodne.",
-            accountCreatedProfileSaveFailedPrefix: "Konto zostało utworzone, ale nie udało się zapisać danych profilu: ",
-            unknownProfileSaveError: "Wystąpił nieznany błąd podczas zapisywania profilu.",
-            emailAlreadyRegistered: "Ten adres e-mail jest już zarejestrowany.",
-            passwordTooShortSignUp: "Hasło musi mieć co najmniej 6 znaków.",
-            signUpFailedPrefix: "Rejestracja nie powiodła się: ",
-            unknownSignUpError: "Wystąpił nieznany błąd podczas rejestracji."
-        },
+        "errors": {
+            "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło",
+            "userNotFound": "Użytkownik nie został znaleziony",
+            "weakPassword": "Hasło powinno mieć co najmniej 6 znaków",
+            "emailInUse": "Email już w użyciu",
+            "generic": "Wystąpił błąd. Spróbuj ponownie.",
+            "initialization": "Błąd inicjalizacji. Spróbuj ponownie później.",
+            "invalidEmail": "Proszę podać prawidłowy adres e-mail.",
+            "tooManyRequests": "Dostęp tymczasowo zablokowany z powodu zbyt wielu nieudanych prób logowania. Zresetuj hasło lub spróbuj ponownie później.",
+            "signInFailedPrefix": "Logowanie nieudane: ",
+            "unknownSignInError": "Podczas logowania wystąpił nieznany błąd.",
+            "profileSaveFailedPrefix": "Zalogowano, ale nie udało się zapisać danych profilu: ",
+            "profileCheckSaveFailedPrefix": "Zalogowano, ale nie udało się sprawdzić/zapisać danych profilu: ",
+            "accountExistsWithDifferentCredential": "Istnieje już konto o tym samym adresie e-mail, używające innej metody logowania.",
+            "googleSignInFailedPrefix": "Google Logowanie nie powiodło się: ",
+            "unknownGoogleSignInError": "Wystąpił nieznany błąd podczas Google Zalogować się.",
+            "passwordsDoNotMatch": "Hasła nie są takie same.",
+            "accountCreatedProfileSaveFailedPrefix": "Konto zostało utworzone, ale nie udało się zapisać danych profilu: ",
+            "unknownProfileSaveError": "Wystąpił nieznany błąd podczas zapisywania profilu.",
+            "emailAlreadyRegistered": "Ten adres e-mail jest już zarejestrowany.",
+            "passwordTooShortSignUp": "Hasło powinno mieć co najmniej 6 znaków.",
+            "signUpFailedPrefix": "Nie udało się zarejestrować: ",
+            "unknownSignUpError": "Podczas rejestracji wystąpił nieznany błąd."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Ładowanie...',
-        error: 'Błąd',
-        save: 'Zapisz',
-        cancel: 'Anuluj',
-        delete: 'Usuń',
-        confirm: 'Potwierdź',
-        or: 'lub',
-        MoreInformation: "Więcej informacji",
-        Example: "Przykład:",
-        ShowMore: "Pokaż więcej",
-        ShowLess: "Pokaż mniej",
-        AwaitingApproval: "Oczekiwanie na zatwierdzenie...",
-        OpenInNewTab: "Otwórz w nowej karcie",
-        AdvancedSettings: "Ustawienia zaawansowane",
-        Name: "Nazwa",
-        Created: "Utworzono",
-        Updated: "Zaktualizowano",
-        Launched: "Uruchomiono",
-        Docs: "Dokumentacja",
-        Blog: "Blog",
-        Pricing: "Cennik",
-        Terms: "Warunki",
-        Privacy: "Prywatność",
-        Changelog: "Dziennik zmian",
-        Copy: "Kopiuj",
-        Copied: "Skopiowano",
-        TryAgain: "Spróbuj ponownie"
+    "common": {
+        "loading": "Załadunek...",
+        "error": "Błąd",
+        "save": "Ratować",
+        "cancel": "Anulować",
+        "delete": "Usuwać",
+        "confirm": "Potwierdzać",
+        "or": "Lub"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "Brak klucza API",
-    apiKeyMissingSubtext: "Brak lub nieprawidłowy klucz API dla tego dostawcy. Dodaj go w ustawieniach.",
-    apiKeyNotNeeded: "Klucz API nie jest potrzebny",
-    apiKeyNotNeededSubtext: "Ten dostawca nie wymaga klucza API dla swojego bezpłatnego planu lub niektórych modeli.",
-    apiKeyFound: "Klucz API ustawiony",
-    apiKeyFoundSubtext: "Dla tego dostawcy skonfigurowano klucz API.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Główne modele czatu",
-    modelCategory_Reasoning: "Modele rozumowania",
-    modelCategory_CostOptimized: "Modele zoptymalizowane pod kątem kosztów",
-    modelCategory_OlderGPT: "Starsze modele GPT",
-    modelCategory_Gemini2_5: "Seria Gemini 2.5",
-    modelCategory_Gemini2_0: "Seria Gemini 2.0",
-    modelCategory_Gemini1_5: "Seria Gemini 1.5",
-    modelCategory_Claude3_7: "Seria Claude 3.7",
-    modelCategory_Claude3_5: "Seria Claude 3.5",
-    modelCategory_Claude3: "Seria Claude 3",
-    modelCategory_Grok3: "Seria Grok 3",
-    modelCategory_Grok3Mini: "Seria Grok 3 Mini",
-    modelCategory_Llama4: "Seria Llama 4",
-    modelCategory_Llama3_3: "Seria Llama 3.3",
-    modelCategory_Llama3_2: "Seria Llama 3.2",
-    modelCategory_Llama3_1: "Seria Llama 3.1",
-    modelCategory_Llama3: "Seria Llama 3",
-    modelCategory_LlamaVision: "Modele Llama Vision",
-    modelCategory_MetaLlama: "Modele Meta Llama",
-    modelCategory_Gemma2: "Seria Gemma 2",
-    modelCategory_Gemma: "Seria Gemma",
-    modelCategory_GoogleGemma: "Modele Google Gemma",
-    modelCategory_DeepSeekR1: "Seria DeepSeek R1",
-    modelCategory_DeepSeekV3: "Seria DeepSeek V3",
-    modelCategory_DeepSeekR1Distill: "Seria DeepSeek R1 Distill",
-    modelCategory_DeepSeekModels: "Modele DeepSeek",
-    modelCategory_MistralAIModels: "Modele Mistral AI",
-    modelCategory_Qwen3: "Seria Qwen3",
-    modelCategory_QwQwQ: "Seria Qwen QwQ",
-    modelCategory_Qwen2_5: "Seria Qwen2.5",
-    modelCategory_Qwen2_5Vision: "Seria Qwen2.5 Vision",
-    modelCategory_Qwen2_5Coder: "Seria Qwen2.5 Coder",
-    modelCategory_Qwen2: "Seria Qwen2",
-    modelCategory_Qwen2Vision: "Seria Qwen2 Vision",
-    modelCategory_QwenModels: "Modele Qwen",
-    modelCategory_OtherModels: "Inne modele",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Nie udało się załadować danych użytkownika: {errorMessage}. Spróbuj odświeżyć.",
-    page_ErrorUserNotFound: "Nie znaleziono użytkownika. Zaloguj się ponownie.",
-    page_ErrorUserApiKeyConfig: "Nie można załadować konfiguracji klucza API użytkownika. Odśwież lub sprawdź ustawienia.",
-    page_ErrorStartingSessionAPI: "Błąd API: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Błąd podczas uruchamiania sesji: {errorMessage}",
-    page_ErrorSessionIdMissing: "Odpowiedź API pomyślna, ale nie zawierała identyfikatora conversationId.",
-    page_LoadingUserData: "Ładowanie danych użytkownika...",
-    page_ErrorAlertTitle: "Błąd",
-    page_WelcomeTitle: "Witaj w Two AIs",
-    page_WelcomeSubtitle: "Ta strona internetowa pozwala słuchać rozmów między dwoma LLM.",
-    page_ApiKeysRequiredTitle: "Wymagane klucze API",
-    page_ApiKeysRequiredDescription: "Aby prowadzić rozmowy, po zalogowaniu musisz podać własne klucze API dla modeli AI, których chcesz używać (np. OpenAI, Google, Anthropic). Szczegółowe instrukcje dla każdego dostawcy można znaleźć na stronie Ustawienia / Klucze API po zalogowaniu.",
-    page_SignInPrompt: "Aby rozpocząć własną sesję, możesz zalogować się lub utworzyć konto, korzystając z linku w nagłówku.",
-    page_VideoTitle: "Demonstracja rozmowy Two AIs",
-    page_AvailableLLMsTitle: "Obecnie dostępne LLM",
-    page_TooltipGoogleThinkingBudget: "Ten model Google używa \"budżetu na myślenie\". Wynik \"myślenia\" jest rozliczany, ale nie jest widoczny na czacie.",
-    page_TooltipAnthropicExtendedThinking: "Ten model Anthropic używa \"rozszerzonego myślenia\". Wynik \"myślenia\" jest rozliczany, ale nie jest widoczny na czacie.",
-    page_TooltipXaiThinking: "Ten model xAI używa \"myślenia\". Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
-    page_TooltipQwenReasoning: "Ten model Qwen używa \"rozumowania/myślenia\". Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
-    page_TooltipDeepSeekReasoning: "Ten model DeepSeek używa \"rozumowania/myślenia\". Wynik jest rozliczany, ale nie jest widoczny na czacie.",
-    page_TooltipGenericReasoning: "Ten model wykorzystuje tokeny rozumowania, które nie są widoczne na czacie, ale są rozliczane jako tokeny wyjściowe.",
-    page_TooltipRequiresVerification: "Wymaga zweryfikowanej organizacji OpenAI. Możesz ją zweryfikować tutaj.",
-    page_TooltipSupportsLanguage: "Obsługuje {languageName}",
-    page_TooltipMayNotSupportLanguage: "Może nie obsługiwać {languageName}",
-    page_BadgePreview: "Podgląd",
-    page_BadgeExperimental: "Eksperymentalny",
-    page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Obecnie dostępne TTS",
-    page_NoTTSOptions: "Obecnie brak dostępnych opcji TTS.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Wprowadź nowy klucz API {serviceName}",
-    apiKeyManager_TestKey: "Testuj klucz",
-    apiKeyManager_TestingKey: "Testowanie klucza...",
-    apiKeyManager_KeyIsValid: "Klucz jest prawidłowy.",
-    apiKeyManager_KeyIsInvalid: "Klucz jest nieprawidłowy.",
-    apiKeyManager_FailedToTestKey: "Testowanie klucza nie powiodło się.",
-    apiKeyManager_ErrorTestingKey: "Błąd podczas testowania klucza: {error}",
-    apiKeyManager_KeyProvider: "Dostawca",
-    apiKeyManager_KeyName: "Nazwa klucza",
-    apiKeyManager_Status: "Status",
-    apiKeyManager_Action: "Akcja",
-
-    // Model capabilities
-    modelCapability_Vision: "Wizja",
-    modelCapability_JSON: "Tryb JSON",
-    modelCapability_Tools: "Użycie narzędzi",
-    modelCapability_ImageGen: "Generowanie obrazów",
-    modelCapability_Multilingual: "Wielojęzyczny",
-    modelCapability_WebSearch: "Wyszukiwanie w Internecie",
-    modelCapability_LargeContext: "Duży kontekst",
-    modelCapability_LongContext: "Długi kontekst",
-    modelCapability_FastResponse: "Szybka odpowiedź",
-    modelCapability_CostEffective: "Ekonomiczny",
-    modelCapability_AdvancedReasoning: "Zaawansowane rozumowanie",
-    modelCapability_Coding: "Kodowanie",
-    modelCapability_Foundation: "Model podstawowy",
-    modelCapability_Experimental: "Eksperymentalny",
-    modelCapability_Beta: "Beta",
-    modelCapability_Preview: "Podgląd",
-    modelCapability_RequiresVerification: "Wymaga weryfikacji",
-    modelCapability_RequiresAccount: "Wymaga konta",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Brak klucza",
+    "apiKeyMissingSubtext": "Ten API Klucz tego dostawcy jest nieobecny lub nieprawidłowy. Dodaj go w ustawieniach.",
+    "apiKeyNotNeeded": "API Klucz nie jest potrzebny",
+    "apiKeyNotNeededSubtext": "Ten dostawca nie wymaga API klucz do bezpłatnej wersji lub niektórych modeli.",
+    "apiKeyFound": "API Zestaw kluczy",
+    "apiKeyFoundSubtext": "Jakiś API klucz jest skonfigurowany dla tego dostawcy.",
+    "modelCategory_FlagshipChat": "Flagowe modele czatów",
+    "modelCategory_Reasoning": "Modele wnioskowania",
+    "modelCategory_CostOptimized": "Modele zoptymalizowane pod kątem kosztów",
+    "modelCategory_OlderGPT": "Starsze modele GPT",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modele",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modele",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modele",
+    "modelCategory_Claude4": "Claude 4 modele",
+    "modelCategory_Claude3_7": "Claude 3.7 modele",
+    "modelCategory_Claude3_5": "Claude 3.5 modele",
+    "modelCategory_Claude3": "Claude 3 modele",
+    "modelCategory_Grok4": "Grok 4 modele",
+    "modelCategory_Grok3": "Grok 3 modele",
+    "modelCategory_Grok3Mini": "Grok 3 Mini modele",
+    "modelCategory_Llama4": "Llama 4 modele",
+    "modelCategory_Llama3_3": "Llama 3.3 modele",
+    "modelCategory_Llama3_2": "Llama 3.2 modele",
+    "modelCategory_Llama3_1": "Llama 3.1 modeli",
+    "modelCategory_Llama3": "Llama 3 modele",
+    "modelCategory_LlamaVision": "Llama Modele wizji",
+    "modelCategory_MetaLlama": "Meta Llama Modele",
+    "modelCategory_Gemma3n": "Gemma Model 3n",
+    "modelCategory_Gemma2": "Gemma 2 modele",
+    "modelCategory_Gemma": "Gemma modele",
+    "modelCategory_GoogleGemma": "Google Gemma Modele",
+    "modelCategory_DeepSeekR1": "DeepSeek Modele R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modele V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek Modele R1 Distill",
+    "modelCategory_DeepSeekModels": "DeepSeek Modele",
+    "modelCategory_MistralAIModels": "Mistral AI Modele",
+    "modelCategory_Qwen3": "Qwen3 modele",
+    "modelCategory_QwQwQ": "Qwen Modele QwQ",
+    "modelCategory_Qwen2_5": "Qwen2,5 modelu",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modele wizji",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modele koderów",
+    "modelCategory_Qwen2": "Qwen2 modele",
+    "modelCategory_Qwen2Vision": "Qwen2 modele Vision",
+    "modelCategory_QwenModels": "Qwen Modele",
+    "modelCategory_OtherModels": "Inne modele",
+    "page_ErrorLoadingUserData": "Nie udało się załadować danych użytkownika: {errorMessage}. Spróbuj odświeżyć.",
+    "page_ErrorUserNotFound": "Użytkownik nie został znaleziony. Zaloguj się ponownie.",
+    "page_ErrorUserApiKeyConfig": "Użytkownik API Nie można załadować konfiguracji klucza. Odśwież ustawienia lub sprawdź je.",
+    "page_ErrorStartingSessionAPI": "API Błąd: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Błąd podczas uruchamiania sesji: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API odpowiedź pomyślna, ale nie zawierała identyfikatora konwersacji.",
+    "page_LoadingUserData": "Ładowanie danych użytkownika...",
+    "page_ErrorAlertTitle": "Błąd",
+    "page_WelcomeTitle": "Witamy w Two AIs",
+    "page_WelcomeSubtitle": "Ta strona internetowa umożliwia słuchanie rozmów między dwoma osobami Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Wymagane klucze",
+    "page_ApiKeysRequiredDescription": "Aby prowadzić rozmowy, musisz podać własne API klucze do AI modele, których chcesz użyć (np. OpenAI, Google, Anthropic) po zalogowaniu. Szczegółowe instrukcje dla każdego dostawcy można znaleźć w Ustawieniach / API Strona kluczy po zalogowaniu.",
+    "page_SignInPrompt": "Aby rozpocząć własną sesję, możesz się zalogować lub utworzyć konto, korzystając z łącza w nagłówku.",
+    "page_VideoTitle": "Two AIs Demo rozmowy",
+    "page_AvailableLLMsTitle": "Aktualnie dostępne LLMs",
+    "page_TooltipGoogleThinkingBudget": "Ten Google Model wykorzystuje „budżet myślowy”. Wynik „myślenia” jest rozliczany, ale nie jest widoczny na czacie.",
+    "page_TooltipAnthropicExtendedThinking": "Ten Anthropic Model wykorzystuje „rozszerzone myślenie”. Wynik „myślenia” jest rozliczany, ale nie jest widoczny na czacie.",
+    "page_TooltipXaiThinking": "Ten xAI Model wykorzystuje „myślenie”. Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
+    "page_TooltipQwenReasoning": "Ten Qwen Model wykorzystuje „rozumowanie/myślenie”. Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
+    "page_TooltipDeepSeekReasoning": "Ten DeepSeek Model wykorzystuje „rozumowanie/myślenie”. Wynik jest rozliczany, ale nie jest widoczny na czacie.",
+    "page_TooltipGenericReasoning": "Model ten wykorzystuje tokeny rozumowania, które nie są widoczne na czacie, ale są rozliczane jako tokeny wyjściowe.",
+    "page_TooltipRequiresVerification": "Wymaga weryfikacji OpenAI Organizacja. Możesz to sprawdzić tutaj.",
+    "page_TooltipSupportsLanguage": "Obsługuje {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ten model może nie obsługiwać w pełni języka {languageName} podczas konwersacji.",
+    "page_BadgePreview": "Zapowiedź",
+    "page_BadgeExperimental": "Eksperymentalny",
+    "page_BadgeBeta": "Beta",
+    "page_AvailableTTSTitle": "Aktualnie dostępne Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "NIE TTS opcje aktualnie dostępne.",
+    "page_TruncatableNoteFormat": "({tekst notatki})",
+    "page_PricesLastVerifiedOn": "Ceny ostatnio zweryfikowane w dniu {date}",
+    "page_PricingPerTokens": "za {amount} Tokeny",
+    "page_ModelCategoryModels": "{model} modele",
+    "ttsVoice_Ugne": "W ogniu",
+    "sessionSetupForm": {
+        "title": "Formularz konfiguracji sesji",
+        "description": "Tutaj możesz wybrać LLM i opcjonalne TTS ustawienia dla każdego agenta.",
+        "agentAModel": "Model Agenta A",
+        "agentBModel": "Model agenta B",
+        "selectLLMForAgentA": "Wybierz LLM dla Agenta A",
+        "selectLLMForAgentB": "Wybierz LLM dla Agenta B",
+        "enableTTS": "Włączać Text-to-Speech (TTS)",
+        "agentATTS": "Agent A TTS",
+        "agentBTTS": "Agent B TTS",
+        "provider": "Dostawca",
+        "initialSystemPrompt": "Początkowy monit systemowy",
+        "initialPromptDescription": "Ten monit zostanie wysłany jako pierwsza wiadomość rozpoczynająca konwersację. Jeśli pozostawisz go pustym, monit nie zostanie wysłany.",
+        "startConversation": "Rozpocznij rozmowę",
+        "starting": "Startowy...",
+        "startTheConversation": "Rozpocznij rozmowę."
+    },
+    "history": {
+        "backToMain": "Powrót do strony głównej",
+        "conversationHistory": "Historia konwersacji",
+        "chatWith": "Porozmawiaj z {agentA} & {agentB}",
+        "viewConversation": "Wyświetl konwersację",
+        "backToPreviousChats": "Powrót do poprzednich czatów",
+        "resumeConversation": "Wznów rozmowę",
+        "resuming": "Wznawianie...",
+        "sessionDetails": "Szczegóły sesji",
+        "language": "Język:",
+        "transcript": "Transkrypcja"
+    }
 };
-export default pl; 
+export default pl;

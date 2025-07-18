@@ -1,433 +1,323 @@
-// src/lib/translations/sk.ts
+// sk.ts
 const sk = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Nastavenia',
-        signIn: 'Prihlásiť sa',
-        signOut: 'Odhlásiť sa',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Nastavenia",
+        "signIn": "Prihlásiť sa",
+        "signOut": "Odhlásiť sa",
+        "previousChats": "Predchádzajúce rozhovory"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Kannadčina",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Maráthčina",
+        "ms": "Malay",
+        "my": "Barmčina",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Nastavenia',
-        sections: {
-            appearance: 'Vzhľad',
-            apiKeys: 'API kľúče',
-            language: 'Jazyk',
+    "settings": {
+        "title": "Nastavenia",
+        "sections": {
+            "appearance": "Vzhľad",
+            "apiKeys": "API Kľúče",
+            "language": "Jazyk"
         },
-        appearance: {
-            theme: 'Téma',
-            light: 'Svetlá',
-            dark: 'Tmavá',
-            system: 'Systémová',
-            description: "Prispôsobte vzhľad a dojem aplikácie."
+        "appearance": {
+            "theme": "Téma",
+            "light": "Svetlo",
+            "dark": "Tmavé",
+            "system": "Systém",
+            "description": "Prispôsobte si vzhľad a dojem z aplikácie."
         },
-        language: {
-            title: 'Jazyk',
-            description: 'Vyberte preferovaný jazyk pre rozhranie',
-            conversationLanguage: 'Jazyk konverzácie',
-            conversationLanguageDescription: 'Jazyk používaný pre konverzácie s AI bude zodpovedať jazyku vášho rozhrania',
+        "language": {
+            "title": "Jazyk",
+            "description": "Vyberte si preferovaný jazyk rozhrania",
+            "conversationLanguage": "Konverzačný jazyk",
+            "conversationLanguageDescription": "Jazyk používaný pre AI konverzácie budú zodpovedať jazyku vášho rozhrania",
+            "supportedLanguages": "Podporované jazyky",
+            "languageSupportInformation": "Informácie o jazykovej podpore",
+            "aiAgentsLanguageDescription": "Rozhovor medzi AI agenti budú vedení vo vami zvolenom jazyku."
         },
-        apiKeys: {
-            title: 'API kľúče',
-            description: 'Spravujte svoje API kľúče pre rôznych poskytovateľov AI',
-            saved: 'Uložené',
-            notSet: 'Nenastavené',
-            setKey: 'Nastaviť kľúč',
-            updateKey: 'Aktualizovať kľúč',
-            removeKey: 'Odstrániť kľúč',
-            getKeyInstructions: 'Získajte svoj API kľúč',
-            noNewKeys: "Neboli zadané žiadne nové API kľúče na uloženie.",
-            unexpectedResponse: "Prijatá neočakávaná odpoveď zo servera.",
-            failedToSaveKey: "Nepodarilo sa uložiť kľúč {serviceName}.",
-            someKeysNotSaved: "Niektoré API kľúče sa nepodarilo uložiť. Skontrolujte podrobnosti nižšie.",
-            keyStatus: "stav kľúča...",
-            apiKeySecurelySaved: "API kľúč bezpečne uložený",
-            confirmRemoveTitle: "Potvrdiť odstránenie",
-            confirmRemoveDescription: "Naozaj chcete odstrániť API kľúč pre {serviceName}? Táto akcia sa nedá vrátiť späť.",
-            failedToRemoveKey: "Nepodarilo sa odstrániť kľúč {serviceName}.",
-            successfullyRemovedKey: "Kľúč {serviceName} úspešne odstránený.",
-            keyNotSet: "Stav kľúča: Nenastavený",
-            keySet: "Stav kľúča: Nastavený",
-            saveButton: "Uložiť API kľúč(e)"
-        },
+        "apiKeys": {
+            "title": "API Kľúče",
+            "description": "Spravujte svoje API kľúče pre rôzne AI poskytovatelia",
+            "saved": "Uložené",
+            "notSet": "Nie je nastavené",
+            "setKey": "Nastaviť kľúč",
+            "updateKey": "Aktualizačný kľúč",
+            "removeKey": "Odstráňte kľúč",
+            "getKeyInstructions": "Získajte svoje API kľúč",
+            "noNewKeys": "Žiadne nové API zadané kľúče na uloženie.",
+            "unexpectedResponse": "Prijatá neočakávaná odpoveď zo servera.",
+            "failedToSaveKey": "Uloženie kľúča {serviceName} zlyhalo.",
+            "someKeysNotSaved": "Niektorí API Kľúče sa nepodarilo uložiť. Skontrolujte podrobnosti nižšie.",
+            "keyStatus": "kľúčový stav...",
+            "apiKeySecurelySaved": "API Kľúč bezpečne uložený",
+            "confirmRemoveTitle": "Potvrdiť odstránenie",
+            "confirmRemoveDescription": "Naozaj chcete odstrániť API kľúč pre {serviceName}? Túto akciu nie je možné vrátiť späť.",
+            "failedToRemoveKey": "Nepodarilo sa odstrániť kľúč {serviceName}.",
+            "successfullyRemovedKey": "Kľúč {serviceName} bol úspešne odstránený.",
+            "keyNotSet": "Stav kľúča: Nenastavené",
+            "keySet": "Stav kľúča: Nastavený",
+            "saveButton": "Uložiť API Kľúč(e)",
+            "enteringNewKeyOverwrites": "Zadaním nového kľúča sa prepíše uložený kľúč.",
+            "keyStoredSecurely": "Váš kľúč bude bezpečne uložený pomocou Google Tajný manažér."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'Konverzácia s AI',
-        setupForm: {
-            title: 'Nastavte si konverzáciu',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Model',
-            selectModel: 'Vyberte model',
-            tts: {
-                title: 'Prevod textu na reč',
-                enable: 'Povoliť prevod textu na reč',
-                provider: 'Poskytovateľ TTS',
-                selectProvider: 'Vyberte poskytovateľa TTS',
-                voice: 'Hlas',
-                selectVoice: 'Vyberte hlas',
-                model: 'Model TTS',
-                selectModel: 'Vyberte model TTS',
+    "main": {
+        "title": "AI Konverzácia",
+        "setupForm": {
+            "title": "Naplánujte si konverzáciu",
+            "agentA": "Agent A.",
+            "agentB": "Agent B.",
+            "model": "Model",
+            "selectModel": "Vyberte model",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Povoliť Text-to-Speech",
+                "provider": "TTS Poskytovateľ",
+                "selectProvider": "Vyberte TTS poskytovateľ",
+                "voice": "Hlas",
+                "selectVoice": "Vybrať hlas",
+                "model": "TTS Model",
+                "selectModel": "Vyberte TTS model"
             },
-            startConversation: 'Začať konverzáciu',
-            conversationPrompt: 'Začnite konverzáciu.',
+            "startConversation": "Začať konverzáciu",
+            "conversationPrompt": "Začnite konverzáciu."
         },
-        conversation: {
-            thinking: 'rozmýšľa...',
-            stop: 'Zastaviť',
-            restart: 'Reštartovať konverzáciu',
+        "conversation": {
+            "thinking": "premýšľanie...",
+            "stop": "Zastaviť",
+            "restart": "Obnoviť konverzáciu"
         },
-        pricing: {
-            estimatedCost: 'Odhadované náklady',
-            perMillionTokens: 'na milión tokenov',
-            input: 'Vstup',
-            output: 'Výstup',
-        },
+        "pricing": {
+            "estimatedCost": "Odhadované náklady",
+            "perMillionTokens": "na milión tokenov",
+            "input": "Vstup",
+            "output": "Výstup"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Prihlásiť sa do Two AIs', // Keep brand name
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Heslo',
-            signIn: 'Prihlásiť sa',
-            signInWithGoogle: 'Prihlásiť sa cez Google',
-            noAccount: "Nemáte účet?",
-            signUp: 'Zaregistrovať sa',
-            forgotPassword: 'Zabudli ste heslo?',
-            orContinueWith: "Alebo pokračujte s",
-            signingIn: "Prihlasovanie..."
+    "auth": {
+        "login": {
+            "title": "Prihlásiť sa Two AIs",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Heslo",
+            "signIn": "Prihlásiť sa",
+            "signInWithGoogle": "Prihlásiť sa pomocou Google",
+            "noAccount": "Nemáte účet?",
+            "signUp": "Zaregistrovať sa",
+            "forgotPassword": "Zabudli ste heslo?",
+            "orContinueWith": "Alebo pokračujte s",
+            "signingIn": "Prihlasovanie..."
         },
-        signup: {
-            title: 'Vytvoriť účet',
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Heslo (aspoň 6 znakov)',
-            signUp: 'Zaregistrovať sa',
-            signUpWithGoogle: 'Zaregistrovať sa cez Google',
-            hasAccount: 'Máte už účet?',
-            signIn: 'Prihlásiť sa',
-            emailLabel: "E-mailová adresa",
-            confirmPasswordPlaceholder: "Potvrďte heslo",
-            signingUp: "Registrácia..."
+        "signup": {
+            "title": "Vytvoriť účet",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Heslo (najmenej 6 znakov)",
+            "signUp": "Zaregistrovať sa",
+            "signUpWithGoogle": "Zaregistrujte sa u Google",
+            "hasAccount": "Už máte účet?",
+            "signIn": "Prihlásiť sa",
+            "emailLabel": "Email adresa",
+            "confirmPasswordPlaceholder": "Potvrdiť heslo",
+            "signingUp": "Registrácia..."
         },
-        errors: {
-            invalidCredentials: 'Neplatný e-mail alebo heslo',
-            userNotFound: 'Používateľ sa nenašiel',
-            weakPassword: 'Heslo musí mať aspoň 6 znakov',
-            emailInUse: 'E-mail sa už používa',
-            generic: 'Vyskytla sa chyba. Skúste to znova.',
-            initialization: "Chyba inicializácie. Skúste to prosím neskôr.",
-            invalidEmail: "Zadajte platnú e-mailovú adresu.",
-            tooManyRequests: "Prístup je dočasne zakázaný z dôvodu príliš veľkého počtu neúspešných pokusov o prihlásenie. Obnovte si heslo alebo to skúste neskôr.",
-            signInFailedPrefix: "Prihlásenie zlyhalo: ",
-            unknownSignInError: "Počas prihlasovania sa vyskytla neznáma chyba.",
-            profileSaveFailedPrefix: "Prihlásenie úspešné, ale uloženie profilových údajov zlyhalo: ",
-            profileCheckSaveFailedPrefix: "Prihlásenie úspešné, ale kontrola/uloženie profilových údajov zlyhalo: ",
-            accountExistsWithDifferentCredential: "Účet s týmto e-mailom už existuje a používa iný spôsob prihlásenia.",
-            googleSignInFailedPrefix: "Prihlásenie cez Google zlyhalo: ",
-            unknownGoogleSignInError: "Počas prihlasovania cez Google sa vyskytla neznáma chyba.",
-            passwordsDoNotMatch: "Heslá sa nezhodujú.",
-            accountCreatedProfileSaveFailedPrefix: "Účet bol vytvorený, ale uloženie profilových údajov zlyhalo: ",
-            unknownProfileSaveError: "Počas ukladania profilu sa vyskytla neznáma chyba.",
-            emailAlreadyRegistered: "Táto e-mailová adresa je už zaregistrovaná.",
-            passwordTooShortSignUp: "Heslo musí mať aspoň 6 znakov.",
-            signUpFailedPrefix: "Registrácia zlyhala: ",
-            unknownSignUpError: "Počas registrácie sa vyskytla neznáma chyba."
-        },
+        "errors": {
+            "invalidCredentials": "Neplatný e-mail alebo heslo",
+            "userNotFound": "Používateľ sa nenašiel",
+            "weakPassword": "Heslo by malo mať aspoň 6 znakov",
+            "emailInUse": "Email už v prevádzke",
+            "generic": "Vyskytla sa chyba. Skúste to znova.",
+            "initialization": "Chyba inicializácie. Skúste to znova neskôr.",
+            "invalidEmail": "Zadajte platnú e-mailovú adresu.",
+            "tooManyRequests": "Prístup je dočasne zablokovaný z dôvodu príliš veľkého počtu neúspešných pokusov o prihlásenie. Obnovte si heslo alebo to skúste znova neskôr.",
+            "signInFailedPrefix": "Prihlásenie zlyhalo: ",
+            "unknownSignInError": "Počas prihlasovania sa vyskytla neznáma chyba.",
+            "profileSaveFailedPrefix": "Prihlásený/á, ale nepodarilo sa uložiť údaje profilu: ",
+            "profileCheckSaveFailedPrefix": "Prihlásený/á som, ale nepodarilo sa skontrolovať/uložiť údaje profilu: ",
+            "accountExistsWithDifferentCredential": "Účet s touto e-mailovou adresou už existuje a používa inú metódu prihlásenia.",
+            "googleSignInFailedPrefix": "Google Prihlásenie zlyhalo: ",
+            "unknownGoogleSignInError": "Počas Google Prihlásenie.",
+            "passwordsDoNotMatch": "Heslá sa nezhodujú.",
+            "accountCreatedProfileSaveFailedPrefix": "Účet bol vytvorený, ale uloženie údajov profilu sa nepodarilo: ",
+            "unknownProfileSaveError": "Pri ukladaní profilu sa vyskytla neznáma chyba.",
+            "emailAlreadyRegistered": "Táto e-mailová adresa je už zaregistrovaná.",
+            "passwordTooShortSignUp": "Heslo by malo mať dĺžku aspoň 6 znakov.",
+            "signUpFailedPrefix": "Registrácia zlyhala: ",
+            "unknownSignUpError": "Počas registrácie sa vyskytla neznáma chyba."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Načítava sa...',
-        error: 'Chyba',
-        save: 'Uložiť',
-        cancel: 'Zrušiť',
-        delete: 'Odstrániť',
-        confirm: 'Potvrdiť',
-        or: 'alebo',
-        MoreInformation: "Viac informácií",
-        Example: "Príklad:",
-        ShowMore: "Zobraziť viac",
-        ShowLess: "Zobraziť menej",
-        AwaitingApproval: "Čaká na schválenie...",
-        OpenInNewTab: "Otvoriť na novej karte",
-        AdvancedSettings: "Rozšírené nastavenia",
-        Name: "Názov",
-        Created: "Vytvorené",
-        Updated: "Aktualizované",
-        Launched: "Spustené",
-        Docs: "Dokumentácia",
-        Blog: "Blog",
-        Pricing: "Ceny",
-        Terms: "Podmienky",
-        Privacy: "Súkromie",
-        Changelog: "Zoznam zmien",
-        Copy: "Kopírovať",
-        Copied: "Skopírované",
-        TryAgain: "Skúsiť znova"
+    "common": {
+        "loading": "Načítava sa...",
+        "error": "Chyba",
+        "save": "Uložiť",
+        "cancel": "Zrušiť",
+        "delete": "Odstrániť",
+        "confirm": "Potvrdiť",
+        "or": "alebo"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "Chýba API kľúč",
-    apiKeyMissingSubtext: "API kľúč pre tohto poskytovateľa chýba alebo je neplatný. Pridajte ho v nastaveniach.",
-    apiKeyNotNeeded: "API kľúč nie je potrebný",
-    apiKeyNotNeededSubtext: "Tento poskytovateľ nevyžaduje API kľúč pre svoju bezplatnú úroveň alebo niektoré modely.",
-    apiKeyFound: "API kľúč je nastavený",
-    apiKeyFoundSubtext: "Pre tohto poskytovateľa je nakonfigurovaný API kľúč.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Vlajkové chatovacie modely",
-    modelCategory_Reasoning: "Modely na uvažovanie",
-    modelCategory_CostOptimized: "Nákladovo optimalizované modely",
-    modelCategory_OlderGPT: "Staršie modely GPT",
-    modelCategory_Gemini2_5: "Séria Gemini 2.5",
-    modelCategory_Gemini2_0: "Séria Gemini 2.0",
-    modelCategory_Gemini1_5: "Séria Gemini 1.5",
-    modelCategory_Claude3_7: "Séria Claude 3.7",
-    modelCategory_Claude3_5: "Séria Claude 3.5",
-    modelCategory_Claude3: "Séria Claude 3",
-    modelCategory_Grok3: "Séria Grok 3",
-    modelCategory_Grok3Mini: "Séria Grok 3 Mini",
-    modelCategory_Llama4: "Séria Llama 4",
-    modelCategory_Llama3_3: "Séria Llama 3.3",
-    modelCategory_Llama3_2: "Séria Llama 3.2",
-    modelCategory_Llama3_1: "Séria Llama 3.1",
-    modelCategory_Llama3: "Séria Llama 3",
-    modelCategory_LlamaVision: "Modely Llama Vision",
-    modelCategory_MetaLlama: "Modely Meta Llama",
-    modelCategory_Gemma2: "Séria Gemma 2",
-    modelCategory_Gemma: "Séria Gemma",
-    modelCategory_GoogleGemma: "Modely Google Gemma",
-    modelCategory_DeepSeekR1: "Séria DeepSeek R1",
-    modelCategory_DeepSeekV3: "Séria DeepSeek V3",
-    modelCategory_DeepSeekR1Distill: "Séria DeepSeek R1 Distill",
-    modelCategory_DeepSeekModels: "Modely DeepSeek",
-    modelCategory_MistralAIModels: "Modely Mistral AI",
-    modelCategory_Qwen3: "Séria Qwen3",
-    modelCategory_QwQwQ: "Séria Qwen QwQ",
-    modelCategory_Qwen2_5: "Séria Qwen2.5",
-    modelCategory_Qwen2_5Vision: "Séria Qwen2.5 Vision",
-    modelCategory_Qwen2_5Coder: "Séria Qwen2.5 Coder",
-    modelCategory_Qwen2: "Séria Qwen2",
-    modelCategory_Qwen2Vision: "Séria Qwen2 Vision",
-    modelCategory_QwenModels: "Modely Qwen",
-    modelCategory_OtherModels: "Iné modely",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Nepodarilo sa načítať údaje používateľa: {errorMessage}. Skúste obnoviť stránku.",
-    page_ErrorUserNotFound: "Používateľ sa nenašiel. Prihláste sa znova.",
-    page_ErrorUserApiKeyConfig: "Konfiguráciu API kľúča používateľa sa nepodarilo načítať. Obnovte stránku alebo skontrolujte nastavenia.",
-    page_ErrorStartingSessionAPI: "Chyba API: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Chyba pri spustení relácie: {errorMessage}",
-    page_ErrorSessionIdMissing: "Odpoveď API bola úspešná, ale neobsahovala ID konverzácie.",
-    page_LoadingUserData: "Načítavajú sa údaje používateľa...",
-    page_ErrorAlertTitle: "Chyba",
-    page_WelcomeTitle: "Vitajte v Two AIs",
-    page_WelcomeSubtitle: "Táto webová stránka vám umožňuje počúvať konverzácie medzi dvoma LLM.",
-    page_ApiKeysRequiredTitle: "Vyžadujú sa API kľúče",
-    page_ApiKeysRequiredDescription: "Na spustenie konverzácií budete musieť po prihlásení poskytnúť vlastné API kľúče pre modely AI, ktoré chcete použiť (napr. OpenAI, Google, Anthropic). Podrobné pokyny pre každého poskytovateľa nájdete po prihlásení na stránke Nastavenia / API kľúče.",
-    page_SignInPrompt: "Ak chcete začať vlastnú reláciu, môžete sa prihlásiť alebo vytvoriť účet pomocou odkazu v hlavičke.",
-    page_VideoTitle: "Ukážka konverzácie Two AIs",
-    page_AvailableLLMsTitle: "Aktuálne dostupné LLM",
-    page_TooltipGoogleThinkingBudget: "Tento model Google používa 'rozpočet na premýšľanie'. Výstup 'premýšľania' je spoplatnený, ale v chate nie je viditeľný.",
-    page_TooltipAnthropicExtendedThinking: "Tento model Anthropic používa 'rozšírené premýšľanie'. Výstup 'premýšľania' je spoplatnený, ale v chate nie je viditeľný.",
-    page_TooltipXaiThinking: "Tento model xAI používa 'premýšľanie'. Tento výstup je spoplatnený, ale v chate nie je viditeľný.",
-    page_TooltipQwenReasoning: "Tento model Qwen používa 'uvažovanie/premýšľanie'. Tento výstup je spoplatnený, ale v chate nie je viditeľný.",
-    page_TooltipDeepSeekReasoning: "Tento model DeepSeek používa 'uvažovanie/premýšľanie'. Výstup je spoplatnený, ale v chate nie je viditeľný.",
-    page_TooltipGenericReasoning: "Tento model používa tokeny uvažovania, ktoré nie sú viditeľné v chate, ale sú spoplatnené ako výstupné tokeny.",
-    page_TooltipRequiresVerification: "Vyžaduje overenú organizáciu OpenAI. Overiť môžete tu.",
-    page_TooltipSupportsLanguage: "Podporuje {languageName}",
-    page_TooltipMayNotSupportLanguage: "Nemusí podporovať {languageName}",
-    page_BadgePreview: "Ukážka",
-    page_BadgeExperimental: "Experimentálne",
-    page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Aktuálne dostupné TTS",
-    page_NoTTSOptions: "Momentálne nie sú k dispozícii žiadne možnosti TTS.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Zadajte nový API kľúč {serviceName}",
-    apiKeyManager_TestKey: "Otestovať kľúč",
-    apiKeyManager_TestingKey: "Testuje sa kľúč...",
-    apiKeyManager_KeyIsValid: "Kľúč je platný.",
-    apiKeyManager_KeyIsInvalid: "Kľúč je neplatný.",
-    apiKeyManager_FailedToTestKey: "Nepodarilo sa otestovať kľúč.",
-    apiKeyManager_ErrorTestingKey: "Chyba pri testovaní kľúča: {error}",
-    apiKeyManager_KeyProvider: "Poskytovateľ",
-    apiKeyManager_KeyName: "Názov kľúča",
-    apiKeyManager_Status: "Stav",
-    apiKeyManager_Action: "Akcia",
-
-    // Model capabilities
-    modelCapability_Vision: "Videnie",
-    modelCapability_JSON: "Režim JSON",
-    modelCapability_Tools: "Používanie nástrojov",
-    modelCapability_ImageGen: "Generovanie obrázkov",
-    modelCapability_Multilingual: "Viacjazyčný",
-    modelCapability_WebSearch: "Vyhľadávanie na webe",
-    modelCapability_LargeContext: "Veľký kontext",
-    modelCapability_LongContext: "Dlhý kontext",
-    modelCapability_FastResponse: "Rýchla odpoveď",
-    modelCapability_CostEffective: "Nákladovo efektívny",
-    modelCapability_AdvancedReasoning: "Pokročilé uvažovanie",
-    modelCapability_Coding: "Kódovanie",
-    modelCapability_Foundation: "Základný model",
-    modelCapability_Experimental: "Experimentálne",
-    modelCapability_Beta: "Beta",
-    modelCapability_Preview: "Ukážka",
-    modelCapability_RequiresVerification: "Vyžaduje overenie",
-    modelCapability_RequiresAccount: "Vyžaduje účet",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Chýbajúci kľúč",
+    "apiKeyMissingSubtext": "Ten/Tá/To API Kľúč pre tohto poskytovateľa chýba alebo je neplatný. Pridajte ho v nastaveniach.",
+    "apiKeyNotNeeded": "API Kľúč nie je potrebný",
+    "apiKeyNotNeededSubtext": "Tento poskytovateľ nevyžaduje API kľúč pre svoju bezplatnú úroveň alebo určité modely.",
+    "apiKeyFound": "API Sada kľúčov",
+    "apiKeyFoundSubtext": "Jeden API Kľúč je nakonfigurovaný pre tohto poskytovateľa.",
+    "modelCategory_FlagshipChat": "Vlajkové modely chatu",
+    "modelCategory_Reasoning": "Modely uvažovania",
+    "modelCategory_CostOptimized": "Modely s optimalizovanými nákladmi",
+    "modelCategory_OlderGPT": "Staršie modely GPT",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modely",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modely",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modely",
+    "modelCategory_Claude4": "Claude 4 modely",
+    "modelCategory_Claude3_7": "Claude 3.7 modely",
+    "modelCategory_Claude3_5": "Claude 3.5 modely",
+    "modelCategory_Claude3": "Claude 3 modely",
+    "modelCategory_Grok4": "Grok 4 modely",
+    "modelCategory_Grok3": "Grok 3 modely",
+    "modelCategory_Grok3Mini": "Grok 3 Mini modely",
+    "modelCategory_Llama4": "Llama 4 modely",
+    "modelCategory_Llama3_3": "Llama 3,3 modely",
+    "modelCategory_Llama3_2": "Llama 3.2 modely",
+    "modelCategory_Llama3_1": "Llama 3.1 modely",
+    "modelCategory_Llama3": "Llama 3 modely",
+    "modelCategory_LlamaVision": "Llama Modely videnia",
+    "modelCategory_MetaLlama": "Meta Llama Modely",
+    "modelCategory_Gemma3n": "Gemma 3n model",
+    "modelCategory_Gemma2": "Gemma 2 modely",
+    "modelCategory_Gemma": "Gemma modely",
+    "modelCategory_GoogleGemma": "Google Gemma Modely",
+    "modelCategory_DeepSeekR1": "DeepSeek Modely R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modely V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek Modely R1 Distill",
+    "modelCategory_DeepSeekModels": "DeepSeek Modely",
+    "modelCategory_MistralAIModels": "Mistral AI Modely",
+    "modelCategory_Qwen3": "Qwen3 modely",
+    "modelCategory_QwQwQ": "Qwen Modely QwQ",
+    "modelCategory_Qwen2_5": "Qwen2,5 modely",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modely videnia",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modely kódovačov",
+    "modelCategory_Qwen2": "Qwen2 modely",
+    "modelCategory_Qwen2Vision": "Qwen2 modely Vision",
+    "modelCategory_QwenModels": "Qwen Modely",
+    "modelCategory_OtherModels": "Iné modely",
+    "page_ErrorLoadingUserData": "Nepodarilo sa načítať používateľské údaje: {errorMessage}. Skúste obnoviť stránku.",
+    "page_ErrorUserNotFound": "Používateľ sa nenašiel. Prihláste sa znova.",
+    "page_ErrorUserApiKeyConfig": "Používateľ API Konfiguráciu kľúča sa nepodarilo načítať. Obnovte stránku alebo skontrolujte nastavenia.",
+    "page_ErrorStartingSessionAPI": "API Chyba: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Chyba pri spustení relácie: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API Odpoveď bola úspešná, ale neobsahovala ID konverzácie.",
+    "page_LoadingUserData": "Načítavajú sa používateľské údaje...",
+    "page_ErrorAlertTitle": "Chyba",
+    "page_WelcomeTitle": "Vitajte na Two AIs",
+    "page_WelcomeSubtitle": "Táto webová stránka vám umožňuje počúvať rozhovory medzi dvoma Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Požadované kľúče",
+    "page_ApiKeysRequiredDescription": "Ak chcete viesť konverzácie, budete musieť poskytnúť svoje vlastné API kľúče pre AI modely, ktoré chcete použiť (napr. OpenAI, Google, Anthropic) po prihlásení. Podrobné pokyny pre každého poskytovateľa nájdete v časti Nastavenia / API Stránka s kľúčmi po prihlásení.",
+    "page_SignInPrompt": "Ak chcete začať vlastnú reláciu, môžete sa prihlásiť alebo si vytvoriť účet pomocou odkazu v hlavičke.",
+    "page_VideoTitle": "Two AIs Ukážka konverzácie",
+    "page_AvailableLLMsTitle": "Momentálne k dispozícii LLMs",
+    "page_TooltipGoogleThinkingBudget": "Toto Google Model používa „rozpočet na premýšľanie“. Výstup „premýšľania“ je fakturovaný, ale nie je viditeľný v chate.",
+    "page_TooltipAnthropicExtendedThinking": "Toto Anthropic Model používa „rozšírené myslenie“. Výstup „myslenia“ je fakturovaný, ale nie je viditeľný v chate.",
+    "page_TooltipXaiThinking": "Toto xAI Model používa „myslenie“. Tento výstup je fakturovaný, ale nie je viditeľný v chate.",
+    "page_TooltipQwenReasoning": "Toto Qwen Model používa „uvažovanie/myslenie“. Tento výstup je fakturovaný, ale nie je viditeľný v chate.",
+    "page_TooltipDeepSeekReasoning": "Toto DeepSeek Model používa „uvažovanie/myslenie“. Výstup je fakturovaný, ale nie je viditeľný v chate.",
+    "page_TooltipGenericReasoning": "Tento model používa tokeny uvažovania, ktoré nie sú viditeľné v chate, ale sú účtované ako výstupné tokeny.",
+    "page_TooltipRequiresVerification": "Vyžaduje sa overenie OpenAI organizácia. Môžete si to overiť tu.",
+    "page_TooltipSupportsLanguage": "Podporuje {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Tento model nemusí plne podporovať jazyk {languageName} pre konverzáciu.",
+    "page_BadgePreview": "Náhľad",
+    "page_BadgeExperimental": "Experimentálne",
+    "page_BadgeBeta": "Beta verzia",
+    "page_AvailableTTSTitle": "Momentálne k dispozícii Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Nie TTS aktuálne dostupné možnosti.",
+    "page_TruncatableNoteFormat": "({noteText})",
+    "page_PricesLastVerifiedOn": "Ceny boli naposledy overené dňa {date}",
+    "page_PricingPerTokens": "za {amount} Žetóny",
+    "page_ModelCategoryModels": "{model} modely",
+    "ttsVoice_Ugne": "V ohni",
+    "sessionSetupForm": {
+        "title": "Formulár na nastavenie relácie",
+        "description": "Tu si môžete vybrať LLM a voliteľné TTS nastavenia pre každého agenta.",
+        "agentAModel": "Model agenta A",
+        "agentBModel": "Model agenta B",
+        "selectLLMForAgentA": "Vyberte LLM pre agenta A",
+        "selectLLMForAgentB": "Vyberte LLM pre agenta B",
+        "enableTTS": "Povoliť Text-to-Speech (TTS)",
+        "agentATTS": "Agent A. TTS",
+        "agentBTTS": "Agent B. TTS",
+        "provider": "Poskytovateľ",
+        "initialSystemPrompt": "Úvodná systémová výzva",
+        "initialPromptDescription": "Táto výzva sa odošle ako prvá správa na začatie konverzácie. Ak toto pole necháte prázdne, výzva sa nezobrazí.",
+        "startConversation": "Začať konverzáciu",
+        "starting": "Začína sa...",
+        "startTheConversation": "Začnite konverzáciu."
+    },
+    "history": {
+        "backToMain": "Späť na hlavný obsah",
+        "conversationHistory": "História konverzácií",
+        "chatWith": "Chatujte s {agentA} a {agentB}",
+        "viewConversation": "Zobraziť konverzáciu",
+        "backToPreviousChats": "Späť na predchádzajúce rozhovory",
+        "resumeConversation": "Obnoviť konverzáciu",
+        "resuming": "Obnovuje sa...",
+        "sessionDetails": "Podrobnosti o relácii",
+        "language": "Jazyk:",
+        "transcript": "Prepis"
+    }
 };
-export default sk; 
+export default sk;

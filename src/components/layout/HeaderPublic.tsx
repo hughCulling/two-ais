@@ -43,7 +43,7 @@ export default function HeaderPublic() {
 
                         {/* --- Auth Links (Desktop) --- */}
                         <Link href={`/${language.code}/login`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Sign in to your account">
-                            Sign In
+                            {t.header.signIn}
                         </Link>
                     </div>
 
@@ -72,7 +72,7 @@ export default function HeaderPublic() {
             <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" role="navigation" aria-label="Mobile navigation menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <Link href={`/${language.code}/login`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
-                        Sign In
+                        {t.header.signIn}
                     </Link>
 
                     {/* Language Selector for Mobile */}

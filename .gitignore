@@ -33,6 +33,7 @@ firebase-debug*.log
 
 # env files (can opt-in for committing if needed)
 .env*
+two-ais-e71e9e3ac81e.json
 
 # vercel
 .vercel

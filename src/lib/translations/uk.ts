@@ -1,434 +1,323 @@
-// src/lib/translations/uk.ts
+// uk.ts
 const uk = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Налаштування',
-        signIn: 'Увійти',
-        signOut: 'Вийти',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Налаштування",
+        "signIn": "Увійти",
+        "signOut": "Вийти",
+        "previousChats": "Попередні чати"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Каннада",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Маратхі",
+        "ms": "Malay",
+        "my": "Бірманський",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Налаштування',
-        sections: {
-            appearance: 'Зовнішній вигляд',
-            apiKeys: 'Ключі API',
-            language: 'Мова',
+    "settings": {
+        "title": "Налаштування",
+        "sections": {
+            "appearance": "Зовнішній вигляд",
+            "apiKeys": "API Ключі",
+            "language": "Мова"
         },
-        appearance: {
-            theme: 'Тема',
-            light: 'Світла',
-            dark: 'Темна',
-            system: 'Системна',
-            description: "Налаштуйте вигляд і відчуття програми."
+        "appearance": {
+            "theme": "Тема",
+            "light": "Світло",
+            "dark": "Темний",
+            "system": "Система",
+            "description": "Налаштуйте зовнішній вигляд та функціональність програми."
         },
-        language: {
-            title: 'Мова',
-            description: 'Виберіть бажану мову для інтерфейсу',
-            conversationLanguage: 'Мова розмови',
-            conversationLanguageDescription: 'Мова, яка використовується для розмов зі штучним інтелектом, відповідатиме мові вашого інтерфейсу',
+        "language": {
+            "title": "Мова",
+            "description": "Виберіть бажану мову інтерфейсу",
+            "conversationLanguage": "Мова розмови",
+            "conversationLanguageDescription": "Мова, що використовується для AI розмови відповідатимуть мові вашого інтерфейсу",
+            "supportedLanguages": "Підтримувані мови",
+            "languageSupportInformation": "Інформація про мовну підтримку",
+            "aiAgentsLanguageDescription": "Розмова між AI агенти будуть проводитися обраною вами мовою."
         },
-        apiKeys: {
-            title: 'Ключі API',
-            description: 'Керуйте своїми ключами API для різних постачальників ШІ',
-            saved: 'Збережено',
-            notSet: 'Не встановлено',
-            setKey: 'Встановити ключ',
-            updateKey: 'Оновити ключ',
-            removeKey: 'Видалити ключ',
-            getKeyInstructions: 'Отримайте свій ключ API',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Немає нових ключів API для збереження.",
-            unexpectedResponse: "Отримано неочікувану відповідь від сервера.",
-            failedToSaveKey: "Не вдалося зберегти ключ {serviceName}.",
-            someKeysNotSaved: "Деякі ключі API не вдалося зберегти. Будь ласка, перевірте деталі нижче.",
-            keyStatus: "статус ключа...",
-            apiKeySecurelySaved: "Ключ API надійно збережено",
-            confirmRemoveTitle: "Підтвердити видалення",
-            confirmRemoveDescription: "Ви впевнені, що хочете видалити ключ API для {serviceName}? Цю дію неможливо скасувати.",
-            failedToRemoveKey: "Не вдалося видалити ключ {serviceName}.",
-            successfullyRemovedKey: "Ключ {serviceName} успішно видалено.",
-            keyNotSet: "Статус ключа: Не встановлено",
-            keySet: "Статус ключа: Встановлено",
-            saveButton: "Зберегти ключ(і) API"
-        },
+        "apiKeys": {
+            "title": "API Ключі",
+            "description": "Керуйте своїм API ключі для різних AI постачальники",
+            "saved": "Збережено",
+            "notSet": "Не встановлено",
+            "setKey": "Встановити ключ",
+            "updateKey": "Ключ оновлення",
+            "removeKey": "Видалити ключ",
+            "getKeyInstructions": "Отримайте свій API ключ",
+            "noNewKeys": "Нічого нового API ключі, введені для збереження.",
+            "unexpectedResponse": "Отримано неочікувану відповідь від сервера.",
+            "failedToSaveKey": "Не вдалося зберегти ключ {serviceName}.",
+            "someKeysNotSaved": "Деякі API ключі не вдалося зберегти. Будь ласка, перевірте деталі нижче.",
+            "keyStatus": "ключовий стан...",
+            "apiKeySecurelySaved": "API Ключ надійно збережено",
+            "confirmRemoveTitle": "Підтвердити видалення",
+            "confirmRemoveDescription": "Ви впевнені, що хочете видалити API ключ для {serviceName}? Цю дію неможливо скасувати.",
+            "failedToRemoveKey": "Не вдалося видалити ключ {serviceName}.",
+            "successfullyRemovedKey": "Ключ {serviceName} успішно видалено.",
+            "keyNotSet": "Стан ключа: Не встановлено",
+            "keySet": "Стан ключа: Встановлено",
+            "saveButton": "Зберегти API Ключ(и)",
+            "enteringNewKeyOverwrites": "Введення нового ключа перезапише збережений.",
+            "keyStoredSecurely": "Ваш ключ буде надійно збережено за допомогою Google Таємний менеджер."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'Розмова зі ШІ',
-        setupForm: {
-            title: 'Налаштуйте свою розмову',
-            agentA: 'Агент А',
-            agentB: 'Агент Б',
-            model: 'Модель',
-            selectModel: 'Виберіть модель',
-            tts: {
-                title: 'Текст-в-мовлення',
-                enable: 'Увімкнути Текст-в-мовлення',
-                provider: 'Постачальник TTS',
-                selectProvider: 'Виберіть постачальника TTS',
-                voice: 'Голос',
-                selectVoice: 'Виберіть голос',
-                model: 'Модель TTS',
-                selectModel: 'Виберіть модель TTS',
+    "main": {
+        "title": "AI Розмова",
+        "setupForm": {
+            "title": "Налаштуйте свою розмову",
+            "agentA": "Агент А",
+            "agentB": "Агент Б",
+            "model": "Модель",
+            "selectModel": "Виберіть модель",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Увімкнути Text-to-Speech",
+                "provider": "TTS Постачальник",
+                "selectProvider": "Виберіть TTS постачальник",
+                "voice": "Голос",
+                "selectVoice": "Вибрати голос",
+                "model": "TTS Модель",
+                "selectModel": "Виберіть TTS модель"
             },
-            startConversation: 'Почати розмову',
-            conversationPrompt: 'Почніть розмову.',
+            "startConversation": "Почати розмову",
+            "conversationPrompt": "Почніть розмову."
         },
-        conversation: {
-            thinking: 'думає...',
-            stop: 'Зупинити',
-            restart: 'Перезапустити розмову',
+        "conversation": {
+            "thinking": "мислення...",
+            "stop": "СТІЙ",
+            "restart": "Перезапустити розмову"
         },
-        pricing: {
-            estimatedCost: 'Орієнтовна вартість',
-            perMillionTokens: 'за мільйон токенів',
-            input: 'Вхід',
-            output: 'Вихід',
-        },
+        "pricing": {
+            "estimatedCost": "Орієнтовна вартість",
+            "perMillionTokens": "на мільйон токенів",
+            "input": "Вхід",
+            "output": "Вихід"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Увійти до Two AIs', // Keep brand name
-            emailPlaceholder: 'Електронна пошта',
-            passwordPlaceholder: 'Пароль',
-            signIn: 'Увійти',
-            signInWithGoogle: 'Увійти через Google',
-            noAccount: "Немає облікового запису?",
-            signUp: 'Зареєструватися',
-            forgotPassword: 'Забули пароль?',
-            orContinueWith: "Або продовжити з",
-            signingIn: "Вхід..."
+    "auth": {
+        "login": {
+            "title": "Увійти Two AIs",
+            "emailPlaceholder": "Електронна пошта",
+            "passwordPlaceholder": "Пароль",
+            "signIn": "Увійти",
+            "signInWithGoogle": "Увійти за допомогою Google",
+            "noAccount": "Немає облікового запису?",
+            "signUp": "Зареєструватися",
+            "forgotPassword": "Забули пароль?",
+            "orContinueWith": "Або продовжуйте з",
+            "signingIn": "Вхід..."
         },
-        signup: {
-            title: 'Створити обліковий запис',
-            emailPlaceholder: 'Електронна пошта',
-            passwordPlaceholder: 'Пароль (принаймні 6 символів)',
-            signUp: 'Зареєструватися',
-            signUpWithGoogle: 'Зареєструватися через Google',
-            hasAccount: 'Вже є обліковий запис?',
-            signIn: 'Увійти',
-            emailLabel: "Адреса електронної пошти",
-            confirmPasswordPlaceholder: "Підтвердьте пароль",
-            signingUp: "Реєстрація..."
+        "signup": {
+            "title": "Створити обліковий запис",
+            "emailPlaceholder": "Електронна пошта",
+            "passwordPlaceholder": "Пароль (принаймні 6 символів)",
+            "signUp": "Зареєструватися",
+            "signUpWithGoogle": "Зареєструватися за допомогою Google",
+            "hasAccount": "Вже маєте обліковий запис?",
+            "signIn": "Увійти",
+            "emailLabel": "Email адреса",
+            "confirmPasswordPlaceholder": "Підтвердьте пароль",
+            "signingUp": "Реєстрація..."
         },
-        errors: {
-            invalidCredentials: 'Неправильна адреса електронної пошти або пароль',
-            userNotFound: 'Користувача не знайдено',
-            weakPassword: 'Пароль має містити принаймні 6 символів',
-            emailInUse: 'Ця адреса електронної пошти вже використовується',
-            generic: 'Сталася помилка. Будь ласка, спробуйте ще раз.',
-            initialization: "Помилка ініціалізації. Будь ласка, спробуйте пізніше.",
-            invalidEmail: "Будь ласка, введіть дійсну адресу електронної пошти.",
-            tooManyRequests: "Доступ тимчасово вимкнено через занадто велику кількість невдалих спроб входу. Будь ласка, скиньте пароль або спробуйте пізніше.",
-            signInFailedPrefix: "Помилка входу: ",
-            unknownSignInError: "Під час входу сталася невідома помилка.",
-            profileSaveFailedPrefix: "Вхід успішний, але не вдалося зберегти дані профілю: ",
-            profileCheckSaveFailedPrefix: "Вхід успішний, але не вдалося перевірити/зберегти дані профілю: ",
-            accountExistsWithDifferentCredential: "Обліковий запис із цією адресою електронної пошти вже існує з іншим методом входу.",
-            googleSignInFailedPrefix: "Помилка входу через Google: ",
-            unknownGoogleSignInError: "Під час входу через Google сталася невідома помилка.",
-            passwordsDoNotMatch: "Паролі не збігаються.",
-            accountCreatedProfileSaveFailedPrefix: "Обліковий запис створено, але не вдалося зберегти дані профілю: ",
-            unknownProfileSaveError: "Під час збереження профілю сталася невідома помилка.",
-            emailAlreadyRegistered: "Ця адреса електронної пошти вже зареєстрована.",
-            passwordTooShortSignUp: "Пароль повинен містити щонайменше 6 символів.",
-            signUpFailedPrefix: "Помилка реєстрації: ",
-            unknownSignUpError: "Під час реєстрації сталася невідома помилка."
-        },
+        "errors": {
+            "invalidCredentials": "Недійсна електронна адреса або пароль",
+            "userNotFound": "Користувача не знайдено",
+            "weakPassword": "Пароль має містити щонайменше 6 символів",
+            "emailInUse": "Email вже використовується",
+            "generic": "Сталася помилка. Будь ласка, спробуйте ще раз.",
+            "initialization": "Помилка ініціалізації. Будь ласка, спробуйте пізніше.",
+            "invalidEmail": "Будь ласка, введіть дійсну адресу електронної пошти.",
+            "tooManyRequests": "Доступ тимчасово вимкнено через забагато невдалих спроб входу. Будь ласка, скиньте пароль або спробуйте пізніше.",
+            "signInFailedPrefix": "Не вдалося ввійти: ",
+            "unknownSignInError": "Під час входу сталася невідома помилка.",
+            "profileSaveFailedPrefix": "Увійшов, але не вдалося зберегти дані профілю: ",
+            "profileCheckSaveFailedPrefix": "Увійшов, але не вдалося перевірити/зберегти дані профілю: ",
+            "accountExistsWithDifferentCredential": "Обліковий запис із цією електронною адресою вже існує, використовуючи інший метод входу.",
+            "googleSignInFailedPrefix": "Google Не вдалося ввійти: ",
+            "unknownGoogleSignInError": "Сталася невідома помилка під час Google Вхід.",
+            "passwordsDoNotMatch": "Паролі не збігаються.",
+            "accountCreatedProfileSaveFailedPrefix": "Обліковий запис створено, але не вдалося зберегти дані профілю: ",
+            "unknownProfileSaveError": "Під час збереження профілю сталася невідома помилка.",
+            "emailAlreadyRegistered": "Ця адреса електронної пошти вже зареєстрована.",
+            "passwordTooShortSignUp": "Пароль повинен містити щонайменше 6 символів.",
+            "signUpFailedPrefix": "Не вдалося зареєструватися: ",
+            "unknownSignUpError": "Під час реєстрації сталася невідома помилка."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Завантаження...',
-        error: 'Помилка',
-        save: 'Зберегти',
-        cancel: 'Скасувати',
-        delete: 'Видалити',
-        confirm: 'Підтвердити',
-        or: 'або',
-        MoreInformation: "Більше інформації",
-        Example: "Приклад:",
-        ShowMore: "Показати більше",
-        ShowLess: "Показати менше",
-        AwaitingApproval: "Очікування схвалення...",
-        OpenInNewTab: "Відкрити в новій вкладці",
-        AdvancedSettings: "Розширені налаштування",
-        Name: "Ім\'я",
-        Created: "Створено",
-        Updated: "Оновлено",
-        Launched: "Запущено",
-        Docs: "Документація",
-        Blog: "Блог",
-        Pricing: "Ціни",
-        Terms: "Умови",
-        Privacy: "Конфіденційність",
-        Changelog: "Журнал змін",
-        Copy: "Копіювати",
-        Copied: "Скопійовано",
-        TryAgain: "Спробувати ще раз"
+    "common": {
+        "loading": "Завантаження...",
+        "error": "Помилка",
+        "save": "Зберегти",
+        "cancel": "Скасувати",
+        "delete": "Видалити",
+        "confirm": "Підтвердити",
+        "or": "або"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "Відсутній ключ API",
-    apiKeyMissingSubtext: "Ключ API для цього провайдера відсутній або недійсний. Будь ласка, додайте його в налаштуваннях.",
-    apiKeyNotNeeded: "Ключ API не потрібен",
-    apiKeyNotNeededSubtext: "Цей провайдер не вимагає ключа API для свого безкоштовного рівня або певних моделей.",
-    apiKeyFound: "Ключ API встановлено",
-    apiKeyFoundSubtext: "Для цього провайдера налаштовано ключ API.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Флагманські моделі чату",
-    modelCategory_Reasoning: "Моделі для міркувань",
-    modelCategory_CostOptimized: "Моделі, оптимізовані за вартістю",
-    modelCategory_OlderGPT: "Старіші моделі GPT",
-    modelCategory_Gemini2_5: "Серія Gemini 2.5",
-    modelCategory_Gemini2_0: "Серія Gemini 2.0",
-    modelCategory_Gemini1_5: "Серія Gemini 1.5",
-    modelCategory_Claude3_7: "Серія Claude 3.7",
-    modelCategory_Claude3_5: "Серія Claude 3.5",
-    modelCategory_Claude3: "Серія Claude 3",
-    modelCategory_Grok3: "Серія Grok 3",
-    modelCategory_Grok3Mini: "Серія Grok 3 Mini",
-    modelCategory_Llama4: "Серія Llama 4",
-    modelCategory_Llama3_3: "Серія Llama 3.3",
-    modelCategory_Llama3_2: "Серія Llama 3.2",
-    modelCategory_Llama3_1: "Серія Llama 3.1",
-    modelCategory_Llama3: "Серія Llama 3",
-    modelCategory_LlamaVision: "Моделі Llama Vision",
-    modelCategory_MetaLlama: "Моделі Meta Llama",
-    modelCategory_Gemma2: "Серія Gemma 2",
-    modelCategory_Gemma: "Серія Gemma",
-    modelCategory_GoogleGemma: "Моделі Google Gemma",
-    modelCategory_DeepSeekR1: "Серія DeepSeek R1",
-    modelCategory_DeepSeekV3: "Серія DeepSeek V3",
-    modelCategory_DeepSeekR1Distill: "Серія DeepSeek R1 Distill",
-    modelCategory_DeepSeekModels: "Моделі DeepSeek",
-    modelCategory_MistralAIModels: "Моделі Mistral AI",
-    modelCategory_Qwen3: "Серія Qwen3",
-    modelCategory_QwQwQ: "Серія Qwen QwQ",
-    modelCategory_Qwen2_5: "Серія Qwen2.5",
-    modelCategory_Qwen2_5Vision: "Серія Qwen2.5 Vision",
-    modelCategory_Qwen2_5Coder: "Серія Qwen2.5 Coder",
-    modelCategory_Qwen2: "Серія Qwen2",
-    modelCategory_Qwen2Vision: "Серія Qwen2 Vision",
-    modelCategory_QwenModels: "Моделі Qwen",
-    modelCategory_OtherModels: "Інші моделі",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Не вдалося завантажити дані користувача: {errorMessage}. Будь ласка, спробуйте оновити.",
-    page_ErrorUserNotFound: "Користувача не знайдено. Будь ласка, увійдіть знову.",
-    page_ErrorUserApiKeyConfig: "Не вдалося завантажити конфігурацію ключа API користувача. Будь ласка, оновіть або перевірте налаштування.",
-    page_ErrorStartingSessionAPI: "Помилка API: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Помилка під час запуску сеансу: {errorMessage}",
-    page_ErrorSessionIdMissing: "Відповідь API успішна, але не містить ідентифікатор сеансу.",
-    page_LoadingUserData: "Завантаження даних користувача...",
-    page_ErrorAlertTitle: "Помилка",
-    page_WelcomeTitle: "Ласкаво просимо до Two AIs",
-    page_WelcomeSubtitle: "Цей веб-сайт дозволяє вам слухати розмови між двома LLM.",
-    page_ApiKeysRequiredTitle: "Потрібні ключі API",
-    page_ApiKeysRequiredDescription: "Щоб розпочати розмову, вам потрібно буде надати власні ключі API для моделей ШІ, які ви хочете використовувати (наприклад, OpenAI, Google, Anthropic) після входу. Детальні інструкції для кожного провайдера можна знайти на сторінці Налаштування / Ключі API після входу.",
-    page_SignInPrompt: "Щоб розпочати власний сеанс, ви можете увійти або створити обліковий запис за посиланням у заголовку.",
-    page_VideoTitle: "Демонстрація розмови Two AIs",
-    page_AvailableLLMsTitle: "Доступні на даний момент LLM",
-    page_TooltipGoogleThinkingBudget: "Ця модель Google використовує 'бюджет на роздуми'. Результат 'роздумів' оплачується, але не відображається в чаті.",
-    page_TooltipAnthropicExtendedThinking: "Ця модель Anthropic використовує 'розширені роздуми'. Результат 'роздумів' оплачується, але не відображається в чаті.",
-    page_TooltipXaiThinking: "Ця модель xAI використовує 'роздуми'. Цей результат оплачується, але не відображається в чаті.",
-    page_TooltipQwenReasoning: "Ця модель Qwen використовує 'міркування/роздуми'. Цей результат оплачується, але не відображається в чаті.",
-    page_TooltipDeepSeekReasoning: "Ця модель DeepSeek використовує 'міркування/роздуми'. Результат оплачується, але не відображається в чаті.",
-    page_TooltipGenericReasoning: "Ця модель використовує токени для міркувань, які не видно в чаті, але оплачуються як вихідні токени.",
-    page_TooltipRequiresVerification: "Потрібна перевірена організація OpenAI. Ви можете перевірити тут.",
-    page_TooltipSupportsLanguage: "Підтримує {languageName}",
-    page_TooltipMayNotSupportLanguage: "Може не підтримувати {languageName}",
-    page_BadgePreview: "Попередній перегляд",
-    page_BadgeExperimental: "Експериментальний",
-    page_BadgeBeta: "Бета",
-    page_AvailableTTSTitle: "Доступні на даний момент TTS",
-    page_NoTTSOptions: "На даний момент немає доступних опцій TTS.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Введіть новий ключ API {serviceName}",
-    apiKeyManager_TestKey: "Перевірити ключ",
-    apiKeyManager_TestingKey: "Перевірка ключа...",
-    apiKeyManager_KeyIsValid: "Ключ дійсний.",
-    apiKeyManager_KeyIsInvalid: "Ключ недійсний.",
-    apiKeyManager_FailedToTestKey: "Не вдалося перевірити ключ.",
-    apiKeyManager_ErrorTestingKey: "Помилка під час перевірки ключа: {error}",
-    apiKeyManager_KeyProvider: "Постачальник",
-    apiKeyManager_KeyName: "Назва ключа",
-    apiKeyManager_Status: "Статус",
-    apiKeyManager_Action: "Дія",
-
-    // Model capabilities
-    modelCapability_Vision: "Зір",
-    modelCapability_JSON: "Режим JSON",
-    modelCapability_Tools: "Використання інструментів",
-    modelCapability_ImageGen: "Генерація зображень",
-    modelCapability_Multilingual: "Багатомовний",
-    modelCapability_WebSearch: "Пошук в Інтернеті",
-    modelCapability_LargeContext: "Великий контекст",
-    modelCapability_LongContext: "Довгий контекст",
-    modelCapability_FastResponse: "Швидка відповідь",
-    modelCapability_CostEffective: "Економічно вигідний",
-    modelCapability_AdvancedReasoning: "Розширені міркування",
-    modelCapability_Coding: "Кодування",
-    modelCapability_Foundation: "Базова модель",
-    modelCapability_Experimental: "Експериментальний",
-    modelCapability_Beta: "Бета",
-    modelCapability_Preview: "Попередній перегляд",
-    modelCapability_RequiresVerification: "Потрібна перевірка",
-    modelCapability_RequiresAccount: "Потрібен обліковий запис",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Відсутній ключ",
+    "apiKeyMissingSubtext": "The API Ключ для цього постачальника відсутній або недійсний. Будь ласка, додайте його в налаштуваннях.",
+    "apiKeyNotNeeded": "API Ключ не потрібен",
+    "apiKeyNotNeededSubtext": "Цей постачальник не вимагає API ключ для свого безкоштовного рівня або певних моделей.",
+    "apiKeyFound": "API Набір ключів",
+    "apiKeyFoundSubtext": "Ан API ключ налаштовано для цього постачальника.",
+    "modelCategory_FlagshipChat": "Флагманські моделі чату",
+    "modelCategory_Reasoning": "Моделі міркувань",
+    "modelCategory_CostOptimized": "Моделі з оптимізацією витрат",
+    "modelCategory_OlderGPT": "Старіші моделі GPT",
+    "modelCategory_Gemini2_5": "Gemini 2.5 моделі",
+    "modelCategory_Gemini2_0": "Gemini 2.0 моделі",
+    "modelCategory_Gemini1_5": "Gemini 1.5 моделі",
+    "modelCategory_Claude4": "Claude 4 моделі",
+    "modelCategory_Claude3_7": "Claude 3.7 моделі",
+    "modelCategory_Claude3_5": "Claude 3.5 моделі",
+    "modelCategory_Claude3": "Claude 3 моделі",
+    "modelCategory_Grok4": "Grok 4 моделі",
+    "modelCategory_Grok3": "Grok 3 моделі",
+    "modelCategory_Grok3Mini": "Grok 3 Міні-моделі",
+    "modelCategory_Llama4": "Llama 4 моделі",
+    "modelCategory_Llama3_3": "Llama 3.3 моделі",
+    "modelCategory_Llama3_2": "Llama 3.2 моделі",
+    "modelCategory_Llama3_1": "Llama 3.1 моделі",
+    "modelCategory_Llama3": "Llama 3 моделі",
+    "modelCategory_LlamaVision": "Llama Моделі зору",
+    "modelCategory_MetaLlama": "Meta Llama Моделі",
+    "modelCategory_Gemma3n": "Gemma Модель 3n",
+    "modelCategory_Gemma2": "Gemma 2 моделі",
+    "modelCategory_Gemma": "Gemma моделі",
+    "modelCategory_GoogleGemma": "Google Gemma Моделі",
+    "modelCategory_DeepSeekR1": "DeepSeek Моделі R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Моделі V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek Моделі R1 Distill",
+    "modelCategory_DeepSeekModels": "DeepSeek Моделі",
+    "modelCategory_MistralAIModels": "Mistral AI Моделі",
+    "modelCategory_Qwen3": "Qwen3 моделі",
+    "modelCategory_QwQwQ": "Qwen Моделі QwQ",
+    "modelCategory_Qwen2_5": "Qwen2,5 моделі",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Моделі зору",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Моделі кодера",
+    "modelCategory_Qwen2": "Qwen2 моделі",
+    "modelCategory_Qwen2Vision": "Qwen2 моделі Vision",
+    "modelCategory_QwenModels": "Qwen Моделі",
+    "modelCategory_OtherModels": "Інші моделі",
+    "page_ErrorLoadingUserData": "Не вдалося завантажити дані користувача: {errorMessage}. Спробуйте оновити сторінку.",
+    "page_ErrorUserNotFound": "Користувача не знайдено. Будь ласка, увійдіть ще раз.",
+    "page_ErrorUserApiKeyConfig": "Користувач API Не вдалося завантажити конфігурацію ключа. Оновіть сторінку або перевірте налаштування.",
+    "page_ErrorStartingSessionAPI": "API Помилка: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Помилка запуску сеансу: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API Відповідь успішна, але не містить ідентифікатора розмови.",
+    "page_LoadingUserData": "Завантаження даних користувача...",
+    "page_ErrorAlertTitle": "Помилка",
+    "page_WelcomeTitle": "Ласкаво просимо до Two AIs",
+    "page_WelcomeSubtitle": "Цей вебсайт дозволяє прослуховувати розмови між двома Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Необхідні ключі",
+    "page_ApiKeysRequiredDescription": "Щоб вести розмови, вам потрібно буде надати власні API ключі для AI моделі, які ви хочете використовувати (наприклад, OpenAI, Google, Anthropic) після входу. Детальні інструкції для кожного постачальника можна знайти в розділі Налаштування / API Сторінка ключів після входу.",
+    "page_SignInPrompt": "Щоб розпочати власний сеанс, ви можете увійти або створити обліковий запис, скориставшись посиланням у заголовку.",
+    "page_VideoTitle": "Two AIs Демонстрація розмови",
+    "page_AvailableLLMsTitle": "Наразі доступно LLMs",
+    "page_TooltipGoogleThinkingBudget": "Це Google Модель використовує «бюджет обдумування». Результат «обдумування» виставляється рахунок, але його не видно в чаті.",
+    "page_TooltipAnthropicExtendedThinking": "Це Anthropic Модель використовує «розширене мислення». Результат «мислення» оплачується, але не відображається в чаті.",
+    "page_TooltipXaiThinking": "Це xAI Модель використовує «мислення». Цей результат оплачується, але не відображається в чаті.",
+    "page_TooltipQwenReasoning": "Це Qwen Модель використовує «міркування/мислення». Цей результат оплачується, але не відображається в чаті.",
+    "page_TooltipDeepSeekReasoning": "Це DeepSeek Модель використовує «міркування/мислення». Результат виставляється рахунок, але не відображається в чаті.",
+    "page_TooltipGenericReasoning": "Ця модель використовує токени міркувань, які не видно в чаті, але оплачуються як вихідні токени.",
+    "page_TooltipRequiresVerification": "Потрібно перевірити OpenAI організація. Ви можете перевірити тут.",
+    "page_TooltipSupportsLanguage": "Підтримує {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ця модель може не повністю підтримувати {languageName} для розмов.",
+    "page_BadgePreview": "Попередній перегляд",
+    "page_BadgeExperimental": "Експериментальний",
+    "page_BadgeBeta": "Бета-версія",
+    "page_AvailableTTSTitle": "Наразі доступно Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Ні TTS доступні наразі опції.",
+    "page_TruncatableNoteFormat": "({примітка})",
+    "page_PricesLastVerifiedOn": "Ціни востаннє перевірялися {date}",
+    "page_PricingPerTokens": "за {amount} Токени",
+    "page_ModelCategoryModels": "{model} моделі",
+    "ttsVoice_Ugne": "У вогні",
+    "sessionSetupForm": {
+        "title": "Форма налаштування сеансу",
+        "description": "Тут ви можете вибрати LLM та необов'язково TTS налаштування для кожного агента.",
+        "agentAModel": "Модель агента А",
+        "agentBModel": "Модель агента B",
+        "selectLLMForAgentA": "Виберіть LLM для агента A",
+        "selectLLMForAgentB": "Виберіть LLM для агента B",
+        "enableTTS": "Увімкнути Text-to-Speech (TTS)",
+        "agentATTS": "Агент А TTS",
+        "agentBTTS": "Агент Б TTS",
+        "provider": "Постачальник",
+        "initialSystemPrompt": "Початковий системний запит",
+        "initialPromptDescription": "Це повідомлення буде надіслано як перше для початку розмови. Якщо залишити це поле порожнім, запиту не буде.",
+        "startConversation": "Почати розмову",
+        "starting": "Початок...",
+        "startTheConversation": "Почніть розмову."
+    },
+    "history": {
+        "backToMain": "Назад до головного",
+        "conversationHistory": "Історія розмов",
+        "chatWith": "Спілкуйтеся з {agentA} & {agentB}",
+        "viewConversation": "Переглянути розмову",
+        "backToPreviousChats": "Назад до попередніх чатів",
+        "resumeConversation": "Відновити розмову",
+        "resuming": "Відновлення...",
+        "sessionDetails": "Деталі сеансу",
+        "language": "Мова:",
+        "transcript": "Стенограма"
+    }
 };
-export default uk; 
+export default uk;

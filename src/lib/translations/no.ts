@@ -1,434 +1,323 @@
-// src/lib/translations/no.ts
+// no.ts
 const no = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Innstillinger',
-        signIn: 'Logg inn',
-        signOut: 'Logg ut',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Innstillinger",
+        "signIn": "Logg inn",
+        "signOut": "Logg ut",
+        "previousChats": "Tidligere chatter"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Kannada",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Marathisk",
+        "ms": "Malay",
+        "my": "Burmesisk",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Innstillinger',
-        sections: {
-            appearance: 'Utseende',
-            apiKeys: 'API-nøkler',
-            language: 'Språk',
+    "settings": {
+        "title": "Innstillinger",
+        "sections": {
+            "appearance": "Utseende",
+            "apiKeys": "API Nøkler",
+            "language": "Språk"
         },
-        appearance: {
-            theme: 'Tema',
-            light: 'Lys',
-            dark: 'Mørk',
-            system: 'System',
-            description: "Tilpass utseendet og følelsen til applikasjonen."
+        "appearance": {
+            "theme": "Tema",
+            "light": "Lys",
+            "dark": "Mørk",
+            "system": "System",
+            "description": "Tilpass utseendet og følelsen til applikasjonen."
         },
-        language: {
-            title: 'Språk',
-            description: 'Velg ditt foretrukne språk for grensesnittet',
-            conversationLanguage: 'Samtalespråk',
-            conversationLanguageDescription: 'Språket som brukes for AI-samtaler vil matche språket i grensesnittet ditt',
+        "language": {
+            "title": "Språk",
+            "description": "Velg ditt foretrukne språk for grensesnittet",
+            "conversationLanguage": "Samtalespråk",
+            "conversationLanguageDescription": "Språket som brukes til AI samtalene vil samsvare med grensesnittspråket ditt",
+            "supportedLanguages": "Støttede språk",
+            "languageSupportInformation": "Informasjon om språkstøtte",
+            "aiAgentsLanguageDescription": "Samtalen mellom AI Agentene vil bli utført på ditt valgte språk."
         },
-        apiKeys: {
-            title: 'API-nøkler',
-            description: 'Administrer API-nøklene dine for forskjellige AI-leverandører',
-            saved: 'Lagret',
-            notSet: 'Ikke angitt',
-            setKey: 'Angi nøkkel',
-            updateKey: 'Oppdater nøkkel',
-            removeKey: 'Fjern nøkkel',
-            getKeyInstructions: 'Få API-nøkkelen din',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Ingen nye API-nøkler er lagt inn for lagring.",
-            unexpectedResponse: "Mottok et uventet svar fra serveren.",
-            failedToSaveKey: "Kunne ikke lagre {serviceName}-nøkkel.",
-            someKeysNotSaved: "Noen API-nøkler kunne ikke lagres. Vennligst sjekk detaljene nedenfor.",
-            keyStatus: "nøkkelstatus...",
-            apiKeySecurelySaved: "API-nøkkel lagret sikkert",
-            confirmRemoveTitle: "Bekreft fjerning",
-            confirmRemoveDescription: "Er du sikker på at du vil fjerne API-nøkkelen for {serviceName}? Denne handlingen kan ikke angres.",
-            failedToRemoveKey: "Kunne ikke fjerne {serviceName}-nøkkel.",
-            successfullyRemovedKey: "{serviceName}-nøkkel fjernet.",
-            keyNotSet: "Nøkkelstatus: Ikke angitt",
-            keySet: "Nøkkelstatus: Angitt",
-            saveButton: "Lagre API-nøkkel(er)"
-        },
+        "apiKeys": {
+            "title": "API Nøkler",
+            "description": "Administrer din API nøkler for forskjellige AI leverandører",
+            "saved": "Lagret",
+            "notSet": "Ikke angitt",
+            "setKey": "Angi nøkkel",
+            "updateKey": "Oppdater nøkkel",
+            "removeKey": "Fjern nøkkelen",
+            "getKeyInstructions": "Få din API nøkkel",
+            "noNewKeys": "Ingen nye API tastene tastet inn for å lagre.",
+            "unexpectedResponse": "Fikk et uventet svar fra serveren.",
+            "failedToSaveKey": "Kunne ikke lagre nøkkelen {serviceName}.",
+            "someKeysNotSaved": "Noen API Nøklene kunne ikke lagres. Vennligst sjekk detaljene nedenfor.",
+            "keyStatus": "nøkkelstatus...",
+            "apiKeySecurelySaved": "API Nøkkelen er sikkert lagret",
+            "confirmRemoveTitle": "Bekreft fjerning",
+            "confirmRemoveDescription": "Er du sikker på at du vil fjerne API nøkkel for {serviceName}? Denne handlingen kan ikke angres.",
+            "failedToRemoveKey": "Kunne ikke fjerne {serviceName}-nøkkelen.",
+            "successfullyRemovedKey": "Nøkkelen {serviceName} er fjernet.",
+            "keyNotSet": "Nøkkelstatus: Ikke angitt",
+            "keySet": "Nøkkelstatus: Angitt",
+            "saveButton": "Spare API Nøkkel(er)",
+            "enteringNewKeyOverwrites": "Hvis du skriver inn en ny nøkkel, overskrives den lagrede.",
+            "keyStoredSecurely": "Nøkkelen din vil bli lagret sikkert ved hjelp av Google Hemmelig manager."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'AI-samtale',
-        setupForm: {
-            title: 'Sett opp samtalen din',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Modell',
-            selectModel: 'Velg en modell',
-            tts: {
-                title: 'Tekst-til-tale',
-                enable: 'Aktiver tekst-til-tale',
-                provider: 'TTS-leverandør',
-                selectProvider: 'Velg TTS-leverandør',
-                voice: 'Stemme',
-                selectVoice: 'Velg stemme',
-                model: 'TTS-modell',
-                selectModel: 'Velg TTS-modell',
+    "main": {
+        "title": "AI Samtale",
+        "setupForm": {
+            "title": "Sett opp samtalen din",
+            "agentA": "Agent A",
+            "agentB": "Agent B",
+            "model": "Modell",
+            "selectModel": "Velg en modell",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Aktiver Text-to-Speech",
+                "provider": "TTS Leverandør",
+                "selectProvider": "Velge TTS leverandør",
+                "voice": "Stemme",
+                "selectVoice": "Velg stemme",
+                "model": "TTS Modell",
+                "selectModel": "Velge TTS modell"
             },
-            startConversation: 'Start samtale',
-            conversationPrompt: 'Start samtalen.',
+            "startConversation": "Start samtale",
+            "conversationPrompt": "Start samtalen."
         },
-        conversation: {
-            thinking: 'tenker...',
-            stop: 'Stopp',
-            restart: 'Start samtalen på nytt',
+        "conversation": {
+            "thinking": "tenker ...",
+            "stop": "Stoppe",
+            "restart": "Start samtalen på nytt"
         },
-        pricing: {
-            estimatedCost: 'Estimert kostnad',
-            perMillionTokens: 'per million tokens',
-            input: 'Input',
-            output: 'Output',
-        },
+        "pricing": {
+            "estimatedCost": "Estimert kostnad",
+            "perMillionTokens": "per million tokens",
+            "input": "Inndata",
+            "output": "Produksjon"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Logg inn på Two AIs', // Keep brand name
-            emailPlaceholder: 'E-post',
-            passwordPlaceholder: 'Passord',
-            signIn: 'Logg inn',
-            signInWithGoogle: 'Logg inn med Google',
-            noAccount: "Har du ikke konto?",
-            signUp: 'Registrer deg',
-            forgotPassword: 'Glemt passord?',
-            orContinueWith: "Eller fortsett med",
-            signingIn: "Logger inn..."
+    "auth": {
+        "login": {
+            "title": "Logg inn på Two AIs",
+            "emailPlaceholder": "E-post",
+            "passwordPlaceholder": "Passord",
+            "signIn": "Logg inn",
+            "signInWithGoogle": "Logg inn med Google",
+            "noAccount": "Har du ikke en konto?",
+            "signUp": "Registrer deg",
+            "forgotPassword": "Glemt passord?",
+            "orContinueWith": "Eller fortsett med",
+            "signingIn": "Logger inn..."
         },
-        signup: {
-            title: 'Opprett konto',
-            emailPlaceholder: 'E-post',
-            passwordPlaceholder: 'Passord (minimum 6 tegn)',
-            signUp: 'Registrer deg',
-            signUpWithGoogle: 'Registrer deg med Google',
-            hasAccount: 'Har du allerede konto?',
-            signIn: 'Logg inn',
-            emailLabel: "E-postadresse",
-            confirmPasswordPlaceholder: "Bekreft passord",
-            signingUp: "Registrerer..."
+        "signup": {
+            "title": "Opprett en konto",
+            "emailPlaceholder": "E-post",
+            "passwordPlaceholder": "Passord (minst 6 tegn)",
+            "signUp": "Registrer deg",
+            "signUpWithGoogle": "Registrer deg med Google",
+            "hasAccount": "Har du allerede en konto?",
+            "signIn": "Logg inn",
+            "emailLabel": "Email adresse",
+            "confirmPasswordPlaceholder": "Bekreft passord",
+            "signingUp": "Registrerer seg..."
         },
-        errors: {
-            invalidCredentials: 'Ugyldig e-post eller passord',
-            userNotFound: 'Bruker ikke funnet',
-            weakPassword: 'Passordet må være på minst 6 tegn',
-            emailInUse: 'E-posten er allerede i bruk',
-            generic: 'Det oppstod en feil. Vennligst prøv igjen.',
-            initialization: "Initialiseringsfeil. Vennligst prøv igjen senere.",
-            invalidEmail: "Vennligst skriv inn en gyldig e-postadresse.",
-            tooManyRequests: "Tilgang midlertidig deaktivert på grunn av for mange mislykkede påloggingsforsøk. Tilbakestill passordet ditt eller prøv igjen senere.",
-            signInFailedPrefix: "Innlogging mislyktes: ",
-            unknownSignInError: "Ukjent feil oppstod under innlogging.",
-            profileSaveFailedPrefix: "Innlogget, men lagring av profildata mislyktes: ",
-            profileCheckSaveFailedPrefix: "Innlogget, men kontroll/lagring av profildata mislyktes: ",
-            accountExistsWithDifferentCredential: "En konto med denne e-postadressen eksisterer allerede med en annen påloggingsmetode.",
-            googleSignInFailedPrefix: "Google-innlogging mislyktes: ",
-            unknownGoogleSignInError: "Ukjent feil oppstod under Google-innlogging.",
-            passwordsDoNotMatch: "Passordene stemmer ikke overens.",
-            accountCreatedProfileSaveFailedPrefix: "Konto opprettet, men lagring av profildata mislyktes: ",
-            unknownProfileSaveError: "Ukjent feil oppstod under lagring av profil.",
-            emailAlreadyRegistered: "Denne e-postadressen er allerede registrert.",
-            passwordTooShortSignUp: "Passordet må være på minst 6 tegn.",
-            signUpFailedPrefix: "Registrering mislyktes: ",
-            unknownSignUpError: "Ukjent feil oppstod under registrering."
-        },
+        "errors": {
+            "invalidCredentials": "Ugyldig e-post eller passord",
+            "userNotFound": "Brukeren ble ikke funnet",
+            "weakPassword": "Passordet må være minst 6 tegn langt",
+            "emailInUse": "Email allerede i bruk",
+            "generic": "Det oppsto en feil. Prøv på nytt.",
+            "initialization": "Initialiseringsfeil. Prøv igjen senere.",
+            "invalidEmail": "Vennligst skriv inn en gyldig e-postadresse.",
+            "tooManyRequests": "Tilgang er midlertidig deaktivert på grunn av for mange mislykkede påloggingsforsøk. Vennligst tilbakestill passordet ditt eller prøv på nytt senere.",
+            "signInFailedPrefix": "Innlogging mislyktes: ",
+            "unknownSignInError": "Det oppsto en ukjent feil under påloggingen.",
+            "profileSaveFailedPrefix": "Logget inn, men klarte ikke å lagre profildata: ",
+            "profileCheckSaveFailedPrefix": "Logget inn, men klarte ikke å sjekke/lagre profildata: ",
+            "accountExistsWithDifferentCredential": "Det finnes allerede en konto med denne e-postadressen som bruker en annen påloggingsmetode.",
+            "googleSignInFailedPrefix": "Google Pålogging mislyktes: ",
+            "unknownGoogleSignInError": "Det oppsto en ukjent feil under Google Logg inn.",
+            "passwordsDoNotMatch": "Passordene stemmer ikke overens.",
+            "accountCreatedProfileSaveFailedPrefix": "Konto opprettet, men kunne ikke lagre profildata: ",
+            "unknownProfileSaveError": "Det oppsto en ukjent feil under lagring av profilen.",
+            "emailAlreadyRegistered": "Denne e-postadressen er allerede registrert.",
+            "passwordTooShortSignUp": "Passordet må være minst 6 tegn langt.",
+            "signUpFailedPrefix": "Klarte ikke å registrere seg: ",
+            "unknownSignUpError": "Det oppsto en ukjent feil under registreringen."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Laster...',
-        error: 'Feil',
-        save: 'Lagre',
-        cancel: 'Avbryt',
-        delete: 'Slett',
-        confirm: 'Bekreft',
-        or: 'eller',
-        MoreInformation: "Mer informasjon",
-        Example: "Eksempel:",
-        ShowMore: "Vis mer",
-        ShowLess: "Vis mindre",
-        AwaitingApproval: "Venter på godkjenning...",
-        OpenInNewTab: "Åpne i ny fane",
-        AdvancedSettings: "Avanserte innstillinger",
-        Name: "Navn",
-        Created: "Opprettet",
-        Updated: "Oppdatert",
-        Launched: "Lansert",
-        Docs: "Dokumentasjon",
-        Blog: "Blogg",
-        Pricing: "Priser",
-        Terms: "Vilkår",
-        Privacy: "Personvern",
-        Changelog: "Endringslogg",
-        Copy: "Kopier",
-        Copied: "Kopiert",
-        TryAgain: "Prøv igjen"
+    "common": {
+        "loading": "Laster inn...",
+        "error": "Feil",
+        "save": "Spare",
+        "cancel": "Kansellere",
+        "delete": "Slett",
+        "confirm": "Bekrefte",
+        "or": "eller"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "API-nøkkel mangler",
-    apiKeyMissingSubtext: "API-nøkkelen for denne leverandøren mangler eller er ugyldig. Legg den til i innstillingene.",
-    apiKeyNotNeeded: "API-nøkkel ikke nødvendig",
-    apiKeyNotNeededSubtext: "Denne leverandøren krever ikke API-nøkkel for gratisnivået eller visse modeller.",
-    apiKeyFound: "API-nøkkel angitt",
-    apiKeyFoundSubtext: "En API-nøkkel er konfigurert for denne leverandøren.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Flaggskip-chatmodeller",
-    modelCategory_Reasoning: "Resonneringsmodeller",
-    modelCategory_CostOptimized: "Kostnadsoptimaliserte modeller",
-    modelCategory_OlderGPT: "Eldre GPT-modeller",
-    modelCategory_Gemini2_5: "Gemini 2.5-serien",
-    modelCategory_Gemini2_0: "Gemini 2.0-serien",
-    modelCategory_Gemini1_5: "Gemini 1.5-serien",
-    modelCategory_Claude3_7: "Claude 3.7-serien",
-    modelCategory_Claude3_5: "Claude 3.5-serien",
-    modelCategory_Claude3: "Claude 3-serien",
-    modelCategory_Grok3: "Grok 3-serien",
-    modelCategory_Grok3Mini: "Grok 3 Mini-serien",
-    modelCategory_Llama4: "Llama 4-serien",
-    modelCategory_Llama3_3: "Llama 3.3-serien",
-    modelCategory_Llama3_2: "Llama 3.2-serien",
-    modelCategory_Llama3_1: "Llama 3.1-serien",
-    modelCategory_Llama3: "Llama 3-serien",
-    modelCategory_LlamaVision: "Llama Vision-modeller",
-    modelCategory_MetaLlama: "Meta Llama-modeller",
-    modelCategory_Gemma2: "Gemma 2-serien",
-    modelCategory_Gemma: "Gemma-serien",
-    modelCategory_GoogleGemma: "Google Gemma-modeller",
-    modelCategory_DeepSeekR1: "DeepSeek R1-serien",
-    modelCategory_DeepSeekV3: "DeepSeek V3-serien",
-    modelCategory_DeepSeekR1Distill: "DeepSeek R1 Distill-serien",
-    modelCategory_DeepSeekModels: "DeepSeek-modeller",
-    modelCategory_MistralAIModels: "Mistral AI-modeller",
-    modelCategory_Qwen3: "Qwen3-serien",
-    modelCategory_QwQwQ: "Qwen QwQ-serien",
-    modelCategory_Qwen2_5: "Qwen2.5-serien",
-    modelCategory_Qwen2_5Vision: "Qwen2.5 Vision-serien",
-    modelCategory_Qwen2_5Coder: "Qwen2.5 Coder-serien",
-    modelCategory_Qwen2: "Qwen2-serien",
-    modelCategory_Qwen2Vision: "Qwen2 Vision-serien",
-    modelCategory_QwenModels: "Qwen-modeller",
-    modelCategory_OtherModels: "Andre modeller",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Kunne ikke laste brukerdata: {errorMessage}. Prøv å laste inn på nytt.",
-    page_ErrorUserNotFound: "Bruker ikke funnet. Logg inn på nytt.",
-    page_ErrorUserApiKeyConfig: "Brukerens API-nøkkelkonfigurasjon kunne ikke lastes. Last inn på nytt eller sjekk innstillingene.",
-    page_ErrorStartingSessionAPI: "API-feil: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Feil ved start av økt: {errorMessage}",
-    page_ErrorSessionIdMissing: "API-svar vellykket, men inkluderte ikke en samtale-ID.",
-    page_LoadingUserData: "Laster brukerdata...",
-    page_ErrorAlertTitle: "Feil",
-    page_WelcomeTitle: "Velkommen til Two AIs",
-    page_WelcomeSubtitle: "Denne nettsiden lar deg lytte til samtaler mellom to LLM-er.",
-    page_ApiKeysRequiredTitle: "API-nøkler kreves",
-    page_ApiKeysRequiredDescription: "For å kjøre samtaler, må du oppgi dine egne API-nøkler for AI-modellene du ønsker å bruke (f.eks. OpenAI, Google, Anthropic) etter pålogging. Detaljerte instruksjoner for hver leverandør finner du på siden Innstillinger / API-nøkler etter pålogging.",
-    page_SignInPrompt: "For å starte din egen økt, kan du logge inn eller opprette en konto via lenken i toppteksten.",
-    page_VideoTitle: "Two AIs-samtaledemo",
-    page_AvailableLLMsTitle: "Tilgjengelige LLM-er",
-    page_TooltipGoogleThinkingBudget: "Denne Google-modellen bruker et 'tenkebudsjett'. 'Tenke'-output faktureres, men er ikke synlig i chatten.",
-    page_TooltipAnthropicExtendedThinking: "Denne Anthropic-modellen bruker 'utvidet tenkning'. 'Tenke'-output faktureres, men er ikke synlig i chatten.",
-    page_TooltipXaiThinking: "Denne xAI-modellen bruker 'tenkning'. Denne outputen faktureres, men er ikke synlig i chatten.",
-    page_TooltipQwenReasoning: "Denne Qwen-modellen bruker 'resonnering/tenkning'. Denne outputen faktureres, men er ikke synlig i chatten.",
-    page_TooltipDeepSeekReasoning: "Denne DeepSeek-modellen bruker 'resonnering/tenkning'. Output faktureres, men er ikke synlig i chatten.",
-    page_TooltipGenericReasoning: "Denne modellen bruker resonneringstokener som ikke er synlige i chatten, men som faktureres som outputtokener.",
-    page_TooltipRequiresVerification: "Krever verifisert OpenAI-organisasjon. Du kan verifisere her.",
-    page_TooltipSupportsLanguage: "Støtter {languageName}",
-    page_TooltipMayNotSupportLanguage: "Støtter kanskje ikke {languageName}",
-    page_BadgePreview: "Forhåndsvisning",
-    page_BadgeExperimental: "Eksperimentell",
-    page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Tilgjengelige TTS",
-    page_NoTTSOptions: "Ingen TTS-alternativer er tilgjengelige for øyeblikket.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Skriv inn ny {serviceName} API-nøkkel",
-    apiKeyManager_TestKey: "Test nøkkel",
-    apiKeyManager_TestingKey: "Tester nøkkel...",
-    apiKeyManager_KeyIsValid: "Nøkkelen er gyldig.",
-    apiKeyManager_KeyIsInvalid: "Nøkkelen er ugyldig.",
-    apiKeyManager_FailedToTestKey: "Testing av nøkkel mislyktes.",
-    apiKeyManager_ErrorTestingKey: "Feil ved testing av nøkkel: {error}",
-    apiKeyManager_KeyProvider: "Leverandør",
-    apiKeyManager_KeyName: "Nøkkelnavn",
-    apiKeyManager_Status: "Status",
-    apiKeyManager_Action: "Handling",
-
-    // Model capabilities
-    modelCapability_Vision: "Syn",
-    modelCapability_JSON: "JSON-modus",
-    modelCapability_Tools: "Verktøybruk",
-    modelCapability_ImageGen: "Bildegenerering",
-    modelCapability_Multilingual: "Flerspråklig",
-    modelCapability_WebSearch: "Nettsøk",
-    modelCapability_LargeContext: "Stor kontekst",
-    modelCapability_LongContext: "Lang kontekst",
-    modelCapability_FastResponse: "Rask respons",
-    modelCapability_CostEffective: "Kostnadseffektiv",
-    modelCapability_AdvancedReasoning: "Avansert resonnering",
-    modelCapability_Coding: "Koding",
-    modelCapability_Foundation: "Grunnmodell",
-    modelCapability_Experimental: "Eksperimentell",
-    modelCapability_Beta: "Beta",
-    modelCapability_Preview: "Forhåndsvisning",
-    modelCapability_RequiresVerification: "Krever verifisering",
-    modelCapability_RequiresAccount: "Krever konto",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne", // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Nøkkel mangler",
+    "apiKeyMissingSubtext": "De API Nøkkelen for denne leverandøren mangler eller er ugyldig. Vennligst legg den til i innstillingene.",
+    "apiKeyNotNeeded": "API Nøkkel ikke nødvendig",
+    "apiKeyNotNeededSubtext": "Denne leverandøren krever ikke en API nøkkel for gratisnivået eller visse modeller.",
+    "apiKeyFound": "API Nøkkelsett",
+    "apiKeyFoundSubtext": "En API nøkkelen er konfigurert for denne leverandøren.",
+    "modelCategory_FlagshipChat": "Flaggskip-chatmodeller",
+    "modelCategory_Reasoning": "Resonnementsmodeller",
+    "modelCategory_CostOptimized": "Kostnadsoptimaliserte modeller",
+    "modelCategory_OlderGPT": "Eldre GPT-modeller",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modeller",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modeller",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modeller",
+    "modelCategory_Claude4": "Claude 4 modeller",
+    "modelCategory_Claude3_7": "Claude 3.7 modeller",
+    "modelCategory_Claude3_5": "Claude 3.5 modeller",
+    "modelCategory_Claude3": "Claude 3 modeller",
+    "modelCategory_Grok4": "Grok 4 modeller",
+    "modelCategory_Grok3": "Grok 3 modeller",
+    "modelCategory_Grok3Mini": "Grok 3 Minimodeller",
+    "modelCategory_Llama4": "Llama 4 modeller",
+    "modelCategory_Llama3_3": "Llama 3.3-modeller",
+    "modelCategory_Llama3_2": "Llama 3.2-modeller",
+    "modelCategory_Llama3_1": "Llama 3.1-modeller",
+    "modelCategory_Llama3": "Llama 3 modeller",
+    "modelCategory_LlamaVision": "Llama Visjonsmodeller",
+    "modelCategory_MetaLlama": "Meta Llama Modeller",
+    "modelCategory_Gemma3n": "Gemma 3n-modell",
+    "modelCategory_Gemma2": "Gemma 2-modell",
+    "modelCategory_Gemma": "Gemma modeller",
+    "modelCategory_GoogleGemma": "Google Gemma Modeller",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-modeller",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-modeller",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Destill-modeller",
+    "modelCategory_DeepSeekModels": "DeepSeek Modeller",
+    "modelCategory_MistralAIModels": "Mistral AI Modeller",
+    "modelCategory_Qwen3": "Qwen3 modeller",
+    "modelCategory_QwQwQ": "Qwen QwQ-modeller",
+    "modelCategory_Qwen2_5": "Qwen2,5-modeller",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-modeller",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodermodeller",
+    "modelCategory_Qwen2": "Qwen2 modeller",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision-modeller",
+    "modelCategory_QwenModels": "Qwen Modeller",
+    "modelCategory_OtherModels": "Andre modeller",
+    "page_ErrorLoadingUserData": "Kunne ikke laste inn brukerdata: {errorMessage}. Prøv å laste inn på nytt.",
+    "page_ErrorUserNotFound": "Brukeren ble ikke funnet. Vennligst logg inn på nytt.",
+    "page_ErrorUserApiKeyConfig": "Bruker API Kunne ikke laste inn nøkkelkonfigurasjonen. Vennligst oppdater eller sjekk innstillingene.",
+    "page_ErrorStartingSessionAPI": "API Feil: {status} {statustekst}",
+    "page_ErrorStartingSessionGeneric": "Feil ved oppstart av økt: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API Svaret var vellykket, men inkluderte ikke en samtale-ID.",
+    "page_LoadingUserData": "Laster inn brukerdata ...",
+    "page_ErrorAlertTitle": "Feil",
+    "page_WelcomeTitle": "Velkommen til Two AIs",
+    "page_WelcomeSubtitle": "Denne nettsiden lar deg lytte til samtaler mellom to Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Nøkler kreves",
+    "page_ApiKeysRequiredDescription": "For å kjøre samtaler må du oppgi dine egne API nøkler for AI modeller du ønsker å bruke (f.eks. OpenAI, Google, Anthropic) etter innlogging. Detaljerte instruksjoner for hver leverandør finner du i Innstillinger / API Nøkkelside etter innlogging.",
+    "page_SignInPrompt": "For å starte din egen økt kan du logge inn eller opprette en konto ved å bruke lenken i overskriften.",
+    "page_VideoTitle": "Two AIs Samtaledemo",
+    "page_AvailableLLMsTitle": "For øyeblikket tilgjengelig LLMs",
+    "page_TooltipGoogleThinkingBudget": "Dette Google Modellen bruker et «tenkebudsjett». «Tenkebudsjettet» faktureres, men er ikke synlig i chatten.",
+    "page_TooltipAnthropicExtendedThinking": "Dette Anthropic Modellen bruker «utvidet tenkning». «Tenkning»-utdataene faktureres, men er ikke synlig i chatten.",
+    "page_TooltipXaiThinking": "Dette xAI Modellen bruker «tenkning». Denne utdataen faktureres, men er ikke synlig i chatten.",
+    "page_TooltipQwenReasoning": "Dette Qwen Modellen bruker «resonnement/tenkning». Denne utdataen faktureres, men er ikke synlig i chatten.",
+    "page_TooltipDeepSeekReasoning": "Dette DeepSeek Modellen bruker «resonnement/tenkning». Utdata faktureres, men er ikke synlig i chatten.",
+    "page_TooltipGenericReasoning": "Denne modellen bruker resonnementstokener som ikke er synlige i chatten, men som faktureres som utdatatokener.",
+    "page_TooltipRequiresVerification": "Krever bekreftelse OpenAI organisasjon. Du kan bekrefte her.",
+    "page_TooltipSupportsLanguage": "Støtter {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Denne modellen støtter kanskje ikke {languageName} fullt ut for samtaler.",
+    "page_BadgePreview": "Forhåndsvisning",
+    "page_BadgeExperimental": "Eksperimentell",
+    "page_BadgeBeta": "Beta",
+    "page_AvailableTTSTitle": "For øyeblikket tilgjengelig Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Ingen TTS alternativer som er tilgjengelige for øyeblikket.",
+    "page_TruncatableNoteFormat": "({noteText})",
+    "page_PricesLastVerifiedOn": "Prisene sist bekreftet {date}",
+    "page_PricingPerTokens": "per {amount} Tokener",
+    "page_ModelCategoryModels": "{model} modeller",
+    "ttsVoice_Ugne": "I ilden",
+    "sessionSetupForm": {
+        "title": "Skjema for oppsett av økt",
+        "description": "Her kan du velge LLM og valgfritt TTS innstillinger for hver agent.",
+        "agentAModel": "Agent A-modell",
+        "agentBModel": "Agent B-modell",
+        "selectLLMForAgentA": "Velg LLM for Agent A",
+        "selectLLMForAgentB": "Velg LLM for Agent B",
+        "enableTTS": "Aktiver Text-to-Speech (TTS)",
+        "agentATTS": "Agent A TTS",
+        "agentBTTS": "Agent B TTS",
+        "provider": "Leverandør",
+        "initialSystemPrompt": "Første systemspørsmål",
+        "initialPromptDescription": "Denne meldingen sendes som den første meldingen som starter samtalen. Hvis du lar den stå tom, blir det ingen melding.",
+        "startConversation": "Start samtale",
+        "starting": "Starter...",
+        "startTheConversation": "Start samtalen."
+    },
+    "history": {
+        "backToMain": "Tilbake til hovedinnholdet",
+        "conversationHistory": "Samtalelogg",
+        "chatWith": "Chat med {agentA} og {agentB}",
+        "viewConversation": "Vis samtale",
+        "backToPreviousChats": "Tilbake til tidligere chatter",
+        "resumeConversation": "Gjenoppta samtalen",
+        "resuming": "Gjenopptar...",
+        "sessionDetails": "Detaljer om økten",
+        "language": "Språk:",
+        "transcript": "Transkripsjon"
+    }
 };
-export default no; 
+export default no;

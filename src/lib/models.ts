@@ -307,7 +307,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
         usesReasoningTokens: true,
-        categoryKey: 'claude4_temp',
+        categoryKey: 'modelCategory_Claude4',
     },
     {
         id: 'claude-sonnet-4-20250514',
@@ -319,7 +319,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
         usesReasoningTokens: true,
-        categoryKey: 'claude4_temp',
+        categoryKey: 'modelCategory_Claude4',
     },
     {
         id: 'claude-3-7-sonnet-20250219',
@@ -721,13 +721,13 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Gemini1_5,
     ];
     const anthropicCategoryOrder = [
-        "Claude 4 models",
+        t.modelCategory_Claude4,
         t.modelCategory_Claude3_7,
         t.modelCategory_Claude3_5,
         t.modelCategory_Claude3,
     ];
     const xAICategoryOrder = [
-        'Grok 4 models',
+        t.modelCategory_Grok4,
         t.modelCategory_Grok3,
         t.modelCategory_Grok3Mini,
     ];
@@ -741,7 +741,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_MetaLlama,
         t.modelCategory_GoogleGemma,
         // Place Gemma 3n above Gemma 2
-        'Gemma 3n model',
+        // 'Gemma 3n model',
+        t.modelCategory_Gemma3n,
         t.modelCategory_Gemma2,
         t.modelCategory_Gemma,
         t.modelCategory_DeepSeekR1,
@@ -765,10 +766,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         let translatedCategory: string;
         if (categoryKey === 'claude4_temp') {
             translatedCategory = "Claude 4 models";
-        } else if (categoryKey === 'modelCategory_Grok4') {
-            translatedCategory = "Grok 4 models";
-        } else if (categoryKey === 'modelCategory_Gemma3n') {
-            translatedCategory = "Gemma 3n model";
+        // } else if (categoryKey === 'modelCategory_Grok4') {
+        //     translatedCategory = "Grok 4 models";
+        // } else if (categoryKey === 'modelCategory_Gemma3n') {
+        //     translatedCategory = "Gemma 3n model";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]

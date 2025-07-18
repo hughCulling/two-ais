@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
 import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
@@ -48,6 +49,7 @@ export default function ChatHistoryViewerPage() {
     const params = useParams();
     const router = useRouter();
     const { language } = useLanguage();
+    const { t, loading: translationLoading } = useTranslation();
     const conversationId = params.conversationId as string;
 
     const [details, setDetails] = useState<ConversationDetails | null>(null);
@@ -107,7 +109,7 @@ export default function ChatHistoryViewerPage() {
     }, [user, loading, router]);
 
 
-    if (authLoading || loading) {
+    if (authLoading || loading || translationLoading || !t) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -135,7 +137,7 @@ export default function ChatHistoryViewerPage() {
                             aria-describedby="back-to-history-description"
                         >
                             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
-                            Back to Previous Chats
+                            {t.history.backToPreviousChats}
                         </Button>
                         <div id="back-to-history-description" className="sr-only">
                             Click to return to the list of all previous conversations.
@@ -161,7 +163,7 @@ export default function ChatHistoryViewerPage() {
                         <Button variant="outline" asChild>
                              <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
                                 <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
-                                Back to Previous Chats
+                                {t.history.backToPreviousChats}
                             </Link>
                         </Button>
                     </CardContent>
@@ -251,12 +253,12 @@ export default function ChatHistoryViewerPage() {
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-3xl font-bold flex items-center">
                         <MessageCircle className="mr-3 h-8 w-8 text-primary" />
-                        View Conversation
+                        {t.history.viewConversation}
                     </h1>
                     <Button variant="outline" asChild>
                         <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
                             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
-                            Back to Previous Chats
+                            {t.history.backToPreviousChats}
                         </Link>
                     </Button>
                 </div>
@@ -271,7 +273,7 @@ export default function ChatHistoryViewerPage() {
                             aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
                             aria-describedby="resume-conversation-description"
                         >
-                            {resumeLoading ? 'Resuming...' : 'Resume Conversation'}
+                            {resumeLoading ? t.history.resuming : t.history.resumeConversation}
                         </Button>
                         <div id="resume-conversation-description" className="sr-only">
                             Click to continue this conversation from where it left off. This will create a new active session.
@@ -284,7 +286,7 @@ export default function ChatHistoryViewerPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Session Details</CardTitle>
+                        <CardTitle>{t.history.sessionDetails}</CardTitle>
                         <CardDescription>{`Chat started on ${formattedCreationDate}`}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3 text-sm">
@@ -300,7 +302,7 @@ export default function ChatHistoryViewerPage() {
                         </div>
                         <div className="flex items-center">
                             <Languages className="mr-2 h-5 w-5 text-primary/80" />
-                            <strong>Language:</strong>
+                            <strong>{t.history.language}:</strong>
                             <span className="ml-2">{details.language.toUpperCase()}</span>
                         </div>
                         {details.ttsSettings && (
@@ -332,7 +334,7 @@ export default function ChatHistoryViewerPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Transcript</CardTitle>
+                        <CardTitle>{t.history.transcript}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <ScrollArea className="h-[500px] w-full pr-4" style={{ contain: 'layout style paint' }}>

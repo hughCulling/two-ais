@@ -1,433 +1,323 @@
-// src/lib/translations/th.ts
+// th.ts
 const th = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'การตั้งค่า',
-        signIn: 'ลงชื่อเข้าใช้',
-        signOut: 'ออกจากระบบ',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "การตั้งค่า",
+        "signIn": "เข้าสู่ระบบ",
+        "signOut": "ออกจากระบบ",
+        "previousChats": "แชทที่ผ่านมา"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "ภาษากันนาดา",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "มาราฐี",
+        "ms": "Malay",
+        "my": "พม่า",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'การตั้งค่า',
-        sections: {
-            appearance: 'ลักษณะที่ปรากฏ',
-            apiKeys: 'คีย์ API',
-            language: 'ภาษา',
+    "settings": {
+        "title": "การตั้งค่า",
+        "sections": {
+            "appearance": "รูปร่าง",
+            "apiKeys": "API กุญแจ",
+            "language": "ภาษา"
         },
-        appearance: {
-            theme: 'ธีม',
-            light: 'สว่าง',
-            dark: 'มืด',
-            system: 'ระบบ',
-            description: 'ปรับแต่งรูปลักษณ์และความรู้สึกของแอปพลิเคชัน',
+        "appearance": {
+            "theme": "ธีม",
+            "light": "แสงสว่าง",
+            "dark": "มืด",
+            "system": "ระบบ",
+            "description": "ปรับแต่งรูปลักษณ์และความรู้สึกของแอปพลิเคชัน"
         },
-        language: {
-            title: 'ภาษา',
-            description: 'เลือกภาษาที่คุณต้องการสำหรับอินเทอร์เฟซ',
-            conversationLanguage: 'ภาษาการสนทนา',
-            conversationLanguageDescription: 'ภาษาที่ใช้สำหรับการสนทนา AI จะตรงกับภาษาอินเทอร์เฟซของคุณ',
+        "language": {
+            "title": "ภาษา",
+            "description": "เลือกภาษาที่คุณต้องการสำหรับอินเทอร์เฟซ",
+            "conversationLanguage": "ภาษาสนทนา",
+            "conversationLanguageDescription": "ภาษาที่ใช้สำหรับ AI การสนทนาจะตรงกับภาษาอินเทอร์เฟซของคุณ",
+            "supportedLanguages": "ภาษาที่รองรับ",
+            "languageSupportInformation": "ข้อมูลการสนับสนุนด้านภาษา",
+            "aiAgentsLanguageDescription": "บทสนทนาระหว่าง AI ตัวแทนจะดำเนินการในภาษาที่คุณเลือก"
         },
-        apiKeys: {
-            title: 'API Keys',
-            description: 'Manage your API keys for different AI providers',
-            saved: 'Saved',
-            notSet: 'Not set',
-            setKey: 'Set key',
-            updateKey: 'Update key',
-            removeKey: 'Remove key',
-            getKeyInstructions: 'Get your API key',
-            noNewKeys: "No new API keys entered to save.",
-            unexpectedResponse: "Received an unexpected response from the server.",
-            failedToSaveKey: "Failed to save {serviceName} key.",
-            someKeysNotSaved: "Some API keys could not be saved. Please check the details below.",
-            keyStatus: "key status...",
-            apiKeySecurelySaved: "API Key Securely Saved",
-            confirmRemoveTitle: "Confirm Removal",
-            confirmRemoveDescription: "Are you sure you want to remove the API key for {serviceName}? This action cannot be undone.",
-            failedToRemoveKey: "Failed to remove {serviceName} key.",
-            successfullyRemovedKey: "Successfully removed {serviceName} key.",
-            keyNotSet: "Key Status: Not Set",
-            keySet: "Key Status: Set",
-            saveButton: "Save API Key(s)"
-        },
+        "apiKeys": {
+            "title": "API กุญแจ",
+            "description": "จัดการของคุณ API กุญแจสำหรับที่แตกต่างกัน AI ผู้ให้บริการ",
+            "saved": "บันทึกแล้ว",
+            "notSet": "ไม่ได้ตั้งค่า",
+            "setKey": "ตั้งค่าคีย์",
+            "updateKey": "อัปเดตคีย์",
+            "removeKey": "ถอดกุญแจออก",
+            "getKeyInstructions": "รับของคุณ API สำคัญ",
+            "noNewKeys": "ไม่มีใหม่ API ป้อนคีย์เพื่อบันทึก",
+            "unexpectedResponse": "ได้รับการตอบรับที่ไม่คาดคิดจากเซิร์ฟเวอร์",
+            "failedToSaveKey": "ไม่สามารถบันทึกคีย์ {serviceName} ได้",
+            "someKeysNotSaved": "บาง API ไม่สามารถบันทึกคีย์ได้ โปรดตรวจสอบรายละเอียดด้านล่าง",
+            "keyStatus": "สถานะคีย์...",
+            "apiKeySecurelySaved": "API บันทึกคีย์อย่างปลอดภัย",
+            "confirmRemoveTitle": "ยืนยันการลบ",
+            "confirmRemoveDescription": "คุณแน่ใจหรือไม่ว่าต้องการลบ API ต้องการคีย์สำหรับ {serviceName} หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+            "failedToRemoveKey": "ไม่สามารถลบคีย์ {serviceName} ได้",
+            "successfullyRemovedKey": "ลบคีย์ {serviceName} สำเร็จแล้ว",
+            "keyNotSet": "สถานะคีย์: ไม่ได้ตั้งค่า",
+            "keySet": "สถานะคีย์: ตั้งค่า",
+            "saveButton": "บันทึก API คีย์",
+            "enteringNewKeyOverwrites": "การป้อนรหัสใหม่จะเขียนทับรหัสที่บันทึกไว้",
+            "keyStoredSecurely": "กุญแจของคุณจะถูกเก็บไว้อย่างปลอดภัยโดยใช้ Google ผู้จัดการลับ"
+        }
     },
-
-    // Main page
-    main: {
-        title: 'การสนทนา AI',
-        setupForm: {
-            title: 'ตั้งค่าการสนทนาของคุณ',
-            agentA: 'ตัวแทน A',
-            agentB: 'ตัวแทน B',
-            model: 'โมเดล',
-            selectModel: 'เลือกโมเดล',
-            tts: {
-                title: 'ข้อความเป็นคำพูด',
-                enable: 'เปิดใช้งานข้อความเป็นคำพูด',
-                provider: 'ผู้ให้บริการ TTS',
-                selectProvider: 'เลือกผู้ให้บริการ TTS',
-                voice: 'เสียง',
-                selectVoice: 'เลือกเสียง',
-                model: 'โมเดล TTS',
-                selectModel: 'เลือกโมเดล TTS',
+    "main": {
+        "title": "AI การสนทนา",
+        "setupForm": {
+            "title": "ตั้งค่าการสนทนาของคุณ",
+            "agentA": "ตัวแทนเอ",
+            "agentB": "เอเจนท์ บี",
+            "model": "แบบอย่าง",
+            "selectModel": "เลือกรุ่น",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "เปิดใช้งาน Text-to-Speech",
+                "provider": "TTS ผู้ให้บริการ",
+                "selectProvider": "เลือก TTS ผู้ให้บริการ",
+                "voice": "เสียง",
+                "selectVoice": "เลือกเสียง",
+                "model": "TTS แบบอย่าง",
+                "selectModel": "เลือก TTS แบบอย่าง"
             },
-            startConversation: 'เริ่มการสนทนา',
-            conversationPrompt: 'เริ่มการสนทนา',
+            "startConversation": "เริ่มการสนทนา",
+            "conversationPrompt": "เริ่มการสนทนา"
         },
-        conversation: {
-            thinking: 'กำลังคิด...',
-            stop: 'หยุด',
-            restart: 'เริ่มการสนทนาใหม่',
+        "conversation": {
+            "thinking": "กำลังคิด...",
+            "stop": "หยุด",
+            "restart": "เริ่มการสนทนาใหม่"
         },
-        pricing: {
-            estimatedCost: 'ค่าใช้จ่ายโดยประมาณ',
-            perMillionTokens: 'ต่อล้านโทเค็น',
-            input: 'อินพุต',
-            output: 'เอาต์พุต',
-        },
+        "pricing": {
+            "estimatedCost": "ค่าใช้จ่ายโดยประมาณ",
+            "perMillionTokens": "ต่อหนึ่งล้านโทเค็น",
+            "input": "ป้อนข้อมูล",
+            "output": "เอาท์พุต"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'ลงชื่อเข้าใช้ Two AIs', // Keep brand name
-            emailPlaceholder: 'อีเมล',
-            passwordPlaceholder: 'รหัสผ่าน',
-            signIn: 'ลงชื่อเข้าใช้',
-            signInWithGoogle: 'ลงชื่อเข้าใช้ด้วย Google',
-            noAccount: "ยังไม่มีบัญชีใช่ไหม",
-            signUp: 'ลงทะเบียน',
-            forgotPassword: 'ลืมรหัสผ่าน?',
-            orContinueWith: "หรือดำเนินการต่อด้วย",
-            signingIn: "กำลังลงชื่อเข้าใช้..."
+    "auth": {
+        "login": {
+            "title": "ลงชื่อเข้าใช้ Two AIs",
+            "emailPlaceholder": "อีเมล",
+            "passwordPlaceholder": "รหัสผ่าน",
+            "signIn": "เข้าสู่ระบบ",
+            "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
+            "noAccount": "ไม่มีบัญชีใช่ไหม?",
+            "signUp": "สมัครสมาชิก",
+            "forgotPassword": "ลืมรหัสผ่าน?",
+            "orContinueWith": "หรือดำเนินการต่อด้วย",
+            "signingIn": "กำลังลงชื่อเข้าใช้..."
         },
-        signup: {
-            title: 'สร้างบัญชี',
-            emailPlaceholder: 'อีเมล',
-            passwordPlaceholder: 'รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)',
-            signUp: 'ลงทะเบียน',
-            signUpWithGoogle: 'ลงทะเบียนด้วย Google',
-            hasAccount: 'มีบัญชีอยู่แล้วใช่ไหม',
-            signIn: 'ลงชื่อเข้าใช้',
-            emailLabel: "ที่อยู่อีเมล",
-            confirmPasswordPlaceholder: "ยืนยันรหัสผ่าน",
-            signingUp: "กำลังลงทะเบียน..."
+        "signup": {
+            "title": "สร้างบัญชี",
+            "emailPlaceholder": "อีเมล",
+            "passwordPlaceholder": "รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)",
+            "signUp": "ลงทะเบียน",
+            "signUpWithGoogle": "สมัครสมาชิกด้วย Google",
+            "hasAccount": "มีบัญชีอยู่แล้วใช่ไหม?",
+            "signIn": "ลงชื่อเข้าใช้",
+            "emailLabel": "Email ที่อยู่",
+            "confirmPasswordPlaceholder": "ยืนยันรหัสผ่าน",
+            "signingUp": "กำลังสมัครสมาชิก..."
         },
-        errors: {
-            invalidCredentials: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
-            userNotFound: 'ไม่พบผู้ใช้',
-            weakPassword: 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร',
-            emailInUse: 'อีเมลนี้ถูกใช้แล้ว',
-            generic: 'เกิดข้อผิดพลาด โปรดลองอีกครั้ง',
-            initialization: "การเริ่มต้นล้มเหลว โปรดลองอีกครั้งในภายหลัง",
-            invalidEmail: "โปรดป้อนที่อยู่อีเมลที่ถูกต้อง",
-            tooManyRequests: "การเข้าถึงถูกระงับชั่วคราวเนื่องจากพยายามลงชื่อเข้าใช้ล้มเหลวหลายครั้งเกินไป โปรดรีเซ็ตรหัสผ่านของคุณหรือลองอีกครั้งในภายหลัง",
-            signInFailedPrefix: "การลงชื่อเข้าใช้ล้มเหลว: ",
-            unknownSignInError: "เกิดข้อผิดพลาดที่ไม่รู้จักระหว่างการลงชื่อเข้าใช้",
-            profileSaveFailedPrefix: "การลงชื่อเข้าใช้สำเร็จ แต่การบันทึกข้อมูลโปรไฟล์ล้มเหลว: ",
-            profileCheckSaveFailedPrefix: "การลงชื่อเข้าใช้สำเร็จ แต่การตรวจสอบ/บันทึกข้อมูลโปรไฟล์ล้มเหลว: ",
-            accountExistsWithDifferentCredential: "บัญชีที่มีอีเมลนี้มีอยู่แล้วด้วยวิธีการลงชื่อเข้าใช้ที่แตกต่างกัน",
-            googleSignInFailedPrefix: "การลงชื่อเข้าใช้ด้วย Google ล้มเหลว: ",
-            unknownGoogleSignInError: "เกิดข้อผิดพลาดที่ไม่รู้จักระหว่างการลงชื่อเข้าใช้ด้วย Google",
-            passwordsDoNotMatch: "รหัสผ่านไม่ตรงกัน",
-            accountCreatedProfileSaveFailedPrefix: "สร้างบัญชีแล้ว แต่การบันทึกข้อมูลโปรไฟล์ล้มเหลว: ",
-            unknownProfileSaveError: "เกิดข้อผิดพลาดที่ไม่รู้จักระหว่างการบันทึกโปรไฟล์",
-            emailAlreadyRegistered: "ที่อยู่อีเมลนี้ได้รับการลงทะเบียนแล้ว",
-            passwordTooShortSignUp: "รหัสผ่านต้องมีอักขระอย่างน้อย 6 ตัว",
-            signUpFailedPrefix: "การลงทะเบียนล้มเหลว: ",
-            unknownSignUpError: "เกิดข้อผิดพลาดที่ไม่รู้จักระหว่างการลงทะเบียน"
-        },
+        "errors": {
+            "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+            "userNotFound": "ไม่พบผู้ใช้",
+            "weakPassword": "รหัสผ่านควรมีอย่างน้อย 6 ตัวอักษร",
+            "emailInUse": "Email ใช้งานแล้ว",
+            "generic": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
+            "initialization": "เกิดข้อผิดพลาดในการเริ่มต้น โปรดลองอีกครั้งในภายหลัง",
+            "invalidEmail": "กรุณากรอกที่อยู่อีเมลที่ถูกต้อง",
+            "tooManyRequests": "การเข้าถึงถูกปิดใช้งานชั่วคราวเนื่องจากพยายามเข้าสู่ระบบไม่สำเร็จหลายครั้งเกินไป โปรดรีเซ็ตรหัสผ่านหรือลองอีกครั้งในภายหลัง",
+            "signInFailedPrefix": "การลงชื่อเข้าใช้ล้มเหลว: ",
+            "unknownSignInError": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุระหว่างการลงชื่อเข้าใช้",
+            "profileSaveFailedPrefix": "ลงชื่อเข้าใช้แล้ว แต่ไม่สามารถบันทึกข้อมูลโปรไฟล์ได้: ",
+            "profileCheckSaveFailedPrefix": "ลงชื่อเข้าใช้แล้ว แต่ไม่สามารถตรวจสอบ/บันทึกข้อมูลโปรไฟล์ได้: ",
+            "accountExistsWithDifferentCredential": "มีบัญชีอยู่แล้วโดยใช้อีเมลนี้โดยใช้วิธีลงชื่อเข้าใช้แบบอื่น",
+            "googleSignInFailedPrefix": "Google การลงชื่อเข้าใช้ล้มเหลว: ",
+            "unknownGoogleSignInError": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุระหว่าง Google การลงชื่อเข้าใช้",
+            "passwordsDoNotMatch": "รหัสผ่านไม่ตรงกัน",
+            "accountCreatedProfileSaveFailedPrefix": "สร้างบัญชีแล้วแต่ไม่สามารถบันทึกข้อมูลโปรไฟล์ได้: ",
+            "unknownProfileSaveError": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุขณะบันทึกโปรไฟล์",
+            "emailAlreadyRegistered": "ที่อยู่อีเมลนี้ได้ลงทะเบียนไว้แล้ว",
+            "passwordTooShortSignUp": "รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร",
+            "signUpFailedPrefix": "การลงทะเบียนล้มเหลว: ",
+            "unknownSignUpError": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุระหว่างการสมัคร"
+        }
     },
-
-    // Common
-    common: {
-        loading: 'กำลังโหลด...',
-        error: 'ข้อผิดพลาด',
-        save: 'บันทึก',
-        cancel: 'ยกเลิก',
-        delete: 'ลบ',
-        confirm: 'ยืนยัน',
-        or: 'หรือ',
-        MoreInformation: "ข้อมูลเพิ่มเติม",
-        Example: "ตัวอย่าง:",
-        ShowMore: "แสดงเพิ่มเติม",
-        ShowLess: "แสดงน้อยลง",
-        AwaitingApproval: "รอการอนุมัติ...",
-        OpenInNewTab: "เปิดในแท็บใหม่",
-        AdvancedSettings: "การตั้งค่าขั้นสูง",
-        Name: "ชื่อ",
-        Created: "สร้างเมื่อ",
-        Updated: "อัปเดตเมื่อ",
-        Launched: "เปิดตัวเมื่อ",
-        Docs: "เอกสาร",
-        Blog: "บล็อก",
-        Pricing: "ราคา",
-        Terms: "ข้อกำหนด",
-        Privacy: "ความเป็นส่วนตัว",
-        Changelog: "บันทึกการเปลี่ยนแปลง",
-        Copy: "คัดลอก",
-        Copied: "คัดลอกแล้ว",
-        TryAgain: "ลองอีกครั้ง"
+    "common": {
+        "loading": "กำลังโหลด...",
+        "error": "ข้อผิดพลาด",
+        "save": "บันทึก",
+        "cancel": "ยกเลิก",
+        "delete": "ลบ",
+        "confirm": "ยืนยัน",
+        "or": "หรือ"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "ไม่พบ API Key",
-    apiKeyMissingSubtext: "API key สำหรับผู้ให้บริการนี้หายไปหรือไม่ถูกต้อง โปรดเพิ่มในหน้าการตั้งค่า",
-    apiKeyNotNeeded: "ไม่จำเป็นต้องใช้ API Key",
-    apiKeyNotNeededSubtext: "ผู้ให้บริการนี้ไม่ต้องการ API key สำหรับระดับการใช้งานฟรีหรือบางรุ่น",
-    apiKeyFound: "ตั้งค่า API Key แล้ว",
-    apiKeyFoundSubtext: "มีการกำหนดค่า API key สำหรับผู้ให้บริการนี้แล้ว",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "รุ่นเรือธงสำหรับแชท",
-    modelCategory_Reasoning: "รุ่นสำหรับการให้เหตุผล",
-    modelCategory_CostOptimized: "รุ่นที่คุ้มค่า",
-    modelCategory_OlderGPT: "รุ่น GPT ที่เก่ากว่า",
-    modelCategory_Gemini2_5: "Gemini 2.5 Series",
-    modelCategory_Gemini2_0: "Gemini 2.0 Series",
-    modelCategory_Gemini1_5: "Gemini 1.5 Series",
-    modelCategory_Claude3_7: "Claude 3.7 Series",
-    modelCategory_Claude3_5: "Claude 3.5 Series",
-    modelCategory_Claude3: "Claude 3 Series",
-    modelCategory_Grok3: "Grok 3 Series",
-    modelCategory_Grok3Mini: "Grok 3 Mini Series",
-    modelCategory_Llama4: "Llama 4 Series",
-    modelCategory_Llama3_3: "Llama 3.3 Series",
-    modelCategory_Llama3_2: "Llama 3.2 Series",
-    modelCategory_Llama3_1: "Llama 3.1 Series",
-    modelCategory_Llama3: "Llama 3 Series",
-    modelCategory_LlamaVision: "Llama Vision Models",
-    modelCategory_MetaLlama: "Meta Llama Models",
-    modelCategory_Gemma2: "Gemma 2 Series",
-    modelCategory_Gemma: "Gemma Series",
-    modelCategory_GoogleGemma: "Google Gemma Models",
-    modelCategory_DeepSeekR1: "DeepSeek R1 Series",
-    modelCategory_DeepSeekV3: "DeepSeek V3 Series",
-    modelCategory_DeepSeekR1Distill: "DeepSeek R1 Distill Series",
-    modelCategory_DeepSeekModels: "DeepSeek Models",
-    modelCategory_MistralAIModels: "Mistral AI Models",
-    modelCategory_Qwen3: "Qwen3 Series",
-    modelCategory_QwQwQ: "Qwen QwQ Series",
-    modelCategory_Qwen2_5: "Qwen2.5 Series",
-    modelCategory_Qwen2_5Vision: "Qwen2.5 Vision Series",
-    modelCategory_Qwen2_5Coder: "Qwen2.5 Coder Series",
-    modelCategory_Qwen2: "Qwen2 Series",
-    modelCategory_Qwen2Vision: "Qwen2 Vision Series",
-    modelCategory_QwenModels: "Qwen Models",
-    modelCategory_OtherModels: "รุ่นอื่นๆ",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "ไม่สามารถโหลดข้อมูลผู้ใช้: {errorMessage} โปรดลองรีเฟรช",
-    page_ErrorUserNotFound: "ไม่พบผู้ใช้ โปรดลงชื่อเข้าใช้อีกครั้ง",
-    page_ErrorUserApiKeyConfig: "ไม่สามารถโหลดการกำหนดค่า API key ของผู้ใช้ โปรดรีเฟรชหรือตรวจสอบการตั้งค่า",
-    page_ErrorStartingSessionAPI: "ข้อผิดพลาด API: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "ข้อผิดพลาดในการเริ่มเซสชัน: {errorMessage}",
-    page_ErrorSessionIdMissing: "การตอบกลับ API สำเร็จแต่ไม่รวม ID การสนทนา",
-    page_LoadingUserData: "กำลังโหลดข้อมูลผู้ใช้...",
-    page_ErrorAlertTitle: "ข้อผิดพลาด",
-    page_WelcomeTitle: "ยินดีต้อนรับสู่ Two AIs",
-    page_WelcomeSubtitle: "เว็บไซต์นี้ให้คุณฟังการสนทนาระหว่าง LLM สองตัว",
-    page_ApiKeysRequiredTitle: "จำเป็นต้องใช้ API Keys",
-    page_ApiKeysRequiredDescription: "ในการเรียกใช้การสนทนา คุณจะต้องให้ API keys ของคุณเองสำหรับโมเดล AI ที่คุณต้องการใช้ (เช่น OpenAI, Google, Anthropic) หลังจากลงชื่อเข้าใช้แล้ว สามารถดูคำแนะนำโดยละเอียดสำหรับผู้ให้บริการแต่ละรายได้ที่หน้าการตั้งค่า / API Keys หลังจากลงชื่อเข้าใช้",
-    page_SignInPrompt: "ในการเริ่มเซสชันของคุณเอง คุณสามารถลงชื่อเข้าใช้หรือสร้างบัญชีโดยใช้ลิงก์ในส่วนหัว",
-    page_VideoTitle: "การสาธิตการสนทนาของ Two AIs",
-    page_AvailableLLMsTitle: "LLM ที่มีให้บริการในปัจจุบัน",
-    page_TooltipGoogleThinkingBudget: "โมเดล Google นี้ใช้ 'งบประมาณการคิด' ผลลัพธ์ของ 'การคิด' จะถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
-    page_TooltipAnthropicExtendedThinking: "โมเดล Anthropic นี้ใช้ 'การคิดแบบขยาย' ผลลัพธ์ของ 'การคิด' จะถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
-    page_TooltipXaiThinking: "โมเดล xAI นี้ใช้ 'การคิด' ผลลัพธ์นี้จะถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
-    page_TooltipQwenReasoning: "โมเดล Qwen นี้ใช้ 'การให้เหตุผล/การคิด' ผลลัพธ์นี้จะถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
-    page_TooltipDeepSeekReasoning: "โมเดล DeepSeek นี้ใช้ 'การให้เหตุผล/การคิด' ผลลัพธ์จะถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
-    page_TooltipGenericReasoning: "โมเดลนี้ใช้โทเค็นการให้เหตุผลซึ่งไม่ปรากฏในแชทแต่จะถูกเรียกเก็บเงินเป็นโทเค็นผลลัพธ์",
-    page_TooltipRequiresVerification: "ต้องใช้การยืนยันองค์กร OpenAI คุณสามารถยืนยันได้ที่นี่",
-    page_TooltipSupportsLanguage: "รองรับ {languageName}",
-    page_TooltipMayNotSupportLanguage: "อาจไม่รองรับ {languageName}",
-    page_BadgePreview: "ตัวอย่าง",
-    page_BadgeExperimental: "ทดลอง",
-    page_BadgeBeta: "เบต้า",
-    page_AvailableTTSTitle: "TTS ที่มีให้บริการในปัจจุบัน",
-    page_NoTTSOptions: "ขณะนี้ยังไม่มีตัวเลือก TTS",
-    page_TruncatableNoteFormat: "หมายเหตุ: {noteText}",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "ป้อน API Key ใหม่ {serviceName}",
-    apiKeyManager_TestKey: "ทดสอบ Key",
-    apiKeyManager_TestingKey: "กำลังทดสอบ Key...",
-    apiKeyManager_KeyIsValid: "Key ถูกต้อง",
-    apiKeyManager_KeyIsInvalid: "Key ไม่ถูกต้อง",
-    apiKeyManager_FailedToTestKey: "การทดสอบ Key ล้มเหลว",
-    apiKeyManager_ErrorTestingKey: "ข้อผิดพลาดในการทดสอบ Key: {error}",
-    apiKeyManager_KeyProvider: "ผู้ให้บริการ",
-    apiKeyManager_KeyName: "ชื่อ Key",
-    apiKeyManager_Status: "สถานะ",
-    apiKeyManager_Action: "การดำเนินการ",
-
-    // Model capabilities
-    modelCapability_Vision: "การมองเห็น",
-    modelCapability_JSON: "โหมด JSON",
-    modelCapability_Tools: "การใช้เครื่องมือ",
-    modelCapability_ImageGen: "การสร้างภาพ",
-    modelCapability_Multilingual: "หลายภาษา",
-    modelCapability_WebSearch: "การค้นหาเว็บ",
-    modelCapability_LargeContext: "บริบทขนาดใหญ่",
-    modelCapability_LongContext: "บริบทแบบยาว",
-    modelCapability_FastResponse: "การตอบสนองที่รวดเร็ว",
-    modelCapability_CostEffective: "คุ้มค่า",
-    modelCapability_AdvancedReasoning: "การให้เหตุผลขั้นสูง",
-    modelCapability_Coding: "การเขียนโค้ด",
-    modelCapability_Foundation: "โมเดลพื้นฐาน",
-    modelCapability_Experimental: "ทดลอง",
-    modelCapability_Beta: "เบต้า",
-    modelCapability_Preview: "ตัวอย่าง",
-    modelCapability_RequiresVerification: "ต้องมีการยืนยัน",
-    modelCapability_RequiresAccount: "ต้องมีบัญชี",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API กุญแจหายไป",
+    "apiKeyMissingSubtext": "การ API รหัสสำหรับผู้ให้บริการนี้หายไปหรือไม่ถูกต้อง โปรดเพิ่มรหัสในการตั้งค่า",
+    "apiKeyNotNeeded": "API ไม่จำเป็นต้องใช้กุญแจ",
+    "apiKeyNotNeededSubtext": "ผู้ให้บริการรายนี้ไม่ต้องการ API กุญแจสำหรับระดับฟรีหรือรุ่นบางรุ่น",
+    "apiKeyFound": "API ชุดกุญแจ",
+    "apiKeyFoundSubtext": "หนึ่ง API คีย์ได้รับการกำหนดค่าสำหรับผู้ให้บริการรายนี้",
+    "modelCategory_FlagshipChat": "นางแบบแชทเรือธง",
+    "modelCategory_Reasoning": "แบบจำลองการใช้เหตุผล",
+    "modelCategory_CostOptimized": "แบบจำลองที่ปรับต้นทุนให้เหมาะสม",
+    "modelCategory_OlderGPT": "รุ่น GPT รุ่นเก่า",
+    "modelCategory_Gemini2_5": "Gemini 2.5 แบบจำลอง",
+    "modelCategory_Gemini2_0": "Gemini 2.0 แบบจำลอง",
+    "modelCategory_Gemini1_5": "Gemini 1.5 แบบจำลอง",
+    "modelCategory_Claude4": "Claude 4 แบบจำลอง",
+    "modelCategory_Claude3_7": "Claude 3.7 แบบจำลอง",
+    "modelCategory_Claude3_5": "Claude 3.5 แบบจำลอง",
+    "modelCategory_Claude3": "Claude 3 แบบจำลอง",
+    "modelCategory_Grok4": "Grok 4 แบบจำลอง",
+    "modelCategory_Grok3": "Grok 3 แบบจำลอง",
+    "modelCategory_Grok3Mini": "Grok 3 โมเดลมินิ",
+    "modelCategory_Llama4": "Llama 4 รุ่น",
+    "modelCategory_Llama3_3": "Llama 3.3 โมเดล",
+    "modelCategory_Llama3_2": "Llama 3.2 โมเดล",
+    "modelCategory_Llama3_1": "Llama 3.1 แบบจำลอง",
+    "modelCategory_Llama3": "Llama 3 รุ่น",
+    "modelCategory_LlamaVision": "Llama แบบจำลองวิสัยทัศน์",
+    "modelCategory_MetaLlama": "Meta Llama แบบจำลอง",
+    "modelCategory_Gemma3n": "Gemma แบบจำลอง 3n",
+    "modelCategory_Gemma2": "Gemma 2 รุ่น",
+    "modelCategory_Gemma": "Gemma แบบจำลอง",
+    "modelCategory_GoogleGemma": "Google Gemma แบบจำลอง",
+    "modelCategory_DeepSeekR1": "DeepSeek รุ่น R1",
+    "modelCategory_DeepSeekV3": "DeepSeek รุ่น V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek โมเดลกลั่น R1",
+    "modelCategory_DeepSeekModels": "DeepSeek แบบจำลอง",
+    "modelCategory_MistralAIModels": "Mistral AI แบบจำลอง",
+    "modelCategory_Qwen3": "Qwen3 รุ่น",
+    "modelCategory_QwQwQ": "Qwen โมเดล QwQ",
+    "modelCategory_Qwen2_5": "Qwen2.5 รุ่น",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 โมเดลวิสัยทัศน์",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 โมเดลโค้ดเดอร์",
+    "modelCategory_Qwen2": "Qwen2 รุ่น",
+    "modelCategory_Qwen2Vision": "Qwenโมเดลวิสัยทัศน์ 2 แบบ",
+    "modelCategory_QwenModels": "Qwen แบบจำลอง",
+    "modelCategory_OtherModels": "รุ่นอื่นๆ",
+    "page_ErrorLoadingUserData": "ไม่สามารถโหลดข้อมูลผู้ใช้: {errorMessage} โปรดลองรีเฟรช",
+    "page_ErrorUserNotFound": "ไม่พบผู้ใช้ กรุณาลงชื่อเข้าใช้อีกครั้ง",
+    "page_ErrorUserApiKeyConfig": "ผู้ใช้ API ไม่สามารถโหลดการกำหนดค่าคีย์ได้ โปรดรีเฟรชหรือตรวจสอบการตั้งค่า",
+    "page_ErrorStartingSessionAPI": "API ข้อผิดพลาด: {สถานะ} {statusText}",
+    "page_ErrorStartingSessionGeneric": "ข้อผิดพลาดในการเริ่มเซสชัน: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API ตอบกลับสำเร็จแต่ไม่ได้รวม conversationId",
+    "page_LoadingUserData": "กำลังโหลดข้อมูลผู้ใช้...",
+    "page_ErrorAlertTitle": "ข้อผิดพลาด",
+    "page_WelcomeTitle": "ยินดีต้อนรับสู่ Two AIs",
+    "page_WelcomeSubtitle": "เว็บไซต์นี้ช่วยให้คุณฟังบทสนทนาระหว่างสองคน Large Language Models -LLMs-",
+    "page_ApiKeysRequiredTitle": "API ต้องมีกุญแจ",
+    "page_ApiKeysRequiredDescription": "หากต้องการสนทนา คุณต้องระบุข้อมูลของคุณเอง API กุญแจสำหรับ AI โมเดลที่คุณต้องการใช้ (เช่น OpenAI- Google- Anthropic) หลังจากลงชื่อเข้าใช้แล้ว สามารถดูคำแนะนำโดยละเอียดสำหรับแต่ละผู้ให้บริการได้ที่ การตั้งค่า / API หน้าคีย์หลังจากลงชื่อเข้าใช้",
+    "page_SignInPrompt": "หากต้องการเริ่มเซสชันของคุณเอง คุณสามารถลงชื่อเข้าใช้หรือสร้างบัญชีโดยใช้ลิงก์ในส่วนหัว",
+    "page_VideoTitle": "Two AIs การสาธิตการสนทนา",
+    "page_AvailableLLMsTitle": "มีจำหน่ายในปัจจุบัน LLMs",
+    "page_TooltipGoogleThinkingBudget": "นี้ Google แบบจำลองนี้ใช้ 'งบประมาณการคิด' ผลลัพธ์ 'การคิด' จะถูกเรียกเก็บเงิน แต่จะไม่ปรากฏในแชท",
+    "page_TooltipAnthropicExtendedThinking": "นี้ Anthropic แบบจำลองนี้ใช้ 'การคิดแบบขยาย' ผลลัพธ์ของการ 'คิด' จะถูกเรียกเก็บเงิน แต่จะไม่ปรากฏในแชท",
+    "page_TooltipXaiThinking": "นี้ xAI โมเดลใช้ 'การคิด' ผลลัพธ์นี้ถูกเรียกเก็บเงินแต่ไม่ปรากฏในแชท",
+    "page_TooltipQwenReasoning": "นี้ Qwen แบบจำลองนี้ใช้ 'การใช้เหตุผล/การคิด' ผลลัพธ์นี้ถูกเรียกเก็บเงินแล้ว แต่จะไม่ปรากฏในแชท",
+    "page_TooltipDeepSeekReasoning": "นี้ DeepSeek โมเดลใช้ 'การใช้เหตุผล/การคิด' ผลลัพธ์ถูกเรียกเก็บเงินแต่ไม่ปรากฏในแชท",
+    "page_TooltipGenericReasoning": "โมเดลนี้ใช้โทเค็นการให้เหตุผลที่ไม่ปรากฏในแชทแต่จะถูกเรียกเก็บเงินเป็นโทเค็นเอาต์พุต",
+    "page_TooltipRequiresVerification": "ต้องได้รับการตรวจสอบ OpenAI องค์กร คุณสามารถตรวจสอบได้ที่นี่",
+    "page_TooltipSupportsLanguage": "รองรับ {languageName}",
+    "page_TooltipMayNotSupportLanguage": "รุ่นนี้อาจไม่รองรับ {languageName} สำหรับการสนทนาได้อย่างสมบูรณ์",
+    "page_BadgePreview": "ตัวอย่าง",
+    "page_BadgeExperimental": "การทดลอง",
+    "page_BadgeBeta": "เบต้า",
+    "page_AvailableTTSTitle": "มีจำหน่ายในปัจจุบัน Text-to-Speech -TTS-",
+    "page_NoTTSOptions": "เลขที่ TTS ตัวเลือกที่มีอยู่ในปัจจุบัน",
+    "page_TruncatableNoteFormat": "({noteText})",
+    "page_PricesLastVerifiedOn": "ราคาตรวจสอบล่าสุดเมื่อ {date}",
+    "page_PricingPerTokens": "ต่อ {amount} โทเค็น",
+    "page_ModelCategoryModels": "{model} แบบจำลอง",
+    "ttsVoice_Ugne": "ในกองไฟ",
+    "sessionSetupForm": {
+        "title": "แบบฟอร์มการตั้งค่าเซสชัน",
+        "description": "ที่นี่คุณสามารถเลือก LLM และตัวเลือกเพิ่มเติม TTS การตั้งค่าสำหรับแต่ละตัวแทน",
+        "agentAModel": "ตัวแทนรุ่น A",
+        "agentBModel": "ตัวแทนรุ่น B",
+        "selectLLMForAgentA": "เลือก LLM สำหรับตัวแทน A",
+        "selectLLMForAgentB": "เลือก LLM สำหรับตัวแทน B",
+        "enableTTS": "เปิดใช้งาน Text-to-Speech -TTS-",
+        "agentATTS": "ตัวแทนเอ TTS",
+        "agentBTTS": "เอเจนท์ บี TTS",
+        "provider": "ผู้ให้บริการ",
+        "initialSystemPrompt": "การแจ้งเตือนระบบเริ่มต้น",
+        "initialPromptDescription": "ข้อความแจ้งเตือนนี้จะถูกส่งเป็นข้อความแรกเพื่อเริ่มการสนทนา หากคุณเว้นว่างไว้ จะไม่มีข้อความแจ้งเตือนเกิดขึ้น",
+        "startConversation": "เริ่มการสนทนา",
+        "starting": "กำลังเริ่มต้น...",
+        "startTheConversation": "เริ่มการสนทนา"
+    },
+    "history": {
+        "backToMain": "กลับสู่หน้าหลัก",
+        "conversationHistory": "ประวัติการสนทนา",
+        "chatWith": "แชทกับ {agentA} - {agentB}",
+        "viewConversation": "ดูการสนทนา",
+        "backToPreviousChats": "กลับไปที่การสนทนาครั้งก่อน",
+        "resumeConversation": "การสนทนาต่อ",
+        "resuming": "กำลังดำเนินการต่อ...",
+        "sessionDetails": "รายละเอียดเซสชัน",
+        "language": "ภาษา:",
+        "transcript": "บทบันทึก"
+    }
 };
-export default th; 
+export default th;

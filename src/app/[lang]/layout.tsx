@@ -78,6 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const description = t?.page_WelcomeSubtitle ||
     'Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience. Requires user API keys.';
   return {
+    metadataBase: new URL('https://www.two-ais.com'),
     title,
     description,
     openGraph: {

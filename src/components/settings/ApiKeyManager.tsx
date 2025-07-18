@@ -311,7 +311,7 @@ export default function ApiKeyManager() {
                                     )}
                                 </div>
                                  <p id={`${id}-description`} className="text-xs text-muted-foreground px-1">
-                                     {isSaved ? "Entering a new key will overwrite the saved one." : "Your key will be stored securely using Google Secret Manager."}
+                                     {isSaved ? t.settings.apiKeys.enteringNewKeyOverwrites : t.settings.apiKeys.keyStoredSecurely}
                                  </p>
                                  {isSaved && (
                                      <div id={`${id}-saved-status`} className="sr-only">
