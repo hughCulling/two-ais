@@ -1,434 +1,323 @@
-// src/lib/translations/hr.ts
+// hr.ts
 const hr = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Postavke',
-        signIn: 'Prijava',
-        signOut: 'Odjava',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Postavke",
+        "signIn": "Prijava",
+        "signOut": "Odjava",
+        "previousChats": "Prethodni razgovori"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arapski',
-        bn: 'Bengalski',
-        bg: 'Bugarski',
-        zh: 'Kineski',
-        hr: 'Hrvatski',
-        cs: 'Češki',
-        da: 'Danski',
-        nl: 'Nizozemski',
-        en: 'Engleski',
-        et: 'Estonski',
-        fi: 'Finski',
-        fr: 'Francuski',
-        de: 'Njemački',
-        el: 'Grčki',
-        iw: 'Hebrejski',
-        hi: 'Hindski',
-        hu: 'Mađarski',
-        id: 'Indonezijski',
-        it: 'Talijanski',
-        ja: 'Japanski',
-        ko: 'Korejski',
-        lv: 'Latvijski',
-        lt: 'Litavski',
-        no: 'Norveški',
-        pl: 'Poljski',
-        pt: 'Portugalski',
-        ro: 'Rumunjski',
-        ru: 'Ruski',
-        sr: 'Srpski',
-        sk: 'Slovački',
-        sl: 'Slovenski',
-        es: 'Španjolski',
-        sw: 'Svahili',
-        sv: 'Švedski',
-        th: 'Tajlandski',
-        tr: 'Turski',
-        uk: 'Ukrajinski',
-        vi: 'Vijetnamski',
-        mt: 'Malteški',
-        bs: 'Bosanski',
-        ca: 'Katalonski',
-        gu: 'Gudžaratski',
-        hy: 'Armenski',
-        is: 'Islandski',
-        ka: 'Gruzijski',
-        kk: 'Kazaški',
-        kn: 'Kannadski',
-        mk: 'Makedonski',
-        ml: 'Malajalamski',
-        mr: 'Marathski',
-        ms: 'Malajski',
-        my: 'Burmanski',
-        pa: 'Pandžapski',
-        so: 'Somalski',
-        sq: 'Albanski',
-        ta: 'Tamilski',
-        te: 'Telugu',
-        tl: 'Tagaloški',
-        ur: 'Urdski',
-        am: 'Amharski',
-        mn: 'Mongolski',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Kannadski",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "my": "burmanski",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Postavke',
-        sections: {
-            appearance: 'Izgled',
-            apiKeys: 'API ključevi',
-            language: 'Jezik',
+    "settings": {
+        "title": "Postavke",
+        "sections": {
+            "appearance": "Izgled",
+            "apiKeys": "API Ključevi",
+            "language": "Jezik"
         },
-        appearance: {
-            theme: 'Tema',
-            light: 'Svijetla',
-            dark: 'Tamna',
-            system: 'Sustav',
-            description: "Prilagodite izgled i dojam aplikacije."
+        "appearance": {
+            "theme": "Tema",
+            "light": "Svjetlo",
+            "dark": "Tamno",
+            "system": "Sustav",
+            "description": "Prilagodite izgled i dojam aplikacije."
         },
-        language: {
-            title: 'Jezik',
-            description: 'Odaberite željeni jezik za sučelje',
-            conversationLanguage: 'Jezik razgovora',
-            conversationLanguageDescription: 'Jezik koji se koristi za AI razgovore odgovarat će jeziku vašeg sučelja',
+        "language": {
+            "title": "Jezik",
+            "description": "Odaberite željeni jezik za sučelje",
+            "conversationLanguage": "Jezik razgovora",
+            "conversationLanguageDescription": "Jezik koji se koristi za AI razgovori će odgovarati jeziku vašeg sučelja",
+            "supportedLanguages": "Podržani jezici",
+            "languageSupportInformation": "Informacije o jezičnoj podršci",
+            "aiAgentsLanguageDescription": "Razgovor između AI Agenti će se voditi na jeziku koji ste odabrali."
         },
-        apiKeys: {
-            title: 'API ključevi',
-            description: 'Upravljajte svojim API ključevima za različite AI pružatelje usluga',
-            saved: 'Spremljeno',
-            notSet: 'Nije postavljeno',
-            setKey: 'Postavi ključ',
-            updateKey: 'Ažuriraj ključ',
-            removeKey: 'Ukloni ključ',
-            getKeyInstructions: 'Nabavite svoj API ključ',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Nisu uneseni novi API ključevi za spremanje.",
-            unexpectedResponse: "Primljen je neočekivani odgovor od poslužitelja.",
-            failedToSaveKey: "Spremanje ključa {serviceName} nije uspjelo.",
-            someKeysNotSaved: "Neki API ključevi nisu mogli biti spremljeni. Molimo provjerite detalje u nastavku.",
-            keyStatus: "status ključa...",
-            apiKeySecurelySaved: "API ključ sigurno spremljen",
-            confirmRemoveTitle: "Potvrdite uklanjanje",
-            confirmRemoveDescription: "Jeste li sigurni da želite ukloniti API ključ za {serviceName}? Ova se radnja ne može poništiti.",
-            failedToRemoveKey: "Uklanjanje ključa {serviceName} nije uspjelo.",
-            successfullyRemovedKey: "Ključ {serviceName} uspješno uklonjen.",
-            keyNotSet: "Status ključa: Nije postavljeno",
-            keySet: "Status ključa: Postavljeno",
-            saveButton: "Spremi API ključ(eve)"
-        },
+        "apiKeys": {
+            "title": "API Ključevi",
+            "description": "Upravljajte svojim API ključevi za različite AI pružatelji usluga",
+            "saved": "Spremljeno",
+            "notSet": "Nije postavljeno",
+            "setKey": "Postavi ključ",
+            "updateKey": "Ažuriraj ključ",
+            "removeKey": "Ukloni ključ",
+            "getKeyInstructions": "Uzmite svoje API ključ",
+            "noNewKeys": "Nema novih API tipke unesene za spremanje.",
+            "unexpectedResponse": "Primljen je neočekivani odgovor od poslužitelja.",
+            "failedToSaveKey": "Spremanje ključa {serviceName} nije uspjelo.",
+            "someKeysNotSaved": "Neki API Ključevi se nisu mogli spremiti. Molimo provjerite detalje u nastavku.",
+            "keyStatus": "ključno stanje...",
+            "apiKeySecurelySaved": "API Ključ sigurno spremljen",
+            "confirmRemoveTitle": "Potvrdi uklanjanje",
+            "confirmRemoveDescription": "Jeste li sigurni da želite ukloniti API ključ za {serviceName}? Ova se radnja ne može poništiti.",
+            "failedToRemoveKey": "Uklanjanje ključa {serviceName} nije uspjelo.",
+            "successfullyRemovedKey": "Ključ {serviceName} uspješno uklonjen.",
+            "keyNotSet": "Status ključa: Nije postavljeno",
+            "keySet": "Status ključa: Postavljeno",
+            "saveButton": "Uštedjeti API Ključ(evi)",
+            "enteringNewKeyOverwrites": "Unos novog ključa prebrisat će spremljeni.",
+            "keyStoredSecurely": "Vaš ključ će biti sigurno pohranjen pomoću Google Tajni upravitelj."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'AI Razgovor',
-        setupForm: {
-            title: 'Postavite svoj razgovor',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Model',
-            selectModel: 'Odaberite model',
-            tts: {
-                title: 'Tekst u govor',
-                enable: 'Omogući tekst u govor',
-                provider: 'TTS pružatelj',
-                selectProvider: 'Odaberite TTS pružatelja',
-                voice: 'Glas',
-                selectVoice: 'Odaberite glas',
-                model: 'TTS model',
-                selectModel: 'Odaberite TTS model',
+    "main": {
+        "title": "AI Razgovor",
+        "setupForm": {
+            "title": "Postavite svoj razgovor",
+            "agentA": "Agent A",
+            "agentB": "Agent B",
+            "model": "Model",
+            "selectModel": "Odaberite model",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Omogućiti Text-to-Speech",
+                "provider": "TTS Pružatelj usluga",
+                "selectProvider": "Odaberite TTS pružatelj usluga",
+                "voice": "Glas",
+                "selectVoice": "Odaberite glas",
+                "model": "TTS Model",
+                "selectModel": "Odaberite TTS model"
             },
-            startConversation: 'Započni razgovor',
-            conversationPrompt: 'Započnite razgovor.',
+            "startConversation": "Započni razgovor",
+            "conversationPrompt": "Započnite razgovor."
         },
-        conversation: {
-            thinking: 'razmišlja...',
-            stop: 'Zaustavi',
-            restart: 'Ponovno pokreni razgovor',
+        "conversation": {
+            "thinking": "razmišljanje...",
+            "stop": "Stop",
+            "restart": "Ponovo pokreni razgovor"
         },
-        pricing: {
-            estimatedCost: 'Procijenjeni trošak',
-            perMillionTokens: 'po milijunu tokena',
-            input: 'Unos',
-            output: 'Izlaz',
-        },
+        "pricing": {
+            "estimatedCost": "Procijenjeni trošak",
+            "perMillionTokens": "po milijun tokena",
+            "input": "Ulazni",
+            "output": "Izlaz"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Prijavite se na Two AIs', // Keep brand name
-            emailPlaceholder: 'Email',
-            passwordPlaceholder: 'Lozinka',
-            signIn: 'Prijava',
-            signInWithGoogle: 'Prijavite se putem Googlea',
-            noAccount: "Nemate račun?",
-            signUp: 'Registrirajte se',
-            forgotPassword: 'Zaboravili ste lozinku?',
-            orContinueWith: "Ili nastavite s",
-            signingIn: "Prijavljivanje..."
+    "auth": {
+        "login": {
+            "title": "Prijavite se na Two AIs",
+            "emailPlaceholder": "E-pošta",
+            "passwordPlaceholder": "Lozinka",
+            "signIn": "Prijava",
+            "signInWithGoogle": "Prijavite se s Google",
+            "noAccount": "Nemate račun?",
+            "signUp": "Prijavi se",
+            "forgotPassword": "Zaboravili ste lozinku?",
+            "orContinueWith": "Ili nastavite s",
+            "signingIn": "Prijava..."
         },
-        signup: {
-            title: 'Stvorite račun',
-            emailPlaceholder: 'Email',
-            passwordPlaceholder: 'Lozinka (najmanje 6 znakova)',
-            signUp: 'Registrirajte se',
-            signUpWithGoogle: 'Registrirajte se putem Googlea',
-            hasAccount: 'Već imate račun?',
-            signIn: 'Prijava',
-            emailLabel: "Email adresa",
-            confirmPasswordPlaceholder: "Potvrdite lozinku",
-            signingUp: "Registriranje..."
+        "signup": {
+            "title": "Izradi račun",
+            "emailPlaceholder": "E-pošta",
+            "passwordPlaceholder": "Lozinka (najmanje 6 znakova)",
+            "signUp": "Prijavi se",
+            "signUpWithGoogle": "Prijavite se s Google",
+            "hasAccount": "Već imate račun?",
+            "signIn": "Prijava",
+            "emailLabel": "Email adresa",
+            "confirmPasswordPlaceholder": "Potvrdite lozinku",
+            "signingUp": "Prijava..."
         },
-        errors: {
-            invalidCredentials: 'Nevažeći email ili lozinka',
-            userNotFound: 'Korisnik nije pronađen',
-            weakPassword: 'Lozinka mora imati najmanje 6 znakova',
-            emailInUse: 'Email se već koristi',
-            generic: 'Došlo je do pogreške. Molimo pokušajte ponovo.',
-            initialization: "Pogreška pri inicijalizaciji. Molimo pokušajte kasnije.",
-            invalidEmail: "Molimo unesite važeću email adresu.",
-            tooManyRequests: "Pristup je privremeno onemogućen zbog previše neuspjelih pokušaja prijave. Molimo resetirajte lozinku ili pokušajte kasnije.",
-            signInFailedPrefix: "Prijava nije uspjela: ",
-            unknownSignInError: "Došlo je do nepoznate pogreške prilikom prijave.",
-            profileSaveFailedPrefix: "Prijavljeni ste, ali spremanje podataka profila nije uspjelo: ",
-            profileCheckSaveFailedPrefix: "Prijavljeni ste, ali provjera/spremanje podataka profila nije uspjelo: ",
-            accountExistsWithDifferentCredential: "Račun s ovom e-poštom već postoji i koristi drugu metodu prijave.",
-            googleSignInFailedPrefix: "Google prijava nije uspjela: ",
-            unknownGoogleSignInError: "Došlo je do nepoznate pogreške prilikom Google prijave.",
-            passwordsDoNotMatch: "Lozinke se ne podudaraju.",
-            accountCreatedProfileSaveFailedPrefix: "Račun je stvoren, ali spremanje podataka profila nije uspjelo: ",
-            unknownProfileSaveError: "Došlo je do nepoznate pogreške prilikom spremanja profila.",
-            emailAlreadyRegistered: "Ova email adresa je već registrirana.",
-            passwordTooShortSignUp: "Lozinka mora imati najmanje 6 znakova.",
-            signUpFailedPrefix: "Registracija nije uspjela: ",
-            unknownSignUpError: "Došlo je do nepoznate pogreške prilikom registracije."
-        },
+        "errors": {
+            "invalidCredentials": "Nevažeća e-pošta ili lozinka",
+            "userNotFound": "Korisnik nije pronađen",
+            "weakPassword": "Lozinka mora imati najmanje 6 znakova",
+            "emailInUse": "Email već u upotrebi",
+            "generic": "Došlo je do pogreške. Pokušajte ponovno.",
+            "initialization": "Pogreška inicijalizacije. Pokušajte ponovno kasnije.",
+            "invalidEmail": "Molimo unesite važeću adresu e-pošte.",
+            "tooManyRequests": "Pristup je privremeno onemogućen zbog previše neuspjelih pokušaja prijave. Molimo vas da resetirate lozinku ili pokušate ponovno kasnije.",
+            "signInFailedPrefix": "Prijava nije uspjela: ",
+            "unknownSignInError": "Došlo je do nepoznate pogreške prilikom prijave.",
+            "profileSaveFailedPrefix": "Prijavljen, ali spremanje podataka profila nije uspjelo: ",
+            "profileCheckSaveFailedPrefix": "Prijavljen, ali provjera/spremanje podataka profila nije uspjelo: ",
+            "accountExistsWithDifferentCredential": "Već postoji račun s ovom e-poštom koji koristi drugu metodu prijave.",
+            "googleSignInFailedPrefix": "Google Prijava nije uspjela: ",
+            "unknownGoogleSignInError": "Došlo je do nepoznate pogreške tijekom Google Prijava.",
+            "passwordsDoNotMatch": "Lozinke se ne podudaraju.",
+            "accountCreatedProfileSaveFailedPrefix": "Račun je kreiran, ali nije uspjelo spremanje podataka profila: ",
+            "unknownProfileSaveError": "Došlo je do nepoznate pogreške prilikom spremanja profila.",
+            "emailAlreadyRegistered": "Ova adresa e-pošte je već registrirana.",
+            "passwordTooShortSignUp": "Lozinka mora biti dugačka najmanje 6 znakova.",
+            "signUpFailedPrefix": "Prijava nije uspjela: ",
+            "unknownSignUpError": "Došlo je do nepoznate pogreške tijekom registracije."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Učitavanje...',
-        error: 'Greška',
-        save: 'Spremi',
-        cancel: 'Odustani',
-        delete: 'Izbriši',
-        confirm: 'Potvrdi',
-        or: 'ili',
-        MoreInformation: "Više informacija",
-        Example: "Primjer:",
-        ShowMore: "Prikaži više",
-        ShowLess: "Prikaži manje",
-        AwaitingApproval: "Čeka se odobrenje...",
-        OpenInNewTab: "Otvori u novoj kartici",
-        AdvancedSettings: "Napredne postavke",
-        Name: "Naziv",
-        Created: "Stvoreno",
-        Updated: "Ažurirano",
-        Launched: "Pokrenuto",
-        Docs: "Dokumentacija",
-        Blog: "Blog",
-        Pricing: "Cijene",
-        Terms: "Uvjeti",
-        Privacy: "Privatnost",
-        Changelog: "Dnevnik promjena",
-        Copy: "Kopiraj",
-        Copied: "Kopirano",
-        TryAgain: "Pokušaj ponovno"
+    "common": {
+        "loading": "Učitavanje...",
+        "error": "Pogreška",
+        "save": "Uštedjeti",
+        "cancel": "Otkazati",
+        "delete": "Izbrisati",
+        "confirm": "Potvrdi",
+        "or": "ili"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "Nedostaje API ključ",
-    apiKeyMissingSubtext: "API ključ za ovog pružatelja usluga nedostaje ili je nevažeći. Molimo dodajte ga u postavkama.",
-    apiKeyNotNeeded: "API ključ nije potreban",
-    apiKeyNotNeededSubtext: "Ovaj pružatelj usluga ne zahtijeva API ključ za svoju besplatnu razinu ili određene modele.",
-    apiKeyFound: "API ključ postavljen",
-    apiKeyFoundSubtext: "Za ovog pružatelja usluga konfiguriran je API ključ.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Vodeći modeli za chat",
-    modelCategory_Reasoning: "Modeli za zaključivanje",
-    modelCategory_CostOptimized: "Modeli optimizirani za troškove",
-    modelCategory_OlderGPT: "Stariji GPT modeli",
-    modelCategory_Gemini2_5: "Gemini 2.5 serija",
-    modelCategory_Gemini2_0: "Gemini 2.0 serija",
-    modelCategory_Gemini1_5: "Gemini 1.5 serija",
-    modelCategory_Claude3_7: "Claude 3.7 serija",
-    modelCategory_Claude3_5: "Claude 3.5 serija",
-    modelCategory_Claude3: "Claude 3 serija",
-    modelCategory_Grok3: "Grok 3 serija",
-    modelCategory_Grok3Mini: "Grok 3 Mini serija",
-    modelCategory_Llama4: "Llama 4 serija",
-    modelCategory_Llama3_3: "Llama 3.3 serija",
-    modelCategory_Llama3_2: "Llama 3.2 serija",
-    modelCategory_Llama3_1: "Llama 3.1 serija",
-    modelCategory_Llama3: "Llama 3 serija",
-    modelCategory_LlamaVision: "Llama Vision modeli",
-    modelCategory_MetaLlama: "Meta Llama modeli",
-    modelCategory_Gemma2: "Gemma 2 serija",
-    modelCategory_Gemma: "Gemma serija",
-    modelCategory_GoogleGemma: "Google Gemma modeli",
-    modelCategory_DeepSeekR1: "DeepSeek R1 serija",
-    modelCategory_DeepSeekV3: "DeepSeek V3 serija",
-    modelCategory_DeepSeekR1Distill: "DeepSeek R1 Distill serija",
-    modelCategory_DeepSeekModels: "DeepSeek modeli",
-    modelCategory_MistralAIModels: "Mistral AI modeli",
-    modelCategory_Qwen3: "Qwen3 serija",
-    modelCategory_QwQwQ: "Qwen QwQ serija",
-    modelCategory_Qwen2_5: "Qwen2.5 serija",
-    modelCategory_Qwen2_5Vision: "Qwen2.5 Vision serija",
-    modelCategory_Qwen2_5Coder: "Qwen2.5 Coder serija",
-    modelCategory_Qwen2: "Qwen2 serija",
-    modelCategory_Qwen2Vision: "Qwen2 Vision serija",
-    modelCategory_QwenModels: "Qwen modeli",
-    modelCategory_OtherModels: "Ostali modeli",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Učitavanje korisničkih podataka nije uspjelo: {errorMessage}. Molimo pokušajte osvježiti stranicu.",
-    page_ErrorUserNotFound: "Korisnik nije pronađen. Molimo prijavite se ponovno.",
-    page_ErrorUserApiKeyConfig: "Konfiguracija API ključa korisnika nije se mogla učitati. Molimo osvježite stranicu ili provjerite postavke.",
-    page_ErrorStartingSessionAPI: "API pogreška: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Pogreška pri pokretanju sesije: {errorMessage}",
-    page_ErrorSessionIdMissing: "API odgovor je uspješan, ali nije uključivao ID razgovora.",
-    page_LoadingUserData: "Učitavanje korisničkih podataka...",
-    page_ErrorAlertTitle: "Greška",
-    page_WelcomeTitle: "Dobrodošli u Two AIs",
-    page_WelcomeSubtitle: "Ova web stranica omogućuje vam slušanje razgovora između dva LLM-a.",
-    page_ApiKeysRequiredTitle: "Potrebni su API ključevi",
-    page_ApiKeysRequiredDescription: "Da biste pokrenuli razgovore, morat ćete nakon prijave navesti vlastite API ključeve za AI modele koje želite koristiti (npr. OpenAI, Google, Anthropic). Detaljne upute za svakog pružatelja usluga možete pronaći na stranici Postavke / API ključevi nakon prijave.",
-    page_SignInPrompt: "Da biste započeli vlastitu sesiju, možete se prijaviti ili stvoriti račun pomoću veze u zaglavlju.",
-    page_VideoTitle: "Demo razgovora Two AIs",
-    page_AvailableLLMsTitle: "Trenutno dostupni LLM-ovi",
-    page_TooltipGoogleThinkingBudget: "Ovaj Googleov model koristi \"proračun za razmišljanje\". Izlaz \"razmišljanja\" se naplaćuje, ali nije vidljiv u chatu.",
-    page_TooltipAnthropicExtendedThinking: "Ovaj Anthropicov model koristi \"prošireno razmišljanje\". Izlaz \"razmišljanja\" se naplaćuje, ali nije vidljiv u chatu.",
-    page_TooltipXaiThinking: "Ovaj xAI model koristi \"razmišljanje\". Ovaj se izlaz naplaćuje, ali nije vidljiv u chatu.",
-    page_TooltipQwenReasoning: "Ovaj Qwen model koristi \"zaključivanje/razmišljanje\". Ovaj se izlaz naplaćuje, ali nije vidljiv u chatu.",
-    page_TooltipDeepSeekReasoning: "Ovaj DeepSeek model koristi \"zaključivanje/razmišljanje\". Izlaz se naplaćuje, ali nije vidljiv u chatu.",
-    page_TooltipGenericReasoning: "Ovaj model koristi tokene za zaključivanje koji nisu vidljivi u chatu, ali se naplaćuju kao izlazni tokeni.",
-    page_TooltipRequiresVerification: "Zahtijeva potvrđenu OpenAI organizaciju. Ovdje možete potvrditi.",
-    page_TooltipSupportsLanguage: "Podržava {languageName}",
-    page_TooltipMayNotSupportLanguage: "Možda ne podržava {languageName}",
-    page_BadgePreview: "Pregled",
-    page_BadgeExperimental: "Eksperimentalno",
-    page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Trenutno dostupni TTS-ovi",
-    page_NoTTSOptions: "Trenutno nema dostupnih TTS opcija.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Unesite novi {serviceName} API ključ",
-    apiKeyManager_TestKey: "Testiraj ključ",
-    apiKeyManager_TestingKey: "Testiranje ključa...",
-    apiKeyManager_KeyIsValid: "Ključ je važeći.",
-    apiKeyManager_KeyIsInvalid: "Ključ je nevažeći.",
-    apiKeyManager_FailedToTestKey: "Testiranje ključa nije uspjelo.",
-    apiKeyManager_ErrorTestingKey: "Pogreška pri testiranju ključa: {error}",
-    apiKeyManager_KeyProvider: "Pružatelj",
-    apiKeyManager_KeyName: "Naziv ključa",
-    apiKeyManager_Status: "Status",
-    apiKeyManager_Action: "Radnja",
-
-    // Model capabilities
-    modelCapability_Vision: "Vid",
-    modelCapability_JSON: "JSON način rada",
-    modelCapability_Tools: "Korištenje alata",
-    modelCapability_ImageGen: "Generiranje slika",
-    modelCapability_Multilingual: "Višejezično",
-    modelCapability_WebSearch: "Pretraživanje weba",
-    modelCapability_LargeContext: "Veliki kontekst",
-    modelCapability_LongContext: "Dugi kontekst",
-    modelCapability_FastResponse: "Brzi odgovor",
-    modelCapability_CostEffective: "Isplativo",
-    modelCapability_AdvancedReasoning: "Napredno zaključivanje",
-    modelCapability_Coding: "Kodiranje",
-    modelCapability_Foundation: "Osnovni model",
-    modelCapability_Experimental: "Eksperimentalno",
-    modelCapability_Beta: "Beta",
-    modelCapability_Preview: "Pregled",
-    modelCapability_RequiresVerification: "Zahtijeva provjeru",
-    modelCapability_RequiresAccount: "Zahtijeva račun",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Nedostaje ključ",
+    "apiKeyMissingSubtext": "The API Ključ za ovog pružatelja usluga nedostaje ili je nevažeći. Dodajte ga u postavke.",
+    "apiKeyNotNeeded": "API Ključ nije potreban",
+    "apiKeyNotNeededSubtext": "Ovaj pružatelj usluga ne zahtijeva API ključ za svoju besplatnu razinu ili određene modele.",
+    "apiKeyFound": "API Set ključeva",
+    "apiKeyFoundSubtext": "Jedan API Ključ je konfiguriran za ovog pružatelja usluga.",
+    "modelCategory_FlagshipChat": "Vodeći modeli chata",
+    "modelCategory_Reasoning": "Modeli zaključivanja",
+    "modelCategory_CostOptimized": "Modeli optimizirani s obzirom na troškove",
+    "modelCategory_OlderGPT": "Stariji GPT modeli",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modeli",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modeli",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modeli",
+    "modelCategory_Claude4": "Claude 4 modeli",
+    "modelCategory_Claude3_7": "Claude 3.7 modeli",
+    "modelCategory_Claude3_5": "Claude 3.5 modeli",
+    "modelCategory_Claude3": "Claude 3 modeli",
+    "modelCategory_Grok4": "Grok 4 modeli",
+    "modelCategory_Grok3": "Grok 3 modeli",
+    "modelCategory_Grok3Mini": "Grok 3 Mini modeli",
+    "modelCategory_Llama4": "Llama 4 modela",
+    "modelCategory_Llama3_3": "Llama 3.3 modela",
+    "modelCategory_Llama3_2": "Llama 3.2 modela",
+    "modelCategory_Llama3_1": "Llama 3.1 modeli",
+    "modelCategory_Llama3": "Llama 3 modela",
+    "modelCategory_LlamaVision": "Llama Modeli vida",
+    "modelCategory_MetaLlama": "Meta Llama Modeli",
+    "modelCategory_Gemma3n": "Gemma 3n model",
+    "modelCategory_Gemma2": "Gemma 2 modela",
+    "modelCategory_Gemma": "Gemma modeli",
+    "modelCategory_GoogleGemma": "Google Gemma Modeli",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 modeli",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modeli",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill modeli",
+    "modelCategory_DeepSeekModels": "DeepSeek Modeli",
+    "modelCategory_MistralAIModels": "Mistral AI Modeli",
+    "modelCategory_Qwen3": "Qwen3 modela",
+    "modelCategory_QwQwQ": "Qwen QwQ modeli",
+    "modelCategory_Qwen2_5": "Qwen2.5 modela",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modeli vida",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modeli programera",
+    "modelCategory_Qwen2": "Qwen2 modela",
+    "modelCategory_Qwen2Vision": "Qwen2 modela vida",
+    "modelCategory_QwenModels": "Qwen Modeli",
+    "modelCategory_OtherModels": "Ostali modeli",
+    "page_ErrorLoadingUserData": "Nije uspjelo učitavanje korisničkih podataka: {errorMessage}. Pokušajte osvježiti stranicu.",
+    "page_ErrorUserNotFound": "Korisnik nije pronađen. Molimo vas da se ponovno prijavite.",
+    "page_ErrorUserApiKeyConfig": "Korisnik API Konfiguracija ključa nije se mogla učitati. Osvježite ili provjerite postavke.",
+    "page_ErrorStartingSessionAPI": "API Pogreška: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Greška pri pokretanju sesije: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API Odgovor je bio uspješan, ali nije uključivao ID razgovora.",
+    "page_LoadingUserData": "Učitavanje korisničkih podataka...",
+    "page_ErrorAlertTitle": "Pogreška",
+    "page_WelcomeTitle": "Dobrodošli u Two AIs",
+    "page_WelcomeSubtitle": "Ova web stranica vam omogućuje slušanje razgovora između dva Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Potrebni ključevi",
+    "page_ApiKeysRequiredDescription": "Za vođenje razgovora morat ćete navesti vlastite API ključevi za AI modele koje želite koristiti (npr. OpenAI, Google, Anthropic) nakon prijave. Detaljne upute za svakog pružatelja usluga možete pronaći u Postavkama / API Stranica s ključevima nakon prijave.",
+    "page_SignInPrompt": "Za početak vlastite sesije možete se prijaviti ili stvoriti račun pomoću poveznice u zaglavlju.",
+    "page_VideoTitle": "Two AIs Demo razgovora",
+    "page_AvailableLLMsTitle": "Trenutno dostupno LLMs",
+    "page_TooltipGoogleThinkingBudget": "Ovaj Google Model koristi 'proračun za razmišljanje'. Izlaz 'razmišljanja' se naplaćuje, ali nije vidljiv u chatu.",
+    "page_TooltipAnthropicExtendedThinking": "Ovaj Anthropic Model koristi 'prošireno razmišljanje'. Izlaz 'razmišljanja' se naplaćuje, ali nije vidljiv u chatu.",
+    "page_TooltipXaiThinking": "Ovaj xAI Model koristi 'razmišljanje'. Ovaj izlaz se naplaćuje, ali nije vidljiv u chatu.",
+    "page_TooltipQwenReasoning": "Ovaj Qwen Model koristi 'rasuđivanje/razmišljanje'. Ovaj izlaz se naplaćuje, ali nije vidljiv u chatu.",
+    "page_TooltipDeepSeekReasoning": "Ovaj DeepSeek Model koristi 'rasuđivanje/razmišljanje'. Izlaz se naplaćuje, ali nije vidljiv u chatu.",
+    "page_TooltipGenericReasoning": "Ovaj model koristi tokene za zaključivanje koji nisu vidljivi u chatu, ali se naplaćuju kao izlazni tokeni.",
+    "page_TooltipRequiresVerification": "Zahtijeva provjeru OpenAI organizacija. Možete provjeriti ovdje.",
+    "page_TooltipSupportsLanguage": "Podržava {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ovaj model možda ne podržava u potpunosti {languageName} za razgovor.",
+    "page_BadgePreview": "Pregled",
+    "page_BadgeExperimental": "Eksperimentalno",
+    "page_BadgeBeta": "Beta",
+    "page_AvailableTTSTitle": "Trenutno dostupno Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Ne TTS trenutno dostupne opcije.",
+    "page_TruncatableNoteFormat": "({noteText})",
+    "page_PricesLastVerifiedOn": "Cijene su zadnji put provjerene {date}",
+    "page_PricingPerTokens": "po {amount} Tokeni",
+    "page_ModelCategoryModels": "{model} modeli",
+    "ttsVoice_Ugne": "U vatri",
+    "sessionSetupForm": {
+        "title": "Obrazac za postavljanje sesije",
+        "description": "Ovdje možete odabrati LLM i opcionalno TTS postavke za svakog agenta.",
+        "agentAModel": "Model agenta A",
+        "agentBModel": "Model agenta B",
+        "selectLLMForAgentA": "Odaberite LLM za agenta A",
+        "selectLLMForAgentB": "Odaberite LLM za agenta B",
+        "enableTTS": "Omogućiti Text-to-Speech (TTS)",
+        "agentATTS": "Agent A TTS",
+        "agentBTTS": "Agent B TTS",
+        "provider": "Pružatelj usluga",
+        "initialSystemPrompt": "Početni upit sustava",
+        "initialPromptDescription": "Ovaj upit bit će poslan kao prva poruka za početak razgovora. Ako ga ostavite praznim, upita neće biti.",
+        "startConversation": "Započni razgovor",
+        "starting": "Početak...",
+        "startTheConversation": "Započnite razgovor."
+    },
+    "history": {
+        "backToMain": "Natrag na glavni sadržaj",
+        "conversationHistory": "Povijest razgovora",
+        "chatWith": "Razgovarajte s {agentA} & {agentB}",
+        "viewConversation": "Prikaži razgovor",
+        "backToPreviousChats": "Natrag na prethodne razgovore",
+        "resumeConversation": "Nastavi razgovor",
+        "resuming": "Nastavak...",
+        "sessionDetails": "Detalji sesije",
+        "language": "Jezik:",
+        "transcript": "Prijepis"
+    }
 };
-export default hr; 
+export default hr;

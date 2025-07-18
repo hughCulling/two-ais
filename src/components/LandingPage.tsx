@@ -274,7 +274,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 {t.page_AvailableLLMsTitle}
               </h2>
               <p className="text-xs text-muted-foreground text-center mt-1">
-                Prices last verified on 2025-06-04
+                {t.page_PricesLastVerifiedOn.replace('{date}', '2025-06-04')}
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -309,11 +309,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           const modelCategoryKey = providerModels.find(m => {
                             let translatedCategory: string;
                             if (m.categoryKey === 'claude4_temp') {
-                              translatedCategory = "Claude 4 models";
+                              translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Claude 4');
                             } else if (m.categoryKey === 'modelCategory_Grok4') {
-                              translatedCategory = "Grok 4 models";
-                            } else if (m.categoryKey === 'modelCategory_Gemma3n') {
-                              translatedCategory = "Gemma 3n model";
+                              translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Grok 4');
+                            // } else if (m.categoryKey === 'modelCategory_Gemma3n') {
+                            //   translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Gemma 3n');
                             } else {
                               const maybeTranslation = (m.categoryKey && m.categoryKey in t)
                                 ? t[m.categoryKey as keyof typeof t]
@@ -349,9 +349,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     ) : (
                                       <span
                                         className="text-xs text-muted-foreground truncate min-w-0"
-                                        title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} per 1M Tokens`}
+                                        title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
                                       >
-                                        (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M Tokens)
+                                        (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
                                       </span>
                                     )}
                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (

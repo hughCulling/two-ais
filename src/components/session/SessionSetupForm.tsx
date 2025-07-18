@@ -312,13 +312,14 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
     const { user, loading: authLoading } = useAuth();
     const { language } = useLanguage();
+    const { t, loading: translationLoading } = useTranslation();
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
-    const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>("Start the conversation.");
+    const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
@@ -640,7 +641,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             <div className="space-y-3 p-4 border rounded-md bg-background/50">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
                 <div className="space-y-2">
-                    <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-provider`}>Provider</Label>
+                    <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-provider`}>{t?.sessionSetupForm?.provider}</Label>
                     <Select
                         value={currentAgentTTSSettings.provider}
                         onValueChange={(value: TTSProviderOptionId) => handleTTSProviderChange(agentIdentifier, value)}
@@ -748,8 +749,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     return (
         <Card className="w-full max-w-2xl">
             <CardHeader>
-                <CardTitle>Session Setup Form</CardTitle>
-                <CardDescription>Here you can select the LLM and optional TTS settings for each agent.</CardDescription>
+                {translationLoading || !t ? (
+                    <CardTitle>...</CardTitle>
+                ) : (
+                    <CardTitle>{t.sessionSetupForm.title}</CardTitle>
+                )}
+                {t?.sessionSetupForm && t.sessionSetupForm.description && (
+                    <CardDescription>{t.sessionSetupForm.description}</CardDescription>
+                )}
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                 {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
             </CardHeader>
@@ -763,8 +770,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 value={agentA_llm}
                                 onChange={setAgentA_llm}
                                 disabled={isLoading || isLoadingStatus || !user}
-                                label="Agent A Model"
-                                placeholder="Select LLM for Agent A"
+                                label={t?.sessionSetupForm?.agentAModel || ''}
+                                placeholder={t?.sessionSetupForm?.selectLLMForAgentA || ''}
                             />
                         </div>
                         {/* Agent B LLM Selector */}
@@ -773,8 +780,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 value={agentB_llm}
                                 onChange={setAgentB_llm}
                                 disabled={isLoading || isLoadingStatus || !user}
-                                label="Agent B Model"
-                                placeholder="Select LLM for Agent B"
+                                label={t?.sessionSetupForm?.agentBModel || ''}
+                                placeholder={t?.sessionSetupForm?.selectLLMForAgentB || ''}
                             />
                         </div>
                     </div>
@@ -821,7 +828,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             htmlFor="tts-enabled-checkbox" 
                             className="text-base font-medium"
                         >
-                            Enable Text-to-Speech (TTS)
+                            {t?.sessionSetupForm?.enableTTS}
                         </Label>
                     </div>
                     <div id="tts-checkbox-description" className="sr-only">
@@ -837,18 +844,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 </div>
                 {/* Move initial prompt section here */}
                 <div className="mt-4">
-                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1">Initial System Prompt</label>
+                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1">{t?.sessionSetupForm?.initialSystemPrompt}</label>
                     <textarea
                         id="initial-system-prompt"
                         className="w-full border rounded-md p-2 text-sm min-h-[60px]"
                         value={initialSystemPrompt}
                         onChange={e => setInitialSystemPrompt(e.target.value)}
-                        placeholder="Start the conversation."
+                        placeholder={t?.sessionSetupForm?.startTheConversation || ''}
                         aria-describedby="initial-prompt-description"
                         aria-label="Initial system prompt for starting the conversation"
                     />
                     <p id="initial-prompt-description" className="text-xs text-muted-foreground mt-1">
-                        This prompt will be sent as the first message to start the conversation. If you leave it blank, there will be no prompt.
+                        {t?.sessionSetupForm?.initialPromptDescription}
                     </p>
                 </div>
             </CardContent>
@@ -860,7 +867,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     aria-label={isStartDisabled ? "Cannot start session - please select models for both agents" : "Start a new conversation with the selected settings"}
                     aria-describedby="start-button-description"
                 >
-                    {isLoading ? "Starting..." : "Start Conversation"}
+                    {isLoading ? t?.sessionSetupForm?.starting : t?.sessionSetupForm?.startConversation}
                 </Button>
                 <div id="start-button-description" className="sr-only">
                     Click to begin a new AI conversation with the selected language models and settings.

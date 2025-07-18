@@ -1,433 +1,323 @@
-// src/lib/translations/ro.ts
+// ro.ts
 const ro = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Setări',
-        signIn: 'Conectare',
-        signOut: 'Deconectare',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Setări",
+        "signIn": "Conectare",
+        "signOut": "Sign out",
+        "previousChats": "Chat-uri anterioare"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Kannada",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "my": "Birmanez",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Setări',
-        sections: {
-            appearance: 'Aspect',
-            apiKeys: 'Chei API',
-            language: 'Limbă',
+    "settings": {
+        "title": "Setări",
+        "sections": {
+            "appearance": "Aspect",
+            "apiKeys": "API Chei",
+            "language": "Limbă"
         },
-        appearance: {
-            theme: 'Temă',
-            light: 'Luminos',
-            dark: 'Întunecat',
-            system: 'Sistem',
-            description: "Personalizați aspectul și experiența aplicației."
+        "appearance": {
+            "theme": "Temă",
+            "light": "Aprinde",
+            "dark": "Întuneric",
+            "system": "Sistem",
+            "description": "Personalizați aspectul și funcționalitatea aplicației."
         },
-        language: {
-            title: 'Limbă',
-            description: 'Alegeți limba preferată pentru interfață',
-            conversationLanguage: 'Limba conversației',
-            conversationLanguageDescription: 'Limba utilizată pentru conversațiile AI se va potrivi cu limba interfeței dvs.',
+        "language": {
+            "title": "Limbă",
+            "description": "Alegeți limba preferată pentru interfață",
+            "conversationLanguage": "Limbajul conversației",
+            "conversationLanguageDescription": "Limbajul folosit pentru AI conversațiile vor corespunde limbii interfeței dvs.",
+            "supportedLanguages": "Limbi acceptate",
+            "languageSupportInformation": "Informații despre asistența lingvistică",
+            "aiAgentsLanguageDescription": "Conversația dintre AI Contactele cu agenții vor fi efectuate în limba selectată de dumneavoastră."
         },
-        apiKeys: {
-            title: 'Chei API',
-            description: 'Gestionați-vă cheile API pentru diferiți furnizori AI',
-            saved: 'Salvat',
-            notSet: 'Nu este setat',
-            setKey: 'Setează cheia',
-            updateKey: 'Actualizează cheia',
-            removeKey: 'Elimină cheia',
-            getKeyInstructions: 'Obțineți cheia API',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Nu au fost introduse chei API noi pentru salvare.",
-            unexpectedResponse: "S-a primit un răspuns neașteptat de la server.",
-            failedToSaveKey: "Salvarea cheii {serviceName} a eșuat.",
-            someKeysNotSaved: "Unele chei API nu au putut fi salvate. Verificați detaliile de mai jos.",
-            keyStatus: "starea cheii...",
-            apiKeySecurelySaved: "Cheie API salvată în siguranță",
-            confirmRemoveTitle: "Confirmați eliminarea",
-            confirmRemoveDescription: "Sigur doriți să eliminați cheia API pentru {serviceName}? Această acțiune nu poate fi anulată.",
-            failedToRemoveKey: "Eliminarea cheii {serviceName} a eșuat.",
-            successfullyRemovedKey: "Cheia {serviceName} a fost eliminată cu succes.",
-            keyNotSet: "Starea cheii: nesetată",
-            keySet: "Starea cheii: setată",
-            saveButton: "Salvați cheia(ile) API"
-        },
+        "apiKeys": {
+            "title": "API Chei",
+            "description": "Gestionează-ți API chei pentru diferite AI furnizori",
+            "saved": "Salvat",
+            "notSet": "Nesetat",
+            "setKey": "Setați cheia",
+            "updateKey": "Actualizare cheie",
+            "removeKey": "Scoateți cheia",
+            "getKeyInstructions": "Ia-ți API cheie",
+            "noNewKeys": "Nicio noutate API tastele introduse pentru salvare.",
+            "unexpectedResponse": "Am primit un răspuns neașteptat de la server.",
+            "failedToSaveKey": "Cheia {serviceName} nu a putut fi salvată.",
+            "someKeysNotSaved": "Unele API Cheile nu au putut fi salvate. Vă rugăm să verificați detaliile de mai jos.",
+            "keyStatus": "stare cheie...",
+            "apiKeySecurelySaved": "API Cheie salvată în siguranță",
+            "confirmRemoveTitle": "Confirmați eliminarea",
+            "confirmRemoveDescription": "Sigur vrei să elimini API cheie pentru {serviceName}? Această acțiune nu poate fi anulată.",
+            "failedToRemoveKey": "Cheia {serviceName} nu a putut fi eliminată.",
+            "successfullyRemovedKey": "Cheia {serviceName} a fost eliminată cu succes.",
+            "keyNotSet": "Stare cheie: Nesetată",
+            "keySet": "Stare cheie: Setată",
+            "saveButton": "Salva API Cheie(le)",
+            "enteringNewKeyOverwrites": "Introducerea unei noi chei va suprascrie cheia salvată.",
+            "keyStoredSecurely": "Cheia dumneavoastră va fi stocată în siguranță folosind Google Managerul Secret."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'Conversație AI',
-        setupForm: {
-            title: 'Configurați-vă conversația',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Model',
-            selectModel: 'Selectați un model',
-            tts: {
-                title: 'Text-în-Vorbire',
-                enable: 'Activați Text-în-Vorbire',
-                provider: 'Furnizor TTS',
-                selectProvider: 'Selectați furnizorul TTS',
-                voice: 'Voce',
-                selectVoice: 'Selectați vocea',
-                model: 'Model TTS',
-                selectModel: 'Selectați modelul TTS',
+    "main": {
+        "title": "AI Conversaţie",
+        "setupForm": {
+            "title": "Configurați-vă conversația",
+            "agentA": "Agentul A",
+            "agentB": "Agentul B",
+            "model": "Model",
+            "selectModel": "Selectați un model",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Permite Text-to-Speech",
+                "provider": "TTS Furnizor",
+                "selectProvider": "Selecta TTS furnizor",
+                "voice": "Voce",
+                "selectVoice": "Selectați vocea",
+                "model": "TTS Model",
+                "selectModel": "Selecta TTS model"
             },
-            startConversation: 'Începe conversația',
-            conversationPrompt: 'Începeți conversația.',
+            "startConversation": "Începeți conversația",
+            "conversationPrompt": "Începe conversația."
         },
-        conversation: {
-            thinking: 'gândește...',
-            stop: 'Oprește',
-            restart: 'Repornește conversația',
+        "conversation": {
+            "thinking": "gândire...",
+            "stop": "Stop",
+            "restart": "Reporniți conversația"
         },
-        pricing: {
-            estimatedCost: 'Cost estimat',
-            perMillionTokens: 'pe milion de jetoane',
-            input: 'Intrare',
-            output: 'Ieșire',
-        },
+        "pricing": {
+            "estimatedCost": "Cost estimat",
+            "perMillionTokens": "per milion de token-uri",
+            "input": "Intrare",
+            "output": "Ieșire"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Conectați-vă la Two AIs', // Keep brand name
-            emailPlaceholder: 'Email',
-            passwordPlaceholder: 'Parolă',
-            signIn: 'Conectare',
-            signInWithGoogle: 'Conectați-vă cu Google',
-            noAccount: "Nu aveți cont?",
-            signUp: 'Înregistrare',
-            forgotPassword: 'Ați uitat parola?',
-            orContinueWith: "Sau continuați cu",
-            signingIn: "Conectare..."
+    "auth": {
+        "login": {
+            "title": "Conectați-vă la Two AIs",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Parolă",
+            "signIn": "Conectare",
+            "signInWithGoogle": "Conectați-vă cu Google",
+            "noAccount": "Nu aveți un cont?",
+            "signUp": "Înscrie-te",
+            "forgotPassword": "Aţi uitat parola?",
+            "orContinueWith": "Sau continuați cu",
+            "signingIn": "Conectare..."
         },
-        signup: {
-            title: 'Creați un cont',
-            emailPlaceholder: 'Email',
-            passwordPlaceholder: 'Parolă (cel puțin 6 caractere)',
-            signUp: 'Înregistrare',
-            signUpWithGoogle: 'Înregistrați-vă cu Google',
-            hasAccount: 'Aveți deja un cont?',
-            signIn: 'Conectare',
-            emailLabel: "Adresă de email",
-            confirmPasswordPlaceholder: "Confirmați parola",
-            signingUp: "Înregistrare..."
+        "signup": {
+            "title": "Creați un cont",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Parolă (cel puțin 6 caractere)",
+            "signUp": "Înregistrare",
+            "signUpWithGoogle": "Înregistrează-te cu Google",
+            "hasAccount": "Ai deja un cont?",
+            "signIn": "Conectare",
+            "emailLabel": "Email adresa",
+            "confirmPasswordPlaceholder": "Confirmați parola",
+            "signingUp": "Înscriere..."
         },
-        errors: {
-            invalidCredentials: 'Email sau parolă incorecte',
-            userNotFound: 'Utilizator negăsit',
-            weakPassword: 'Parola trebuie să conțină cel puțin 6 caractere',
-            emailInUse: 'Emailul este deja utilizat',
-            generic: 'A apărut o eroare. Vă rugăm să încercați din nou.',
-            initialization: "Eroare de inițializare. Vă rugăm să încercați mai târziu.",
-            invalidEmail: "Vă rugăm să introduceți o adresă de email validă.",
-            tooManyRequests: "Accesul a fost dezactivat temporar din cauza prea multor încercări de conectare eșuate. Resetați parola sau încercați din nou mai târziu.",
-            signInFailedPrefix: "Conectarea a eșuat: ",
-            unknownSignInError: "A apărut o eroare necunoscută la conectare.",
-            profileSaveFailedPrefix: "Conectat, dar salvarea datelor de profil a eșuat: ",
-            profileCheckSaveFailedPrefix: "Conectat, dar verificarea/salvarea datelor de profil a eșuat: ",
-            accountExistsWithDifferentCredential: "Există deja un cont cu această adresă de email folosind o altă metodă de conectare.",
-            googleSignInFailedPrefix: "Conectarea cu Google a eșuat: ",
-            unknownGoogleSignInError: "A apărut o eroare necunoscută la conectarea cu Google.",
-            passwordsDoNotMatch: "Parolele nu se potrivesc.",
-            accountCreatedProfileSaveFailedPrefix: "Contul a fost creat, dar salvarea datelor de profil a eșuat: ",
-            unknownProfileSaveError: "A apărut o eroare necunoscută la salvarea profilului.",
-            emailAlreadyRegistered: "Această adresă de email este deja înregistrată.",
-            passwordTooShortSignUp: "Parola trebuie să conțină cel puțin 6 caractere.",
-            signUpFailedPrefix: "Înregistrarea a eșuat: ",
-            unknownSignUpError: "A apărut o eroare necunoscută la înregistrare."
-        },
+        "errors": {
+            "invalidCredentials": "Adresă de e-mail sau parolă nevalidă",
+            "userNotFound": "Utilizator negăsit",
+            "weakPassword": "Parola trebuie să aibă cel puțin 6 caractere",
+            "emailInUse": "Email deja în uz",
+            "generic": "A apărut o eroare. Vă rugăm să încercați din nou.",
+            "initialization": "Eroare de inițializare. Vă rugăm să încercați din nou mai târziu.",
+            "invalidEmail": "Vă rugăm să introduceți o adresă de email validă.",
+            "tooManyRequests": "Accesul a fost temporar dezactivat din cauza prea multor încercări de conectare eșuate. Vă rugăm să resetați parola sau să încercați din nou mai târziu.",
+            "signInFailedPrefix": "Conectarea a eșuat: ",
+            "unknownSignInError": "A apărut o eroare necunoscută la conectare.",
+            "profileSaveFailedPrefix": "Conectat, dar datele profilului nu au putut fi salvate: ",
+            "profileCheckSaveFailedPrefix": "Conectat, dar nu am reușit să verific/să salvez datele profilului: ",
+            "accountExistsWithDifferentCredential": "Există deja un cont cu această adresă de e-mail care folosește o altă metodă de conectare.",
+            "googleSignInFailedPrefix": "Google Conectarea a eșuat: ",
+            "unknownGoogleSignInError": "A apărut o eroare necunoscută în timpul Google Conectare.",
+            "passwordsDoNotMatch": "Parolele nu se potrivesc.",
+            "accountCreatedProfileSaveFailedPrefix": "Cont creat, dar datele profilului nu au putut fi salvate: ",
+            "unknownProfileSaveError": "A apărut o eroare necunoscută la salvarea profilului.",
+            "emailAlreadyRegistered": "Această adresă de e-mail este deja înregistrată.",
+            "passwordTooShortSignUp": "Parola trebuie să aibă cel puțin 6 caractere.",
+            "signUpFailedPrefix": "Înregistrarea nu a reușit: ",
+            "unknownSignUpError": "A apărut o eroare necunoscută în timpul înregistrării."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Se încarcă...',
-        error: 'Eroare',
-        save: 'Salvează',
-        cancel: 'Anulează',
-        delete: 'Șterge',
-        confirm: 'Confirmă',
-        or: 'sau',
-        MoreInformation: "Mai multe informații",
-        Example: "Exemplu:",
-        ShowMore: "Arată mai mult",
-        ShowLess: "Arată mai puțin",
-        AwaitingApproval: "Așteaptă aprobarea...",
-        OpenInNewTab: "Deschide în filă nouă",
-        AdvancedSettings: "Setări avansate",
-        Name: "Nume",
-        Created: "Creat",
-        Updated: "Actualizat",
-        Launched: "Lansat",
-        Docs: "Documentație",
-        Blog: "Blog",
-        Pricing: "Prețuri",
-        Terms: "Termeni",
-        Privacy: "Confidențialitate",
-        Changelog: "Jurnal de modificări",
-        Copy: "Copiază",
-        Copied: "Copiat",
-        TryAgain: "Încearcă din nou"
+    "common": {
+        "loading": "Încărcare...",
+        "error": "Eroare",
+        "save": "Salva",
+        "cancel": "Anula",
+        "delete": "Şterge",
+        "confirm": "Confirma",
+        "or": "sau"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "Cheie API lipsă",
-    apiKeyMissingSubtext: "Cheia API pentru acest furnizor lipsește sau este invalidă. Adăugați-o în setări.",
-    apiKeyNotNeeded: "Cheie API nu este necesară",
-    apiKeyNotNeededSubtext: "Acest furnizor nu necesită o cheie API pentru nivelul său gratuit sau pentru anumite modele.",
-    apiKeyFound: "Cheie API setată",
-    apiKeyFoundSubtext: "O cheie API este configurată pentru acest furnizor.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Modele de chat emblematice",
-    modelCategory_Reasoning: "Modele de raționament",
-    modelCategory_CostOptimized: "Modele optimizate pentru costuri",
-    modelCategory_OlderGPT: "Modele GPT mai vechi",
-    modelCategory_Gemini2_5: "Seria Gemini 2.5",
-    modelCategory_Gemini2_0: "Seria Gemini 2.0",
-    modelCategory_Gemini1_5: "Seria Gemini 1.5",
-    modelCategory_Claude3_7: "Seria Claude 3.7",
-    modelCategory_Claude3_5: "Seria Claude 3.5",
-    modelCategory_Claude3: "Seria Claude 3",
-    modelCategory_Grok3: "Seria Grok 3",
-    modelCategory_Grok3Mini: "Seria Grok 3 Mini",
-    modelCategory_Llama4: "Seria Llama 4",
-    modelCategory_Llama3_3: "Seria Llama 3.3",
-    modelCategory_Llama3_2: "Seria Llama 3.2",
-    modelCategory_Llama3_1: "Seria Llama 3.1",
-    modelCategory_Llama3: "Seria Llama 3",
-    modelCategory_LlamaVision: "Modele Llama Vision",
-    modelCategory_MetaLlama: "Modele Meta Llama",
-    modelCategory_Gemma2: "Seria Gemma 2",
-    modelCategory_Gemma: "Seria Gemma",
-    modelCategory_GoogleGemma: "Modele Google Gemma",
-    modelCategory_DeepSeekR1: "Seria DeepSeek R1",
-    modelCategory_DeepSeekV3: "Seria DeepSeek V3",
-    modelCategory_DeepSeekR1Distill: "Seria DeepSeek R1 Distill",
-    modelCategory_DeepSeekModels: "Modele DeepSeek",
-    modelCategory_MistralAIModels: "Modele Mistral AI",
-    modelCategory_Qwen3: "Seria Qwen3",
-    modelCategory_QwQwQ: "Seria Qwen QwQ",
-    modelCategory_Qwen2_5: "Seria Qwen2.5",
-    modelCategory_Qwen2_5Vision: "Seria Qwen2.5 Vision",
-    modelCategory_Qwen2_5Coder: "Seria Qwen2.5 Coder",
-    modelCategory_Qwen2: "Seria Qwen2",
-    modelCategory_Qwen2Vision: "Seria Qwen2 Vision",
-    modelCategory_QwenModels: "Modele Qwen",
-    modelCategory_OtherModels: "Alte modele",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Eroare la încărcarea datelor utilizatorului: {errorMessage}. Vă rugăm să încercați să reîncărcați.",
-    page_ErrorUserNotFound: "Utilizator negăsit. Vă rugăm să vă conectați din nou.",
-    page_ErrorUserApiKeyConfig: "Configurația cheii API a utilizatorului nu a putut fi încărcată. Vă rugăm să reîncărcați sau să verificați setările.",
-    page_ErrorStartingSessionAPI: "Eroare API: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Eroare la pornirea sesiunii: {errorMessage}",
-    page_ErrorSessionIdMissing: "Răspuns API reușit, dar nu a inclus un ID de conversație.",
-    page_LoadingUserData: "Se încarcă datele utilizatorului...",
-    page_ErrorAlertTitle: "Eroare",
-    page_WelcomeTitle: "Bun venit la Two AIs",
-    page_WelcomeSubtitle: "Acest site web vă permite să ascultați conversații între două LLM-uri.",
-    page_ApiKeysRequiredTitle: "Chei API necesare",
-    page_ApiKeysRequiredDescription: "Pentru a rula conversații, va trebui să furnizați propriile chei API pentru modelele AI pe care doriți să le utilizați (de exemplu, OpenAI, Google, Anthropic) după conectare. Instrucțiuni detaliate pentru fiecare furnizor pot fi găsite pe pagina Setări / Chei API după conectare.",
-    page_SignInPrompt: "Pentru a începe propria sesiune, vă puteți conecta sau crea un cont folosind linkul din antet.",
-    page_VideoTitle: "Demonstrație conversație Two AIs",
-    page_AvailableLLMsTitle: "LLM-uri disponibile în prezent",
-    page_TooltipGoogleThinkingBudget: "Acest model Google folosește un \"buget de gândire\". Rezultatul \"gândirii\" este facturat, dar nu este vizibil în chat.",
-    page_TooltipAnthropicExtendedThinking: "Acest model Anthropic folosește \"gândire extinsă\". Rezultatul \"gândirii\" este facturat, dar nu este vizibil în chat.",
-    page_TooltipXaiThinking: "Acest model xAI folosește \"gândire\". Acest rezultat este facturat, dar nu este vizibil în chat.",
-    page_TooltipQwenReasoning: "Acest model Qwen folosește \"raționament/gândire\". Acest rezultat este facturat, dar nu este vizibil în chat.",
-    page_TooltipDeepSeekReasoning: "Acest model DeepSeek folosește \"raționament/gândire\". Rezultatul este facturat, dar nu este vizibil în chat.",
-    page_TooltipGenericReasoning: "Acest model utilizează jetoane de raționament care nu sunt vizibile în chat, dar sunt facturate ca jetoane de ieșire.",
-    page_TooltipRequiresVerification: "Necesită organizație OpenAI verificată. Puteți verifica aici.",
-    page_TooltipSupportsLanguage: "Suportă {languageName}",
-    page_TooltipMayNotSupportLanguage: "Este posibil să nu suporte {languageName}",
-    page_BadgePreview: "Previzualizare",
-    page_BadgeExperimental: "Experimental",
-    page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "TTS disponibil în prezent",
-    page_NoTTSOptions: "Nicio opțiune TTS disponibilă în prezent.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Introduceți o nouă cheie API {serviceName}",
-    apiKeyManager_TestKey: "Testați cheia",
-    apiKeyManager_TestingKey: "Se testează cheia...",
-    apiKeyManager_KeyIsValid: "Cheia este validă.",
-    apiKeyManager_KeyIsInvalid: "Cheia este invalidă.",
-    apiKeyManager_FailedToTestKey: "Testarea cheii a eșuat.",
-    apiKeyManager_ErrorTestingKey: "Eroare la testarea cheii: {error}",
-    apiKeyManager_KeyProvider: "Furnizor",
-    apiKeyManager_KeyName: "Nume cheie",
-    apiKeyManager_Status: "Stare",
-    apiKeyManager_Action: "Acțiune",
-
-    // Model capabilities
-    modelCapability_Vision: "Viziune",
-    modelCapability_JSON: "Mod JSON",
-    modelCapability_Tools: "Utilizare instrumente",
-    modelCapability_ImageGen: "Generare imagini",
-    modelCapability_Multilingual: "Multilingv",
-    modelCapability_WebSearch: "Căutare web",
-    modelCapability_LargeContext: "Context mare",
-    modelCapability_LongContext: "Context lung",
-    modelCapability_FastResponse: "Răspuns rapid",
-    modelCapability_CostEffective: "Eficient din punct de vedere al costurilor",
-    modelCapability_AdvancedReasoning: "Raționament avansat",
-    modelCapability_Coding: "Codificare",
-    modelCapability_Foundation: "Model de bază",
-    modelCapability_Experimental: "Experimental",
-    modelCapability_Beta: "Beta",
-    modelCapability_Preview: "Previzualizare",
-    modelCapability_RequiresVerification: "Necesită verificare",
-    modelCapability_RequiresAccount: "Necesită cont",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne" // Keep name (Lithuanian)
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Cheie lipsă",
+    "apiKeyMissingSubtext": "Cel/Cea/Cei/Cele API Cheia pentru acest furnizor lipsește sau este invalidă. Vă rugăm să o adăugați în setări.",
+    "apiKeyNotNeeded": "API Cheia nu este necesară",
+    "apiKeyNotNeededSubtext": "Acest furnizor nu necesită un API cheie pentru nivelul său gratuit sau pentru anumite modele.",
+    "apiKeyFound": "API Set de chei",
+    "apiKeyFoundSubtext": "Un API Cheia este configurată pentru acest furnizor.",
+    "modelCategory_FlagshipChat": "Modele emblematice de chat",
+    "modelCategory_Reasoning": "Modele de raționament",
+    "modelCategory_CostOptimized": "Modele optimizate din punct de vedere al costurilor",
+    "modelCategory_OlderGPT": "Modele GPT mai vechi",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modele",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modele",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modele",
+    "modelCategory_Claude4": "Claude 4 modele",
+    "modelCategory_Claude3_7": "Claude 3.7 modele",
+    "modelCategory_Claude3_5": "Claude 3.5 modele",
+    "modelCategory_Claude3": "Claude 3 modele",
+    "modelCategory_Grok4": "Grok 4 modele",
+    "modelCategory_Grok3": "Grok 3 modele",
+    "modelCategory_Grok3Mini": "Grok 3 Modele mini",
+    "modelCategory_Llama4": "Llama 4 modele",
+    "modelCategory_Llama3_3": "Llama 3.3 modele",
+    "modelCategory_Llama3_2": "Llama 3.2 modele",
+    "modelCategory_Llama3_1": "Llama Modele 3.1",
+    "modelCategory_Llama3": "Llama 3 modele",
+    "modelCategory_LlamaVision": "Llama Modele de viziune",
+    "modelCategory_MetaLlama": "Meta Llama Modele",
+    "modelCategory_Gemma3n": "Gemma Modelul 3n",
+    "modelCategory_Gemma2": "Gemma 2 modele",
+    "modelCategory_Gemma": "Gemma modele",
+    "modelCategory_GoogleGemma": "Google Gemma Modele",
+    "modelCategory_DeepSeekR1": "DeepSeek Modele R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modele V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek Modele R1 Distill",
+    "modelCategory_DeepSeekModels": "DeepSeek Modele",
+    "modelCategory_MistralAIModels": "Mistral AI Modele",
+    "modelCategory_Qwen3": "Qwen3 modele",
+    "modelCategory_QwQwQ": "Qwen Modele QwQ",
+    "modelCategory_Qwen2_5": "QwenModele 2.5",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modele de viziune",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modele de coder",
+    "modelCategory_Qwen2": "Qwen2 modele",
+    "modelCategory_Qwen2Vision": "Qwen2 modele de viziune",
+    "modelCategory_QwenModels": "Qwen Modele",
+    "modelCategory_OtherModels": "Alte modele",
+    "page_ErrorLoadingUserData": "Nu s-au putut încărca datele utilizatorului: {errorMessage}. Vă rugăm să încercați să actualizați pagina.",
+    "page_ErrorUserNotFound": "Utilizator negăsit. Vă rugăm să vă conectați din nou.",
+    "page_ErrorUserApiKeyConfig": "Utilizator API Configurația cheii nu a putut fi încărcată. Vă rugăm să actualizați pagina sau să verificați setările.",
+    "page_ErrorStartingSessionAPI": "API Eroare: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Eroare la pornirea sesiunii: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API Răspunsul a fost emis cu succes, dar nu a inclus un ID de conversație.",
+    "page_LoadingUserData": "Se încarcă datele utilizatorului...",
+    "page_ErrorAlertTitle": "Eroare",
+    "page_WelcomeTitle": "Bine ați venit la Two AIs",
+    "page_WelcomeSubtitle": "Acest site web vă permite să ascultați conversații între doi Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Chei necesare",
+    "page_ApiKeysRequiredDescription": "Pentru a purta conversații, va trebui să furnizați propriile date API chei pentru AI modelele pe care doriți să le utilizați (de exemplu, OpenAI, Google, Anthropic) după conectare. Instrucțiuni detaliate pentru fiecare furnizor pot fi găsite în Setări / API Pagina cu chei după conectare.",
+    "page_SignInPrompt": "Pentru a începe propria sesiune, vă puteți conecta sau crea un cont folosind linkul din antet.",
+    "page_VideoTitle": "Two AIs Demonstrație de conversație",
+    "page_AvailableLLMsTitle": "Disponibil în prezent LLMs",
+    "page_TooltipGoogleThinkingBudget": "Acest Google Modelul folosește un „buget de gândire”. Rezultatul „de gândire” este facturat, dar nu este vizibil în chat.",
+    "page_TooltipAnthropicExtendedThinking": "Acest Anthropic Modelul folosește „gândire extinsă”. Rezultatul „gândirii” este facturat, dar nu este vizibil în chat.",
+    "page_TooltipXaiThinking": "Acest xAI Modelul folosește „gândirea”. Această ieșire este facturată, dar nu este vizibilă în chat.",
+    "page_TooltipQwenReasoning": "Acest Qwen Modelul folosește „raționament/gândire”. Această ieșire este facturată, dar nu este vizibilă în chat.",
+    "page_TooltipDeepSeekReasoning": "Acest DeepSeek Modelul folosește „raționament/gândire”. Rezultatul este facturat, dar nu este vizibil în chat.",
+    "page_TooltipGenericReasoning": "Acest model folosește jetoane de raționament care nu sunt vizibile în chat, dar sunt facturate ca jetoane de ieșire.",
+    "page_TooltipRequiresVerification": "Necesită verificare OpenAI organizație. Puteți verifica aici.",
+    "page_TooltipSupportsLanguage": "Acceptă {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Este posibil ca acest model să nu fie complet compatibil cu {languageName} pentru conversație.",
+    "page_BadgePreview": "Previzualizare",
+    "page_BadgeExperimental": "Experimental",
+    "page_BadgeBeta": "Beta",
+    "page_AvailableTTSTitle": "Disponibil în prezent Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Nu TTS opțiunile disponibile în prezent.",
+    "page_TruncatableNoteFormat": "({noteText})",
+    "page_PricesLastVerifiedOn": "Prețurile verificate ultima dată pe {date}",
+    "page_PricingPerTokens": "pe {amount} Jetoane",
+    "page_ModelCategoryModels": "{model} modele",
+    "ttsVoice_Ugne": "În foc",
+    "sessionSetupForm": {
+        "title": "Formular de configurare a sesiunii",
+        "description": "Aici puteți selecta LLM-ul și opționalul TTS setări pentru fiecare agent.",
+        "agentAModel": "Agent A Model",
+        "agentBModel": "Modelul Agentului B",
+        "selectLLMForAgentA": "Selectați LLM pentru Agentul A",
+        "selectLLMForAgentB": "Selectați LLM pentru Agentul B",
+        "enableTTS": "Permite Text-to-Speech (TTS)",
+        "agentATTS": "Agentul A TTS",
+        "agentBTTS": "Agentul B TTS",
+        "provider": "Furnizor",
+        "initialSystemPrompt": "Solicitare inițială a sistemului",
+        "initialPromptDescription": "Această solicitare va fi trimisă ca primul mesaj pentru a începe conversația. Dacă o lăsați necompletată, nu va exista nicio solicitare.",
+        "startConversation": "Începeți conversația",
+        "starting": "Pornire...",
+        "startTheConversation": "Începe conversația."
+    },
+    "history": {
+        "backToMain": "Înapoi la pagina principală",
+        "conversationHistory": "Istoricul conversațiilor",
+        "chatWith": "Chat cu {agentA} & {agentB}",
+        "viewConversation": "Vizualizați conversația",
+        "backToPreviousChats": "Înapoi la chat-urile anterioare",
+        "resumeConversation": "Reluați conversația",
+        "resuming": "Se reia...",
+        "sessionDetails": "Detalii sesiune",
+        "language": "Limbă:",
+        "transcript": "Transcriere"
+    }
 };
-export default ro; 
+export default ro;

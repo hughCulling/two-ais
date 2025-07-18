@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import { getLLMInfoById } from '@/lib/models';
 
 interface ConversationSummary {
     conversationId: string;
@@ -48,6 +50,7 @@ export default function HistoryPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
     const { language } = useLanguage();
+    const { t, loading: translationLoading } = useTranslation();
 
     const PAGE_SIZE = 20;
     const [conversations, setConversations] = useState<ConversationSummary[]>([]);
@@ -105,7 +108,7 @@ export default function HistoryPage() {
     };
 
     // Now safe to return early
-    if (loading) return null;
+    if (loading || translationLoading || !t) return null;
     if (!user) return null;
 
     if (loading || historyLoading) {
@@ -123,12 +126,12 @@ export default function HistoryPage() {
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold flex items-center">
                         <MessageSquareText className="mr-3 h-8 w-8 text-primary" />
-                        Conversation History
+                        {t.history.conversationHistory}
                     </h1>
                     <Button variant="outline" asChild>
                         <Link href={`/${language.code}/app`}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Main
+                            {t.history.backToMain}
                         </Link>
                     </Button>
                 </div>
@@ -173,7 +176,12 @@ export default function HistoryPage() {
                                     <a className="block hover:no-underline">
                                         <Card className="hover:shadow-md transition-shadow duration-200 cursor-pointer">
                                             <CardHeader>
-                                                <CardTitle className="text-lg">{`Chat with ${convo.agentA_llm} & ${convo.agentB_llm}`}</CardTitle>
+                                                <CardTitle className="text-lg">
+                                                    {t.history.chatWith
+                                                        .replace('{agentA}', getLLMInfoById(convo.agentA_llm)?.name || convo.agentA_llm)
+                                                        .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
+                                                    }
+                                                </CardTitle>
                                                 <CardDescription>
                                                     {`Started on ${formattedDate}`} - Language: {convo.language.toUpperCase()}
                                                 </CardDescription>

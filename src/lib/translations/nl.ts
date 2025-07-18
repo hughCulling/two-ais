@@ -1,434 +1,323 @@
-// src/lib/translations/nl.ts
+// nl.ts
 const nl = {
-    // Header
-    header: {
-        appName: 'Two AIs', // Keep brand name
-        settings: 'Instellingen',
-        signIn: 'Inloggen',
-        signOut: 'Uitloggen',
+    "header": {
+        "appName": "Two AIs",
+        "settings": "Instellingen",
+        "signIn": "Aanmelden",
+        "signOut": "Afmelden",
+        "previousChats": "Vorige chats"
     },
-
-    // Language names (for display in language selector)
-    languages: {
-        ar: 'Arabic',
-        bn: 'Bengali',
-        bg: 'Bulgarian',
-        zh: 'Chinese',
-        hr: 'Croatian',
-        cs: 'Czech',
-        da: 'Danish',
-        nl: 'Dutch',
-        en: 'English',
-        et: 'Estonian',
-        fi: 'Finnish',
-        fr: 'French',
-        de: 'German',
-        el: 'Greek',
-        iw: 'Hebrew',
-        hi: 'Hindi',
-        hu: 'Hungarian',
-        id: 'Indonesian',
-        it: 'Italian',
-        ja: 'Japanese',
-        ko: 'Korean',
-        lv: 'Latvian',
-        lt: 'Lithuanian',
-        no: 'Norwegian',
-        pl: 'Polish',
-        pt: 'Portuguese',
-        ro: 'Romanian',
-        ru: 'Russian',
-        sr: 'Serbian',
-        sk: 'Slovak',
-        sl: 'Slovenian',
-        es: 'Spanish',
-        sw: 'Swahili',
-        sv: 'Swedish',
-        th: 'Thai',
-        tr: 'Turkish',
-        uk: 'Ukrainian',
-        vi: 'Vietnamese',
-        mt: 'Maltese',
-        bs: 'Bosnian',
-        ca: 'Catalan',
-        gu: 'Gujarati',
-        hy: 'Armenian',
-        is: 'Icelandic',
-        ka: 'Georgian',
-        kk: 'Kazakh',
-        kn: 'Kannada',
-        mk: 'Macedonian',
-        ml: 'Malayalam',
-        mr: 'Marathi',
-        ms: 'Malay',
-        my: 'Burmese',
-        pa: 'Punjabi',
-        so: 'Somali',
-        sq: 'Albanian',
-        ta: 'Tamil',
-        te: 'Telugu',
-        tl: 'Tagalog',
-        ur: 'Urdu',
-        am: 'Amharic',
-        mn: 'Mongolian',
+    "languages": {
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "bg": "Bulgarian",
+        "zh": "Chinese",
+        "hr": "Croatian",
+        "cs": "Czech",
+        "da": "Danish",
+        "nl": "Dutch",
+        "en": "English",
+        "et": "Estonian",
+        "fi": "Finnish",
+        "fr": "French",
+        "de": "German",
+        "el": "Greek",
+        "iw": "Hebrew",
+        "hi": "Hindi",
+        "hu": "Hungarian",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "lv": "Latvian",
+        "lt": "Lithuanian",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sr": "Serbian",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "es": "Spanish",
+        "sw": "Swahili",
+        "sv": "Swedish",
+        "th": "Thai",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "vi": "Vietnamese",
+        "mt": "Maltese",
+        "bs": "Bosnian",
+        "ca": "Catalan",
+        "gu": "Gujarati",
+        "hy": "Armenian",
+        "is": "Icelandic",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "kn": "Kannada",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "my": "Birmees",
+        "pa": "Punjabi",
+        "so": "Somali",
+        "sq": "Albanian",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tl": "Tagalog",
+        "ur": "Urdu",
+        "am": "Amharic",
+        "mn": "Mongolian"
     },
-
-    // Settings page
-    settings: {
-        title: 'Instellingen',
-        sections: {
-            appearance: 'Uiterlijk',
-            apiKeys: 'API-sleutels',
-            language: 'Taal',
+    "settings": {
+        "title": "Instellingen",
+        "sections": {
+            "appearance": "Verschijning",
+            "apiKeys": "API Sleutels",
+            "language": "Taal"
         },
-        appearance: {
-            theme: 'Thema',
-            light: 'Licht',
-            dark: 'Donker',
-            system: 'Systeem',
-            description: "Pas het uiterlijk en de werking van de applicatie aan."
+        "appearance": {
+            "theme": "Thema",
+            "light": "Licht",
+            "dark": "Donker",
+            "system": "Systeem",
+            "description": "Pas het uiterlijk en de beleving van de applicatie aan."
         },
-        language: {
-            title: 'Taal',
-            description: 'Kies uw voorkeurstaal voor de interface',
-            conversationLanguage: 'Gesprekstaal',
-            conversationLanguageDescription: 'De taal die voor AI-gesprekken wordt gebruikt, komt overeen met uw interfacetail',
+        "language": {
+            "title": "Taal",
+            "description": "Kies uw voorkeurstaal voor de interface",
+            "conversationLanguage": "Gesprekstaal",
+            "conversationLanguageDescription": "De taal die gebruikt wordt voor AI gesprekken komen overeen met uw interfacetaal",
+            "supportedLanguages": "Ondersteunde talen",
+            "languageSupportInformation": "Informatie over taalondersteuning",
+            "aiAgentsLanguageDescription": "Het gesprek tussen AI agenten worden in de door u geselecteerde taal gevoerd."
         },
-        apiKeys: {
-            title: 'API-sleutels',
-            description: 'Beheer uw API-sleutels voor verschillende AI-providers',
-            saved: 'Opgeslagen',
-            notSet: 'Niet ingesteld',
-            setKey: 'Sleutel instellen',
-            updateKey: 'Sleutel bijwerken',
-            removeKey: 'Sleutel verwijderen',
-            getKeyInstructions: 'Haal je API-sleutel op',
-            // --- New keys for ApiKeyManager.tsx ---
-            noNewKeys: "Geen nieuwe API-sleutels ingevoerd om op te slaan.",
-            unexpectedResponse: "Onverwacht antwoord van de server ontvangen.",
-            failedToSaveKey: "Opslaan van {serviceName}-sleutel mislukt.",
-            someKeysNotSaved: "Sommige API-sleutels konden niet worden opgeslagen. Controleer de onderstaande gegevens.",
-            keyStatus: "sleutelstatus...",
-            apiKeySecurelySaved: "API-sleutel veilig opgeslagen",
-            confirmRemoveTitle: "Verwijderen bevestigen",
-            confirmRemoveDescription: "Weet u zeker dat u de API-sleutel voor {serviceName} wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
-            failedToRemoveKey: "Verwijderen van {serviceName}-sleutel mislukt.",
-            successfullyRemovedKey: "{serviceName}-sleutel succesvol verwijderd.",
-            keyNotSet: "Sleutelstatus: niet ingesteld",
-            keySet: "Sleutelstatus: ingesteld",
-            saveButton: "API-sleutel(s) opslaan"
-        },
+        "apiKeys": {
+            "title": "API Sleutels",
+            "description": "Beheer uw API sleutels voor verschillende AI aanbieders",
+            "saved": "Opgeslagen",
+            "notSet": "Niet ingesteld",
+            "setKey": "Set-sleutel",
+            "updateKey": "Updatesleutel",
+            "removeKey": "Sleutel verwijderen",
+            "getKeyInstructions": "Haal je API sleutel",
+            "noNewKeys": "Geen nieuw API Toetsen ingevoerd om op te slaan.",
+            "unexpectedResponse": "Er is een onverwacht antwoord van de server ontvangen.",
+            "failedToSaveKey": "Het is niet gelukt om de sleutel {serviceName} op te slaan.",
+            "someKeysNotSaved": "Sommige API Sleutels konden niet worden opgeslagen. Controleer de onderstaande details.",
+            "keyStatus": "sleutelstatus...",
+            "apiKeySecurelySaved": "API Sleutel veilig opgeslagen",
+            "confirmRemoveTitle": "Verwijdering bevestigen",
+            "confirmRemoveDescription": "Weet u zeker dat u de API sleutel voor {serviceName}? Deze actie kan niet ongedaan worden gemaakt.",
+            "failedToRemoveKey": "Het is niet gelukt om de sleutel {serviceName} te verwijderen.",
+            "successfullyRemovedKey": "Sleutel {serviceName} is succesvol verwijderd.",
+            "keyNotSet": "Sleutelstatus: Niet ingesteld",
+            "keySet": "Sleutelstatus: ingesteld",
+            "saveButton": "Redden API Sleutel(s)",
+            "enteringNewKeyOverwrites": "Wanneer u een nieuwe sleutel invoert, wordt de opgeslagen sleutel overschreven.",
+            "keyStoredSecurely": "Uw sleutel wordt veilig bewaard met behulp van Google Geheime Beheerder."
+        }
     },
-
-    // Main page
-    main: {
-        title: 'AI-gesprek',
-        setupForm: {
-            title: 'Stel uw gesprek in',
-            agentA: 'Agent A',
-            agentB: 'Agent B',
-            model: 'Model',
-            selectModel: 'Selecteer een model',
-            tts: {
-                title: 'Tekst-naar-spraak',
-                enable: 'Tekst-naar-spraak inschakelen',
-                provider: 'TTS-provider',
-                selectProvider: 'Selecteer TTS-provider',
-                voice: 'Stem',
-                selectVoice: 'Selecteer stem',
-                model: 'TTS-model',
-                selectModel: 'Selecteer TTS-model',
+    "main": {
+        "title": "AI Gesprek",
+        "setupForm": {
+            "title": "Stel je gesprek in",
+            "agentA": "Agent A",
+            "agentB": "Agent B",
+            "model": "Model",
+            "selectModel": "Selecteer een model",
+            "tts": {
+                "title": "Text-to-Speech",
+                "enable": "Inschakelen Text-to-Speech",
+                "provider": "TTS Aanbieder",
+                "selectProvider": "Selecteer TTS aanbieder",
+                "voice": "Stem",
+                "selectVoice": "Selecteer stem",
+                "model": "TTS Model",
+                "selectModel": "Selecteer TTS model"
             },
-            startConversation: 'Gesprek starten',
-            conversationPrompt: 'Start het gesprek.',
+            "startConversation": "Start gesprek",
+            "conversationPrompt": "Begin het gesprek."
         },
-        conversation: {
-            thinking: 'denkt na...',
-            stop: 'Stoppen',
-            restart: 'Gesprek opnieuw starten',
+        "conversation": {
+            "thinking": "denken...",
+            "stop": "Stop",
+            "restart": "Herstart het gesprek"
         },
-        pricing: {
-            estimatedCost: 'Geschatte kosten',
-            perMillionTokens: 'per miljoen tokens',
-            input: 'Invoer',
-            output: 'Uitvoer',
-        },
+        "pricing": {
+            "estimatedCost": "Geschatte kosten",
+            "perMillionTokens": "per miljoen tokens",
+            "input": "Invoer",
+            "output": "Uitvoer"
+        }
     },
-
-    // Auth pages
-    auth: {
-        login: {
-            title: 'Inloggen bij Two AIs', // Keep brand name
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Wachtwoord',
-            signIn: 'Inloggen',
-            signInWithGoogle: 'Inloggen met Google',
-            noAccount: "Geen account?",
-            signUp: 'Registreren',
-            forgotPassword: 'Wachtwoord vergeten?',
-            orContinueWith: "Of ga verder met",
-            signingIn: "Inloggen..."
+    "auth": {
+        "login": {
+            "title": "Meld u aan bij Two AIs",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Wachtwoord",
+            "signIn": "Aanmelden",
+            "signInWithGoogle": "Meld je aan met Google",
+            "noAccount": "Heeft u nog geen account?",
+            "signUp": "Aanmelden",
+            "forgotPassword": "Wachtwoord vergeten?",
+            "orContinueWith": "Of ga verder met",
+            "signingIn": "Aanmelden..."
         },
-        signup: {
-            title: 'Account aanmaken',
-            emailPlaceholder: 'E-mail',
-            passwordPlaceholder: 'Wachtwoord (minimaal 6 tekens)',
-            signUp: 'Registreren',
-            signUpWithGoogle: 'Registreren met Google',
-            hasAccount: 'Al een account?',
-            signIn: 'Inloggen',
-            emailLabel: "E-mailadres",
-            confirmPasswordPlaceholder: "Bevestig wachtwoord",
-            signingUp: "Registreren..."
+        "signup": {
+            "title": "Een account aanmaken",
+            "emailPlaceholder": "E-mail",
+            "passwordPlaceholder": "Wachtwoord (minimaal 6 tekens)",
+            "signUp": "Aanmelden",
+            "signUpWithGoogle": "Meld je aan bij Google",
+            "hasAccount": "Heeft u al een account?",
+            "signIn": "Aanmelden",
+            "emailLabel": "Email adres",
+            "confirmPasswordPlaceholder": "Bevestig wachtwoord",
+            "signingUp": "Aanmelden..."
         },
-        errors: {
-            invalidCredentials: 'Ongeldige e-mail of wachtwoord',
-            userNotFound: 'Gebruiker niet gevonden',
-            weakPassword: 'Wachtwoord moet minimaal 6 tekens lang zijn',
-            emailInUse: 'E-mailadres is al in gebruik',
-            generic: 'Er is een fout opgetreden. Probeer het opnieuw.',
-            initialization: "Initialisatiefout. Probeer het later opnieuw.",
-            invalidEmail: "Voer een geldig e-mailadres in.",
-            tooManyRequests: "Toegang tijdelijk uitgeschakeld vanwege te veel mislukte inlogpogingen. Reset uw wachtwoord of probeer het later opnieuw.",
-            signInFailedPrefix: "Inloggen mislukt: ",
-            unknownSignInError: "Onbekende fout opgetreden tijdens inloggen.",
-            profileSaveFailedPrefix: "Ingelogd, maar opslaan van profielgegevens mislukt: ",
-            profileCheckSaveFailedPrefix: "Ingelogd, maar controleren/opslaan van profielgegevens mislukt: ",
-            accountExistsWithDifferentCredential: "Er bestaat al een account met dit e-mailadres via een andere inlogmethode.",
-            googleSignInFailedPrefix: "Inloggen met Google mislukt: ",
-            unknownGoogleSignInError: "Onbekende fout opgetreden tijdens inloggen met Google.",
-            passwordsDoNotMatch: "Wachtwoorden komen niet overeen.",
-            accountCreatedProfileSaveFailedPrefix: "Account aangemaakt, maar opslaan van profielgegevens mislukt: ",
-            unknownProfileSaveError: "Onbekende fout opgetreden tijdens opslaan van profiel.",
-            emailAlreadyRegistered: "Dit e-mailadres is al geregistreerd.",
-            passwordTooShortSignUp: "Wachtwoord moet minimaal 6 tekens lang zijn.",
-            signUpFailedPrefix: "Registreren mislukt: ",
-            unknownSignUpError: "Onbekende fout opgetreden tijdens registreren."
-        },
+        "errors": {
+            "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
+            "userNotFound": "Gebruiker niet gevonden",
+            "weakPassword": "Het wachtwoord moet minimaal 6 tekens lang zijn",
+            "emailInUse": "Email al in gebruik",
+            "generic": "Er is een fout opgetreden. Probeer het opnieuw.",
+            "initialization": "Initialisatiefout. Probeer het later opnieuw.",
+            "invalidEmail": "Voer een geldig e-mailadres in.",
+            "tooManyRequests": "Toegang tijdelijk uitgeschakeld vanwege te veel mislukte inlogpogingen. Herstel uw wachtwoord of probeer het later opnieuw.",
+            "signInFailedPrefix": "Aanmelden mislukt: ",
+            "unknownSignInError": "Er is een onbekende fout opgetreden tijdens het aanmelden.",
+            "profileSaveFailedPrefix": "Ingelogd, maar profielgegevens konden niet worden opgeslagen: ",
+            "profileCheckSaveFailedPrefix": "Ingelogd, maar het is niet gelukt om de profielgegevens te controleren/opslaan: ",
+            "accountExistsWithDifferentCredential": "Er bestaat al een account met dit e-mailadres, maar u meldt zich hiervoor wel via een andere aanmeldmethode aan.",
+            "googleSignInFailedPrefix": "Google Aanmelden mislukt: ",
+            "unknownGoogleSignInError": "Er is een onbekende fout opgetreden tijdens Google Aanmelden.",
+            "passwordsDoNotMatch": "Wachtwoorden komen niet overeen.",
+            "accountCreatedProfileSaveFailedPrefix": "Account aangemaakt, maar profielgegevens konden niet worden opgeslagen: ",
+            "unknownProfileSaveError": "Er is een onbekende fout opgetreden bij het opslaan van het profiel.",
+            "emailAlreadyRegistered": "Dit e-mailadres is al geregistreerd.",
+            "passwordTooShortSignUp": "Het wachtwoord moet minimaal 6 tekens lang zijn.",
+            "signUpFailedPrefix": "Aanmelden mislukt: ",
+            "unknownSignUpError": "Er is een onbekende fout opgetreden tijdens het registreren."
+        }
     },
-
-    // Common
-    common: {
-        loading: 'Laden...',
-        error: 'Fout',
-        save: 'Opslaan',
-        cancel: 'Annuleren',
-        delete: 'Verwijderen',
-        confirm: 'Bevestigen',
-        or: 'of',
-        MoreInformation: "Meer informatie",
-        Example: "Voorbeeld:",
-        ShowMore: "Meer weergeven",
-        ShowLess: "Minder weergeven",
-        AwaitingApproval: "Wachten op goedkeuring...",
-        OpenInNewTab: "Openen in nieuw tabblad",
-        AdvancedSettings: "Geavanceerde instellingen",
-        Name: "Naam",
-        Created: "Aangemaakt",
-        Updated: "Bijgewerkt",
-        Launched: "Gelanceerd",
-        Docs: "Documentatie",
-        Blog: "Blog",
-        Pricing: "Prijzen",
-        Terms: "Voorwaarden",
-        Privacy: "Privacy",
-        Changelog: "Wijzigingslogboek",
-        Copy: "Kopiëren",
-        Copied: "Gekopieerd",
-        TryAgain: "Probeer opnieuw"
+    "common": {
+        "loading": "Bezig met laden...",
+        "error": "Fout",
+        "save": "Redden",
+        "cancel": "Annuleren",
+        "delete": "Verwijderen",
+        "confirm": "Bevestigen",
+        "or": "of"
     },
-
-    // In Settings > API Keys > Provider specific sections
-    apiKeyMissing: "API-sleutel ontbreekt",
-    apiKeyMissingSubtext: "De API-sleutel voor deze provider ontbreekt of is ongeldig. Voeg deze toe in de instellingen.",
-    apiKeyNotNeeded: "API-sleutel niet nodig",
-    apiKeyNotNeededSubtext: "Deze provider vereist geen API-sleutel voor de gratis laag of bepaalde modellen.",
-    apiKeyFound: "API-sleutel ingesteld",
-    apiKeyFoundSubtext: "Er is een API-sleutel geconfigureerd voor deze provider.",
-
-    // Model Categories (src/app/page.tsx)
-    modelCategory_FlagshipChat: "Toonaangevende chatmodellen",
-    modelCategory_Reasoning: "Redeneermodellen",
-    modelCategory_CostOptimized: "Kostengeoptimaliseerde modellen",
-    modelCategory_OlderGPT: "Oudere GPT-modellen",
-    modelCategory_Gemini2_5: "Gemini 2.5-serie",
-    modelCategory_Gemini2_0: "Gemini 2.0-serie",
-    modelCategory_Gemini1_5: "Gemini 1.5-serie",
-    modelCategory_Claude3_7: "Claude 3.7-serie",
-    modelCategory_Claude3_5: "Claude 3.5-serie",
-    modelCategory_Claude3: "Claude 3-serie",
-    modelCategory_Grok3: "Grok 3-serie",
-    modelCategory_Grok3Mini: "Grok 3 Mini-serie",
-    modelCategory_Llama4: "Llama 4-serie",
-    modelCategory_Llama3_3: "Llama 3.3-serie",
-    modelCategory_Llama3_2: "Llama 3.2-serie",
-    modelCategory_Llama3_1: "Llama 3.1-serie",
-    modelCategory_Llama3: "Llama 3-serie",
-    modelCategory_LlamaVision: "Llama Vision-modellen",
-    modelCategory_MetaLlama: "Meta Llama-modellen",
-    modelCategory_Gemma2: "Gemma 2-serie",
-    modelCategory_Gemma: "Gemma-serie",
-    modelCategory_GoogleGemma: "Google Gemma-modellen",
-    modelCategory_DeepSeekR1: "DeepSeek R1-serie",
-    modelCategory_DeepSeekV3: "DeepSeek V3-serie",
-    modelCategory_DeepSeekR1Distill: "DeepSeek R1 Distill-serie",
-    modelCategory_DeepSeekModels: "DeepSeek-modellen",
-    modelCategory_MistralAIModels: "Mistral AI-modellen",
-    modelCategory_Qwen3: "Qwen3-serie",
-    modelCategory_QwQwQ: "Qwen QwQ-serie",
-    modelCategory_Qwen2_5: "Qwen2.5-serie",
-    modelCategory_Qwen2_5Vision: "Qwen2.5 Vision-serie",
-    modelCategory_Qwen2_5Coder: "Qwen2.5 Coder-serie",
-    modelCategory_Qwen2: "Qwen2-serie",
-    modelCategory_Qwen2Vision: "Qwen2 Vision-serie",
-    modelCategory_QwenModels: "Qwen-modellen",
-    modelCategory_OtherModels: "Andere modellen",
-
-    // Page specific (src/app/page.tsx)
-    page_ErrorLoadingUserData: "Laden van gebruikersgegevens mislukt: {errorMessage}. Probeer opnieuw te laden.",
-    page_ErrorUserNotFound: "Gebruiker niet gevonden. Log opnieuw in.",
-    page_ErrorUserApiKeyConfig: "Configuratie van API-sleutel voor gebruiker kon niet worden geladen. Laad opnieuw of controleer de instellingen.",
-    page_ErrorStartingSessionAPI: "API-fout: {status} {statusText}",
-    page_ErrorStartingSessionGeneric: "Fout bij starten van sessie: {errorMessage}",
-    page_ErrorSessionIdMissing: "API-antwoord succesvol, maar bevatte geen gespreks-ID.",
-    page_LoadingUserData: "Gebruikersgegevens laden...",
-    page_ErrorAlertTitle: "Fout",
-    page_WelcomeTitle: "Welkom bij Two AIs",
-    page_WelcomeSubtitle: "Deze website laat u luisteren naar gesprekken tussen twee LLM's.",
-    page_ApiKeysRequiredTitle: "API-sleutels vereist",
-    page_ApiKeysRequiredDescription: "Om gesprekken te kunnen voeren, moet u na het inloggen uw eigen API-sleutels opgeven voor de AI-modellen die u wilt gebruiken (bijv. OpenAI, Google, Anthropic). Gedetailleerde instructies voor elke provider vindt u na het inloggen op de pagina Instellingen / API-sleutels.",
-    page_SignInPrompt: "Om uw eigen sessie te starten, kunt u inloggen of een account aanmaken via de link in de koptekst.",
-    page_VideoTitle: "Two AIs-gespreksdemo",
-    page_AvailableLLMsTitle: "Momenteel beschikbare LLM's",
-    page_TooltipGoogleThinkingBudget: "Dit Google-model gebruikt een 'denkbudget'. De 'denk'-output wordt gefactureerd maar is niet zichtbaar in de chat.",
-    page_TooltipAnthropicExtendedThinking: "Dit Anthropic-model gebruikt 'uitgebreid denken'. De 'denk'-output wordt gefactureerd maar is niet zichtbaar in de chat.",
-    page_TooltipXaiThinking: "Dit xAI-model gebruikt 'denken'. Deze output wordt gefactureerd maar is niet zichtbaar in de chat.",
-    page_TooltipQwenReasoning: "Dit Qwen-model gebruikt 'redeneren/denken'. Deze output wordt gefactureerd maar is niet zichtbaar in de chat.",
-    page_TooltipDeepSeekReasoning: "Dit DeepSeek-model gebruikt 'redeneren/denken'. Output wordt gefactureerd maar is niet zichtbaar in de chat.",
-    page_TooltipGenericReasoning: "Dit model gebruikt redeneertokens die niet zichtbaar zijn in de chat, maar wel worden gefactureerd als outputtokens.",
-    page_TooltipRequiresVerification: "Vereist geverifieerde OpenAI-organisatie. U kunt hier verifiëren.",
-    page_TooltipSupportsLanguage: "Ondersteunt {languageName}",
-    page_TooltipMayNotSupportLanguage: "Ondersteunt mogelijk {languageName} niet",
-    page_BadgePreview: "Voorbeeld",
-    page_BadgeExperimental: "Experimenteel",
-    page_BadgeBeta: "Bèta",
-    page_AvailableTTSTitle: "Momenteel beschikbare TTS",
-    page_NoTTSOptions: "Momenteel geen TTS-opties beschikbaar.",
-    page_TruncatableNoteFormat: "({noteText})",
-
-    // API Key Management specific (ApiKeyManager.tsx)
-    apiKeyManager_EnterNewKey: "Voer nieuwe {serviceName} API-sleutel in",
-    apiKeyManager_TestKey: "Sleutel testen",
-    apiKeyManager_TestingKey: "Sleutel testen...",
-    apiKeyManager_KeyIsValid: "Sleutel is geldig.",
-    apiKeyManager_KeyIsInvalid: "Sleutel is ongeldig.",
-    apiKeyManager_FailedToTestKey: "Testen van sleutel mislukt.",
-    apiKeyManager_ErrorTestingKey: "Fout bij testen van sleutel: {error}",
-    apiKeyManager_KeyProvider: "Provider",
-    apiKeyManager_KeyName: "Sleutelnaam",
-    apiKeyManager_Status: "Status",
-    apiKeyManager_Action: "Actie",
-
-    // Model capabilities
-    modelCapability_Vision: "Visie",
-    modelCapability_JSON: "JSON-modus",
-    modelCapability_Tools: "Toolgebruik",
-    modelCapability_ImageGen: "Afbeelding genereren",
-    modelCapability_Multilingual: "Meertalig",
-    modelCapability_WebSearch: "Web zoeken",
-    modelCapability_LargeContext: "Grote context",
-    modelCapability_LongContext: "Lange context",
-    modelCapability_FastResponse: "Snelle reactie",
-    modelCapability_CostEffective: "Kosteneffectief",
-    modelCapability_AdvancedReasoning: "Geavanceerd redeneren",
-    modelCapability_Coding: "Coderen",
-    modelCapability_Foundation: "Basismodel",
-    modelCapability_Experimental: "Experimenteel",
-    modelCapability_Beta: "Bèta",
-    modelCapability_Preview: "Voorbeeld",
-    modelCapability_RequiresVerification: "Verificatie vereist",
-    modelCapability_RequiresAccount: "Account vereist",
-
-    // TTS Voices (ElevenLabs specific)
-    ttsVoice_Adam: "Adam", // Keep name
-    ttsVoice_Antoni: "Antoni", // Keep name
-    ttsVoice_Arnold: "Arnold", // Keep name
-    ttsVoice_Bella: "Bella", // Keep name
-    ttsVoice_Callum: "Callum", // Keep name
-    ttsVoice_Charlie: "Charlie", // Keep name
-    ttsVoice_Charlotte: "Charlotte", // Keep name
-    ttsVoice_Clyde: "Clyde", // Keep name
-    ttsVoice_Daniel: "Daniel", // Keep name
-    ttsVoice_Dave: "Dave", // Keep name
-    ttsVoice_Domi: "Domi", // Keep name
-    ttsVoice_Dorothy: "Dorothy", // Keep name
-    ttsVoice_Drew: "Drew", // Keep name
-    ttsVoice_Elli: "Elli", // Keep name
-    ttsVoice_Emily: "Emily", // Keep name
-    ttsVoice_Ethan: "Ethan", // Keep name
-    ttsVoice_Fin: "Fin", // Keep name
-    ttsVoice_Freya: "Freya", // Keep name
-    ttsVoice_Gigi: "Gigi", // Keep name
-    ttsVoice_Giovanni: "Giovanni", // Keep name
-    ttsVoice_Glinda: "Glinda", // Keep name
-    ttsVoice_Grace: "Grace", // Keep name
-    ttsVoice_Harry: "Harry", // Keep name
-    ttsVoice_James: "James", // Keep name
-    ttsVoice_Jeremy: "Jeremy", // Keep name
-    ttsVoice_Jessie: "Jessie", // Keep name
-    ttsVoice_Joseph: "Joseph", // Keep name
-    ttsVoice_Josh: "Josh", // Keep name
-    ttsVoice_Liam: "Liam", // Keep name
-    ttsVoice_Lottie: "Lottie", // Keep name
-    ttsVoice_Matilda: "Matilda", // Keep name
-    ttsVoice_Matthew: "Matthew", // Keep name
-    ttsVoice_Michael: "Michael", // Keep name
-    ttsVoice_Mimi: "Mimi", // Keep name
-    ttsVoice_Nicole: "Nicole", // Keep name
-    ttsVoice_Olivia: "Olivia", // Keep name
-    ttsVoice_Patrick: "Patrick", // Keep name
-    ttsVoice_Paul: "Paul", // Keep name
-    ttsVoice_Rachel: "Rachel", // Keep name
-    ttsVoice_Ryan: "Ryan", // Keep name // DEFAULT VOICE
-    ttsVoice_Sam: "Sam", // Keep name
-    ttsVoice_Sarah: "Sarah", // Keep name
-    ttsVoice_Serena: "Serena", // Keep name
-    ttsVoice_Thomas: "Thomas", // Keep name
-    ttsVoice_Rem: "Rem", // Keep name (Japanese)
-    ttsVoice_Ren: "Ren", // Keep name (Japanese)
-    ttsVoice_Santa: "Santa Claus", // Keep name
-    ttsVoice_Alice: "Alice", // Keep name (French)
-    ttsVoice_Marcus: "Marcus", // Keep name (German)
-    ttsVoice_Aurora: "Aurora", // Keep name (Spanish)
-    ttsVoice_Luna: "Luna", // Keep name (Portuguese)
-    ttsVoice_Leo: "Leo", // Keep name (Italian)
-    ttsVoice_Victoria: "Victoria", // Keep name (Polish)
-    ttsVoice_Jasper: "Jasper", // Keep name (Dutch)
-    ttsVoice_Felix: "Felix", // Keep name (Finnish)
-    ttsVoice_Oscar: "Oscar", // Keep name (Swedish)
-    ttsVoice_Maya: "Maya", // Keep name (Hindi)
-    ttsVoice_Noah: "Noah", // Keep name (Korean)
-    ttsVoice_Kenji: "Kenji", // Keep name (Japanese)
-    ttsVoice_Isabelle: "Isabelle", // Keep name (Chinese)
-    ttsVoice_Layla: "Layla", // Keep name (Arabic)
-    ttsVoice_Zoe: "Zoe", // Keep name (Turkish)
-    ttsVoice_Alex: "Alex", // Keep name (Russian)
-    ttsVoice_George: "George", // Keep name (Greek)
-    ttsVoice_Valentina: "Valentina", // Keep name (Romanian)
-    ttsVoice_Sofia: "Sofia", // Keep name (Bulgarian)
-    ttsVoice_Viktor: "Viktor", // Keep name (Ukrainian)
-    ttsVoice_Milos: "Milos", // Keep name (Czech)
-    ttsVoice_Matej: "Matej", // Keep name (Slovak)
-    ttsVoice_Luka: "Luka", // Keep name (Croatian)
-    ttsVoice_Andrej: "Andrej", // Keep name (Slovenian)
-    ttsVoice_Ivan: "Ivan", // Keep name (Serbian)
-    ttsVoice_Janos: "Janos", // Keep name (Hungarian)
-    ttsVoice_Elias: "Elias", // Keep name (Norwegian)
-    ttsVoice_Olivia_DA: "Olivia", // Keep name (Danish)
-    ttsVoice_Anna: "Anna", // Keep name (Estonian)
-    ttsVoice_Roberts: "Roberts", // Keep name (Latvian)
-    ttsVoice_Ugne: "Ugne", // Keep name (Lithuanian)
-
-    // --------------- END OF FILE ---------------
+    "apiKeyMissing": "API Sleutel ontbreekt",
+    "apiKeyMissingSubtext": "De API De sleutel voor deze provider ontbreekt of is ongeldig. Voeg deze toe in de instellingen.",
+    "apiKeyNotNeeded": "API Sleutel niet nodig",
+    "apiKeyNotNeededSubtext": "Deze provider heeft geen API sleutel voor het gratis niveau of bepaalde modellen.",
+    "apiKeyFound": "API Sleutelset",
+    "apiKeyFoundSubtext": "Een API sleutel is geconfigureerd voor deze provider.",
+    "modelCategory_FlagshipChat": "Flagship chatmodellen",
+    "modelCategory_Reasoning": "Redeneermodellen",
+    "modelCategory_CostOptimized": "Kostengeoptimaliseerde modellen",
+    "modelCategory_OlderGPT": "Oudere GPT-modellen",
+    "modelCategory_Gemini2_5": "Gemini 2.5 modellen",
+    "modelCategory_Gemini2_0": "Gemini 2.0 modellen",
+    "modelCategory_Gemini1_5": "Gemini 1.5 modellen",
+    "modelCategory_Claude4": "Claude 4 modellen",
+    "modelCategory_Claude3_7": "Claude 3.7 modellen",
+    "modelCategory_Claude3_5": "Claude 3.5 modellen",
+    "modelCategory_Claude3": "Claude 3 modellen",
+    "modelCategory_Grok4": "Grok 4 modellen",
+    "modelCategory_Grok3": "Grok 3 modellen",
+    "modelCategory_Grok3Mini": "Grok 3 Mini-modellen",
+    "modelCategory_Llama4": "Llama 4 modellen",
+    "modelCategory_Llama3_3": "Llama 3.3 modellen",
+    "modelCategory_Llama3_2": "Llama 3.2 modellen",
+    "modelCategory_Llama3_1": "Llama 3.1 modellen",
+    "modelCategory_Llama3": "Llama 3 modellen",
+    "modelCategory_LlamaVision": "Llama Visiemodellen",
+    "modelCategory_MetaLlama": "Meta Llama Modellen",
+    "modelCategory_Gemma3n": "Gemma 3n-model",
+    "modelCategory_Gemma2": "Gemma 2 modellen",
+    "modelCategory_Gemma": "Gemma modellen",
+    "modelCategory_GoogleGemma": "Google Gemma Modellen",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-modellen",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-modellen",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill-modellen",
+    "modelCategory_DeepSeekModels": "DeepSeek Modellen",
+    "modelCategory_MistralAIModels": "Mistral AI Modellen",
+    "modelCategory_Qwen3": "Qwen3 modellen",
+    "modelCategory_QwQwQ": "Qwen QwQ-modellen",
+    "modelCategory_Qwen2_5": "Qwen2,5 modellen",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Visiemodellen",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder-modellen",
+    "modelCategory_Qwen2": "Qwen2 modellen",
+    "modelCategory_Qwen2Vision": "Qwen2 Visiemodellen",
+    "modelCategory_QwenModels": "Qwen Modellen",
+    "modelCategory_OtherModels": "Andere modellen",
+    "page_ErrorLoadingUserData": "Gebruikersgegevens laden mislukt: {errorMessage}. Probeer te vernieuwen.",
+    "page_ErrorUserNotFound": "Gebruiker niet gevonden. Meld u opnieuw aan.",
+    "page_ErrorUserApiKeyConfig": "Gebruiker API De sleutelconfiguratie kon niet worden geladen. Vernieuw of controleer de instellingen.",
+    "page_ErrorStartingSessionAPI": "API Fout: {status} {statusText}",
+    "page_ErrorStartingSessionGeneric": "Fout bij het starten van de sessie: {errorMessage}",
+    "page_ErrorSessionIdMissing": "API antwoord succesvol maar bevatte geen conversationId.",
+    "page_LoadingUserData": "Gebruikersgegevens worden geladen...",
+    "page_ErrorAlertTitle": "Fout",
+    "page_WelcomeTitle": "Welkom bij Two AIs",
+    "page_WelcomeSubtitle": "Op deze website kunt u luisteren naar gesprekken tussen twee Large Language Models (LLMs).",
+    "page_ApiKeysRequiredTitle": "API Sleutels vereist",
+    "page_ApiKeysRequiredDescription": "Om gesprekken te kunnen voeren, moet u uw eigen API sleutels voor de AI modellen die u wilt gebruiken (bijv. OpenAI, Google, Anthropic) na het inloggen. Gedetailleerde instructies voor elke provider vindt u op de pagina Instellingen / API Sleutelpagina na het inloggen.",
+    "page_SignInPrompt": "Om uw eigen sessie te starten, kunt u zich aanmelden of een account aanmaken via de link in de header.",
+    "page_VideoTitle": "Two AIs Gespreksdemo",
+    "page_AvailableLLMsTitle": "Momenteel beschikbaar LLMs",
+    "page_TooltipGoogleThinkingBudget": "Dit Google Het model maakt gebruik van een 'denkbudget'. De 'denk'-output wordt gefactureerd, maar is niet zichtbaar in de chat.",
+    "page_TooltipAnthropicExtendedThinking": "Dit Anthropic Het model maakt gebruik van 'uitgebreid denken'. De 'denk'-output wordt gefactureerd, maar is niet zichtbaar in de chat.",
+    "page_TooltipXaiThinking": "Dit xAI Het model maakt gebruik van 'denken'. Deze output wordt gefactureerd, maar is niet zichtbaar in de chat.",
+    "page_TooltipQwenReasoning": "Dit Qwen Het model maakt gebruik van 'redeneren/denken'. Deze output wordt gefactureerd, maar is niet zichtbaar in de chat.",
+    "page_TooltipDeepSeekReasoning": "Dit DeepSeek Het model maakt gebruik van 'redeneren/denken'. De output wordt gefactureerd, maar is niet zichtbaar in de chat.",
+    "page_TooltipGenericReasoning": "Dit model maakt gebruik van redeneertokens die niet zichtbaar zijn in de chat, maar worden gefactureerd als uitvoertokens.",
+    "page_TooltipRequiresVerification": "Vereist geverifieerd OpenAI organisatie. U kunt dit hier verifiëren.",
+    "page_TooltipSupportsLanguage": "Ondersteunt {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Dit model biedt mogelijk geen volledige ondersteuning voor {languageName} voor conversatie.",
+    "page_BadgePreview": "Voorvertoning",
+    "page_BadgeExperimental": "Experimenteel",
+    "page_BadgeBeta": "Bèta",
+    "page_AvailableTTSTitle": "Momenteel beschikbaar Text-to-Speech (TTS)",
+    "page_NoTTSOptions": "Nee TTS momenteel beschikbare opties.",
+    "page_TruncatableNoteFormat": "({noottekst})",
+    "page_PricesLastVerifiedOn": "Prijzen laatst geverifieerd op {date}",
+    "page_PricingPerTokens": "per {amount} Tokens",
+    "page_ModelCategoryModels": "{model} modellen",
+    "ttsVoice_Ugne": "In het vuur",
+    "sessionSetupForm": {
+        "title": "Sessie-instellingsformulier",
+        "description": "Hier kunt u de LLM en optionele TTS instellingen voor elke agent.",
+        "agentAModel": "Agent A-model",
+        "agentBModel": "Agent B-model",
+        "selectLLMForAgentA": "Selecteer LLM voor Agent A",
+        "selectLLMForAgentB": "Selecteer LLM voor Agent B",
+        "enableTTS": "Inschakelen Text-to-Speech (TTS)",
+        "agentATTS": "Agent A TTS",
+        "agentBTTS": "Agent B TTS",
+        "provider": "Aanbieder",
+        "initialSystemPrompt": "Initiële systeemprompt",
+        "initialPromptDescription": "Deze prompt wordt verzonden als eerste bericht om het gesprek te starten. Als u deze leeg laat, verschijnt er geen prompt.",
+        "startConversation": "Start gesprek",
+        "starting": "Beginnen...",
+        "startTheConversation": "Begin het gesprek."
+    },
+    "history": {
+        "backToMain": "Terug naar hoofdpagina",
+        "conversationHistory": "Gespreksgeschiedenis",
+        "chatWith": "Chatten met {agentA} & {agentB}",
+        "viewConversation": "Bekijk gesprek",
+        "backToPreviousChats": "Terug naar vorige chats",
+        "resumeConversation": "Gesprek hervatten",
+        "resuming": "Doorgaan...",
+        "sessionDetails": "Sessiedetails",
+        "language": "Taal:",
+        "transcript": "Transcriptie"
+    }
 };
-export default nl; 
+export default nl;
