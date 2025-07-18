@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { Language, getLanguageByCode, getDefaultLanguage } from '@/lib/languages';
 import { getTranslationAsync, TranslationKeys } from '@/lib/translations';
 
@@ -19,6 +20,8 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children, lang }: LanguageProviderProps) {
+    const router = useRouter();
+    const pathname = usePathname();
     const [language, setLanguageState] = useState<Language>(() => {
         if (lang) {
             const urlLang = getLanguageByCode(lang);
@@ -58,6 +61,11 @@ export function LanguageProvider({ children, lang }: LanguageProviderProps) {
         setLanguageState(newLanguage);
         localStorage.setItem('selectedLanguage', newLanguage.code);
         document.documentElement.dir = newLanguage.direction;
+
+        // Construct the new URL with the selected language
+        const pathSegments = pathname.split('/');
+        const newPath = `/${newLanguage.code}/${pathSegments.slice(2).join('/')}`;
+        router.push(newPath);
     };
 
     return (
