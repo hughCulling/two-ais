@@ -96,7 +96,6 @@ export default function HistoryPage() {
     useEffect(() => {
         if (!user || loading) return;
         fetchPage(currentPage);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, loading, currentPage, fetchPage]);
 
     const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 1;

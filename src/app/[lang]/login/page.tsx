@@ -32,7 +32,7 @@ function LoginPageContent() {
             console.log("LoginPage: User already logged in, redirecting...");
             router.push(`/${language.code}/app`); // Redirect to authenticated app section
         }
-    }, [user, loading, router]);
+    }, [user, loading, router, language.code]);
 
     // Show loading state
     if (loading || translationLoading || !t) {
