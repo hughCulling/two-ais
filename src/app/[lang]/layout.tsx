@@ -148,6 +148,7 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           />
         ) : null}
         {alternates}
+        <meta name="description" content={description} />
         <script
           type="application/ld+json"
           nonce={nonce}
