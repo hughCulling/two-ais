@@ -148,30 +148,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "SoftwareSourceCode",
-            "name": "Two AIs",
-            "url": "https://www.two-ais.com/"
-          })
-        }}
-      />
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "url": "https://www.two-ais.com/",
-            "name": "Two AIs"
-          })
-        }}
-      />
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
             "@type": "VideoObject",
             "name": "Two AIs Conversation Demo",
             "description": "A demo of Two AIs, a platform for listening to conversations between two LLMs using TTS.",
@@ -185,27 +161,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 "@type": "ImageObject",
                 "url": "https://www.two-ais.com/icon.png"
               }
-            }
-          })
-        }}
-      />
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Two AIs",
-            "operatingSystem": "All",
-            "applicationCategory": "WebApplication",
-            "description": "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience.",
-            "url": "https://www.two-ais.com/",
-            "image": "https://www.two-ais.com/icon.png",
-            "offers": {
-              "@type": "Offer",
-              "price": 0,
-              "priceCurrency": "USD"
             }
           })
         }}
