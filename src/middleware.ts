@@ -45,7 +45,7 @@ export function middleware(request: NextRequest) {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'self'",
-    "require-trusted-types-for 'script'" // Added Trusted Types directive
+    // "require-trusted-types-for 'script'" // Removed Trusted Types directive because not supported by Next.js according to the model I was using on Cursor.
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);
