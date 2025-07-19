@@ -264,7 +264,7 @@ const en = {
     modelCategory_MistralAIModels: "Mistral AI Models",
     modelCategory_Qwen3: "Qwen3 model",
     modelCategory_QwQwQ: "Qwen QwQ model",
-    modelCategory_Qwen2_5: "Qwen2.5 model",
+    modelCategory_Qwen2_5: "Qwen2.5 models",
     modelCategory_Qwen2_5Vision: "Qwen2.5 Vision model",
     modelCategory_Qwen2_5Coder: "Qwen2.5 Coder model",
     modelCategory_Qwen2: "Qwen2 model",
