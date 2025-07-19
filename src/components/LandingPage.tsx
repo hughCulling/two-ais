@@ -18,15 +18,24 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
 import DOMPurify from 'dompurify';
 
-   // Replace these with your actual base64 strings!
-   const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
-   const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
+const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+
+// Minimal Trusted Types interfaces for type safety
+interface TrustedTypesPolicyFactory {
+  getPolicy(name: string): TrustedTypePolicy | null;
+  createPolicy(name: string, policy: { createHTML: (input: string) => string }): TrustedTypePolicy;
+}
+interface TrustedTypePolicy {
+  createHTML(input: string): string;
+}
 
 function getTrustedHTML(html: string) {
   if (typeof window !== 'undefined' && 'trustedTypes' in window && window.trustedTypes) {
-    let policy = (window.trustedTypes as any).getPolicy('default');
+    const trustedTypes = window.trustedTypes as unknown as TrustedTypesPolicyFactory;
+    let policy = trustedTypes.getPolicy('default');
     if (!policy) {
-      policy = (window.trustedTypes as any).createPolicy('default', {
+      policy = trustedTypes.createPolicy('default', {
         createHTML: (input: string) => DOMPurify.sanitize(input),
       });
     }

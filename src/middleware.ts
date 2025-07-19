@@ -32,6 +32,10 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // Enhanced CSP with nonce-based script security and necessary domains
+  // NOTE: We do NOT include 'require-trusted-types-for script' in the CSP below.
+  // As of 2024, Next.js, React, and Turbopack do not support Trusted Types for script/scriptURL assignments.
+  // Enabling this directive breaks chunk loading and runtime scripts, causing fatal errors in all modern React apps.
+  // When the ecosystem supports Trusted Types for scripts, this can be revisited. See: https://github.com/vercel/next.js/issues/56774
   const csp = [
     "default-src 'self'",
     `script-src 'nonce-${nonce}' 'strict-dynamic' https: https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com`,
@@ -44,8 +48,8 @@ export function middleware(request: NextRequest) {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'self'",
-    "require-trusted-types-for 'script'" // Added Trusted Types directive
+    "frame-ancestors 'self'"
+    // Trusted Types directive intentionally omitted for compatibility
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);

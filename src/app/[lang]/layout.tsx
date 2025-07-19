@@ -15,6 +15,15 @@ import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { getTranslationAsync } from '@/lib/translations';
 import DOMPurify from 'dompurify';
 
+// Minimal Trusted Types interfaces for type safety
+interface TrustedTypesPolicyFactory {
+  getPolicy(name: string): TrustedTypePolicy | null;
+  createPolicy(name: string, policy: { createHTML: (input: string) => string }): TrustedTypePolicy;
+}
+interface TrustedTypePolicy {
+  createHTML(input: string): string;
+}
+
 // --- Re-added original font setup ---
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -255,9 +264,10 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
 // Utility to get TrustedHTML for Trusted Types
 function getTrustedHTML(html: string) {
   if (typeof window !== 'undefined' && 'trustedTypes' in window && window.trustedTypes) {
-    let policy = (window.trustedTypes as any).getPolicy('default');
+    const trustedTypes = window.trustedTypes as unknown as TrustedTypesPolicyFactory;
+    let policy = trustedTypes.getPolicy('default');
     if (!policy) {
-      policy = (window.trustedTypes as any).createPolicy('default', {
+      policy = trustedTypes.createPolicy('default', {
         createHTML: (input: string) => DOMPurify.sanitize(input),
       });
     }
