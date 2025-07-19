@@ -162,10 +162,6 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
               "publisher": {
                 "@type": "Person",
                 "name": "Hugh Wilfred Culling",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": "https://www.two-ais.com/icon.png"
-                }
               }
             })
           }}
