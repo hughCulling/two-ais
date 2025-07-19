@@ -16,10 +16,25 @@ import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, Chev
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
+import DOMPurify from 'dompurify';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
    const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+
+function getTrustedHTML(html: string) {
+  if (typeof window !== 'undefined' && 'trustedTypes' in window && window.trustedTypes) {
+    let policy = (window.trustedTypes as any).getPolicy('default');
+    if (!policy) {
+      policy = (window.trustedTypes as any).createPolicy('default', {
+        createHTML: (input: string) => DOMPurify.sanitize(input),
+      });
+    }
+    return policy.createHTML(html);
+  }
+  // SSR fallback: just sanitize
+  return DOMPurify.sanitize(html);
+}
 
 // TruncatableNote component for pricing notes
 const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
@@ -146,7 +161,23 @@ export default function LandingPage({ nonce }: LandingPageProps) {
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: typeof window !== 'undefined' ? getTrustedHTML(JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            "name": "Two AIs Conversation Demo",
+            "description": "A demo of Two AIs, a platform for listening to conversations between two LLMs using TTS.",
+            "thumbnailUrl": "https://www.two-ais.com/landing-light.webp",
+            "uploadDate": "2025-04-29T14:12:00+01:00",
+            "contentUrl": "https://www.youtube.com/watch?v=52oUvRFdaXE",
+            "embedUrl": "https://www.youtube.com/embed/52oUvRFdaXE?si=1RKDtEhp62ppXPVv",
+            "publisher": {
+              "name": "Two AIs",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.two-ais.com/icon.png"
+              }
+            }
+          })) : JSON.stringify({
             "@context": "https://schema.org",
             "@type": "VideoObject",
             "name": "Two AIs Conversation Demo",

@@ -13,6 +13,7 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { getTranslationAsync } from '@/lib/translations';
+import DOMPurify from 'dompurify';
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -143,7 +144,7 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
             nonce={nonce}
             suppressHydrationWarning
             dangerouslySetInnerHTML={{
-              __html: `window.__CSP_NONCE__ = "${nonce}";`
+              __html: typeof window !== 'undefined' ? getTrustedHTML(`window.__CSP_NONCE__ = "${nonce}";`) : `window.__CSP_NONCE__ = "${nonce}";`
             }}
           />
         ) : null}
@@ -154,7 +155,17 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: typeof window !== 'undefined' ? getTrustedHTML(JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": title,
+              "url": `https://www.two-ais.com/${lang}`,
+              "description": description,
+              "publisher": {
+                "@type": "Person",
+                "name": "Hugh Wilfred Culling",
+              }
+            })) : JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": title,
@@ -172,7 +183,12 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: typeof window !== 'undefined' ? getTrustedHTML(JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareSourceCode",
+              "name": "Two AIs",
+              "url": "https://www.two-ais.com/"
+            })) : JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareSourceCode",
               "name": "Two AIs",
@@ -185,7 +201,21 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: typeof window !== 'undefined' ? getTrustedHTML(JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Two AIs",
+              "operatingSystem": "All",
+              "applicationCategory": "WebApplication",
+              "description": "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience.",
+              "url": "https://www.two-ais.com/",
+              "image": "https://www.two-ais.com/icon.png",
+              "offers": {
+                "@type": "Offer",
+                "price": 0,
+                "priceCurrency": "USD"
+              }
+            })) : JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
               "name": "Two AIs",
@@ -220,4 +250,19 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
       </body>
     </html>
   );
+}
+
+// Utility to get TrustedHTML for Trusted Types
+function getTrustedHTML(html: string) {
+  if (typeof window !== 'undefined' && 'trustedTypes' in window && window.trustedTypes) {
+    let policy = (window.trustedTypes as any).getPolicy('default');
+    if (!policy) {
+      policy = (window.trustedTypes as any).createPolicy('default', {
+        createHTML: (input: string) => DOMPurify.sanitize(input),
+      });
+    }
+    return policy.createHTML(html);
+  }
+  // SSR fallback: just sanitize
+  return DOMPurify.sanitize(html);
 }
