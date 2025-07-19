@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       siteName: 'Two AIs',
       images: [
         {
-          url: '/icon.png',
+          url: `https://www.two-ais.com/icon.png`, // Absolute URL
           width: 512,
           height: 512,
           alt: 'Two AIs Logo',
@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       card: 'summary_large_image',
       title,
       description,
-      images: ['/icon.png'],
+      images: [`https://www.two-ais.com/icon.png`], // Absolute URL
     },
   };
 }
