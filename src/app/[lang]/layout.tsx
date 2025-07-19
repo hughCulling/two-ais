@@ -166,6 +166,41 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
             })
           }}
         />
+        <script
+          type="application/ld+json"
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareSourceCode",
+              "name": "Two AIs",
+              "url": "https://www.two-ais.com/"
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Two AIs",
+              "operatingSystem": "All",
+              "applicationCategory": "WebApplication",
+              "description": "Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience.",
+              "url": "https://www.two-ais.com/",
+              "image": "https://www.two-ais.com/icon.png",
+              "offers": {
+                "@type": "Offer",
+                "price": 0,
+                "priceCurrency": "USD"
+              }
+            })
+          }}
+        />
         {/* Place any other <head> content here if needed */}
       </head>
       <body
