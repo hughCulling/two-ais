@@ -44,7 +44,8 @@ export function middleware(request: NextRequest) {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'self'"
+    "frame-ancestors 'self'",
+    "require-trusted-types-for 'script'" // Added Trusted Types directive
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);
