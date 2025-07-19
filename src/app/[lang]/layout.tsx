@@ -110,8 +110,13 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function RootLayout({ children, params }: { children: React.ReactNode, params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   const nonce = (await headers()).get('x-nonce') || '';
+  const t = await getTranslationAsync(lang);
+  const title = t?.header?.appName || 'Two AIs';
+  const description = t?.page_WelcomeSubtitle ||
+    'Two AIs allows you to listen to conversations between two LLMs (e.g., GPT, Gemini, Claude) using Text-to-Speech (TTS) for an audible AI podcast experience. Requires user API keys.';
+
   return (
-    <HtmlWithNonce nonce={nonce} lang={lang}>
+    <HtmlWithNonce nonce={nonce} lang={lang} title={title} description={description}>
       <PublicHeaderOnLanding />
       {children}
     </HtmlWithNonce>
@@ -119,7 +124,7 @@ export default async function RootLayout({ children, params }: { children: React
 }
 
 // Add lang and hreflang logic
-function HtmlWithNonce({ children, nonce, lang }: { children: React.ReactNode, nonce: string, lang: string }) {
+function HtmlWithNonce({ children, nonce, lang, title, description }: { children: React.ReactNode, nonce: string, lang: string, title: string, description: string }) {
   // Generate alternate links for all supported languages
   const baseUrl = 'https://www.two-ais.com';
   const alternates = SUPPORTED_LANGUAGES.map(l => {
@@ -143,6 +148,28 @@ function HtmlWithNonce({ children, nonce, lang }: { children: React.ReactNode, n
           />
         ) : null}
         {alternates}
+        <script
+          type="application/ld+json"
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": title,
+              "url": `https://www.two-ais.com/${lang}`,
+              "description": description,
+              "publisher": {
+                "@type": "Person",
+                "name": "Hugh Wilfred Culling",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://www.two-ais.com/icon.png"
+                }
+              }
+            })
+          }}
+        />
         {/* Place any other <head> content here if needed */}
       </head>
       <body
