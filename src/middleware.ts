@@ -34,7 +34,7 @@ export function middleware(request: NextRequest) {
   // Enhanced CSP with nonce-based script security and necessary domains
   const csp = [
     "default-src 'self'",
-    `script-src 'nonce-${nonce}' 'strict-dynamic' https: https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com`,
+    `script-src 'nonce-${nonce}' 'unsafe-inline' 'strict-dynamic' https: https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/",
     "font-src 'self' https://fonts.gstatic.com",
