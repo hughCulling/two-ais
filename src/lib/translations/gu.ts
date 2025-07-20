@@ -120,7 +120,7 @@ const gu = {
             "saveUpdateKeys": "કી સાચવો / અપડેટ કરો",
             "saving": "સાચવી રહ્યું છે..."
         },
-        "loading": "Loading settings..."
+        "loading": "સેટિંગ્સ લોડ કરી રહ્યું છે..."
     },
     "main": {
         "title": "AI વાર્તાલાપ",

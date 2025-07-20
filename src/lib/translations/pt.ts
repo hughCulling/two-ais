@@ -120,7 +120,7 @@ const pt = {
             "saveUpdateKeys": "Salvar / Atualizar Chaves",
             "saving": "Salvando..."
         },
-        "loading": "Loading settings..."
+        "loading": "Carregando configurações..."
     },
     "main": {
         "title": "AI Conversa",

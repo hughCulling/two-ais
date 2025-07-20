@@ -120,7 +120,7 @@ const tl = {
             "saveUpdateKeys": "I-save / I-update ang Mga Susi",
             "saving": "Nagse-save..."
         },
-        "loading": "Loading settings..."
+        "loading": "Nilo-load ang mga setting..."
     },
     "main": {
         "title": "AI Pag-uusap",

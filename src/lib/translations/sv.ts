@@ -120,7 +120,7 @@ const sv = {
             "saveUpdateKeys": "Spara/uppdatera nycklar",
             "saving": "Sparande..."
         },
-        "loading": "Loading settings..."
+        "loading": "Laddar inställningar..."
     },
     "main": {
         "title": "AI Konversation",

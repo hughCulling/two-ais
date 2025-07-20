@@ -120,7 +120,7 @@ const hu = {
             "saveUpdateKeys": "Kulcsok mentése / frissítése",
             "saving": "Megtakarítás..."
         },
-        "loading": "Loading settings..."
+        "loading": "Beállítások betöltése..."
     },
     "main": {
         "title": "AI Beszélgetés",

@@ -120,7 +120,7 @@ const ms = {
             "saveUpdateKeys": "Simpan / Kemas Kini Kekunci",
             "saving": "Menyimpan..."
         },
-        "loading": "Loading settings..."
+        "loading": "Memuatkan tetapan..."
     },
     "main": {
         "title": "AI Perbualan",

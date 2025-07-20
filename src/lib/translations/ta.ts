@@ -120,7 +120,7 @@ const ta = {
             "saveUpdateKeys": "விசைகளைச் சேமி / புதுப்பி",
             "saving": "சேமிக்கிறது..."
         },
-        "loading": "Loading settings..."
+        "loading": "அமைப்புகளை ஏற்றுகிறது..."
     },
     "main": {
         "title": "AI உரையாடல்",

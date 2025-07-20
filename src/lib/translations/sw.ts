@@ -120,7 +120,7 @@ const sw = {
             "saveUpdateKeys": "Hifadhi / Sasisha Funguo",
             "saving": "Inahifadhi..."
         },
-        "loading": "Loading settings..."
+        "loading": "Inapakia mipangilio..."
     },
     "main": {
         "title": "AI Mazungumzo",

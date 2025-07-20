@@ -120,7 +120,7 @@ const kk = {
             "saveUpdateKeys": "Кілттерді сақтау/жаңарту",
             "saving": "Сақталуда..."
         },
-        "loading": "Loading settings..."
+        "loading": "Параметрлер жүктелуде..."
     },
     "main": {
         "title": "AI Әңгімелесу",

@@ -120,7 +120,7 @@ const ro = {
             "saveUpdateKeys": "Salvați / actualizați cheile",
             "saving": "Economisire..."
         },
-        "loading": "Loading settings..."
+        "loading": "Se încarcă setările..."
     },
     "main": {
         "title": "AI Conversaţie",

@@ -120,7 +120,7 @@ const it = {
             "saveUpdateKeys": "Salva / Aggiorna chiavi",
             "saving": "Risparmio..."
         },
-        "loading": "Loading settings..."
+        "loading": "Caricamento delle impostazioni..."
     },
     "main": {
         "title": "AI Conversazione",

@@ -120,7 +120,7 @@ const no = {
             "saveUpdateKeys": "Lagre/oppdater nøkler",
             "saving": "Lagrer..."
         },
-        "loading": "Loading settings..."
+        "loading": "Laster inn innstillinger ..."
     },
     "main": {
         "title": "AI Samtale",

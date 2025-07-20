@@ -120,7 +120,7 @@ const th = {
             "saveUpdateKeys": "บันทึก / อัปเดตคีย์",
             "saving": "ประหยัด..."
         },
-        "loading": "Loading settings..."
+        "loading": "กำลังโหลดการตั้งค่า..."
     },
     "main": {
         "title": "AI การสนทนา",

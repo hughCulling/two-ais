@@ -120,7 +120,7 @@ const sk = {
             "saveUpdateKeys": "Uložiť / aktualizovať kľúče",
             "saving": "Ukladá sa..."
         },
-        "loading": "Loading settings..."
+        "loading": "Načítavajú sa nastavenia..."
     },
     "main": {
         "title": "AI Konverzácia",

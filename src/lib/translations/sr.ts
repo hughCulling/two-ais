@@ -120,7 +120,7 @@ const sr = {
             "saveUpdateKeys": "Сачувај / Ажурирај кључеве",
             "saving": "Чување..."
         },
-        "loading": "Loading settings..."
+        "loading": "Учитавање подешавања..."
     },
     "main": {
         "title": "AI Разговор",

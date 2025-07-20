@@ -120,7 +120,7 @@ const ur = {
             "saveUpdateKeys": "کیز کو محفوظ کریں / اپ ڈیٹ کریں۔",
             "saving": "محفوظ کر رہا ہے..."
         },
-        "loading": "Loading settings..."
+        "loading": "ترتیبات لوڈ ہو رہی ہیں..."
     },
     "main": {
         "title": "AI بات چیت",

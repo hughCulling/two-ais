@@ -120,7 +120,7 @@ const hr = {
             "saveUpdateKeys": "Spremi/Ažuriraj ključeve",
             "saving": "Spremanje..."
         },
-        "loading": "Loading settings..."
+        "loading": "Učitavanje postavki..."
     },
     "main": {
         "title": "AI Razgovor",

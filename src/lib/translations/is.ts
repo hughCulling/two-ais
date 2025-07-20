@@ -120,7 +120,7 @@ const is = {
             "saveUpdateKeys": "Vista / Uppfæra lykla",
             "saving": "Vistar..."
         },
-        "loading": "Loading settings..."
+        "loading": "Hleður stillingar..."
     },
     "main": {
         "title": "AI Samtal",

@@ -120,7 +120,7 @@ const lt = {
             "saveUpdateKeys": "Įrašyti / atnaujinti raktus",
             "saving": "Įrašoma..."
         },
-        "loading": "Loading settings..."
+        "loading": "Įkeliami nustatymai..."
     },
     "main": {
         "title": "AI Pokalbis",

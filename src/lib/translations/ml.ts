@@ -120,7 +120,7 @@ const ml = {
             "saveUpdateKeys": "കീകൾ സംരക്ഷിക്കുക / അപ്ഡേറ്റ് ചെയ്യുക",
             "saving": "സംരക്ഷിക്കുന്നു..."
         },
-        "loading": "Loading settings..."
+        "loading": "ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യുന്നു..."
     },
     "main": {
         "title": "AI സംഭാഷണം",

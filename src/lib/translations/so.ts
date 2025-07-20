@@ -120,7 +120,7 @@ const so = {
             "saveUpdateKeys": "Keydi / Cusbooneysii furayaasha",
             "saving": "Keydinaya..."
         },
-        "loading": "Loading settings..."
+        "loading": "Dejinta dejinta..."
     },
     "main": {
         "title": "AI Wada sheekeysi",

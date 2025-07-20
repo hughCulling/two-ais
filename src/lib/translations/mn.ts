@@ -120,7 +120,7 @@ const mn = {
             "saveUpdateKeys": "Түлхүүрүүдийг хадгалах / шинэчлэх",
             "saving": "Хадгалж байна..."
         },
-        "loading": "Loading settings..."
+        "loading": "Тохиргоог ачаалж байна..."
     },
     "main": {
         "title": "AI Яриа",

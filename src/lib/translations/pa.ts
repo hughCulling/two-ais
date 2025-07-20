@@ -120,7 +120,7 @@ const pa = {
             "saveUpdateKeys": "ਕੁੰਜੀਆਂ ਨੂੰ ਸੇਵ / ਅੱਪਡੇਟ ਕਰੋ",
             "saving": "ਸੇਵ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
         },
-        "loading": "Loading settings..."
+        "loading": "ਸੈਟਿੰਗਾਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ..."
     },
     "main": {
         "title": "AI ਗੱਲਬਾਤ",

@@ -120,7 +120,7 @@ const iw = {
             "saveUpdateKeys": "שמירה / עדכון מפתחות",
             "saving": "חִסָכוֹן..."
         },
-        "loading": "Loading settings..."
+        "loading": "טוען הגדרות..."
     },
     "main": {
         "title": "AI שִׂיחָה",

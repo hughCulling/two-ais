@@ -120,7 +120,7 @@ const sq = {
             "saveUpdateKeys": "Ruaj / Përditëso Çelësat",
             "saving": "Duke u ruajtur..."
         },
-        "loading": "Loading settings..."
+        "loading": "Duke ngarkuar cilësimet..."
     },
     "main": {
         "title": "AI Bisedë",

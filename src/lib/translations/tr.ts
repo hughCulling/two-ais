@@ -120,7 +120,7 @@ const tr = {
             "saveUpdateKeys": "Anahtarları Kaydet / Güncelle",
             "saving": "Kaydediliyor..."
         },
-        "loading": "Loading settings..."
+        "loading": "Ayarlar yükleniyor..."
     },
     "main": {
         "title": "AI Konuşma",

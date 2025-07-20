@@ -120,7 +120,7 @@ const id = {
             "saveUpdateKeys": "Simpan / Perbarui Kunci",
             "saving": "Penghematan..."
         },
-        "loading": "Loading settings..."
+        "loading": "Memuat pengaturan..."
     },
     "main": {
         "title": "AI Percakapan",

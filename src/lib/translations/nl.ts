@@ -120,7 +120,7 @@ const nl = {
             "saveUpdateKeys": "Sleutels opslaan/bijwerken",
             "saving": "Besparing..."
         },
-        "loading": "Loading settings..."
+        "loading": "Instellingen laden..."
     },
     "main": {
         "title": "AI Gesprek",

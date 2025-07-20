@@ -120,7 +120,7 @@ const uk = {
             "saveUpdateKeys": "Зберегти / оновити ключі",
             "saving": "Збереження..."
         },
-        "loading": "Loading settings..."
+        "loading": "Завантаження налаштувань..."
     },
     "main": {
         "title": "AI Розмова",

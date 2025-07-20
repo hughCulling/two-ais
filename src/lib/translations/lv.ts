@@ -120,7 +120,7 @@ const lv = {
             "saveUpdateKeys": "Saglabāt/atjaunināt atslēgas",
             "saving": "Saglabāšana..."
         },
-        "loading": "Loading settings..."
+        "loading": "Notiek iestatījumu ielāde..."
     },
     "main": {
         "title": "AI Saruna",

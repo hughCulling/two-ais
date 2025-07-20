@@ -120,7 +120,7 @@ const vi = {
             "saveUpdateKeys": "Lưu / Cập nhật Khóa",
             "saving": "Đang lưu..."
         },
-        "loading": "Loading settings..."
+        "loading": "Đang tải cài đặt..."
     },
     "main": {
         "title": "AI Cuộc hội thoại",

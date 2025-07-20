@@ -120,7 +120,7 @@ const my = {
             "saveUpdateKeys": "သော့များကို သိမ်းဆည်း/မွမ်းမံပါ။",
             "saving": "သိမ်းဆည်းနေသည်..."
         },
-        "loading": "Loading settings..."
+        "loading": "ဆက်တင်များကို ဖွင့်နေသည်..."
     },
     "main": {
         "title": "AI စကားဝိုင်း",

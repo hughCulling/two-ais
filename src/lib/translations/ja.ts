@@ -120,7 +120,7 @@ const ja = {
             "saveUpdateKeys": "キーの保存/更新",
             "saving": "保存中..."
         },
-        "loading": "Loading settings..."
+        "loading": "設定を読み込んでいます..."
     },
     "main": {
         "title": "AI 会話",

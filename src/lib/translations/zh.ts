@@ -120,7 +120,7 @@ const zh = {
             "saveUpdateKeys": "保存/更新密钥",
             "saving": "保存..."
         },
-        "loading": "Loading settings..."
+        "loading": "正在加载设置..."
     },
     "main": {
         "title": "AI 对话",

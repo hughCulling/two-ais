@@ -120,7 +120,7 @@ const ka = {
             "saveUpdateKeys": "გასაღებების შენახვა / განახლება",
             "saving": "შენახვა..."
         },
-        "loading": "Loading settings..."
+        "loading": "პარამეტრები იტვირთება..."
     },
     "main": {
         "title": "AI საუბარი",

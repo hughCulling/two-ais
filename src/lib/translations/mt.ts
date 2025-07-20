@@ -120,7 +120,7 @@ const mt = {
             "saveUpdateKeys": "Issejvja / Aġġorna ċ-Ċwievet",
             "saving": "Qed niffranka..."
         },
-        "loading": "Loading settings..."
+        "loading": "Qed jitgħabbew is-settings..."
     },
     "main": {
         "title": "AI Konverżazzjoni",

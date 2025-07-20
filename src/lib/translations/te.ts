@@ -120,7 +120,7 @@ const te = {
             "saveUpdateKeys": "కీలను సేవ్ చేయండి / నవీకరించండి",
             "saving": "సేవ్ చేస్తోంది..."
         },
-        "loading": "Loading settings..."
+        "loading": "సెట్టింగ్‌లను లోడ్ చేస్తోంది..."
     },
     "main": {
         "title": "AI సంభాషణ",

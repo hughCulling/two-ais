@@ -120,7 +120,7 @@ const ru = {
             "saveUpdateKeys": "Сохранить/обновить ключи",
             "saving": "Сохранение..."
         },
-        "loading": "Loading settings..."
+        "loading": "Загрузка настроек..."
     },
     "main": {
         "title": "AI Беседа",

@@ -120,7 +120,7 @@ const mr = {
             "saveUpdateKeys": "की सेव्ह / अपडेट करा",
             "saving": "जतन करत आहे..."
         },
-        "loading": "Loading settings..."
+        "loading": "सेटिंग्ज लोड करत आहे..."
     },
     "main": {
         "title": "AI चर्चा",

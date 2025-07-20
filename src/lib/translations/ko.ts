@@ -120,7 +120,7 @@ const ko = {
             "saveUpdateKeys": "키 저장/업데이트",
             "saving": "절약..."
         },
-        "loading": "Loading settings..."
+        "loading": "설정을 로딩 중입니다..."
     },
     "main": {
         "title": "AI 대화",

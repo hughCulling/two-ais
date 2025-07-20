@@ -120,7 +120,7 @@ const hy = {
             "saveUpdateKeys": "Պահպանել / թարմացնել բանալիները",
             "saving": "Պահպանվում է..."
         },
-        "loading": "Loading settings..."
+        "loading": "Կարգավորումները բեռնվում են..."
     },
     "main": {
         "title": "AI Զրույց",

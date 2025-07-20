@@ -120,7 +120,7 @@ const kn = {
             "saveUpdateKeys": "ಕೀಲಿಗಳನ್ನು ಉಳಿಸಿ / ನವೀಕರಿಸಿ",
             "saving": "ಉಳಿಸಲಾಗುತ್ತಿದೆ..."
         },
-        "loading": "Loading settings..."
+        "loading": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
     },
     "main": {
         "title": "AI ಸಂವಾದ",

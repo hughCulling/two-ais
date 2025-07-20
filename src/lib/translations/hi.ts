@@ -120,7 +120,7 @@ const hi = {
             "saveUpdateKeys": "कुंजियाँ सहेजें/अपडेट करें",
             "saving": "बचत..."
         },
-        "loading": "Loading settings..."
+        "loading": "सेटिंग्स लोड हो रही हैं..."
     },
     "main": {
         "title": "AI बातचीत",
