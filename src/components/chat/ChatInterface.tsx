@@ -140,7 +140,21 @@ export function ChatInterface({
         });
         setCurrentlyPlayingMsgId(null);
 
-        // --- Call requestNextTurn Cloud Function ---
+        // --- NEW: Update Firestore with last played agent message ID ---
+        const playedMsg = messages.find(m => m.id === currentlyPlayingMsgId);
+        if (playedMsg && (playedMsg.role === 'agentA' || playedMsg.role === 'agentB')) {
+            try {
+                const conversationRef = doc(db, "conversations", conversationId);
+                updateDoc(conversationRef, {
+                    lastPlayedAgentMessageId: currentlyPlayingMsgId,
+                    lastActivity: serverTimestamp(),
+                });
+            } catch (err) {
+                logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
+            }
+        }
+
+        // --- Always call requestNextTurn Cloud Function ---
         if (!requestNextTurnFunction) {
             logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
             setError("Error: Cannot communicate with backend to continue conversation.");
@@ -148,10 +162,6 @@ export function ChatInterface({
         }
         if (!conversationId) {
             logger.error("Cannot call requestNextTurn without conversationId.");
-            return;
-        }
-        if (!isWaitingForSignal) {
-            logger.warn(`handleAudioEnd called for ${currentlyPlayingMsgId}, but local state indicates backend wasn't waiting for signal. Skipping call.`);
             return;
         }
         logger.info(`Calling requestNextTurn for conversation ${conversationId}...`);
@@ -169,7 +179,7 @@ export function ChatInterface({
                 }
                 setError(errorMsg);
             });
-    }, [currentlyPlayingMsgId, conversationId, isWaitingForSignal]);
+    }, [currentlyPlayingMsgId, conversationId, messages]);
 
 
     // --- Effect 1: Listen for Messages ---

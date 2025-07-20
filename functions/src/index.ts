@@ -78,7 +78,7 @@ interface AgentTTSSettingsBackend {
     selectedTtsModelId?: string;
     ttsApiModelId?: string;      // API-specific ID, e.g., 'tts-1', 'gemini-2.5-flash-preview-tts'
 }
-interface ConversationTTSSettingsBackend {
+export interface ConversationTTSSettingsBackend {
     enabled: boolean;
     agentA: AgentTTSSettingsBackend;
     agentB: AgentTTSSettingsBackend;
@@ -98,17 +98,20 @@ interface GcpError extends Error { code?: number | string; details?: string; }
 //     type?: string;
 // }
 
-interface ConversationData {
-    agentA_llm: string;
-    agentB_llm: string;
-    turn: "agentA" | "agentB";
-    apiSecretVersions: { [key: string]: string };
-    status?: "running" | "stopped" | "error";
-    userId?: string;
-    ttsSettings?: ConversationTTSSettingsBackend;
-    waitingForTTSEndSignal?: boolean;
-    errorContext?: string;
-}
+const LOOKAHEAD_LIMIT = 2; // How many agent messages ahead can be generated
+// --- ConversationData type for linter ---
+type ConversationData = {
+  agentA_llm: string;
+  agentB_llm: string;
+  turn: "agentA" | "agentB";
+  apiSecretVersions: { [key: string]: string };
+  status?: "running" | "stopped" | "error";
+  userId?: string;
+  ttsSettings?: ConversationTTSSettingsBackend;
+  waitingForTTSEndSignal?: boolean;
+  errorContext?: string;
+  lastPlayedAgentMessageId?: string;
+};
 // --- End Interfaces ---
 
 // --- Helper Functions (Defined ONCE) ---
@@ -347,11 +350,37 @@ async function _triggerAgentResponse(
             logger.error(`Conversation ${conversationId} not found in _triggerAgentResponse.`);
             return;
         }
-        conversationData = conversationSnap.data()!;
+        conversationData = conversationSnap.data() as ConversationData;
 
         if (conversationData.status !== "running") {
              logger.info(`Conversation ${conversationId} status is ${conversationData.status}. Aborting _triggerAgentResponse.`);
              return;
+        }
+
+        // --- NEW: Enforce lookahead limit ---
+        // Only if not forced (for future extensibility)
+        // (This function is only called from orchestrateConversation, which doesn't force)
+        // Fetch all messages ordered by timestamp
+        const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+        const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
+            const data = doc.data() as { role: string };
+            return { id: doc.id, role: data.role };
+        });
+        // Find the index of lastPlayedAgentMessageId
+        let lastPlayedIdx = -1;
+        if (conversationData.lastPlayedAgentMessageId) {
+            lastPlayedIdx = allMessages.findIndex(m => m.id === conversationData.lastPlayedAgentMessageId);
+        }
+        // Count agent messages after lastPlayedIdx
+        let agentMessagesAhead = 0;
+        for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
+            if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
+                agentMessagesAhead++;
+            }
+        }
+        if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
+            logger.info(`[Lookahead Limit] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+            return;
         }
 
         let historyMessages: BaseMessage[] = [];
@@ -749,6 +778,72 @@ export const orchestrateConversation = onDocumentCreated(
     return null;
 });
 // --- End orchestrateConversation ---
+
+
+// --- Add requestNextTurn callable function ---
+export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ message: string }>>( 
+    { region: "us-central1", memory: "512MiB", timeoutSeconds: 60 },
+    async (request) => {
+        logger.info("--- requestNextTurn Function Execution Start ---", { structuredData: true });
+        const conversationId = request.data.conversationId;
+        if (!conversationId || typeof conversationId !== "string") {
+            logger.error("requestNextTurn: Missing or invalid conversationId");
+            throw new HttpsError("invalid-argument", "Missing or invalid conversationId");
+        }
+        const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
+        const messagesRef = conversationRef.collection("messages");
+        let conversationData: ConversationData;
+        try {
+            const conversationSnap = await conversationRef.get();
+            if (!conversationSnap.exists) {
+                logger.error(`requestNextTurn: Conversation document ${conversationId} not found.`);
+                throw new HttpsError("not-found", "Conversation not found");
+            }
+            conversationData = conversationSnap.data() as ConversationData;
+            if (!conversationData?.agentA_llm || !conversationData?.agentB_llm || !conversationData?.turn || !conversationData?.apiSecretVersions) {
+                logger.error(`requestNextTurn: Conversation document ${conversationId} is missing required LLM configuration fields.`);
+                throw new HttpsError("failed-precondition", "Conversation missing required configuration");
+            }
+            if (conversationData.status !== "running") {
+                logger.info(`requestNextTurn: Conversation ${conversationId} status is not 'running' ("${conversationData.status}"). Exiting.`);
+                return { message: "Conversation not running." };
+            }
+        } catch (error) {
+            logger.error(`requestNextTurn: Failed to fetch conversation document ${conversationId}:`, error);
+            throw new HttpsError("internal", "Failed to fetch conversation");
+        }
+        // --- Lookahead logic: count agent messages ahead ---
+        const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+        const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
+            const data = doc.data() as { role: string };
+            return { id: doc.id, role: data.role };
+        });
+        let lastPlayedIdx = -1;
+        if (conversationData.lastPlayedAgentMessageId) {
+            lastPlayedIdx = allMessages.findIndex(m => m.id === conversationData.lastPlayedAgentMessageId);
+        }
+        let agentMessagesAhead = 0;
+        for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
+            if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
+                agentMessagesAhead++;
+            }
+        }
+        if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
+            logger.info(`[requestNextTurn] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+            return { message: "Lookahead buffer full." };
+        }
+        // --- Determine which agent should respond next ---
+        const currentTurn = conversationData.turn;
+        if (currentTurn !== "agentA" && currentTurn !== "agentB") {
+            logger.error(`requestNextTurn: Invalid turn value: ${currentTurn}`);
+            throw new HttpsError("failed-precondition", "Invalid turn value");
+        }
+        logger.info(`requestNextTurn: Triggering agent response for ${currentTurn}`);
+        await _triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+        return { message: `Agent ${currentTurn} response triggered.` };
+    }
+);
+// --- End requestNextTurn ---
 
 
 export { getProviderFromId, getFirestoreKeyIdFromProvider, getTTSApiKeyId, getApiKeyFromSecret, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket };
