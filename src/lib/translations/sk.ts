@@ -316,7 +316,9 @@ const sk = {
         "selectVoice": "Vybrať hlas",
         "noVoicesFor": "Žiadne hlasy pre {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Vyberte {providerName} Model"
+        "selectTtsProviderModel": "Vyberte {providerName} Model",
+        "selectProvider": "Vyberte poskytovateľa",
+        "per": "za"
     },
     "history": {
         "backToMain": "Späť na hlavný obsah",

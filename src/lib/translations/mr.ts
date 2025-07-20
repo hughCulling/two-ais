@@ -316,7 +316,9 @@ const mr = {
         "selectVoice": "आवाज निवडा",
         "noVoicesFor": "साठी आवाज नाहीत {languageName}",
         "ttsProviderModel": "{providerName} मॉडेल",
-        "selectTtsProviderModel": "निवडा {providerName} मॉडेल"
+        "selectTtsProviderModel": "निवडा {providerName} मॉडेल",
+        "selectProvider": "प्रदाता निवडा",
+        "per": "प्रति"
     },
     "history": {
         "backToMain": "मुख्य कडे परत",

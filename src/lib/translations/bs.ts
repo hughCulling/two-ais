@@ -316,7 +316,9 @@ const bs = {
         "selectVoice": "Odaberite glas",
         "noVoicesFor": "Nema glasova za {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Odaberite {providerName} Model"
+        "selectTtsProviderModel": "Odaberite {providerName} Model",
+        "selectProvider": "Odaberite pružatelja usluga",
+        "per": "po"
     },
     "history": {
         "backToMain": "Nazad na glavni sadržaj",

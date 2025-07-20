@@ -316,7 +316,9 @@ const kn = {
         "selectVoice": "ಧ್ವನಿ ಆಯ್ಕೆಮಾಡಿ",
         "noVoicesFor": "ಇದಕ್ಕಾಗಿ ಯಾವುದೇ ಧ್ವನಿಗಳಿಲ್ಲ {languageName}",
         "ttsProviderModel": "{providerName} ಮಾದರಿ",
-        "selectTtsProviderModel": "ಆಯ್ಕೆ ಮಾಡಿ {providerName} ಮಾದರಿ"
+        "selectTtsProviderModel": "ಆಯ್ಕೆ ಮಾಡಿ {providerName} ಮಾದರಿ",
+        "selectProvider": "ಪೂರೈಕೆದಾರರನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        "per": "ಪ್ರತಿ"
     },
     "history": {
         "backToMain": "ಮುಖ್ಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",

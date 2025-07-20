@@ -316,7 +316,9 @@ const et = {
         "selectVoice": "Valige hääl",
         "noVoicesFor": "Hääled puuduvad {languageName}",
         "ttsProviderModel": "{providerName} Mudel",
-        "selectTtsProviderModel": "Vali {providerName} Mudel"
+        "selectTtsProviderModel": "Vali {providerName} Mudel",
+        "selectProvider": "Valige teenusepakkuja",
+        "per": "iga"
     },
     "history": {
         "backToMain": "Tagasi põhisisu juurde",

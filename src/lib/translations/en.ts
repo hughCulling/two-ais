@@ -335,6 +335,8 @@ const en = {
         noVoicesFor: 'No voices for {languageName}',
         ttsProviderModel: '{providerName} Model',
         selectTtsProviderModel: 'Select {providerName} Model',
+        selectProvider: 'Select Provider',
+        per: 'per',
     },
 
     history: {

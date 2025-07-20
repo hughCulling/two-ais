@@ -316,7 +316,9 @@ const so = {
         "selectVoice": "Dooro Cod",
         "noVoicesFor": "Codad uma laha {languageName}",
         "ttsProviderModel": "{providerName} Qaabka",
-        "selectTtsProviderModel": "Dooro {providerName} Qaabka"
+        "selectTtsProviderModel": "Dooro {providerName} Qaabka",
+        "selectProvider": "Dooro Bixiye",
+        "per": "per"
     },
     "history": {
         "backToMain": "Ku laabo Main",

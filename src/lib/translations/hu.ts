@@ -316,7 +316,9 @@ const hu = {
         "selectVoice": "Hang kiválasztása",
         "noVoicesFor": "Nincsenek hangok a következőhöz: {languageName}",
         "ttsProviderModel": "{providerName} Modell",
-        "selectTtsProviderModel": "Válasszon {providerName} Modell"
+        "selectTtsProviderModel": "Válasszon {providerName} Modell",
+        "selectProvider": "Szolgáltató kiválasztása",
+        "per": "per"
     },
     "history": {
         "backToMain": "Vissza a főoldalra",

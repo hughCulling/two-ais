@@ -316,7 +316,9 @@ const fi = {
         "selectVoice": "Valitse ääni",
         "noVoicesFor": "Ei ääniä {languageName}",
         "ttsProviderModel": "{providerName} Malli",
-        "selectTtsProviderModel": "Valitse {providerName} Malli"
+        "selectTtsProviderModel": "Valitse {providerName} Malli",
+        "selectProvider": "Valitse palveluntarjoaja",
+        "per": "per"
     },
     "history": {
         "backToMain": "Takaisin pääsivulle",

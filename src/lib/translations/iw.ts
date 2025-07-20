@@ -316,7 +316,9 @@ const iw = {
         "selectVoice": "בחירת קול",
         "noVoicesFor": "אין קולות עבור {languageName}",
         "ttsProviderModel": "{providerName} דֶגֶם",
-        "selectTtsProviderModel": "לִבחוֹר {providerName} דֶגֶם"
+        "selectTtsProviderModel": "לִבחוֹר {providerName} דֶגֶם",
+        "selectProvider": "בחר ספק",
+        "per": "לְכָל"
     },
     "history": {
         "backToMain": "חזרה לדף הראשי",

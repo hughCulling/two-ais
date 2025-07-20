@@ -316,7 +316,9 @@ const pa = {
         "selectVoice": "ਅਵਾਜ਼ ਚੁਣੋ",
         "noVoicesFor": "ਲਈ ਕੋਈ ਆਵਾਜ਼ ਨਹੀਂ {languageName}",
         "ttsProviderModel": "{providerName} ਮਾਡਲ",
-        "selectTtsProviderModel": "ਚੁਣੋ {providerName} ਮਾਡਲ"
+        "selectTtsProviderModel": "ਚੁਣੋ {providerName} ਮਾਡਲ",
+        "selectProvider": "ਪ੍ਰਦਾਤਾ ਚੁਣੋ",
+        "per": "ਪ੍ਰਤੀ"
     },
     "history": {
         "backToMain": "ਮੁੱਖ ਤੇ ਵਾਪਸ ਜਾਓ",

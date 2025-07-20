@@ -316,7 +316,9 @@ const el = {
         "selectVoice": "Επιλογή φωνής",
         "noVoicesFor": "Δεν υπάρχουν φωνές για {languageName}",
         "ttsProviderModel": "{providerName} Μοντέλο",
-        "selectTtsProviderModel": "Επιλέγω {providerName} Μοντέλο"
+        "selectTtsProviderModel": "Επιλέγω {providerName} Μοντέλο",
+        "selectProvider": "Επιλέξτε Πάροχο",
+        "per": "ανά"
     },
     "history": {
         "backToMain": "Επιστροφή στο κύριο μέρος",

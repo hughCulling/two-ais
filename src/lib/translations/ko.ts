@@ -316,7 +316,9 @@ const ko = {
         "selectVoice": "음성 선택",
         "noVoicesFor": "목소리가 없다 {languageName}",
         "ttsProviderModel": "{providerName} 모델",
-        "selectTtsProviderModel": "선택하다 {providerName} 모델"
+        "selectTtsProviderModel": "선택하다 {providerName} 모델",
+        "selectProvider": "공급자 선택",
+        "per": "당"
     },
     "history": {
         "backToMain": "메인으로 돌아가기",

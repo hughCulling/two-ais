@@ -316,7 +316,9 @@ const mk = {
         "selectVoice": "Изберете глас",
         "noVoicesFor": "Нема гласови за {languageName}",
         "ttsProviderModel": "{providerName} Модел",
-        "selectTtsProviderModel": "Изберете {providerName} Модел"
+        "selectTtsProviderModel": "Изберете {providerName} Модел",
+        "selectProvider": "Изберете провајдер",
+        "per": "на"
     },
     "history": {
         "backToMain": "Назад кон главната страница",

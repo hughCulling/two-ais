@@ -316,7 +316,9 @@ const lt = {
         "selectVoice": "Pasirinkite balsą",
         "noVoicesFor": "Nėra balsų {languageName}",
         "ttsProviderModel": "{providerName} Modelis",
-        "selectTtsProviderModel": "Pasirinkite {providerName} Modelis"
+        "selectTtsProviderModel": "Pasirinkite {providerName} Modelis",
+        "selectProvider": "Pasirinkite tiekėją",
+        "per": "už"
     },
     "history": {
         "backToMain": "Grįžti į pagrindinį puslapį",

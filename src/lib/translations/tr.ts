@@ -316,7 +316,9 @@ const tr = {
         "selectVoice": "Sesi Seçin",
         "noVoicesFor": "Hiçbir ses yok {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Seçme {providerName} Model"
+        "selectTtsProviderModel": "Seçme {providerName} Model",
+        "selectProvider": "Sağlayıcıyı Seçin",
+        "per": "başına"
     },
     "history": {
         "backToMain": "Ana Sayfaya Dön",

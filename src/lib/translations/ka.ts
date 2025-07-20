@@ -316,7 +316,9 @@ const ka = {
         "selectVoice": "აირჩიეთ ხმა",
         "noVoicesFor": "ხმები არ არის {languageName}",
         "ttsProviderModel": "{providerName} მოდელი",
-        "selectTtsProviderModel": "არჩევა {providerName} მოდელი"
+        "selectTtsProviderModel": "არჩევა {providerName} მოდელი",
+        "selectProvider": "პროვაიდერის არჩევა",
+        "per": "თითო"
     },
     "history": {
         "backToMain": "დაბრუნება მთავარზე",

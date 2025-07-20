@@ -316,7 +316,9 @@ const th = {
         "selectVoice": "เลือกเสียง",
         "noVoicesFor": "ไม่มีเสียงสำหรับ {languageName}",
         "ttsProviderModel": "{providerName} แบบอย่าง",
-        "selectTtsProviderModel": "เลือก {providerName} แบบอย่าง"
+        "selectTtsProviderModel": "เลือก {providerName} แบบอย่าง",
+        "selectProvider": "เลือกผู้ให้บริการ",
+        "per": "ต่อ"
     },
     "history": {
         "backToMain": "กลับสู่หน้าหลัก",

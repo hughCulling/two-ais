@@ -316,7 +316,9 @@ const ta = {
         "selectVoice": "குரலைத் தேர்ந்தெடுக்கவும்",
         "noVoicesFor": "குரல்கள் இல்லை {languageName}",
         "ttsProviderModel": "{providerName} மாதிரி",
-        "selectTtsProviderModel": "தேர்ந்தெடுக்கவும் {providerName} மாதிரி"
+        "selectTtsProviderModel": "தேர்ந்தெடுக்கவும் {providerName} மாதிரி",
+        "selectProvider": "வழங்குநரைத் தேர்ந்தெடுக்கவும்",
+        "per": "ஒன்றுக்கு"
     },
     "history": {
         "backToMain": "முதன்மைக்குத் திரும்பு",

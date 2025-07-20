@@ -316,7 +316,9 @@ const ar = {
         "selectVoice": "اختر الصوت",
         "noVoicesFor": "لا يوجد أصوات ل {languageName}",
         "ttsProviderModel": "{providerName} نموذج",
-        "selectTtsProviderModel": "يختار {providerName} نموذج"
+        "selectTtsProviderModel": "يختار {providerName} نموذج",
+        "selectProvider": "حدد المزود",
+        "per": "لكل"
     },
     "history": {
         "backToMain": "العودة إلى الصفحة الرئيسية",

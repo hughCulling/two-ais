@@ -316,7 +316,9 @@ const nl = {
         "selectVoice": "Selecteer stem",
         "noVoicesFor": "Geen stemmen voor {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Selecteer {providerName} Model"
+        "selectTtsProviderModel": "Selecteer {providerName} Model",
+        "selectProvider": "Selecteer aanbieder",
+        "per": "per"
     },
     "history": {
         "backToMain": "Terug naar hoofdpagina",
