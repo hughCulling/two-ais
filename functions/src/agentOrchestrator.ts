@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import type { ConversationTTSSettingsBackend } from "./index";
 import { DocumentReference, CollectionReference, FieldValue } from "firebase-admin/firestore";
 import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
@@ -15,6 +16,22 @@ import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
 const { AudioEncoding } = protos.google.cloud.texttospeech.v1;
 // ...import any other helpers needed...
 
+const LOOKAHEAD_LIMIT = 2; // How many agent messages ahead can be generated
+
+// --- ConversationData type for linter ---
+type ConversationData = {
+  agentA_llm: string;
+  agentB_llm: string;
+  turn: "agentA" | "agentB";
+  apiSecretVersions: { [key: string]: string };
+  status?: "running" | "stopped" | "error";
+  userId?: string;
+  ttsSettings?: ConversationTTSSettingsBackend;
+  waitingForTTSEndSignal?: boolean;
+  errorContext?: string;
+  lastPlayedAgentMessageId?: string;
+};
+
 // Copy the _triggerAgentResponse function here and export as triggerAgentResponse
 export async function triggerAgentResponse(
     conversationId: string,
@@ -24,7 +41,7 @@ export async function triggerAgentResponse(
     forceNextTurn: boolean = false
 ): Promise<void> {
     // --- Begin pasted function body ---
-    let conversationData;
+    let conversationData: ConversationData;
     let llmApiKey: string | null = null;
     const logger = console; // Use console as logger fallback
     const rtdb = admin.database();
@@ -34,7 +51,7 @@ export async function triggerAgentResponse(
             logger.error(`Conversation ${conversationId} not found in triggerAgentResponse.`);
             return;
         }
-        conversationData = conversationSnap.data();
+        conversationData = conversationSnap.data() as ConversationData;
         if (!conversationData) {
             logger.error(`Conversation ${conversationId} has no data in triggerAgentResponse.`);
             return;
@@ -42,6 +59,32 @@ export async function triggerAgentResponse(
         if (conversationData.status !== "running") {
             logger.info(`Conversation ${conversationId} status is ${conversationData.status}. Aborting triggerAgentResponse.`);
             return;
+        }
+
+        // --- NEW: Enforce lookahead limit ---
+        if (!forceNextTurn) {
+            // Fetch all messages ordered by timestamp
+            const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+            const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
+                const data = doc.data() as { role: string };
+                return { id: doc.id, role: data.role };
+            });
+            // Find the index of lastPlayedAgentMessageId
+            let lastPlayedIdx = -1;
+            if (conversationData.lastPlayedAgentMessageId) {
+                lastPlayedIdx = allMessages.findIndex(m => m.id === conversationData.lastPlayedAgentMessageId);
+            }
+            // Count agent messages after lastPlayedIdx
+            let agentMessagesAhead = 0;
+            for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
+                if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
+                    agentMessagesAhead++;
+                }
+            }
+            if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
+                logger.info(`[Lookahead Limit] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+                return;
+            }
         }
         let historyMessages: BaseMessage[] = [];
         try {
