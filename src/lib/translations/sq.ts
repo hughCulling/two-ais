@@ -316,7 +316,9 @@ const sq = {
         "selectVoice": "Zgjidh Zërin",
         "noVoicesFor": "Asnjë zë për {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Zgjidh {providerName} Model"
+        "selectTtsProviderModel": "Zgjidh {providerName} Model",
+        "selectProvider": "Zgjidh Ofruesin",
+        "per": "për"
     },
     "history": {
         "backToMain": "Kthehu te Kryesorja",

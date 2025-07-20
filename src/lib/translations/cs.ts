@@ -316,7 +316,9 @@ const cs = {
         "selectVoice": "Vyberte hlas",
         "noVoicesFor": "Žádné hlasy pro {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Vybrat {providerName} Model"
+        "selectTtsProviderModel": "Vybrat {providerName} Model",
+        "selectProvider": "Vyberte poskytovatele",
+        "per": "za"
     },
     "history": {
         "backToMain": "Zpět na hlavní stránku",

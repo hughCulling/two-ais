@@ -316,7 +316,9 @@ const gu = {
         "selectVoice": "વૉઇસ પસંદ કરો",
         "noVoicesFor": "માટે કોઈ અવાજ નથી {languageName}",
         "ttsProviderModel": "{providerName} મોડેલ",
-        "selectTtsProviderModel": "પસંદ કરો {providerName} મોડેલ"
+        "selectTtsProviderModel": "પસંદ કરો {providerName} મોડેલ",
+        "selectProvider": "પ્રદાતા પસંદ કરો",
+        "per": "પ્રતિ"
     },
     "history": {
         "backToMain": "મુખ્ય પર પાછા જાઓ",

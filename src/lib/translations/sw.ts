@@ -316,7 +316,9 @@ const sw = {
         "selectVoice": "Chagua Sauti",
         "noVoicesFor": "Hakuna sauti kwa {languageName}",
         "ttsProviderModel": "{providerName} Mfano",
-        "selectTtsProviderModel": "Chagua {providerName} Mfano"
+        "selectTtsProviderModel": "Chagua {providerName} Mfano",
+        "selectProvider": "Chagua Mtoa huduma",
+        "per": "kwa"
     },
     "history": {
         "backToMain": "Rudi kwa Kuu",

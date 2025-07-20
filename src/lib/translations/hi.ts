@@ -316,7 +316,9 @@ const hi = {
         "selectVoice": "आवाज़ चुनें",
         "noVoicesFor": "कोई आवाज नहीं {languageName}",
         "ttsProviderModel": "{providerName} नमूना",
-        "selectTtsProviderModel": "चुनना {providerName} नमूना"
+        "selectTtsProviderModel": "चुनना {providerName} नमूना",
+        "selectProvider": "प्रदाता चुनें",
+        "per": "प्रति"
     },
     "history": {
         "backToMain": "मुख्य पर वापस जाएँ",

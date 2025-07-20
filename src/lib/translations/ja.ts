@@ -316,7 +316,9 @@ const ja = {
         "selectVoice": "音声を選択",
         "noVoicesFor": "声がない {languageName}",
         "ttsProviderModel": "{providerName} モデル",
-        "selectTtsProviderModel": "選択 {providerName} モデル"
+        "selectTtsProviderModel": "選択 {providerName} モデル",
+        "selectProvider": "プロバイダーを選択",
+        "per": "あたり"
     },
     "history": {
         "backToMain": "メインに戻る",

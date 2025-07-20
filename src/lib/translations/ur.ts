@@ -316,7 +316,9 @@ const ur = {
         "selectVoice": "آواز منتخب کریں۔",
         "noVoicesFor": "کے لیے کوئی آواز نہیں ہے۔ {languageName}",
         "ttsProviderModel": "{providerName} ماڈل",
-        "selectTtsProviderModel": "منتخب کریں۔ {providerName} ماڈل"
+        "selectTtsProviderModel": "منتخب کریں۔ {providerName} ماڈل",
+        "selectProvider": "فراہم کنندہ کو منتخب کریں۔",
+        "per": "فی"
     },
     "history": {
         "backToMain": "واپس مین پر",

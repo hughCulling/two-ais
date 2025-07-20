@@ -316,7 +316,9 @@ const te = {
         "selectVoice": "వాయిస్ ఎంచుకోండి",
         "noVoicesFor": "దీనికి స్వరాలు లేవు {languageName}",
         "ttsProviderModel": "{providerName} మోడల్",
-        "selectTtsProviderModel": "ఎంచుకోండి {providerName} మోడల్"
+        "selectTtsProviderModel": "ఎంచుకోండి {providerName} మోడల్",
+        "selectProvider": "ప్రొవైడర్‌ను ఎంచుకోండి",
+        "per": "ప్రతి"
     },
     "history": {
         "backToMain": "ప్రధానానికి తిరిగి వెళ్ళు",

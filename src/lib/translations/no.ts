@@ -316,7 +316,9 @@ const no = {
         "selectVoice": "Velg stemme",
         "noVoicesFor": "Ingen stemmer for {languageName}",
         "ttsProviderModel": "{providerName} Modell",
-        "selectTtsProviderModel": "Velge {providerName} Modell"
+        "selectTtsProviderModel": "Velge {providerName} Modell",
+        "selectProvider": "Velg leverandør",
+        "per": "per"
     },
     "history": {
         "backToMain": "Tilbake til hovedinnholdet",

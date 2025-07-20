@@ -316,7 +316,9 @@ const it = {
         "selectVoice": "Seleziona voce",
         "noVoicesFor": "Nessuna voce per {languageName}",
         "ttsProviderModel": "{providerName} Modello",
-        "selectTtsProviderModel": "Selezionare {providerName} Modello"
+        "selectTtsProviderModel": "Selezionare {providerName} Modello",
+        "selectProvider": "Seleziona fornitore",
+        "per": "per"
     },
     "history": {
         "backToMain": "Torna alla pagina principale",

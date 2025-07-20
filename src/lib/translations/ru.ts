@@ -316,7 +316,9 @@ const ru = {
         "selectVoice": "Выберите голос",
         "noVoicesFor": "Нет голосов для {languageName}",
         "ttsProviderModel": "{providerName} Модель",
-        "selectTtsProviderModel": "Выбирать {providerName} Модель"
+        "selectTtsProviderModel": "Выбирать {providerName} Модель",
+        "selectProvider": "Выбрать поставщика",
+        "per": "за"
     },
     "history": {
         "backToMain": "Вернуться на главную",

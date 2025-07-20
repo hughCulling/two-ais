@@ -270,12 +270,12 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                     ) : (
                                                                         <Tooltip>
                                                                             <TooltipTrigger asChild>
-                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} per 1M`}>
-                                                                                    ${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M
+                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.sessionSetupForm?.per} 1M`}>
+                                                                                    (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M)
                                                                                 </span>
                                                                             </TooltipTrigger>
                                                                             <TooltipContent side="top">
-                                                                                <span className="text-xs">${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} per 1M</span>
+                                                                                <span className="text-xs">${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M</span>
                                                                             </TooltipContent>
                                                                         </Tooltip>
                                                                     )}
@@ -291,7 +291,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                 {supportsLanguage ? 'Supports current language.' : 'Does not support current language.'}
                                                                 {llm.status === 'preview' ? ' Preview model.' : ''}
                                                                 {llm.status === 'beta' ? ' Beta model.' : ''}
-                                                                Pricing: ${formatPrice(llm.pricing.input)} per 1M input tokens, ${formatPrice(llm.pricing.output)} per 1M output tokens.
+                                                                Pricing: ${formatPrice(llm.pricing.input)} {t?.sessionSetupForm?.per} 1M input tokens, ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M output tokens.
                                                             </div>
                                                         </li>
                                                     );
@@ -648,7 +648,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         disabled={!user || isLoadingStatus}
                     >
                         <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-provider`} className="w-full">
-                            <SelectValue placeholder="Select TTS Provider" />
+                            <SelectValue placeholder={t?.sessionSetupForm?.selectProvider} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="none">None</SelectItem>

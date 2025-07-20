@@ -38,7 +38,7 @@ function LoginPageContent() {
     if (loading || translationLoading || !t) {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
-                <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+                <p className="text-gray-500 dark:text-gray-400">{t ? t.common.loading : 'Loading...'}</p>
             </main>
         );
     }

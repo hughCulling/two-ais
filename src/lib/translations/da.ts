@@ -316,7 +316,9 @@ const da = {
         "selectVoice": "Vælg stemme",
         "noVoicesFor": "Ingen stemmer til {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Vælge {providerName} Model"
+        "selectTtsProviderModel": "Vælge {providerName} Model",
+        "selectProvider": "Vælg udbyder",
+        "per": "om"
     },
     "history": {
         "backToMain": "Tilbage til hovedindholdet",

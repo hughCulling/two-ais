@@ -316,7 +316,9 @@ const bn = {
         "selectVoice": "ভয়েস নির্বাচন করুন",
         "noVoicesFor": "কোন কণ্ঠস্বর নেই {languageName}",
         "ttsProviderModel": "{providerName} মডেল",
-        "selectTtsProviderModel": "নির্বাচন করুন {providerName} মডেল"
+        "selectTtsProviderModel": "নির্বাচন করুন {providerName} মডেল",
+        "selectProvider": "প্রোভাইডার নির্বাচন করুন",
+        "per": "প্রতি"
     },
     "history": {
         "backToMain": "মূল বিভাগে ফিরে যান",

@@ -316,7 +316,9 @@ const mn = {
         "selectVoice": "Дууг сонгоно уу",
         "noVoicesFor": "Дуу хоолой байхгүй {languageName}",
         "ttsProviderModel": "{providerName} Загвар",
-        "selectTtsProviderModel": "Сонго {providerName} Загвар"
+        "selectTtsProviderModel": "Сонго {providerName} Загвар",
+        "selectProvider": "Үйлчилгээ үзүүлэгчийг сонгоно уу",
+        "per": "per"
     },
     "history": {
         "backToMain": "Үндсэн рүү буцах",

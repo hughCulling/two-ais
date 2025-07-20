@@ -316,7 +316,9 @@ const uk = {
         "selectVoice": "Виберіть голос",
         "noVoicesFor": "Немає голосів за {languageName}",
         "ttsProviderModel": "{providerName} Модель",
-        "selectTtsProviderModel": "Виберіть {providerName} Модель"
+        "selectTtsProviderModel": "Виберіть {providerName} Модель",
+        "selectProvider": "Виберіть постачальника",
+        "per": "за"
     },
     "history": {
         "backToMain": "Назад до головного",

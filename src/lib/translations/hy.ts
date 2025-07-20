@@ -316,7 +316,9 @@ const hy = {
         "selectVoice": "Ընտրեք ձայնը",
         "noVoicesFor": "Ձայներ չկան {languageName}",
         "ttsProviderModel": "{providerName} Մոդել",
-        "selectTtsProviderModel": "Ընտրել {providerName} Մոդել"
+        "selectTtsProviderModel": "Ընտրել {providerName} Մոդել",
+        "selectProvider": "Ընտրեք մատակարար",
+        "per": "յուրաքանչյուր"
     },
     "history": {
         "backToMain": "Վերադառնալ գլխավոր էջ",

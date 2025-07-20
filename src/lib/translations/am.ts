@@ -316,7 +316,9 @@ const am = {
         "selectVoice": "ድምጽ ይምረጡ",
         "noVoicesFor": "ምንም ድምጾች የሉም {languageName}",
         "ttsProviderModel": "{providerName} ሞዴል",
-        "selectTtsProviderModel": "ይምረጡ {providerName} ሞዴል"
+        "selectTtsProviderModel": "ይምረጡ {providerName} ሞዴል",
+        "selectProvider": "አቅራቢን ይምረጡ",
+        "per": "በ"
     },
     "history": {
         "backToMain": "ወደ ዋናው ተመለስ",

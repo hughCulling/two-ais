@@ -316,7 +316,9 @@ const ml = {
         "selectVoice": "വോയ്‌സ് തിരഞ്ഞെടുക്കുക",
         "noVoicesFor": "ഇതിനായി ശബ്ദങ്ങളൊന്നുമില്ല {languageName}",
         "ttsProviderModel": "{providerName} മോഡൽ",
-        "selectTtsProviderModel": "തിരഞ്ഞെടുക്കുക {providerName} മോഡൽ"
+        "selectTtsProviderModel": "തിരഞ്ഞെടുക്കുക {providerName} മോഡൽ",
+        "selectProvider": "ദാതാവിനെ തിരഞ്ഞെടുക്കുക",
+        "per": "ഓരോ"
     },
     "history": {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",

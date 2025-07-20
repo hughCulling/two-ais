@@ -316,7 +316,9 @@ const kk = {
         "selectVoice": "Дауыс опциясын таңдаңыз",
         "noVoicesFor": "үшін дауыс жоқ {languageName}",
         "ttsProviderModel": "{providerName} Үлгі",
-        "selectTtsProviderModel": "таңдаңыз {providerName} Үлгі"
+        "selectTtsProviderModel": "таңдаңыз {providerName} Үлгі",
+        "selectProvider": "Провайдерді таңдаңыз",
+        "per": "пер"
     },
     "history": {
         "backToMain": "Бастыға оралу",

@@ -316,7 +316,9 @@ const fa = {
         "selectVoice": "انتخاب صدا",
         "noVoicesFor": "هیچ صدایی برای {languageName}",
         "ttsProviderModel": "{providerName} مدل",
-        "selectTtsProviderModel": "انتخاب کنید {providerName} مدل"
+        "selectTtsProviderModel": "انتخاب کنید {providerName} مدل",
+        "selectProvider": "ارائه دهنده را انتخاب کنید",
+        "per": "به ازای هر"
     },
     "history": {
         "backToMain": "بازگشت به صفحه اصلی",

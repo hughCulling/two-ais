@@ -316,7 +316,9 @@ const tl = {
         "selectVoice": "Piliin ang Boses",
         "noVoicesFor": "Walang boses para sa {languageName}",
         "ttsProviderModel": "{providerName} Modelo",
-        "selectTtsProviderModel": "Pumili {providerName} Modelo"
+        "selectTtsProviderModel": "Pumili {providerName} Modelo",
+        "selectProvider": "Piliin ang Provider",
+        "per": "bawat"
     },
     "history": {
         "backToMain": "Bumalik sa Main",

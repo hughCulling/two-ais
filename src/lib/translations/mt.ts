@@ -316,7 +316,9 @@ const mt = {
         "selectVoice": "Agħżel il-Vuċi",
         "noVoicesFor": "L-ebda vuċi għal {languageName}",
         "ttsProviderModel": "{providerName} Mudell",
-        "selectTtsProviderModel": "Agħżel {providerName} Mudell"
+        "selectTtsProviderModel": "Agħżel {providerName} Mudell",
+        "selectProvider": "Agħżel Fornitur",
+        "per": "kull"
     },
     "history": {
         "backToMain": "Lura għall-Prinċipali",

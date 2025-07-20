@@ -316,7 +316,9 @@ const ro = {
         "selectVoice": "Selectați vocea",
         "noVoicesFor": "Nicio voce pentru {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Selecta {providerName} Model"
+        "selectTtsProviderModel": "Selecta {providerName} Model",
+        "selectProvider": "Selectați furnizorul",
+        "per": "pe"
     },
     "history": {
         "backToMain": "Înapoi la pagina principală",

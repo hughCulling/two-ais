@@ -316,7 +316,9 @@ const lv = {
         "selectVoice": "Atlasīt balsi",
         "noVoicesFor": "Nav balsu priekš {languageName}",
         "ttsProviderModel": "{providerName} Modelis",
-        "selectTtsProviderModel": "Atlasīt {providerName} Modelis"
+        "selectTtsProviderModel": "Atlasīt {providerName} Modelis",
+        "selectProvider": "Izvēlieties pakalpojumu sniedzēju",
+        "per": "uz vienu"
     },
     "history": {
         "backToMain": "Atpakaļ uz galveno",

@@ -316,7 +316,9 @@ const is = {
         "selectVoice": "Veldu rödd",
         "noVoicesFor": "Engar raddir fyrir {languageName}",
         "ttsProviderModel": "{providerName} Fyrirmynd",
-        "selectTtsProviderModel": "Veldu {providerName} Fyrirmynd"
+        "selectTtsProviderModel": "Veldu {providerName} Fyrirmynd",
+        "selectProvider": "Veldu þjónustuaðila",
+        "per": "á hverja"
     },
     "history": {
         "backToMain": "Til baka í aðalinnganginn",

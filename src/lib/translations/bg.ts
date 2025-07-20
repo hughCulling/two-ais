@@ -316,7 +316,9 @@ const bg = {
         "selectVoice": "Изберете глас",
         "noVoicesFor": "Няма гласове за {languageName}",
         "ttsProviderModel": "{providerName} Модел",
-        "selectTtsProviderModel": "Изберете {providerName} Модел"
+        "selectTtsProviderModel": "Изберете {providerName} Модел",
+        "selectProvider": "Изберете доставчик",
+        "per": "на"
     },
     "history": {
         "backToMain": "Обратно към основното",

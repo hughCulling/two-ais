@@ -316,7 +316,9 @@ const vi = {
         "selectVoice": "Chọn giọng nói",
         "noVoicesFor": "Không có tiếng nói cho {languageName}",
         "ttsProviderModel": "{providerName} Người mẫu",
-        "selectTtsProviderModel": "Lựa chọn {providerName} Người mẫu"
+        "selectTtsProviderModel": "Lựa chọn {providerName} Người mẫu",
+        "selectProvider": "Chọn nhà cung cấp",
+        "per": "mỗi"
     },
     "history": {
         "backToMain": "Quay lại trang chính",

@@ -316,7 +316,9 @@ const sv = {
         "selectVoice": "Välj röst",
         "noVoicesFor": "Inga röster för {languageName}",
         "ttsProviderModel": "{providerName} Modell",
-        "selectTtsProviderModel": "Välja {providerName} Modell"
+        "selectTtsProviderModel": "Välja {providerName} Modell",
+        "selectProvider": "Välj leverantör",
+        "per": "per"
     },
     "history": {
         "backToMain": "Tillbaka till huvudmenyn",

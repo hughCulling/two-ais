@@ -316,7 +316,9 @@ const zh = {
         "selectVoice": "选择语音",
         "noVoicesFor": "没有声音 {languageName}",
         "ttsProviderModel": "{providerName} 模型",
-        "selectTtsProviderModel": "选择 {providerName} 模型"
+        "selectTtsProviderModel": "选择 {providerName} 模型",
+        "selectProvider": "选择提供商",
+        "per": "每"
     },
     "history": {
         "backToMain": "返回主页",

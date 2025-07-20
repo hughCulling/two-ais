@@ -316,7 +316,9 @@ const my = {
         "selectVoice": "Voice ကို ရွေးပါ။",
         "noVoicesFor": "စကားသံ မရှိပါ။ {languageName}",
         "ttsProviderModel": "{providerName} မော်ဒယ်",
-        "selectTtsProviderModel": "ရွေးပါ။ {providerName} မော်ဒယ်"
+        "selectTtsProviderModel": "ရွေးပါ။ {providerName} မော်ဒယ်",
+        "selectProvider": "ပံ့ပိုးသူကို ရွေးပါ။",
+        "per": "နှုန်း"
     },
     "history": {
         "backToMain": "Main သို့ ပြန်သွားရန်",

@@ -316,7 +316,9 @@ const sr = {
         "selectVoice": "Изаберите глас",
         "noVoicesFor": "Нема гласова за {languageName}",
         "ttsProviderModel": "{providerName} Модел",
-        "selectTtsProviderModel": "Изаберите {providerName} Модел"
+        "selectTtsProviderModel": "Изаберите {providerName} Модел",
+        "selectProvider": "Изаберите добављача",
+        "per": "по"
     },
     "history": {
         "backToMain": "Назад на главни",

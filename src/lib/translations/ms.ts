@@ -316,7 +316,9 @@ const ms = {
         "selectVoice": "Pilih Suara",
         "noVoicesFor": "Tiada suara untuk {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Pilih {providerName} Model"
+        "selectTtsProviderModel": "Pilih {providerName} Model",
+        "selectProvider": "Pilih Pembekal",
+        "per": "per"
     },
     "history": {
         "backToMain": "Kembali ke Utama",

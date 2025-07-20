@@ -316,7 +316,9 @@ const ca = {
         "selectVoice": "Selecciona la veu",
         "noVoicesFor": "Sense veus per a {languageName}",
         "ttsProviderModel": "{providerName} Model",
-        "selectTtsProviderModel": "Selecciona {providerName} Model"
+        "selectTtsProviderModel": "Selecciona {providerName} Model",
+        "selectProvider": "Selecciona el proveïdor",
+        "per": "per"
     },
     "history": {
         "backToMain": "Torna a la pàgina principal",
