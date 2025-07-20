@@ -34,6 +34,8 @@ interface Message {
     audioUrl?: string; // Optional audioUrl
     ttsWasSplit?: boolean; // Optional: true if audio was split due to TTS input limits
     isStreaming?: boolean;
+    imageUrl?: string | null;
+    imageGenError?: string | null;
 }
 
 interface ConversationData {
@@ -211,7 +213,9 @@ export function ChatInterface({
                             timestamp: data.timestamp,
                             audioUrl: data.audioUrl,
                             ttsWasSplit: data.ttsWasSplit,
-                            isStreaming: data.isStreaming
+                            isStreaming: data.isStreaming,
+                            imageUrl: data.imageUrl,
+                            imageGenError: data.imageGenError
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
@@ -492,12 +496,21 @@ export function ChatInterface({
         return mergedMessages.slice(0, cutoffIdx + 1);
     }, [mergedMessages, playedMessageIds]);
 
+    // --- Image Modal State ---
+    const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
+    const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
+
     // --- Consolidated Audio Playback Effect ---
     useEffect(() => {
         if (!hasUserInteracted || isAudioPlaying) return;
         // Find the first visible message with unplayed audio
         const nextAudioMsg = visibleMessages.find(
-            (msg) => msg.audioUrl && !playedMessageIds.has(msg.id)
+            (msg) => {
+                if (!msg.audioUrl || playedMessageIds.has(msg.id)) return false;
+                // If imageUrl is present, only play audio after image is loaded or errored
+                if (msg.imageUrl && imageLoadStatus[msg.id] !== 'loaded' && imageLoadStatus[msg.id] !== 'error') return false;
+                return true;
+            }
         );
         if (nextAudioMsg && audioPlayerRef.current) {
             audioPlayerRef.current.src = nextAudioMsg.audioUrl!;
@@ -508,7 +521,6 @@ export function ChatInterface({
                 })
                 .catch((err) => {
                     if (err && err.name === "AbortError") {
-                        // Suppress AbortError: this is expected if playback was interrupted (e.g., by stop button)
                         setIsAudioPlaying(false);
                         setCurrentlyPlayingMsgId(null);
                         handleAudioEnd();
@@ -520,7 +532,7 @@ export function ChatInterface({
                     }
                 });
         }
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, handleAudioEnd]);
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, handleAudioEnd, imageLoadStatus]);
 
 
     // --- Render Logic ---
@@ -667,6 +679,64 @@ export function ChatInterface({
                                     'bg-transparent px-0 py-0 shadow-none'
                                 }`}
                             >
+                                {/* IMAGE DISPLAY (above content) */}
+                                {(msg.role === 'agentA' || msg.role === 'agentB') && (
+                                    <>
+                                        {msg.imageUrl && !msg.imageGenError && (
+                                            <>
+                                                <div className="mb-2 flex flex-col items-center">
+                                                    <img
+                                                        src={msg.imageUrl}
+                                                        alt="Generated image for this turn"
+                                                        className="rounded-md max-w-full max-h-[40vh] cursor-pointer border border-muted-foreground/20 shadow"
+                                                        style={{ objectFit: 'contain' }}
+                                                        onClick={() => setFullScreenImageMsgId(msg.id)}
+                                                        onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
+                                                        onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
+                                                        tabIndex={0}
+                                                        aria-label="Show image in full screen"
+                                                    />
+                                                    {imageLoadStatus[msg.id] === 'loading' && (
+                                                        <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
+                                                    )}
+                                                    {imageLoadStatus[msg.id] === 'error' && (
+                                                        <div className="text-xs text-destructive mt-1">Image failed to load.</div>
+                                                    )}
+                                                    {imageLoadStatus[msg.id] !== 'loaded' && !imageLoadStatus[msg.id] && (
+                                                        <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
+                                                    )}
+                                                </div>
+                                                {/* Full Screen Modal */}
+                                                {fullScreenImageMsgId === msg.id && (
+                                                    <div
+                                                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+                                                        onClick={() => setFullScreenImageMsgId(null)}
+                                                        tabIndex={0}
+                                                        aria-modal="true"
+                                                        role="dialog"
+                                                    >
+                                                        <img
+                                                            src={msg.imageUrl}
+                                                            alt="Generated image for this turn (full screen)"
+                                                            className="max-w-full max-h-[90vh] rounded shadow-lg border border-white"
+                                                            style={{ objectFit: 'contain' }}
+                                                        />
+                                                        <button
+                                                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                                                            onClick={e => { e.stopPropagation(); setFullScreenImageMsgId(null); }}
+                                                            aria-label="Close full screen image"
+                                                        >
+                                                            Close
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                        {msg.imageGenError && (
+                                            <div className="mb-2 text-xs text-destructive">Image could not be generated: {msg.imageGenError}</div>
+                                        )}
+                                    </>
+                                )}
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
                                      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                 ) : null }

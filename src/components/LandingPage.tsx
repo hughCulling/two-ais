@@ -16,6 +16,7 @@ import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, Chev
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
+import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -450,6 +451,59 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 })
               ) : (
                 <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* IMAGE MODELS SECTION */}
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="flex items-center justify-center text-xl font-semibold">
+                <span className="mr-2">🖼️</span>
+                {'Available Image Models'}
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {AVAILABLE_IMAGE_MODELS.length > 0 ? (
+                AVAILABLE_IMAGE_MODELS.map((model) => (
+                  <div key={model.id} className="border rounded-md p-4 bg-muted/30">
+                    <div className="flex items-center mb-2">
+                      <span className="font-semibold text-lg mr-2">{model.name}</span>
+                      <span className="text-xs text-muted-foreground">{model.provider}</span>
+                      {model.status && (
+                        <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
+                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground mb-2">{model.description}</div>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-xs border-collapse">
+                        <thead>
+                          <tr>
+                            <th className="px-2 py-1 border-b text-left">Quality</th>
+                            <th className="px-2 py-1 border-b text-left">Size</th>
+                            <th className="px-2 py-1 border-b text-left">Price (USD)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {model.qualities.map(q => (
+                            q.sizes.map(s => (
+                              <tr key={q.quality + s.size}>
+                                <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
+                                <td className="px-2 py-1">{s.size}</td>
+                                <td className="px-2 py-1">${s.price.toFixed(3)}</td>
+                              </tr>
+                            ))
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {model.pricingNote && (
+                      <div className="text-xs text-muted-foreground mt-2">{model.pricingNote}</div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-muted-foreground text-sm">{'No image models available.'}</p>
               )}
             </CardContent>
           </Card>

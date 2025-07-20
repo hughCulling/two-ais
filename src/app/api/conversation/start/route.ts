@@ -180,6 +180,15 @@ interface StartConversationRequest {
     agentB_tts: AgentTTSSettingsApi;
     language?: string; // Add optional language parameter
     initialSystemPrompt?: string; // <-- Add this line
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        model: string;
+        quality: string;
+        size: string;
+        promptLlm: string;
+        promptSystemMessage: string;
+    };
 }
 
 // --- POST Handler ---
@@ -220,7 +229,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '' } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', imageGenSettings } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -334,8 +343,11 @@ export async function POST(request: NextRequest) {
                     agentB: finalAgentBTts,
                 },
                 initialSystemPrompt: initialSystemPrompt, // <-- Store in Firestore
+                imageGenSettings: imageGenSettings, // <-- Store imageGenSettings in Firestore
             };
 
+            // Add log for imageGenSettings
+            console.log("API Route: imageGenSettings to be stored:", imageGenSettings);
             await newConversationRef.set(conversationData);
             console.log(`API Route: Created conversation document with TTS settings and language: ${conversationId}`);
 
