@@ -669,7 +669,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <>
                         <div className="space-y-2">
                             <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-model`}>
-                                {selectedProviderInfo.name} Model
+                                {t?.sessionSetupForm?.ttsProviderModel?.replace('{providerName}', selectedProviderInfo.name)}
                             </Label>
                             <Select
                                 value={currentAgentTTSSettings.selectedTtsModelId || ''}
@@ -677,7 +677,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 disabled={!user || selectedProviderInfo.models.length === 0}
                             >
                                 <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-model`} className="w-full">
-                                    <SelectValue placeholder={`Select ${selectedProviderInfo.name} Model`} />
+                                    <SelectValue placeholder={t?.sessionSetupForm?.selectTtsProviderModel?.replace('{providerName}', selectedProviderInfo.name)} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {selectedProviderInfo.models.map(m => {
@@ -714,14 +714,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </div>
                         {shouldShowVoiceDropdown && (
                             <div className="space-y-2">
-                                <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>Voice</Label>
+                                <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>{t?.sessionSetupForm?.voice}</Label>
                                 <Select
                                     value={currentAgentTTSSettings.voice || ''}
                                     onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
                                     disabled={!user || currentAgentVoices.length === 0}
                                 >
                                     <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
-                                        <SelectValue placeholder={currentAgentVoices.length > 0 ? "Select Voice" : `No voices for ${language.nativeName}`} />
+                                        <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
                                         {currentAgentVoices.map(v => {
@@ -786,29 +786,33 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </div>
                     </div>
                     {/* Explanation Notes */}
-                    <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0"/>
-                        <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0"/>
-                        Language support indicators show model compatibility with {language.nativeName}. Models without support are disabled.
-                    </p>
+                    {t && (
+                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0"/>
+                            <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0"/>
+                            {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
+                        </p>
+                    )}
                     {ANY_MODEL_USES_REASONING && (
                          <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                             <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
-                            Indicates a model uses &apos;thinking&apos; or &apos;reasoning&apos; tokens. This output is billed but is not visible in the chat.
+                            {t && t.sessionSetupForm.reasoningNote}
                         </p>
                     )}
                     {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
                         <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                             <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
-                            Indicates an OpenAI model requires a verified organization. You can
-                            <a
-                                href="https://platform.openai.com/settings/organization/general"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                            >
-                                verify here
-                            </a>.
+                            {t && t.sessionSetupForm.openaiOrgVerificationNote}
+                            {t && (
+                              <a
+                                  href="https://platform.openai.com/settings/organization/general"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                              >
+                                  {t.common_verifyHere}
+                              </a>
+                            )}
                         </p>
                     )}
                 </div>

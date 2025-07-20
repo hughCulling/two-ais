@@ -11,9 +11,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from '@/components/ui/separator';
+
+// Function to get the appropriate date-fns locale based on language code
+function getLocale(languageCode: string) {
+    const localeMap: Record<string, any> = {
+        en: enUS,
+        fr, de, es, it, pt, ru, ja, ko, zh: zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms
+    };
+    return localeMap[languageCode] || enUS; // Fallback to English if locale not found
+}
 
 interface Message {
     id: string;
@@ -113,7 +122,7 @@ export default function ChatHistoryViewerPage() {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="ml-2 text-muted-foreground">Loading conversation...</p>
+                <p className="ml-2 text-muted-foreground">{t?.history?.loadingConversation}</p>
             </main>
         );
     }
@@ -172,7 +181,7 @@ export default function ChatHistoryViewerPage() {
         );
     }
 
-    const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: enUS });
+    const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: getLocale(language.code) });
 
     // Add TranscriptMessageBubble component for consistent chat UI
     const TranscriptMessageBubble: React.FC<{
@@ -287,17 +296,17 @@ export default function ChatHistoryViewerPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>{t.history.sessionDetails}</CardTitle>
-                        <CardDescription>{`Chat started on ${formattedCreationDate}`}</CardDescription>
+                        <CardDescription>{t.history.chatStartedOn.replace('{date}', formattedCreationDate)}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3 text-sm">
                         <div className="flex items-center">
                             <Bot className="mr-2 h-5 w-5 text-primary/80" />
-                            <strong>Agent A Model:</strong>
+                            <strong>{t.history.agentAModel}:</strong>
                             <span className="ml-2">{agentALLMInfo?.name || details.agentA_llm}</span>
                         </div>
                         <div className="flex items-center">
                             <Bot className="mr-2 h-5 w-5 text-primary/80" />
-                            <strong>Agent B Model:</strong>
+                            <strong>{t.history.agentBModel}:</strong>
                             <span className="ml-2">{agentBLLMInfo?.name || details.agentB_llm}</span>
                         </div>
                         <div className="flex items-center">
@@ -308,20 +317,20 @@ export default function ChatHistoryViewerPage() {
                         {details.ttsSettings && (
                             <>
                                 <Separator className="my-3" />
-                                <h4 className="font-semibold text-md mb-1">TTS Settings</h4>
+                                <h4 className="font-semibold text-md mb-1">{t.history.ttsSettings}</h4>
                                 {details.ttsSettings.enabled ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-xs">
                                         <div>
-                                            <p><strong>Agent A TTS:</strong></p>
-                                            <p>Provider: {details.ttsSettings.agentA.provider}</p>
-                                            {details.ttsSettings.agentA.selectedTtsModelId && <p>Model: {details.ttsSettings.agentA.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentA.voice && <p>Voice: {details.ttsSettings.agentA.voice}</p>}
+                                            <p><strong>{t.history.agentATTS}:</strong></p>
+                                            <p>{t.history.provider}: {details.ttsSettings.agentA.provider}</p>
+                                            {details.ttsSettings.agentA.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentA.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentA.voice && <p>{t.history.voice}: {details.ttsSettings.agentA.voice}</p>}
                                         </div>
                                         <div>
-                                            <p><strong>Agent B TTS:</strong></p>
-                                            <p>Provider: {details.ttsSettings.agentB.provider}</p>
-                                            {details.ttsSettings.agentB.selectedTtsModelId && <p>Model: {details.ttsSettings.agentB.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentB.voice && <p>Voice: {details.ttsSettings.agentB.voice}</p>}
+                                            <p><strong>{t.history.agentBTTS}:</strong></p>
+                                            <p>{t.history.provider}: {details.ttsSettings.agentB.provider}</p>
+                                            {details.ttsSettings.agentB.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentB.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentB.voice && <p>{t.history.voice}: {details.ttsSettings.agentB.voice}</p>}
                                         </div>
                                     </div>
                                 ) : (
