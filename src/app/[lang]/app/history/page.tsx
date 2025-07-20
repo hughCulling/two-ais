@@ -10,8 +10,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox } from 'lucide-react';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import { getLLMInfoById } from '@/lib/models';
+
+// Function to get the appropriate date-fns locale based on language code
+function getLocale(languageCode: string) {
+    const localeMap: Record<string, any> = {
+        en: enUS,
+        fr, de, es, it, pt, ru, ja, ko, zh: zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms
+    };
+    return localeMap[languageCode] || enUS; // Fallback to English if locale not found
+}
 
 interface ConversationSummary {
     conversationId: string;
@@ -114,7 +123,7 @@ export default function HistoryPage() {
         return (
             <main className="flex min-h-screen items-center justify-center p-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="ml-2 text-muted-foreground">Loading history...</p>
+                <p className="ml-2 text-muted-foreground">{t.history.loadingHistory}</p>
             </main>
         );
     }
@@ -166,7 +175,7 @@ export default function HistoryPage() {
                         {conversations.map((convo) => {
                             let formattedDate = 'Invalid Date';
                             try {
-                                formattedDate = format(new Date(convo.createdAt), 'PPP p', { locale: enUS });
+                                formattedDate = format(new Date(convo.createdAt), 'PPP p', { locale: getLocale(language.code) });
                             } catch (e) {
                                 console.error("Error formatting date:", e, "Input was:", convo.createdAt);
                             }
@@ -182,7 +191,10 @@ export default function HistoryPage() {
                                                     }
                                                 </CardTitle>
                                                 <CardDescription>
-                                                    {`Started on ${formattedDate}`} - Language: {convo.language.toUpperCase()}
+                                                    {t.history.conversationDescription
+                                                        .replace('{date}', formattedDate)
+                                                        .replace('{language}', convo.language.toUpperCase())
+                                                    }
                                                 </CardDescription>
                                             </CardHeader>
                                         </Card>

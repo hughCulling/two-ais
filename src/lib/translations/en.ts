@@ -76,6 +76,7 @@ const en = {
 
     // Settings page
     settings: {
+        loading: 'Loading settings...',
         title: 'Settings',
         sections: {
             appearance: 'Appearance',
@@ -100,17 +101,17 @@ const en = {
         },
         apiKeys: {
             title: 'API Keys',
-            description: 'Manage your API keys for different AI providers',
-            saved: 'Saved',
-            notSet: 'Not set',
-            setKey: 'Set key',
-            updateKey: 'Update key',
-            removeKey: 'Remove key',
-            getKeyInstructions: 'Get your API key',
-            noNewKeys: "No new API keys entered to save.",
-            unexpectedResponse: "Received an unexpected response from the server.",
-            failedToSaveKey: "Failed to save {serviceName} key.",
-            someKeysNotSaved: "Some API keys could not be saved. Please check the details below.",
+            description: 'Manage your API keys for different AI services.',
+            setKey: 'Set',
+            updateKey: 'Update',
+            saveUpdateKeys: 'Save / Update Keys',
+            saving: 'Saving...',
+            noNewKeys: 'No new keys to save.',
+            keyStoredSecurely: 'Your API key will be stored securely and encrypted.',
+            enteringNewKeyOverwrites: 'Entering a new key will overwrite the existing one.',
+            failedToSaveKey: 'Failed to save {serviceName} key.',
+            unexpectedResponse: 'Unexpected response from server.',
+            someKeysNotSaved: 'Some keys could not be saved. Please check the errors above.',
             keyStatus: "key status...",
             apiKeySecurelySaved: "API Key Securely Saved",
             confirmRemoveTitle: "Confirm Removal",
@@ -120,8 +121,7 @@ const en = {
             keyNotSet: "Key Status: Not Set",
             keySet: "Key Status: Set",
             saveButton: "Save API Key(s)",
-            enteringNewKeyOverwrites: "Entering a new key will overwrite the saved one.",
-            keyStoredSecurely: "Your key will be stored securely using Google Secret Manager.",
+
         },
     },
 
@@ -306,7 +306,7 @@ const en = {
     page_PricesLastVerifiedOn: 'Prices last verified on {date}',
     page_PricingPerTokens: 'per {amount} Tokens',
     page_ModelCategoryModels: '{model} models',
-
+    common_verifyHere: "verify here", // Added for link text
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
@@ -327,6 +327,14 @@ const en = {
         startConversation: 'Start Conversation',
         starting: 'Starting...',
         startTheConversation: 'Start the conversation.',
+        languageSupportNote: 'Language support indicators show model compatibility with {languageName}. Models without support are disabled.',
+        reasoningNote: "Indicates a model uses 'thinking' or 'reasoning' tokens. This output is billed but is not visible in the chat.",
+        openaiOrgVerificationNote: 'Indicates an OpenAI model requires a verified organization. You can',
+        voice: 'Voice',
+        selectVoice: 'Select Voice',
+        noVoicesFor: 'No voices for {languageName}',
+        ttsProviderModel: '{providerName} Model',
+        selectTtsProviderModel: 'Select {providerName} Model',
     },
 
     history: {
@@ -338,8 +346,19 @@ const en = {
         resumeConversation: 'Resume Conversation',
         resuming: 'Resuming...',
         sessionDetails: 'Session Details',
-        language: 'Language:',
+        language: 'Language',
         transcript: 'Transcript',
+        loadingHistory: 'Loading history...',
+        loadingConversation: 'Loading conversation...',
+        chatStartedOn: 'Chat started on {date}',
+        agentAModel: 'Agent A Model',
+        agentBModel: 'Agent B Model',
+        ttsSettings: 'TTS Settings',
+        agentATTS: 'Agent A TTS',
+        agentBTTS: 'Agent B TTS',
+        provider: 'Provider',
+        model: 'Model',
+        voice: 'Voice',
     },
 
     // --------------- END OF FILE --------------- 

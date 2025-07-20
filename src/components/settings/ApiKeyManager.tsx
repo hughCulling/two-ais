@@ -385,7 +385,7 @@ export default function ApiKeyManager() {
                     aria-label={isSaving ? 'Saving API keys...' : 'Save or update all entered API keys'}
                     aria-describedby="save-button-description"
                 >
-                    {isSaving ? 'Saving...' : 'Save / Update Keys'}
+                    {isSaving ? t.settings.apiKeys.saving : t.settings.apiKeys.saveUpdateKeys}
                 </Button>
                 <div id="save-button-description" className="sr-only">
                     Click to save or update all API keys that have been entered. Keys are stored securely and encrypted.

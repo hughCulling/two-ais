@@ -365,7 +365,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                               rel="noopener noreferrer"
                                               className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
                                             >
-                                              verify here
+                                              {t.common_verifyHere}
                                             </a>
                                             {t.page_TooltipRequiresVerification.split("verify here")[1]}
                                           </p>

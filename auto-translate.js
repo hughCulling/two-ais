@@ -169,8 +169,12 @@ const PROTECTED_TERMS = [
     "{model}",
     "{agentA}",
     "{agentB}",
+    "{languageName}",
+    "{providerName}",
+    "{date}",
+    "{language}",
     "Meta Llama",
-    ...LANGUAGE_NAMES_EN
+    //...LANGUAGE_NAMES_EN
 ];
 
 // Build a regex to match any protected term (word boundaries if needed)

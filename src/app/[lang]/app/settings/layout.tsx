@@ -6,6 +6,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext'; // Adjust path if needed
+import { useTranslation } from '@/hooks/useTranslation';
 import SettingsSidebar from '@/components/settings/SettingsSidebar'; // Adjust path if needed
 
 export default function SettingsLayout({
@@ -14,6 +15,7 @@ export default function SettingsLayout({
     children: React.ReactNode;
 }) {
     const { user, loading } = useAuth(); // Get user and loading state
+    const { t, loading: translationLoading } = useTranslation();
     const router = useRouter();
 
     // Effect to handle redirection if user is not logged in
@@ -27,10 +29,10 @@ export default function SettingsLayout({
     }, [user, loading, router]); // Dependencies for the effect
 
     // While loading authentication state, show a loading indicator
-    if (loading) {
+    if (loading || translationLoading || !t) {
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
-        <p className="text-gray-500 dark:text-gray-400">Loading settings...</p>
+        <p className="text-gray-500 dark:text-gray-400">{t?.settings.loading || 'Loading settings...'}</p>
         </div>
     );
     }
