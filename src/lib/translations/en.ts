@@ -341,6 +341,7 @@ const en = {
         backToMain: 'Back to Main',
         conversationHistory: 'Conversation History',
         chatWith: 'Chat with {agentA} & {agentB}',
+        conversationDescription: 'Started on {date} - Language: {language}',
         viewConversation: 'View Conversation',
         backToPreviousChats: 'Back to Previous Chats',
         resumeConversation: 'Resume Conversation',
