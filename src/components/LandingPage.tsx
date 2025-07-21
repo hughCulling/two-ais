@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
 import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
+import type { ImageModelInfo } from '@/lib/image_models';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -106,6 +107,15 @@ const formatPrice = (price: number) => {
   });
 };
 
+// Helper to group image models by provider
+function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<string, ImageModelInfo[]> {
+  const grouped: Record<string, ImageModelInfo[]> = {};
+  imageModels.forEach((model: ImageModelInfo) => {
+    if (!grouped[model.provider]) grouped[model.provider] = [];
+    grouped[model.provider].push(model);
+  });
+  return grouped;
+}
 
 
 const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
@@ -465,43 +475,67 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               {AVAILABLE_IMAGE_MODELS.length > 0 ? (
-                AVAILABLE_IMAGE_MODELS.map((model) => (
-                  <div key={model.id} className="border rounded-md p-4 bg-muted/30">
-                    <div className="flex items-center mb-2">
-                      <span className="font-semibold text-lg mr-2">{model.name}</span>
-                      <span className="text-xs text-muted-foreground">{model.provider}</span>
-                      {model.status && (
-                        <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
-                      )}
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-2">{model.description}</div>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full text-xs border-collapse">
-                        <thead>
-                          <tr>
-                            <th className="px-2 py-1 border-b text-left">Quality</th>
-                            <th className="px-2 py-1 border-b text-left">Size</th>
-                            <th className="px-2 py-1 border-b text-left">Price (USD)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {model.qualities.map(q => (
-                            q.sizes.map(s => (
-                              <tr key={q.quality + s.size}>
-                                <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
-                                <td className="px-2 py-1">{s.size}</td>
-                                <td className="px-2 py-1">${s.price.toFixed(3)}</td>
-                              </tr>
-                            ))
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {model.pricingNote && (
-                      <div className="text-xs text-muted-foreground mt-2">{model.pricingNote}</div>
-                    )}
-                  </div>
-                ))
+                Object.entries(groupImageModelsByProvider(AVAILABLE_IMAGE_MODELS)).map(([providerName, models]) => {
+                  const typedModels = models as ImageModelInfo[];
+                  const providerCollapsibleId = `image-provider-${providerName.replace(/\s+/g, '-')}`;
+                  const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+                  return (
+                    <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                      <CollapsibleTrigger
+                        className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        aria-expanded={isProviderOpen}
+                        aria-controls={`${providerCollapsibleId}-content`}
+                        aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} image models`}
+                      >
+                        <span>{providerName}</span>
+                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent
+                        id={`${providerCollapsibleId}-content`}
+                        className="space-y-4 pl-2 pt-1"
+                        role="region"
+                        aria-labelledby={`${providerCollapsibleId}-trigger`}
+                      >
+                        {typedModels.map((model: ImageModelInfo) => (
+                          <div key={model.id} className="border rounded-md p-4 bg-muted/30">
+                            <div className="flex items-center mb-2">
+                              <span className="font-semibold text-lg mr-2">{model.name}</span>
+                              {model.status && (
+                                <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
+                              )}
+                            </div>
+                            <div className="text-sm text-muted-foreground mb-2">{model.description}</div>
+                            <div className="overflow-x-auto">
+                              <table className="min-w-full text-xs border-collapse">
+                                <thead>
+                                  <tr>
+                                    <th className="px-2 py-1 border-b text-left">Quality</th>
+                                    <th className="px-2 py-1 border-b text-left">Size</th>
+                                    <th className="px-2 py-1 border-b text-left">Price (USD)</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {model.qualities.map((q) => (
+                                    q.sizes.map((s) => (
+                                      <tr key={q.quality + s.size}>
+                                        <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
+                                        <td className="px-2 py-1">{s.size}</td>
+                                        <td className="px-2 py-1">${s.price.toFixed(3)}</td>
+                                      </tr>
+                                    ))
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                            {model.pricingNote && (
+                              <div className="text-xs text-muted-foreground mt-2">{model.pricingNote}</div>
+                            )}
+                          </div>
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  );
+                })
               ) : (
                 <p className="text-center text-muted-foreground text-sm">{'No image models available.'}</p>
               )}
