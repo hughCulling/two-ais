@@ -344,6 +344,7 @@ const pa = {
         "model": "ਮਾਡਲ",
         "voice": "ਆਵਾਜ਼"
     },
-    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ"
+    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default pa;

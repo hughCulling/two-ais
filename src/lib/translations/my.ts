@@ -344,6 +344,7 @@ const my = {
         "model": "မော်ဒယ်",
         "voice": "စကားသံ"
     },
-    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။"
+    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default my;

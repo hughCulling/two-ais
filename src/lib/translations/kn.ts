@@ -344,6 +344,7 @@ const kn = {
         "model": "ಮಾದರಿ",
         "voice": "ಧ್ವನಿ"
     },
-    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ"
+    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default kn;

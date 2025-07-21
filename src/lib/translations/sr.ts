@@ -344,6 +344,7 @@ const sr = {
         "model": "Модел",
         "voice": "Глас"
     },
-    "common_verifyHere": "потврди овде"
+    "common_verifyHere": "потврди овде",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sr;

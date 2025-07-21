@@ -344,6 +344,7 @@ const ka = {
         "model": "მოდელი",
         "voice": "ხმა"
     },
-    "common_verifyHere": "გადაამოწმეთ აქ"
+    "common_verifyHere": "გადაამოწმეთ აქ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ka;

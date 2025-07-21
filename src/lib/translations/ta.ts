@@ -344,6 +344,7 @@ const ta = {
         "model": "மாதிரி",
         "voice": "குரல்"
     },
-    "common_verifyHere": "இங்கே சரிபார்க்கவும்"
+    "common_verifyHere": "இங்கே சரிபார்க்கவும்",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ta;

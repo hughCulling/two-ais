@@ -344,6 +344,7 @@ const no = {
         "model": "Modell",
         "voice": "Stemme"
     },
-    "common_verifyHere": "bekreft her"
+    "common_verifyHere": "bekreft her",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default no;

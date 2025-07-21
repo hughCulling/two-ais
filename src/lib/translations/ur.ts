@@ -344,6 +344,7 @@ const ur = {
         "model": "ماڈل",
         "voice": "آواز"
     },
-    "common_verifyHere": "یہاں تصدیق کریں"
+    "common_verifyHere": "یہاں تصدیق کریں",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ur;

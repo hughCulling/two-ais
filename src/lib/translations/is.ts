@@ -344,6 +344,7 @@ const is = {
         "model": "Fyrirmynd",
         "voice": "Rödd"
     },
-    "common_verifyHere": "staðfesta hér"
+    "common_verifyHere": "staðfesta hér",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default is;

@@ -344,6 +344,7 @@ const mn = {
         "model": "Загвар",
         "voice": "Дуу хоолой"
     },
-    "common_verifyHere": "энд баталгаажуулна уу"
+    "common_verifyHere": "энд баталгаажуулна уу",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default mn;

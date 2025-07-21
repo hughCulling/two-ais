@@ -344,6 +344,7 @@ const vi = {
         "model": "Người mẫu",
         "voice": "Tiếng nói"
     },
-    "common_verifyHere": "xác minh ở đây"
+    "common_verifyHere": "xác minh ở đây",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default vi;

@@ -344,6 +344,7 @@ const es = {
         "model": "Modelo",
         "voice": "Voz"
     },
-    "common_verifyHere": "verificar aquí"
+    "common_verifyHere": "verificar aquí",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default es;

@@ -344,6 +344,7 @@ const bs = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "potvrdi ovdje"
+    "common_verifyHere": "potvrdi ovdje",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default bs;

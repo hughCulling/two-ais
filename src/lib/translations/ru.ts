@@ -344,6 +344,7 @@ const ru = {
         "model": "Модель",
         "voice": "Голос"
     },
-    "common_verifyHere": "проверить здесь"
+    "common_verifyHere": "проверить здесь",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ru;

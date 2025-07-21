@@ -344,6 +344,7 @@ const ml = {
         "model": "മോഡൽ",
         "voice": "ശബ്ദം"
     },
-    "common_verifyHere": "ഇവിടെ സ്ഥിരീകരിക്കുക"
+    "common_verifyHere": "ഇവിടെ സ്ഥിരീകരിക്കുക",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ml;

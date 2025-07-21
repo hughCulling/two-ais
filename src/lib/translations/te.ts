@@ -344,6 +344,7 @@ const te = {
         "model": "మోడల్",
         "voice": "వాయిస్"
     },
-    "common_verifyHere": "ఇక్కడ ధృవీకరించండి"
+    "common_verifyHere": "ఇక్కడ ధృవీకరించండి",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default te;

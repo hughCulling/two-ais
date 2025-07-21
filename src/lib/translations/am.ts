@@ -344,6 +344,7 @@ const am = {
         "model": "ሞዴል",
         "voice": "ድምጽ"
     },
-    "common_verifyHere": "እዚህ ያረጋግጡ"
+    "common_verifyHere": "እዚህ ያረጋግጡ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default am;

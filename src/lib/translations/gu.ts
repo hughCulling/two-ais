@@ -344,6 +344,7 @@ const gu = {
         "model": "મોડેલ",
         "voice": "અવાજ"
     },
-    "common_verifyHere": "અહીં ચકાસો"
+    "common_verifyHere": "અહીં ચકાસો",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default gu;

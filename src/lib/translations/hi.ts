@@ -344,6 +344,7 @@ const hi = {
         "model": "नमूना",
         "voice": "आवाज़"
     },
-    "common_verifyHere": "यहां सत्यापित करें"
+    "common_verifyHere": "यहां सत्यापित करें",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default hi;

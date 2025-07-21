@@ -344,6 +344,7 @@ const hu = {
         "model": "Modell",
         "voice": "Hang"
     },
-    "common_verifyHere": "ellenőrizze itt"
+    "common_verifyHere": "ellenőrizze itt",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default hu;

@@ -344,6 +344,7 @@ const th = {
         "model": "แบบอย่าง",
         "voice": "เสียง"
     },
-    "common_verifyHere": "ยืนยันที่นี่"
+    "common_verifyHere": "ยืนยันที่นี่",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default th;

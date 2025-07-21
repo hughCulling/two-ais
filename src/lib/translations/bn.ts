@@ -344,6 +344,7 @@ const bn = {
         "model": "মডেল",
         "voice": "কণ্ঠস্বর"
     },
-    "common_verifyHere": "এখানে যাচাই করুন"
+    "common_verifyHere": "এখানে যাচাই করুন",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default bn;

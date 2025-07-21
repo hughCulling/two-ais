@@ -344,6 +344,7 @@ const mr = {
         "model": "मॉडेल",
         "voice": "आवाज"
     },
-    "common_verifyHere": "येथे पडताळणी करा"
+    "common_verifyHere": "येथे पडताळणी करा",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default mr;

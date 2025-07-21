@@ -344,6 +344,7 @@ const et = {
         "model": "Mudel",
         "voice": "Hääl"
     },
-    "common_verifyHere": "kinnita siin"
+    "common_verifyHere": "kinnita siin",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default et;

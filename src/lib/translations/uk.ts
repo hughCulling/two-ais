@@ -344,6 +344,7 @@ const uk = {
         "model": "Модель",
         "voice": "Голос"
     },
-    "common_verifyHere": "перевірте тут"
+    "common_verifyHere": "перевірте тут",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default uk;

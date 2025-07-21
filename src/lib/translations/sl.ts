@@ -344,6 +344,7 @@ const sl = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "preveri tukaj"
+    "common_verifyHere": "preveri tukaj",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sl;

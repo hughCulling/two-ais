@@ -344,6 +344,7 @@ const lv = {
         "model": "Modelis",
         "voice": "Balss"
     },
-    "common_verifyHere": "pārbaudīt šeit"
+    "common_verifyHere": "pārbaudīt šeit",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default lv;

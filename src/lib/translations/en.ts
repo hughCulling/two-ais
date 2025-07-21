@@ -301,6 +301,7 @@ const en = {
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "Currently Available Text-to-Speech (TTS)",
+    page_AvailableImageModelsTitle: "Currently Available Image Models", // Added for image models section
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
     page_PricesLastVerifiedOn: 'Prices last verified on {date}',

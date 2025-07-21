@@ -344,6 +344,7 @@ const hr = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "provjerite ovdje"
+    "common_verifyHere": "provjerite ovdje",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default hr;

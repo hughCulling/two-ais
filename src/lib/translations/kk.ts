@@ -344,6 +344,7 @@ const kk = {
         "model": "Үлгі",
         "voice": "Дауыс"
     },
-    "common_verifyHere": "осы жерден тексеріңіз"
+    "common_verifyHere": "осы жерден тексеріңіз",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default kk;

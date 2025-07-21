@@ -344,6 +344,7 @@ const so = {
         "model": "Qaabka",
         "voice": "Codka"
     },
-    "common_verifyHere": "halkan ka xaqiiji"
+    "common_verifyHere": "halkan ka xaqiiji",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default so;

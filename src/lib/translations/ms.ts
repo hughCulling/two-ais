@@ -344,6 +344,7 @@ const ms = {
         "model": "Model",
         "voice": "Suara"
     },
-    "common_verifyHere": "sahkan di sini"
+    "common_verifyHere": "sahkan di sini",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ms;

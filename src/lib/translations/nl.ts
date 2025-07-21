@@ -344,6 +344,7 @@ const nl = {
         "model": "Model",
         "voice": "Stem"
     },
-    "common_verifyHere": "hier verifiëren"
+    "common_verifyHere": "hier verifiëren",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default nl;

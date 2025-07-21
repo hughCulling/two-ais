@@ -344,6 +344,7 @@ const tl = {
         "model": "Modelo",
         "voice": "Boses"
     },
-    "common_verifyHere": "verify dito"
+    "common_verifyHere": "verify dito",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default tl;

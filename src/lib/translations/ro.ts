@@ -344,6 +344,7 @@ const ro = {
         "model": "Model",
         "voice": "Voce"
     },
-    "common_verifyHere": "verifică aici"
+    "common_verifyHere": "verifică aici",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ro;

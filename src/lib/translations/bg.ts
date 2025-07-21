@@ -344,6 +344,7 @@ const bg = {
         "model": "Модел",
         "voice": "Глас"
     },
-    "common_verifyHere": "проверете тук"
+    "common_verifyHere": "проверете тук",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default bg;

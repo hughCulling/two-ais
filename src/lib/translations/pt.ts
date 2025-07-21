@@ -344,6 +344,7 @@ const pt = {
         "model": "Modelo",
         "voice": "Voz"
     },
-    "common_verifyHere": "verifique aqui"
+    "common_verifyHere": "verifique aqui",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default pt;

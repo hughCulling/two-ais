@@ -344,6 +344,7 @@ const sq = {
         "model": "Model",
         "voice": "Zëri"
     },
-    "common_verifyHere": "verifiko këtu"
+    "common_verifyHere": "verifiko këtu",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sq;

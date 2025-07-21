@@ -12,7 +12,7 @@ import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/model
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Image as ImageIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -459,8 +459,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           <Card className="w-full">
             <CardHeader>
               <h2 className="flex items-center justify-center text-xl font-semibold">
-                <span className="mr-2">🖼️</span>
-                {'Available Image Models'}
+                <ImageIcon className="mr-2 h-5 w-5" />
+                {t.page_AvailableImageModelsTitle}
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">

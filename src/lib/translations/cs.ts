@@ -344,6 +344,7 @@ const cs = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "ověřte zde"
+    "common_verifyHere": "ověřte zde",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default cs;

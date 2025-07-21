@@ -344,6 +344,7 @@ const zh = {
         "model": "模型",
         "voice": "嗓音"
     },
-    "common_verifyHere": "在此验证"
+    "common_verifyHere": "在此验证",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default zh;

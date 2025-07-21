@@ -344,6 +344,7 @@ const fa = {
         "model": "مدل",
         "voice": "صدا"
     },
-    "common_verifyHere": "اینجا تأیید کنید"
+    "common_verifyHere": "اینجا تأیید کنید",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default fa;

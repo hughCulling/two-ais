@@ -344,6 +344,7 @@ const el = {
         "model": "Μοντέλο",
         "voice": "Φωνή"
     },
-    "common_verifyHere": "επαλήθευση εδώ"
+    "common_verifyHere": "επαλήθευση εδώ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default el;

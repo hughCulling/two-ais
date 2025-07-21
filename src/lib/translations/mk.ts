@@ -344,6 +344,7 @@ const mk = {
         "model": "Модел",
         "voice": "Глас"
     },
-    "common_verifyHere": "потврди тука"
+    "common_verifyHere": "потврди тука",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default mk;

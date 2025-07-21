@@ -344,6 +344,7 @@ const sv = {
         "model": "Modell",
         "voice": "Röst"
     },
-    "common_verifyHere": "verifiera här"
+    "common_verifyHere": "verifiera här",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sv;

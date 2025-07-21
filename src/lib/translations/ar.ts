@@ -344,6 +344,7 @@ const ar = {
         "model": "نموذج",
         "voice": "صوت"
     },
-    "common_verifyHere": "التحقق هنا"
+    "common_verifyHere": "التحقق هنا",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ar;

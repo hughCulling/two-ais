@@ -344,6 +344,7 @@ const fr = {
         "model": "Modèle",
         "voice": "Voix"
     },
-    "common_verifyHere": "vérifier ici"
+    "common_verifyHere": "vérifier ici",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default fr;

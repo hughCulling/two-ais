@@ -344,6 +344,7 @@ const da = {
         "model": "Model",
         "voice": "Stemme"
     },
-    "common_verifyHere": "bekræft her"
+    "common_verifyHere": "bekræft her",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default da;

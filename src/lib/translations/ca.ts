@@ -344,6 +344,7 @@ const ca = {
         "model": "Model",
         "voice": "Veu"
     },
-    "common_verifyHere": "verifica aquí"
+    "common_verifyHere": "verifica aquí",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ca;

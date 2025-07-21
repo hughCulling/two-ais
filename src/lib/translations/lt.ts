@@ -344,6 +344,7 @@ const lt = {
         "model": "Modelis",
         "voice": "Balsas"
     },
-    "common_verifyHere": "patikrinkite čia"
+    "common_verifyHere": "patikrinkite čia",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default lt;

@@ -344,6 +344,7 @@ const fi = {
         "model": "Malli",
         "voice": "Ääni"
     },
-    "common_verifyHere": "vahvista tästä"
+    "common_verifyHere": "vahvista tästä",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default fi;

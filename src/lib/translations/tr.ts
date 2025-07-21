@@ -344,6 +344,7 @@ const tr = {
         "model": "Model",
         "voice": "Ses"
     },
-    "common_verifyHere": "buradan doğrulayın"
+    "common_verifyHere": "buradan doğrulayın",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default tr;

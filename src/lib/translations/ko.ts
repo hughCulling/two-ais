@@ -344,6 +344,7 @@ const ko = {
         "model": "모델",
         "voice": "목소리"
     },
-    "common_verifyHere": "여기서 확인하세요"
+    "common_verifyHere": "여기서 확인하세요",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ko;

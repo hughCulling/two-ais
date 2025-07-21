@@ -344,6 +344,7 @@ const sw = {
         "model": "Mfano",
         "voice": "Sauti"
     },
-    "common_verifyHere": "thibitisha hapa"
+    "common_verifyHere": "thibitisha hapa",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sw;

@@ -344,6 +344,7 @@ const sk = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "overiť tu"
+    "common_verifyHere": "overiť tu",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default sk;

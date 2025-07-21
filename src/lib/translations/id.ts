@@ -344,6 +344,7 @@ const id = {
         "model": "Model",
         "voice": "Suara"
     },
-    "common_verifyHere": "verifikasi di sini"
+    "common_verifyHere": "verifikasi di sini",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default id;

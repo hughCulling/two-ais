@@ -344,6 +344,7 @@ const ja = {
         "model": "モデル",
         "voice": "声"
     },
-    "common_verifyHere": "こちらで確認"
+    "common_verifyHere": "こちらで確認",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default ja;

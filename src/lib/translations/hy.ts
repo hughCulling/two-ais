@@ -344,6 +344,7 @@ const hy = {
         "model": "Մոդել",
         "voice": "Ձայն"
     },
-    "common_verifyHere": "ստուգել այստեղ"
+    "common_verifyHere": "ստուգել այստեղ",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default hy;

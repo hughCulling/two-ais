@@ -344,6 +344,7 @@ const mt = {
         "model": "Mudell",
         "voice": "Vuċi"
     },
-    "common_verifyHere": "ivverifika hawn"
+    "common_verifyHere": "ivverifika hawn",
+    "page_AvailableImageModelsTitle": "Currently Available Image Models"
 };
 export default mt;
