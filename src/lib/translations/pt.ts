@@ -153,7 +153,8 @@ const pt = {
             "perMillionTokens": "por milhão de tokens",
             "input": "Entrada",
             "output": "Saída"
-        }
+        },
+        "aiConversation": "AI Conversa"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const pt = {
         "ttsProviderModel": "{providerName} Modelo",
         "selectTtsProviderModel": "Selecione {providerName} Modelo",
         "selectProvider": "Selecione o provedor",
-        "per": "por"
+        "per": "por",
+        "enableImageGen": "Habilitar geração de imagem",
+        "imageModel": "Modelo de imagem",
+        "quality": "Qualidade",
+        "size": "Tamanho",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Mensagem do sistema de prompt de imagem",
+        "defaultImagePromptSystemMessage": "Crie um prompt para dar ao modelo de geração de imagem com base nesta resposta: {turn}",
+        "imagePromptSystemMessageHelp": "Esta mensagem será enviada como prompt do sistema para o LLM que gera o prompt da imagem. Use <code>{'{turn}'}</code> como um espaço reservado para a mensagem do agente.",
+        "selectImageModel": "Selecione o modelo de imagem",
+        "selectPromptLLM": "Selecione LLM para prompt de imagem"
     },
     "history": {
         "backToMain": "Voltar para o principal",
@@ -344,6 +355,10 @@ const pt = {
         "model": "Modelo",
         "voice": "Voz"
     },
-    "common_verifyHere": "verifique aqui"
+    "common_verifyHere": "verifique aqui",
+    "page_AvailableImageModelsTitle": "Modelos de imagem disponíveis atualmente",
+    "imageModel_Quality": "Qualidade",
+    "imageModel_Size": "Tamanho",
+    "imageModel_PriceUSD": "Preço (USD)"
 };
 export default pt;

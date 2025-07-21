@@ -153,7 +153,8 @@ const id = {
             "perMillionTokens": "per juta token",
             "input": "Masukan",
             "output": "Keluaran"
-        }
+        },
+        "aiConversation": "AI Percakapan"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const id = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Memilih {providerName} Model",
         "selectProvider": "Pilih Penyedia",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Aktifkan Pembuatan Gambar",
+        "imageModel": "Model Gambar",
+        "quality": "Kualitas",
+        "size": "Ukuran",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Pesan Sistem Prompt Gambar",
+        "defaultImagePromptSystemMessage": "Buat perintah untuk diberikan ke model pembangkitan gambar berdasarkan giliran ini: {turn}",
+        "imagePromptSystemMessageHelp": "Pesan ini akan dikirim sebagai perintah sistem ke LLM yang menghasilkan perintah gambar. Gunakan <code>{'{turn}'}</code> sebagai tempat penampung pesan agen.",
+        "selectImageModel": "Pilih model gambar",
+        "selectPromptLLM": "Pilih LLM untuk perintah gambar"
     },
     "history": {
         "backToMain": "Kembali ke Utama",
@@ -344,6 +355,10 @@ const id = {
         "model": "Model",
         "voice": "Suara"
     },
-    "common_verifyHere": "verifikasi di sini"
+    "common_verifyHere": "verifikasi di sini",
+    "page_AvailableImageModelsTitle": "Model Gambar yang Tersedia Saat Ini",
+    "imageModel_Quality": "Kualitas",
+    "imageModel_Size": "Ukuran",
+    "imageModel_PriceUSD": "Harga (USD)"
 };
 export default id;

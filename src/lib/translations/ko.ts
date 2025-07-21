@@ -153,7 +153,8 @@ const ko = {
             "perMillionTokens": "백만 토큰당",
             "input": "입력",
             "output": "산출"
-        }
+        },
+        "aiConversation": "AI 대화"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ko = {
         "ttsProviderModel": "{providerName} 모델",
         "selectTtsProviderModel": "선택하다 {providerName} 모델",
         "selectProvider": "공급자 선택",
-        "per": "당"
+        "per": "당",
+        "enableImageGen": "이미지 생성 활성화",
+        "imageModel": "이미지 모델",
+        "quality": "품질",
+        "size": "크기",
+        "promptLLM": "프롬프트 LLM",
+        "imagePromptSystemMessage": "이미지 프롬프트 시스템 메시지",
+        "defaultImagePromptSystemMessage": "이 턴을 기반으로 이미지 생성 모델에 제공할 프롬프트를 만듭니다. {turn}",
+        "imagePromptSystemMessageHelp": "이 메시지는 이미지 프롬프트를 생성하는 LLM에 시스템 프롬프트로 전송됩니다. 사용 <code>{'{turn}'}</code> 에이전트의 메시지를 위한 자리 표시자로 사용됨.",
+        "selectImageModel": "이미지 모델 선택",
+        "selectPromptLLM": "이미지 프롬프트에 LLM을 선택하세요"
     },
     "history": {
         "backToMain": "메인으로 돌아가기",
@@ -344,6 +355,10 @@ const ko = {
         "model": "모델",
         "voice": "목소리"
     },
-    "common_verifyHere": "여기서 확인하세요"
+    "common_verifyHere": "여기서 확인하세요",
+    "page_AvailableImageModelsTitle": "현재 사용 가능한 이미지 모델",
+    "imageModel_Quality": "품질",
+    "imageModel_Size": "크기",
+    "imageModel_PriceUSD": "가격 (USD)"
 };
 export default ko;

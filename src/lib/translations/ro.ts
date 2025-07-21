@@ -153,7 +153,8 @@ const ro = {
             "perMillionTokens": "per milion de token-uri",
             "input": "Intrare",
             "output": "Ieșire"
-        }
+        },
+        "aiConversation": "AI Conversaţie"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ro = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Selecta {providerName} Model",
         "selectProvider": "Selectați furnizorul",
-        "per": "pe"
+        "per": "pe",
+        "enableImageGen": "Activează generarea de imagini",
+        "imageModel": "Model de imagine",
+        "quality": "Calitate",
+        "size": "Dimensiune",
+        "promptLLM": "LLM prompt",
+        "imagePromptSystemMessage": "Mesaj de sistem pentru solicitarea imaginii",
+        "defaultImagePromptSystemMessage": "Creați o solicitare pentru modelul de generare a imaginilor pe baza acestei runde: {turn}",
+        "imagePromptSystemMessageHelp": "Acest mesaj va fi trimis ca prompt de sistem către LLM-ul care generează promptul de imagine. Folosiți <code>{'{turn}'}</code> ca substituent pentru mesajul agentului.",
+        "selectImageModel": "Selectați modelul de imagine",
+        "selectPromptLLM": "Selectați LLM pentru solicitarea de imagini"
     },
     "history": {
         "backToMain": "Înapoi la pagina principală",
@@ -344,6 +355,10 @@ const ro = {
         "model": "Model",
         "voice": "Voce"
     },
-    "common_verifyHere": "verifică aici"
+    "common_verifyHere": "verifică aici",
+    "page_AvailableImageModelsTitle": "Modele de imagine disponibile în prezent",
+    "imageModel_Quality": "Calitate",
+    "imageModel_Size": "Dimensiune",
+    "imageModel_PriceUSD": "Preţ (USD)"
 };
 export default ro;

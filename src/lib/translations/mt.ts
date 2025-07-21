@@ -153,7 +153,8 @@ const mt = {
             "perMillionTokens": "għal kull miljun token",
             "input": "Input",
             "output": "Output"
-        }
+        },
+        "aiConversation": "AI Konverżazzjoni"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const mt = {
         "ttsProviderModel": "{providerName} Mudell",
         "selectTtsProviderModel": "Agħżel {providerName} Mudell",
         "selectProvider": "Agħżel Fornitur",
-        "per": "kull"
+        "per": "kull",
+        "enableImageGen": "Ippermetti l-Ġenerazzjoni tal-Immaġni",
+        "imageModel": "Mudell tal-Immaġni",
+        "quality": "Kwalità",
+        "size": "Daqs",
+        "promptLLM": "LLM fil-pront",
+        "imagePromptSystemMessage": "Messaġġ tas-Sistema ta' Prompt tal-Immaġni",
+        "defaultImagePromptSystemMessage": "Oħloq prompt biex tagħtih lill-mudell tal-ġenerazzjoni tal-immaġni bbażat fuq din id-dawra: {turn}",
+        "imagePromptSystemMessageHelp": "Dan il-messaġġ se jintbagħat bħala l-pront tas-sistema lill-LLM li jiġġenera l-pront tal-immaġni. Uża <code>{'{turn}'}</code> bħala placeholder għall-messaġġ tal-aġent.",
+        "selectImageModel": "Agħżel mudell tal-immaġni",
+        "selectPromptLLM": "Agħżel LLM għall-prompt tal-immaġni"
     },
     "history": {
         "backToMain": "Lura għall-Prinċipali",
@@ -344,6 +355,10 @@ const mt = {
         "model": "Mudell",
         "voice": "Vuċi"
     },
-    "common_verifyHere": "ivverifika hawn"
+    "common_verifyHere": "ivverifika hawn",
+    "page_AvailableImageModelsTitle": "Mudelli ta' Immaġni Disponibbli Bħalissa",
+    "imageModel_Quality": "Kwalità",
+    "imageModel_Size": "Daqs",
+    "imageModel_PriceUSD": "Prezz (USD)"
 };
 export default mt;

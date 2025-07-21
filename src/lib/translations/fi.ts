@@ -153,7 +153,8 @@ const fi = {
             "perMillionTokens": "miljoonaa tokenia kohden",
             "input": "Syöttö",
             "output": "Lähtö"
-        }
+        },
+        "aiConversation": "AI Keskustelu"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const fi = {
         "ttsProviderModel": "{providerName} Malli",
         "selectTtsProviderModel": "Valitse {providerName} Malli",
         "selectProvider": "Valitse palveluntarjoaja",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Ota kuvan luonti käyttöön",
+        "imageModel": "Kuvamalli",
+        "quality": "Laatu",
+        "size": "Koko",
+        "promptLLM": "Nopea oikeustieteen maisteri",
+        "imagePromptSystemMessage": "Kuvakehotteen järjestelmäviesti",
+        "defaultImagePromptSystemMessage": "Luo kuvan luontimallille annettava kehote tämän käännöksen perusteella: {turn}",
+        "imagePromptSystemMessageHelp": "Tämä viesti lähetetään järjestelmäkehotteena LLM:lle, joka luo kuvakehotteen. <code>{'{turn}'}</code> agentin viestin paikkamerkkinä.",
+        "selectImageModel": "Valitse kuvamalli",
+        "selectPromptLLM": "Valitse LLM kuvakehotteelle"
     },
     "history": {
         "backToMain": "Takaisin pääsivulle",
@@ -344,6 +355,10 @@ const fi = {
         "model": "Malli",
         "voice": "Ääni"
     },
-    "common_verifyHere": "vahvista tästä"
+    "common_verifyHere": "vahvista tästä",
+    "page_AvailableImageModelsTitle": "Tällä hetkellä saatavilla olevat kuvamallit",
+    "imageModel_Quality": "Laatu",
+    "imageModel_Size": "Koko",
+    "imageModel_PriceUSD": "Hinta (USD)"
 };
 export default fi;

@@ -153,7 +153,8 @@ const is = {
             "perMillionTokens": "á hverja milljón tákn",
             "input": "Inntak",
             "output": "Úttak"
-        }
+        },
+        "aiConversation": "AI Samtal"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const is = {
         "ttsProviderModel": "{providerName} Fyrirmynd",
         "selectTtsProviderModel": "Veldu {providerName} Fyrirmynd",
         "selectProvider": "Veldu þjónustuaðila",
-        "per": "á hverja"
+        "per": "á hverja",
+        "enableImageGen": "Virkja myndagerð",
+        "imageModel": "Myndlíkan",
+        "quality": "Gæði",
+        "size": "Stærð",
+        "promptLLM": "Hvetja LLM",
+        "imagePromptSystemMessage": "Kerfisskilaboð um mynd",
+        "defaultImagePromptSystemMessage": "Búðu til fyrirmæli til að gefa myndagerðarlíkaninu byggt á þessari beygju: {turn}",
+        "imagePromptSystemMessageHelp": "Þessi skilaboð verða send sem kerfisleiðbeining til LLM-kerfisins sem býr til myndleiðbeininguna. <code>{'{turn}'}</code> sem staðgengill fyrir skilaboð umboðsmannsins.",
+        "selectImageModel": "Veldu myndlíkan",
+        "selectPromptLLM": "Veldu LLM fyrir myndafyrirmæli"
     },
     "history": {
         "backToMain": "Til baka í aðalinnganginn",
@@ -344,6 +355,10 @@ const is = {
         "model": "Fyrirmynd",
         "voice": "Rödd"
     },
-    "common_verifyHere": "staðfesta hér"
+    "common_verifyHere": "staðfesta hér",
+    "page_AvailableImageModelsTitle": "Myndlíkön sem eru nú fáanleg",
+    "imageModel_Quality": "Gæði",
+    "imageModel_Size": "Stærð",
+    "imageModel_PriceUSD": "Verð (USD)"
 };
 export default is;

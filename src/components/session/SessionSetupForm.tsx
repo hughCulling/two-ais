@@ -30,6 +30,7 @@ import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from '@/hooks/useTranslation';
+import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize } from '@/lib/image_models';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
@@ -50,6 +51,15 @@ interface SessionConfig {
     agentB_tts: AgentTTSSettings;
     language?: string;
     initialSystemPrompt: string;
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        model: string;
+        quality: ImageModelQuality;
+        size: ImageModelSize;
+        promptLlm: string;
+        promptSystemMessage: string;
+    };
 }
 
 interface SessionSetupFormProps {
@@ -321,6 +331,37 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
+    // --- Image Generation State ---
+    const [imageGenEnabled, setImageGenEnabled] = useState(false);
+    const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
+    const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
+    const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize>('1024x1024');
+    const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
+    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
+
+    // Update quality/size when model changes
+    useEffect(() => {
+        if (!selectedImageModelId) return;
+        const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+        if (model) {
+            // Default to first quality/size if not set
+            const firstQuality = model.qualities[0]?.quality || 'medium';
+            setSelectedImageQuality(firstQuality);
+            const firstSize = model.qualities[0]?.sizes[0]?.size || '1024x1024';
+            setSelectedImageSize(firstSize);
+        }
+    }, [selectedImageModelId]);
+
+    // Update size when quality changes
+    useEffect(() => {
+        if (!selectedImageModelId || !selectedImageQuality) return;
+        const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+        const qualityObj = model?.qualities.find(q => q.quality === selectedImageQuality);
+        if (qualityObj && qualityObj.sizes.length > 0) {
+            setSelectedImageSize(qualityObj.sizes[0].size);
+        }
+    }, [selectedImageModelId, selectedImageQuality]);
+
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
     const elevenLabsProviderInfo = getTTSProviderInfoById('elevenlabs');
@@ -532,6 +573,41 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             return;
         }
 
+        // Image generation validation
+        let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
+        if (imageGenEnabled) {
+            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+            if (!model) {
+                alert('Please select an image model.');
+                return;
+            }
+            if (!selectedImageQuality) {
+                alert('Please select an image quality.');
+                return;
+            }
+            if (!selectedImageSize) {
+                alert('Please select an image size.');
+                return;
+            }
+            if (!selectedPromptLlm) {
+                alert('Please select a prompt LLM for image generation.');
+                return;
+            }
+            if (!imagePromptSystemMessage) {
+                alert('Please provide a system prompt for the image prompt LLM.');
+                return;
+            }
+            imageGenSettings = {
+                enabled: true,
+                provider: model.provider,
+                model: model.id,
+                quality: selectedImageQuality,
+                size: selectedImageSize,
+                promptLlm: selectedPromptLlm,
+                promptSystemMessage: imagePromptSystemMessage,
+            };
+        }
+
         // ***FIX: Define a type-safe constant for the disabled state***
         const disabledTtsSettings: AgentTTSSettings = { provider: 'none', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined };
 
@@ -556,6 +632,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             agentA_tts: sessionAgentATTSSettings,
             agentB_tts: sessionAgentBTTSSettings,
             initialSystemPrompt,
+            imageGenSettings,
         });
     };
 
@@ -843,6 +920,123 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
                             {renderTTSConfigForAgent('A', agentATTSSettings, currentVoicesA)}
                             {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
+                        </div>
+                    )}
+                </div>
+                {/* IMAGE GENERATION CONFIGURATION SECTION */}
+                <hr className="my-6" />
+                <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                        <Checkbox 
+                            id="image-gen-enabled-checkbox" 
+                            checked={imageGenEnabled} 
+                            onCheckedChange={checked => setImageGenEnabled(Boolean(checked))} 
+                            aria-describedby="image-gen-checkbox-description"
+                        />
+                        <Label 
+                            htmlFor="image-gen-enabled-checkbox" 
+                            className="text-base font-medium"
+                        >
+                            {t?.sessionSetupForm?.enableImageGen}
+                        </Label>
+                    </div>
+                    <div id="image-gen-checkbox-description" className="sr-only">
+                        Check this box to enable image generation for each turn. An image will be generated and shown for each agent message.
+                    </div>
+                    {imageGenEnabled && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="image-gen-settings-label">
+                            <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
+                            {/* Image Model Selection */}
+                            <div className="space-y-2">
+                                <Label htmlFor="image-model-select">{t?.sessionSetupForm?.imageModel}</Label>
+                                <Select
+                                    value={selectedImageModelId}
+                                    onValueChange={setSelectedImageModelId}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder={t?.sessionSetupForm?.selectImageModel} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {AVAILABLE_IMAGE_MODELS.map(m => (
+                                            <SelectItem key={m.id} value={m.id}>{m.name} ({m.provider})</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {/* Quality Selection */}
+                            <div className="space-y-2">
+                                <Label htmlFor="image-quality-select">{t?.sessionSetupForm?.quality}</Label>
+                                <Select
+                                    value={selectedImageQuality}
+                                    onValueChange={v => setSelectedImageQuality(v as ImageModelQuality)}
+                                    disabled={!selectedImageModelId}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select quality" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {(() => {
+                                            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+                                            return model ? model.qualities.map(q => (
+                                                <SelectItem key={q.quality} value={q.quality}>{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</SelectItem>
+                                            )) : null;
+                                        })()}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {/* Size Selection */}
+                            <div className="space-y-2">
+                                <Label htmlFor="image-size-select">{t?.sessionSetupForm?.size}</Label>
+                                <Select
+                                    value={selectedImageSize}
+                                    onValueChange={v => setSelectedImageSize(v as ImageModelSize)}
+                                    disabled={!selectedImageModelId || !selectedImageQuality}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select size" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {(() => {
+                                            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+                                            const qualityObj = model?.qualities.find(q => q.quality === selectedImageQuality);
+                                            return qualityObj ? qualityObj.sizes.map(s => (
+                                                <SelectItem key={s.size} value={s.size}>{s.size}</SelectItem>
+                                            )) : null;
+                                        })()}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {/* Prompt LLM Selection */}
+                            <div className="space-y-2">
+                                <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM}</Label>
+                                <Select
+                                    value={selectedPromptLlm}
+                                    onValueChange={setSelectedPromptLlm}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {AVAILABLE_LLMS.map(llm => (
+                                            <SelectItem key={llm.id} value={llm.id}>{llm.name} ({llm.provider})</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {/* System Prompt for Image Prompt LLM */}
+                            <div className="space-y-2 col-span-1 md:col-span-2">
+                                <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage}</Label>
+                                <textarea
+                                    id="image-prompt-system-message"
+                                    className="w-full border rounded-md p-2 text-sm min-h-[60px]"
+                                    value={imagePromptSystemMessage}
+                                    onChange={e => setImagePromptSystemMessage(e.target.value)}
+                                    placeholder="Create a prompt to give to the image generation model based on this turn: {turn}"
+                                    aria-describedby="image-prompt-system-message-description"
+                                    aria-label="System prompt for image prompt LLM"
+                                />
+                                <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground mt-1" dangerouslySetInnerHTML={{ __html: t?.sessionSetupForm?.imagePromptSystemMessageHelp || '' }} />
+                            </div>
                         </div>
                     )}
                 </div>

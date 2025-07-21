@@ -153,7 +153,8 @@ const lv = {
             "perMillionTokens": "uz miljonu žetonu",
             "input": "Ievade",
             "output": "Izvade"
-        }
+        },
+        "aiConversation": "AI Saruna"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const lv = {
         "ttsProviderModel": "{providerName} Modelis",
         "selectTtsProviderModel": "Atlasīt {providerName} Modelis",
         "selectProvider": "Izvēlieties pakalpojumu sniedzēju",
-        "per": "uz vienu"
+        "per": "uz vienu",
+        "enableImageGen": "Iespējot attēlu ģenerēšanu",
+        "imageModel": "Attēla modelis",
+        "quality": "Kvalitāte",
+        "size": "Izmērs",
+        "promptLLM": "Ātra LLM",
+        "imagePromptSystemMessage": "Attēla uzvednes sistēmas ziņojums",
+        "defaultImagePromptSystemMessage": "Izveidojiet uzvedni, ko sniegt attēlu ģenerēšanas modelim, pamatojoties uz šo pagriezienu: {turn}",
+        "imagePromptSystemMessageHelp": "Šis ziņojums tiks nosūtīts kā sistēmas uzvedne LLM, kas ģenerē attēla uzvedni. <code>{'{turn}}</code> kā aģenta ziņojuma aizvietotāju.",
+        "selectImageModel": "Atlasiet attēla modeli",
+        "selectPromptLLM": "Attēla uzvednei atlasiet LLM"
     },
     "history": {
         "backToMain": "Atpakaļ uz galveno",
@@ -344,6 +355,10 @@ const lv = {
         "model": "Modelis",
         "voice": "Balss"
     },
-    "common_verifyHere": "pārbaudīt šeit"
+    "common_verifyHere": "pārbaudīt šeit",
+    "page_AvailableImageModelsTitle": "Pašlaik pieejamie attēlu modeļi",
+    "imageModel_Quality": "Kvalitāte",
+    "imageModel_Size": "Izmērs",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default lv;

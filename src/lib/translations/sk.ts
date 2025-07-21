@@ -153,7 +153,8 @@ const sk = {
             "perMillionTokens": "na milión tokenov",
             "input": "Vstup",
             "output": "Výstup"
-        }
+        },
+        "aiConversation": "AI Konverzácia"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const sk = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Vyberte {providerName} Model",
         "selectProvider": "Vyberte poskytovateľa",
-        "per": "za"
+        "per": "za",
+        "enableImageGen": "Povoliť generovanie obrázkov",
+        "imageModel": "Obrazový model",
+        "quality": "Kvalita",
+        "size": "Veľkosť",
+        "promptLLM": "Výzva na LLM",
+        "imagePromptSystemMessage": "Systémová správa s obrázkom",
+        "defaultImagePromptSystemMessage": "Vytvorte výzvu, ktorú zadáte modelu generovania obrázkov na základe tohto otočenia: {turn}",
+        "imagePromptSystemMessageHelp": "Táto správa bude odoslaná ako systémová výzva do LLM, ktorá generuje výzvu k obrázku. Použite <code>{'{turn}'}</code> ako zástupný symbol pre správu agenta.",
+        "selectImageModel": "Vyberte model obrázka",
+        "selectPromptLLM": "Vyberte LLM pre obrázkovú výzvu"
     },
     "history": {
         "backToMain": "Späť na hlavný obsah",
@@ -344,6 +355,10 @@ const sk = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "overiť tu"
+    "common_verifyHere": "overiť tu",
+    "page_AvailableImageModelsTitle": "Aktuálne dostupné modely obrázkov",
+    "imageModel_Quality": "Kvalita",
+    "imageModel_Size": "Veľkosť",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default sk;

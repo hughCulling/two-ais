@@ -153,7 +153,8 @@ const tr = {
             "perMillionTokens": "milyon token başına",
             "input": "Giriş",
             "output": "Çıktı"
-        }
+        },
+        "aiConversation": "AI Konuşma"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const tr = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Seçme {providerName} Model",
         "selectProvider": "Sağlayıcıyı Seçin",
-        "per": "başına"
+        "per": "başına",
+        "enableImageGen": "Görüntü Oluşturmayı Etkinleştir",
+        "imageModel": "Görüntü Modeli",
+        "quality": "Kalite",
+        "size": "Boyut",
+        "promptLLM": "Hızlı LLM",
+        "imagePromptSystemMessage": "Görüntü İstemi Sistem Mesajı",
+        "defaultImagePromptSystemMessage": "Bu dönüşe dayalı olarak görüntü oluşturma modeline verilecek bir istem oluşturun: {turn}",
+        "imagePromptSystemMessageHelp": "Bu mesaj, görüntü istemini oluşturan LLM'ye sistem istemi olarak gönderilecektir. <code>{'{turn}'}</code> Temsilcinin mesajı için bir yer tutucu olarak.",
+        "selectImageModel": "Görüntü modelini seçin",
+        "selectPromptLLM": "Resim istemi için LLM'yi seçin"
     },
     "history": {
         "backToMain": "Ana Sayfaya Dön",
@@ -344,6 +355,10 @@ const tr = {
         "model": "Model",
         "voice": "Ses"
     },
-    "common_verifyHere": "buradan doğrulayın"
+    "common_verifyHere": "buradan doğrulayın",
+    "page_AvailableImageModelsTitle": "Şu Anda Mevcut Görüntü Modelleri",
+    "imageModel_Quality": "Kalite",
+    "imageModel_Size": "Boyut",
+    "imageModel_PriceUSD": "Fiyat (USD)"
 };
 export default tr;

@@ -153,7 +153,8 @@ const ta = {
             "perMillionTokens": "மில்லியன் டோக்கன்களுக்கு",
             "input": "உள்ளீடு",
             "output": "வெளியீடு"
-        }
+        },
+        "aiConversation": "AI உரையாடல்"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ta = {
         "ttsProviderModel": "{providerName} மாதிரி",
         "selectTtsProviderModel": "தேர்ந்தெடுக்கவும் {providerName} மாதிரி",
         "selectProvider": "வழங்குநரைத் தேர்ந்தெடுக்கவும்",
-        "per": "ஒன்றுக்கு"
+        "per": "ஒன்றுக்கு",
+        "enableImageGen": "பட உருவாக்கத்தை இயக்கு",
+        "imageModel": "பட மாதிரி",
+        "quality": "தரம்",
+        "size": "அளவு",
+        "promptLLM": "உடனடி எல்.எல்.எம்.",
+        "imagePromptSystemMessage": "பட அறிவிப்பு அமைப்பு செய்தி",
+        "defaultImagePromptSystemMessage": "இந்த திருப்பத்தின் அடிப்படையில் பட உருவாக்க மாதிரிக்கு வழங்க ஒரு தூண்டுதலை உருவாக்கவும்: {turn}",
+        "imagePromptSystemMessageHelp": "இந்தச் செய்தி, பட வரியில் உருவாக்கும் LLM-க்கு கணினி வரியில் அனுப்பப்படும். பயன்படுத்தவும் <code>{'{turn}'}</code> முகவரின் செய்திக்கான ஒதுக்கிடமாக.",
+        "selectImageModel": "பட மாதிரியைத் தேர்ந்தெடுக்கவும்",
+        "selectPromptLLM": "படக் குறிப்பிற்கு LLM ஐத் தேர்ந்தெடுக்கவும்."
     },
     "history": {
         "backToMain": "முதன்மைக்குத் திரும்பு",
@@ -344,6 +355,10 @@ const ta = {
         "model": "மாதிரி",
         "voice": "குரல்"
     },
-    "common_verifyHere": "இங்கே சரிபார்க்கவும்"
+    "common_verifyHere": "இங்கே சரிபார்க்கவும்",
+    "page_AvailableImageModelsTitle": "தற்போது கிடைக்கும் பட மாதிரிகள்",
+    "imageModel_Quality": "தரம்",
+    "imageModel_Size": "அளவு",
+    "imageModel_PriceUSD": "விலை (USD)"
 };
 export default ta;

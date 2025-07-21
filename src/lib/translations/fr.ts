@@ -153,7 +153,8 @@ const fr = {
             "perMillionTokens": "par million de jetons",
             "input": "Saisir",
             "output": "Sortir"
-        }
+        },
+        "aiConversation": "AI Conversation"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const fr = {
         "ttsProviderModel": "{providerName} Modèle",
         "selectTtsProviderModel": "Sélectionner {providerName} Modèle",
         "selectProvider": "Sélectionner un fournisseur",
-        "per": "par"
+        "per": "par",
+        "enableImageGen": "Activer la génération d'images",
+        "imageModel": "Modèle d'image",
+        "quality": "Qualité",
+        "size": "Taille",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Message système d'invite d'image",
+        "defaultImagePromptSystemMessage": "Créez une invite à transmettre au modèle de génération d'images en fonction de ce tour : {turn}",
+        "imagePromptSystemMessageHelp": "Ce message sera envoyé comme invite système au LLM qui génère l'invite d'image. <code>{'{turn}'}</code> comme espace réservé au message de l'agent.",
+        "selectImageModel": "Sélectionnez le modèle d'image",
+        "selectPromptLLM": "Sélectionnez LLM pour l'invite d'image"
     },
     "history": {
         "backToMain": "Retour au menu principal",
@@ -344,6 +355,10 @@ const fr = {
         "model": "Modèle",
         "voice": "Voix"
     },
-    "common_verifyHere": "vérifier ici"
+    "common_verifyHere": "vérifier ici",
+    "page_AvailableImageModelsTitle": "Modèles d'images actuellement disponibles",
+    "imageModel_Quality": "Qualité",
+    "imageModel_Size": "Taille",
+    "imageModel_PriceUSD": "Prix (USD)"
 };
 export default fr;

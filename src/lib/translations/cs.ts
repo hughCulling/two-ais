@@ -153,7 +153,8 @@ const cs = {
             "perMillionTokens": "na milion tokenů",
             "input": "Vstup",
             "output": "Výstup"
-        }
+        },
+        "aiConversation": "AI Konverzace"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const cs = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Vybrat {providerName} Model",
         "selectProvider": "Vyberte poskytovatele",
-        "per": "za"
+        "per": "za",
+        "enableImageGen": "Povolit generování obrázků",
+        "imageModel": "Obrazový model",
+        "quality": "Kvalitní",
+        "size": "Velikost",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Systémová zpráva s obrazovým výzvou",
+        "defaultImagePromptSystemMessage": "Na základě tohoto tahu vytvořte výzvu, kterou zadáte modelu generování obrázků: {turn}",
+        "imagePromptSystemMessageHelp": "Tato zpráva bude odeslána jako systémový výzva do LLM, která generuje výzvu k vygenerování obrázku. Použijte <code>{'{turn}'}</code> jako zástupný symbol pro zprávu agenta.",
+        "selectImageModel": "Vyberte model obrázku",
+        "selectPromptLLM": "Vyberte LLM pro obrazovou výzvu"
     },
     "history": {
         "backToMain": "Zpět na hlavní stránku",
@@ -344,6 +355,10 @@ const cs = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "ověřte zde"
+    "common_verifyHere": "ověřte zde",
+    "page_AvailableImageModelsTitle": "Aktuálně dostupné obrazové modely",
+    "imageModel_Quality": "Kvalitní",
+    "imageModel_Size": "Velikost",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default cs;

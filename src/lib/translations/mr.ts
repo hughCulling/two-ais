@@ -153,7 +153,8 @@ const mr = {
             "perMillionTokens": "प्रति दशलक्ष टोकन",
             "input": "इनपुट",
             "output": "आउटपुट"
-        }
+        },
+        "aiConversation": "AI चर्चा"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const mr = {
         "ttsProviderModel": "{providerName} मॉडेल",
         "selectTtsProviderModel": "निवडा {providerName} मॉडेल",
         "selectProvider": "प्रदाता निवडा",
-        "per": "प्रति"
+        "per": "प्रति",
+        "enableImageGen": "प्रतिमा निर्मिती सक्षम करा",
+        "imageModel": "प्रतिमा मॉडेल",
+        "quality": "गुणवत्ता",
+        "size": "आकार",
+        "promptLLM": "प्रॉम्प्ट एलएलएम",
+        "imagePromptSystemMessage": "इमेज प्रॉम्प्ट सिस्टम मेसेज",
+        "defaultImagePromptSystemMessage": "या वळणावर आधारित इमेज जनरेशन मॉडेलला देण्यासाठी एक प्रॉम्प्ट तयार करा: {turn}",
+        "imagePromptSystemMessageHelp": "हा संदेश सिस्टम प्रॉम्प्ट म्हणून एलएलएमला पाठवला जाईल जो इमेज प्रॉम्प्ट जनरेट करतो. वापरा <code>{'{turn}'}</code> एजंटच्या संदेशासाठी प्लेसहोल्डर म्हणून.",
+        "selectImageModel": "प्रतिमा मॉडेल निवडा",
+        "selectPromptLLM": "इमेज प्रॉम्प्टसाठी LLM निवडा."
     },
     "history": {
         "backToMain": "मुख्य कडे परत",
@@ -344,6 +355,10 @@ const mr = {
         "model": "मॉडेल",
         "voice": "आवाज"
     },
-    "common_verifyHere": "येथे पडताळणी करा"
+    "common_verifyHere": "येथे पडताळणी करा",
+    "page_AvailableImageModelsTitle": "सध्या उपलब्ध प्रतिमा मॉडेल्स",
+    "imageModel_Quality": "गुणवत्ता",
+    "imageModel_Size": "आकार",
+    "imageModel_PriceUSD": "किंमत (USD)"
 };
 export default mr;

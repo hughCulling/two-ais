@@ -153,7 +153,8 @@ const uk = {
             "perMillionTokens": "на мільйон токенів",
             "input": "Вхід",
             "output": "Вихід"
-        }
+        },
+        "aiConversation": "AI Розмова"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const uk = {
         "ttsProviderModel": "{providerName} Модель",
         "selectTtsProviderModel": "Виберіть {providerName} Модель",
         "selectProvider": "Виберіть постачальника",
-        "per": "за"
+        "per": "за",
+        "enableImageGen": "Увімкнути створення зображень",
+        "imageModel": "Модель зображення",
+        "quality": "Якість",
+        "size": "Розмір",
+        "promptLLM": "Підказка LLM",
+        "imagePromptSystemMessage": "Системне повідомлення підказки зображення",
+        "defaultImagePromptSystemMessage": "Створіть запит для моделі генерації зображень на основі цього повороту: {turn}",
+        "imagePromptSystemMessageHelp": "Це повідомлення буде надіслано як системний запит до LLM, який генерує запит зображення. Використовуйте <code>{'{turn}'}</code> як заповнювач для повідомлення агента.",
+        "selectImageModel": "Виберіть модель зображення",
+        "selectPromptLLM": "Виберіть LLM для підказки зображення"
     },
     "history": {
         "backToMain": "Назад до головного",
@@ -344,6 +355,10 @@ const uk = {
         "model": "Модель",
         "voice": "Голос"
     },
-    "common_verifyHere": "перевірте тут"
+    "common_verifyHere": "перевірте тут",
+    "page_AvailableImageModelsTitle": "Доступні наразі моделі зображень",
+    "imageModel_Quality": "Якість",
+    "imageModel_Size": "Розмір",
+    "imageModel_PriceUSD": "Ціна (USD)"
 };
 export default uk;

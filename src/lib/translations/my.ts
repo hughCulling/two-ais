@@ -153,7 +153,8 @@ const my = {
             "perMillionTokens": "တိုကင်တစ်သန်းနှုန်း",
             "input": "ထည့်သွင်းခြင်း။",
             "output": "အထွက်"
-        }
+        },
+        "aiConversation": "AI စကားဝိုင်း"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const my = {
         "ttsProviderModel": "{providerName} မော်ဒယ်",
         "selectTtsProviderModel": "ရွေးပါ။ {providerName} မော်ဒယ်",
         "selectProvider": "ပံ့ပိုးသူကို ရွေးပါ။",
-        "per": "နှုန်း"
+        "per": "နှုန်း",
+        "enableImageGen": "Image Generation ကိုဖွင့်ပါ။",
+        "imageModel": "ရုပ်ပုံမော်ဒယ်",
+        "quality": "အရည်အသွေး",
+        "size": "အရွယ်အစား",
+        "promptLLM": "LLM ကို အချက်ပြပါ။",
+        "imagePromptSystemMessage": "ပုံသတိပေးစနစ် မက်ဆေ့ဂျ်",
+        "defaultImagePromptSystemMessage": "ဤအလှည့်အပြောင်းအပေါ် အခြေခံ၍ ရုပ်ပုံထုတ်လုပ်သည့် မော်ဒယ်အား ပေးအပ်ရန် အချက်တစ်ချက်ကို ဖန်တီးပါ- {turn}",
+        "imagePromptSystemMessageHelp": "ပုံသတိပေးချက်ကို ထုတ်ပေးသည့် LLM သို့ စနစ်သတိပေးချက်အနေဖြင့် ဤစာကို ပေးပို့ပါမည်။ သုံးပါ။ <code>{'{turn}'}</code> အေးဂျင့်၏ မက်ဆေ့ချ်အတွက် နေရာပေးသူအဖြစ်။",
+        "selectImageModel": "ပုံမော်ဒယ်ကို ရွေးပါ။",
+        "selectPromptLLM": "ပုံသတိပေးချက်အတွက် LLM ကို ရွေးပါ။"
     },
     "history": {
         "backToMain": "Main သို့ ပြန်သွားရန်",
@@ -344,6 +355,10 @@ const my = {
         "model": "မော်ဒယ်",
         "voice": "စကားသံ"
     },
-    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။"
+    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။",
+    "page_AvailableImageModelsTitle": "လက်ရှိရနိုင်သော ရုပ်ပုံမော်ဒယ်များ",
+    "imageModel_Quality": "အရည်အသွေး",
+    "imageModel_Size": "အရွယ်အစား",
+    "imageModel_PriceUSD": "စျေးနှုန်း (USD)"
 };
 export default my;

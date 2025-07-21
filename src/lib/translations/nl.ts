@@ -153,7 +153,8 @@ const nl = {
             "perMillionTokens": "per miljoen tokens",
             "input": "Invoer",
             "output": "Uitvoer"
-        }
+        },
+        "aiConversation": "AI Gesprek"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const nl = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Selecteer {providerName} Model",
         "selectProvider": "Selecteer aanbieder",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Afbeeldinggeneratie inschakelen",
+        "imageModel": "Afbeeldingsmodel",
+        "quality": "Kwaliteit",
+        "size": "Maat",
+        "promptLLM": "Snelle LLM",
+        "imagePromptSystemMessage": "Bericht van het Image Prompt-systeem",
+        "defaultImagePromptSystemMessage": "Maak een prompt om aan het model voor het genereren van afbeeldingen te geven op basis van deze beurt: {turn}",
+        "imagePromptSystemMessageHelp": "Dit bericht wordt verzonden als systeemprompt naar de LLM die de afbeeldingprompt genereert. Gebruik <code>{'{turn}'}</code> als tijdelijke aanduiding voor het bericht van de agent.",
+        "selectImageModel": "Selecteer afbeeldingmodel",
+        "selectPromptLLM": "Selecteer LLM voor afbeeldingprompt"
     },
     "history": {
         "backToMain": "Terug naar hoofdpagina",
@@ -344,6 +355,10 @@ const nl = {
         "model": "Model",
         "voice": "Stem"
     },
-    "common_verifyHere": "hier verifiëren"
+    "common_verifyHere": "hier verifiëren",
+    "page_AvailableImageModelsTitle": "Momenteel beschikbare afbeeldingsmodellen",
+    "imageModel_Quality": "Kwaliteit",
+    "imageModel_Size": "Maat",
+    "imageModel_PriceUSD": "Prijs (USD)"
 };
 export default nl;

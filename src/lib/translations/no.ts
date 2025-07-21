@@ -153,7 +153,8 @@ const no = {
             "perMillionTokens": "per million tokens",
             "input": "Inndata",
             "output": "Produksjon"
-        }
+        },
+        "aiConversation": "AI Samtale"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const no = {
         "ttsProviderModel": "{providerName} Modell",
         "selectTtsProviderModel": "Velge {providerName} Modell",
         "selectProvider": "Velg leverandør",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Aktiver bildegenerering",
+        "imageModel": "Bildemodell",
+        "quality": "Kvalitet",
+        "size": "Størrelse",
+        "promptLLM": "Spørsmål LLM",
+        "imagePromptSystemMessage": "Systemmelding for bildemelding",
+        "defaultImagePromptSystemMessage": "Lag en ledetekst som skal gis til bildegenereringsmodellen basert på denne runden: {turn}",
+        "imagePromptSystemMessageHelp": "Denne meldingen sendes som systemledetekst til LLM-en som genererer bildeledeteksten. <code>{'{turn}'}</code> som en plassholder for agentens melding.",
+        "selectImageModel": "Velg bildemodell",
+        "selectPromptLLM": "Velg LLM for bildeprompt"
     },
     "history": {
         "backToMain": "Tilbake til hovedinnholdet",
@@ -344,6 +355,10 @@ const no = {
         "model": "Modell",
         "voice": "Stemme"
     },
-    "common_verifyHere": "bekreft her"
+    "common_verifyHere": "bekreft her",
+    "page_AvailableImageModelsTitle": "Nåværende tilgjengelige bildemodeller",
+    "imageModel_Quality": "Kvalitet",
+    "imageModel_Size": "Størrelse",
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default no;

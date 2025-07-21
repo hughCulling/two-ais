@@ -153,7 +153,8 @@ const et = {
             "perMillionTokens": "miljoni žetooni kohta",
             "input": "Sisend",
             "output": "Väljund"
-        }
+        },
+        "aiConversation": "AI Vestlus"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const et = {
         "ttsProviderModel": "{providerName} Mudel",
         "selectTtsProviderModel": "Vali {providerName} Mudel",
         "selectProvider": "Valige teenusepakkuja",
-        "per": "iga"
+        "per": "iga",
+        "enableImageGen": "Luba piltide genereerimine",
+        "imageModel": "Pildimudel",
+        "quality": "Kvaliteet",
+        "size": "Suurus",
+        "promptLLM": "Kiire LLM",
+        "imagePromptSystemMessage": "Pildiviiba süsteemi teade",
+        "defaultImagePromptSystemMessage": "Loo pildi genereerimise mudelile antud käsk selle pöörde põhjal: {turn}",
+        "imagePromptSystemMessageHelp": "See teade saadetakse süsteemiviibana pildiviiba genereerivale LLM-ile. Kasutage <code>{'{turn}'}</code> agendi sõnumi kohatäitena.",
+        "selectImageModel": "Valige pildimudel",
+        "selectPromptLLM": "Valige pildiviiba jaoks LLM"
     },
     "history": {
         "backToMain": "Tagasi põhisisu juurde",
@@ -344,6 +355,10 @@ const et = {
         "model": "Mudel",
         "voice": "Hääl"
     },
-    "common_verifyHere": "kinnita siin"
+    "common_verifyHere": "kinnita siin",
+    "page_AvailableImageModelsTitle": "Praegu saadaolevad pildimudelid",
+    "imageModel_Quality": "Kvaliteet",
+    "imageModel_Size": "Suurus",
+    "imageModel_PriceUSD": "Hind (USD)"
 };
 export default et;

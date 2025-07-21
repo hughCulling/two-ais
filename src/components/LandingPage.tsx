@@ -12,10 +12,12 @@ import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/model
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Image as ImageIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
+import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
+import type { ImageModelInfo } from '@/lib/image_models';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -105,6 +107,18 @@ const formatPrice = (price: number) => {
   });
 };
 
+// Helper to group image models by provider
+function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<string, ImageModelInfo[]> {
+  const grouped: Record<string, ImageModelInfo[]> = {};
+  imageModels.forEach((model: ImageModelInfo) => {
+    if (!grouped[model.provider]) grouped[model.provider] = [];
+    grouped[model.provider].push(model);
+  });
+  return grouped;
+}
+
+// Token pricing tooltip content for GPT Image 1
+const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = `Token pricing for GPT Image 1:\nInput: $10.00 / 1M tokens\nCached input: $2.50 / 1M tokens\nOutput: $40.00 / 1M tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.`;
 
 
 const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
@@ -450,6 +464,110 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 })
               ) : (
                 <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* IMAGE MODELS SECTION */}
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="flex items-center justify-center text-xl font-semibold">
+                <ImageIcon className="mr-2 h-5 w-5" />
+                {t.page_AvailableImageModelsTitle}
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {AVAILABLE_IMAGE_MODELS.length > 0 ? (
+                Object.entries(groupImageModelsByProvider(AVAILABLE_IMAGE_MODELS)).map(([providerName, models]) => {
+                  const typedModels = models as ImageModelInfo[];
+                  const providerCollapsibleId = `image-provider-${providerName.replace(/\s+/g, '-')}`;
+                  const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+                  return (
+                    <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                      <CollapsibleTrigger
+                        className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        aria-expanded={isProviderOpen}
+                        aria-controls={`${providerCollapsibleId}-content`}
+                        aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} image models`}
+                      >
+                        <span>{providerName}</span>
+                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent
+                        id={`${providerCollapsibleId}-content`}
+                        className="space-y-4 pl-2 pt-1"
+                        role="region"
+                        aria-labelledby={`${providerCollapsibleId}-trigger`}
+                      >
+                        {typedModels.map((model: ImageModelInfo) => (
+                          <div key={model.id} className="border rounded-md p-4 bg-muted/30">
+                            <div className="flex items-center mb-2">
+                              <span className="font-semibold text-lg mr-2">{model.name}</span>
+                              {model.id === 'gpt-image-1' && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help ml-1" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="w-auto max-w-[260px] p-2">
+                                    <p className="text-xs whitespace-pre-line">{GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                              {model.requiresOrgVerification && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help ml-1" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                    <p className="text-xs">
+                                      {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                      <a
+                                        href="https://platform.openai.com/settings/organization/general"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                      >
+                                        {t.common_verifyHere}
+                                      </a>
+                                      {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                              {model.status && (
+                                <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
+                              )}
+                            </div>
+                            <div className="overflow-x-auto">
+                              <table className="min-w-full text-xs border-collapse">
+                                <thead>
+                                  <tr>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_Quality}</th>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_Size}</th>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_PriceUSD}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {model.qualities.map((q) => (
+                                    q.sizes.map((s) => (
+                                      <tr key={q.quality + s.size}>
+                                        <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
+                                        <td className="px-2 py-1">{s.size}</td>
+                                        <td className="px-2 py-1">${s.price.toFixed(3)}</td>
+                                      </tr>
+                                    ))
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  );
+                })
+              ) : (
+                <p className="text-center text-muted-foreground text-sm">{'No image models available.'}</p>
               )}
             </CardContent>
           </Card>

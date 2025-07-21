@@ -153,7 +153,8 @@ const vi = {
             "perMillionTokens": "trên một triệu mã thông báo",
             "input": "Đầu vào",
             "output": "Đầu ra"
-        }
+        },
+        "aiConversation": "AI Cuộc hội thoại"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const vi = {
         "ttsProviderModel": "{providerName} Người mẫu",
         "selectTtsProviderModel": "Lựa chọn {providerName} Người mẫu",
         "selectProvider": "Chọn nhà cung cấp",
-        "per": "mỗi"
+        "per": "mỗi",
+        "enableImageGen": "Kích hoạt tạo hình ảnh",
+        "imageModel": "Mô hình hình ảnh",
+        "quality": "Chất lượng",
+        "size": "Kích cỡ",
+        "promptLLM": "LLM nhanh chóng",
+        "imagePromptSystemMessage": "Tin nhắn hệ thống nhắc nhở hình ảnh",
+        "defaultImagePromptSystemMessage": "Tạo lời nhắc để đưa cho mô hình tạo hình ảnh dựa trên lượt này: {turn}",
+        "imagePromptSystemMessageHelp": "Thông báo này sẽ được gửi dưới dạng lời nhắc hệ thống đến LLM tạo lời nhắc hình ảnh. Sử dụng <code>{'{turn}'}</code> như một chỗ giữ chỗ cho tin nhắn của tác nhân.",
+        "selectImageModel": "Chọn mô hình hình ảnh",
+        "selectPromptLLM": "Chọn LLM cho lời nhắc hình ảnh"
     },
     "history": {
         "backToMain": "Quay lại trang chính",
@@ -344,6 +355,10 @@ const vi = {
         "model": "Người mẫu",
         "voice": "Tiếng nói"
     },
-    "common_verifyHere": "xác minh ở đây"
+    "common_verifyHere": "xác minh ở đây",
+    "page_AvailableImageModelsTitle": "Các mô hình hình ảnh hiện có",
+    "imageModel_Quality": "Chất lượng",
+    "imageModel_Size": "Kích cỡ",
+    "imageModel_PriceUSD": "Giá (USD)"
 };
 export default vi;

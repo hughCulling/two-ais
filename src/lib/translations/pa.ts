@@ -153,7 +153,8 @@ const pa = {
             "perMillionTokens": "ਪ੍ਰਤੀ ਮਿਲੀਅਨ ਟੋਕਨ",
             "input": "ਇਨਪੁੱਟ",
             "output": "ਆਉਟਪੁੱਟ"
-        }
+        },
+        "aiConversation": "AI ਗੱਲਬਾਤ"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const pa = {
         "ttsProviderModel": "{providerName} ਮਾਡਲ",
         "selectTtsProviderModel": "ਚੁਣੋ {providerName} ਮਾਡਲ",
         "selectProvider": "ਪ੍ਰਦਾਤਾ ਚੁਣੋ",
-        "per": "ਪ੍ਰਤੀ"
+        "per": "ਪ੍ਰਤੀ",
+        "enableImageGen": "ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਨੂੰ ਸਮਰੱਥ ਬਣਾਓ",
+        "imageModel": "ਚਿੱਤਰ ਮਾਡਲ",
+        "quality": "ਗੁਣਵੱਤਾ",
+        "size": "ਆਕਾਰ",
+        "promptLLM": "ਪ੍ਰੋਂਪਟ ਐਲ.ਐਲ.ਐਮ.",
+        "imagePromptSystemMessage": "ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਸਿਸਟਮ ਸੁਨੇਹਾ",
+        "defaultImagePromptSystemMessage": "ਇਸ ਮੋੜ ਦੇ ਆਧਾਰ 'ਤੇ ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਮਾਡਲ ਨੂੰ ਦੇਣ ਲਈ ਇੱਕ ਪ੍ਰੋਂਪਟ ਬਣਾਓ: {turn}",
+        "imagePromptSystemMessageHelp": "ਇਹ ਸੁਨੇਹਾ ਸਿਸਟਮ ਪ੍ਰੋਂਪਟ ਦੇ ਤੌਰ 'ਤੇ LLM ਨੂੰ ਭੇਜਿਆ ਜਾਵੇਗਾ ਜੋ ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਤਿਆਰ ਕਰਦਾ ਹੈ। ਵਰਤੋਂ <code>{'{turn}'}</code> ਏਜੰਟ ਦੇ ਸੁਨੇਹੇ ਲਈ ਪਲੇਸਹੋਲਡਰ ਵਜੋਂ।",
+        "selectImageModel": "ਚਿੱਤਰ ਮਾਡਲ ਚੁਣੋ",
+        "selectPromptLLM": "ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਲਈ LLM ਚੁਣੋ।"
     },
     "history": {
         "backToMain": "ਮੁੱਖ ਤੇ ਵਾਪਸ ਜਾਓ",
@@ -344,6 +355,10 @@ const pa = {
         "model": "ਮਾਡਲ",
         "voice": "ਆਵਾਜ਼"
     },
-    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ"
+    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "page_AvailableImageModelsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਚਿੱਤਰ ਮਾਡਲ",
+    "imageModel_Quality": "ਗੁਣਵੱਤਾ",
+    "imageModel_Size": "ਆਕਾਰ",
+    "imageModel_PriceUSD": "ਕੀਮਤ (USD)"
 };
 export default pa;

@@ -153,7 +153,8 @@ const bs = {
             "perMillionTokens": "po milion tokena",
             "input": "Unos",
             "output": "Izlaz"
-        }
+        },
+        "aiConversation": "AI Razgovor"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const bs = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Odaberite {providerName} Model",
         "selectProvider": "Odaberite pružatelja usluga",
-        "per": "po"
+        "per": "po",
+        "enableImageGen": "Omogući generiranje slika",
+        "imageModel": "Model slike",
+        "quality": "Kvalitet",
+        "size": "Veličina",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Sistemska poruka upita za sliku",
+        "defaultImagePromptSystemMessage": "Kreirajte prompt za model generiranja slike na osnovu ovog poteza: {turn}",
+        "imagePromptSystemMessageHelp": "Ova poruka će biti poslana kao sistemski prompt LLM-u koji generira prompt slike. Koristite <code>{'{turn}'}</code> kao rezervirano mjesto za poruku agenta.",
+        "selectImageModel": "Odaberite model slike",
+        "selectPromptLLM": "Odaberite LLM za upit slike"
     },
     "history": {
         "backToMain": "Nazad na glavni sadržaj",
@@ -344,6 +355,10 @@ const bs = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "potvrdi ovdje"
+    "common_verifyHere": "potvrdi ovdje",
+    "page_AvailableImageModelsTitle": "Trenutno dostupni modeli slika",
+    "imageModel_Quality": "Kvalitet",
+    "imageModel_Size": "Veličina",
+    "imageModel_PriceUSD": "Cijena (USD)"
 };
 export default bs;

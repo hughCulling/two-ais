@@ -128,6 +128,7 @@ const en = {
     // Main page
     main: {
         title: 'AI Conversation',
+        aiConversation: 'AI Conversation',
         setupForm: {
             title: 'Set up your conversation',
             agentA: 'Agent A',
@@ -282,7 +283,7 @@ const en = {
     page_LoadingUserData: "Loading user data...",
     page_ErrorAlertTitle: "Error",
     page_WelcomeTitle: "Welcome to Two AIs",
-    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs).",
+    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) and generate images for each turn.",
     page_ApiKeysRequiredTitle: "API Keys Required",
     page_ApiKeysRequiredDescription: "To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in. Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.",
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
@@ -301,6 +302,7 @@ const en = {
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
     page_AvailableTTSTitle: "Currently Available Text-to-Speech (TTS)",
+    page_AvailableImageModelsTitle: "Currently Available Image Models", // Added for image models section
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
     page_PricesLastVerifiedOn: 'Prices last verified on {date}',
@@ -337,6 +339,16 @@ const en = {
         selectTtsProviderModel: 'Select {providerName} Model',
         selectProvider: 'Select Provider',
         per: 'per',
+        enableImageGen: 'Enable Image Generation',
+        imageModel: 'Image Model',
+        quality: 'Quality',
+        size: 'Size',
+        promptLLM: 'Prompt LLM',
+        imagePromptSystemMessage: 'Image Prompt System Message',
+        defaultImagePromptSystemMessage: 'Create a prompt to give to the image generation model based on this turn: {turn}',
+        imagePromptSystemMessageHelp: "This message will be sent as the system prompt to the LLM that generates the image prompt. Use <code>{'{turn}'}</code> as a placeholder for the agent's message.",
+        selectImageModel: 'Select image model',
+        selectPromptLLM: 'Select LLM for image prompt',
     },
 
     history: {
@@ -364,6 +376,9 @@ const en = {
         voice: 'Voice',
     },
 
+    imageModel_Quality: "Quality",
+    imageModel_Size: "Size",
+    imageModel_PriceUSD: "Price (USD)",
     // --------------- END OF FILE --------------- 
 };
 export default en; 

@@ -153,7 +153,8 @@ const te = {
             "perMillionTokens": "మిలియన్ టోకెన్లకు",
             "input": "ఇన్‌పుట్",
             "output": "అవుట్‌పుట్"
-        }
+        },
+        "aiConversation": "AI సంభాషణ"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const te = {
         "ttsProviderModel": "{providerName} మోడల్",
         "selectTtsProviderModel": "ఎంచుకోండి {providerName} మోడల్",
         "selectProvider": "ప్రొవైడర్‌ను ఎంచుకోండి",
-        "per": "ప్రతి"
+        "per": "ప్రతి",
+        "enableImageGen": "చిత్ర ఉత్పత్తిని ప్రారంభించండి",
+        "imageModel": "ఇమేజ్ మోడల్",
+        "quality": "నాణ్యత",
+        "size": "పరిమాణం",
+        "promptLLM": "ప్రాంప్ట్ LLM",
+        "imagePromptSystemMessage": "ఇమేజ్ ప్రాంప్ట్ సిస్టమ్ సందేశం",
+        "defaultImagePromptSystemMessage": "ఈ మలుపు ఆధారంగా ఇమేజ్ జనరేషన్ మోడల్‌కు ఇవ్వడానికి ఒక ప్రాంప్ట్‌ను సృష్టించండి: {turn}",
+        "imagePromptSystemMessageHelp": "ఈ సందేశం ఇమేజ్ ప్రాంప్ట్‌ను ఉత్పత్తి చేసే LLMకి సిస్టమ్ ప్రాంప్ట్‌గా పంపబడుతుంది. ఉపయోగించండి <code>{'{turn}'}</code> ఏజెంట్ సందేశానికి ప్లేస్‌హోల్డర్‌గా.",
+        "selectImageModel": "ఇమేజ్ మోడల్‌ను ఎంచుకోండి",
+        "selectPromptLLM": "ఇమేజ్ ప్రాంప్ట్ కోసం LLM ని ఎంచుకోండి."
     },
     "history": {
         "backToMain": "ప్రధానానికి తిరిగి వెళ్ళు",
@@ -344,6 +355,10 @@ const te = {
         "model": "మోడల్",
         "voice": "వాయిస్"
     },
-    "common_verifyHere": "ఇక్కడ ధృవీకరించండి"
+    "common_verifyHere": "ఇక్కడ ధృవీకరించండి",
+    "page_AvailableImageModelsTitle": "ప్రస్తుతం అందుబాటులో ఉన్న చిత్ర నమూనాలు",
+    "imageModel_Quality": "నాణ్యత",
+    "imageModel_Size": "పరిమాణం",
+    "imageModel_PriceUSD": "ధర (USD)"
 };
 export default te;

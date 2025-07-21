@@ -153,7 +153,8 @@ const kn = {
             "perMillionTokens": "ಪ್ರತಿ ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
             "input": "ಇನ್ಪುಟ್",
             "output": "ಔಟ್ಪುಟ್"
-        }
+        },
+        "aiConversation": "AI ಸಂವಾದ"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const kn = {
         "ttsProviderModel": "{providerName} ಮಾದರಿ",
         "selectTtsProviderModel": "ಆಯ್ಕೆ ಮಾಡಿ {providerName} ಮಾದರಿ",
         "selectProvider": "ಪೂರೈಕೆದಾರರನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-        "per": "ಪ್ರತಿ"
+        "per": "ಪ್ರತಿ",
+        "enableImageGen": "ಚಿತ್ರ ರಚನೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
+        "imageModel": "ಇಮೇಜ್ ಮಾದರಿ",
+        "quality": "ಗುಣಮಟ್ಟ",
+        "size": "ಗಾತ್ರ",
+        "promptLLM": "ಪ್ರಾಂಪ್ಟ್ ಎಲ್ಎಲ್ಎಂ",
+        "imagePromptSystemMessage": "ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್ ಸಿಸ್ಟಮ್ ಸಂದೇಶ",
+        "defaultImagePromptSystemMessage": "ಈ ತಿರುವಿನ ಆಧಾರದ ಮೇಲೆ ಚಿತ್ರ ರಚನೆ ಮಾದರಿಗೆ ನೀಡಲು ಪ್ರಾಂಪ್ಟ್ ರಚಿಸಿ: {turn}",
+        "imagePromptSystemMessageHelp": "ಈ ಸಂದೇಶವನ್ನು ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ಉತ್ಪಾದಿಸುವ LLM ಗೆ ಸಿಸ್ಟಮ್ ಪ್ರಾಂಪ್ಟ್ ಆಗಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಬಳಸಿ <code>{'{turn}'}</code> ಏಜೆಂಟ್ ಸಂದೇಶಕ್ಕೆ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಆಗಿ.",
+        "selectImageModel": "ಚಿತ್ರ ಮಾದರಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        "selectPromptLLM": "ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್‌ಗಾಗಿ LLM ಆಯ್ಕೆಮಾಡಿ."
     },
     "history": {
         "backToMain": "ಮುಖ್ಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",
@@ -344,6 +355,10 @@ const kn = {
         "model": "ಮಾದರಿ",
         "voice": "ಧ್ವನಿ"
     },
-    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ"
+    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
+    "page_AvailableImageModelsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಇಮೇಜ್ ಮಾದರಿಗಳು",
+    "imageModel_Quality": "ಗುಣಮಟ್ಟ",
+    "imageModel_Size": "ಗಾತ್ರ",
+    "imageModel_PriceUSD": "ಬೆಲೆ (USD)"
 };
 export default kn;

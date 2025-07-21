@@ -153,7 +153,8 @@ const zh = {
             "perMillionTokens": "每百万个代币",
             "input": "输入",
             "output": "输出"
-        }
+        },
+        "aiConversation": "AI 对话"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const zh = {
         "ttsProviderModel": "{providerName} 模型",
         "selectTtsProviderModel": "选择 {providerName} 模型",
         "selectProvider": "选择提供商",
-        "per": "每"
+        "per": "每",
+        "enableImageGen": "启用图像生成",
+        "imageModel": "图像模型",
+        "quality": "质量",
+        "size": "尺寸",
+        "promptLLM": "即时法学硕士",
+        "imagePromptSystemMessage": "图片提示系统消息",
+        "defaultImagePromptSystemMessage": "根据此回合创建一个提示给图像生成模型： {turn}",
+        "imagePromptSystemMessageHelp": "此消息将作为系统提示符发送到生成图像提示符的 LLM。使用 <code>{'{turn}'}</code> 作为代理消息的占位符。",
+        "selectImageModel": "选择图像模型",
+        "selectPromptLLM": "选择 LLM 作为图像提示"
     },
     "history": {
         "backToMain": "返回主页",
@@ -344,6 +355,10 @@ const zh = {
         "model": "模型",
         "voice": "嗓音"
     },
-    "common_verifyHere": "在此验证"
+    "common_verifyHere": "在此验证",
+    "page_AvailableImageModelsTitle": "当前可用的图像模型",
+    "imageModel_Quality": "质量",
+    "imageModel_Size": "尺寸",
+    "imageModel_PriceUSD": "价格 (USD)"
 };
 export default zh;

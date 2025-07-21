@@ -153,7 +153,8 @@ const ur = {
             "perMillionTokens": "فی ملین ٹوکن",
             "input": "ان پٹ",
             "output": "آؤٹ پٹ"
-        }
+        },
+        "aiConversation": "AI بات چیت"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ur = {
         "ttsProviderModel": "{providerName} ماڈل",
         "selectTtsProviderModel": "منتخب کریں۔ {providerName} ماڈل",
         "selectProvider": "فراہم کنندہ کو منتخب کریں۔",
-        "per": "فی"
+        "per": "فی",
+        "enableImageGen": "امیج جنریشن کو فعال کریں۔",
+        "imageModel": "تصویری ماڈل",
+        "quality": "معیار",
+        "size": "سائز",
+        "promptLLM": "فوری ایل ایل ایم",
+        "imagePromptSystemMessage": "امیج پرامپٹ سسٹم کا پیغام",
+        "defaultImagePromptSystemMessage": "اس موڑ کی بنیاد پر امیج جنریشن ماڈل کو دینے کے لیے ایک پرامپٹ بنائیں: {turn}",
+        "imagePromptSystemMessageHelp": "یہ پیغام LLM کو سسٹم پرامپٹ کے طور پر بھیجا جائے گا جو امیج پرامپٹ تیار کرتا ہے۔ استعمال کریں۔ <code>{'{turn}'}</code> ایجنٹ کے پیغام کے پلیس ہولڈر کے طور پر۔",
+        "selectImageModel": "تصویر کا ماڈل منتخب کریں۔",
+        "selectPromptLLM": "امیج پرامپٹ کے لیے ایل ایل ایم منتخب کریں۔"
     },
     "history": {
         "backToMain": "واپس مین پر",
@@ -344,6 +355,10 @@ const ur = {
         "model": "ماڈل",
         "voice": "آواز"
     },
-    "common_verifyHere": "یہاں تصدیق کریں"
+    "common_verifyHere": "یہاں تصدیق کریں",
+    "page_AvailableImageModelsTitle": "فی الحال دستیاب تصویری ماڈلز",
+    "imageModel_Quality": "معیار",
+    "imageModel_Size": "سائز",
+    "imageModel_PriceUSD": "قیمت (USD)"
 };
 export default ur;

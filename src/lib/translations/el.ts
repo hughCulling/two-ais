@@ -153,7 +153,8 @@ const el = {
             "perMillionTokens": "ανά εκατομμύριο μάρκες",
             "input": "Εισαγωγή",
             "output": "Παραγωγή"
-        }
+        },
+        "aiConversation": "AI Συνομιλία"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const el = {
         "ttsProviderModel": "{providerName} Μοντέλο",
         "selectTtsProviderModel": "Επιλέγω {providerName} Μοντέλο",
         "selectProvider": "Επιλέξτε Πάροχο",
-        "per": "ανά"
+        "per": "ανά",
+        "enableImageGen": "Ενεργοποίηση δημιουργίας εικόνων",
+        "imageModel": "Μοντέλο εικόνας",
+        "quality": "Ποιότητα",
+        "size": "Μέγεθος",
+        "promptLLM": "Προτροπή LLM",
+        "imagePromptSystemMessage": "Μήνυμα συστήματος προτροπής εικόνας",
+        "defaultImagePromptSystemMessage": "Δημιουργήστε μια προτροπή για να την δώσετε στο μοντέλο δημιουργίας εικόνων με βάση αυτόν τον γύρο: {turn}",
+        "imagePromptSystemMessageHelp": "Αυτό το μήνυμα θα σταλεί ως προτροπή συστήματος στο LLM που δημιουργεί την προτροπή εικόνας. Χρησιμοποιήστε <code>{'{turn}'}</code> ως σύμβολο κράτησης θέσης για το μήνυμα του πράκτορα.",
+        "selectImageModel": "Επιλογή μοντέλου εικόνας",
+        "selectPromptLLM": "Επιλέξτε LLM για προτροπή εικόνας"
     },
     "history": {
         "backToMain": "Επιστροφή στο κύριο μέρος",
@@ -344,6 +355,10 @@ const el = {
         "model": "Μοντέλο",
         "voice": "Φωνή"
     },
-    "common_verifyHere": "επαλήθευση εδώ"
+    "common_verifyHere": "επαλήθευση εδώ",
+    "page_AvailableImageModelsTitle": "Διαθέσιμα μοντέλα εικόνας αυτήν τη στιγμή",
+    "imageModel_Quality": "Ποιότητα",
+    "imageModel_Size": "Μέγεθος",
+    "imageModel_PriceUSD": "Τιμή (USD)"
 };
 export default el;
