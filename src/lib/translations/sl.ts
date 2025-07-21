@@ -345,6 +345,9 @@ const sl = {
         "voice": "Glas"
     },
     "common_verifyHere": "preveri tukaj",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Trenutno razpoložljivi modeli slik",
+    "imageModel_Quality": "Kakovost",
+    "imageModel_Size": "Velikost",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default sl;

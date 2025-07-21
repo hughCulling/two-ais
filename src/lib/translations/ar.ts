@@ -345,6 +345,9 @@ const ar = {
         "voice": "صوت"
     },
     "common_verifyHere": "التحقق هنا",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "نماذج الصور المتوفرة حاليًا",
+    "imageModel_Quality": "جودة",
+    "imageModel_Size": "مقاس",
+    "imageModel_PriceUSD": "سعر (USD)"
 };
 export default ar;

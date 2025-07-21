@@ -345,6 +345,9 @@ const et = {
         "voice": "Hääl"
     },
     "common_verifyHere": "kinnita siin",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Praegu saadaolevad pildimudelid",
+    "imageModel_Quality": "Kvaliteet",
+    "imageModel_Size": "Suurus",
+    "imageModel_PriceUSD": "Hind (USD)"
 };
 export default et;

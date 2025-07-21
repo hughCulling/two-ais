@@ -345,6 +345,9 @@ const ka = {
         "voice": "ხმა"
     },
     "common_verifyHere": "გადაამოწმეთ აქ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "ამჟამად ხელმისაწვდომი გამოსახულების მოდელები",
+    "imageModel_Quality": "ხარისხი",
+    "imageModel_Size": "ზომა",
+    "imageModel_PriceUSD": "ფასი (USD)"
 };
 export default ka;

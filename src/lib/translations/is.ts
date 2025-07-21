@@ -345,6 +345,9 @@ const is = {
         "voice": "Rödd"
     },
     "common_verifyHere": "staðfesta hér",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Myndlíkön sem eru nú fáanleg",
+    "imageModel_Quality": "Gæði",
+    "imageModel_Size": "Stærð",
+    "imageModel_PriceUSD": "Verð (USD)"
 };
 export default is;

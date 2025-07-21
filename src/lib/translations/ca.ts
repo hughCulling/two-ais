@@ -345,6 +345,9 @@ const ca = {
         "voice": "Veu"
     },
     "common_verifyHere": "verifica aquí",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Models d'imatge disponibles actualment",
+    "imageModel_Quality": "Qualitat",
+    "imageModel_Size": "Mida",
+    "imageModel_PriceUSD": "Preu (USD)"
 };
 export default ca;

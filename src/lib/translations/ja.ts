@@ -345,6 +345,9 @@ const ja = {
         "voice": "声"
     },
     "common_verifyHere": "こちらで確認",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "現在利用可能な画像モデル",
+    "imageModel_Quality": "品質",
+    "imageModel_Size": "サイズ",
+    "imageModel_PriceUSD": "価格 (USD)"
 };
 export default ja;

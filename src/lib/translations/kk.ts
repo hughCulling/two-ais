@@ -345,6 +345,9 @@ const kk = {
         "voice": "Дауыс"
     },
     "common_verifyHere": "осы жерден тексеріңіз",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Қазіргі уақытта қол жетімді кескін үлгілері",
+    "imageModel_Quality": "Сапасы",
+    "imageModel_Size": "Өлшем",
+    "imageModel_PriceUSD": "Бағасы (USD)"
 };
 export default kk;

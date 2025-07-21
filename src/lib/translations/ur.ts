@@ -345,6 +345,9 @@ const ur = {
         "voice": "آواز"
     },
     "common_verifyHere": "یہاں تصدیق کریں",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "فی الحال دستیاب تصویری ماڈلز",
+    "imageModel_Quality": "معیار",
+    "imageModel_Size": "سائز",
+    "imageModel_PriceUSD": "قیمت (USD)"
 };
 export default ur;

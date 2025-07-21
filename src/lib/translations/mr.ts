@@ -345,6 +345,9 @@ const mr = {
         "voice": "आवाज"
     },
     "common_verifyHere": "येथे पडताळणी करा",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "सध्या उपलब्ध प्रतिमा मॉडेल्स",
+    "imageModel_Quality": "गुणवत्ता",
+    "imageModel_Size": "आकार",
+    "imageModel_PriceUSD": "किंमत (USD)"
 };
 export default mr;

@@ -117,6 +117,9 @@ function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<strin
   return grouped;
 }
 
+// Token pricing tooltip content for GPT Image 1
+const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = `Token pricing for GPT Image 1:\nInput: $10.00 / 1M tokens\nCached input: $2.50 / 1M tokens\nOutput: $40.00 / 1M tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.`;
+
 
 const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 
@@ -500,18 +503,48 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           <div key={model.id} className="border rounded-md p-4 bg-muted/30">
                             <div className="flex items-center mb-2">
                               <span className="font-semibold text-lg mr-2">{model.name}</span>
+                              {model.id === 'gpt-image-1' && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help ml-1" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="w-auto max-w-[260px] p-2">
+                                    <p className="text-xs whitespace-pre-line">{GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                              {model.requiresOrgVerification && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help ml-1" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                    <p className="text-xs">
+                                      {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                      <a
+                                        href="https://platform.openai.com/settings/organization/general"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                      >
+                                        {t.common_verifyHere}
+                                      </a>
+                                      {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
                               {model.status && (
                                 <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
                               )}
                             </div>
-                            <div className="text-sm text-muted-foreground mb-2">{model.description}</div>
                             <div className="overflow-x-auto">
                               <table className="min-w-full text-xs border-collapse">
                                 <thead>
                                   <tr>
-                                    <th className="px-2 py-1 border-b text-left">Quality</th>
-                                    <th className="px-2 py-1 border-b text-left">Size</th>
-                                    <th className="px-2 py-1 border-b text-left">Price (USD)</th>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_Quality}</th>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_Size}</th>
+                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_PriceUSD}</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -527,9 +560,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 </tbody>
                               </table>
                             </div>
-                            {model.pricingNote && (
-                              <div className="text-xs text-muted-foreground mt-2">{model.pricingNote}</div>
-                            )}
                           </div>
                         ))}
                       </CollapsibleContent>

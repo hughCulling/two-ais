@@ -345,6 +345,9 @@ const pa = {
         "voice": "ਆਵਾਜ਼"
     },
     "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਚਿੱਤਰ ਮਾਡਲ",
+    "imageModel_Quality": "ਗੁਣਵੱਤਾ",
+    "imageModel_Size": "ਆਕਾਰ",
+    "imageModel_PriceUSD": "ਕੀਮਤ (USD)"
 };
 export default pa;

@@ -345,6 +345,9 @@ const am = {
         "voice": "ድምጽ"
     },
     "common_verifyHere": "እዚህ ያረጋግጡ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "በአሁኑ ጊዜ የሚገኙ የምስል ሞዴሎች",
+    "imageModel_Quality": "ጥራት",
+    "imageModel_Size": "መጠን",
+    "imageModel_PriceUSD": "ዋጋ (USD)"
 };
 export default am;

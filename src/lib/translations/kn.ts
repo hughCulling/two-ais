@@ -345,6 +345,9 @@ const kn = {
         "voice": "ಧ್ವನಿ"
     },
     "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಇಮೇಜ್ ಮಾದರಿಗಳು",
+    "imageModel_Quality": "ಗುಣಮಟ್ಟ",
+    "imageModel_Size": "ಗಾತ್ರ",
+    "imageModel_PriceUSD": "ಬೆಲೆ (USD)"
 };
 export default kn;

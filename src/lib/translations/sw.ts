@@ -345,6 +345,9 @@ const sw = {
         "voice": "Sauti"
     },
     "common_verifyHere": "thibitisha hapa",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Miundo ya Picha Inayopatikana Kwa Sasa",
+    "imageModel_Quality": "Ubora",
+    "imageModel_Size": "Ukubwa",
+    "imageModel_PriceUSD": "Bei (USD)"
 };
 export default sw;

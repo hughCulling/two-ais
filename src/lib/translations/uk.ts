@@ -345,6 +345,9 @@ const uk = {
         "voice": "Голос"
     },
     "common_verifyHere": "перевірте тут",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Доступні наразі моделі зображень",
+    "imageModel_Quality": "Якість",
+    "imageModel_Size": "Розмір",
+    "imageModel_PriceUSD": "Ціна (USD)"
 };
 export default uk;

@@ -345,6 +345,9 @@ const te = {
         "voice": "వాయిస్"
     },
     "common_verifyHere": "ఇక్కడ ధృవీకరించండి",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "ప్రస్తుతం అందుబాటులో ఉన్న చిత్ర నమూనాలు",
+    "imageModel_Quality": "నాణ్యత",
+    "imageModel_Size": "పరిమాణం",
+    "imageModel_PriceUSD": "ధర (USD)"
 };
 export default te;

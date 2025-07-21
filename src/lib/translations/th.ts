@@ -345,6 +345,9 @@ const th = {
         "voice": "เสียง"
     },
     "common_verifyHere": "ยืนยันที่นี่",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "โมเดลภาพที่มีอยู่ในปัจจุบัน",
+    "imageModel_Quality": "คุณภาพ",
+    "imageModel_Size": "ขนาด",
+    "imageModel_PriceUSD": "ราคา (USD)"
 };
 export default th;

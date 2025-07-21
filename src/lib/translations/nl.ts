@@ -345,6 +345,9 @@ const nl = {
         "voice": "Stem"
     },
     "common_verifyHere": "hier verifiëren",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Momenteel beschikbare afbeeldingsmodellen",
+    "imageModel_Quality": "Kwaliteit",
+    "imageModel_Size": "Maat",
+    "imageModel_PriceUSD": "Prijs (USD)"
 };
 export default nl;

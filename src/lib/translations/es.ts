@@ -345,6 +345,9 @@ const es = {
         "voice": "Voz"
     },
     "common_verifyHere": "verificar aquí",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Modelos de imagen actualmente disponibles",
+    "imageModel_Quality": "Calidad",
+    "imageModel_Size": "Tamaño",
+    "imageModel_PriceUSD": "Precio (USD)"
 };
 export default es;

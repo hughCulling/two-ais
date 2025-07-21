@@ -345,6 +345,9 @@ const lt = {
         "voice": "Balsas"
     },
     "common_verifyHere": "patikrinkite čia",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Šiuo metu prieinami vaizdo modeliai",
+    "imageModel_Quality": "Kokybė",
+    "imageModel_Size": "Dydis",
+    "imageModel_PriceUSD": "Kaina (USD)"
 };
 export default lt;

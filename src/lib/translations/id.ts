@@ -345,6 +345,9 @@ const id = {
         "voice": "Suara"
     },
     "common_verifyHere": "verifikasi di sini",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Model Gambar yang Tersedia Saat Ini",
+    "imageModel_Quality": "Kualitas",
+    "imageModel_Size": "Ukuran",
+    "imageModel_PriceUSD": "Harga (USD)"
 };
 export default id;

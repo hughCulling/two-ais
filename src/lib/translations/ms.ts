@@ -345,6 +345,9 @@ const ms = {
         "voice": "Suara"
     },
     "common_verifyHere": "sahkan di sini",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Model Imej Tersedia Pada Masa Ini",
+    "imageModel_Quality": "Kualiti",
+    "imageModel_Size": "Saiz",
+    "imageModel_PriceUSD": "harga (USD)"
 };
 export default ms;

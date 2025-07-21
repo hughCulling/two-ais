@@ -345,6 +345,9 @@ const cs = {
         "voice": "Hlas"
     },
     "common_verifyHere": "ověřte zde",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Aktuálně dostupné obrazové modely",
+    "imageModel_Quality": "Kvalitní",
+    "imageModel_Size": "Velikost",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default cs;

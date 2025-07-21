@@ -345,6 +345,9 @@ const mk = {
         "voice": "Глас"
     },
     "common_verifyHere": "потврди тука",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Моментално достапни модели на слики",
+    "imageModel_Quality": "Квалитет",
+    "imageModel_Size": "Големина",
+    "imageModel_PriceUSD": "Цена (USD)"
 };
 export default mk;

@@ -345,6 +345,9 @@ const vi = {
         "voice": "Tiếng nói"
     },
     "common_verifyHere": "xác minh ở đây",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Các mô hình hình ảnh hiện có",
+    "imageModel_Quality": "Chất lượng",
+    "imageModel_Size": "Kích cỡ",
+    "imageModel_PriceUSD": "Giá (USD)"
 };
 export default vi;

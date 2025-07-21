@@ -345,6 +345,9 @@ const gu = {
         "voice": "અવાજ"
     },
     "common_verifyHere": "અહીં ચકાસો",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "હાલમાં ઉપલબ્ધ છબી મોડેલ્સ",
+    "imageModel_Quality": "ગુણવત્તા",
+    "imageModel_Size": "કદ",
+    "imageModel_PriceUSD": "કિંમત (USD)"
 };
 export default gu;

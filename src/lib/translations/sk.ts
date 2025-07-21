@@ -345,6 +345,9 @@ const sk = {
         "voice": "Hlas"
     },
     "common_verifyHere": "overiť tu",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Aktuálne dostupné modely obrázkov",
+    "imageModel_Quality": "Kvalita",
+    "imageModel_Size": "Veľkosť",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default sk;

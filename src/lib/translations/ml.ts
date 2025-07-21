@@ -345,6 +345,9 @@ const ml = {
         "voice": "ശബ്ദം"
     },
     "common_verifyHere": "ഇവിടെ സ്ഥിരീകരിക്കുക",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "നിലവിൽ ലഭ്യമായ ഇമേജ് മോഡലുകൾ",
+    "imageModel_Quality": "ഗുണമേന്മ",
+    "imageModel_Size": "വലുപ്പം",
+    "imageModel_PriceUSD": "വില (USD)"
 };
 export default ml;

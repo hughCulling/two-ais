@@ -345,6 +345,9 @@ const lv = {
         "voice": "Balss"
     },
     "common_verifyHere": "pārbaudīt šeit",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Pašlaik pieejamie attēlu modeļi",
+    "imageModel_Quality": "Kvalitāte",
+    "imageModel_Size": "Izmērs",
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default lv;

@@ -345,6 +345,9 @@ const zh = {
         "voice": "嗓音"
     },
     "common_verifyHere": "在此验证",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "当前可用的图像模型",
+    "imageModel_Quality": "质量",
+    "imageModel_Size": "尺寸",
+    "imageModel_PriceUSD": "价格 (USD)"
 };
 export default zh;

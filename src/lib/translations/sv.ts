@@ -345,6 +345,9 @@ const sv = {
         "voice": "Röst"
     },
     "common_verifyHere": "verifiera här",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "För närvarande tillgängliga bildmodeller",
+    "imageModel_Quality": "Kvalitet",
+    "imageModel_Size": "Storlek",
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default sv;

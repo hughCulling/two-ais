@@ -345,6 +345,9 @@ const fa = {
         "voice": "صدا"
     },
     "common_verifyHere": "اینجا تأیید کنید",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "مدل‌های تصویر موجود در حال حاضر",
+    "imageModel_Quality": "کیفیت",
+    "imageModel_Size": "اندازه",
+    "imageModel_PriceUSD": "قیمت (USD)"
 };
 export default fa;

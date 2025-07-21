@@ -345,6 +345,9 @@ const ro = {
         "voice": "Voce"
     },
     "common_verifyHere": "verifică aici",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Modele de imagine disponibile în prezent",
+    "imageModel_Quality": "Calitate",
+    "imageModel_Size": "Dimensiune",
+    "imageModel_PriceUSD": "Preţ (USD)"
 };
 export default ro;

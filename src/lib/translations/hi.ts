@@ -345,6 +345,9 @@ const hi = {
         "voice": "आवाज़"
     },
     "common_verifyHere": "यहां सत्यापित करें",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "वर्तमान में उपलब्ध छवि मॉडल",
+    "imageModel_Quality": "गुणवत्ता",
+    "imageModel_Size": "आकार",
+    "imageModel_PriceUSD": "कीमत (USD)"
 };
 export default hi;

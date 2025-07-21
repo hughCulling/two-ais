@@ -173,6 +173,7 @@ const PROTECTED_TERMS = [
     "{providerName}",
     "{date}",
     "{language}",
+    "(USD)",
     "Meta Llama",
     //...LANGUAGE_NAMES_EN
 ];

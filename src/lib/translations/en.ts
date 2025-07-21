@@ -365,6 +365,9 @@ const en = {
         voice: 'Voice',
     },
 
+    imageModel_Quality: "Quality",
+    imageModel_Size: "Size",
+    imageModel_PriceUSD: "Price (USD)",
     // --------------- END OF FILE --------------- 
 };
 export default en; 

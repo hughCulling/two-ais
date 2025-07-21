@@ -345,6 +345,9 @@ const so = {
         "voice": "Codka"
     },
     "common_verifyHere": "halkan ka xaqiiji",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Qaababka Sawirka ee Hadda La Heli karo",
+    "imageModel_Quality": "Tayada",
+    "imageModel_Size": "Cabbirka",
+    "imageModel_PriceUSD": "Qiimaha (USD)"
 };
 export default so;

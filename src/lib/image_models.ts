@@ -17,6 +17,7 @@ export interface ImageModelInfo {
   }>;
   pricingNote?: string;
   status?: 'preview' | 'beta' | 'experimental';
+  requiresOrgVerification?: boolean;
 }
 
 export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
@@ -53,6 +54,7 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     ],
     pricingNote: 'Pricing is per image. See OpenAI docs for details.',
     status: undefined,
+    requiresOrgVerification: true,
   },
   {
     id: 'dall-e-3',
@@ -84,14 +86,14 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     id: 'dall-e-2',
     name: 'DALL·E 2',
     provider: 'OpenAI',
-    description: 'Previous generation image generation model. Lower cost, supports 256x256, 512x512, 1024x1024.',
+    description: 'Previous generation image generation model. Lower cost, supports 1024x1024, 1024x1536, 1536x1024.',
     qualities: [
       {
         quality: 'standard',
         sizes: [
-          { size: '256x256', price: 0.016 },
-          { size: '512x512', price: 0.018 },
-          { size: '1024x1024', price: 0.02 },
+          { size: '1024x1024', price: 0.016 },
+          { size: '1024x1536', price: 0.018 },
+          { size: '1536x1024', price: 0.02 },
         ],
       },
     ],

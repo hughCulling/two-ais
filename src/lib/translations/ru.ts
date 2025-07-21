@@ -345,6 +345,9 @@ const ru = {
         "voice": "Голос"
     },
     "common_verifyHere": "проверить здесь",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Доступные в настоящее время модели изображений",
+    "imageModel_Quality": "Качество",
+    "imageModel_Size": "Размер",
+    "imageModel_PriceUSD": "Цена (USD)"
 };
 export default ru;

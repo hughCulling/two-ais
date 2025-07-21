@@ -345,6 +345,9 @@ const tl = {
         "voice": "Boses"
     },
     "common_verifyHere": "verify dito",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Kasalukuyang Magagamit na Mga Modelo ng Larawan",
+    "imageModel_Quality": "Kalidad",
+    "imageModel_Size": "Sukat",
+    "imageModel_PriceUSD": "Presyo (USD)"
 };
 export default tl;

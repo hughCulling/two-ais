@@ -345,6 +345,9 @@ const iw = {
         "voice": "קוֹל"
     },
     "common_verifyHere": "אימות כאן",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "דגמי תמונה זמינים כעת",
+    "imageModel_Quality": "אֵיכוּת",
+    "imageModel_Size": "גוֹדֶל",
+    "imageModel_PriceUSD": "מְחִיר (USD)"
 };
 export default iw;

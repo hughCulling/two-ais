@@ -345,6 +345,9 @@ const sq = {
         "voice": "Zëri"
     },
     "common_verifyHere": "verifiko këtu",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Modelet e imazheve të disponueshme aktualisht",
+    "imageModel_Quality": "Cilësia",
+    "imageModel_Size": "Madhësia",
+    "imageModel_PriceUSD": "Çmimi (USD)"
 };
 export default sq;

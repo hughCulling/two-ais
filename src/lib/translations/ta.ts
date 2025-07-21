@@ -345,6 +345,9 @@ const ta = {
         "voice": "குரல்"
     },
     "common_verifyHere": "இங்கே சரிபார்க்கவும்",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "தற்போது கிடைக்கும் பட மாதிரிகள்",
+    "imageModel_Quality": "தரம்",
+    "imageModel_Size": "அளவு",
+    "imageModel_PriceUSD": "விலை (USD)"
 };
 export default ta;

@@ -345,6 +345,9 @@ const bg = {
         "voice": "Глас"
     },
     "common_verifyHere": "проверете тук",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Налични модели на изображения в момента",
+    "imageModel_Quality": "Качество",
+    "imageModel_Size": "Размер",
+    "imageModel_PriceUSD": "Цена (USD)"
 };
 export default bg;

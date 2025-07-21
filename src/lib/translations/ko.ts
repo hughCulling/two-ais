@@ -345,6 +345,9 @@ const ko = {
         "voice": "목소리"
     },
     "common_verifyHere": "여기서 확인하세요",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "현재 사용 가능한 이미지 모델",
+    "imageModel_Quality": "품질",
+    "imageModel_Size": "크기",
+    "imageModel_PriceUSD": "가격 (USD)"
 };
 export default ko;

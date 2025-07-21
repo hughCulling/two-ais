@@ -345,6 +345,9 @@ const hu = {
         "voice": "Hang"
     },
     "common_verifyHere": "ellenőrizze itt",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Jelenleg elérhető képmodellek",
+    "imageModel_Quality": "Minőség",
+    "imageModel_Size": "Méret",
+    "imageModel_PriceUSD": "Ár (USD)"
 };
 export default hu;

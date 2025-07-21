@@ -345,6 +345,9 @@ const hy = {
         "voice": "Ձայն"
     },
     "common_verifyHere": "ստուգել այստեղ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Ներկայումս հասանելի պատկերի մոդելներ",
+    "imageModel_Quality": "Որակ",
+    "imageModel_Size": "Չափս",
+    "imageModel_PriceUSD": "Գինը (USD)"
 };
 export default hy;

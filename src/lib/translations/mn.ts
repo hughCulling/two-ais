@@ -345,6 +345,9 @@ const mn = {
         "voice": "Дуу хоолой"
     },
     "common_verifyHere": "энд баталгаажуулна уу",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Одоогоор бэлэн байгаа зургийн загварууд",
+    "imageModel_Quality": "Чанартай",
+    "imageModel_Size": "Хэмжээ",
+    "imageModel_PriceUSD": "Үнэ (USD)"
 };
 export default mn;

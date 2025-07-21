@@ -345,6 +345,9 @@ const tr = {
         "voice": "Ses"
     },
     "common_verifyHere": "buradan doğrulayın",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Şu Anda Mevcut Görüntü Modelleri",
+    "imageModel_Quality": "Kalite",
+    "imageModel_Size": "Boyut",
+    "imageModel_PriceUSD": "Fiyat (USD)"
 };
 export default tr;

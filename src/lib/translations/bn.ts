@@ -345,6 +345,9 @@ const bn = {
         "voice": "কণ্ঠস্বর"
     },
     "common_verifyHere": "এখানে যাচাই করুন",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "বর্তমানে উপলব্ধ চিত্র মডেল",
+    "imageModel_Quality": "গুণমান",
+    "imageModel_Size": "আকার",
+    "imageModel_PriceUSD": "দাম (USD)"
 };
 export default bn;

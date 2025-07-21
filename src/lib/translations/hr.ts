@@ -345,6 +345,9 @@ const hr = {
         "voice": "Glas"
     },
     "common_verifyHere": "provjerite ovdje",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Trenutno dostupni modeli slika",
+    "imageModel_Quality": "Kvaliteta",
+    "imageModel_Size": "Veličina",
+    "imageModel_PriceUSD": "Cijena (USD)"
 };
 export default hr;

@@ -345,6 +345,9 @@ const mt = {
         "voice": "Vuċi"
     },
     "common_verifyHere": "ivverifika hawn",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Mudelli ta' Immaġni Disponibbli Bħalissa",
+    "imageModel_Quality": "Kwalità",
+    "imageModel_Size": "Daqs",
+    "imageModel_PriceUSD": "Prezz (USD)"
 };
 export default mt;

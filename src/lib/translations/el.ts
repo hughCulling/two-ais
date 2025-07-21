@@ -345,6 +345,9 @@ const el = {
         "voice": "Φωνή"
     },
     "common_verifyHere": "επαλήθευση εδώ",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Διαθέσιμα μοντέλα εικόνας αυτήν τη στιγμή",
+    "imageModel_Quality": "Ποιότητα",
+    "imageModel_Size": "Μέγεθος",
+    "imageModel_PriceUSD": "Τιμή (USD)"
 };
 export default el;

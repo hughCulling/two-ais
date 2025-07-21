@@ -345,6 +345,9 @@ const my = {
         "voice": "စကားသံ"
     },
     "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "လက်ရှိရနိုင်သော ရုပ်ပုံမော်ဒယ်များ",
+    "imageModel_Quality": "အရည်အသွေး",
+    "imageModel_Size": "အရွယ်အစား",
+    "imageModel_PriceUSD": "စျေးနှုန်း (USD)"
 };
 export default my;

@@ -345,6 +345,9 @@ const da = {
         "voice": "Stemme"
     },
     "common_verifyHere": "bekræft her",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Aktuelt tilgængelige billedmodeller",
+    "imageModel_Quality": "Kvalitet",
+    "imageModel_Size": "Størrelse",
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default da;

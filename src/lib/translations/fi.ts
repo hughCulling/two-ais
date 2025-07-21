@@ -345,6 +345,9 @@ const fi = {
         "voice": "Ääni"
     },
     "common_verifyHere": "vahvista tästä",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Tällä hetkellä saatavilla olevat kuvamallit",
+    "imageModel_Quality": "Laatu",
+    "imageModel_Size": "Koko",
+    "imageModel_PriceUSD": "Hinta (USD)"
 };
 export default fi;

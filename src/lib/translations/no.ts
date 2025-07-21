@@ -345,6 +345,9 @@ const no = {
         "voice": "Stemme"
     },
     "common_verifyHere": "bekreft her",
-    "page_AvailableImageModelsTitle": "Currently Available Image Models"
+    "page_AvailableImageModelsTitle": "Nåværende tilgjengelige bildemodeller",
+    "imageModel_Quality": "Kvalitet",
+    "imageModel_Size": "Størrelse",
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default no;
