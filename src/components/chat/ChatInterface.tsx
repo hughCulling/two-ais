@@ -25,6 +25,7 @@ import {
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
 import { useTranslation } from '@/hooks/useTranslation';
+import ReactDOM from 'react-dom';
 
 // --- Interfaces ---
 interface Message {
@@ -503,6 +504,21 @@ export function ChatInterface({
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
     const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
 
+    // --- Auto-update fullscreen image modal when new image arrives ---
+    useEffect(() => {
+        if (!fullScreenImageMsgId) return;
+        // Find all visible messages with images
+        const imageMessages = visibleMessages.filter(
+            m => (m.role === 'agentA' || m.role === 'agentB') && m.imageUrl && !m.imageGenError
+        );
+        if (imageMessages.length === 0) return;
+        // If the current modal image is not the last image message, update it
+        const lastImageMsg = imageMessages[imageMessages.length - 1];
+        if (lastImageMsg.id !== fullScreenImageMsgId) {
+            setFullScreenImageMsgId(lastImageMsg.id);
+        }
+    }, [visibleMessages, fullScreenImageMsgId]);
+
     // --- Consolidated Audio Playback Effect ---
     useEffect(() => {
         if (!hasUserInteracted || isAudioPlaying) return;
@@ -710,29 +726,32 @@ export function ChatInterface({
                                                     )}
                                                 </div>
                                                 {/* Full Screen Modal */}
-                                                {fullScreenImageMsgId === msg.id && (
-                                                    <div
-                                                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-                                                        onClick={() => setFullScreenImageMsgId(null)}
-                                                        tabIndex={0}
-                                                        aria-modal="true"
-                                                        role="dialog"
-                                                    >
-                                                        <img
-                                                            src={msg.imageUrl}
-                                                            alt="Generated image for this turn (full screen)"
-                                                            className="max-w-full max-h-[90vh] rounded shadow-lg border border-white"
-                                                            style={{ objectFit: 'contain' }}
-                                                        />
-                                                        <button
-                                                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
-                                                            onClick={e => { e.stopPropagation(); setFullScreenImageMsgId(null); }}
-                                                            aria-label="Close full screen image"
+                                                {fullScreenImageMsgId === msg.id &&
+                                                    ReactDOM.createPortal(
+                                                        <div
+                                                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+                                                            onClick={() => setFullScreenImageMsgId(null)}
+                                                            tabIndex={0}
+                                                            aria-modal="true"
+                                                            role="dialog"
                                                         >
-                                                            Close
-                                                        </button>
-                                                    </div>
-                                                )}
+                                                            <img
+                                                                src={msg.imageUrl}
+                                                                alt="Generated image for this turn (full screen)"
+                                                                className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                                                style={{ objectFit: 'contain' }}
+                                                            />
+                                                            <button
+                                                                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                                                                onClick={e => { e.stopPropagation(); setFullScreenImageMsgId(null); }}
+                                                                aria-label="Close full screen image"
+                                                            >
+                                                                Close
+                                                            </button>
+                                                        </div>,
+                                                        document.body
+                                                    )
+                                                }
                                             </>
                                         )}
                                         {msg.imageGenError && (
