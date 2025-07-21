@@ -13,6 +13,7 @@ import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 import OpenAI from "openai";
 import axios from "axios";
 import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
+import removeMarkdown from "remove-markdown";
 const { AudioEncoding } = protos.google.cloud.texttospeech.v1;
 
 type QuotaError = { code?: string; status?: number };
@@ -191,7 +192,7 @@ export async function triggerAgentResponse(
         // --- TTS and IMAGE GENERATION in PARALLEL ---
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
-        const textToSpeak = responseContent;
+        const textToSpeak = removeMarkdown(responseContent);
         const imageGenSettings = conversationData.imageGenSettings;
 
         // Add debug log for imageGenSettings

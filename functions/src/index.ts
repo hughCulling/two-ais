@@ -11,6 +11,7 @@ import axios from "axios";
 // --- TTS Client Imports ---
 import OpenAI from "openai";
 import { TextToSpeechClient } from "@google-cloud/text-to-speech"; // Added Google TTS Client
+import removeMarkdown from "remove-markdown";
 
 // LangChain Imports
 import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
@@ -492,7 +493,7 @@ async function _triggerAgentResponse(
         // let ttsWasSplit = false; // New: flag for UI if audio was split
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
-        const textToSpeak = responseContent;
+        const textToSpeak = removeMarkdown(responseContent);
 
         // --- IMAGE GENERATION LOGIC (NEW) ---
         // Define a type that extends ConversationData with imageGenSettings
