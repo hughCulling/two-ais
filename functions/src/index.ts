@@ -488,207 +488,351 @@ async function _triggerAgentResponse(
         }
 
         // --- TTS and Firestore logic (unchanged, but use messageId) ---
-        let audioUrl: string | null = null;
-        let ttsGenerated = false;
-        let ttsWasSplit = false; // New: flag for UI if audio was split
+        // let audioUrl: string | null = null;
+        // let ttsWasSplit = false; // New: flag for UI if audio was split
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
         const textToSpeak = responseContent;
 
-        if (ttsSettings?.enabled && agentSettings && agentSettings.provider !== "none" && agentSettings.voice && textToSpeak) {
-            let audioBuffer: Buffer | null = null;
-            let ttsApiKey: string | null = null;
-            const ttsApiKeyId = getTTSApiKeyId(agentSettings.provider); // Get the correct key ID for TTS
+        // --- IMAGE GENERATION LOGIC (NEW) ---
+        // Define a type that extends ConversationData with imageGenSettings
+        type ConversationDataWithImageGen = ConversationData & {
+            imageGenSettings?: {
+                enabled: boolean;
+                provider: string;
+                model: string;
+                quality: string;
+                size: string;
+                promptLlm: string;
+                promptSystemMessage: string;
+            };
+        };
+        const imageGenSettings = (conversationData as ConversationDataWithImageGen).imageGenSettings;
+        async function runImageGen() {
+            logger.info("[DEBUG] Entered runImageGen. imageGenSettings:", imageGenSettings);
+            let imageUrl: string | null = null;
+            let imageGenError: string | null = null;
+            try {
+                if (imageGenSettings && imageGenSettings.enabled) {
+                    logger.info(`[ImageGen] Starting image generation for messageId: ${messageId}`);
+                    const imageGenStart = Date.now();
+                    try {
+                        // 1. Generate image prompt using selected LLM
+                        const promptLlmId = imageGenSettings.promptLlm;
+                        const promptSystemMessage = imageGenSettings.promptSystemMessage || "Create a prompt to give to the image generation model based on this turn: {turn}";
+                        const promptLlmProvider = getProviderFromId(promptLlmId);
+                        const promptLlmFirestoreKeyId = getFirestoreKeyIdFromProvider(promptLlmProvider);
+                        if (!promptLlmFirestoreKeyId) throw new Error(`Invalid Firestore key ID for image prompt LLM provider: ${promptLlmProvider}`);
+                        const promptLlmSecretVersionName = conversationData.apiSecretVersions[promptLlmFirestoreKeyId];
+                        if (!promptLlmSecretVersionName) throw new Error(`API key reference missing for image prompt LLM (${promptLlmProvider}).`);
+                        const promptLlmApiKey = await getApiKeyFromSecret(promptLlmSecretVersionName);
+                        if (!promptLlmApiKey) throw new Error(`getApiKeyFromSecret returned null for image prompt LLM version ${promptLlmSecretVersionName}`);
+                        let promptLlmModel: BaseChatModel;
+                        if (promptLlmProvider === "OpenAI") promptLlmModel = new ChatOpenAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                        else if (promptLlmProvider === "Google") promptLlmModel = new ChatGoogleGenerativeAI({ apiKey: promptLlmApiKey, model: promptLlmId });
+                        else if (promptLlmProvider === "Anthropic") promptLlmModel = new ChatAnthropic({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                        else if (promptLlmProvider === "xAI") promptLlmModel = new ChatXAI({ apiKey: promptLlmApiKey, model: promptLlmId });
+                        else if (promptLlmProvider === "TogetherAI") promptLlmModel = new ChatTogetherAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                        else throw new Error(`Unsupported provider for image prompt LLM: ${promptLlmProvider}`);
+                        // Compose system/user messages
+                        const systemMsg = promptSystemMessage.replace("{turn}", responseContent);
+                        const promptMessages = [
+                            new SystemMessage({ content: systemMsg }),
+                            new HumanMessage({ content: responseContent })
+                        ];
+                        // Use .invoke for single-turn prompt
+                        const promptResult = await promptLlmModel.invoke(promptMessages as BaseLanguageModelInput);
+                        let imagePrompt: string;
+                        if (typeof promptResult === "string") {
+                            imagePrompt = promptResult;
+                        } else if (promptResult && typeof promptResult.content === "string") {
+                            imagePrompt = promptResult.content;
+                        } else if (promptResult && Array.isArray(promptResult.content)) {
+                            imagePrompt = promptResult.content.map(x => (typeof x === "string" ? x : JSON.stringify(x))).join(" ");
+                        } else {
+                            imagePrompt = responseContent;
+                        }
+                        logger.info(`[ImageGen] Generated image prompt: ${imagePrompt}`);
+                        // 2. Call image generation API
+                        const provider = (imageGenSettings.provider || "").toLowerCase();
+                        if (provider === "openai") {
+                            const openaiApiKeyRef = conversationData.apiSecretVersions["openai"];
+                            if (!openaiApiKeyRef) throw new Error("OpenAI API key reference not found for image generation.");
+                            const openaiApiKey = await getApiKeyFromSecret(openaiApiKeyRef);
+                            if (!openaiApiKey) throw new Error("getApiKeyFromSecret returned null for OpenAI image generation.");
+                            const openai = new OpenAI({ apiKey: openaiApiKey });
+                            const quality = imageGenSettings.quality;
+                            const size = imageGenSettings.size;
+                            const model = imageGenSettings.model || "dall-e-3";
+                            // Build params for OpenAI image generation
+                            const openaiParams: Record<string, unknown> = {
+                                prompt: imagePrompt,
+                                model,
+                                n: 1,
+                            };
+                            if (model === "dall-e-3") {
+                                openaiParams.quality = (["standard", "hd"].includes(quality)) ? (quality as "standard" | "hd") : "standard";
+                                openaiParams.size = (["1024x1024", "1792x1024", "1024x1792"].includes(size)) ? (size as "1024x1024" | "1792x1024" | "1024x1792") : "1024x1024";
+                                openaiParams.response_format = "url";
+                            } else if (model === "dall-e-2") {
+                                openaiParams.quality = "standard";
+                                openaiParams.size = (["256x256", "512x512", "1024x1024"].includes(size)) ? (size as "256x256" | "512x512" | "1024x1024") : "1024x1024";
+                                openaiParams.response_format = "url";
+                            } else if (model === "gpt-image-1") {
+                                // For gpt-image-1, do not assign response_format at all
+                                openaiParams.quality = (["low", "medium", "high"].includes(quality)) ? quality : "low";
+                                openaiParams.size = (["1024x1024", "1024x1536", "1536x1024"].includes(size)) ? size : "1024x1024";
+                            } else {
+                                throw new Error(`Unsupported OpenAI image model: '${model}'. Please use 'dall-e-2', 'dall-e-3', or 'gpt-image-1'.`);
+                            }
+                            logger.info("[ImageGen] Calling OpenAI images.generate with params:", openaiParams);
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            const openaiRes = await openai.images.generate(openaiParams as any);
+                            if (openaiRes && openaiRes.data && openaiRes.data[0]) {
+                                if (openaiRes.data[0].url) {
+                                    imageUrl = openaiRes.data[0].url;
+                                    logger.info(`[ImageGen] Image generated (url): ${imageUrl}`);
+                                } else if (openaiRes.data[0].b64_json) {
+                                    // For gpt-image-1, upload the image to storage and return a public URL
+                                    const imageBuffer = Buffer.from(openaiRes.data[0].b64_json, "base64");
+                                    const imageFileName = `conversations/${conversationId}/images/${messageId}_${agentToRespond}.png`;
+                                    const file = storageBucket.file(imageFileName);
+                                    await file.save(imageBuffer, { metadata: { contentType: "image/png" } });
+                                    await file.makePublic();
+                                    imageUrl = file.publicUrl();
+                                    logger.info(`[ImageGen] Image generated and uploaded for gpt-image-1: ${imageUrl}`);
+                                } else {
+                                    throw new Error("No image URL or b64_json returned from OpenAI image generation.");
+                                }
+                            } else {
+                                throw new Error("No image data returned from OpenAI image generation.");
+                            }
+                        } else {
+                            throw new Error(`Image generation provider not implemented: ${imageGenSettings.provider}`);
+                        }
+                    } catch (err) {
+                        imageGenError = err instanceof Error ? err.message : String(err);
+                        logger.error("[ImageGen] Error:", err);
+                        imageUrl = null;
+                    }
+                    const imageGenEnd = Date.now();
+                    logger.info(`[ImageGen] Image generation for messageId: ${messageId} took ${imageGenEnd - imageGenStart}ms`);
+                }
+            } catch (err) {
+                imageGenError = err instanceof Error ? err.message : String(err);
+                logger.error("[ImageGen] Outer Error:", err);
+                imageUrl = null;
+            }
+            return { imageUrl, imageGenError };
+        }
+        // --- END IMAGE GENERATION LOGIC ---
 
-            if (!ttsApiKeyId) {
-                logger.error(`[TTS Error] Unsupported TTS provider or no API key ID mapping for: ${agentSettings.provider}. Skipping TTS.`);
-            } else {
-                const ttsSecretVersionName = conversationData.apiSecretVersions[ttsApiKeyId];
-                logger.info(`[TTS Key Check] Provider: ${agentSettings.provider}, Key ID: ${ttsApiKeyId}, Version Ref: ${ttsSecretVersionName}`);
-
-                if (!ttsSecretVersionName) {
-                    logger.error(`[TTS Error] TTS selected, but API key reference ('${ttsApiKeyId}') missing in apiSecretVersions. Skipping TTS.`);
+        // --- TTS LOGIC (existing, unchanged) ---
+        async function runTTS() {
+            let audioUrl: string | null = null;
+            let ttsWasSplit = false;
+            if (ttsSettings?.enabled && agentSettings && agentSettings.provider !== "none" && agentSettings.voice && textToSpeak) {
+                let audioBuffer: Buffer | null = null;
+                let ttsApiKey: string | null = null;
+                const ttsApiKeyId = getTTSApiKeyId(agentSettings.provider); // Get the correct key ID for TTS
+                if (!ttsApiKeyId) {
+                    logger.error(`[TTS Error] Unsupported TTS provider or no API key ID mapping for: ${agentSettings.provider}. Skipping TTS.`);
                 } else {
-                    ttsApiKey = await getApiKeyFromSecret(ttsSecretVersionName);
-                    if (!ttsApiKey) {
-                        logger.error(`[TTS Error] Failed to retrieve API key for TTS (provider: ${agentSettings.provider}, version: ${ttsSecretVersionName}). Skipping TTS.`);
+                    const ttsSecretVersionName = conversationData.apiSecretVersions[ttsApiKeyId];
+                    logger.info(`[TTS Key Check] Provider: ${agentSettings.provider}, Key ID: ${ttsApiKeyId}, Version Ref: ${ttsSecretVersionName}`);
+                    if (!ttsSecretVersionName) {
+                        logger.error(`[TTS Error] TTS selected, but API key reference ('${ttsApiKeyId}') missing in apiSecretVersions. Skipping TTS.`);
                     } else {
-                         logger.info(`[TTS Key Check] Successfully retrieved API key for TTS provider: ${agentSettings.provider}.`);
+                        ttsApiKey = await getApiKeyFromSecret(ttsSecretVersionName);
+                        if (!ttsApiKey) {
+                            logger.error(`[TTS Error] Failed to retrieve API key for TTS (provider: ${agentSettings.provider}, version: ${ttsSecretVersionName}). Skipping TTS.`);
+                        } else {
+                             logger.info(`[TTS Key Check] Successfully retrieved API key for TTS provider: ${agentSettings.provider}.`);
+                        }
                     }
                 }
-            }
-
-            if (ttsApiKey && agentSettings && agentSettings.voice) {
-                // --- New: TTS Input Splitting Logic ---
-                const ttsModel = getBackendTTSModelById(agentSettings.selectedTtsModelId || agentSettings.ttsApiModelId || "");
-                let inputLimitType = "characters";
-                let inputLimitValue = 4096;
-                let encodingName = "cl100k_base";
-                if (ttsModel) {
-                  inputLimitType = ttsModel.inputLimitType;
-                  inputLimitValue = ttsModel.inputLimitValue;
-                  if (ttsModel.encodingName) encodingName = ttsModel.encodingName;
-                }
-                // Split text as needed
-                const ttsChunks = getTTSInputChunks(
-                  textToSpeak,
-                  inputLimitType as import("./tts_models").TTSInputLimitType,
-                  inputLimitValue,
-                  encodingName as import("@dqbd/tiktoken").TiktokenEncoding | undefined
-                );
-                if (ttsChunks.length > 1) {
-                  ttsWasSplit = true;
-                  logger.info(`[TTS Split] Text for ${agentToRespond} split into ${ttsChunks.length} chunks for TTS model ${ttsModel?.name || agentSettings.selectedTtsModelId}`);
-                }
-                // Generate audio for each chunk and concatenate if possible
-                const audioBuffers: Buffer[] = [];
-                for (let i = 0; i < ttsChunks.length; i++) {
-                  const chunkText = ttsChunks[i];
-                  let chunkBuffer: Buffer | null = null;
-                  try {
-                    if (agentSettings.provider === "openai") {
-                      const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
-                      const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
-                                               agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
-                                               "tts-1";
-                      const openai = new OpenAI({ apiKey: ttsApiKey });
-                      // --- DEBUG LOG ---
-                      logger.info(`[TTS Debug] chunkText type: ${typeof chunkText}, isBuffer: ${Buffer.isBuffer(chunkText)}, value:`, chunkText);
-                      const mp3 = await openai.audio.speech.create({
-                        model: openAIModelApiId,
-                        voice: openAIVoice,
-                        input: chunkText,
-                        response_format: "mp3",
-                      });
-                      chunkBuffer = Buffer.from(await mp3.arrayBuffer());
-                    } else if (agentSettings.provider === "google-cloud") {
-                      if (!textToSpeechClient) throw new Error("Google TextToSpeechClient not initialized");
-                      const googleVoiceName = agentSettings.voice;
-                      const languageCode = googleVoiceName.split("-").slice(0, 2).join("-");
-                      const request = {
-                        input: { text: chunkText },
-                        voice: { languageCode: languageCode, name: googleVoiceName },
-                        audioConfig: { audioEncoding: "MP3" as const },
-                      };
-                      const [response] = await textToSpeechClient.synthesizeSpeech(request);
-                      if (response.audioContent instanceof Uint8Array) {
-                        chunkBuffer = Buffer.from(response.audioContent);
-                      } else {
-                        throw new Error("Google TTS audio content is not Uint8Array");
-                      }
-                    } else if (agentSettings.provider === "google-gemini") {
-                      const geminiVoiceId = agentSettings.voice;
-                      const geminiModelApiId = agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId;
-                      const ttsModelName = geminiModelApiId && geminiModelApiId.includes("tts") ? geminiModelApiId : "gemini-2.5-flash-preview-tts";
-                      const geminiTtsApiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ttsModelName}:generateContent?key=${ttsApiKey}`;
-                      const geminiTtsRequestBody = {
-                        contents: [{ parts: [{ text: chunkText }] }],
-                        generationConfig: {
-                          responseModalities: ["AUDIO"],
-                          speechConfig: {
-                            voiceConfig: { prebuiltVoiceConfig: { voiceName: geminiVoiceId } }
+                if (ttsApiKey && agentSettings && agentSettings.voice) {
+                    // --- New: TTS Input Splitting Logic ---
+                    const ttsModel = getBackendTTSModelById(agentSettings.selectedTtsModelId || agentSettings.ttsApiModelId || "");
+                    let inputLimitType = "characters";
+                    let inputLimitValue = 4096;
+                    let encodingName = "cl100k_base";
+                    if (ttsModel) {
+                      inputLimitType = ttsModel.inputLimitType;
+                      inputLimitValue = ttsModel.inputLimitValue;
+                      if (ttsModel.encodingName) encodingName = ttsModel.encodingName;
+                    }
+                    // Split text as needed
+                    const ttsChunks = getTTSInputChunks(
+                      textToSpeak,
+                      inputLimitType as import("./tts_models").TTSInputLimitType,
+                      inputLimitValue,
+                      encodingName as import("@dqbd/tiktoken").TiktokenEncoding | undefined
+                    );
+                    if (ttsChunks.length > 1) {
+                      ttsWasSplit = true;
+                      logger.info(`[TTS Split] Text for ${agentToRespond} split into ${ttsChunks.length} chunks for TTS model ${ttsModel?.name || agentSettings.selectedTtsModelId}`);
+                    }
+                    // Generate audio for each chunk and concatenate if possible
+                    const audioBuffers: Buffer[] = [];
+                    for (let i = 0; i < ttsChunks.length; i++) {
+                      const chunkText = ttsChunks[i];
+                      let chunkBuffer: Buffer | null = null;
+                      try {
+                        if (agentSettings.provider === "openai") {
+                          const openAIVoice = agentSettings.voice as "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+                          const openAIModelApiId = agentSettings.selectedTtsModelId === "openai-tts-1-hd" ? "tts-1-hd" :
+                                                   agentSettings.selectedTtsModelId === "openai-gpt-4o-mini-tts" ? "tts-1" :
+                                                   "tts-1";
+                          const openai = new OpenAI({ apiKey: ttsApiKey });
+                          logger.info(`[TTS Debug] chunkText type: ${typeof chunkText}, isBuffer: ${Buffer.isBuffer(chunkText)}, value:`, chunkText);
+                          const mp3 = await openai.audio.speech.create({
+                            model: openAIModelApiId,
+                            voice: openAIVoice,
+                            input: chunkText,
+                            response_format: "mp3",
+                          });
+                          chunkBuffer = Buffer.from(await mp3.arrayBuffer());
+                        } else if (agentSettings.provider === "google-cloud") {
+                          if (!textToSpeechClient) throw new Error("Google TextToSpeechClient not initialized");
+                          const googleVoiceName = agentSettings.voice;
+                          const languageCode = googleVoiceName.split("-").slice(0, 2).join("-");
+                          const request = {
+                            input: { text: chunkText },
+                            voice: { languageCode: languageCode, name: googleVoiceName },
+                            audioConfig: { audioEncoding: "MP3" as const },
+                          };
+                          const [response] = await textToSpeechClient.synthesizeSpeech(request);
+                          if (response.audioContent instanceof Uint8Array) {
+                            chunkBuffer = Buffer.from(response.audioContent);
+                          } else {
+                            throw new Error("Google TTS audio content is not Uint8Array");
+                          }
+                        } else if (agentSettings.provider === "google-gemini") {
+                          const geminiVoiceId = agentSettings.voice;
+                          const geminiModelApiId = agentSettings.ttsApiModelId || agentSettings.selectedTtsModelId;
+                          const ttsModelName = geminiModelApiId && geminiModelApiId.includes("tts") ? geminiModelApiId : "gemini-2.5-flash-preview-tts";
+                          const geminiTtsApiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ttsModelName}:generateContent?key=${ttsApiKey}`;
+                          const geminiTtsRequestBody = {
+                            contents: [{ parts: [{ text: chunkText }] }],
+                            generationConfig: {
+                              responseModalities: ["AUDIO"],
+                              speechConfig: {
+                                voiceConfig: { prebuiltVoiceConfig: { voiceName: geminiVoiceId } }
+                              }
+                            }
+                          };
+                          const geminiResponse = await axios({
+                            method: "post",
+                            url: geminiTtsApiEndpoint,
+                            headers: { "Content-Type": "application/json" },
+                            data: geminiTtsRequestBody,
+                            responseType: "json",
+                            timeout: 30000,
+                          });
+                          if (geminiResponse.data &&
+                            geminiResponse.data.candidates &&
+                            geminiResponse.data.candidates[0] &&
+                            geminiResponse.data.candidates[0].content &&
+                            geminiResponse.data.candidates[0].content.parts &&
+                            geminiResponse.data.candidates[0].content.parts[0] &&
+                            geminiResponse.data.candidates[0].content.parts[0].inlineData &&
+                            geminiResponse.data.candidates[0].content.parts[0].inlineData.data) {
+                            const audioData = geminiResponse.data.candidates[0].content.parts[0].inlineData.data;
+                            const rawPcmBuffer = Buffer.from(audioData, "base64");
+                            chunkBuffer = createWavBuffer(rawPcmBuffer, 1, 24000, 16);
+                          } else {
+                            throw new Error("Gemini TTS: No audio data in response or invalid response structure");
+                          }
+                        } else if (agentSettings.provider === "elevenlabs") {
+                          const elevenLabsVoiceId = agentSettings.voice;
+                          let modelId = "eleven_multilingual_v2";
+                          if (agentSettings.selectedTtsModelId === "elevenlabs-flash-v2-5") {
+                            modelId = "eleven_flash_v2_5";
+                          } else if (agentSettings.selectedTtsModelId === "elevenlabs-turbo-v2-5") {
+                            modelId = "eleven_turbo_v2_5";
+                          }
+                          const elevenlabsApiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${elevenLabsVoiceId}`;
+                          const headers = {
+                            "xi-api-key": ttsApiKey,
+                            "Content-Type": "application/json",
+                            "Accept": "audio/mpeg"
+                          };
+                          const requestBody = {
+                            text: chunkText,
+                            model_id: modelId,
+                            voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+                          };
+                          const response = await axios({
+                            method: "post",
+                            url: elevenlabsApiUrl,
+                            headers: headers,
+                            data: requestBody,
+                            responseType: "arraybuffer"
+                          });
+                          if (response.data) {
+                            chunkBuffer = Buffer.from(response.data);
+                          } else {
+                            throw new Error("ElevenLabs TTS: No audio data returned");
                           }
                         }
-                      };
-                      const geminiResponse = await axios({
-                        method: "post",
-                        url: geminiTtsApiEndpoint,
-                        headers: { "Content-Type": "application/json" },
-                        data: geminiTtsRequestBody,
-                        responseType: "json",
-                        timeout: 30000,
-                      });
-                      if (geminiResponse.data &&
-                        geminiResponse.data.candidates &&
-                        geminiResponse.data.candidates[0] &&
-                        geminiResponse.data.candidates[0].content &&
-                        geminiResponse.data.candidates[0].content.parts &&
-                        geminiResponse.data.candidates[0].content.parts[0] &&
-                        geminiResponse.data.candidates[0].content.parts[0].inlineData &&
-                        geminiResponse.data.candidates[0].content.parts[0].inlineData.data) {
-                        const audioData = geminiResponse.data.candidates[0].content.parts[0].inlineData.data;
-                        const rawPcmBuffer = Buffer.from(audioData, "base64");
-                        chunkBuffer = createWavBuffer(rawPcmBuffer, 1, 24000, 16);
-                      } else {
-                        throw new Error("Gemini TTS: No audio data in response or invalid response structure");
+                      } catch (err) {
+                        logger.error(`[TTS Chunk Error] Failed to generate audio for chunk ${i + 1}/${ttsChunks.length}:`, err);
+                        chunkBuffer = null;
                       }
-                    } else if (agentSettings.provider === "elevenlabs") {
-                      const elevenLabsVoiceId = agentSettings.voice;
-                      let modelId = "eleven_multilingual_v2";
-                      if (agentSettings.selectedTtsModelId === "elevenlabs-flash-v2-5") {
-                        modelId = "eleven_flash_v2_5";
-                      } else if (agentSettings.selectedTtsModelId === "elevenlabs-turbo-v2-5") {
-                        modelId = "eleven_turbo_v2_5";
-                      }
-                      const elevenlabsApiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${elevenLabsVoiceId}`;
-                      const headers = {
-                        "xi-api-key": ttsApiKey,
-                        "Content-Type": "application/json",
-                        "Accept": "audio/mpeg"
-                      };
-                      const requestBody = {
-                        text: chunkText,
-                        model_id: modelId,
-                        voice_settings: { stability: 0.5, similarity_boost: 0.75 }
-                      };
-                      const response = await axios({
-                        method: "post",
-                        url: elevenlabsApiUrl,
-                        headers: headers,
-                        data: requestBody,
-                        responseType: "arraybuffer"
-                      });
-                      if (response.data) {
-                        chunkBuffer = Buffer.from(response.data);
-                      } else {
-                        throw new Error("ElevenLabs TTS: No audio data returned");
-                      }
+                      if (chunkBuffer) audioBuffers.push(chunkBuffer);
                     }
-                  } catch (err) {
-                    logger.error(`[TTS Chunk Error] Failed to generate audio for chunk ${i + 1}/${ttsChunks.length}:`, err);
-                    chunkBuffer = null;
-                  }
-                  if (chunkBuffer) audioBuffers.push(chunkBuffer);
+                    // Concatenate audio buffers if possible (for MP3, just Buffer.concat; for WAV, also Buffer.concat)
+                    if (audioBuffers.length > 0) {
+                      audioBuffer = Buffer.concat(audioBuffers);
+                      // ttsGenerated = true; // This line is removed as per the edit hint.
+                    }
                 }
-                // Concatenate audio buffers if possible (for MP3, just Buffer.concat; for WAV, also Buffer.concat)
-                if (audioBuffers.length > 0) {
-                  audioBuffer = Buffer.concat(audioBuffers);
-                  ttsGenerated = true;
+                if (ttsApiKey && agentSettings && agentSettings.voice) {
+                    if (audioBuffer) {
+                        logger.info("[TTS Upload] Attempting to upload audio buffer...");
+                        const currentMessageId = admin.firestore().collection("dummy").doc().id;
+                        let fileExtension = "mp3";
+                        let contentType = "audio/mpeg";
+                        if (agentSettings.provider === "google-gemini") {
+                            fileExtension = "wav";
+                            contentType = "audio/wav";
+                            logger.info("[TTS Upload] Using WAV format for Google Gemini TTS");
+                        }
+                        const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.${fileExtension}`;
+                        const file = storageBucket.file(audioFileName);
+                        await file.save(audioBuffer, { metadata: { contentType: contentType } });
+                        await file.makePublic();
+                        audioUrl = file.publicUrl();
+                        logger.info(`[TTS Upload Success] TTS audio uploaded for ${agentToRespond} to: ${audioUrl}`);
+                    } else {
+                        logger.warn("[TTS Upload Skip] No audio buffer generated, skipping upload.");
+                    }
                 }
             }
-            if (ttsApiKey && agentSettings && agentSettings.voice) {
-                if (audioBuffer) {
-                    logger.info("[TTS Upload] Attempting to upload audio buffer...");
-                    const currentMessageId = admin.firestore().collection("dummy").doc().id;
-                    let fileExtension = "mp3";
-                    let contentType = "audio/mpeg";
-                    if (agentSettings.provider === "google-gemini") {
-                        fileExtension = "wav";
-                        contentType = "audio/wav";
-                        logger.info("[TTS Upload] Using WAV format for Google Gemini TTS");
-                    }
-                    const audioFileName = `conversations/${conversationId}/audio/${currentMessageId}_${agentToRespond}.${fileExtension}`;
-                    const file = storageBucket.file(audioFileName);
-                    await file.save(audioBuffer, { metadata: { contentType: contentType } });
-                    await file.makePublic();
-                    audioUrl = file.publicUrl();
-                    logger.info(`[TTS Upload Success] TTS audio uploaded for ${agentToRespond} to: ${audioUrl}`);
-                } else {
-                    logger.warn("[TTS Upload Skip] No audio buffer generated, skipping upload.");
-                }
-            }
-        } else if (agentSettings) {
-            if (!agentSettings.voice) logger.warn(`[TTS Skip] No voice selected for provider: ${agentSettings.provider}`);
+            return { audioUrl, ttsWasSplit };
         }
+        // --- END TTS LOGIC ---
 
+        // --- Run TTS and image generation in parallel ---
+        const [ttsResult, imageResult] = await Promise.all([
+            runTTS(),
+            runImageGen()
+        ]);
+        // --- END PARALLEL ---
+        logger.info(`[Orchestrator] TTS and image generation complete for messageId: ${messageId}`, { ttsResult, imageResult });
+
+        // --- Write Firestore message only after both are ready ---
         const nextTurn = agentToRespond === "agentA" ? "agentB" : "agentA";
-        const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null; ttsWasSplit?: boolean } = {
+        const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null; ttsWasSplit?: boolean; imageUrl?: string | null; imageGenError?: string | null } = {
             role: agentToRespond, content: responseContent, timestamp: admin.firestore.FieldValue.serverTimestamp(),
         };
-        if (audioUrl) { responseMessage.audioUrl = audioUrl; }
-        if (ttsWasSplit) { responseMessage.ttsWasSplit = true; }
-
-        // --- Prevent duplicate agent responses: check last message role ---
+        if (ttsResult.audioUrl) { responseMessage.audioUrl = ttsResult.audioUrl; }
+        if (ttsResult.ttsWasSplit) { responseMessage.ttsWasSplit = true; }
+        if (imageResult.imageUrl !== undefined) { responseMessage.imageUrl = imageResult.imageUrl; }
+        if (imageResult.imageGenError !== undefined) { responseMessage.imageGenError = imageResult.imageGenError; }
+        logger.info(`[Orchestrator] Writing Firestore message for messageId: ${messageId}`, { responseMessage });
+        // Fetch the last message
         const lastMsgSnap = await messagesRef.orderBy("timestamp", "desc").limit(1).get();
         const lastMessage = !lastMsgSnap.empty ? lastMsgSnap.docs[0].data() : null;
         if (lastMessage && lastMessage.role === agentToRespond) {
@@ -697,9 +841,8 @@ async function _triggerAgentResponse(
         }
 
         try {
-            // Write final message to Firestore with the same messageId
             await messagesRef.doc(messageId).set(responseMessage);
-            logger.info(`Agent ${agentToRespond} response saved (message ID: ${messageId}). TTS generated: ${ttsGenerated}`);
+            logger.info(`Agent ${agentToRespond} response saved to Firestore (message ID: ${messageId}). TTS and image generation complete.`);
             const updateData: { lastActivity: FieldValue; turn?: string } = {
                 lastActivity: admin.firestore.FieldValue.serverTimestamp()
             };
@@ -707,7 +850,11 @@ async function _triggerAgentResponse(
             logger.info(`Updating turn to ${nextTurn} for conversation ${conversationId}.`);
             await conversationRef.update(updateData);
             logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn.`);
-        } catch (error) { throw new Error(`Failed to save ${agentToRespond}'s response or update conversation state: ${error}`); }
+        } catch (err) {
+            logger.error(`Failed to write agent response to Firestore (message ID: ${messageId}):`, err);
+            logger.error("responseMessage object that failed to write:", { responseMessage });
+            throw err;
+        }
 
     } catch (error) {
         logger.error(`Error in _triggerAgentResponse for ${conversationId} (${agentToRespond}):`, error);

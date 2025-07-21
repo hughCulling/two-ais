@@ -1,7 +1,7 @@
 // src/lib/image_models.ts
 
-export type ImageModelQuality = 'low' | 'medium' | 'high';
-export type ImageModelSize = '1024x1024' | '1024x1536' | '1536x1024';
+export type ImageModelQuality = 'low' | 'medium' | 'high' | 'standard' | 'hd';
+export type ImageModelSize = '256x256' | '512x512' | '1024x1024' | '1024x1536' | '1536x1024';
 
 export interface ImageModelInfo {
   id: string;
@@ -48,6 +48,50 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
           { size: '1024x1024', price: 0.167 },
           { size: '1024x1536', price: 0.25 },
           { size: '1536x1024', price: 0.25 },
+        ],
+      },
+    ],
+    pricingNote: 'Pricing is per image. See OpenAI docs for details.',
+    status: undefined,
+  },
+  {
+    id: 'dall-e-3',
+    name: 'DALL·E 3',
+    provider: 'OpenAI',
+    description: 'High quality image generation model. Supports standard and HD quality.',
+    qualities: [
+      {
+        quality: 'standard',
+        sizes: [
+          { size: '1024x1024', price: 0.04 },
+          { size: '1024x1536', price: 0.08 },
+          { size: '1536x1024', price: 0.08 },
+        ],
+      },
+      {
+        quality: 'hd',
+        sizes: [
+          { size: '1024x1024', price: 0.08 },
+          { size: '1024x1536', price: 0.12 },
+          { size: '1536x1024', price: 0.12 },
+        ],
+      },
+    ],
+    pricingNote: 'Pricing is per image. See OpenAI docs for details.',
+    status: undefined,
+  },
+  {
+    id: 'dall-e-2',
+    name: 'DALL·E 2',
+    provider: 'OpenAI',
+    description: 'Previous generation image generation model. Lower cost, supports 256x256, 512x512, 1024x1024.',
+    qualities: [
+      {
+        quality: 'standard',
+        sizes: [
+          { size: '256x256', price: 0.016 },
+          { size: '512x512', price: 0.018 },
+          { size: '1024x1024', price: 0.02 },
         ],
       },
     ],
