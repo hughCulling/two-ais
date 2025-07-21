@@ -153,7 +153,8 @@ const sv = {
             "perMillionTokens": "per miljon tokens",
             "input": "Input",
             "output": "Produktion"
-        }
+        },
+        "aiConversation": "AI Konversation"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const sv = {
         "ttsProviderModel": "{providerName} Modell",
         "selectTtsProviderModel": "Välja {providerName} Modell",
         "selectProvider": "Välj leverantör",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Aktivera bildgenerering",
+        "imageModel": "Bildmodell",
+        "quality": "Kvalitet",
+        "size": "Storlek",
+        "promptLLM": "Snabb juridik",
+        "imagePromptSystemMessage": "Systemmeddelande för bilduppmaning",
+        "defaultImagePromptSystemMessage": "Skapa en prompt att ge till bildgenereringsmodellen baserat på denna tur: {turn}",
+        "imagePromptSystemMessageHelp": "Det här meddelandet skickas som systemprompt till den LLM som genererar bildprompten. <code>{'{turn}'}</code> som platshållare för agentens meddelande.",
+        "selectImageModel": "Välj bildmodell",
+        "selectPromptLLM": "Välj LLM för bildprompt"
     },
     "history": {
         "backToMain": "Tillbaka till huvudmenyn",

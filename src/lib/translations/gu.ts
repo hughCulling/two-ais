@@ -153,7 +153,8 @@ const gu = {
             "perMillionTokens": "પ્રતિ મિલિયન ટોકન",
             "input": "ઇનપુટ",
             "output": "આઉટપુટ"
-        }
+        },
+        "aiConversation": "AI વાર્તાલાપ"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const gu = {
         "ttsProviderModel": "{providerName} મોડેલ",
         "selectTtsProviderModel": "પસંદ કરો {providerName} મોડેલ",
         "selectProvider": "પ્રદાતા પસંદ કરો",
-        "per": "પ્રતિ"
+        "per": "પ્રતિ",
+        "enableImageGen": "છબી જનરેશન સક્ષમ કરો",
+        "imageModel": "છબી મોડેલ",
+        "quality": "ગુણવત્તા",
+        "size": "કદ",
+        "promptLLM": "પ્રોમ્પ્ટ એલએલએમ",
+        "imagePromptSystemMessage": "છબી પ્રોમ્પ્ટ સિસ્ટમ સંદેશ",
+        "defaultImagePromptSystemMessage": "આ વળાંકના આધારે ઇમેજ જનરેશન મોડેલને આપવા માટે પ્રોમ્પ્ટ બનાવો: {turn}",
+        "imagePromptSystemMessageHelp": "આ સંદેશ LLM ને સિસ્ટમ પ્રોમ્પ્ટ તરીકે મોકલવામાં આવશે જે ઇમેજ પ્રોમ્પ્ટ જનરેટ કરે છે. ઉપયોગ કરો <code>{'{turn}'}</code> એજન્ટના સંદેશ માટે પ્લેસહોલ્ડર તરીકે.",
+        "selectImageModel": "છબી મોડેલ પસંદ કરો",
+        "selectPromptLLM": "છબી પ્રોમ્પ્ટ માટે LLM પસંદ કરો"
     },
     "history": {
         "backToMain": "મુખ્ય પર પાછા જાઓ",

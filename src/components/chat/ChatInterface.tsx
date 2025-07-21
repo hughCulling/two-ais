@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert";
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // --- Interfaces ---
 interface Message {
@@ -121,6 +122,8 @@ export function ChatInterface({
 
     // Use optimized scroll hook
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
+
+    const { t } = useTranslation();
 
     // --- Handler: User Interaction Detection ---
     const handleUserInteraction = useCallback(() => {
@@ -591,7 +594,7 @@ export function ChatInterface({
         <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden">
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
-                <h2 className="text-lg font-semibold">AI Conversation</h2>
+                <h2 className="text-lg font-semibold">{t?.main?.aiConversation}</h2>
                 {isAudioPlaying && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
                          <Volume2 className="h-4 w-4 animate-pulse text-primary" aria-hidden="true"/>

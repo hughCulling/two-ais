@@ -153,7 +153,8 @@ const ml = {
             "perMillionTokens": "ഒരു ദശലക്ഷം ടോക്കണുകൾക്ക്",
             "input": "ഇൻപുട്ട്",
             "output": "ഔട്ട്പുട്ട്"
-        }
+        },
+        "aiConversation": "AI സംഭാഷണം"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ml = {
         "ttsProviderModel": "{providerName} മോഡൽ",
         "selectTtsProviderModel": "തിരഞ്ഞെടുക്കുക {providerName} മോഡൽ",
         "selectProvider": "ദാതാവിനെ തിരഞ്ഞെടുക്കുക",
-        "per": "ഓരോ"
+        "per": "ഓരോ",
+        "enableImageGen": "ഇമേജ് ജനറേഷൻ പ്രാപ്തമാക്കുക",
+        "imageModel": "ഇമേജ് മോഡൽ",
+        "quality": "ഗുണമേന്മ",
+        "size": "വലുപ്പം",
+        "promptLLM": "പ്രോംപ്റ്റ് എൽഎൽഎം",
+        "imagePromptSystemMessage": "ഇമേജ് പ്രോംപ്റ്റ് സിസ്റ്റം സന്ദേശം",
+        "defaultImagePromptSystemMessage": "ഈ ടേണിനെ അടിസ്ഥാനമാക്കി ഇമേജ് ജനറേഷൻ മോഡലിന് നൽകാൻ ഒരു പ്രോംപ്റ്റ് സൃഷ്ടിക്കുക: {turn}",
+        "imagePromptSystemMessageHelp": "ഇമേജ് പ്രോംപ്റ്റ് സൃഷ്ടിക്കുന്ന LLM-ലേക്ക് സിസ്റ്റം പ്രോംപ്റ്റായി ഈ സന്ദേശം അയയ്ക്കപ്പെടും. ഉപയോഗിക്കുക <code>{'{turn}'}</code> ഏജന്റിന്റെ സന്ദേശത്തിനുള്ള ഒരു പ്ലെയ്‌സ്‌ഹോൾഡറായി.",
+        "selectImageModel": "ഇമേജ് മോഡൽ തിരഞ്ഞെടുക്കുക",
+        "selectPromptLLM": "ഇമേജ് പ്രോംപ്റ്റിനായി LLM തിരഞ്ഞെടുക്കുക."
     },
     "history": {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",

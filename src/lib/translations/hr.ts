@@ -153,7 +153,8 @@ const hr = {
             "perMillionTokens": "po milijun tokena",
             "input": "Ulazni",
             "output": "Izlaz"
-        }
+        },
+        "aiConversation": "AI Razgovor"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const hr = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Odaberite {providerName} Model",
         "selectProvider": "Odaberite pružatelja usluga",
-        "per": "po"
+        "per": "po",
+        "enableImageGen": "Omogući generiranje slika",
+        "imageModel": "Model slike",
+        "quality": "Kvaliteta",
+        "size": "Veličina",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Poruka sustava za upit slike",
+        "defaultImagePromptSystemMessage": "Napravite prompt za model generiranja slike na temelju ovog zaokreta: {turn}",
+        "imagePromptSystemMessageHelp": "Ova poruka bit će poslana kao sistemski upit LLM-u koji generira upit za sliku. Koristite <code>{'{turn}'}</code> kao rezervirano mjesto za poruku agenta.",
+        "selectImageModel": "Odaberite model slike",
+        "selectPromptLLM": "Odaberite LLM za upit slike"
     },
     "history": {
         "backToMain": "Natrag na glavni sadržaj",

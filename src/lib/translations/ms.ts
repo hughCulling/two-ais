@@ -153,7 +153,8 @@ const ms = {
             "perMillionTokens": "setiap juta token",
             "input": "Input",
             "output": "Keluaran"
-        }
+        },
+        "aiConversation": "AI Perbualan"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ms = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Pilih {providerName} Model",
         "selectProvider": "Pilih Pembekal",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Dayakan Penjanaan Imej",
+        "imageModel": "Model Imej",
+        "quality": "Kualiti",
+        "size": "Saiz",
+        "promptLLM": "LLM segera",
+        "imagePromptSystemMessage": "Mesej Sistem Gesaan Imej",
+        "defaultImagePromptSystemMessage": "Buat gesaan untuk diberikan kepada model penjanaan imej berdasarkan giliran ini: {turn}",
+        "imagePromptSystemMessageHelp": "Mesej ini akan dihantar sebagai gesaan sistem kepada LLM yang menjana gesaan imej. guna <code>{'{turn}'}</code> sebagai pemegang tempat untuk mesej ejen.",
+        "selectImageModel": "Pilih model imej",
+        "selectPromptLLM": "Pilih LLM untuk gesaan imej"
     },
     "history": {
         "backToMain": "Kembali ke Utama",

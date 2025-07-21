@@ -153,7 +153,8 @@ const bg = {
             "perMillionTokens": "на милион токени",
             "input": "Вход",
             "output": "Изход"
-        }
+        },
+        "aiConversation": "AI Разговор"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const bg = {
         "ttsProviderModel": "{providerName} Модел",
         "selectTtsProviderModel": "Изберете {providerName} Модел",
         "selectProvider": "Изберете доставчик",
-        "per": "на"
+        "per": "на",
+        "enableImageGen": "Активиране на генериране на изображения",
+        "imageModel": "Модел на изображението",
+        "quality": "Качество",
+        "size": "Размер",
+        "promptLLM": "Подканен LLM",
+        "imagePromptSystemMessage": "Системно съобщение за подкана за изображение",
+        "defaultImagePromptSystemMessage": "Създайте подкана, която да дадете на модела за генериране на изображения въз основа на този ход: {turn}",
+        "imagePromptSystemMessageHelp": "Това съобщение ще бъде изпратено като системен подканен код към LLM, който генерира подканата за изображение. Използвайте <code>{'{turn}'}</code> като заместител за съобщението на агента.",
+        "selectImageModel": "Изберете модел на изображението",
+        "selectPromptLLM": "Изберете LLM за подкана за изображение"
     },
     "history": {
         "backToMain": "Обратно към основното",

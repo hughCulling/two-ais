@@ -153,7 +153,8 @@ const sq = {
             "perMillionTokens": "për milion tokena",
             "input": "Hyrje",
             "output": "Prodhimi"
-        }
+        },
+        "aiConversation": "AI Bisedë"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const sq = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Zgjidh {providerName} Model",
         "selectProvider": "Zgjidh Ofruesin",
-        "per": "për"
+        "per": "për",
+        "enableImageGen": "Aktivizo Gjenerimin e Imazheve",
+        "imageModel": "Modeli i Imazhit",
+        "quality": "Cilësia",
+        "size": "Madhësia",
+        "promptLLM": "LLM i shpejtë",
+        "imagePromptSystemMessage": "Mesazhi i Sistemit të Kërkesës për Imazhin",
+        "defaultImagePromptSystemMessage": "Krijo një kërkesë për t'ia dhënë modelit të gjenerimit të imazhit bazuar në këtë raund: {turn}",
+        "imagePromptSystemMessageHelp": "Ky mesazh do të dërgohet si njoftim i sistemit te LLM që gjeneron njoftimin e imazhit. Përdoreni <code>{'{turn}'}</code> si një vendmbajtës për mesazhin e agjentit.",
+        "selectImageModel": "Zgjidhni modelin e imazhit",
+        "selectPromptLLM": "Zgjidhni LLM për njoftimin e imazhit"
     },
     "history": {
         "backToMain": "Kthehu te Kryesorja",

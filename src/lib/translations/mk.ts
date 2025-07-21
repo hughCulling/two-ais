@@ -153,7 +153,8 @@ const mk = {
             "perMillionTokens": "на милион токени",
             "input": "Внесување",
             "output": "Излез"
-        }
+        },
+        "aiConversation": "AI Разговор"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const mk = {
         "ttsProviderModel": "{providerName} Модел",
         "selectTtsProviderModel": "Изберете {providerName} Модел",
         "selectProvider": "Изберете провајдер",
-        "per": "на"
+        "per": "на",
+        "enableImageGen": "Овозможи генерирање слики",
+        "imageModel": "Модел на слика",
+        "quality": "Квалитет",
+        "size": "Големина",
+        "promptLLM": "Брз LLM",
+        "imagePromptSystemMessage": "Системска порака за слика",
+        "defaultImagePromptSystemMessage": "Креирај потсетник за давање на моделот за генерирање слики врз основа на овој потег: {turn}",
+        "imagePromptSystemMessageHelp": "Оваа порака ќе биде испратена како системски потсетник до LLM кој го генерира потсетникот за слика. Користете <code>{'{turn}'}</code> како променлива вредност за пораката на агентот.",
+        "selectImageModel": "Изберете модел на слика",
+        "selectPromptLLM": "Изберете LLM за слика"
     },
     "history": {
         "backToMain": "Назад кон главната страница",

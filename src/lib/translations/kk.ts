@@ -153,7 +153,8 @@ const kk = {
             "perMillionTokens": "миллион токенге",
             "input": "Енгізу",
             "output": "Шығару"
-        }
+        },
+        "aiConversation": "AI Әңгімелесу"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const kk = {
         "ttsProviderModel": "{providerName} Үлгі",
         "selectTtsProviderModel": "таңдаңыз {providerName} Үлгі",
         "selectProvider": "Провайдерді таңдаңыз",
-        "per": "пер"
+        "per": "пер",
+        "enableImageGen": "Кескін жасауды қосыңыз",
+        "imageModel": "Кескін үлгісі",
+        "quality": "Сапасы",
+        "size": "Өлшем",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Кескінді шақыру жүйесінің хабарламасы",
+        "defaultImagePromptSystemMessage": "Осы бұрылысқа негізделген кескінді құру үлгісіне сұрауды жасаңыз: {turn}",
+        "imagePromptSystemMessageHelp": "Бұл хабар кескін шақыруын жасайтын LLM-ге жүйелік шақыру ретінде жіберіледі. Қолдану <code>{'{turn}'}</code> агент хабарының толтырғышы ретінде.",
+        "selectImageModel": "Кескін үлгісін таңдаңыз",
+        "selectPromptLLM": "Кескін сұрауы үшін LLM таңдаңыз"
     },
     "history": {
         "backToMain": "Бастыға оралу",

@@ -153,7 +153,8 @@ const lt = {
             "perMillionTokens": "už milijoną žetonų",
             "input": "Įvestis",
             "output": "Išvestis"
-        }
+        },
+        "aiConversation": "AI Pokalbis"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const lt = {
         "ttsProviderModel": "{providerName} Modelis",
         "selectTtsProviderModel": "Pasirinkite {providerName} Modelis",
         "selectProvider": "Pasirinkite tiekėją",
-        "per": "už"
+        "per": "už",
+        "enableImageGen": "Įgalinti vaizdų generavimą",
+        "imageModel": "Vaizdo modelis",
+        "quality": "Kokybė",
+        "size": "Dydis",
+        "promptLLM": "Greitas LLM",
+        "imagePromptSystemMessage": "Vaizdo raginimo sistemos pranešimas",
+        "defaultImagePromptSystemMessage": "Sukurkite raginimą, kurį reikia pateikti vaizdų generavimo modeliui, remiantis šiuo posūkiu: {turn}",
+        "imagePromptSystemMessageHelp": "Šis pranešimas bus išsiųstas kaip sistemos raginimas LLM, kuris generuoja vaizdo raginimą. <code>{'{turn}„}“</code> kaip agento pranešimo vietos žymeklis.",
+        "selectImageModel": "Pasirinkite vaizdo modelį",
+        "selectPromptLLM": "Pasirinkite LLM vaizdo užklausai"
     },
     "history": {
         "backToMain": "Grįžti į pagrindinį puslapį",

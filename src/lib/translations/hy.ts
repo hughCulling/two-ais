@@ -153,7 +153,8 @@ const hy = {
             "perMillionTokens": "մեկ միլիոն տոկենների համար",
             "input": "Մուտքագրում",
             "output": "Արդյունք"
-        }
+        },
+        "aiConversation": "AI Զրույց"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const hy = {
         "ttsProviderModel": "{providerName} Մոդել",
         "selectTtsProviderModel": "Ընտրել {providerName} Մոդել",
         "selectProvider": "Ընտրեք մատակարար",
-        "per": "յուրաքանչյուր"
+        "per": "յուրաքանչյուր",
+        "enableImageGen": "Միացնել պատկերի ստեղծումը",
+        "imageModel": "Պատկերի մոդել",
+        "quality": "Որակ",
+        "size": "Չափս",
+        "promptLLM": "Արագ Իրավագիտության Մագիստրոսական Դասընթաց",
+        "imagePromptSystemMessage": "Պատկերի հարցման համակարգի հաղորդագրություն",
+        "defaultImagePromptSystemMessage": "Ստեղծեք հուշում պատկերի ստեղծման մոդելին տալու համար՝ հիմնվելով այս շրջադարձի վրա. {turn}",
+        "imagePromptSystemMessageHelp": "Այս հաղորդագրությունը կուղարկվի որպես համակարգային հուշում պատկերի հուշումը ստեղծող LLM-ին։ Օգտագործեք <code>{'{turn}'}</code> որպես գործակալի հաղորդագրության տեղապահ։",
+        "selectImageModel": "Ընտրեք պատկերի մոդելը",
+        "selectPromptLLM": "Ընտրեք LLM պատկերի հուշման համար"
     },
     "history": {
         "backToMain": "Վերադառնալ գլխավոր էջ",

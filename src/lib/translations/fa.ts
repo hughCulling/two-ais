@@ -153,7 +153,8 @@ const fa = {
             "perMillionTokens": "به ازای هر میلیون توکن",
             "input": "ورودی",
             "output": "خروجی"
-        }
+        },
+        "aiConversation": "AI مکالمه"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const fa = {
         "ttsProviderModel": "{providerName} مدل",
         "selectTtsProviderModel": "انتخاب کنید {providerName} مدل",
         "selectProvider": "ارائه دهنده را انتخاب کنید",
-        "per": "به ازای هر"
+        "per": "به ازای هر",
+        "enableImageGen": "فعال کردن تولید تصویر",
+        "imageModel": "مدل تصویر",
+        "quality": "کیفیت",
+        "size": "اندازه",
+        "promptLLM": "LLM سریع",
+        "imagePromptSystemMessage": "پیام سیستم اعلان تصویر",
+        "defaultImagePromptSystemMessage": "بر اساس این نوبت، یک اعلان برای ارائه به مدل تولید تصویر ایجاد کنید: {turn}",
+        "imagePromptSystemMessageHelp": "این پیام به عنوان پیام سیستم به LLM که پیام تصویر را تولید می‌کند، ارسال خواهد شد. استفاده کنید <code>{'{turn}'}</code> به عنوان یک نگهدارنده برای پیام عامل.",
+        "selectImageModel": "مدل تصویر را انتخاب کنید",
+        "selectPromptLLM": "برای دریافت تصویر، LLM را انتخاب کنید"
     },
     "history": {
         "backToMain": "بازگشت به صفحه اصلی",

@@ -153,7 +153,8 @@ const am = {
             "perMillionTokens": "በአንድ ሚሊዮን ቶከኖች",
             "input": "ግቤት",
             "output": "ውፅዓት"
-        }
+        },
+        "aiConversation": "AI ውይይት"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const am = {
         "ttsProviderModel": "{providerName} ሞዴል",
         "selectTtsProviderModel": "ይምረጡ {providerName} ሞዴል",
         "selectProvider": "አቅራቢን ይምረጡ",
-        "per": "በ"
+        "per": "በ",
+        "enableImageGen": "ምስል ማመንጨትን አንቃ",
+        "imageModel": "የምስል ሞዴል",
+        "quality": "ጥራት",
+        "size": "መጠን",
+        "promptLLM": "ፈጣን LLM",
+        "imagePromptSystemMessage": "የምስል ፈጣን ስርዓት መልእክት",
+        "defaultImagePromptSystemMessage": "በዚህ ተራ መሰረት ለምስል ማመንጨት ሞዴል ለመስጠት ጥያቄ ይፍጠሩ፡ {turn}",
+        "imagePromptSystemMessageHelp": "ይህ መልእክት የምስል መጠየቂያውን ወደሚያመነጨው ኤልኤልኤም እንደ ሲስተም ጥያቄ ይላካል። ተጠቀም <code>{'{turn}'}</code> ለወኪሉ መልእክት እንደ ቦታ ያዥ።",
+        "selectImageModel": "የምስል ሞዴል ምረጥ",
+        "selectPromptLLM": "ለምስል ጥያቄ LLM ን ይምረጡ"
     },
     "history": {
         "backToMain": "ወደ ዋናው ተመለስ",

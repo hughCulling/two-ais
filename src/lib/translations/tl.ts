@@ -153,7 +153,8 @@ const tl = {
             "perMillionTokens": "bawat milyong token",
             "input": "Input",
             "output": "Output"
-        }
+        },
+        "aiConversation": "AI Pag-uusap"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const tl = {
         "ttsProviderModel": "{providerName} Modelo",
         "selectTtsProviderModel": "Pumili {providerName} Modelo",
         "selectProvider": "Piliin ang Provider",
-        "per": "bawat"
+        "per": "bawat",
+        "enableImageGen": "Paganahin ang Pagbuo ng Larawan",
+        "imageModel": "Modelo ng Larawan",
+        "quality": "Kalidad",
+        "size": "Sukat",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Mensahe ng System Prompt ng Larawan",
+        "defaultImagePromptSystemMessage": "Gumawa ng prompt para ibigay sa modelo ng pagbuo ng imahe batay sa turn na ito: {turn}",
+        "imagePromptSystemMessageHelp": "Ipapadala ang mensaheng ito bilang prompt ng system sa LLM na bubuo ng prompt ng imahe. Gamitin <code>{'{turn}'}</code> bilang isang placeholder para sa mensahe ng ahente.",
+        "selectImageModel": "Pumili ng modelo ng larawan",
+        "selectPromptLLM": "Piliin ang LLM para sa prompt ng larawan"
     },
     "history": {
         "backToMain": "Bumalik sa Main",

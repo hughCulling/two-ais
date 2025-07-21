@@ -153,7 +153,8 @@ const ru = {
             "perMillionTokens": "за миллион токенов",
             "input": "Вход",
             "output": "Выход"
-        }
+        },
+        "aiConversation": "AI Беседа"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ru = {
         "ttsProviderModel": "{providerName} Модель",
         "selectTtsProviderModel": "Выбирать {providerName} Модель",
         "selectProvider": "Выбрать поставщика",
-        "per": "за"
+        "per": "за",
+        "enableImageGen": "Включить генерацию изображений",
+        "imageModel": "Модель изображения",
+        "quality": "Качество",
+        "size": "Размер",
+        "promptLLM": "Промпта LLM",
+        "imagePromptSystemMessage": "Системное сообщение с подсказкой изображения",
+        "defaultImagePromptSystemMessage": "Создайте подсказку для модели генерации изображения на основе этого хода: {turn}",
+        "imagePromptSystemMessageHelp": "Это сообщение будет отправлено в качестве системного запроса LLM, который сгенерирует запрос на изображение. Используйте <code>{'{turn}'}</code> в качестве заполнителя для сообщения агента.",
+        "selectImageModel": "Выберите модель изображения",
+        "selectPromptLLM": "Выберите LLM для запроса изображения"
     },
     "history": {
         "backToMain": "Вернуться на главную",

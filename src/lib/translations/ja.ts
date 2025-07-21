@@ -153,7 +153,8 @@ const ja = {
             "perMillionTokens": "100万トークンあたり",
             "input": "入力",
             "output": "出力"
-        }
+        },
+        "aiConversation": "AI 会話"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ja = {
         "ttsProviderModel": "{providerName} モデル",
         "selectTtsProviderModel": "選択 {providerName} モデル",
         "selectProvider": "プロバイダーを選択",
-        "per": "あたり"
+        "per": "あたり",
+        "enableImageGen": "画像生成を有効にする",
+        "imageModel": "画像モデル",
+        "quality": "品質",
+        "size": "サイズ",
+        "promptLLM": "プロンプトLLM",
+        "imagePromptSystemMessage": "画像プロンプトシステムメッセージ",
+        "defaultImagePromptSystemMessage": "このターンに基づいて画像生成モデルに与えるプロンプトを作成します。 {turn}",
+        "imagePromptSystemMessageHelp": "このメッセージは、イメージプロンプトを生成するLLMにシステムプロンプトとして送信されます。 <code>{'{turn}'}</code> エージェントのメッセージのプレースホルダーとして。",
+        "selectImageModel": "画像モデルを選択",
+        "selectPromptLLM": "画像プロンプトでLLMを選択"
     },
     "history": {
         "backToMain": "メインに戻る",

@@ -153,7 +153,8 @@ const hi = {
             "perMillionTokens": "प्रति मिलियन टोकन",
             "input": "इनपुट",
             "output": "उत्पादन"
-        }
+        },
+        "aiConversation": "AI बातचीत"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const hi = {
         "ttsProviderModel": "{providerName} नमूना",
         "selectTtsProviderModel": "चुनना {providerName} नमूना",
         "selectProvider": "प्रदाता चुनें",
-        "per": "प्रति"
+        "per": "प्रति",
+        "enableImageGen": "छवि निर्माण सक्षम करें",
+        "imageModel": "छवि मॉडल",
+        "quality": "गुणवत्ता",
+        "size": "आकार",
+        "promptLLM": "प्रॉम्प्ट एलएलएम",
+        "imagePromptSystemMessage": "छवि संकेत सिस्टम संदेश",
+        "defaultImagePromptSystemMessage": "इस मोड़ के आधार पर छवि निर्माण मॉडल को देने के लिए एक संकेत बनाएं: {turn}",
+        "imagePromptSystemMessageHelp": "यह संदेश सिस्टम प्रॉम्प्ट के रूप में उस LLM को भेजा जाएगा जो इमेज प्रॉम्प्ट जनरेट करता है। उपयोग करें <code>{'{turn}'}</code> एजेंट के संदेश के लिए प्लेसहोल्डर के रूप में।",
+        "selectImageModel": "छवि मॉडल चुनें",
+        "selectPromptLLM": "छवि संकेत के लिए LLM का चयन करें"
     },
     "history": {
         "backToMain": "मुख्य पर वापस जाएँ",

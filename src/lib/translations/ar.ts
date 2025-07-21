@@ -153,7 +153,8 @@ const ar = {
             "perMillionTokens": "لكل مليون رمز",
             "input": "مدخل",
             "output": "الناتج"
-        }
+        },
+        "aiConversation": "AI محادثة"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ar = {
         "ttsProviderModel": "{providerName} نموذج",
         "selectTtsProviderModel": "يختار {providerName} نموذج",
         "selectProvider": "حدد المزود",
-        "per": "لكل"
+        "per": "لكل",
+        "enableImageGen": "تمكين إنشاء الصور",
+        "imageModel": "نموذج الصورة",
+        "quality": "جودة",
+        "size": "مقاس",
+        "promptLLM": "ماجستير في القانون الفوري",
+        "imagePromptSystemMessage": "رسالة نظام مطالبة الصورة",
+        "defaultImagePromptSystemMessage": "إنشاء مطالبة لتقديمها إلى نموذج إنشاء الصورة استنادًا إلى هذا الدور: {turn}",
+        "imagePromptSystemMessageHelp": "سيتم إرسال هذه الرسالة كموجه للنظام إلى وحدة إدارة التعلم (LLM) التي تُنشئ موجه الصورة. استخدم <code>{'{turn}'}</code> كعلامة نائبة لرسالة الوكيل.",
+        "selectImageModel": "حدد نموذج الصورة",
+        "selectPromptLLM": "حدد LLM لمطالبة الصورة"
     },
     "history": {
         "backToMain": "العودة إلى الصفحة الرئيسية",

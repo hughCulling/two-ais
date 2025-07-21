@@ -153,7 +153,8 @@ const th = {
             "perMillionTokens": "ต่อหนึ่งล้านโทเค็น",
             "input": "ป้อนข้อมูล",
             "output": "เอาท์พุต"
-        }
+        },
+        "aiConversation": "AI การสนทนา"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const th = {
         "ttsProviderModel": "{providerName} แบบอย่าง",
         "selectTtsProviderModel": "เลือก {providerName} แบบอย่าง",
         "selectProvider": "เลือกผู้ให้บริการ",
-        "per": "ต่อ"
+        "per": "ต่อ",
+        "enableImageGen": "เปิดใช้งานการสร้างภาพ",
+        "imageModel": "แบบจำลองภาพ",
+        "quality": "คุณภาพ",
+        "size": "ขนาด",
+        "promptLLM": "ปริญญาโท LLM พร้อมท์",
+        "imagePromptSystemMessage": "ข้อความระบบแจ้งเตือนภาพ",
+        "defaultImagePromptSystemMessage": "สร้างคำเตือนเพื่อส่งไปยังโมเดลการสร้างภาพตามเทิร์นนี้: {turn}",
+        "imagePromptSystemMessageHelp": "ข้อความนี้จะถูกส่งเป็นข้อความแจ้งเตือนของระบบไปยัง LLM ที่สร้างข้อความแจ้งเตือนภาพ ใช้ <code>-{turn}-</code> เป็นตัวแทนสำหรับข้อความของตัวแทน",
+        "selectImageModel": "เลือกแบบจำลองภาพ",
+        "selectPromptLLM": "เลือก LLM สำหรับคำแนะนำภาพ"
     },
     "history": {
         "backToMain": "กลับสู่หน้าหลัก",

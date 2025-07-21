@@ -153,7 +153,8 @@ const sw = {
             "perMillionTokens": "kwa tokeni milioni",
             "input": "Ingizo",
             "output": "Pato"
-        }
+        },
+        "aiConversation": "AI Mazungumzo"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const sw = {
         "ttsProviderModel": "{providerName} Mfano",
         "selectTtsProviderModel": "Chagua {providerName} Mfano",
         "selectProvider": "Chagua Mtoa huduma",
-        "per": "kwa"
+        "per": "kwa",
+        "enableImageGen": "Washa Uzalishaji wa Picha",
+        "imageModel": "Mfano wa Picha",
+        "quality": "Ubora",
+        "size": "Ukubwa",
+        "promptLLM": "Haraka LLM",
+        "imagePromptSystemMessage": "Ujumbe wa Mfumo wa Mwongozo wa Picha",
+        "defaultImagePromptSystemMessage": "Unda kidokezo cha kutoa mfano wa kutengeneza picha kulingana na zamu hii: {turn}",
+        "imagePromptSystemMessageHelp": "Ujumbe huu utatumwa kama kidokezo cha mfumo kwa LLM inayotoa kidokezo cha picha. Tumia <code>{'{turn}'}</code> kama kishikilia nafasi cha ujumbe wa wakala.",
+        "selectImageModel": "Chagua mfano wa picha",
+        "selectPromptLLM": "Chagua LLM kwa haraka ya picha"
     },
     "history": {
         "backToMain": "Rudi kwa Kuu",

@@ -153,7 +153,8 @@ const ca = {
             "perMillionTokens": "per milió de fitxes",
             "input": "Entrada",
             "output": "Sortida"
-        }
+        },
+        "aiConversation": "AI Conversa"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ca = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Selecciona {providerName} Model",
         "selectProvider": "Selecciona el proveïdor",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Habilita la generació d'imatges",
+        "imageModel": "Model d'imatge",
+        "quality": "Qualitat",
+        "size": "Mida",
+        "promptLLM": "LLM ràpid",
+        "imagePromptSystemMessage": "Missatge del sistema de sol·licitud d'imatge",
+        "defaultImagePromptSystemMessage": "Crea una indicació per donar al model de generació d'imatges basada en aquest torn: {turn}",
+        "imagePromptSystemMessageHelp": "Aquest missatge s'enviarà com a indicador del sistema a l'LLM que genera l'indicador d'imatge. Utilitzeu <code>{'{turn}'}</code> com a marcador de posició per al missatge de l'agent.",
+        "selectImageModel": "Selecciona el model d'imatge",
+        "selectPromptLLM": "Seleccioneu LLM per a la sol·licitud d'imatge"
     },
     "history": {
         "backToMain": "Torna a la pàgina principal",

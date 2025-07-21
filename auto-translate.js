@@ -174,6 +174,9 @@ const PROTECTED_TERMS = [
     "{date}",
     "{language}",
     "(USD)",
+    "{turn}",
+    "<code>",
+    "</code>",
     "Meta Llama",
     //...LANGUAGE_NAMES_EN
 ];

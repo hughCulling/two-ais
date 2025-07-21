@@ -128,6 +128,7 @@ const en = {
     // Main page
     main: {
         title: 'AI Conversation',
+        aiConversation: 'AI Conversation',
         setupForm: {
             title: 'Set up your conversation',
             agentA: 'Agent A',
@@ -338,6 +339,16 @@ const en = {
         selectTtsProviderModel: 'Select {providerName} Model',
         selectProvider: 'Select Provider',
         per: 'per',
+        enableImageGen: 'Enable Image Generation',
+        imageModel: 'Image Model',
+        quality: 'Quality',
+        size: 'Size',
+        promptLLM: 'Prompt LLM',
+        imagePromptSystemMessage: 'Image Prompt System Message',
+        defaultImagePromptSystemMessage: 'Create a prompt to give to the image generation model based on this turn: {turn}',
+        imagePromptSystemMessageHelp: "This message will be sent as the system prompt to the LLM that generates the image prompt. Use <code>{'{turn}'}</code> as a placeholder for the agent's message.",
+        selectImageModel: 'Select image model',
+        selectPromptLLM: 'Select LLM for image prompt',
     },
 
     history: {

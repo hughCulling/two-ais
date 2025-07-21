@@ -337,7 +337,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
     const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize>('1024x1024');
     const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
-    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>('Create a prompt to give to the image generation model based on this turn: {turn}');
+    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
 
     // Update quality/size when model changes
     useEffect(() => {
@@ -937,7 +937,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             htmlFor="image-gen-enabled-checkbox" 
                             className="text-base font-medium"
                         >
-                            Enable Image Generation
+                            {t?.sessionSetupForm?.enableImageGen}
                         </Label>
                     </div>
                     <div id="image-gen-checkbox-description" className="sr-only">
@@ -948,13 +948,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
                             {/* Image Model Selection */}
                             <div className="space-y-2">
-                                <Label htmlFor="image-model-select">Image Model</Label>
+                                <Label htmlFor="image-model-select">{t?.sessionSetupForm?.imageModel}</Label>
                                 <Select
                                     value={selectedImageModelId}
                                     onValueChange={setSelectedImageModelId}
                                 >
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select image model" />
+                                        <SelectValue placeholder={t?.sessionSetupForm?.selectImageModel} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {AVAILABLE_IMAGE_MODELS.map(m => (
@@ -965,7 +965,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                             {/* Quality Selection */}
                             <div className="space-y-2">
-                                <Label htmlFor="image-quality-select">Quality</Label>
+                                <Label htmlFor="image-quality-select">{t?.sessionSetupForm?.quality}</Label>
                                 <Select
                                     value={selectedImageQuality}
                                     onValueChange={v => setSelectedImageQuality(v as ImageModelQuality)}
@@ -986,7 +986,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                             {/* Size Selection */}
                             <div className="space-y-2">
-                                <Label htmlFor="image-size-select">Size</Label>
+                                <Label htmlFor="image-size-select">{t?.sessionSetupForm?.size}</Label>
                                 <Select
                                     value={selectedImageSize}
                                     onValueChange={v => setSelectedImageSize(v as ImageModelSize)}
@@ -1008,13 +1008,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                             {/* Prompt LLM Selection */}
                             <div className="space-y-2">
-                                <Label htmlFor="prompt-llm-select">Prompt LLM</Label>
+                                <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM}</Label>
                                 <Select
                                     value={selectedPromptLlm}
                                     onValueChange={setSelectedPromptLlm}
                                 >
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select LLM for image prompt" />
+                                        <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {AVAILABLE_LLMS.map(llm => (
@@ -1025,7 +1025,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                             {/* System Prompt for Image Prompt LLM */}
                             <div className="space-y-2 col-span-1 md:col-span-2">
-                                <Label htmlFor="image-prompt-system-message">Image Prompt System Message</Label>
+                                <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage}</Label>
                                 <textarea
                                     id="image-prompt-system-message"
                                     className="w-full border rounded-md p-2 text-sm min-h-[60px]"
@@ -1035,9 +1035,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     aria-describedby="image-prompt-system-message-description"
                                     aria-label="System prompt for image prompt LLM"
                                 />
-                                <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground mt-1">
-                                    This message will be sent as the system prompt to the LLM that generates the image prompt. Use <code>{'{turn}'}</code> as a placeholder for the agent&aposs message.
-                                </p>
+                                <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground mt-1" dangerouslySetInnerHTML={{ __html: t?.sessionSetupForm?.imagePromptSystemMessageHelp || '' }} />
                             </div>
                         </div>
                     )}

@@ -153,7 +153,8 @@ const bn = {
             "perMillionTokens": "প্রতি মিলিয়ন টোকেনে",
             "input": "ইনপুট",
             "output": "আউটপুট"
-        }
+        },
+        "aiConversation": "AI কথা-বার্তা"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const bn = {
         "ttsProviderModel": "{providerName} মডেল",
         "selectTtsProviderModel": "নির্বাচন করুন {providerName} মডেল",
         "selectProvider": "প্রোভাইডার নির্বাচন করুন",
-        "per": "প্রতি"
+        "per": "প্রতি",
+        "enableImageGen": "ছবি তৈরি সক্ষম করুন",
+        "imageModel": "চিত্র মডেল",
+        "quality": "গুণমান",
+        "size": "আকার",
+        "promptLLM": "প্রম্পট এলএলএম",
+        "imagePromptSystemMessage": "ইমেজ প্রম্পট সিস্টেম বার্তা",
+        "defaultImagePromptSystemMessage": "এই টার্নের উপর ভিত্তি করে ইমেজ জেনারেশন মডেলকে দেওয়ার জন্য একটি প্রম্পট তৈরি করুন: {turn}",
+        "imagePromptSystemMessageHelp": "এই বার্তাটি সিস্টেম প্রম্পট হিসেবে LLM-এ পাঠানো হবে যা ইমেজ প্রম্পট তৈরি করে। ব্যবহার করুন <code>{'{turn}'}</code> এজেন্টের বার্তার স্থানধারক হিসেবে।",
+        "selectImageModel": "ছবির মডেল নির্বাচন করুন",
+        "selectPromptLLM": "ইমেজ প্রম্পটের জন্য LLM নির্বাচন করুন"
     },
     "history": {
         "backToMain": "মূল বিভাগে ফিরে যান",

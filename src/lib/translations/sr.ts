@@ -153,7 +153,8 @@ const sr = {
             "perMillionTokens": "по милиону токена",
             "input": "Унос",
             "output": "Излаз"
-        }
+        },
+        "aiConversation": "AI Разговор"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const sr = {
         "ttsProviderModel": "{providerName} Модел",
         "selectTtsProviderModel": "Изаберите {providerName} Модел",
         "selectProvider": "Изаберите добављача",
-        "per": "по"
+        "per": "по",
+        "enableImageGen": "Омогући генерисање слика",
+        "imageModel": "Модел слике",
+        "quality": "Квалитет",
+        "size": "Величина",
+        "promptLLM": "Prompt LLM",
+        "imagePromptSystemMessage": "Системска порука за упит о слици",
+        "defaultImagePromptSystemMessage": "Направите промпт који ћете дати моделу за генерисање слика на основу овог потеза: {turn}",
+        "imagePromptSystemMessageHelp": "Ова порука ће бити послата као системски упит LLM-у који генерише упит за слику. Користите <code>{'{turn}'}</code> као резервисано место за поруку агента.",
+        "selectImageModel": "Изаберите модел слике",
+        "selectPromptLLM": "Изаберите LLM за промпт слике"
     },
     "history": {
         "backToMain": "Назад на главни",

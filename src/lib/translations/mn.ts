@@ -153,7 +153,8 @@ const mn = {
             "perMillionTokens": "сая жетон тутамд",
             "input": "Оруулах",
             "output": "Гаралт"
-        }
+        },
+        "aiConversation": "AI Яриа"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const mn = {
         "ttsProviderModel": "{providerName} Загвар",
         "selectTtsProviderModel": "Сонго {providerName} Загвар",
         "selectProvider": "Үйлчилгээ үзүүлэгчийг сонгоно уу",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Зураг үүсгэхийг идэвхжүүлнэ үү",
+        "imageModel": "Зургийн загвар",
+        "quality": "Чанартай",
+        "size": "Хэмжээ",
+        "promptLLM": "Шуурхай LLM",
+        "imagePromptSystemMessage": "Зургийн сануулга системийн мессеж",
+        "defaultImagePromptSystemMessage": "Энэ эргэлт дээр үндэслэн зураг үүсгэх загварт өгөх сануулгыг үүсгэ: {turn}",
+        "imagePromptSystemMessageHelp": "Энэ мессежийг зургийн сануулга үүсгэдэг LLM-д системийн сануулга болгон илгээх болно. Ашиглах <code>{'{turn}'}</code> төлөөлөгчийн мессежийн орлуулагч болгон.",
+        "selectImageModel": "Зургийн загварыг сонгоно уу",
+        "selectPromptLLM": "Зургийн сануулга авахын тулд LLM сонгоно уу"
     },
     "history": {
         "backToMain": "Үндсэн рүү буцах",

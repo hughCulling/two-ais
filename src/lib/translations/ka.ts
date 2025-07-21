@@ -153,7 +153,8 @@ const ka = {
             "perMillionTokens": "მილიონ ტოკენებზე",
             "input": "შეყვანა",
             "output": "გამომავალი"
-        }
+        },
+        "aiConversation": "AI საუბარი"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const ka = {
         "ttsProviderModel": "{providerName} მოდელი",
         "selectTtsProviderModel": "არჩევა {providerName} მოდელი",
         "selectProvider": "პროვაიდერის არჩევა",
-        "per": "თითო"
+        "per": "თითო",
+        "enableImageGen": "სურათების გენერირების ჩართვა",
+        "imageModel": "სურათის მოდელი",
+        "quality": "ხარისხი",
+        "size": "ზომა",
+        "promptLLM": "სწრაფი LLM",
+        "imagePromptSystemMessage": "სურათის მოთხოვნის სისტემის შეტყობინება",
+        "defaultImagePromptSystemMessage": "შექმენით მოთხოვნა, რომელიც ამ რაუნდის მიხედვით გამოსახულების გენერირების მოდელს მიეცემა: {turn}",
+        "imagePromptSystemMessageHelp": "ეს შეტყობინება სისტემური მოთხოვნის სახით გაეგზავნება LLM-ს, რომელიც სურათის მოთხოვნას გენერირებს. გამოიყენეთ <code>{'{turn}'}</code> როგორც აგენტის შეტყობინების ჩანაცვლების ველი.",
+        "selectImageModel": "სურათის მოდელის არჩევა",
+        "selectPromptLLM": "სურათის მოთხოვნისთვის აირჩიეთ LLM"
     },
     "history": {
         "backToMain": "დაბრუნება მთავარზე",

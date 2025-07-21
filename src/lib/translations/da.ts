@@ -153,7 +153,8 @@ const da = {
             "perMillionTokens": "pr. million tokens",
             "input": "Input",
             "output": "Produktion"
-        }
+        },
+        "aiConversation": "AI Samtale"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const da = {
         "ttsProviderModel": "{providerName} Model",
         "selectTtsProviderModel": "Vælge {providerName} Model",
         "selectProvider": "Vælg udbyder",
-        "per": "om"
+        "per": "om",
+        "enableImageGen": "Aktivér billedgenerering",
+        "imageModel": "Billedmodel",
+        "quality": "Kvalitet",
+        "size": "Størrelse",
+        "promptLLM": "Hurtig LLM",
+        "imagePromptSystemMessage": "Systemmeddelelse for billedprompt",
+        "defaultImagePromptSystemMessage": "Opret en prompt, der skal gives til billedgenereringsmodellen baseret på denne tur: {turn}",
+        "imagePromptSystemMessageHelp": "Denne besked sendes som systemprompt til den LLM, der genererer billedprompten. <code>{'{turn}'}</code> som en pladsholder for agentens besked.",
+        "selectImageModel": "Vælg billedmodel",
+        "selectPromptLLM": "Vælg LLM til billedprompt"
     },
     "history": {
         "backToMain": "Tilbage til hovedindholdet",

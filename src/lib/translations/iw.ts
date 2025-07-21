@@ -153,7 +153,8 @@ const iw = {
             "perMillionTokens": "לכל מיליון אסימונים",
             "input": "קֶלֶט",
             "output": "תְפוּקָה"
-        }
+        },
+        "aiConversation": "AI שִׂיחָה"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const iw = {
         "ttsProviderModel": "{providerName} דֶגֶם",
         "selectTtsProviderModel": "לִבחוֹר {providerName} דֶגֶם",
         "selectProvider": "בחר ספק",
-        "per": "לְכָל"
+        "per": "לְכָל",
+        "enableImageGen": "הפעלת יצירת תמונות",
+        "imageModel": "מודל תמונה",
+        "quality": "אֵיכוּת",
+        "size": "גוֹדֶל",
+        "promptLLM": "תואר ראשון במשפטים (LLM)",
+        "imagePromptSystemMessage": "הודעת מערכת הנחיות תמונה",
+        "defaultImagePromptSystemMessage": "צור הנחיה שתוענק למודל יצירת התמונה בהתבסס על תור זה: {turn}",
+        "imagePromptSystemMessageHelp": "הודעה זו תישלח כהנחיית מערכת ל-LLM שמייצר את הנחיית התמונה. <code>{'{turn}'}</code> כמציין מיקום עבור הודעת הסוכן.",
+        "selectImageModel": "בחר מודל תמונה",
+        "selectPromptLLM": "בחר LLM עבור הנחיית תמונה"
     },
     "history": {
         "backToMain": "חזרה לדף הראשי",

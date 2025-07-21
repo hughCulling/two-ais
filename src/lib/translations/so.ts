@@ -153,7 +153,8 @@ const so = {
             "perMillionTokens": "halkii milyan oo calaamadood",
             "input": "Gelida",
             "output": "Wax soo saarka"
-        }
+        },
+        "aiConversation": "AI Wada sheekeysi"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const so = {
         "ttsProviderModel": "{providerName} Qaabka",
         "selectTtsProviderModel": "Dooro {providerName} Qaabka",
         "selectProvider": "Dooro Bixiye",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Daar Sawirka Jiilka",
+        "imageModel": "Qaabka Sawirka",
+        "quality": "Tayada",
+        "size": "Cabbirka",
+        "promptLLM": "Degdeg LLM",
+        "imagePromptSystemMessage": "Fariinta Nidaamka Tooska ah ee Sawirka",
+        "defaultImagePromptSystemMessage": "Samee degdeg ah si aad u siiso qaabka jiilka sawirka oo ku salaysan leexashadan: {turn}",
+        "imagePromptSystemMessageHelp": "Fariintan waxaa loo diri doonaa iyadoo nidaamku soo dedejin doono LLM kaas oo soo saara sawirka degdega ah. Isticmaal <code>{'{turn}'}</code> meel haye ahaan fariinta wakiilka.",
+        "selectImageModel": "Dooro qaabka sawirka",
+        "selectPromptLLM": "Dooro LLM si aad sawir uga hesho"
     },
     "history": {
         "backToMain": "Ku laabo Main",

@@ -153,7 +153,8 @@ const hu = {
             "perMillionTokens": "millió tokenenként",
             "input": "Bemenet",
             "output": "Kimenet"
-        }
+        },
+        "aiConversation": "AI Beszélgetés"
     },
     "auth": {
         "login": {
@@ -318,7 +319,17 @@ const hu = {
         "ttsProviderModel": "{providerName} Modell",
         "selectTtsProviderModel": "Válasszon {providerName} Modell",
         "selectProvider": "Szolgáltató kiválasztása",
-        "per": "per"
+        "per": "per",
+        "enableImageGen": "Képgenerálás engedélyezése",
+        "imageModel": "Képmodell",
+        "quality": "Minőség",
+        "size": "Méret",
+        "promptLLM": "Azonnali LLM",
+        "imagePromptSystemMessage": "Képüzenet a rendszerről",
+        "defaultImagePromptSystemMessage": "Hozz létre egy promptot, amelyet a képgeneráló modellnek adsz ki ezen a fordulón alapulva: {turn}",
+        "imagePromptSystemMessageHelp": "Ez az üzenet rendszerpromptként kerül elküldésre az LLM-nek, amely létrehozza a képpromptot. <code>{'{turn}'}</code> az ügynök üzenetének helyőrzőjeként.",
+        "selectImageModel": "Képmodell kiválasztása",
+        "selectPromptLLM": "Válassza az LLM-et a képkéréshez"
     },
     "history": {
         "backToMain": "Vissza a főoldalra",
