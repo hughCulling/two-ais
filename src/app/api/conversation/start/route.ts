@@ -327,7 +327,7 @@ export async function POST(request: NextRequest) {
                 ttsApiModelId: agentB_tts.ttsApiModelId,
             };
 
-            const conversationData = {
+            const conversationData: any = {
                 userId: userId,
                 agentA_llm: agentA_llm,
                 agentB_llm: agentB_llm,
@@ -343,8 +343,10 @@ export async function POST(request: NextRequest) {
                     agentB: finalAgentBTts,
                 },
                 initialSystemPrompt: initialSystemPrompt, // <-- Store in Firestore
-                imageGenSettings: imageGenSettings, // <-- Store imageGenSettings in Firestore
             };
+            if (imageGenSettings !== undefined) {
+                conversationData.imageGenSettings = imageGenSettings;
+            }
 
             // Add log for imageGenSettings
             console.log("API Route: imageGenSettings to be stored:", imageGenSettings);
