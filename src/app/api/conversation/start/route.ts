@@ -191,6 +191,44 @@ interface StartConversationRequest {
     };
 }
 
+// --- ConversationData type for Firestore documents ---
+type ConversationData = {
+    userId: string;
+    agentA_llm: string;
+    agentB_llm: string;
+    turn: "agentA" | "agentB";
+    status: "running" | "stopped" | "error";
+    language: string;
+    apiSecretVersions: { [key: string]: string };
+    createdAt: FirebaseFirestore.FieldValue;
+    lastActivity: FirebaseFirestore.FieldValue;
+    ttsSettings: {
+        enabled: boolean;
+        agentA: {
+            provider: string;
+            voice: string | null;
+            selectedTtsModelId?: string;
+            ttsApiModelId?: string;
+        };
+        agentB: {
+            provider: string;
+            voice: string | null;
+            selectedTtsModelId?: string;
+            ttsApiModelId?: string;
+        };
+    };
+    initialSystemPrompt: string;
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        model: string;
+        quality: string;
+        size: string;
+        promptLlm: string;
+        promptSystemMessage: string;
+    };
+};
+
 // --- POST Handler ---
 export async function POST(request: NextRequest) {
     console.log("API route /api/conversation/start hit");
@@ -327,7 +365,7 @@ export async function POST(request: NextRequest) {
                 ttsApiModelId: agentB_tts.ttsApiModelId,
             };
 
-            const conversationData: any = {
+            const conversationData: ConversationData = {
                 userId: userId,
                 agentA_llm: agentA_llm,
                 agentB_llm: agentB_llm,
