@@ -11,7 +11,8 @@ import {
     serverTimestamp,
     Timestamp,
     updateDoc,
-    FirestoreError
+    FirestoreError,
+    getDoc
 } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -56,6 +57,7 @@ interface ConversationData {
     };
     waitingForTTSEndSignal?: boolean;
     errorContext?: string;
+    lastPlayedAgentMessageId?: string; // <-- Add this line
 }
 
 interface ChatInterfaceProps {
@@ -203,6 +205,16 @@ export function ChatInterface({
         );
 
         let isFirstSnapshot = true;
+        let lastPlayedAgentMessageId: string | undefined = undefined;
+        // Fetch lastPlayedAgentMessageId from conversation doc
+        const conversationDocRef = doc(db, "conversations", conversationId);
+        getDoc(conversationDocRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data() as ConversationData;
+                lastPlayedAgentMessageId = data.lastPlayedAgentMessageId;
+            }
+        });
+
         const unsubscribe = onSnapshot(messagesQuery,
             (querySnapshot) => {
                 logger.debug(`ChatInterface: Message snapshot received ${querySnapshot.docs.length} docs for ${conversationId}.`);
@@ -226,9 +238,20 @@ export function ChatInterface({
                     }
                 });
                 setMessages(fetchedMessages);
-                // --- Removed initialPlayedIds logic: do not mark any messages as played on initial snapshot ---
                 if (isFirstSnapshot) {
-                    setPlayedMessageIds(new Set());
+                    // Initialize playedMessageIds based on lastPlayedAgentMessageId
+                    if (lastPlayedAgentMessageId) {
+                        const playedIds = new Set<string>();
+                        for (const msg of fetchedMessages) {
+                            if ((msg.role === 'agentA' || msg.role === 'agentB') && msg.audioUrl) {
+                                playedIds.add(msg.id);
+                                if (msg.id === lastPlayedAgentMessageId) break;
+                            }
+                        }
+                        setPlayedMessageIds(playedIds);
+                    } else {
+                        setPlayedMessageIds(new Set());
+                    }
                     isFirstSnapshot = false;
                 }
             },
