@@ -109,7 +109,9 @@ const handleStartSession = async (config: SessionConfig) => {
     setSessionConfig(null);
     setActiveConversationId(null);
     setHasManuallyStopped(false);
-    try {
+
+    // Helper to actually perform the fetch
+    const doSessionStartFetch = async () => {
         const idToken = await user.getIdToken();
         logger.info("Obtained ID Token for API call.");
         const configWithLanguage = {
@@ -134,15 +136,57 @@ const handleStartSession = async (config: SessionConfig) => {
         logger.info(`Session setup successful via API. Conversation ID: ${result.conversationId}`);
         setSessionConfig(configWithLanguage);
         setActiveConversationId(result.conversationId);
+    };
+
+    let didRetry = false;
+    try {
+        try {
+            await doSessionStartFetch();
+        } catch (error) {
+            // Detect network error (TypeError: Failed to fetch, or similar)
+            const isNetworkError =
+                error instanceof TypeError &&
+                (
+                    error.message === 'Failed to fetch' ||
+                    error.message === 'NetworkError when attempting to fetch resource.' ||
+                    error.message === 'The network connection was lost.' ||
+                    error.message.toLowerCase().includes('network') ||
+                    error.message.toLowerCase().includes('connection')
+                );
+            if (isNetworkError && !didRetry) {
+                logger.warn("Network error detected on session start. Retrying once...");
+                didRetry = true;
+                await new Promise(res => setTimeout(res, 800)); // brief delay before retry
+                await doSessionStartFetch();
+                return;
+            }
+            throw error;
+        }
     } catch (error) {
         logger.error("Failed to start session:", error);
-        setPageError(
-            t!.page_ErrorStartingSessionGeneric.replace(
-                "{errorMessage}",
-                (error instanceof Error ? error.message : String(error)) +
-                " Please try again. If the problem persists, refresh the page."
-            )
-        );
+        // If network error after retry, show a friendlier message
+        const isNetworkError =
+            error instanceof TypeError &&
+            (
+                error.message === 'Failed to fetch' ||
+                error.message === 'NetworkError when attempting to fetch resource.' ||
+                error.message === 'The network connection was lost.' ||
+                error.message.toLowerCase().includes('network') ||
+                error.message.toLowerCase().includes('connection')
+            );
+        if (isNetworkError) {
+            setPageError(
+                'Network connection lost. Please check your internet and try again.'
+            );
+        } else {
+            setPageError(
+                t!.page_ErrorStartingSessionGeneric.replace(
+                    "{errorMessage}",
+                    (error instanceof Error ? error.message : String(error)) +
+                    " Please try again. If the problem persists, refresh the page."
+                )
+            );
+        }
         setSessionConfig(null);
         setActiveConversationId(null);
     } finally {
