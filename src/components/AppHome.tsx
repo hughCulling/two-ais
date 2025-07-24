@@ -119,11 +119,23 @@ const handleStartSession = async (config: SessionConfig) => {
             language: config.language,
             initialSystemPrompt: config.initialSystemPrompt,
         };
-        const response = await fetch('/api/conversation/start', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
-            body: JSON.stringify(configWithLanguage),
-        });
+        // --- Add 15-second timeout via AbortController ---
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        let response: Response;
+        try {
+            response = await fetch('/api/conversation/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+                body: JSON.stringify(configWithLanguage),
+                signal: controller.signal,
+            });
+        } finally {
+            clearTimeout(timeoutId);
+        }
         if (!response.ok) {
             let errorMsg = t!.page_ErrorStartingSessionAPI.replace("{status}", response.status.toString()).replace("{statusText}", response.statusText);
             try { const errorData = await response.json(); errorMsg = errorData.error || errorMsg; }
@@ -138,33 +150,37 @@ const handleStartSession = async (config: SessionConfig) => {
         setActiveConversationId(result.conversationId);
     };
 
-    let didRetry = false;
+    // --- Exponential-backoff retry wrapper ---
     try {
-        try {
-            await doSessionStartFetch();
-        } catch (error) {
-            // Detect network error (TypeError: Failed to fetch, or similar)
-            const isNetworkError =
-                error instanceof TypeError &&
-                (
-                    error.message === 'Failed to fetch' ||
-                    error.message === 'NetworkError when attempting to fetch resource.' ||
-                    error.message === 'The network connection was lost.' ||
-                    error.message.toLowerCase().includes('network') ||
-                    error.message.toLowerCase().includes('connection')
-                );
-            if (isNetworkError && !didRetry) {
-                logger.warn("Network error detected on session start. Retrying once...");
-                didRetry = true;
-                await new Promise(res => setTimeout(res, 800)); // brief delay before retry
+        const MAX_RETRIES = 3;
+        let attempt = 0;
+        while (attempt < MAX_RETRIES) {
+            try {
                 await doSessionStartFetch();
-                return;
+                break; // success
+            } catch (error) {
+                const isNetworkError =
+                    error instanceof TypeError &&
+                    (
+                        error.message === 'Failed to fetch' ||
+                        error.message === 'NetworkError when attempting to fetch resource.' ||
+                        error.message === 'The network connection was lost.' ||
+                        error.message.toLowerCase().includes('network') ||
+                        error.message.toLowerCase().includes('connection') ||
+                        (error as Error).name === 'AbortError'
+                    );
+                if (!isNetworkError || attempt === MAX_RETRIES - 1) {
+                    // Either non-network error or out of retries → rethrow
+                    throw error;
+                }
+                const backoff = 500 * Math.pow(2, attempt); // 0.5 s, 1 s, 2 s
+                logger.warn(`Network error on session start (attempt ${attempt + 1}/${MAX_RETRIES}). Retrying in ${backoff} ms...`);
+                await new Promise(res => setTimeout(res, backoff));
+                attempt++;
             }
-            throw error;
         }
     } catch (error) {
         logger.error("Failed to start session:", error);
-        // If network error after retry, show a friendlier message
         const isNetworkError =
             error instanceof TypeError &&
             (
@@ -175,15 +191,13 @@ const handleStartSession = async (config: SessionConfig) => {
                 error.message.toLowerCase().includes('connection')
             );
         if (isNetworkError) {
-            setPageError(
-                'Network connection lost. Please check your internet and try again.'
-            );
+            setPageError('Network connection lost. Please check your internet and try again.');
         } else {
             setPageError(
                 t!.page_ErrorStartingSessionGeneric.replace(
-                    "{errorMessage}",
+                    '{errorMessage}',
                     (error instanceof Error ? error.message : String(error)) +
-                    " Please try again. If the problem persists, refresh the page."
+                        ' Please try again. If the problem persists, refresh the page.'
                 )
             );
         }
