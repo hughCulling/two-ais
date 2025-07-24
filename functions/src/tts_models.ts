@@ -72,30 +72,30 @@ export const BACKEND_TTS_MODELS: BackendTTSModel[] = [
     encodingName: "cl100k_base",
   },
   // --- ElevenLabs ---
-  {
-    id: "elevenlabs-multilingual-v2",
-    apiModelId: "eleven_multilingual_v2",
-    provider: "elevenlabs",
-    name: "ElevenLabs Multilingual v2",
-    inputLimitType: "characters",
-    inputLimitValue: 10000,
-  },
-  {
-    id: "elevenlabs-flash-v2-5",
-    apiModelId: "eleven_flash_v2_5",
-    provider: "elevenlabs",
-    name: "ElevenLabs Flash v2.5",
-    inputLimitType: "characters",
-    inputLimitValue: 10000,
-  },
-  {
-    id: "elevenlabs-turbo-v2-5",
-    apiModelId: "eleven_turbo_v2_5",
-    provider: "elevenlabs",
-    name: "ElevenLabs Turbo v2.5",
-    inputLimitType: "characters",
-    inputLimitValue: 10000,
-  },
+  // {
+  //   id: "elevenlabs-multilingual-v2",
+  //   apiModelId: "eleven_multilingual_v2",
+  //   provider: "elevenlabs",
+  //   name: "ElevenLabs Multilingual v2",
+  //   inputLimitType: "characters",
+  //   inputLimitValue: 10000,
+  // },
+  // {
+  //   id: "elevenlabs-flash-v2-5",
+  //   apiModelId: "eleven_flash_v2_5",
+  //   provider: "elevenlabs",
+  //   name: "ElevenLabs Flash v2.5",
+  //   inputLimitType: "characters",
+  //   inputLimitValue: 10000,
+  // },
+  // {
+  //   id: "elevenlabs-turbo-v2-5",
+  //   apiModelId: "eleven_turbo_v2_5",
+  //   provider: "elevenlabs",
+  //   name: "ElevenLabs Turbo v2.5",
+  //   inputLimitType: "characters",
+  //   inputLimitValue: 10000,
+  // },
 ];
 
 export function getBackendTTSModelById(id: string): BackendTTSModel | undefined {
