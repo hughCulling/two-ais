@@ -729,7 +729,7 @@ async function _triggerAgentResponse(
                             headers: { "Content-Type": "application/json" },
                             data: geminiTtsRequestBody,
                             responseType: "json",
-                            timeout: 30000,
+                            timeout: 90000,
                           });
                           if (geminiResponse.data &&
                             geminiResponse.data.candidates &&
@@ -930,7 +930,7 @@ export const orchestrateConversation = onDocumentCreated(
 
 // --- Add requestNextTurn callable function ---
 export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ message: string }>>( 
-    { region: "us-central1", memory: "512MiB", timeoutSeconds: 60 },
+    { region: "us-central1", memory: "512MiB", timeoutSeconds: 300 },
     async (request) => {
         logger.info("--- requestNextTurn Function Execution Start ---", { structuredData: true });
         const conversationId = request.data.conversationId;

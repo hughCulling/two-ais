@@ -297,7 +297,7 @@ export async function triggerAgentResponse(
                             headers: { "Content-Type": "application/json" },
                             data: geminiTtsRequestBody,
                             responseType: "json",
-                            timeout: 30000,
+                            timeout: 90000,
                           });
                           if (geminiResponse.data &&
                             geminiResponse.data.candidates &&
