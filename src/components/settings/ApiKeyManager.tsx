@@ -63,13 +63,13 @@ const initialApiKeys: ApiKeyInput[] = [
         tooltip: "Your general Google Cloud API Key. Used for AI Studio (Gemini models) and other Google Cloud services like Text-to-Speech. Ensure relevant APIs (e.g., 'Vertex AI API' for Gemini, 'Cloud Text-to-Speech API' for TTS) are enabled in your Google Cloud Console project. Create keys in AI Studio or Google Cloud Console.",
         learnMoreLink: 'https://console.cloud.google.com/apis/library'
     },
-    {
-        id: 'elevenlabs',
-        label: 'Eleven Labs API Key',
-        value: '',
-        tooltip: 'Used for Eleven Labs Text-to-Speech voices. Create a free account at elevenlabs.io to get started or upgrade for more features. Generate your API key from your Eleven Labs dashboard.',
-        learnMoreLink: 'https://elevenlabs.io/app/settings/api-keys'
-    },
+    // {
+    //     id: 'elevenlabs',
+    //     label: 'Eleven Labs API Key',
+    //     value: '',
+    //     tooltip: 'Used for Eleven Labs Text-to-Speech voices. Create a free account at elevenlabs.io to get started or upgrade for more features. Generate your API key from your Eleven Labs dashboard.',
+    //     learnMoreLink: 'https://elevenlabs.io/app/settings/api-keys'
+    // },
     {
         id: 'anthropic',
         label: 'Anthropic API Key',
@@ -79,7 +79,7 @@ const initialApiKeys: ApiKeyInput[] = [
     },
     {
         id: 'xai',
-        label: 'XAI (Grok) API Key',
+        label: 'xAI API Key',
         value: '',
         tooltip: 'Used for Grok models from xAI. Requires an xAI account. Find keys at console.x.ai (or similar). Costs may apply.',
         learnMoreLink: 'https://console.x.ai' // Placeholder, actual link might differ
