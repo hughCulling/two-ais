@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2 } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -118,8 +118,34 @@ export function ChatInterface({
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+    const [isAudioPaused, setIsAudioPaused] = useState<boolean>(false);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
     const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
+    
+    // --- Audio Control Handlers ---
+    const handlePauseAudio = useCallback(() => {
+        if (audioPlayerRef.current && isAudioPlaying) {
+            audioPlayerRef.current.pause();
+            setIsAudioPlaying(false);
+            setIsAudioPaused(true);
+        }
+    }, [isAudioPlaying]);
+
+    const handleResumeAudio = useCallback(() => {
+        if (audioPlayerRef.current && isAudioPaused) {
+            audioPlayerRef.current.play()
+                .then(() => {
+                    setIsAudioPlaying(true);
+                    setIsAudioPaused(false);
+                })
+                .catch(err => {
+                    console.error('Error resuming audio:', err);
+                    setIsAudioPlaying(false);
+                    setIsAudioPaused(false);
+                    handleAudioEnd();
+                });
+        }
+    }, [isAudioPaused]);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -375,8 +401,14 @@ export function ChatInterface({
     useEffect(() => {
         const audioElem = audioPlayerRef.current;
         if (!audioElem) return;
-        const onEnded = () => handleAudioEnd();
-        const onError = () => handleAudioEnd();
+        const onEnded = () => {
+            setIsAudioPaused(false);
+            handleAudioEnd();
+        };
+        const onError = () => {
+            setIsAudioPaused(false);
+            handleAudioEnd();
+        };
         audioElem.addEventListener('ended', onEnded);
         audioElem.addEventListener('error', onError);
         return () => {
@@ -415,6 +447,7 @@ export function ChatInterface({
         if (audioPlayerRef.current) {
              audioPlayerRef.current.pause();
              setIsAudioPlaying(false);
+             setIsAudioPaused(false);
              setCurrentlyPlayingMsgId(null);
         }
         try {
@@ -544,7 +577,7 @@ export function ChatInterface({
 
     // --- Consolidated Audio Playback Effect ---
     useEffect(() => {
-        if (!hasUserInteracted || isAudioPlaying) return;
+        if (!hasUserInteracted || isAudioPlaying || isAudioPaused) return;
         // Find the first visible message with unplayed audio
         const nextAudioMsg = visibleMessages.find(
             (msg) => {
@@ -634,10 +667,10 @@ export function ChatInterface({
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">{t?.main?.aiConversation}</h2>
-                {isAudioPlaying && currentlyPlayingMsgId && (
+                {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
-                         <Volume2 className="h-4 w-4 animate-pulse text-primary" aria-hidden="true"/>
-                         <span>Playing Audio...</span>
+                        <Volume2 className={`h-4 w-4 ${isAudioPlaying ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} aria-hidden="true"/>
+                        <span>{isAudioPaused ? 'Audio Paused' : 'Playing Audio...'}</span>
                     </div>
                 )}
                 <Button 
@@ -824,6 +857,35 @@ export function ChatInterface({
                     <div ref={messagesEndRef} />
                 </div>
             </ScrollArea>
+
+            {/* Audio Controls in Footer */}
+            {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
+                <div className="flex-shrink-0 pt-2 border-t mt-4">
+                    <div className="flex items-center justify-center">
+                        {isAudioPlaying ? (
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                onClick={handlePauseAudio}
+                                className="h-12 w-12 rounded-full"
+                                aria-label="Pause audio"
+                            >
+                                <Pause className="h-6 w-6" />
+                            </Button>
+                        ) : isAudioPaused ? (
+                            <Button 
+                                variant="ghost" 
+                                size="icon"
+                                onClick={handleResumeAudio}
+                                className="h-12 w-12 rounded-full"
+                                aria-label="Resume audio"
+                            >
+                                <Play className="h-6 w-6" />
+                            </Button>
+                        ) : null}
+                    </div>
+                </div>
+            )}
 
             {/* Hidden Audio Player */}
             <audio
