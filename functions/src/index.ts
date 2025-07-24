@@ -576,7 +576,6 @@ async function _triggerAgentResponse(
                                 openaiParams.size = (["1024x1024", "1792x1024", "1024x1792"].includes(size)) ? (size as "1024x1024" | "1792x1024" | "1024x1792") : "1024x1024";
                                 openaiParams.response_format = "url";
                             } else if (model === "dall-e-2") {
-                                openaiParams.quality = "standard";
                                 openaiParams.size = (["256x256", "512x512", "1024x1024"].includes(size)) ? (size as "256x256" | "512x512" | "1024x1024") : "1024x1024";
                                 openaiParams.response_format = "url";
                             } else if (model === "gpt-image-1") {
