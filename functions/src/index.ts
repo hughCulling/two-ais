@@ -112,6 +112,7 @@ type ConversationData = {
   waitingForTTSEndSignal?: boolean;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
+  initialSystemPrompt?: string;
 };
 // --- End Interfaces ---
 
@@ -393,26 +394,38 @@ async function _triggerAgentResponse(
             if (llmProvider === "TogetherAI") {
                 // Normalize roles for TogetherAI: system, user, assistant, user, assistant, ...
                 const docs = historySnap.docs;
-                let idx = 0;
-                if (docs.length > 0 && docs[0].data().role === "system") {
-                    // First message is system
-                    historyMessages.push(new SystemMessage({ content: docs[0].data().content }));
-                    idx = 1;
-                }
-                // Determine which agent is the 'user' for this turn
-                // The agent who is NOT about to respond is the 'user' in the last message
-                // For the rest, alternate: user, assistant, user, assistant ...
-                let isUser = true;
-                for (let i = idx; i < docs.length; i++) {
-                    const data = docs[i].data() as { role: string; content: string };
-                    if (isUser) {
-                        // Message from the agent who is NOT about to respond
-                        historyMessages.push(new HumanMessage({ content: data.content }));
-                    } else {
-                        // Message from the agent who IS about to respond
-                        historyMessages.push(new AIMessage({ content: data.content }));
+                if (docs.length === 1 && docs[0].data().role === "system") {
+                    // History has only the system prompt. Use its content as the first human message.
+                    const systemPromptContent = docs[0].data().content;
+                    historyMessages.push(new SystemMessage({ content: systemPromptContent }));
+                    historyMessages.push(new HumanMessage({ content: systemPromptContent }));
+                } else if (docs.length === 0) {
+                     // Handle empty history: add system prompt and a placeholder
+                    const systemPrompt = conversationData.initialSystemPrompt || "You are a helpful assistant.";
+                    historyMessages.push(new SystemMessage({ content: systemPrompt }));
+                    historyMessages.push(new HumanMessage({ content: "Hello" }));
+                } else {
+                    let idx = 0;
+                    if (docs[0].data().role === "system") {
+                        // First message is system
+                        historyMessages.push(new SystemMessage({ content: docs[0].data().content }));
+                        idx = 1;
                     }
-                    isUser = !isUser;
+                    // Determine which agent is the 'user' for this turn
+                    // The agent who is NOT about to respond is the 'user' in the last message
+                    // For the rest, alternate: user, assistant, user, assistant ...
+                    let isUser = true;
+                    for (let i = idx; i < docs.length; i++) {
+                        const data = docs[i].data() as { role: string; content: string };
+                        if (isUser) {
+                            // Message from the agent who is NOT about to respond
+                            historyMessages.push(new HumanMessage({ content: data.content }));
+                        } else {
+                            // Message from the agent who IS about to respond
+                            historyMessages.push(new AIMessage({ content: data.content }));
+                        }
+                        isUser = !isUser;
+                    }
                 }
             } else {
                 // Existing logic for other providers

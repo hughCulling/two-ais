@@ -32,6 +32,7 @@ type ConversationData = {
   waitingForTTSEndSignal?: boolean;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
+  initialSystemPrompt?: string;
   imageGenSettings?: {
     enabled: boolean;
     provider: string;
@@ -107,20 +108,32 @@ export async function triggerAgentResponse(
             const llmProvider = getProviderFromId(agentModelId);
             if (llmProvider === "TogetherAI") {
                 const docs = historySnap.docs;
-                let idx = 0;
-                if (docs.length > 0 && docs[0].data().role === "system") {
-                    historyMessages.push(new SystemMessage({ content: docs[0].data().content }));
-                    idx = 1;
-                }
-                let isUser = true;
-                for (let i = idx; i < docs.length; i++) {
-                    const data = docs[i].data() as { role: string; content: string };
-                    if (isUser) {
-                        historyMessages.push(new HumanMessage({ content: data.content }));
-                    } else {
-                        historyMessages.push(new AIMessage({ content: data.content }));
+                if (docs.length === 1 && docs[0].data().role === "system") {
+                    // History has only the system prompt. Use its content as the first human message.
+                    const systemPromptContent = docs[0].data().content;
+                    historyMessages.push(new SystemMessage({ content: systemPromptContent }));
+                    historyMessages.push(new HumanMessage({ content: systemPromptContent }));
+                } else if (docs.length === 0) {
+                     // Handle empty history: add system prompt and a placeholder
+                    const systemPrompt = conversationData.initialSystemPrompt || "You are a helpful assistant.";
+                    historyMessages.push(new SystemMessage({ content: systemPrompt }));
+                    historyMessages.push(new HumanMessage({ content: "Hello" }));
+                } else {
+                    let idx = 0;
+                    if (docs[0].data().role === "system") {
+                        historyMessages.push(new SystemMessage({ content: docs[0].data().content }));
+                        idx = 1;
                     }
-                    isUser = !isUser;
+                    let isUser = true;
+                    for (let i = idx; i < docs.length; i++) {
+                        const data = docs[i].data() as { role: string; content: string };
+                        if (isUser) {
+                            historyMessages.push(new HumanMessage({ content: data.content }));
+                        } else {
+                            historyMessages.push(new AIMessage({ content: data.content }));
+                        }
+                        isUser = !isUser;
+                    }
                 }
             } else {
                 historyMessages = historySnap.docs.map((doc) => {
