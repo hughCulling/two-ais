@@ -359,6 +359,7 @@ const sw = {
     "page_AvailableImageModelsTitle": "Miundo ya Picha Inayopatikana Kwa Sasa",
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",
-    "imageModel_PriceUSD": "Bei (USD)"
+    "imageModel_PriceUSD": "Bei (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default sw;

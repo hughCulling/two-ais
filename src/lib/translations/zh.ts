@@ -359,6 +359,7 @@ const zh = {
     "page_AvailableImageModelsTitle": "当前可用的图像模型",
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",
-    "imageModel_PriceUSD": "价格 (USD)"
+    "imageModel_PriceUSD": "价格 (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default zh;

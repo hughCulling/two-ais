@@ -359,6 +359,7 @@ const hr = {
     "page_AvailableImageModelsTitle": "Trenutno dostupni modeli slika",
     "imageModel_Quality": "Kvaliteta",
     "imageModel_Size": "Veličina",
-    "imageModel_PriceUSD": "Cijena (USD)"
+    "imageModel_PriceUSD": "Cijena (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default hr;

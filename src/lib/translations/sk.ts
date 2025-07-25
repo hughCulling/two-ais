@@ -359,6 +359,7 @@ const sk = {
     "page_AvailableImageModelsTitle": "Aktuálne dostupné modely obrázkov",
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default sk;

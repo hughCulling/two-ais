@@ -359,6 +359,7 @@ const ta = {
     "page_AvailableImageModelsTitle": "தற்போது கிடைக்கும் பட மாதிரிகள்",
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",
-    "imageModel_PriceUSD": "விலை (USD)"
+    "imageModel_PriceUSD": "விலை (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ta;

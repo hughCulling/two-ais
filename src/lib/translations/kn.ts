@@ -359,6 +359,7 @@ const kn = {
     "page_AvailableImageModelsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಇಮೇಜ್ ಮಾದರಿಗಳು",
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",
-    "imageModel_PriceUSD": "ಬೆಲೆ (USD)"
+    "imageModel_PriceUSD": "ಬೆಲೆ (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default kn;

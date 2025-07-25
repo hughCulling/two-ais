@@ -323,6 +323,19 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
                                       </span>
                                     )}
+                                    {llm.knowledgeCutoff && (
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="flex items-center text-xs text-muted-foreground ml-2">
+                                            <Info className="h-3 w-3 mr-1 flex-shrink-0" />
+                                            <span>{llm.knowledgeCutoff}</span>
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top">
+                                          <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    )}
                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
                                       <Tooltip>
                                         <TooltipTrigger asChild>

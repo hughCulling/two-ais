@@ -359,6 +359,7 @@ const fr = {
     "page_AvailableImageModelsTitle": "Modèles d'images actuellement disponibles",
     "imageModel_Quality": "Qualité",
     "imageModel_Size": "Taille",
-    "imageModel_PriceUSD": "Prix (USD)"
+    "imageModel_PriceUSD": "Prix (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default fr;

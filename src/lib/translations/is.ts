@@ -359,6 +359,7 @@ const is = {
     "page_AvailableImageModelsTitle": "Myndlíkön sem eru nú fáanleg",
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",
-    "imageModel_PriceUSD": "Verð (USD)"
+    "imageModel_PriceUSD": "Verð (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default is;

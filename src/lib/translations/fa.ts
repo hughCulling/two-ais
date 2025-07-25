@@ -359,6 +359,7 @@ const fa = {
     "page_AvailableImageModelsTitle": "مدل‌های تصویر موجود در حال حاضر",
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",
-    "imageModel_PriceUSD": "قیمت (USD)"
+    "imageModel_PriceUSD": "قیمت (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default fa;

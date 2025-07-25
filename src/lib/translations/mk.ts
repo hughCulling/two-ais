@@ -359,6 +359,7 @@ const mk = {
     "page_AvailableImageModelsTitle": "Моментално достапни модели на слики",
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Големина",
-    "imageModel_PriceUSD": "Цена (USD)"
+    "imageModel_PriceUSD": "Цена (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default mk;

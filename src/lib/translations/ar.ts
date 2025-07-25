@@ -359,6 +359,7 @@ const ar = {
     "page_AvailableImageModelsTitle": "نماذج الصور المتوفرة حاليًا",
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",
-    "imageModel_PriceUSD": "سعر (USD)"
+    "imageModel_PriceUSD": "سعر (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ar;

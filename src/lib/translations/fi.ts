@@ -359,6 +359,7 @@ const fi = {
     "page_AvailableImageModelsTitle": "Tällä hetkellä saatavilla olevat kuvamallit",
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",
-    "imageModel_PriceUSD": "Hinta (USD)"
+    "imageModel_PriceUSD": "Hinta (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default fi;

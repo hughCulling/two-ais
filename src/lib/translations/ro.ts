@@ -359,6 +359,7 @@ const ro = {
     "page_AvailableImageModelsTitle": "Modele de imagine disponibile în prezent",
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",
-    "imageModel_PriceUSD": "Preţ (USD)"
+    "imageModel_PriceUSD": "Preţ (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ro;

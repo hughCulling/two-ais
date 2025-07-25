@@ -359,6 +359,7 @@ const ko = {
     "page_AvailableImageModelsTitle": "현재 사용 가능한 이미지 모델",
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",
-    "imageModel_PriceUSD": "가격 (USD)"
+    "imageModel_PriceUSD": "가격 (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ko;

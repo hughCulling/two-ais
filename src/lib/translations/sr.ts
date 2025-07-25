@@ -359,6 +359,7 @@ const sr = {
     "page_AvailableImageModelsTitle": "Тренутно доступни модели слика",
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Величина",
-    "imageModel_PriceUSD": "Цена (USD)"
+    "imageModel_PriceUSD": "Цена (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default sr;

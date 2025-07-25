@@ -359,6 +359,7 @@ const tl = {
     "page_AvailableImageModelsTitle": "Kasalukuyang Magagamit na Mga Modelo ng Larawan",
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",
-    "imageModel_PriceUSD": "Presyo (USD)"
+    "imageModel_PriceUSD": "Presyo (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default tl;
