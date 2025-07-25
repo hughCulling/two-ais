@@ -146,7 +146,7 @@ const en = {
                 selectModel: 'Select TTS model',
             },
             startConversation: 'Start Conversation',
-            conversationPrompt: 'Start the conversation.',
+            conversationPrompt: 'Please start the conversation.',
         },
         conversation: {
             thinking: 'thinking...',
@@ -329,7 +329,7 @@ const en = {
         initialPromptDescription: 'This prompt will be sent as the first message to start the conversation. If you leave it blank, there will be no prompt.',
         startConversation: 'Start Conversation',
         starting: 'Starting...',
-        startTheConversation: 'Start the conversation.',
+        startTheConversation: 'Please start the conversation.',
         languageSupportNote: 'Language support indicators show model compatibility with {languageName}. Models without support are disabled.',
         reasoningNote: "Indicates a model uses 'thinking' or 'reasoning' tokens. This output is billed but is not visible in the chat.",
         openaiOrgVerificationNote: 'Indicates an OpenAI model requires a verified organization. You can',
