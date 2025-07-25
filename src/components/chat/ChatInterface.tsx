@@ -1,5 +1,6 @@
 // src/components/chat/ChatInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
 import { httpsCallable, FunctionsError } from 'firebase/functions'; // Import httpsCallable
 import {
@@ -131,37 +132,6 @@ export function ChatInterface({
         }
     }, [isAudioPlaying]);
 
-    const handleResumeAudio = useCallback(() => {
-        if (audioPlayerRef.current && isAudioPaused) {
-            audioPlayerRef.current.play()
-                .then(() => {
-                    setIsAudioPlaying(true);
-                    setIsAudioPaused(false);
-                })
-                .catch(err => {
-                    console.error('Error resuming audio:', err);
-                    setIsAudioPlaying(false);
-                    setIsAudioPaused(false);
-                    handleAudioEnd();
-                });
-        }
-    }, [isAudioPaused]);
-
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    // Use optimized scroll hook
-    const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
-
-    const { t } = useTranslation();
-
-    // --- Handler: User Interaction Detection ---
-    const handleUserInteraction = useCallback(() => {
-        if (!hasUserInteracted) {
-            logger.info("User interaction detected - enabling audio playback");
-            setHasUserInteracted(true);
-        }
-    }, [hasUserInteracted]);
-
     // --- Refactored: Audio End Handler (no param, uses state) ---
     const handleAudioEnd = useCallback(() => {
         if (!currentlyPlayingMsgId) return;
@@ -215,6 +185,36 @@ export function ChatInterface({
             });
     }, [currentlyPlayingMsgId, conversationId, messages]);
 
+    const handleResumeAudio = useCallback(() => {
+        if (audioPlayerRef.current && isAudioPaused) {
+            audioPlayerRef.current.play()
+                .then(() => {
+                    setIsAudioPlaying(true);
+                    setIsAudioPaused(false);
+                })
+                .catch(err => {
+                    console.error('Error resuming audio:', err);
+                    setIsAudioPlaying(false);
+                    setIsAudioPaused(false);
+                    handleAudioEnd();
+                });
+        }
+    }, [isAudioPaused, handleAudioEnd]);
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Use optimized scroll hook
+    const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
+
+    const { t } = useTranslation();
+
+    // --- Handler: User Interaction Detection ---
+    const handleUserInteraction = useCallback(() => {
+        if (!hasUserInteracted) {
+            logger.info("User interaction detected - enabling audio playback");
+            setHasUserInteracted(true);
+        }
+    }, [hasUserInteracted]);
 
     // --- Effect 1: Listen for Messages ---
     useEffect(() => {
@@ -607,7 +607,7 @@ export function ChatInterface({
                     }
                 });
         }
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, handleAudioEnd, imageLoadStatus]);
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, isAudioPaused, handleAudioEnd, imageLoadStatus]);
 
 
     // --- Render Logic ---
@@ -760,7 +760,7 @@ export function ChatInterface({
                                         {msg.imageUrl && !msg.imageGenError && (
                                             <>
                                                 <div className="mb-2 flex flex-col items-center">
-                                                    <img
+                                                    <Image
                                                         src={msg.imageUrl}
                                                         alt="Generated image for this turn"
                                                         className="rounded-md max-w-full max-h-[40vh] cursor-pointer border border-muted-foreground/20 shadow"
@@ -769,6 +769,9 @@ export function ChatInterface({
                                                         onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
                                                         onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
                                                         tabIndex={0}
+                                                        width={800}
+                                                        height={600}
+                                                        unoptimized
                                                         aria-label="Show image in full screen"
                                                     />
                                                     {imageLoadStatus[msg.id] === 'loading' && (
@@ -791,11 +794,14 @@ export function ChatInterface({
                                                             aria-modal="true"
                                                             role="dialog"
                                                         >
-                                                            <img
+                                                            <Image
                                                                 src={msg.imageUrl}
                                                                 alt="Generated image for this turn (full screen)"
                                                                 className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
                                                                 style={{ objectFit: 'contain' }}
+                                                                width={1920}
+                                                                height={1080}
+                                                                unoptimized
                                                             />
                                                             <button
                                                                 className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
