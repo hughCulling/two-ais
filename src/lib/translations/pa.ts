@@ -359,6 +359,7 @@ const pa = {
     "page_AvailableImageModelsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਚਿੱਤਰ ਮਾਡਲ",
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",
-    "imageModel_PriceUSD": "ਕੀਮਤ (USD)"
+    "imageModel_PriceUSD": "ਕੀਮਤ (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default pa;

@@ -359,6 +359,7 @@ const id = {
     "page_AvailableImageModelsTitle": "Model Gambar yang Tersedia Saat Ini",
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",
-    "imageModel_PriceUSD": "Harga (USD)"
+    "imageModel_PriceUSD": "Harga (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default id;

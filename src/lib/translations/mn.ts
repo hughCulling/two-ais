@@ -359,6 +359,7 @@ const mn = {
     "page_AvailableImageModelsTitle": "Одоогоор бэлэн байгаа зургийн загварууд",
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",
-    "imageModel_PriceUSD": "Үнэ (USD)"
+    "imageModel_PriceUSD": "Үнэ (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default mn;

@@ -359,6 +359,7 @@ const da = {
     "page_AvailableImageModelsTitle": "Aktuelt tilgængelige billedmodeller",
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
-    "imageModel_PriceUSD": "Pris (USD)"
+    "imageModel_PriceUSD": "Pris (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default da;

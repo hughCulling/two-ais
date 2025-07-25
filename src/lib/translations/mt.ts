@@ -359,6 +359,7 @@ const mt = {
     "page_AvailableImageModelsTitle": "Mudelli ta' Immaġni Disponibbli Bħalissa",
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",
-    "imageModel_PriceUSD": "Prezz (USD)"
+    "imageModel_PriceUSD": "Prezz (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default mt;

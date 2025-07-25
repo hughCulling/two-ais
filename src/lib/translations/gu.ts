@@ -359,6 +359,7 @@ const gu = {
     "page_AvailableImageModelsTitle": "હાલમાં ઉપલબ્ધ છબી મોડેલ્સ",
     "imageModel_Quality": "ગુણવત્તા",
     "imageModel_Size": "કદ",
-    "imageModel_PriceUSD": "કિંમત (USD)"
+    "imageModel_PriceUSD": "કિંમત (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default gu;

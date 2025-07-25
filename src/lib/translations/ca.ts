@@ -359,6 +359,7 @@ const ca = {
     "page_AvailableImageModelsTitle": "Models d'imatge disponibles actualment",
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",
-    "imageModel_PriceUSD": "Preu (USD)"
+    "imageModel_PriceUSD": "Preu (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ca;

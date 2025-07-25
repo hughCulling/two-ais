@@ -359,6 +359,7 @@ const my = {
     "page_AvailableImageModelsTitle": "လက်ရှိရနိုင်သော ရုပ်ပုံမော်ဒယ်များ",
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",
-    "imageModel_PriceUSD": "စျေးနှုန်း (USD)"
+    "imageModel_PriceUSD": "စျေးနှုန်း (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default my;

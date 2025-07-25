@@ -289,6 +289,7 @@ const en = {
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
     page_VideoTitle: "Two AIs Conversation Demo",
     page_AvailableLLMsTitle: "Currently Available LLMs",
+    page_TooltipKnowledgeCutoff: "The model's knowledge is cut off at this date.",
     page_TooltipGoogleThinkingBudget: "This Google model uses a 'thinking budget'. The 'thinking' output is billed but is not visible in the chat.",
     page_TooltipAnthropicExtendedThinking: "This Anthropic model uses 'extended thinking'. The 'thinking' output is billed but is not visible in the chat.",
     page_TooltipXaiThinking: "This xAI model uses 'thinking'. This output is billed but is not visible in the chat.",

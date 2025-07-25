@@ -359,6 +359,7 @@ const tr = {
     "page_AvailableImageModelsTitle": "Şu Anda Mevcut Görüntü Modelleri",
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",
-    "imageModel_PriceUSD": "Fiyat (USD)"
+    "imageModel_PriceUSD": "Fiyat (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default tr;

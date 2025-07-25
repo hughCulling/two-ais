@@ -359,6 +359,7 @@ const cs = {
     "page_AvailableImageModelsTitle": "Aktuálně dostupné obrazové modely",
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default cs;

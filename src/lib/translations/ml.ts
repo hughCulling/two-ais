@@ -359,6 +359,7 @@ const ml = {
     "page_AvailableImageModelsTitle": "നിലവിൽ ലഭ്യമായ ഇമേജ് മോഡലുകൾ",
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",
-    "imageModel_PriceUSD": "വില (USD)"
+    "imageModel_PriceUSD": "വില (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ml;

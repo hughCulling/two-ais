@@ -359,6 +359,7 @@ const ur = {
     "page_AvailableImageModelsTitle": "فی الحال دستیاب تصویری ماڈلز",
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",
-    "imageModel_PriceUSD": "قیمت (USD)"
+    "imageModel_PriceUSD": "قیمت (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ur;

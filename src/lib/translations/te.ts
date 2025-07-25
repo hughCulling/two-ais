@@ -359,6 +359,7 @@ const te = {
     "page_AvailableImageModelsTitle": "ప్రస్తుతం అందుబాటులో ఉన్న చిత్ర నమూనాలు",
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",
-    "imageModel_PriceUSD": "ధర (USD)"
+    "imageModel_PriceUSD": "ధర (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default te;

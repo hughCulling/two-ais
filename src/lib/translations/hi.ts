@@ -359,6 +359,7 @@ const hi = {
     "page_AvailableImageModelsTitle": "वर्तमान में उपलब्ध छवि मॉडल",
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "कीमत (USD)"
+    "imageModel_PriceUSD": "कीमत (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default hi;

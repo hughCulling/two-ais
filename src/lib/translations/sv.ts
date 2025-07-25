@@ -359,6 +359,7 @@ const sv = {
     "page_AvailableImageModelsTitle": "För närvarande tillgängliga bildmodeller",
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Storlek",
-    "imageModel_PriceUSD": "Pris (USD)"
+    "imageModel_PriceUSD": "Pris (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default sv;

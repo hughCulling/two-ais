@@ -359,6 +359,7 @@ const el = {
     "page_AvailableImageModelsTitle": "Διαθέσιμα μοντέλα εικόνας αυτήν τη στιγμή",
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",
-    "imageModel_PriceUSD": "Τιμή (USD)"
+    "imageModel_PriceUSD": "Τιμή (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default el;

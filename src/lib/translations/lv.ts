@@ -359,6 +359,7 @@ const lv = {
     "page_AvailableImageModelsTitle": "Pašlaik pieejamie attēlu modeļi",
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default lv;

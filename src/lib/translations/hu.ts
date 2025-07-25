@@ -359,6 +359,7 @@ const hu = {
     "page_AvailableImageModelsTitle": "Jelenleg elérhető képmodellek",
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",
-    "imageModel_PriceUSD": "Ár (USD)"
+    "imageModel_PriceUSD": "Ár (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default hu;

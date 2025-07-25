@@ -359,6 +359,7 @@ const iw = {
     "page_AvailableImageModelsTitle": "דגמי תמונה זמינים כעת",
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",
-    "imageModel_PriceUSD": "מְחִיר (USD)"
+    "imageModel_PriceUSD": "מְחִיר (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default iw;

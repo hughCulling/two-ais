@@ -359,6 +359,7 @@ const ka = {
     "page_AvailableImageModelsTitle": "ამჟამად ხელმისაწვდომი გამოსახულების მოდელები",
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",
-    "imageModel_PriceUSD": "ფასი (USD)"
+    "imageModel_PriceUSD": "ფასი (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ka;

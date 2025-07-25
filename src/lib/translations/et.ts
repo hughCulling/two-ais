@@ -359,6 +359,7 @@ const et = {
     "page_AvailableImageModelsTitle": "Praegu saadaolevad pildimudelid",
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
-    "imageModel_PriceUSD": "Hind (USD)"
+    "imageModel_PriceUSD": "Hind (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default et;

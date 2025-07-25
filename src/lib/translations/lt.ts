@@ -359,6 +359,7 @@ const lt = {
     "page_AvailableImageModelsTitle": "Šiuo metu prieinami vaizdo modeliai",
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",
-    "imageModel_PriceUSD": "Kaina (USD)"
+    "imageModel_PriceUSD": "Kaina (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default lt;

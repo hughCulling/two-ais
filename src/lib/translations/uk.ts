@@ -359,6 +359,7 @@ const uk = {
     "page_AvailableImageModelsTitle": "Доступні наразі моделі зображень",
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",
-    "imageModel_PriceUSD": "Ціна (USD)"
+    "imageModel_PriceUSD": "Ціна (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default uk;

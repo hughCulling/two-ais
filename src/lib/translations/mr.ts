@@ -359,6 +359,7 @@ const mr = {
     "page_AvailableImageModelsTitle": "सध्या उपलब्ध प्रतिमा मॉडेल्स",
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "किंमत (USD)"
+    "imageModel_PriceUSD": "किंमत (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default mr;

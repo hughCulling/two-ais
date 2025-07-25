@@ -359,6 +359,7 @@ const ja = {
     "page_AvailableImageModelsTitle": "現在利用可能な画像モデル",
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",
-    "imageModel_PriceUSD": "価格 (USD)"
+    "imageModel_PriceUSD": "価格 (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default ja;

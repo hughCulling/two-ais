@@ -359,6 +359,7 @@ const kk = {
     "page_AvailableImageModelsTitle": "Қазіргі уақытта қол жетімді кескін үлгілері",
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
-    "imageModel_PriceUSD": "Бағасы (USD)"
+    "imageModel_PriceUSD": "Бағасы (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default kk;

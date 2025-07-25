@@ -359,6 +359,7 @@ const nl = {
     "page_AvailableImageModelsTitle": "Momenteel beschikbare afbeeldingsmodellen",
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",
-    "imageModel_PriceUSD": "Prijs (USD)"
+    "imageModel_PriceUSD": "Prijs (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default nl;

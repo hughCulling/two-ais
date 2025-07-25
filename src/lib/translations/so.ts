@@ -359,6 +359,7 @@ const so = {
     "page_AvailableImageModelsTitle": "Qaababka Sawirka ee Hadda La Heli karo",
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",
-    "imageModel_PriceUSD": "Qiimaha (USD)"
+    "imageModel_PriceUSD": "Qiimaha (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default so;

@@ -359,6 +359,7 @@ const sq = {
     "page_AvailableImageModelsTitle": "Modelet e imazheve të disponueshme aktualisht",
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",
-    "imageModel_PriceUSD": "Çmimi (USD)"
+    "imageModel_PriceUSD": "Çmimi (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default sq;

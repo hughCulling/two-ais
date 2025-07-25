@@ -359,6 +359,7 @@ const hy = {
     "page_AvailableImageModelsTitle": "Ներկայումս հասանելի պատկերի մոդելներ",
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",
-    "imageModel_PriceUSD": "Գինը (USD)"
+    "imageModel_PriceUSD": "Գինը (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default hy;

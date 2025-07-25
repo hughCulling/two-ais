@@ -359,6 +359,7 @@ const bn = {
     "page_AvailableImageModelsTitle": "বর্তমানে উপলব্ধ চিত্র মডেল",
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",
-    "imageModel_PriceUSD": "দাম (USD)"
+    "imageModel_PriceUSD": "দাম (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default bn;

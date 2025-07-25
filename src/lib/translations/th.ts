@@ -359,6 +359,7 @@ const th = {
     "page_AvailableImageModelsTitle": "โมเดลภาพที่มีอยู่ในปัจจุบัน",
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",
-    "imageModel_PriceUSD": "ราคา (USD)"
+    "imageModel_PriceUSD": "ราคา (USD)",
+    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
 };
 export default th;
