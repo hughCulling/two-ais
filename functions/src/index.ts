@@ -1,6 +1,6 @@
 // functions/src/index.ts
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import { FieldValue, DocumentReference, CollectionReference } from "firebase-admin/firestore";
@@ -1005,6 +1005,67 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ mess
 );
 // --- End requestNextTurn ---
 
+/**
+ * Firestore onUpdate trigger for conversation document.
+ * Detects changes to lastPlayedAgentMessageId and triggers lookahead logic.
+ */
+export const onConversationProgressUpdate = onDocumentUpdated(
+  {
+    document: "conversations/{conversationId}",
+    region: "us-central1",
+    memory: "512MiB",
+    timeoutSeconds: 300
+  },
+  async (event) => {
+    const { conversationId } = event.params;
+    const before = event.data?.before?.data();
+    const after = event.data?.after?.data();
+    if (!before || !after) {
+      logger.error("onConversationProgressUpdate: Missing before/after data");
+      return;
+    }
+    if (before.lastPlayedAgentMessageId === after.lastPlayedAgentMessageId) {
+      logger.info(`onConversationProgressUpdate: lastPlayedAgentMessageId unchanged (${after.lastPlayedAgentMessageId}), skipping.`);
+      return;
+    }
+    if (after.status !== "running") {
+      logger.info(`onConversationProgressUpdate: Conversation ${conversationId} status is not 'running' (${after.status}), skipping.`);
+      return;
+    }
+    logger.info(`onConversationProgressUpdate: Detected user progress update for conversation ${conversationId}. lastPlayedAgentMessageId: ${before.lastPlayedAgentMessageId} -> ${after.lastPlayedAgentMessageId}`);
+    const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
+    const messagesRef = conversationRef.collection("messages");
+    // --- Lookahead logic: count agent messages ahead ---
+    const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+    const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
+      const data = doc.data() as { role: string };
+      return { id: doc.id, role: data.role };
+    });
+    let lastPlayedIdx = -1;
+    if (after.lastPlayedAgentMessageId) {
+      lastPlayedIdx = allMessages.findIndex(m => m.id === after.lastPlayedAgentMessageId);
+    }
+    let agentMessagesAhead = 0;
+    for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
+      if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
+        agentMessagesAhead++;
+      }
+    }
+    if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
+      logger.info(`[onConversationProgressUpdate] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+      return;
+    }
+    // --- Determine which agent should respond next ---
+    const currentTurn = after.turn;
+    if (currentTurn !== "agentA" && currentTurn !== "agentB") {
+      logger.error(`onConversationProgressUpdate: Invalid turn value: ${currentTurn}`);
+      return;
+    }
+    logger.info(`onConversationProgressUpdate: Triggering agent response for ${currentTurn}`);
+    await _triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+    logger.info(`onConversationProgressUpdate: Agent ${currentTurn} response triggered.`);
+  }
+);
 
 export { getProviderFromId, getFirestoreKeyIdFromProvider, getTTSApiKeyId, getApiKeyFromSecret, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket };
 
