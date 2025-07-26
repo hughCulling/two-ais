@@ -28,6 +28,8 @@ import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
 import { useTranslation } from '@/hooks/useTranslation';
 import ReactDOM from 'react-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // --- Interfaces ---
 interface Message {
@@ -775,9 +777,13 @@ export function ChatInterface({
                                     </>
                                 )}
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
-                                     <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
-                                ) : null }
-                                {msg.content}
+    <>
+      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+    </>
+  ) : (
+    msg.content
+  )}
                                 {msg.isStreaming && (
                                   <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
                                 )}
