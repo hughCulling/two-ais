@@ -157,32 +157,6 @@ export function ChatInterface({
                 logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
             }
         }
-
-        // --- Always call requestNextTurn Cloud Function ---
-        if (!requestNextTurnFunction) {
-            logger.error("requestNextTurn function is not initialized. Cannot signal backend.");
-            setError("Error: Cannot communicate with backend to continue conversation.");
-            return;
-        }
-        if (!conversationId) {
-            logger.error("Cannot call requestNextTurn without conversationId.");
-            return;
-        }
-        logger.info(`Calling requestNextTurn for conversation ${conversationId}...`);
-        requestNextTurnFunction({ conversationId })
-            .then(result => {
-                logger.info("requestNextTurn successful:", result.data);
-            })
-            .catch(error => {
-                logger.error("Error calling requestNextTurn function:", error);
-                let errorMsg = "Failed to signal backend to continue.";
-                if (error instanceof FunctionsError) {
-                    errorMsg = `Error signalling backend: ${error.message} (Code: ${error.code})`;
-                } else if (error instanceof Error) {
-                    errorMsg = `Error signalling backend: ${error.message}`;
-                }
-                setError(errorMsg);
-            });
     }, [currentlyPlayingMsgId, conversationId, messages]);
 
     const handleResumeAudio = useCallback(() => {
@@ -395,27 +369,6 @@ export function ChatInterface({
             scrollToBottom(messagesEndRef.current);
         }
     }, [messages, conversationStatus, isStopped, scrollToBottom]); // Keep dependencies
-
-
-    // --- Dedicated Audio Event Listeners Effect ---
-    useEffect(() => {
-        const audioElem = audioPlayerRef.current;
-        if (!audioElem) return;
-        const onEnded = () => {
-            setIsAudioPaused(false);
-            handleAudioEnd();
-        };
-        const onError = () => {
-            setIsAudioPaused(false);
-            handleAudioEnd();
-        };
-        audioElem.addEventListener('ended', onEnded);
-        audioElem.addEventListener('error', onError);
-        return () => {
-            audioElem.removeEventListener('ended', onEnded);
-            audioElem.removeEventListener('error', onError);
-        };
-    }, [handleAudioEnd]);
 
 
     // --- Effect 5: User Interaction Detection ---
@@ -898,6 +851,23 @@ export function ChatInterface({
                 ref={audioPlayerRef}
                 style={{ display: 'none' }}
                 aria-hidden="true"
+                onEnded={async () => {
+                  setIsAudioPaused(false);
+                  // Find the last played agent message
+                  const lastAgentMsg = [...messages].reverse().find(
+                    m => (m.role === 'agentA' || m.role === 'agentB') && m.audioUrl
+                  );
+                  if (lastAgentMsg && lastAgentMsg.id) {
+                    try {
+                      await updateDoc(doc(db, "conversations", conversationId), {
+                        lastPlayedAgentMessageId: lastAgentMsg.id
+                      });
+                    } catch (err) {
+                      logger.error('Failed to update lastPlayedAgentMessageId:', err);
+                    }
+                  }
+                  handleAudioEnd();
+                }}
             />
         </div>
     );
