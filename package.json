@@ -2,6 +2,11 @@
   "name": "two-ais",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "defaults and supports es6-module",
+    "not dead",
+    "not IE 11"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
