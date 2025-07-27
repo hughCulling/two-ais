@@ -389,10 +389,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     {llm.knowledgeCutoff && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <div className="flex items-center text-xs text-muted-foreground ml-2">
-                                            {/* <Info className="h-3 w-3 mr-1 flex-shrink-0" /> */}
+                                          <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
                                             <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
-                                            <span>{llm.knowledgeCutoff}</span>
+                                            <span className="truncate" title={llm.knowledgeCutoff}>
+                                              {llm.knowledgeCutoff}
+                                            </span>
                                           </div>
                                         </TooltipTrigger>
                                         <TooltipContent side="top">
