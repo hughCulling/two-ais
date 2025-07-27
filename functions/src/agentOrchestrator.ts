@@ -7,6 +7,7 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+import { ChatDeepSeek } from "@langchain/deepseek";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { getProviderFromId, getFirestoreKeyIdFromProvider, getApiKeyFromSecret, getTTSApiKeyId, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket } from "./index";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
@@ -168,6 +169,13 @@ export async function triggerAgentResponse(
                      apiKey: llmApiKey,
                      modelName: modelName,
                  });
+            }
+            else if (llmProvider === "DeepSeek") {
+                chatModel = new ChatDeepSeek({
+                    apiKey: llmApiKey,
+                    modelName: modelName,
+                    temperature: 0.7, // Default temperature, can be adjusted
+                });
             }
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in triggerAgentResponse`);
