@@ -6,7 +6,7 @@ import { TranslationKeys } from './translations';
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI';
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI' | 'DeepSeek';
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -25,8 +25,9 @@ export interface LLMInfo {
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
 
 export const AVAILABLE_LLMS: LLMInfo[] = [
+
     // === OpenAI ===
-     {
+    {
         id: 'chatgpt-4o-latest',
         name: 'ChatGPT-4o',
         provider: 'OpenAI',
@@ -471,6 +472,42 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         knowledgeCutoff: 'Nov 2024',
     },
 
+        // === DeepSeek ===
+        {
+            id: 'deepseek-chat',
+            name: 'DeepSeek V3',
+            provider: 'DeepSeek',
+            contextWindow: 64000,
+            pricing: { 
+                input: 0.27, // Cache miss price (worst case)
+                output: 1.10,
+                // note: 'Off-peak pricing (50% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
+            },
+            apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
+            apiKeySecretName: 'deepseek',
+            status: 'stable',
+            requiresOrgVerification: false,
+            usesReasoningTokens: false,
+            categoryKey: 'modelCategory_DeepSeekV3',
+        },
+        {
+            id: 'deepseek-reasoner',
+            name: 'DeepSeek R1',
+            provider: 'DeepSeek',
+            contextWindow: 64000,
+            pricing: { 
+                input: 0.55, // Cache miss price (worst case)
+                output: 2.19,
+                // note: 'Off-peak pricing (75% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
+            },
+            apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
+            apiKeySecretName: 'deepseek',
+            status: 'stable',
+            requiresOrgVerification: false,
+            usesReasoningTokens: true,
+            categoryKey: 'modelCategory_DeepSeekR1',
+        },
+
     // === Together.ai ===
     // Removing Llama models not available on the Llama API, even though still using Together.ai.
     {
@@ -763,6 +800,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         t.modelCategory_Grok3,
         t.modelCategory_Grok3Mini,
     ];
+    const deepSeekCategoryOrder = [
+        t.modelCategory_DeepSeekV3,
+        t.modelCategory_DeepSeekR1,
+    ];
     const togetherAICategoryOrder = [
         t.modelCategory_Llama4,
         t.modelCategory_Llama3_3,
@@ -829,6 +870,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             currentProviderOrder = xAICategoryOrder;
         } else if (providerName === 'TogetherAI') {
             currentProviderOrder = togetherAICategoryOrder;
+        } else if (providerName === 'DeepSeek') {
+            currentProviderOrder = deepSeekCategoryOrder;
         }
     }
 
