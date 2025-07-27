@@ -12,7 +12,7 @@ import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/model
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Image as ImageIcon } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Image as ImageIcon, Calendar } from "lucide-react";
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -323,19 +323,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
                                       </span>
                                     )}
-                                    {/* {llm.knowledgeCutoff && (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <div className="flex items-center text-xs text-muted-foreground ml-2">
-                                            <Info className="h-3 w-3 mr-1 flex-shrink-0" />
-                                            <span>{llm.knowledgeCutoff}</span>
-                                          </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top">
-                                          <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )} */}
                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
@@ -403,7 +390,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <div className="flex items-center text-xs text-muted-foreground ml-2">
-                                            <Info className="h-3 w-3 mr-1 flex-shrink-0" />
+                                            {/* <Info className="h-3 w-3 mr-1 flex-shrink-0" /> */}
+                                            <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
                                             <span>{llm.knowledgeCutoff}</span>
                                           </div>
                                         </TooltipTrigger>
