@@ -16,16 +16,15 @@ export async function GET() {
   // Add root URL (redirects to language)
   sitemapUrls.push(`${baseUrl}/`);
 
-  // Add language-prefixed URLs for each page
+  // Add language-prefixed root pages and URLs for each page
   SUPPORTED_LANGUAGES.forEach(lang => {
+    // Add the localized root page for every language, including 'en'
+    sitemapUrls.push(`${baseUrl}/${lang.code}/`);
     pages.forEach(page => {
-      // Skip root page for language-prefixed versions since it's already added
       if (page === '/') return;
-      
-      const url = lang.code === 'en' 
-        ? `${baseUrl}${page}` 
+      const url = lang.code === 'en'
+        ? `${baseUrl}${page}`
         : `${baseUrl}/${lang.code}${page}`;
-      
       sitemapUrls.push(url);
     });
   });
