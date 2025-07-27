@@ -212,10 +212,14 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
         )}
       >
         <ThemeProvider nonce={nonce}>
-          <LanguageProvider lang={lang}>
-            {children}
-          </LanguageProvider>
-          <Footer />
+          <div className="flex flex-col min-h-screen">
+            <LanguageProvider lang={lang}>
+              <main className="flex-grow">
+                {children}
+              </main>
+            </LanguageProvider>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>
