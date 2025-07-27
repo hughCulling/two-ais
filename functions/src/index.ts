@@ -18,6 +18,7 @@ import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatDeepSeek } from "@langchain/deepseek";
 import { ChatXAI } from "@langchain/xai";
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
@@ -86,7 +87,7 @@ export interface ConversationTTSSettingsBackend {
 }
 interface LLMInfo {
     id: string;
-    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI";
+    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI" | "DeepSeek";
     apiKeySecretName: string;
 }
 interface GcpError extends Error { code?: number | string; details?: string; }
@@ -156,6 +157,7 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
      if (id.startsWith("grok-")) return "xAI";
+     if (id.startsWith("deepseek-")) return "DeepSeek";
      if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("Qwen/")) return "TogetherAI";
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
@@ -167,6 +169,7 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "Anthropic") return "anthropic";
     if (provider === "xAI") return "xai";
     if (provider === "TogetherAI") return "together_ai";
+    if (provider === "DeepSeek") return "deepseek";
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -463,6 +466,13 @@ async function _triggerAgentResponse(
                      apiKey: llmApiKey,
                      modelName: modelName,
                  });
+            }
+            else if (llmProvider === "DeepSeek") {
+                chatModel = new ChatDeepSeek({
+                    apiKey: llmApiKey,
+                    modelName: modelName,
+                    temperature: 0.7,
+                });
             }
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in _triggerAgentResponse`);

@@ -230,6 +230,11 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
             }
         ],
         notes: 'Language support varies by model. Explicit per-model listing is preferred. Models not explicitly listed default to English-only support based on general capabilities of underlying model architectures unless specified otherwise in their documentation.'
+    },
+    {
+        provider: 'DeepSeek',
+        defaultSupportedLanguages: ['en', 'zh'],
+        notes: 'Based on DeepSeek documentation.'
     }
 ];
 

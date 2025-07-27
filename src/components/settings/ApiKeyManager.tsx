@@ -91,6 +91,13 @@ const initialApiKeys: ApiKeyInput[] = [
         tooltip: 'Used for various open-source models hosted by TogetherAI. Find keys at api.together.ai/settings/api-keys.',
         learnMoreLink: 'https://api.together.ai/settings/api-keys'
     },
+    {
+        id: 'deepseek',
+        label: 'DeepSeek API Key',
+        value: '',
+        tooltip: 'Used for DeepSeek models. Create an account and get your API key at platform.deepseek.com/api-keys. The API key is only visible once at creation, so save it securely.',
+        learnMoreLink: 'https://platform.deepseek.com/api-keys'
+    },
 ];
 
 export default function ApiKeyManager() {
