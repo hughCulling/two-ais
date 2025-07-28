@@ -360,6 +360,8 @@ const uk = {
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",
     "imageModel_PriceUSD": "Ціна (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Знання моделі на цьому етапі припиняються.",
+    "modelCategory_MistralAIPremierModels": "Прем'єрні моделі",
+    "modelCategory_MistralAIOpenModels": "Відкриті моделі"
 };
 export default uk;

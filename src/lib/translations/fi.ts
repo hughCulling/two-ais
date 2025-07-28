@@ -360,6 +360,8 @@ const fi = {
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",
     "imageModel_PriceUSD": "Hinta (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Mallin tietämys on katkaistu tänä päivänä.",
+    "modelCategory_MistralAIPremierModels": "Premier-mallit",
+    "modelCategory_MistralAIOpenModels": "Avoimet mallit"
 };
 export default fi;

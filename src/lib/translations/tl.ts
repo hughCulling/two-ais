@@ -360,6 +360,8 @@ const tl = {
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",
     "imageModel_PriceUSD": "Presyo (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Ang kaalaman ng modelo ay pinutol sa petsang ito.",
+    "modelCategory_MistralAIPremierModels": "Mga pangunahing modelo",
+    "modelCategory_MistralAIOpenModels": "Buksan ang mga modelo"
 };
 export default tl;

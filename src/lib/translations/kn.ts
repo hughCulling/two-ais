@@ -360,6 +360,8 @@ const kn = {
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",
     "imageModel_PriceUSD": "ಬೆಲೆ (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "ಈ ದಿನಾಂಕದಂದು ಮಾದರಿಯ ಜ್ಞಾನವು ಕಡಿತಗೊಂಡಿದೆ.",
+    "modelCategory_MistralAIPremierModels": "ಪ್ರೀಮಿಯರ್ ಮಾದರಿಗಳು",
+    "modelCategory_MistralAIOpenModels": "ಮುಕ್ತ ಮಾದರಿಗಳು"
 };
 export default kn;

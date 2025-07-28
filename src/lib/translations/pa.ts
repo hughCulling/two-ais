@@ -360,6 +360,8 @@ const pa = {
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",
     "imageModel_PriceUSD": "ਕੀਮਤ (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "ਇਸ ਮਿਤੀ 'ਤੇ ਮਾਡਲ ਦਾ ਗਿਆਨ ਖਤਮ ਹੋ ਜਾਂਦਾ ਹੈ।",
+    "modelCategory_MistralAIPremierModels": "ਪ੍ਰੀਮੀਅਰ ਮਾਡਲ",
+    "modelCategory_MistralAIOpenModels": "ਖੁੱਲ੍ਹੇ ਮਾਡਲ"
 };
 export default pa;

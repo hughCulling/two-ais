@@ -360,6 +360,8 @@ const hu = {
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",
     "imageModel_PriceUSD": "Ár (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "A modell tudása ezen a napon le van tiltva.",
+    "modelCategory_MistralAIPremierModels": "Prémium modellek",
+    "modelCategory_MistralAIOpenModels": "Nyílt modellek"
 };
 export default hu;

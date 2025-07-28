@@ -178,6 +178,13 @@ const PROTECTED_TERMS = [
     "<code>",
     "</code>",
     "Meta Llama",
+    "Mistral Medium 3",
+    "Magistral Medium",
+    "Mistral Large",
+    "Ministral 8B 24.10",
+    "Ministral 3B 24.10",
+    "Mistral Small 3.2",
+    "Magistral Small",
     //...LANGUAGE_NAMES_EN
 ];
 

@@ -360,6 +360,8 @@ const te = {
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",
     "imageModel_PriceUSD": "ధర (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "ఈ తేదీతో మోడల్ జ్ఞానం తెగిపోయింది.",
+    "modelCategory_MistralAIPremierModels": "ప్రీమియర్ మోడల్స్",
+    "modelCategory_MistralAIOpenModels": "ఓపెన్ మోడల్స్"
 };
 export default te;

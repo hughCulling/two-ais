@@ -360,6 +360,8 @@ const ko = {
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",
     "imageModel_PriceUSD": "가격 (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "이 날짜에 모델의 지식이 차단되었습니다.",
+    "modelCategory_MistralAIPremierModels": "프리미어 모델",
+    "modelCategory_MistralAIOpenModels": "오픈 모델"
 };
 export default ko;

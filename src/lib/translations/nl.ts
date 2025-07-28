@@ -360,6 +360,8 @@ const nl = {
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",
     "imageModel_PriceUSD": "Prijs (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Op dit moment is de kennis van het model afgesloten.",
+    "modelCategory_MistralAIPremierModels": "Premier-modellen",
+    "modelCategory_MistralAIOpenModels": "Open modellen"
 };
 export default nl;

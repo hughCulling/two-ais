@@ -360,6 +360,8 @@ const da = {
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
     "imageModel_PriceUSD": "Pris (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Modellens kendskab er afskåret på denne dato.",
+    "modelCategory_MistralAIPremierModels": "Premier-modeller",
+    "modelCategory_MistralAIOpenModels": "Åbne modeller"
 };
 export default da;

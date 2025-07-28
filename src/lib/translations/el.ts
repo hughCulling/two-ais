@@ -360,6 +360,8 @@ const el = {
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",
     "imageModel_PriceUSD": "Τιμή (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Οι γνώσεις του μοντέλου έχουν διακοπεί σε αυτήν την ημερομηνία.",
+    "modelCategory_MistralAIPremierModels": "Κορυφαία μοντέλα",
+    "modelCategory_MistralAIOpenModels": "Ανοιχτά μοντέλα"
 };
 export default el;

@@ -360,6 +360,8 @@ const ro = {
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",
     "imageModel_PriceUSD": "Preţ (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Cunoștințele modelului sunt întrerupte la această dată.",
+    "modelCategory_MistralAIPremierModels": "Modele Premier",
+    "modelCategory_MistralAIOpenModels": "Modele deschise"
 };
 export default ro;

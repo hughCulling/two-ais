@@ -360,6 +360,8 @@ const iw = {
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",
     "imageModel_PriceUSD": "מְחִיר (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "הידע של המודל מופסק בתאריך זה.",
+    "modelCategory_MistralAIPremierModels": "דגמי פרימיום",
+    "modelCategory_MistralAIOpenModels": "דגמים פתוחים"
 };
 export default iw;

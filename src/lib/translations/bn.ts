@@ -360,6 +360,8 @@ const bn = {
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",
     "imageModel_PriceUSD": "দাম (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "এই তারিখে মডেলের জ্ঞান শেষ হয়ে গেছে।",
+    "modelCategory_MistralAIPremierModels": "প্রিমিয়ার মডেল",
+    "modelCategory_MistralAIOpenModels": "খোলা মডেল"
 };
 export default bn;

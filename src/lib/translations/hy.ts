@@ -360,6 +360,8 @@ const hy = {
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",
     "imageModel_PriceUSD": "Գինը (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Մոդելի գիտելիքները այս ամսաթվին կտրված են։",
+    "modelCategory_MistralAIPremierModels": "Պրեմիեր մոդելներ",
+    "modelCategory_MistralAIOpenModels": "Բաց մոդելներ"
 };
 export default hy;

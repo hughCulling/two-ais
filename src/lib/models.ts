@@ -6,7 +6,7 @@ import { TranslationKeys } from './translations';
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI' | 'DeepSeek';
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI' | 'DeepSeek' | 'Mistral AI';
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -472,42 +472,209 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         knowledgeCutoff: 'Nov 2024',
     },
 
-        // === DeepSeek ===
-        {
-            id: 'deepseek-chat',
-            name: 'DeepSeek V3',
-            provider: 'DeepSeek',
-            contextWindow: 64000,
-            pricing: { 
-                input: 0.27, // Cache miss price (worst case)
-                output: 1.10,
-                // note: 'Off-peak pricing (50% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
-            },
-            apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
-            apiKeySecretName: 'deepseek',
-            status: 'stable',
-            requiresOrgVerification: false,
-            usesReasoningTokens: false,
-            categoryKey: 'modelCategory_DeepSeekV3',
+    // === DeepSeek ===
+    {
+        id: 'deepseek-chat',
+        name: 'DeepSeek V3',
+        provider: 'DeepSeek',
+        contextWindow: 64000,
+        pricing: { 
+            input: 0.27, // Cache miss price (worst case)
+            output: 1.10,
+            // note: 'Off-peak pricing (50% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
         },
-        {
-            id: 'deepseek-reasoner',
-            name: 'DeepSeek R1',
-            provider: 'DeepSeek',
-            contextWindow: 64000,
-            pricing: { 
-                input: 0.55, // Cache miss price (worst case)
-                output: 2.19,
-                // note: 'Off-peak pricing (75% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
-            },
-            apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
-            apiKeySecretName: 'deepseek',
-            status: 'stable',
-            requiresOrgVerification: false,
-            usesReasoningTokens: true,
-            categoryKey: 'modelCategory_DeepSeekR1',
+        apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
+        apiKeySecretName: 'deepseek',
+        status: 'stable',
+        requiresOrgVerification: false,
+        usesReasoningTokens: false,
+        categoryKey: 'modelCategory_DeepSeekV3',
+    },
+    {
+        id: 'deepseek-reasoner',
+        name: 'DeepSeek R1',
+        provider: 'DeepSeek',
+        contextWindow: 64000,
+        pricing: { 
+            input: 0.55, // Cache miss price (worst case)
+            output: 2.19,
+            // note: 'Off-peak pricing (75% off) available 16:30-00:30 UTC. Cache hits are cheaper.'
         },
-
+        apiKeyInstructionsUrl: 'https://platform.deepseek.com/api-keys',
+        apiKeySecretName: 'deepseek',
+        status: 'stable',
+        requiresOrgVerification: false,
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_DeepSeekR1',
+    },
+    // === Mistral AI === // I only included models which appeared both on the models page and the pricing page therefore only include the latest versions.
+    // Premier Models
+    {
+        id: 'mistral-medium-latest',
+        name: 'Mistral Medium 3',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { input: 0.40, output: 2.00 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    {
+        id: 'magistral-medium-latest',
+        name: 'Magistral Medium',
+        provider: 'Mistral AI',
+        contextWindow: 40000,
+        pricing: { input: 2.00, output: 5.00 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    // {
+    //     id: 'magistral-medium-2506',
+    //     name: 'Magistral Medium 1',
+    //     provider: 'Mistral',
+    //     contextWindow: 40000,
+    //     pricing: { input: 0.30, output: 0.90 }, // TODO: Check pricing
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Coding',
+    // },
+    {
+        id: 'mistral-large-latest',
+        name: 'Mistral Large',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { input: 2.00, output: 6.00 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    {
+        id: 'ministral-8b-latest',
+        name: 'Ministral 8B 24.10',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { input: 0.10, output: 1.00 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    {
+        id: 'ministral-3b-latest',
+        name: 'Ministral 3B 24.10',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { input: 0.04, output: 0.04 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    // {
+    //     id: 'ministral-8b-latest',
+    //     name: 'Ministral 8B 24.10',
+    //     provider: 'Mistral',
+    //     contextWindow: 128000,
+    //     pricing: { input: 0.10, output: 1.00 }, //
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_MistralAIPremierModels',
+    // },
+    // {
+    //     id: 'mistral-large-latest',
+    //     name: 'Mistral Large',
+    //     provider: 'Mistral',
+    //     contextWindow: 128000,
+    //     pricing: { input: 2.00, output: 6.00 }, //
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_MistralAIPremierModels',
+    // },
+    // {
+    //     id: 'mistral-small-2407',
+    //     name: 'Mistral Small 2',
+    //     provider: 'Mistral',
+    //     contextWindow: 128000,
+    //     pricing: { input: 0.30, output: 0.90 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Coding',
+    // },
+    // Open Models
+    {
+        id: 'magistral-small-latest',
+        name: 'Magistral Small',
+        provider: 'Mistral AI',
+        contextWindow: 40000,
+        pricing: { input: 0.50, output: 1.50 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIOpenModels',
+    },
+    {
+        id: 'mistral-small-latest',
+        name: 'Mistral Small 3.2',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { input: 0.10, output: 0.30 }, //
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIOpenModels',
+    },
+    // {
+    //     id: 'magistral-small-2506',
+    //     name: 'Magistral Small 1',
+    //     provider: 'Mistral',
+    //     contextWindow: 40000,
+    //     pricing: { input: 0.50, output: 1.50 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Reasoning',
+    // },
+    // {
+    //     id: 'mistral-small-2503',
+    //     name: 'Mistral Small 3.1',
+    //     provider: 'Mistral',
+    //     contextWindow: 128000,
+    //     pricing: { input: 0.10, output: 0.30 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_General',
+    // },
+    // {
+    //     id: 'mistral-small-2501',
+    //     name: 'Mistral Small 3',
+    //     provider: 'Mistral',
+    //     contextWindow: 32000,
+    //     pricing: { input: 0.10, output: 0.30 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_General',
+    // },
+    // {
+    //     id: 'open-mistral-nemo',
+    //     name: 'Mistral Nemo 12B',
+    //     provider: 'Mistral',
+    //     contextWindow: 128000,
+    //     pricing: { input: 0.15, output: 0.15 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Multilingual',
+    // },
     // === Together.ai ===
     // Removing Llama models not available on the Llama API, even though still using Together.ai.
     {
@@ -579,165 +746,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
     },
-    // DeepSeek Models via TogetherAI
-    // {
-    //     id: 'deepseek-ai/DeepSeek-R1',
-    //     name: 'DeepSeek R1-0528',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 128000, 
-    //     pricing: { input: 3.00, output: 7.00 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekR1',
-    //     usesReasoningTokens: true, 
-    // },
-    // {
-    //     id: 'deepseek-ai/DeepSeek-V3', 
-    //     name: 'DeepSeek V3-0324',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 128000, 
-    //     pricing: { input: 1.25, output: 1.25 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekV3',
-    // },
-    // {
-    //     id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-    //     name: 'DeepSeek R1 Distill Llama 70B',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 2.00, output: 2.00 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekR1Distill',
-    // },
-    // {
-    //     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
-    //     name: 'DeepSeek R1 Distill Qwen 14B',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 1.60, output: 1.60 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekR1Distill',
-    // },
-    // {
-    //     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
-    //     name: 'DeepSeek R1 Distill Qwen 1.5B',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 0.18, output: 0.18 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekR1Distill',
-    // },
-    // {
-    //     id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free',
-    //     name: 'DeepSeek R1 Distill Llama 70B Free',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 0.00, output: 0.00, note: 'Free' },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_DeepSeekR1Distill',
-    // },
-    // Qwen Models via TogetherAI
-    // {
-    //     id: 'Qwen/Qwen3-235B-A22B',
-    //     name: 'Qwen3 235B A22B',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 40960,
-    //     pricing: { input: 0.20, output: 0.60 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_Qwen3',
-    //     usesReasoningTokens: true, 
-    // },
-    // {
-    //     id: 'Qwen/Qwen3-30B-A3B',
-    //     name: 'Qwen3 30B A3B',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 1.20, output: 1.20 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_QwQwQ',
-    //     usesReasoningTokens: true, 
-    // },
-    // {
-    //     id: 'Qwen/Qwen2.5-VL-72B-Instruct',
-    //     name: 'Qwen2.5-VL (72B) Instruct',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 1.95, output: 8.00 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2_5Vision',
-    // },
-    // {
-    //     id: 'Qwen/Qwen2-VL-72B-Instruct',
-    //     name: 'Qwen2-VL (72B) Instruct',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 1.20, output: 1.20 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2Vision',
-    // },
-    // {
-    //     id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
-    //     name: 'Qwen 2.5 Coder 32B Instruct',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 0.80, output: 0.80 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2_5Coder',
-    // },
-    // {
-    //     id: 'Qwen/Qwen2.5-72B-Instruct-Turbo',
-    //     name: 'Qwen2.5 72B Instruct Turbo',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 1.20, output: 1.20 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2_5',
-    // },
-    // {
-    //     id: 'Qwen/Qwen2.5-7B-Instruct-Turbo',
-    //     name: 'Qwen2.5 7B Instruct Turbo',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 0.30, output: 0.30 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2_5',
-    // },
-    // {
-    //     id: 'Qwen/Qwen2-72B-Instruct',
-    //     name: 'Qwen 2 Instruct (72B)',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32768,
-    //     pricing: { input: 0.90, output: 0.90 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Qwen2',
-    // },
 ];
 
 // --- Helper Functions ---
@@ -803,6 +811,10 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
     const deepSeekCategoryOrder = [
         t.modelCategory_DeepSeekV3,
         t.modelCategory_DeepSeekR1,
+    ];
+    const mistralCategoryOrder = [
+        t.modelCategory_MistralAIPremierModels,
+        t.modelCategory_MistralAIOpenModels,
     ];
     const togetherAICategoryOrder = [
         t.modelCategory_Llama4,
@@ -872,6 +884,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             currentProviderOrder = togetherAICategoryOrder;
         } else if (providerName === 'DeepSeek') {
             currentProviderOrder = deepSeekCategoryOrder;
+        } else if (providerName === 'Mistral AI') {
+            currentProviderOrder = mistralCategoryOrder;
         }
     }
 
@@ -1002,6 +1016,41 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                 byCategory[cat].sort((a, b) => {
                     const idxA = llama31Order.indexOf(a.id);
                     const idxB = llama31Order.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+            
+            // Custom sorting for Mistral AI Premier models, follows order in Pricing documentation
+            if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIPremierModels) {
+                const mistralPremierOrder = [
+                    'mistral-medium-latest',
+                    'magistral-medium-latest',
+                    'mistral-large-latest',
+                    'ministral-8b-latest',
+                    'ministral-3b-latest'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = mistralPremierOrder.indexOf(a.id);
+                    const idxB = mistralPremierOrder.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+            
+            // Custom sorting for Mistral AI Open models
+            if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIOpenModels) {
+                const mistralOpenOrder = [
+                    'mistral-small-latest',
+                    'magistral-small-latest'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = mistralOpenOrder.indexOf(a.id);
+                    const idxB = mistralOpenOrder.indexOf(b.id);
                     if (idxA !== -1 && idxB !== -1) return idxA - idxB;
                     if (idxA !== -1) return -1;
                     if (idxB !== -1) return 1;

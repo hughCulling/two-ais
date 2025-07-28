@@ -360,6 +360,8 @@ const et = {
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
     "imageModel_PriceUSD": "Hind (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Mudeli teadmised on sellel kuupäeval piiratud.",
+    "modelCategory_MistralAIPremierModels": "Premier mudelid",
+    "modelCategory_MistralAIOpenModels": "Avatud mudelid"
 };
 export default et;

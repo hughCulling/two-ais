@@ -360,6 +360,8 @@ const fa = {
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",
     "imageModel_PriceUSD": "قیمت (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "دانش مدل در این تاریخ قطع شده است.",
+    "modelCategory_MistralAIPremierModels": "مدل‌های برتر",
+    "modelCategory_MistralAIOpenModels": "مدل‌های باز"
 };
 export default fa;

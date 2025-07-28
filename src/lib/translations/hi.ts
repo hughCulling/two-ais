@@ -360,6 +360,8 @@ const hi = {
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
     "imageModel_PriceUSD": "कीमत (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "इस तिथि पर मॉडल का ज्ञान समाप्त हो जाता है।",
+    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडल",
+    "modelCategory_MistralAIOpenModels": "खुले मॉडल"
 };
 export default hi;

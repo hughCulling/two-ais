@@ -360,6 +360,8 @@ const pl = {
     "imageModel_Quality": "Jakość",
     "imageModel_Size": "Rozmiar",
     "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Wiedza modelu jest w tym momencie zablokowana.",
+    "modelCategory_MistralAIPremierModels": "Modele Premier",
+    "modelCategory_MistralAIOpenModels": "Otwarte modele"
 };
 export default pl;

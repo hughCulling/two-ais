@@ -360,6 +360,8 @@ const ml = {
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",
     "imageModel_PriceUSD": "വില (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "ഈ തീയതിയിൽ മോഡലിന്റെ അറിവ് ഛേദിക്കപ്പെട്ടിരിക്കുന്നു.",
+    "modelCategory_MistralAIPremierModels": "പ്രീമിയർ മോഡലുകൾ",
+    "modelCategory_MistralAIOpenModels": "തുറന്ന മോഡലുകൾ"
 };
 export default ml;
