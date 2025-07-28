@@ -115,6 +115,7 @@ type ConversationData = {
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
+  processingTurnFor?: "agentA" | "agentB" | null;
 };
 // --- End Interfaces ---
 
@@ -348,6 +349,11 @@ async function _triggerAgentResponse(
     messagesRef: CollectionReference
 ): Promise<void> {
     logger.info(`_triggerAgentResponse called for ${agentToRespond} in conversation ${conversationId}`);
+
+    // Set processing lock
+    await conversationRef.update({
+        processingTurnFor: agentToRespond
+    });
 
     let conversationData: ConversationData;
     let llmApiKey: string | null = null;
@@ -885,10 +891,8 @@ async function _triggerAgentResponse(
             logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn.`);
         } catch (err) {
             logger.error(`Failed to write agent response to Firestore (message ID: ${messageId}):`, err);
-            logger.error("responseMessage object that failed to write:", { responseMessage });
-            throw err;
+            throw err; // Re-throw to be caught by the outer catch
         }
-
     } catch (error) {
         logger.error(`Error in _triggerAgentResponse for ${conversationId} (${agentToRespond}):`, error);
         try {
@@ -899,6 +903,17 @@ async function _triggerAgentResponse(
             });
         } catch (updateError) {
             logger.error(`Failed to update conversation ${conversationId} status to "error" after processing failure:`, updateError);
+        }
+        throw error; // Re-throw to ensure the finally block runs
+    } finally {
+        // Clear processing lock
+        try {
+            await conversationRef.update({
+                processingTurnFor: admin.firestore.FieldValue.delete()
+            });
+            logger.info(`Cleared processing lock for ${agentToRespond} in conversation ${conversationId}`);
+        } catch (error) {
+            logger.error(`Failed to clear processing lock for ${agentToRespond} in conversation ${conversationId}:`, error);
         }
     }
 }
@@ -1050,6 +1065,12 @@ export const onConversationProgressUpdate = onDocumentUpdated(
     }
     if (after.status !== "running") {
       logger.info(`onConversationProgressUpdate: Conversation ${conversationId} status is not 'running' (${after.status}), skipping.`);
+      return;
+    }
+    
+    // Check if another response is already being processed
+    if (after.processingTurnFor) {
+      logger.info(`onConversationProgressUpdate: Another response is already being processed for ${after.processingTurnFor}, skipping.`);
       return;
     }
     logger.info(`onConversationProgressUpdate: Detected user progress update for conversation ${conversationId}. lastPlayedAgentMessageId: ${before.lastPlayedAgentMessageId} -> ${after.lastPlayedAgentMessageId}`);
