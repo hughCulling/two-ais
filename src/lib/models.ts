@@ -520,17 +520,18 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
-    {
-        id: 'magistral-medium-latest',
-        name: 'Magistral Medium',
-        provider: 'Mistral AI',
-        contextWindow: 40000,
-        pricing: { input: 2.00, output: 5.00 }, //
-        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
-        apiKeySecretName: 'mistral',
-        status: 'stable',
-        categoryKey: 'modelCategory_MistralAIPremierModels',
-    },
+    // Temporarily disabled due to streaming response issues
+    // {
+    //     id: 'magistral-medium-latest',
+    //     name: 'Magistral Medium',
+    //     provider: 'Mistral AI',
+    //     contextWindow: 40000,
+    //     pricing: { input: 2.00, output: 5.00 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_MistralAIPremierModels',
+    // },
     {
         id: 'mistral-large-latest',
         name: 'Mistral Large',
@@ -565,17 +566,18 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
     // Open Models
-    {
-        id: 'magistral-small-latest',
-        name: 'Magistral Small',
-        provider: 'Mistral AI',
-        contextWindow: 40000,
-        pricing: { input: 0.50, output: 1.50 }, //
-        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
-        apiKeySecretName: 'mistral',
-        status: 'stable',
-        categoryKey: 'modelCategory_MistralAIOpenModels',
-    },
+    // Temporarily disabled due to streaming response issues
+    // {
+    //     id: 'magistral-small-latest',
+    //     name: 'Magistral Small',
+    //     provider: 'Mistral AI',
+    //     contextWindow: 40000,
+    //     pricing: { input: 0.50, output: 1.50 },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_MistralAIOpenModels',
+    // },
     {
         id: 'mistral-small-latest',
         name: 'Mistral Small 3.2',
