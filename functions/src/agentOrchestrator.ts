@@ -326,7 +326,7 @@ export async function triggerAgentResponse(
                             headers: { "Content-Type": "application/json" },
                             data: geminiTtsRequestBody,
                             responseType: "json",
-                            timeout: 90000,
+                            timeout: 300000, // Increased from 90s to 300s (5 minutes)
                           });
                           if (geminiResponse.data &&
                             geminiResponse.data.candidates &&
@@ -458,6 +458,8 @@ export async function triggerAgentResponse(
                     else if (promptLlmProvider === "Anthropic") promptLlmModel = new ChatAnthropic({ apiKey: promptLlmApiKey, modelName: promptLlmId });
                     else if (promptLlmProvider === "xAI") promptLlmModel = new ChatXAI({ apiKey: promptLlmApiKey, model: promptLlmId });
                     else if (promptLlmProvider === "TogetherAI") promptLlmModel = new ChatTogetherAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    else if (promptLlmProvider === "Mistral AI") promptLlmModel = new ChatMistralAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    else if (promptLlmProvider === "DeepSeek") promptLlmModel = new ChatDeepSeek({ apiKey: promptLlmApiKey, modelName: promptLlmId });
                     else throw new Error(`Unsupported provider for image prompt LLM: ${promptLlmProvider}`);
                     // Compose system/user messages
                     const systemMsg = promptSystemMessage.replace("{turn}", responseContent);
