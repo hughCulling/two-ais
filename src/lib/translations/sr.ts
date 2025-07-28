@@ -360,6 +360,8 @@ const sr = {
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Величина",
     "imageModel_PriceUSD": "Цена (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Знање модела је прекинуто на овај датум.",
+    "modelCategory_MistralAIPremierModels": "Премијер модели",
+    "modelCategory_MistralAIOpenModels": "Отворени модели"
 };
 export default sr;

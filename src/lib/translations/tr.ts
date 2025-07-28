@@ -360,6 +360,8 @@ const tr = {
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",
     "imageModel_PriceUSD": "Fiyat (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Modelin bilgisi bu tarihte kesilmiştir.",
+    "modelCategory_MistralAIPremierModels": "Premier modeller",
+    "modelCategory_MistralAIOpenModels": "Açık modeller"
 };
 export default tr;

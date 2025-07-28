@@ -360,6 +360,8 @@ const bs = {
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Veličina",
     "imageModel_PriceUSD": "Cijena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Znanje modela je na ovaj datum prekinuto.",
+    "modelCategory_MistralAIPremierModels": "Premier modeli",
+    "modelCategory_MistralAIOpenModels": "Otvoreni modeli"
 };
 export default bs;

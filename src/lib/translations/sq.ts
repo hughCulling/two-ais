@@ -360,6 +360,8 @@ const sq = {
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",
     "imageModel_PriceUSD": "Çmimi (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Njohuritë e modelit janë ndërprerë në këtë datë.",
+    "modelCategory_MistralAIPremierModels": "Modelet kryesore",
+    "modelCategory_MistralAIOpenModels": "Modele të hapura"
 };
 export default sq;

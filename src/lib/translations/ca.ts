@@ -360,6 +360,8 @@ const ca = {
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",
     "imageModel_PriceUSD": "Preu (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "El coneixement del model està tallat en aquesta data.",
+    "modelCategory_MistralAIPremierModels": "Models de primera línia",
+    "modelCategory_MistralAIOpenModels": "Models oberts"
 };
 export default ca;

@@ -235,6 +235,11 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
         provider: 'DeepSeek',
         defaultSupportedLanguages: ['en', 'zh'],
         notes: 'Based on DeepSeek documentation.'
+    },
+    {
+        provider: 'Mistral AI',
+        defaultSupportedLanguages: ['en'],
+        notes: 'Just a guess atm, need to update.'
     }
 ];
 

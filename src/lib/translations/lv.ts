@@ -360,6 +360,8 @@ const lv = {
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",
     "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Šajā datumā modeļa zināšanas ir pārtrauktas.",
+    "modelCategory_MistralAIPremierModels": "Augstākās klases modeļi",
+    "modelCategory_MistralAIOpenModels": "Atvērtie modeļi"
 };
 export default lv;

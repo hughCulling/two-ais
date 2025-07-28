@@ -360,6 +360,8 @@ const ms = {
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",
     "imageModel_PriceUSD": "harga (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tarikh ini.",
+    "modelCategory_MistralAIPremierModels": "Model perdana",
+    "modelCategory_MistralAIOpenModels": "Model terbuka"
 };
 export default ms;

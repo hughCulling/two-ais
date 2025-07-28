@@ -360,6 +360,8 @@ const ta = {
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",
     "imageModel_PriceUSD": "விலை (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "இந்த தேதியில் மாதிரியின் அறிவு துண்டிக்கப்பட்டுள்ளது.",
+    "modelCategory_MistralAIPremierModels": "பிரீமியர் மாதிரிகள்",
+    "modelCategory_MistralAIOpenModels": "திறந்த மாதிரிகள்"
 };
 export default ta;

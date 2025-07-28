@@ -360,6 +360,8 @@ const my = {
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",
     "imageModel_PriceUSD": "စျေးနှုန်း (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "မော်ဒယ်ရဲ့ အသိပညာကို ဒီရက်စွဲနဲ့ ဖြတ်လိုက်ပါတယ်။",
+    "modelCategory_MistralAIPremierModels": "ပရီမီယာမော်ဒယ်များ",
+    "modelCategory_MistralAIOpenModels": "မော်ဒယ်များကိုဖွင့်ပါ။"
 };
 export default my;

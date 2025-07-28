@@ -360,6 +360,8 @@ const id = {
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",
     "imageModel_PriceUSD": "Harga (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tanggal ini.",
+    "modelCategory_MistralAIPremierModels": "Model utama",
+    "modelCategory_MistralAIOpenModels": "Model terbuka"
 };
 export default id;

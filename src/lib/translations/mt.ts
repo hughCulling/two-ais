@@ -360,6 +360,8 @@ const mt = {
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",
     "imageModel_PriceUSD": "Prezz (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "L-għarfien tal-mudell jinqata' f'din id-data.",
+    "modelCategory_MistralAIPremierModels": "Mudelli Premier",
+    "modelCategory_MistralAIOpenModels": "Mudelli miftuħa"
 };
 export default mt;

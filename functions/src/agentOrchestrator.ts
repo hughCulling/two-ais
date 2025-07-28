@@ -8,6 +8,7 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatXAI } from "@langchain/xai";
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 import { ChatDeepSeek } from "@langchain/deepseek";
+import { ChatMistralAI } from "@langchain/mistralai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { getProviderFromId, getFirestoreKeyIdFromProvider, getApiKeyFromSecret, getTTSApiKeyId, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket } from "./index";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
@@ -172,6 +173,13 @@ export async function triggerAgentResponse(
             }
             else if (llmProvider === "DeepSeek") {
                 chatModel = new ChatDeepSeek({
+                    apiKey: llmApiKey,
+                    modelName: modelName,
+                    temperature: 0.7, // Default temperature, can be adjusted
+                });
+            }
+            else if (llmProvider === "Mistral AI") {
+                chatModel = new ChatMistralAI({
                     apiKey: llmApiKey,
                     modelName: modelName,
                     temperature: 0.7, // Default temperature, can be adjusted

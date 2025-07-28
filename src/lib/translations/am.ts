@@ -360,6 +360,8 @@ const am = {
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",
     "imageModel_PriceUSD": "ዋጋ (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "በዚህ ቀን የአምሳያው ዕውቀት ይቋረጣል.",
+    "modelCategory_MistralAIPremierModels": "ዋና ሞዴሎች",
+    "modelCategory_MistralAIOpenModels": "ሞዴሎችን ይክፈቱ"
 };
 export default am;

@@ -360,6 +360,8 @@ const ja = {
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",
     "imageModel_PriceUSD": "価格 (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "モデルの知識はこの時点で切断されます。",
+    "modelCategory_MistralAIPremierModels": "プレミアモデル",
+    "modelCategory_MistralAIOpenModels": "オープンモデル"
 };
 export default ja;

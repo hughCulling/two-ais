@@ -360,6 +360,8 @@ const vi = {
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",
     "imageModel_PriceUSD": "Giá (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Kiến thức của mô hình đã bị cắt bỏ vào thời điểm này.",
+    "modelCategory_MistralAIPremierModels": "Các mẫu hàng đầu",
+    "modelCategory_MistralAIOpenModels": "Mô hình mở"
 };
 export default vi;

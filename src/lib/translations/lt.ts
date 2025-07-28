@@ -360,6 +360,8 @@ const lt = {
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",
     "imageModel_PriceUSD": "Kaina (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Modelio žinios šią dieną yra nutrauktos.",
+    "modelCategory_MistralAIPremierModels": "Aukščiausios klasės modeliai",
+    "modelCategory_MistralAIOpenModels": "Atviri modeliai"
 };
 export default lt;

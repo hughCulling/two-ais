@@ -360,6 +360,8 @@ const so = {
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",
     "imageModel_PriceUSD": "Qiimaha (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Aqoonta moodeelku waa la jaray taariikhdan.",
+    "modelCategory_MistralAIPremierModels": "moodooyinka Premier",
+    "modelCategory_MistralAIOpenModels": "Moodooyinka furan"
 };
 export default so;

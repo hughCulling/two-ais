@@ -360,6 +360,8 @@ const sl = {
     "imageModel_Quality": "Kakovost",
     "imageModel_Size": "Velikost",
     "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Znanje modela je na ta datum prekinjeno.",
+    "modelCategory_MistralAIPremierModels": "Premier modeli",
+    "modelCategory_MistralAIOpenModels": "Odprti modeli"
 };
 export default sl;

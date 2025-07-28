@@ -360,6 +360,8 @@ const is = {
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",
     "imageModel_PriceUSD": "Verð (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Þekking líkansins er rofin á þessum degi.",
+    "modelCategory_MistralAIPremierModels": "Fyrsta flokks gerðir",
+    "modelCategory_MistralAIOpenModels": "Opnar gerðir"
 };
 export default is;

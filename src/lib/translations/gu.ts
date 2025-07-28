@@ -360,6 +360,8 @@ const gu = {
     "imageModel_Quality": "ગુણવત્તા",
     "imageModel_Size": "કદ",
     "imageModel_PriceUSD": "કિંમત (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "આ તારીખે મોડેલનું જ્ઞાન બંધ થઈ ગયું છે.",
+    "modelCategory_MistralAIPremierModels": "પ્રીમિયર મોડેલ્સ",
+    "modelCategory_MistralAIOpenModels": "ખુલ્લા મોડેલો"
 };
 export default gu;

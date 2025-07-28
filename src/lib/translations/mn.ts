@@ -360,6 +360,8 @@ const mn = {
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",
     "imageModel_PriceUSD": "Үнэ (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Загварын мэдлэг энэ өдөр тасарчээ.",
+    "modelCategory_MistralAIPremierModels": "Дээд зэрэглэлийн загварууд",
+    "modelCategory_MistralAIOpenModels": "Нээлттэй загварууд"
 };
 export default mn;

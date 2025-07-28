@@ -360,6 +360,8 @@ const ar = {
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",
     "imageModel_PriceUSD": "سعر (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "تم قطع معرفة النموذج في هذا التاريخ.",
+    "modelCategory_MistralAIPremierModels": "موديلات بريميير",
+    "modelCategory_MistralAIOpenModels": "نماذج مفتوحة"
 };
 export default ar;

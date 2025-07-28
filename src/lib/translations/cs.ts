@@ -360,6 +360,8 @@ const cs = {
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",
     "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Znalosti modelu jsou k tomuto datu ukončeny.",
+    "modelCategory_MistralAIPremierModels": "Prémiové modely",
+    "modelCategory_MistralAIOpenModels": "Otevřené modely"
 };
 export default cs;

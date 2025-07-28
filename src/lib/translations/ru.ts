@@ -360,6 +360,8 @@ const ru = {
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",
     "imageModel_PriceUSD": "Цена (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "На этой дате сведения о модели обрываются.",
+    "modelCategory_MistralAIPremierModels": "Премьер-модели",
+    "modelCategory_MistralAIOpenModels": "Открытые модели"
 };
 export default ru;

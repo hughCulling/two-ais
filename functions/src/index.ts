@@ -3,6 +3,7 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
+import { ChatMistralAI } from "@langchain/mistralai";
 import { FieldValue, DocumentReference, CollectionReference } from "firebase-admin/firestore";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { getStorage } from "firebase-admin/storage";
@@ -87,7 +88,7 @@ export interface ConversationTTSSettingsBackend {
 }
 interface LLMInfo {
     id: string;
-    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI" | "DeepSeek";
+    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI" | "DeepSeek" | "Mistral AI";
     apiKeySecretName: string;
 }
 interface GcpError extends Error { code?: number | string; details?: string; }
@@ -158,6 +159,7 @@ function getProviderFromId(id: string): LLMInfo["provider"] | null {
      if (id.startsWith("claude-")) return "Anthropic";
      if (id.startsWith("grok-")) return "xAI";
      if (id.startsWith("deepseek-")) return "DeepSeek";
+     if (id.startsWith("mistral-") || id.startsWith("magistral-") || id.startsWith("ministral-") || id === "open-mistral-nemo") return "Mistral AI";
      if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("Qwen/")) return "TogetherAI";
      logger.warn(`Could not determine provider from model ID: ${id}`);
      return null;
@@ -170,6 +172,7 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "xAI") return "xai";
     if (provider === "TogetherAI") return "together_ai";
     if (provider === "DeepSeek") return "deepseek";
+    if (provider === "Mistral AI") return "mistral";
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -469,6 +472,13 @@ async function _triggerAgentResponse(
             }
             else if (llmProvider === "DeepSeek") {
                 chatModel = new ChatDeepSeek({
+                    apiKey: llmApiKey,
+                    modelName: modelName,
+                    temperature: 0.7,
+                });
+            }
+            else if (llmProvider === "Mistral AI") {
+                chatModel = new ChatMistralAI({
                     apiKey: llmApiKey,
                     modelName: modelName,
                     temperature: 0.7,

@@ -360,6 +360,8 @@ const sw = {
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",
     "imageModel_PriceUSD": "Bei (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Ujuzi wa mfano umekatwa kwa tarehe hii.",
+    "modelCategory_MistralAIPremierModels": "Mifano kuu",
+    "modelCategory_MistralAIOpenModels": "Fungua mifano"
 };
 export default sw;

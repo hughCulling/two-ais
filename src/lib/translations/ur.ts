@@ -360,6 +360,8 @@ const ur = {
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",
     "imageModel_PriceUSD": "قیمت (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "اس تاریخ میں ماڈل کا علم منقطع ہے۔",
+    "modelCategory_MistralAIPremierModels": "پریمیئر ماڈلز",
+    "modelCategory_MistralAIOpenModels": "ماڈلز کھولیں۔"
 };
 export default ur;

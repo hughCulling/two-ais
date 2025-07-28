@@ -360,6 +360,8 @@ const kk = {
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
     "imageModel_PriceUSD": "Бағасы (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Модельдің білімі осы күні үзіледі.",
+    "modelCategory_MistralAIPremierModels": "Бастапқы модельдер",
+    "modelCategory_MistralAIOpenModels": "Ашық үлгілер"
 };
 export default kk;

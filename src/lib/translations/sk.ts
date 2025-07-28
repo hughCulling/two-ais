@@ -360,6 +360,8 @@ const sk = {
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",
     "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Znalosti modelu sú k tomuto dátumu ukončené.",
+    "modelCategory_MistralAIPremierModels": "Prémiové modely",
+    "modelCategory_MistralAIOpenModels": "Otvorené modely"
 };
 export default sk;

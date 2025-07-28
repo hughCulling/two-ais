@@ -360,6 +360,8 @@ const th = {
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",
     "imageModel_PriceUSD": "ราคา (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "ความรู้ของโมเดลถูกตัดออกในวันที่นี้",
+    "modelCategory_MistralAIPremierModels": "นางแบบชั้นนำ",
+    "modelCategory_MistralAIOpenModels": "โมเดลเปิด"
 };
 export default th;

@@ -98,6 +98,13 @@ const initialApiKeys: ApiKeyInput[] = [
         tooltip: 'Used for DeepSeek models. Create an account and get your API key at platform.deepseek.com/api-keys. The API key is only visible once at creation, so save it securely.',
         learnMoreLink: 'https://platform.deepseek.com/api-keys'
     },
+    {
+        id: 'mistral',
+        label: 'Mistral AI API Key',
+        value: '',
+        tooltip: 'Used for Mistral AI models (Mistral, Magistral, Ministral). Create an account and get your API key at console.mistral.ai/api-keys. The API key is only shown once at creation, so save it securely.',
+        learnMoreLink: 'https://console.mistral.ai/api-keys'
+    },
 ];
 
 export default function ApiKeyManager() {

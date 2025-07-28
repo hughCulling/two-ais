@@ -360,6 +360,8 @@ const ka = {
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",
     "imageModel_PriceUSD": "ფასი (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "მოდელის ცოდნა ამ თარიღში შეწყდა.",
+    "modelCategory_MistralAIPremierModels": "პრემიერ მოდელები",
+    "modelCategory_MistralAIOpenModels": "ღია მოდელები"
 };
 export default ka;

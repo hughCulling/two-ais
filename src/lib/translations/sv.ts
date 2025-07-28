@@ -360,6 +360,8 @@ const sv = {
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Storlek",
     "imageModel_PriceUSD": "Pris (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "Modellens kunskap är avstängd vid detta datum.",
+    "modelCategory_MistralAIPremierModels": "Premier-modeller",
+    "modelCategory_MistralAIOpenModels": "Öppna modeller"
 };
 export default sv;

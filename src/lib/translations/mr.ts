@@ -360,6 +360,8 @@ const mr = {
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
     "imageModel_PriceUSD": "किंमत (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "या तारखेला मॉडेलचे ज्ञान कमी झाले आहे.",
+    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडेल्स",
+    "modelCategory_MistralAIOpenModels": "उघडे मॉडेल"
 };
 export default mr;

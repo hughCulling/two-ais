@@ -360,6 +360,8 @@ const zh = {
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",
     "imageModel_PriceUSD": "价格 (USD)",
-    "page_TooltipKnowledgeCutoff": "The model's knowledge is cut off at this date."
+    "page_TooltipKnowledgeCutoff": "该模型的知识在该日期被切断。",
+    "modelCategory_MistralAIPremierModels": "顶级型号",
+    "modelCategory_MistralAIOpenModels": "开放模型"
 };
 export default zh;
