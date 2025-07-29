@@ -147,6 +147,44 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     supportsAspectRatio: true,
     defaultAspectRatio: '1:1',
   },
+  {
+    id: 'imagen-3.0-generate-002',
+    name: 'Imagen 3',
+    provider: 'Google',
+    description: 'State-of-the-art text-to-image model that generates high-quality images with excellent detail, rich lighting, and minimal artifacts. Supports generating up to 4 images per request.',
+    qualities: [
+      {
+        quality: 'standard',
+        sizes: [
+          { size: '1:1', price: 0.03 },
+          { size: '3:4', price: 0.03 },
+          { size: '4:3', price: 0.03 },
+          { size: '9:16', price: 0.03 },
+          { size: '16:9', price: 0.03 },
+        ],
+      },
+    ],
+    pricingNote: 'Pricing is $0.03 per image. Available on the paid tier of Google AI. Supports multiple aspect ratios.',
+    status: undefined,
+    supportsAspectRatio: true,
+    defaultAspectRatio: '1:1',
+  },
+  {
+    id: 'grok-2-image-1212',
+    name: 'Grok-2 Image Gen',
+    provider: 'xAI',
+    description: 'Latest image generation model from xAI that can generate vivid, realistic images based on text prompts. Excels at generating images for marketing, social media, and entertainment. Generates standard quality images at 1024x1024 resolution.',
+    qualities: [
+      {
+        quality: 'standard',
+        sizes: [
+          { size: '1024x1024', price: 0.07 }
+        ],
+      },
+    ],
+    pricingNote: 'Pricing is $0.07 per image. Fixed resolution of 1024x1024. See xAI docs for details.',
+    status: undefined,
+  },
 ];
 
 export function getImageModelById(id: string): ImageModelInfo | undefined {
