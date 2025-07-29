@@ -36,7 +36,7 @@ export function middleware(request: NextRequest) {
     "default-src 'self'",
     `script-src 'nonce-${nonce}' 'unsafe-inline' 'strict-dynamic' https: https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/ https://oaidalleapiprodscus.blob.core.windows.net",
+    "img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/ https://storage.googleapis.com https://*.googleapis.com https://oaidalleapiprodscus.blob.core.windows.net",
     "font-src 'self' https://fonts.gstatic.com",
     "media-src 'self' https://storage.googleapis.com",
     "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net https://firebaseinstallations.googleapis.com",

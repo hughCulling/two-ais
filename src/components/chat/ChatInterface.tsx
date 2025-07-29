@@ -722,11 +722,14 @@ export function ChatInterface({
                                                         style={{ objectFit: 'contain' }}
                                                         onClick={() => setFullScreenImageMsgId(msg.id)}
                                                         onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
-                                                        onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
+                                                        onError={(e) => {
+                                                            console.error('Image load error:', e);
+                                                            setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }));
+                                                        }}
                                                         tabIndex={0}
                                                         width={800}
                                                         height={600}
-                                                        unoptimized
+                                                        unoptimized={msg.imageUrl?.includes('storage.googleapis.com') || msg.imageUrl?.includes('googleapis.com/storage')}
                                                         aria-label="Show image in full screen"
                                                     />
                                                     {imageLoadStatus[msg.id] === 'loading' && (
@@ -756,7 +759,12 @@ export function ChatInterface({
                                                                 style={{ objectFit: 'contain' }}
                                                                 width={1920}
                                                                 height={1080}
-                                                                unoptimized
+                                                                unoptimized={msg.imageUrl?.includes('storage.googleapis.com') || msg.imageUrl?.includes('googleapis.com/storage')}
+                                                                onError={(e) => {
+                                                                    console.error('Fullscreen image load error:', e);
+                                                                    setFullScreenImageMsgId(null);
+                                                                    setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }));
+                                                                }}
                                                             />
                                                             <button
                                                                 className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
