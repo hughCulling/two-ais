@@ -599,7 +599,38 @@ async function _triggerAgentResponse(
                         logger.info(`[ImageGen] Generated image prompt: ${imagePrompt}`);
                         // 2. Call image generation API
                         const provider = (imageGenSettings.provider || "").toLowerCase();
-                        if (provider === "openai") {
+                        if (provider === "xai") {
+                            const xaiApiKeyRef = conversationData.apiSecretVersions["xai"];
+                            if (!xaiApiKeyRef) throw new Error("xAI API key reference not found for image generation.");
+                            const xaiApiKey = await getApiKeyFromSecret(xaiApiKeyRef);
+                            if (!xaiApiKey) throw new Error("getApiKeyFromSecret returned null for xAI image generation.");
+                            
+                            const xai = new OpenAI({
+                                apiKey: xaiApiKey,
+                                baseURL: "https://api.x.ai/v1"
+                            });
+                            
+                            const model = imageGenSettings.model || "grok-2-image-1212";
+                            
+                            logger.info("[ImageGen] Calling xAI images.generate with model:", model);
+                            const xaiResponse = await xai.images.generate({
+                                model: model,
+                                prompt: imagePrompt,
+                                n: 1,
+                                response_format: "url"
+                            });
+
+                            if (xaiResponse && xaiResponse.data && xaiResponse.data[0]) {
+                                if (xaiResponse.data[0].url) {
+                                    imageUrl = xaiResponse.data[0].url;
+                                    logger.info(`[ImageGen] Image generated (url): ${imageUrl}`);
+                                } else {
+                                    throw new Error("No image URL returned from xAI image generation.");
+                                }
+                            } else {
+                                throw new Error("No image data returned from xAI image generation.");
+                            }
+                        } else if (provider === "openai") {
                             const openaiApiKeyRef = conversationData.apiSecretVersions["openai"];
                             if (!openaiApiKeyRef) throw new Error("OpenAI API key reference not found for image generation.");
                             const openaiApiKey = await getApiKeyFromSecret(openaiApiKeyRef);
