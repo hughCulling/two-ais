@@ -185,6 +185,22 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     pricingNote: 'Pricing is $0.07 per image. Fixed resolution of 1024x1024. See xAI docs for details.',
     status: undefined,
   },
+  {
+    id: 'black-forest-labs/FLUX.1-schnell-Free',
+    name: 'FLUX.1 [schnell] Free',
+    provider: 'TogetherAI',
+    description: 'A 12 billion parameter rectified flow transformer capable of generating images from text descriptions. Available for free on HuggingFace.',
+    qualities: [
+      {
+        quality: 'standard',
+        sizes: [
+          { size: '1024x1024', price: 0 }
+        ],
+      },
+    ],
+    pricingNote: 'Free to use. Available on HuggingFace.',
+    status: undefined,
+  },
 ];
 
 export function getImageModelById(id: string): ImageModelInfo | undefined {

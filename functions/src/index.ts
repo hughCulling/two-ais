@@ -24,6 +24,7 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatDeepSeek } from "@langchain/deepseek";
 import { ChatXAI } from "@langchain/xai";
 import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+import Together from "together-ai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
 
@@ -737,6 +738,67 @@ async function _triggerAgentResponse(
                                 await file.makePublic();
                                 imageUrl = file.publicUrl();
                                 logger.info(`[ImageGen] Image generated and uploaded for ${model}: ${imageUrl}`);
+                        } else if (provider === "togetherai") {
+                            const togetherAiApiKeyRef = conversationData.apiSecretVersions["together_ai"];
+                            if (!togetherAiApiKeyRef) throw new Error("TogetherAI API key reference not found for image generation.");
+                            const togetherAiApiKey = await getApiKeyFromSecret(togetherAiApiKeyRef);
+                            if (!togetherAiApiKey) throw new Error("getApiKeyFromSecret returned null for TogetherAI image generation.");
+
+                            const model = imageGenSettings.model || "black-forest-labs/FLUX.1-schnell-Free";
+                            const steps = 4; // Default number of steps
+                            const n = 1; // Number of images to generate
+                            
+                            logger.info(`[ImageGen] Initializing TogetherAI client for model: ${model}`);
+                            const together = new Together({ apiKey: togetherAiApiKey });
+                            
+                            try {
+                                logger.info(`[ImageGen] Generating image with TogetherAI (model: ${model}, steps: ${steps})`);
+                                const response = await together.images.create({
+                                    model: model,
+                                    prompt: imagePrompt,
+                                    steps: steps,
+                                    n: n
+                                });
+
+                                if (response?.data?.[0]) {
+                                    const imageData = response.data[0];
+                                    
+                                    // Define the expected response type
+                                    type TogetherAIImageResponse = {
+                                        url: string;
+                                        // Add other fields if they exist in the response
+                                    };
+
+                                    // Check if we have a URL in the response
+                                    const imageResponse = imageData as TogetherAIImageResponse;
+                                    if (imageResponse?.url) {
+                                        // Download the image from the URL
+                                        const imageDownload = await axios.get(imageResponse.url, { responseType: "arraybuffer" });
+                                        const imageBuffer = Buffer.from(imageDownload.data, "binary");
+                                        const imageFileName = `conversations/${conversationId}/images/${messageId}_${agentToRespond}.png`;
+                                        const file = storageBucket.file(imageFileName);
+                                        await file.save(imageBuffer, { 
+                                            metadata: { 
+                                                contentType: "image/png",
+                                                metadata: {
+                                                    model: model,
+                                                    prompt: imagePrompt.substring(0, 100) + (imagePrompt.length > 100 ? "..." : "")
+                                                }
+                                            } 
+                                        });
+                                        await file.makePublic();
+                                        imageUrl = file.publicUrl();
+                                        logger.info(`[ImageGen] Image generated and uploaded for ${model}: ${imageUrl}`);
+                                    } else {
+                                        throw new Error("No base64 image data returned from TogetherAI image generation.");
+                                    }
+                                } else {
+                                    throw new Error("No image data returned from TogetherAI image generation.");
+                                }
+                            } catch (error) {
+                                logger.error("[ImageGen] Error in TogetherAI image generation:", error);
+                                throw new Error(`TogetherAI image generation failed: ${error instanceof Error ? error.message : String(error)}`);
+                            }
                         } else {
                             throw new Error(`Image generation provider not implemented: ${imageGenSettings.provider}`);
                         }
