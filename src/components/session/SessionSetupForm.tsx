@@ -30,7 +30,7 @@ import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from '@/hooks/useTranslation';
-import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize } from '@/lib/image_models';
+import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
@@ -56,7 +56,7 @@ interface SessionConfig {
         provider: string;
         model: string;
         quality: ImageModelQuality;
-        size: ImageModelSize;
+        size: ImageModelSize | ImageAspectRatio;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -335,7 +335,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [imageGenEnabled, setImageGenEnabled] = useState(false);
     const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
     const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
-    const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize>('1024x1024');
+    const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize | ImageAspectRatio>('1024x1024');
     const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
     const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
 
