@@ -94,6 +94,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Disable trailing slashes in URLs
+  trailingSlash: false,
   // Configure compiler options for modern browsers
   compiler: {
     // Remove console logs in production
