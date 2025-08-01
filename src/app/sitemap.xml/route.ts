@@ -6,9 +6,7 @@ export async function GET() {
   const baseUrl = 'https://www.two-ais.com';
 
   const pages = [
-    '/', // Root redirects to language-prefixed route
-    '/login',
-    '/signup'
+    '/' // Root redirects to language-prefixed route
   ];
 
   const sitemapUrls: string[] = [];
