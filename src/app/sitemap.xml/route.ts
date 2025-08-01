@@ -33,6 +33,7 @@ export async function GET() {
     .map(
       (url) => `  <url>
     <loc>${url}</loc>
+    <lastmod>2025-08-01</lastmod>
   </url>`
     )
     .join('\n')}
