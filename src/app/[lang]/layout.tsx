@@ -103,6 +103,11 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
             }}
           />
         ) : null}
+        {/* Canonical URL - includes language code for all languages including English */}
+        <link 
+          rel="canonical" 
+          href={`${baseUrl}/${lang}`} 
+        />
         {alternates}
         <meta name="description" content={description} />
         <script
