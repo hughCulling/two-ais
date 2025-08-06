@@ -362,6 +362,11 @@ const te = {
     "imageModel_PriceUSD": "ధర (USD)",
     "page_TooltipKnowledgeCutoff": "ఈ తేదీతో మోడల్ జ్ఞానం తెగిపోయింది.",
     "modelCategory_MistralAIPremierModels": "ప్రీమియర్ మోడల్స్",
-    "modelCategory_MistralAIOpenModels": "ఓపెన్ మోడల్స్"
+    "modelCategory_MistralAIOpenModels": "ఓపెన్ మోడల్స్",
+    "pricing": {
+        "perMillionTokens": "1 మిలియన్ టోకెన్లకు",
+        "tokens": "టోకెన్లు",
+        "free": "ఉచితం"
+    }
 };
 export default te;

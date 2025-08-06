@@ -362,6 +362,11 @@ const it = {
     "imageModel_PriceUSD": "Prezzo (USD)",
     "page_TooltipKnowledgeCutoff": "A partire da questa data la conoscenza del modello è giunta al termine.",
     "modelCategory_MistralAIPremierModels": "Modelli Premier",
-    "modelCategory_MistralAIOpenModels": "Modelli aperti"
+    "modelCategory_MistralAIOpenModels": "Modelli aperti",
+    "pricing": {
+        "perMillionTokens": "per 1 milione di token",
+        "tokens": "gettoni",
+        "free": "Gratuito"
+    }
 };
 export default it;

@@ -11,7 +11,7 @@ export interface LLMInfo {
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
         output: number; // Price per 1 million output tokens (in USD)
-        note?: string; // Optional note for complex pricing
+        note?: string | ((t: TranslationKeys) => string); // Optional note for complex pricing (can be a string or a function that returns a string)
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
     apiKeySecretName: string; // The Secret Manager secret *key ID*
@@ -204,7 +204,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 10.00, 
-            note: '$1.25 (≤200k tokens), $2.50 (>200k tokens) / $10.00 (≤200k tokens), $15.00 (>200k tokens) per 1M Tokens' 
+            note: (t: TranslationKeys) => `$1.25 (≤200k ${t.pricing.tokens}), $2.50 (>200k ${t.pricing.tokens}) / $10.00 (≤200k ${t.pricing.tokens}), $15.00 (>200k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -261,7 +261,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 5.00, 
-            note: '$1.25 (≤128k tokens), $2.50 (>128k tokens) / $5.00 (≤128k tokens), $10.00 (>128k tokens) per 1M Tokens'
+            note: (t: TranslationKeys) => `$1.25 (≤128k ${t.pricing.tokens}), $2.50 (>128k ${t.pricing.tokens}) / $5.00 (≤128k ${t.pricing.tokens}), $10.00 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -276,7 +276,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.075, 
             output: 0.30, 
-            note: '$0.075 (≤128k tokens), $0.15 (>128k tokens) / $0.30 (≤128k tokens), $0.60 (>128k tokens) per 1M Tokens'
+            note: (t: TranslationKeys) => `$0.075 (≤128k ${t.pricing.tokens}), $0.15 (>128k ${t.pricing.tokens}) / $0.30 (≤128k ${t.pricing.tokens}), $0.60 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -291,7 +291,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.0375, 
             output: 0.15,  
-            note: '$0.0375 (≤128k tokens), $0.075 (>128k tokens) / $0.15 (≤128k tokens), $0.30 (>128k tokens) per 1M Tokens'
+            note: (t: TranslationKeys) => `$0.0375 (≤128k ${t.pricing.tokens}), $0.075 (>128k ${t.pricing.tokens}) / $0.15 (≤128k ${t.pricing.tokens}), $0.30 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -630,7 +630,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Meta Llama 3.3 70B Instruct Turbo Free',
         provider: 'TogetherAI',
         contextWindow: 131072, 
-        pricing: { input: 0.00, output: 0.00, note: 'Free' }, 
+        pricing: { input: 0.00, output: 0.00, note: (t: TranslationKeys) => t.pricing.free }, 
         apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
         apiKeySecretName: 'together_ai',
         status: 'stable',

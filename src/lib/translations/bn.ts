@@ -362,6 +362,11 @@ const bn = {
     "imageModel_PriceUSD": "দাম (USD)",
     "page_TooltipKnowledgeCutoff": "এই তারিখে মডেলের জ্ঞান শেষ হয়ে গেছে।",
     "modelCategory_MistralAIPremierModels": "প্রিমিয়ার মডেল",
-    "modelCategory_MistralAIOpenModels": "খোলা মডেল"
+    "modelCategory_MistralAIOpenModels": "খোলা মডেল",
+    "pricing": {
+        "perMillionTokens": "প্রতি ১ মিলিয়ন টোকেনে",
+        "tokens": "টোকেন",
+        "free": "বিনামূল্যে"
+    }
 };
 export default bn;

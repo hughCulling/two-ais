@@ -362,6 +362,11 @@ const pa = {
     "imageModel_PriceUSD": "ਕੀਮਤ (USD)",
     "page_TooltipKnowledgeCutoff": "ਇਸ ਮਿਤੀ 'ਤੇ ਮਾਡਲ ਦਾ ਗਿਆਨ ਖਤਮ ਹੋ ਜਾਂਦਾ ਹੈ।",
     "modelCategory_MistralAIPremierModels": "ਪ੍ਰੀਮੀਅਰ ਮਾਡਲ",
-    "modelCategory_MistralAIOpenModels": "ਖੁੱਲ੍ਹੇ ਮਾਡਲ"
+    "modelCategory_MistralAIOpenModels": "ਖੁੱਲ੍ਹੇ ਮਾਡਲ",
+    "pricing": {
+        "perMillionTokens": "ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ",
+        "tokens": "ਟੋਕਨ",
+        "free": "ਮੁਫ਼ਤ"
+    }
 };
 export default pa;

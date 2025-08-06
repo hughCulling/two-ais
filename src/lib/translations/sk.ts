@@ -362,6 +362,11 @@ const sk = {
     "imageModel_PriceUSD": "Cena (USD)",
     "page_TooltipKnowledgeCutoff": "Znalosti modelu sú k tomuto dátumu ukončené.",
     "modelCategory_MistralAIPremierModels": "Prémiové modely",
-    "modelCategory_MistralAIOpenModels": "Otvorené modely"
+    "modelCategory_MistralAIOpenModels": "Otvorené modely",
+    "pricing": {
+        "perMillionTokens": "na 1 milión tokenov",
+        "tokens": "žetóny",
+        "free": "Zadarmo"
+    }
 };
 export default sk;

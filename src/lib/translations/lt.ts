@@ -362,6 +362,11 @@ const lt = {
     "imageModel_PriceUSD": "Kaina (USD)",
     "page_TooltipKnowledgeCutoff": "Modelio žinios šią dieną yra nutrauktos.",
     "modelCategory_MistralAIPremierModels": "Aukščiausios klasės modeliai",
-    "modelCategory_MistralAIOpenModels": "Atviri modeliai"
+    "modelCategory_MistralAIOpenModels": "Atviri modeliai",
+    "pricing": {
+        "perMillionTokens": "už 1 milijoną žetonų",
+        "tokens": "žetonai",
+        "free": "Nemokama"
+    }
 };
 export default lt;

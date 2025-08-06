@@ -362,6 +362,11 @@ const my = {
     "imageModel_PriceUSD": "စျေးနှုန်း (USD)",
     "page_TooltipKnowledgeCutoff": "မော်ဒယ်ရဲ့ အသိပညာကို ဒီရက်စွဲနဲ့ ဖြတ်လိုက်ပါတယ်။",
     "modelCategory_MistralAIPremierModels": "ပရီမီယာမော်ဒယ်များ",
-    "modelCategory_MistralAIOpenModels": "မော်ဒယ်များကိုဖွင့်ပါ။"
+    "modelCategory_MistralAIOpenModels": "မော်ဒယ်များကိုဖွင့်ပါ။",
+    "pricing": {
+        "perMillionTokens": "တိုကင် 1 သန်းအတွက်",
+        "tokens": "တိုကင်များ",
+        "free": "အခမဲ့"
+    }
 };
 export default my;

@@ -362,6 +362,11 @@ const zh = {
     "imageModel_PriceUSD": "价格 (USD)",
     "page_TooltipKnowledgeCutoff": "该模型的知识在该日期被切断。",
     "modelCategory_MistralAIPremierModels": "顶级型号",
-    "modelCategory_MistralAIOpenModels": "开放模型"
+    "modelCategory_MistralAIOpenModels": "开放模型",
+    "pricing": {
+        "perMillionTokens": "每 100 万个代币",
+        "tokens": "代币",
+        "free": "自由的"
+    }
 };
 export default zh;

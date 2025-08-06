@@ -362,6 +362,11 @@ const sv = {
     "imageModel_PriceUSD": "Pris (USD)",
     "page_TooltipKnowledgeCutoff": "Modellens kunskap är avstängd vid detta datum.",
     "modelCategory_MistralAIPremierModels": "Premier-modeller",
-    "modelCategory_MistralAIOpenModels": "Öppna modeller"
+    "modelCategory_MistralAIOpenModels": "Öppna modeller",
+    "pricing": {
+        "perMillionTokens": "per 1 miljon tokens",
+        "tokens": "tokens",
+        "free": "Gratis"
+    }
 };
 export default sv;

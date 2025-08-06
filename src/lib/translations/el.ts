@@ -362,6 +362,11 @@ const el = {
     "imageModel_PriceUSD": "Τιμή (USD)",
     "page_TooltipKnowledgeCutoff": "Οι γνώσεις του μοντέλου έχουν διακοπεί σε αυτήν την ημερομηνία.",
     "modelCategory_MistralAIPremierModels": "Κορυφαία μοντέλα",
-    "modelCategory_MistralAIOpenModels": "Ανοιχτά μοντέλα"
+    "modelCategory_MistralAIOpenModels": "Ανοιχτά μοντέλα",
+    "pricing": {
+        "perMillionTokens": "ανά 1 εκατομμύριο μάρκες",
+        "tokens": "μάρκες",
+        "free": "Δωρεάν"
+    }
 };
 export default el;

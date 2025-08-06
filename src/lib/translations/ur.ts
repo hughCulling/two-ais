@@ -362,6 +362,11 @@ const ur = {
     "imageModel_PriceUSD": "قیمت (USD)",
     "page_TooltipKnowledgeCutoff": "اس تاریخ میں ماڈل کا علم منقطع ہے۔",
     "modelCategory_MistralAIPremierModels": "پریمیئر ماڈلز",
-    "modelCategory_MistralAIOpenModels": "ماڈلز کھولیں۔"
+    "modelCategory_MistralAIOpenModels": "ماڈلز کھولیں۔",
+    "pricing": {
+        "perMillionTokens": "فی 1 ملین ٹوکن",
+        "tokens": "ٹوکن",
+        "free": "مفت"
+    }
 };
 export default ur;

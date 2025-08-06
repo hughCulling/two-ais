@@ -362,6 +362,11 @@ const bg = {
     "imageModel_PriceUSD": "Цена (USD)",
     "page_TooltipKnowledgeCutoff": "Знанията на модела са прекъснати на тази дата.",
     "modelCategory_MistralAIPremierModels": "Премиер модели",
-    "modelCategory_MistralAIOpenModels": "Отворени модели"
+    "modelCategory_MistralAIOpenModels": "Отворени модели",
+    "pricing": {
+        "perMillionTokens": "на 1 милион токена",
+        "tokens": "жетони",
+        "free": "Безплатно"
+    }
 };
 export default bg;

@@ -24,7 +24,10 @@ import type { ImageModelInfo } from '@/lib/image_models';
    const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
 
 // TruncatableNote component for pricing notes
-const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
+const TruncatableNote: React.FC<{ 
+  noteText: string | ((t: any) => string); 
+  tooltipMaxWidth?: string 
+}> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);
   const { t, loading } = useTranslation();
@@ -68,7 +71,7 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
         isActuallyOverflowing && "cursor-help"
       )}
     >
-      {t.page_TruncatableNoteFormat.replace('{noteText}', noteText)}
+      {t.page_TruncatableNoteFormat.replace('{noteText}', typeof noteText === 'function' ? noteText(t) : noteText)}
     </span>
   );
   if (isActuallyOverflowing) {
@@ -76,7 +79,7 @@ const TruncatableNote: React.FC<{ noteText: string; tooltipMaxWidth?: string }> 
       <Tooltip>
         <TooltipTrigger asChild>{noteSpan}</TooltipTrigger>
         <TooltipContent side="top" className={`w-auto p-2 ${tooltipMaxWidth}`}>
-          <p className="text-xs">{noteText}</p>
+          <p className="text-xs">{typeof noteText === 'function' ? noteText(t) : noteText}</p>
         </TooltipContent>
       </Tooltip>
     );

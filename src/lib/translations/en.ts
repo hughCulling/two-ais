@@ -315,6 +315,15 @@ const en = {
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
 
+    // Pricing related terms
+    pricing: {
+        perMillionTokens: "per 1 Million tokens",
+        tokens: "tokens",
+        free: "Free"
+    },
+    
+    // Common terms
+
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',

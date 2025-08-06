@@ -362,6 +362,11 @@ const so = {
     "imageModel_PriceUSD": "Qiimaha (USD)",
     "page_TooltipKnowledgeCutoff": "Aqoonta moodeelku waa la jaray taariikhdan.",
     "modelCategory_MistralAIPremierModels": "moodooyinka Premier",
-    "modelCategory_MistralAIOpenModels": "Moodooyinka furan"
+    "modelCategory_MistralAIOpenModels": "Moodooyinka furan",
+    "pricing": {
+        "perMillionTokens": "1 Milyan oo calaamadood",
+        "tokens": "calaamado",
+        "free": "Bilaash"
+    }
 };
 export default so;

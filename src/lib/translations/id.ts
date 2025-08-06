@@ -362,6 +362,11 @@ const id = {
     "imageModel_PriceUSD": "Harga (USD)",
     "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tanggal ini.",
     "modelCategory_MistralAIPremierModels": "Model utama",
-    "modelCategory_MistralAIOpenModels": "Model terbuka"
+    "modelCategory_MistralAIOpenModels": "Model terbuka",
+    "pricing": {
+        "perMillionTokens": "per 1 Juta token",
+        "tokens": "token",
+        "free": "Bebas"
+    }
 };
 export default id;

@@ -362,6 +362,11 @@ const kk = {
     "imageModel_PriceUSD": "Бағасы (USD)",
     "page_TooltipKnowledgeCutoff": "Модельдің білімі осы күні үзіледі.",
     "modelCategory_MistralAIPremierModels": "Бастапқы модельдер",
-    "modelCategory_MistralAIOpenModels": "Ашық үлгілер"
+    "modelCategory_MistralAIOpenModels": "Ашық үлгілер",
+    "pricing": {
+        "perMillionTokens": "1 миллион токенге",
+        "tokens": "жетондар",
+        "free": "Тегін"
+    }
 };
 export default kk;

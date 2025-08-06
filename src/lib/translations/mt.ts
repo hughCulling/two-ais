@@ -362,6 +362,11 @@ const mt = {
     "imageModel_PriceUSD": "Prezz (USD)",
     "page_TooltipKnowledgeCutoff": "L-għarfien tal-mudell jinqata' f'din id-data.",
     "modelCategory_MistralAIPremierModels": "Mudelli Premier",
-    "modelCategory_MistralAIOpenModels": "Mudelli miftuħa"
+    "modelCategory_MistralAIOpenModels": "Mudelli miftuħa",
+    "pricing": {
+        "perMillionTokens": "għal kull miljun token",
+        "tokens": "tokens",
+        "free": "B'xejn"
+    }
 };
 export default mt;

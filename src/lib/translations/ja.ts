@@ -362,6 +362,11 @@ const ja = {
     "imageModel_PriceUSD": "価格 (USD)",
     "page_TooltipKnowledgeCutoff": "モデルの知識はこの時点で切断されます。",
     "modelCategory_MistralAIPremierModels": "プレミアモデル",
-    "modelCategory_MistralAIOpenModels": "オープンモデル"
+    "modelCategory_MistralAIOpenModels": "オープンモデル",
+    "pricing": {
+        "perMillionTokens": "100万トークンあたり",
+        "tokens": "トークン",
+        "free": "無料"
+    }
 };
 export default ja;

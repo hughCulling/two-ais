@@ -362,6 +362,11 @@ const mn = {
     "imageModel_PriceUSD": "Үнэ (USD)",
     "page_TooltipKnowledgeCutoff": "Загварын мэдлэг энэ өдөр тасарчээ.",
     "modelCategory_MistralAIPremierModels": "Дээд зэрэглэлийн загварууд",
-    "modelCategory_MistralAIOpenModels": "Нээлттэй загварууд"
+    "modelCategory_MistralAIOpenModels": "Нээлттэй загварууд",
+    "pricing": {
+        "perMillionTokens": "1 сая жетон тутамд",
+        "tokens": "жетон",
+        "free": "Үнэгүй"
+    }
 };
 export default mn;

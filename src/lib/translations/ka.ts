@@ -362,6 +362,11 @@ const ka = {
     "imageModel_PriceUSD": "ფასი (USD)",
     "page_TooltipKnowledgeCutoff": "მოდელის ცოდნა ამ თარიღში შეწყდა.",
     "modelCategory_MistralAIPremierModels": "პრემიერ მოდელები",
-    "modelCategory_MistralAIOpenModels": "ღია მოდელები"
+    "modelCategory_MistralAIOpenModels": "ღია მოდელები",
+    "pricing": {
+        "perMillionTokens": "1 მილიონ ტოკენზე",
+        "tokens": "ჟეტონები",
+        "free": "უფასო"
+    }
 };
 export default ka;

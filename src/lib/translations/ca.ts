@@ -362,6 +362,11 @@ const ca = {
     "imageModel_PriceUSD": "Preu (USD)",
     "page_TooltipKnowledgeCutoff": "El coneixement del model està tallat en aquesta data.",
     "modelCategory_MistralAIPremierModels": "Models de primera línia",
-    "modelCategory_MistralAIOpenModels": "Models oberts"
+    "modelCategory_MistralAIOpenModels": "Models oberts",
+    "pricing": {
+        "perMillionTokens": "per 1 milió de fitxes",
+        "tokens": "fitxes",
+        "free": "Gratuït"
+    }
 };
 export default ca;

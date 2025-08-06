@@ -362,6 +362,11 @@ const is = {
     "imageModel_PriceUSD": "Verð (USD)",
     "page_TooltipKnowledgeCutoff": "Þekking líkansins er rofin á þessum degi.",
     "modelCategory_MistralAIPremierModels": "Fyrsta flokks gerðir",
-    "modelCategory_MistralAIOpenModels": "Opnar gerðir"
+    "modelCategory_MistralAIOpenModels": "Opnar gerðir",
+    "pricing": {
+        "perMillionTokens": "á hverja 1 milljón tákn",
+        "tokens": "tákn",
+        "free": "Ókeypis"
+    }
 };
 export default is;

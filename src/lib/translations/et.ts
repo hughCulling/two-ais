@@ -362,6 +362,11 @@ const et = {
     "imageModel_PriceUSD": "Hind (USD)",
     "page_TooltipKnowledgeCutoff": "Mudeli teadmised on sellel kuupäeval piiratud.",
     "modelCategory_MistralAIPremierModels": "Premier mudelid",
-    "modelCategory_MistralAIOpenModels": "Avatud mudelid"
+    "modelCategory_MistralAIOpenModels": "Avatud mudelid",
+    "pricing": {
+        "perMillionTokens": "1 miljoni žetooni kohta",
+        "tokens": "märgid",
+        "free": "Tasuta"
+    }
 };
 export default et;

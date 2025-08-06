@@ -362,6 +362,11 @@ const sw = {
     "imageModel_PriceUSD": "Bei (USD)",
     "page_TooltipKnowledgeCutoff": "Ujuzi wa mfano umekatwa kwa tarehe hii.",
     "modelCategory_MistralAIPremierModels": "Mifano kuu",
-    "modelCategory_MistralAIOpenModels": "Fungua mifano"
+    "modelCategory_MistralAIOpenModels": "Fungua mifano",
+    "pricing": {
+        "perMillionTokens": "kwa tokeni Milioni 1",
+        "tokens": "ishara",
+        "free": "Bure"
+    }
 };
 export default sw;

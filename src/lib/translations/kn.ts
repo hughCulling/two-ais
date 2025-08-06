@@ -362,6 +362,11 @@ const kn = {
     "imageModel_PriceUSD": "ಬೆಲೆ (USD)",
     "page_TooltipKnowledgeCutoff": "ಈ ದಿನಾಂಕದಂದು ಮಾದರಿಯ ಜ್ಞಾನವು ಕಡಿತಗೊಂಡಿದೆ.",
     "modelCategory_MistralAIPremierModels": "ಪ್ರೀಮಿಯರ್ ಮಾದರಿಗಳು",
-    "modelCategory_MistralAIOpenModels": "ಮುಕ್ತ ಮಾದರಿಗಳು"
+    "modelCategory_MistralAIOpenModels": "ಮುಕ್ತ ಮಾದರಿಗಳು",
+    "pricing": {
+        "perMillionTokens": "ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
+        "tokens": "ಟೋಕನ್‌ಗಳು",
+        "free": "ಉಚಿತ"
+    }
 };
 export default kn;

@@ -362,6 +362,11 @@ const hy = {
     "imageModel_PriceUSD": "Գինը (USD)",
     "page_TooltipKnowledgeCutoff": "Մոդելի գիտելիքները այս ամսաթվին կտրված են։",
     "modelCategory_MistralAIPremierModels": "Պրեմիեր մոդելներ",
-    "modelCategory_MistralAIOpenModels": "Բաց մոդելներ"
+    "modelCategory_MistralAIOpenModels": "Բաց մոդելներ",
+    "pricing": {
+        "perMillionTokens": "յուրաքանչյուր 1 միլիոն տոկենի համար",
+        "tokens": "ժետոններ",
+        "free": "Անվճար"
+    }
 };
 export default hy;

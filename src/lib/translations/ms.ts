@@ -362,6 +362,11 @@ const ms = {
     "imageModel_PriceUSD": "harga (USD)",
     "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tarikh ini.",
     "modelCategory_MistralAIPremierModels": "Model perdana",
-    "modelCategory_MistralAIOpenModels": "Model terbuka"
+    "modelCategory_MistralAIOpenModels": "Model terbuka",
+    "pricing": {
+        "perMillionTokens": "setiap 1 Juta token",
+        "tokens": "token",
+        "free": "Percuma"
+    }
 };
 export default ms;
