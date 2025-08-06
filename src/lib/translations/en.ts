@@ -322,30 +322,30 @@ const en = {
         free: "Free",
         tts: {
             geminiFlash: {
-                textTokens: "$0.50 per 1 Million text tokens",
-                audioTokens: "$10.00 per 1 Million audio tokens"
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
             },
             geminiPro: {
-                textTokens: "$1.00 per 1 Million text tokens",
-                audioTokens: "$20.00 per 1 Million audio tokens"
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
             },
             openAIMini: {
-                textTokens: "$0.60 per 1 Million text tokens",
-                audioTokens: "$12.00 per 1 Million audio tokens"
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
             },
             openAITTS1: {
-                standard: "$15.00 per 1 Million tokens"
+                standard: "{price} per 1 Million tokens"
             },
             openAITTS1HD: {
-                standard: "$30.00 per 1 Million tokens"
+                standard: "{price} per 1 Million tokens"
             },
             plusSign: " + ",
             googleCloud: {
-                standard: "$4.00 per 1 Million characters",
-                neural: "$16.00 per 1 Million characters",
-                studio: "$160.00 per 1 Million characters",
+                standard: "{price} per 1 Million characters",
+                neural: "{price} per 1 Million characters",
+                studio: "{price} per 1 Million characters",
                 chirpHD: "Couldn\'t verify",
-                chirp3HD: "$30.00 per 1 Million characters"
+                chirp3HD: "{price} per 1 Million characters"
             }
         }
     },

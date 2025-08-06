@@ -175,6 +175,7 @@ const PROTECTED_TERMS = [
     "{language}",
     "(USD)",
     "{turn}",
+    "{price}",
     "<code>",
     "</code>",
     "Meta Llama",
