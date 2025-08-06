@@ -366,7 +366,35 @@ const id = {
     "pricing": {
         "perMillionTokens": "per 1 Juta token",
         "tokens": "token",
-        "free": "Bebas"
+        "free": "Bebas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0,50 per 1 Juta token teks",
+                "audioTokens": "$10,00 per 1 Juta token audio"
+            },
+            "geminiPro": {
+                "textTokens": "$1,00 per 1 Juta token teks",
+                "audioTokens": "$20,00 per 1 Juta token audio"
+            },
+            "openAIMini": {
+                "textTokens": "$0,60 per 1 Juta token teks",
+                "audioTokens": "$12,00 per 1 Juta token audio"
+            },
+            "openAITTS1": {
+                "standard": "$15,00 per 1 Juta token"
+            },
+            "openAITTS1HD": {
+                "standard": "$30,00 per 1 Juta token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4,00 per 1 Juta karakter",
+                "neural": "$16,00 per 1 Juta karakter",
+                "studio": "$160,00 per 1 Juta karakter",
+                "chirpHD": "Tidak dapat memverifikasi",
+                "chirp3HD": "$30,00 per 1 Juta karakter"
+            }
+        }
     }
 };
 export default id;

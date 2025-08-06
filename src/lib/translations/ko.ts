@@ -366,7 +366,35 @@ const ko = {
     "pricing": {
         "perMillionTokens": "100만 개의 토큰당",
         "tokens": "토큰",
-        "free": "무료"
+        "free": "무료",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "100만 개의 텍스트 토큰당 0.50달러",
+                "audioTokens": "100만 개의 오디오 토큰당 10.00달러"
+            },
+            "geminiPro": {
+                "textTokens": "100만 개의 텍스트 토큰당 1.00달러",
+                "audioTokens": "100만 개의 오디오 토큰당 20.00달러"
+            },
+            "openAIMini": {
+                "textTokens": "100만 개의 텍스트 토큰당 0.60달러",
+                "audioTokens": "100만 개의 오디오 토큰당 12.00달러"
+            },
+            "openAITTS1": {
+                "standard": "100만 개의 토큰당 15.00달러"
+            },
+            "openAITTS1HD": {
+                "standard": "100만 개의 토큰당 30.00달러"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "100만 자당 $4.00",
+                "neural": "100만 자당 16.00달러",
+                "studio": "100만 자당 160.00달러",
+                "chirpHD": "확인할 수 없습니다",
+                "chirp3HD": "100만 자당 30.00달러"
+            }
+        }
     }
 };
 export default ko;

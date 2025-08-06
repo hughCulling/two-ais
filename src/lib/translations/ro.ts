@@ -366,7 +366,35 @@ const ro = {
     "pricing": {
         "perMillionTokens": "per 1 milion de token-uri",
         "tokens": "jetoane",
-        "free": "Gratuit"
+        "free": "Gratuit",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD pentru fiecare milion de token-uri text",
+                "audioTokens": "10,00 USD pentru fiecare milion de token-uri audio"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD per 1 milion de token-uri text",
+                "audioTokens": "20,00 USD pentru fiecare milion de token-uri audio"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD pentru fiecare milion de token-uri text",
+                "audioTokens": "12,00 USD pentru fiecare milion de token-uri audio"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD pentru fiecare milion de token-uri"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD pentru fiecare milion de token-uri"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD pentru fiecare milion de caractere",
+                "neural": "16,00 USD pentru fiecare milion de caractere",
+                "studio": "160,00 USD pentru 1 milion de caractere",
+                "chirpHD": "Nu s-a putut verifica",
+                "chirp3HD": "30,00 USD pentru fiecare milion de caractere"
+            }
+        }
     }
 };
 export default ro;

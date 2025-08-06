@@ -366,7 +366,35 @@ const hr = {
     "pricing": {
         "perMillionTokens": "po milijun tokena",
         "tokens": "žetoni",
-        "free": "Besplatno"
+        "free": "Besplatno",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD po milijunu tekstualnih tokena",
+                "audioTokens": "10,00 USD po milijunu audio tokena"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD po milijunu tekstualnih tokena",
+                "audioTokens": "20,00 USD po milijunu audio tokena"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD po milijunu tekstualnih tokena",
+                "audioTokens": "12,00 USD po milijunu audio tokena"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD po milijunu tokena"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD po milijunu tokena"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD po milijunu znakova",
+                "neural": "16,00 USD po milijunu znakova",
+                "studio": "160,00 USD po milijunu znakova",
+                "chirpHD": "Nije moguće potvrditi",
+                "chirp3HD": "30,00 USD po milijunu znakova"
+            }
+        }
     }
 };
 export default hr;

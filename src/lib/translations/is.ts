@@ -366,7 +366,35 @@ const is = {
     "pricing": {
         "perMillionTokens": "á hverja 1 milljón tákn",
         "tokens": "tákn",
-        "free": "Ókeypis"
+        "free": "Ókeypis",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 dollarar á hverja milljón textamerki",
+                "audioTokens": "10,00 dollarar fyrir hverja milljón hljóðmerki"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 Bandaríkjadalir fyrir hverja milljón textamerki",
+                "audioTokens": "20,00 dollarar fyrir hverja milljón hljóðmerki"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 dollarar á hverja milljón textaskilaboð",
+                "audioTokens": "12,00 dollarar fyrir hverja milljón hljóðmerki"
+            },
+            "openAITTS1": {
+                "standard": "15,00 dollarar fyrir hverja 1 milljón tákn"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 dollarar fyrir hverja 1 milljón tákn"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 dollarar fyrir hverja milljón stafi",
+                "neural": "16,00 dollarar fyrir hverja milljón stafi",
+                "studio": "160,00 dollarar fyrir hverja milljón stafi",
+                "chirpHD": "Gat ekki staðfest",
+                "chirp3HD": "30,00 dollarar fyrir hverja milljón stafi"
+            }
+        }
     }
 };
 export default is;

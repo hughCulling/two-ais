@@ -366,7 +366,35 @@ const pa = {
     "pricing": {
         "perMillionTokens": "ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ",
         "tokens": "ਟੋਕਨ",
-        "free": "ਮੁਫ਼ਤ"
+        "free": "ਮੁਫ਼ਤ",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "$10.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨ"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "$20.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨ"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "$12.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨ"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨ"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨ"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰ",
+                "neural": "$16.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰ",
+                "studio": "$160.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰ",
+                "chirpHD": "ਪੁਸ਼ਟੀ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ",
+                "chirp3HD": "$30.00 ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰ"
+            }
+        }
     }
 };
 export default pa;

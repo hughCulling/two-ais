@@ -366,7 +366,35 @@ const hu = {
     "pricing": {
         "perMillionTokens": "1 millió tokenenként",
         "tokens": "zsetonok",
-        "free": "Ingyenes"
+        "free": "Ingyenes",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 dollár minden 1 millió szöveges token után",
+                "audioTokens": "10,00 dollár minden 1 millió audio token után"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 dollár minden 1 millió szöveges token után",
+                "audioTokens": "20,00 dollár minden 1 millió audio token után"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 dollár minden 1 millió szöveges token után",
+                "audioTokens": "12,00 dollár minden 1 millió audio token után"
+            },
+            "openAITTS1": {
+                "standard": "15,00 dollár 1 millió tokenenként"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 dollár 1 millió tokenenként"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 dollár 1 millió karakterenként",
+                "neural": "16,00 USD 1 millió karakterenként",
+                "studio": "160,00 USD 1 millió karakterenként",
+                "chirpHD": "Nem sikerült ellenőrizni",
+                "chirp3HD": "30,00 USD 1 millió karakterenként"
+            }
+        }
     }
 };
 export default hu;

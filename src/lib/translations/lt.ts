@@ -366,7 +366,35 @@ const lt = {
     "pricing": {
         "perMillionTokens": "už 1 milijoną žetonų",
         "tokens": "žetonai",
-        "free": "Nemokama"
+        "free": "Nemokama",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD už 1 milijoną tekstinių žetonų",
+                "audioTokens": "10,00 USD už 1 milijoną garso žetonų"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD už 1 milijoną tekstinių žetonų",
+                "audioTokens": "20,00 USD už 1 milijoną garso žetonų"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD už 1 milijoną tekstinių žetonų",
+                "audioTokens": "12,00 USD už 1 milijoną garso žetonų"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD už 1 milijoną žetonų"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD už 1 milijoną žetonų"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD už 1 milijoną simbolių",
+                "neural": "16,00 USD už 1 milijoną simbolių",
+                "studio": "160,00 USD už 1 milijoną simbolių",
+                "chirpHD": "Nepavyko patvirtinti",
+                "chirp3HD": "30,00 USD už 1 milijoną simbolių"
+            }
+        }
     }
 };
 export default lt;

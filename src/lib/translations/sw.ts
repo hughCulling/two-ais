@@ -366,7 +366,35 @@ const sw = {
     "pricing": {
         "perMillionTokens": "kwa tokeni Milioni 1",
         "tokens": "ishara",
-        "free": "Bure"
+        "free": "Bure",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 kwa kila tokeni za maandishi Milioni 1",
+                "audioTokens": "$10.00 kwa tokeni za sauti Milioni 1"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 kwa kila tokeni za maandishi Milioni 1",
+                "audioTokens": "$20.00 kwa tokeni za sauti Milioni 1"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 kwa kila tokeni za maandishi Milioni 1",
+                "audioTokens": "$12.00 kwa tokeni za sauti Milioni 1"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 kwa tokeni Milioni 1"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 kwa tokeni Milioni 1"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 kwa kila herufi Milioni 1",
+                "neural": "$16.00 kwa kila herufi Milioni 1",
+                "studio": "$160.00 kwa kila herufi Milioni 1",
+                "chirpHD": "Haikuweza kuthibitisha",
+                "chirp3HD": "$30.00 kwa kila herufi Milioni 1"
+            }
+        }
     }
 };
 export default sw;

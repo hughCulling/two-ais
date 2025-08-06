@@ -366,7 +366,35 @@ const tl = {
     "pricing": {
         "perMillionTokens": "bawat 1 Milyong token",
         "tokens": "mga token",
-        "free": "Libre"
+        "free": "Libre",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 bawat 1 Milyong text token",
+                "audioTokens": "$10.00 bawat 1 Milyong audio token"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 bawat 1 Milyong text token",
+                "audioTokens": "$20.00 bawat 1 Milyong audio token"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 bawat 1 Milyong text token",
+                "audioTokens": "$12.00 bawat 1 Milyong audio token"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 bawat 1 Milyong token"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 bawat 1 Milyong token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 bawat 1 Milyong character",
+                "neural": "$16.00 bawat 1 Milyong character",
+                "studio": "$160.00 bawat 1 Milyong character",
+                "chirpHD": "Hindi ma-verify",
+                "chirp3HD": "$30.00 bawat 1 Milyong character"
+            }
+        }
     }
 };
 export default tl;

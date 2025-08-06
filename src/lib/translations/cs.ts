@@ -366,7 +366,35 @@ const cs = {
     "pricing": {
         "perMillionTokens": "na 1 milion tokenů",
         "tokens": "žetony",
-        "free": "Uvolnit"
+        "free": "Uvolnit",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD za 1 milion textových tokenů",
+                "audioTokens": "10,00 USD za 1 milion audio tokenů"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD za 1 milion textových tokenů",
+                "audioTokens": "20,00 USD za 1 milion audio tokenů"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD za 1 milion textových tokenů",
+                "audioTokens": "12,00 USD za 1 milion audio tokenů"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD za 1 milion tokenů"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD za 1 milion tokenů"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD za 1 milion znaků",
+                "neural": "16,00 USD za 1 milion znaků",
+                "studio": "160,00 USD za 1 milion znaků",
+                "chirpHD": "Nepodařilo se ověřit",
+                "chirp3HD": "30,00 USD za 1 milion znaků"
+            }
+        }
     }
 };
 export default cs;

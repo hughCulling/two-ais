@@ -366,7 +366,35 @@ const gu = {
     "pricing": {
         "perMillionTokens": "પ્રતિ 1 મિલિયન ટોકન માટે",
         "tokens": "ટોકન્સ",
-        "free": "મફત"
+        "free": "મફત",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 પ્રતિ 1 મિલિયન ટેક્સ્ટ ટોકન",
+                "audioTokens": "૧૦ લાખ ઓડિયો ટોકન માટે ૧૦.૦૦ ડોલર"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 પ્રતિ 1 મિલિયન ટેક્સ્ટ ટોકન",
+                "audioTokens": "૧ મિલિયન ઓડિયો ટોકન માટે $૨૦.૦૦"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 પ્રતિ 1 મિલિયન ટેક્સ્ટ ટોકન",
+                "audioTokens": "$૧૨.૦૦ પ્રતિ ૧૦ લાખ ઓડિયો ટોકન"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 પ્રતિ 1 મિલિયન ટોકન"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 પ્રતિ 1 મિલિયન ટોકન"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 પ્રતિ 1 મિલિયન અક્ષરો",
+                "neural": "$૧૬.૦૦ પ્રતિ ૧૦ લાખ અક્ષરો",
+                "studio": "$૧૬૦.૦૦ પ્રતિ ૧૦ લાખ અક્ષરો",
+                "chirpHD": "ચકાસી શકાયું નથી",
+                "chirp3HD": "$૩૦.૦૦ પ્રતિ ૧૦ લાખ અક્ષરો"
+            }
+        }
     }
 };
 export default gu;

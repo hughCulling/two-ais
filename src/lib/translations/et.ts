@@ -366,7 +366,35 @@ const et = {
     "pricing": {
         "perMillionTokens": "1 miljoni žetooni kohta",
         "tokens": "märgid",
-        "free": "Tasuta"
+        "free": "Tasuta",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 dollarit miljoni tekstitokeni kohta",
+                "audioTokens": "10,00 dollarit miljoni heližetooni kohta"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 dollarit miljoni tekstitokeni kohta",
+                "audioTokens": "20,00 dollarit miljoni heližetooni kohta"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 dollarit miljoni tekstitokeni kohta",
+                "audioTokens": "12,00 dollarit miljoni heližetooni kohta"
+            },
+            "openAITTS1": {
+                "standard": "15,00 dollarit miljoni žetooni kohta"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 dollarit miljoni žetooni kohta"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 dollarit miljoni tähemärgi eest",
+                "neural": "16,00 dollarit miljoni tähemärgi eest",
+                "studio": "160,00 dollarit miljoni tähemärgi eest",
+                "chirpHD": "Ei õnnestunud kinnitada",
+                "chirp3HD": "30,00 dollarit miljoni tähemärgi eest"
+            }
+        }
     }
 };
 export default et;

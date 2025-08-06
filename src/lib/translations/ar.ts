@@ -366,7 +366,35 @@ const ar = {
     "pricing": {
         "perMillionTokens": "لكل مليون رمز",
         "tokens": "الرموز",
-        "free": "حر"
+        "free": "حر",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0.50 دولارًا لكل مليون رمز نصي",
+                "audioTokens": "10.00 دولارات لكل مليون رمز صوتي"
+            },
+            "geminiPro": {
+                "textTokens": "1.00 دولار أمريكي لكل مليون رمز نصي",
+                "audioTokens": "20.00 دولارًا أمريكيًا لكل مليون رمز صوتي"
+            },
+            "openAIMini": {
+                "textTokens": "0.60 دولارًا لكل مليون رمز نصي",
+                "audioTokens": "12.00 دولارًا أمريكيًا لكل مليون رمز صوتي"
+            },
+            "openAITTS1": {
+                "standard": "15.00 دولارًا لكل مليون رمز"
+            },
+            "openAITTS1HD": {
+                "standard": "30.00 دولارًا لكل مليون رمز"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4.00 دولار لكل مليون حرف",
+                "neural": "16.00 دولارًا لكل مليون حرف",
+                "studio": "160.00 دولارًا لكل مليون حرف",
+                "chirpHD": "لم نتمكن من التحقق",
+                "chirp3HD": "30.00 دولارًا لكل مليون حرف"
+            }
+        }
     }
 };
 export default ar;

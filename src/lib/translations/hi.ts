@@ -366,7 +366,35 @@ const hi = {
     "pricing": {
         "perMillionTokens": "प्रति 1 मिलियन टोकन",
         "tokens": "टोकन",
-        "free": "मुक्त"
+        "free": "मुक्त",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "10 लाख ऑडियो टोकन प्रति $10.00"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "1 मिलियन ऑडियो टोकन के लिए $20.00"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "1 मिलियन ऑडियो टोकन के लिए $12.00"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 प्रति 1 मिलियन टोकन"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 प्रति 1 मिलियन टोकन"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "प्रति 1 मिलियन अक्षर $4.00",
+                "neural": "$16.00 प्रति 1 मिलियन अक्षर",
+                "studio": "प्रति 1 मिलियन अक्षर $160.00",
+                "chirpHD": "सत्यापित नहीं किया जा सका",
+                "chirp3HD": "प्रति 1 मिलियन अक्षर $30.00"
+            }
+        }
     }
 };
 export default hi;

@@ -366,7 +366,35 @@ const am = {
     "pricing": {
         "perMillionTokens": "በ 1 ሚሊዮን ቶከኖች",
         "tokens": "ማስመሰያዎች",
-        "free": "ፍርይ"
+        "free": "ፍርይ",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "$10.00 በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "$20.00 በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "$12.00 በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "openAITTS1": {
+                "standard": "በ 1 ሚሊዮን ቶከኖች 15.00 ዶላር"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 በ 1 ሚሊዮን ቶከኖች"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 በ 1 ሚሊዮን ቁምፊዎች",
+                "neural": "$16.00 በ 1 ሚሊዮን ቁምፊዎች",
+                "studio": "$160.00 በ1 ሚሊዮን ቁምፊዎች",
+                "chirpHD": "ማረጋገጥ አልተቻለም",
+                "chirp3HD": "$30.00 በ 1 ሚሊዮን ቁምፊዎች"
+            }
+        }
     }
 };
 export default am;

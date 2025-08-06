@@ -366,7 +366,35 @@ const sq = {
     "pricing": {
         "perMillionTokens": "për 1 milion tokenë",
         "tokens": "tokena",
-        "free": "Falas"
+        "free": "Falas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0.50 dollarë për 1 milion tokenë teksti",
+                "audioTokens": "10.00 dollarë për 1 milion tokenë audio"
+            },
+            "geminiPro": {
+                "textTokens": "1.00 dollarë për 1 milion tokenë teksti",
+                "audioTokens": "20,00 dollarë për 1 milion tokenë audio"
+            },
+            "openAIMini": {
+                "textTokens": "0.60 dollarë për 1 milion tokenë teksti",
+                "audioTokens": "12.00 dollarë për 1 milion tokenë audio"
+            },
+            "openAITTS1": {
+                "standard": "15.00 dollarë për 1 milion tokenë"
+            },
+            "openAITTS1HD": {
+                "standard": "30.00 dollarë për 1 milion tokenë"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4.00 dollarë për 1 milion karaktere",
+                "neural": "16.00 dollarë për 1 milion karaktere",
+                "studio": "160.00 dollarë për 1 milion karaktere",
+                "chirpHD": "Nuk mund të verifikohej",
+                "chirp3HD": "30,00 dollarë për 1 milion karaktere"
+            }
+        }
     }
 };
 export default sq;

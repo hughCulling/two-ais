@@ -366,7 +366,35 @@ const vi = {
     "pricing": {
         "perMillionTokens": "trên 1 triệu mã thông báo",
         "tokens": "mã thông báo",
-        "free": "Miễn phí"
+        "free": "Miễn phí",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 đô la cho 1 triệu mã thông báo văn bản",
+                "audioTokens": "10,00 đô la cho 1 triệu token âm thanh"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 đô la cho 1 triệu mã thông báo văn bản",
+                "audioTokens": "20,00 đô la cho 1 triệu token âm thanh"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 đô la cho 1 triệu mã thông báo văn bản",
+                "audioTokens": "12,00 đô la cho 1 triệu token âm thanh"
+            },
+            "openAITTS1": {
+                "standard": "15,00 đô la cho 1 triệu mã thông báo"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 đô la cho 1 triệu mã thông báo"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 đô la cho 1 triệu ký tự",
+                "neural": "16,00 đô la cho 1 triệu ký tự",
+                "studio": "160,00 đô la cho 1 triệu ký tự",
+                "chirpHD": "Không thể xác minh",
+                "chirp3HD": "30,00 đô la cho 1 triệu ký tự"
+            }
+        }
     }
 };
 export default vi;

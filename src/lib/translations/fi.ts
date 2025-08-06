@@ -366,7 +366,35 @@ const fi = {
     "pricing": {
         "perMillionTokens": "miljoonaa tokenia kohden",
         "tokens": "tokenit",
-        "free": "Ilmainen"
+        "free": "Ilmainen",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 dollaria miljoonaa tekstitokenia kohden",
+                "audioTokens": "10,00 dollaria per miljoona äänitokenia"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 dollaria per miljoona tekstitokenia",
+                "audioTokens": "20,00 dollaria per miljoona äänitokenia"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 dollaria miljoonaa tekstitokenia kohden",
+                "audioTokens": "12,00 dollaria per miljoona äänitokenia"
+            },
+            "openAITTS1": {
+                "standard": "15,00 dollaria per miljoona tokenia"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 dollaria per miljoona tokenia"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 dollaria per miljoona merkkiä",
+                "neural": "16,00 dollaria per miljoona merkkiä",
+                "studio": "160,00 dollaria miljoonaa merkkiä kohden",
+                "chirpHD": "Vahvistus epäonnistui",
+                "chirp3HD": "30,00 dollaria per miljoona merkkiä"
+            }
+        }
     }
 };
 export default fi;

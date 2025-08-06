@@ -1,5 +1,6 @@
 // src/lib/tts_models.ts
 // Centralized definition for available Text-to-Speech providers and voices
+import { TranslationKeys } from '@/lib/translations';
 
 // --- TTS Voice Interface ---
 export interface TTSVoice {
@@ -747,7 +748,7 @@ export interface TTSModelDetail {
     apiModelId: string;
     name: string;
     description: string;
-    pricingText: string;
+    pricingText: string | ((t: TranslationKeys) => string);
     voiceFilterCriteria?: (voice: TTSVoice) => boolean;
     supportedLanguages?: string[]; // BCP-47 or ISO 639-1 codes
     inputLimitType?: 'tokens' | 'characters' | 'bytes'; // Optional: How the input limit is measured
@@ -868,7 +869,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gpt-4o-mini-tts',
                 name: 'GPT-4o mini TTS',
                 description: 'Newest and most reliable model for intelligent realtime applications. Can be prompted for accent, emotion, intonation, speed, tone, etc.',
-                pricingText: '$0.60 per 1M text tokens + $12 per 1M audio tokens',
+                pricingText: (t: TranslationKeys) => `${t.pricing.tts.openAIMini.textTokens} ${t.pricing.tts.plusSign} ${t.pricing.tts.openAIMini.audioTokens}`,
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
                 inputLimitType: 'tokens',
                 inputLimitValue: 2000,
@@ -877,8 +878,8 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 id: 'openai-tts-1',
                 apiModelId: 'tts-1',
                 name: 'TTS-1',
-                description: 'Optimized for real-time use cases and speed.',
-                pricingText: '$15.00 per 1M tokens',
+                description: 'Standard TTS model with improved quality and stability.',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.openAITTS1.standard,
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
                 inputLimitType: 'characters',
                 inputLimitValue: 4096,
@@ -887,8 +888,8 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 id: 'openai-tts-1-hd',
                 apiModelId: 'tts-1-hd',
                 name: 'TTS-1 HD',
-                description: 'Optimized for quality.',
-                pricingText: '$30.00 per 1M tokens',
+                description: 'Higher quality TTS model with better voice quality and naturalness.',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.openAITTS1HD.standard,
                 supportedLanguages: ['af', 'ar', 'hy', 'az', 'be', 'bs', 'bg', 'ca', 'zh', 'hr', 'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'gl', 'de', 'el', 'he', 'hi', 'hu', 'is', 'id', 'it', 'ja', 'kn', 'kk', 'ko', 'lv', 'lt', 'mk', 'ms', 'mr', 'mi', 'ne', 'no', 'fa', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw', 'sv', 'tl', 'ta', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'],
                 inputLimitType: 'characters',
                 inputLimitValue: 4096,
@@ -907,7 +908,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-standard',
                 name: 'Standard Voices',
                 description: 'Cost-effective voices for general use.',
-                pricingText: '$4.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.standard,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Standard',
                 supportedLanguages: ['af-ZA', 'ar-XA', 'bg-BG', 'bn-IN', 'ca-ES', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'eu-ES', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gl-ES', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'is-IS', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'lt-LT', 'lv-LV', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sr-RS', 'sv-SE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'vi-VN', 'yue-HK'],
                 inputLimitType: 'bytes',
@@ -918,7 +919,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-wavenet',
                 name: 'WaveNet Voices',
                 description: 'High-quality, natural-sounding voices.',
-                pricingText: '$16.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.neural,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'WaveNet',
                 supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'cmn-TW', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'fil-PH', 'fi-FI', 'fr-CA', 'fr-FR', 'gu-IN', 'he-IL', 'hi-IN', 'hu-HU', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'ms-MY', 'nb-NO', 'nl-BE', 'nl-NL', 'pa-IN', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK', 'sv-SE', 'ta-IN', 'tr-TR', 'uk-UA', 'vi-VN'],
                 inputLimitType: 'bytes',
@@ -929,7 +930,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-neural2',
                 name: 'Neural2 Voices',
                 description: 'Advanced Neural2 voices for general purpose.',
-                pricingText: '$16.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.neural,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2',
                 supportedLanguages: ['de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fil-PH', 'fr-CA', 'fr-FR', 'hi-IN', 'it-IT', 'ja-JP', 'ko-KR', 'pt-BR', 'th-TH', 'vi-VN'],
                 inputLimitType: 'bytes',
@@ -940,7 +941,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-casual',
                 name: 'Casual Voices (Neural2)',
                 description: 'Neural2 voices with a casual speaking style.',
-                pricingText: '$16.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.neural,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Neural2 (Casual)',
                 supportedLanguages: ['en-US'],
                 inputLimitType: 'bytes',
@@ -951,7 +952,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-polyglot',
                 name: 'Polyglot (Preview) Voices',
                 description: 'Voices designed to speak multiple languages fluently (Neural2-based).',
-                pricingText: '$16.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.neural,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Polyglot',
                 supportedLanguages: ['de-DE', 'en-AU', 'en-US', 'es-ES', 'fr-FR', 'it-IT', 'pt-BR'],
                 inputLimitType: 'bytes',
@@ -962,7 +963,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-studio',
                 name: 'Studio Voices',
                 description: 'Highest-quality voices for narration and professional use.',
-                pricingText: '$160.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.studio,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Studio',
                 supportedLanguages: ['de-DE', 'en-GB', 'en-US', 'es-US', 'fr-FR'],
                 inputLimitType: 'bytes',
@@ -973,7 +974,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-news',
                 name: 'News Voices (Studio)',
                 description: 'Studio-quality voices optimized for news narration.',
-                pricingText: '$160.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.studio,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Studio (News)',
                 supportedLanguages: ['en-AU', 'en-GB', 'en-US', 'es-US'],
                 inputLimitType: 'bytes',
@@ -984,7 +985,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-chirp-hd-preview',
                 name: 'Chirp HD Voices (Preview)',
                 description: 'Earlier preview of conversational voices. Some limitations apply.',
-                pricingText: 'Couldn\'t verify',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.chirpHD,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp HD' && voice.status === 'Preview',
                 supportedLanguages: ['en-AU', 'en-GB', 'en-IN', 'en-US'],
                 inputLimitType: 'bytes',
@@ -995,7 +996,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'google-chirp3-hd-ga',
                 name: 'Chirp3 HD Voices (GA)',
                 description: 'Latest GA conversational voices. Nuanced, engaging.',
-                pricingText: '$30.00 per 1M characters',
+                pricingText: (t: TranslationKeys) => t.pricing.tts.googleCloud.chirp3HD,
                 voiceFilterCriteria: (voice) => voice.voiceType === 'Chirp3 HD',
                 supportedLanguages: ['ar-XA', 'bn-IN', 'cmn-CN', 'de-DE', 'en-AU', 'en-GB', 'en-IN', 'en-US', 'es-ES', 'es-US', 'fr-CA', 'fr-FR', 'gu-IN', 'hi-IN', 'id-ID', 'it-IT', 'ja-JP', 'kn-IN', 'ko-KR', 'ml-IN', 'mr-IN', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'ru-RU', 'sw-KE', 'ta-IN', 'te-IN', 'th-TH', 'tr-TR', 'uk-UA', 'ur-IN', 'vi-VN'],
                 inputLimitType: 'bytes',
@@ -1057,7 +1058,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gemini-2.5-flash-preview-tts',
                 name: 'Gemini 2.5 Flash Preview TTS',
                 description: 'Low latency, controllable, single- and multi-speaker text-to-speech audio generation. Uses Gemini API.',
-                pricingText: '$0.50 per 1M text tokens + $10.00 per 1M audio tokens',
+                pricingText: (t: TranslationKeys) => `${t.pricing.tts.geminiFlash.textTokens} ${t.pricing.tts.plusSign} ${t.pricing.tts.geminiFlash.audioTokens}`,
                 supportedLanguages: [
                     'ar-EG', 'de-DE', 'en-US', 'es-US', 'fr-FR', 'hi-IN', 'id-ID', 'it-IT',
                     'ja-JP', 'ko-KR', 'pt-BR', 'ru-RU', 'nl-NL', 'pl-PL', 'th-TH', 'tr-TR',
@@ -1071,7 +1072,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'gemini-2.5-pro-preview-tts',
                 name: 'Gemini 2.5 Pro Preview TTS',
                 description: 'High-quality, controllable, single- and multi-speaker text-to-speech audio generation. Uses Gemini API.',
-                pricingText: '$1.0 per 1M text tokens + $20.00 per 1M audio tokens',
+                pricingText: (t: TranslationKeys) => `${t.pricing.tts.geminiPro.textTokens} ${t.pricing.tts.plusSign} ${t.pricing.tts.geminiPro.audioTokens}`,
                 supportedLanguages: [
                     'ar-EG', 'de-DE', 'en-US', 'es-US', 'fr-FR', 'hi-IN', 'id-ID', 'it-IT',
                     'ja-JP', 'ko-KR', 'pt-BR', 'ru-RU', 'nl-NL', 'pl-PL', 'th-TH', 'tr-TR',

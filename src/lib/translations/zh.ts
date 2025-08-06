@@ -366,7 +366,35 @@ const zh = {
     "pricing": {
         "perMillionTokens": "每 100 万个代币",
         "tokens": "代币",
-        "free": "自由的"
+        "free": "自由的",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "每 100 万个文本标记 0.50 美元",
+                "audioTokens": "每 100 万个音频代币 10.00 美元"
+            },
+            "geminiPro": {
+                "textTokens": "每 100 万个文本标记 1.00 美元",
+                "audioTokens": "每 100 万个音频代币 20.00 美元"
+            },
+            "openAIMini": {
+                "textTokens": "每 100 万个文本标记 0.60 美元",
+                "audioTokens": "每 100 万个音频代币 12.00 美元"
+            },
+            "openAITTS1": {
+                "standard": "每 100 万个代币 15.00 美元"
+            },
+            "openAITTS1HD": {
+                "standard": "每 100 万个代币 30.00 美元"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "每 100 万个字符 4.00 美元",
+                "neural": "每 100 万个字符 16.00 美元",
+                "studio": "每 100 万个字符 160.00 美元",
+                "chirpHD": "无法验证",
+                "chirp3HD": "每 100 万个字符 30.00 美元"
+            }
+        }
     }
 };
 export default zh;

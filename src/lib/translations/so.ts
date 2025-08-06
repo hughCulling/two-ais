@@ -366,7 +366,35 @@ const so = {
     "pricing": {
         "perMillionTokens": "1 Milyan oo calaamadood",
         "tokens": "calaamado",
-        "free": "Bilaash"
+        "free": "Bilaash",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 1 Milyan oo qoraal ah",
+                "audioTokens": "$10.00 1 Milyan oo calaamado maqal ah"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 1 Milyan oo calaamad qoraal ah",
+                "audioTokens": "$20.00 1 Milyan oo calaamado maqal ah"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 1 Milyan oo calaamad qoraal ah",
+                "audioTokens": "$12.00 1 Milyan oo calaamado maqal ah"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 halkii Milyan ee calaamadood"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 halkii Milyan ee calaamadood"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 halkii Milyan ee xaraf",
+                "neural": "$16.00 halkii Milyan ee xaraf",
+                "studio": "$160.00 halkii Milyan ee xaraf",
+                "chirpHD": "Waa la xaqiijin kari waayay",
+                "chirp3HD": "$30.00 halkii Milyan ee xaraf"
+            }
+        }
     }
 };
 export default so;

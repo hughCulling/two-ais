@@ -366,7 +366,35 @@ const sv = {
     "pricing": {
         "perMillionTokens": "per 1 miljon tokens",
         "tokens": "tokens",
-        "free": "Gratis"
+        "free": "Gratis",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD per 1 miljon texttokens",
+                "audioTokens": "10,00 USD per 1 miljon ljudtokens"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD per 1 miljon texttokens",
+                "audioTokens": "20,00 USD per 1 miljon ljudtokens"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD per 1 miljon texttokens",
+                "audioTokens": "12,00 USD per 1 miljon ljudtokens"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD per 1 miljon tokens"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD per 1 miljon tokens"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD per 1 miljon tecken",
+                "neural": "16,00 USD per 1 miljon tecken",
+                "studio": "160,00 USD per 1 miljon tecken",
+                "chirpHD": "Kunde inte verifiera",
+                "chirp3HD": "30,00 USD per 1 miljon tecken"
+            }
+        }
     }
 };
 export default sv;

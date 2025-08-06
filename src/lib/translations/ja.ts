@@ -366,7 +366,35 @@ const ja = {
     "pricing": {
         "perMillionTokens": "100万トークンあたり",
         "tokens": "トークン",
-        "free": "無料"
+        "free": "無料",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "100万テキストトークンあたり0.50ドル",
+                "audioTokens": "100万オーディオトークンあたり10.00ドル"
+            },
+            "geminiPro": {
+                "textTokens": "100万テキストトークンあたり1.00ドル",
+                "audioTokens": "100万オーディオトークンあたり20ドル"
+            },
+            "openAIMini": {
+                "textTokens": "100万テキストトークンあたり0.60ドル",
+                "audioTokens": "100万オーディオトークンあたり12.00ドル"
+            },
+            "openAITTS1": {
+                "standard": "100万トークンあたり15.00ドル"
+            },
+            "openAITTS1HD": {
+                "standard": "100万トークンあたり30ドル"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "100万文字あたり4.00ドル",
+                "neural": "100万文字あたり16.00ドル",
+                "studio": "100万文字あたり160ドル",
+                "chirpHD": "確認できませんでした",
+                "chirp3HD": "100万文字あたり30ドル"
+            }
+        }
     }
 };
 export default ja;

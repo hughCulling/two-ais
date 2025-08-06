@@ -366,7 +366,35 @@ const sl = {
     "pricing": {
         "perMillionTokens": "na 1 milijon žetonov",
         "tokens": "žetoni",
-        "free": "Brezplačno"
+        "free": "Brezplačno",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD na milijon besedilnih žetonov",
+                "audioTokens": "10,00 USD na milijon zvočnih žetonov"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD na 1 milijon besedilnih žetonov",
+                "audioTokens": "20,00 USD na 1 milijon zvočnih žetonov"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD na 1 milijon besedilnih žetonov",
+                "audioTokens": "12,00 USD na milijon zvočnih žetonov"
+            },
+            "openAITTS1": {
+                "standard": "15,00 $ na 1 milijon žetonov"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD na 1 milijon žetonov"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD na milijon znakov",
+                "neural": "16,00 USD na milijon znakov",
+                "studio": "160,00 USD na 1 milijon znakov",
+                "chirpHD": "Ni bilo mogoče preveriti",
+                "chirp3HD": "30,00 USD na milijon znakov"
+            }
+        }
     }
 };
 export default sl;

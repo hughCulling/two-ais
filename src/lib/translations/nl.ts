@@ -366,7 +366,35 @@ const nl = {
     "pricing": {
         "perMillionTokens": "per 1 miljoen tokens",
         "tokens": "tokens",
-        "free": "Vrij"
+        "free": "Vrij",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0,50 per 1 miljoen teksttokens",
+                "audioTokens": "$ 10,00 per 1 miljoen audiotokens"
+            },
+            "geminiPro": {
+                "textTokens": "$ 1,00 per 1 miljoen teksttokens",
+                "audioTokens": "$ 20,00 per 1 miljoen audiotokens"
+            },
+            "openAIMini": {
+                "textTokens": "$0,60 per 1 miljoen teksttokens",
+                "audioTokens": "$ 12,00 per 1 miljoen audiotokens"
+            },
+            "openAITTS1": {
+                "standard": "$15,00 per 1 miljoen tokens"
+            },
+            "openAITTS1HD": {
+                "standard": "$30,00 per 1 miljoen tokens"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4,00 per 1 miljoen tekens",
+                "neural": "$ 16,00 per 1 miljoen tekens",
+                "studio": "$ 160,00 per 1 miljoen tekens",
+                "chirpHD": "Kon niet verifiëren",
+                "chirp3HD": "$ 30,00 per 1 miljoen tekens"
+            }
+        }
     }
 };
 export default nl;

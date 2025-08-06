@@ -366,7 +366,35 @@ const sk = {
     "pricing": {
         "perMillionTokens": "na 1 milión tokenov",
         "tokens": "žetóny",
-        "free": "Zadarmo"
+        "free": "Zadarmo",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 USD za 1 milión textových tokenov",
+                "audioTokens": "10,00 USD za 1 milión audio tokenov"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 USD za 1 milión textových tokenov",
+                "audioTokens": "20,00 USD za 1 milión audio tokenov"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 USD za 1 milión textových tokenov",
+                "audioTokens": "12,00 USD za 1 milión audio tokenov"
+            },
+            "openAITTS1": {
+                "standard": "15,00 USD za 1 milión tokenov"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 USD za 1 milión tokenov"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 USD za 1 milión znakov",
+                "neural": "16,00 USD za 1 milión znakov",
+                "studio": "160,00 USD za 1 milión znakov",
+                "chirpHD": "Nepodarilo sa overiť",
+                "chirp3HD": "30,00 USD za 1 milión znakov"
+            }
+        }
     }
 };
 export default sk;

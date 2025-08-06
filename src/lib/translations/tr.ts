@@ -366,7 +366,35 @@ const tr = {
     "pricing": {
         "perMillionTokens": "1 Milyon token başına",
         "tokens": "jetonlar",
-        "free": "Özgür"
+        "free": "Özgür",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "1 Milyon metin jetonu başına 0,50 ABD doları",
+                "audioTokens": "1 Milyon ses jetonu başına 10,00 ABD doları"
+            },
+            "geminiPro": {
+                "textTokens": "1 Milyon metin jetonu başına 1,00 ABD doları",
+                "audioTokens": "1 Milyon sesli token başına 20,00 ABD doları"
+            },
+            "openAIMini": {
+                "textTokens": "1 Milyon metin jetonu başına 0,60 ABD doları",
+                "audioTokens": "1 Milyon sesli token başına 12,00 ABD doları"
+            },
+            "openAITTS1": {
+                "standard": "1 Milyon token başına 15,00 ABD doları"
+            },
+            "openAITTS1HD": {
+                "standard": "1 Milyon token başına 30,00 ABD doları"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "1 Milyon karakter başına 4,00 ABD doları",
+                "neural": "1 Milyon karakter başına 16,00 ABD doları",
+                "studio": "1 Milyon karakter başına 160,00 ABD doları",
+                "chirpHD": "Doğrulanamadı",
+                "chirp3HD": "1 Milyon karakter başına 30,00 ABD doları"
+            }
+        }
     }
 };
 export default tr;

@@ -366,7 +366,35 @@ const lv = {
     "pricing": {
         "perMillionTokens": "uz 1 miljonu žetonu",
         "tokens": "žetoni",
-        "free": "Bezmaksas"
+        "free": "Bezmaksas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 ASV dolāri par 1 miljonu teksta žetonu",
+                "audioTokens": "10,00 ASV dolāri par 1 miljonu audio žetonu"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 ASV dolāri par 1 miljonu teksta žetonu",
+                "audioTokens": "20,00 ASV dolāri par 1 miljonu audio žetonu"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 ASV dolāri par 1 miljonu teksta žetonu",
+                "audioTokens": "12,00 ASV dolāri par 1 miljonu audio žetonu"
+            },
+            "openAITTS1": {
+                "standard": "15,00 ASV dolāri par 1 miljonu žetonu"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 ASV dolāri par 1 miljonu žetonu"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 ASV dolāri par 1 miljonu rakstzīmju",
+                "neural": "16,00 ASV dolāri par 1 miljonu rakstzīmju",
+                "studio": "160,00 ASV dolāri par 1 miljonu rakstzīmju",
+                "chirpHD": "Nevarēja verificēt",
+                "chirp3HD": "30,00 ASV dolāri par 1 miljonu rakstzīmju"
+            }
+        }
     }
 };
 export default lv;

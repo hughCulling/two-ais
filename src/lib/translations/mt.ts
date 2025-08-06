@@ -366,7 +366,35 @@ const mt = {
     "pricing": {
         "perMillionTokens": "għal kull miljun token",
         "tokens": "tokens",
-        "free": "B'xejn"
+        "free": "B'xejn",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 għal kull miljun token tat-test",
+                "audioTokens": "$10.00 għal kull miljun token awdjo"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 għal kull miljun token tat-test",
+                "audioTokens": "$20.00 għal kull miljun token awdjo"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 għal kull miljun token tat-test",
+                "audioTokens": "$12.00 għal kull miljun token awdjo"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 għal kull miljun token"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 għal kull miljun token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 għal kull miljun karattru",
+                "neural": "$16.00 għal kull miljun karattru",
+                "studio": "$160.00 għal kull miljun karattru",
+                "chirpHD": "Ma stajtx nivverifika",
+                "chirp3HD": "$30.00 għal kull miljun karattru"
+            }
+        }
     }
 };
 export default mt;

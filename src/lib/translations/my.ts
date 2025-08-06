@@ -366,7 +366,35 @@ const my = {
     "pricing": {
         "perMillionTokens": "တိုကင် 1 သန်းအတွက်",
         "tokens": "တိုကင်များ",
-        "free": "အခမဲ့"
+        "free": "အခမဲ့",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "စာသားတိုကင် ၁ သန်းလျှင် $0.50",
+                "audioTokens": "အသံတိုကင် 1 သန်းအတွက် $10.00"
+            },
+            "geminiPro": {
+                "textTokens": "စာသားတိုကင် 1 သန်းအတွက် $1.00",
+                "audioTokens": "အသံတိုကင် ၁ သန်းလျှင် $20.00"
+            },
+            "openAIMini": {
+                "textTokens": "စာသားတိုကင် ၁ သန်းလျှင် $0.60",
+                "audioTokens": "အသံတိုကင် 1 သန်းအတွက် $12.00"
+            },
+            "openAITTS1": {
+                "standard": "တိုကင် ၁ သန်းလျှင် $15.00"
+            },
+            "openAITTS1HD": {
+                "standard": "တိုကင် ၁ သန်းလျှင် $30.00"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "ဇာတ်ကောင် ၁ သန်းလျှင် $4.00",
+                "neural": "စာလုံး 1 သန်းလျှင် $16.00",
+                "studio": "ဇာတ်ကောင် ၁ သန်းလျှင် $160.00",
+                "chirpHD": "အတည်မပြုနိုင်ပါ။",
+                "chirp3HD": "ဇာတ်ကောင် ၁ သန်းလျှင် $30.00"
+            }
+        }
     }
 };
 export default my;

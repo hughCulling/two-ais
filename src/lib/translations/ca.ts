@@ -366,7 +366,35 @@ const ca = {
     "pricing": {
         "perMillionTokens": "per 1 milió de fitxes",
         "tokens": "fitxes",
-        "free": "Gratuït"
+        "free": "Gratuït",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "0,50 $ per cada milió de tokens de text",
+                "audioTokens": "10,00 $ per cada milió de tokens d'àudio"
+            },
+            "geminiPro": {
+                "textTokens": "1,00 $ per cada milió de tokens de text",
+                "audioTokens": "20,00 $ per cada milió de tokens d'àudio"
+            },
+            "openAIMini": {
+                "textTokens": "0,60 $ per cada milió de tokens de text",
+                "audioTokens": "12,00 $ per cada milió de tokens d'àudio"
+            },
+            "openAITTS1": {
+                "standard": "15,00 $ per cada milió de fitxes"
+            },
+            "openAITTS1HD": {
+                "standard": "30,00 $ per cada milió de fitxes"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "4,00 $ per cada milió de caràcters",
+                "neural": "16,00 $ per cada milió de caràcters",
+                "studio": "160,00 $ per cada milió de caràcters",
+                "chirpHD": "No s'ha pogut verificar",
+                "chirp3HD": "30,00 $ per cada milió de caràcters"
+            }
+        }
     }
 };
 export default ca;

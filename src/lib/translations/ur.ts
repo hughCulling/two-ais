@@ -366,7 +366,35 @@ const ur = {
     "pricing": {
         "perMillionTokens": "فی 1 ملین ٹوکن",
         "tokens": "ٹوکن",
-        "free": "مفت"
+        "free": "مفت",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "$0.50 فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "$10.00 فی 1 ملین آڈیو ٹوکن"
+            },
+            "geminiPro": {
+                "textTokens": "$1.00 فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "$20.00 فی 1 ملین آڈیو ٹوکن"
+            },
+            "openAIMini": {
+                "textTokens": "$0.60 فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "$12.00 فی 1 ملین آڈیو ٹوکن"
+            },
+            "openAITTS1": {
+                "standard": "$15.00 فی 1 ملین ٹوکن"
+            },
+            "openAITTS1HD": {
+                "standard": "$30.00 فی 1 ملین ٹوکن"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "$4.00 فی 1 ملین حروف",
+                "neural": "$16.00 فی 1 ملین حروف",
+                "studio": "$160.00 فی 1 ملین حروف",
+                "chirpHD": "تصدیق نہیں ہو سکی",
+                "chirp3HD": "$30.00 فی 1 ملین حروف"
+            }
+        }
     }
 };
 export default ur;
