@@ -204,7 +204,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 10.00, 
-            note: '$1.25 (≤200k tkns), $2.50 (>200k tkns) / $10.00 (≤200k tkns), $15.00 (>200k tkns) per 1M Tokens' 
+            note: '$1.25 (≤200k tokens), $2.50 (>200k tokens) / $10.00 (≤200k tokens), $15.00 (>200k tokens) per 1M Tokens' 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -219,9 +219,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         provider: 'Google',
         contextWindow: 2000000,
         pricing: { 
-            input: 0.15, 
-            output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) per 1M Tokens' // Removed trailing period
+            input: 0.30, 
+            output: 2.50, 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -262,7 +261,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 5.00, 
-            note: '$1.25 (≤128k tkns), $2.50 (>128k tkns) / $5.00 (≤128k tkns), $10.00 (>128k tkns) per 1M Tokens'
+            note: '$1.25 (≤128k tokens), $2.50 (>128k tokens) / $5.00 (≤128k tokens), $10.00 (>128k tokens) per 1M Tokens'
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -277,7 +276,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.075, 
             output: 0.30, 
-            note: '$0.075 (≤128k tkns), $0.15 (>128k tkns) / $0.30 (≤128k tkns), $0.60 (>128k tkns) per 1M Tokens'
+            note: '$0.075 (≤128k tokens), $0.15 (>128k tokens) / $0.30 (≤128k tokens), $0.60 (>128k tokens) per 1M Tokens'
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -292,7 +291,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.0375, 
             output: 0.15,  
-            note: '$0.0375 (≤128k tkns), $0.075 (>128k tkns) / $0.15 (≤128k tkns), $0.30 (>128k tkns) per 1M Tokens'
+            note: '$0.0375 (≤128k tokens), $0.075 (>128k tokens) / $0.15 (≤128k tokens), $0.30 (>128k tokens) per 1M Tokens'
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
