@@ -24,9 +24,11 @@ import type { ImageModelInfo } from '@/lib/image_models';
    const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
 
 // TruncatableNote component for pricing notes
+import type { TranslationKeys } from '@/lib/translations';
+
 const TruncatableNote: React.FC<{ 
-  noteText: string | ((t: any) => string); 
-  tooltipMaxWidth?: string 
+  noteText: string | ((t: TranslationKeys) => string);
+  tooltipMaxWidth?: string;
 }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);

@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
+import type { TranslationKeys } from '@/lib/translations';
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -269,12 +270,30 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                     {llm.pricing.note ? (
                                                                         <Tooltip>
                                                                             <TooltipTrigger asChild>
-                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={llm.pricing.note}>
-                                                                                    ({llm.pricing.note})
+                                                                                <span 
+                                                                                    className="text-xs text-muted-foreground truncate max-w-[10rem] block" 
+                                                                                    title={typeof llm.pricing.note === 'string' ? llm.pricing.note : ''}
+                                                                                >
+                                                                                    ({typeof llm.pricing.note === 'string' ? llm.pricing.note : ''})
                                                                                 </span>
                                                                             </TooltipTrigger>
                                                                             <TooltipContent side="top">
-                                                                                <span className="text-xs">{llm.pricing.note}</span>
+                                                                                <span className="text-xs">
+                                                                                    {typeof llm.pricing.note === 'string' 
+                                                                                        ? llm.pricing.note 
+                                                                                        : llm.pricing.note((() => {
+                                                                                            // Create a proxy that returns empty strings for any property access
+                                                                                            // This is a fallback in case the actual translation function is not available
+                                                                                            return new Proxy({} as TranslationKeys, {
+                                                                                                get(_, prop) {
+                                                                                                    return prop === 'page_TruncatableNoteFormat' 
+                                                                                                        ? '{noteText}' 
+                                                                                                        : '';
+                                                                                                }
+                                                                                            });
+                                                                                        })())
+                                                                                    }
+                                                                                </span>
                                                                             </TooltipContent>
                                                                         </Tooltip>
                                                                     ) : (
