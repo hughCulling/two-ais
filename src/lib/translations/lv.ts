@@ -362,6 +362,11 @@ const lv = {
     "imageModel_PriceUSD": "Cena (USD)",
     "page_TooltipKnowledgeCutoff": "Šajā datumā modeļa zināšanas ir pārtrauktas.",
     "modelCategory_MistralAIPremierModels": "Augstākās klases modeļi",
-    "modelCategory_MistralAIOpenModels": "Atvērtie modeļi"
+    "modelCategory_MistralAIOpenModels": "Atvērtie modeļi",
+    "pricing": {
+        "perMillionTokens": "uz 1 miljonu žetonu",
+        "tokens": "žetoni",
+        "free": "Bezmaksas"
+    }
 };
 export default lv;

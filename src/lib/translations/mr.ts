@@ -362,6 +362,11 @@ const mr = {
     "imageModel_PriceUSD": "किंमत (USD)",
     "page_TooltipKnowledgeCutoff": "या तारखेला मॉडेलचे ज्ञान कमी झाले आहे.",
     "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडेल्स",
-    "modelCategory_MistralAIOpenModels": "उघडे मॉडेल"
+    "modelCategory_MistralAIOpenModels": "उघडे मॉडेल",
+    "pricing": {
+        "perMillionTokens": "प्रति १ दशलक्ष टोकनसाठी",
+        "tokens": "टोकन",
+        "free": "मोफत"
+    }
 };
 export default mr;

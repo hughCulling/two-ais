@@ -362,6 +362,11 @@ const ar = {
     "imageModel_PriceUSD": "سعر (USD)",
     "page_TooltipKnowledgeCutoff": "تم قطع معرفة النموذج في هذا التاريخ.",
     "modelCategory_MistralAIPremierModels": "موديلات بريميير",
-    "modelCategory_MistralAIOpenModels": "نماذج مفتوحة"
+    "modelCategory_MistralAIOpenModels": "نماذج مفتوحة",
+    "pricing": {
+        "perMillionTokens": "لكل مليون رمز",
+        "tokens": "الرموز",
+        "free": "حر"
+    }
 };
 export default ar;

@@ -362,6 +362,11 @@ const tr = {
     "imageModel_PriceUSD": "Fiyat (USD)",
     "page_TooltipKnowledgeCutoff": "Modelin bilgisi bu tarihte kesilmiştir.",
     "modelCategory_MistralAIPremierModels": "Premier modeller",
-    "modelCategory_MistralAIOpenModels": "Açık modeller"
+    "modelCategory_MistralAIOpenModels": "Açık modeller",
+    "pricing": {
+        "perMillionTokens": "1 Milyon token başına",
+        "tokens": "jetonlar",
+        "free": "Özgür"
+    }
 };
 export default tr;

@@ -362,6 +362,11 @@ const iw = {
     "imageModel_PriceUSD": "מְחִיר (USD)",
     "page_TooltipKnowledgeCutoff": "הידע של המודל מופסק בתאריך זה.",
     "modelCategory_MistralAIPremierModels": "דגמי פרימיום",
-    "modelCategory_MistralAIOpenModels": "דגמים פתוחים"
+    "modelCategory_MistralAIOpenModels": "דגמים פתוחים",
+    "pricing": {
+        "perMillionTokens": "לכל מיליון אסימונים",
+        "tokens": "אסימונים",
+        "free": "לְשַׁחְרֵר"
+    }
 };
 export default iw;

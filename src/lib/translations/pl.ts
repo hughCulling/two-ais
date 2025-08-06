@@ -362,6 +362,11 @@ const pl = {
     "imageModel_PriceUSD": "Cena (USD)",
     "page_TooltipKnowledgeCutoff": "Wiedza modelu jest w tym momencie zablokowana.",
     "modelCategory_MistralAIPremierModels": "Modele Premier",
-    "modelCategory_MistralAIOpenModels": "Otwarte modele"
+    "modelCategory_MistralAIOpenModels": "Otwarte modele",
+    "pricing": {
+        "perMillionTokens": "na 1 milion tokenów",
+        "tokens": "żetony",
+        "free": "Bezpłatny"
+    }
 };
 export default pl;

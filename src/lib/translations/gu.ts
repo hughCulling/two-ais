@@ -362,6 +362,11 @@ const gu = {
     "imageModel_PriceUSD": "કિંમત (USD)",
     "page_TooltipKnowledgeCutoff": "આ તારીખે મોડેલનું જ્ઞાન બંધ થઈ ગયું છે.",
     "modelCategory_MistralAIPremierModels": "પ્રીમિયર મોડેલ્સ",
-    "modelCategory_MistralAIOpenModels": "ખુલ્લા મોડેલો"
+    "modelCategory_MistralAIOpenModels": "ખુલ્લા મોડેલો",
+    "pricing": {
+        "perMillionTokens": "પ્રતિ 1 મિલિયન ટોકન માટે",
+        "tokens": "ટોકન્સ",
+        "free": "મફત"
+    }
 };
 export default gu;

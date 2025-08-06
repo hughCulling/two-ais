@@ -362,6 +362,11 @@ const bs = {
     "imageModel_PriceUSD": "Cijena (USD)",
     "page_TooltipKnowledgeCutoff": "Znanje modela je na ovaj datum prekinuto.",
     "modelCategory_MistralAIPremierModels": "Premier modeli",
-    "modelCategory_MistralAIOpenModels": "Otvoreni modeli"
+    "modelCategory_MistralAIOpenModels": "Otvoreni modeli",
+    "pricing": {
+        "perMillionTokens": "po milionu tokena",
+        "tokens": "žetoni",
+        "free": "Besplatno"
+    }
 };
 export default bs;

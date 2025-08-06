@@ -362,6 +362,11 @@ const ro = {
     "imageModel_PriceUSD": "Preţ (USD)",
     "page_TooltipKnowledgeCutoff": "Cunoștințele modelului sunt întrerupte la această dată.",
     "modelCategory_MistralAIPremierModels": "Modele Premier",
-    "modelCategory_MistralAIOpenModels": "Modele deschise"
+    "modelCategory_MistralAIOpenModels": "Modele deschise",
+    "pricing": {
+        "perMillionTokens": "per 1 milion de token-uri",
+        "tokens": "jetoane",
+        "free": "Gratuit"
+    }
 };
 export default ro;

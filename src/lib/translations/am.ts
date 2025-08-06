@@ -362,6 +362,11 @@ const am = {
     "imageModel_PriceUSD": "ዋጋ (USD)",
     "page_TooltipKnowledgeCutoff": "በዚህ ቀን የአምሳያው ዕውቀት ይቋረጣል.",
     "modelCategory_MistralAIPremierModels": "ዋና ሞዴሎች",
-    "modelCategory_MistralAIOpenModels": "ሞዴሎችን ይክፈቱ"
+    "modelCategory_MistralAIOpenModels": "ሞዴሎችን ይክፈቱ",
+    "pricing": {
+        "perMillionTokens": "በ 1 ሚሊዮን ቶከኖች",
+        "tokens": "ማስመሰያዎች",
+        "free": "ፍርይ"
+    }
 };
 export default am;

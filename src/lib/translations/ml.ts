@@ -362,6 +362,11 @@ const ml = {
     "imageModel_PriceUSD": "വില (USD)",
     "page_TooltipKnowledgeCutoff": "ഈ തീയതിയിൽ മോഡലിന്റെ അറിവ് ഛേദിക്കപ്പെട്ടിരിക്കുന്നു.",
     "modelCategory_MistralAIPremierModels": "പ്രീമിയർ മോഡലുകൾ",
-    "modelCategory_MistralAIOpenModels": "തുറന്ന മോഡലുകൾ"
+    "modelCategory_MistralAIOpenModels": "തുറന്ന മോഡലുകൾ",
+    "pricing": {
+        "perMillionTokens": "1 ദശലക്ഷം ടോക്കണുകൾക്ക്",
+        "tokens": "ടോക്കണുകൾ",
+        "free": "സൗ ജന്യം"
+    }
 };
 export default ml;

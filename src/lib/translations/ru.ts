@@ -362,6 +362,11 @@ const ru = {
     "imageModel_PriceUSD": "Цена (USD)",
     "page_TooltipKnowledgeCutoff": "На этой дате сведения о модели обрываются.",
     "modelCategory_MistralAIPremierModels": "Премьер-модели",
-    "modelCategory_MistralAIOpenModels": "Открытые модели"
+    "modelCategory_MistralAIOpenModels": "Открытые модели",
+    "pricing": {
+        "perMillionTokens": "за 1 миллион токенов",
+        "tokens": "жетоны",
+        "free": "Бесплатно"
+    }
 };
 export default ru;

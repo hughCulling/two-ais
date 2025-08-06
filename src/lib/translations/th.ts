@@ -362,6 +362,11 @@ const th = {
     "imageModel_PriceUSD": "ราคา (USD)",
     "page_TooltipKnowledgeCutoff": "ความรู้ของโมเดลถูกตัดออกในวันที่นี้",
     "modelCategory_MistralAIPremierModels": "นางแบบชั้นนำ",
-    "modelCategory_MistralAIOpenModels": "โมเดลเปิด"
+    "modelCategory_MistralAIOpenModels": "โมเดลเปิด",
+    "pricing": {
+        "perMillionTokens": "ต่อ 1 ล้านโทเค็น",
+        "tokens": "โทเค็น",
+        "free": "ฟรี"
+    }
 };
 export default th;

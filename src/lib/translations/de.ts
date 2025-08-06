@@ -324,7 +324,7 @@ const de = {
         "imageModel": "Bildmodell",
         "quality": "Qualität",
         "size": "Größe",
-        "promptLLM": "Prompt LLM",
+        "promptLLM": "Eingabeaufforderung LLM",
         "imagePromptSystemMessage": "Bildaufforderungssystemnachricht",
         "defaultImagePromptSystemMessage": "Erstellen Sie eine Eingabeaufforderung, die Sie dem Bildgenerierungsmodell basierend auf dieser Wendung geben können: {turn}",
         "imagePromptSystemMessageHelp": "Diese Meldung wird als Systemaufforderung an den LLM gesendet, der die Bildaufforderung generiert. Verwenden Sie <code>{'{turn}'}</code> als Platzhalter für die Nachricht des Agenten.",
@@ -362,6 +362,11 @@ const de = {
     "imageModel_PriceUSD": "Preis (USD)",
     "page_TooltipKnowledgeCutoff": "Das Wissen des Modells ist zu diesem Zeitpunkt abgeschnitten.",
     "modelCategory_MistralAIPremierModels": "Premier-Modelle",
-    "modelCategory_MistralAIOpenModels": "Offene Modelle"
+    "modelCategory_MistralAIOpenModels": "Offene Modelle",
+    "pricing": {
+        "perMillionTokens": "pro 1 Million Token",
+        "tokens": "Token",
+        "free": "Frei"
+    }
 };
 export default de;

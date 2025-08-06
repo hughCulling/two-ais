@@ -362,6 +362,11 @@ const da = {
     "imageModel_PriceUSD": "Pris (USD)",
     "page_TooltipKnowledgeCutoff": "Modellens kendskab er afskåret på denne dato.",
     "modelCategory_MistralAIPremierModels": "Premier-modeller",
-    "modelCategory_MistralAIOpenModels": "Åbne modeller"
+    "modelCategory_MistralAIOpenModels": "Åbne modeller",
+    "pricing": {
+        "perMillionTokens": "pr. 1 million tokens",
+        "tokens": "tokens",
+        "free": "Gratis"
+    }
 };
 export default da;

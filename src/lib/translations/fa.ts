@@ -362,6 +362,11 @@ const fa = {
     "imageModel_PriceUSD": "قیمت (USD)",
     "page_TooltipKnowledgeCutoff": "دانش مدل در این تاریخ قطع شده است.",
     "modelCategory_MistralAIPremierModels": "مدل‌های برتر",
-    "modelCategory_MistralAIOpenModels": "مدل‌های باز"
+    "modelCategory_MistralAIOpenModels": "مدل‌های باز",
+    "pricing": {
+        "perMillionTokens": "به ازای هر ۱ میلیون توکن",
+        "tokens": "توکن ها",
+        "free": "رایگان"
+    }
 };
 export default fa;

@@ -362,6 +362,11 @@ const sr = {
     "imageModel_PriceUSD": "Цена (USD)",
     "page_TooltipKnowledgeCutoff": "Знање модела је прекинуто на овај датум.",
     "modelCategory_MistralAIPremierModels": "Премијер модели",
-    "modelCategory_MistralAIOpenModels": "Отворени модели"
+    "modelCategory_MistralAIOpenModels": "Отворени модели",
+    "pricing": {
+        "perMillionTokens": "по милиону токена",
+        "tokens": "токени",
+        "free": "Бесплатно"
+    }
 };
 export default sr;

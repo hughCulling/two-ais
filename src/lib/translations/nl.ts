@@ -362,6 +362,11 @@ const nl = {
     "imageModel_PriceUSD": "Prijs (USD)",
     "page_TooltipKnowledgeCutoff": "Op dit moment is de kennis van het model afgesloten.",
     "modelCategory_MistralAIPremierModels": "Premier-modellen",
-    "modelCategory_MistralAIOpenModels": "Open modellen"
+    "modelCategory_MistralAIOpenModels": "Open modellen",
+    "pricing": {
+        "perMillionTokens": "per 1 miljoen tokens",
+        "tokens": "tokens",
+        "free": "Vrij"
+    }
 };
 export default nl;

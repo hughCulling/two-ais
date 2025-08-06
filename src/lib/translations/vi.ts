@@ -362,6 +362,11 @@ const vi = {
     "imageModel_PriceUSD": "Giá (USD)",
     "page_TooltipKnowledgeCutoff": "Kiến thức của mô hình đã bị cắt bỏ vào thời điểm này.",
     "modelCategory_MistralAIPremierModels": "Các mẫu hàng đầu",
-    "modelCategory_MistralAIOpenModels": "Mô hình mở"
+    "modelCategory_MistralAIOpenModels": "Mô hình mở",
+    "pricing": {
+        "perMillionTokens": "trên 1 triệu mã thông báo",
+        "tokens": "mã thông báo",
+        "free": "Miễn phí"
+    }
 };
 export default vi;

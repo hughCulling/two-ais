@@ -362,6 +362,11 @@ const uk = {
     "imageModel_PriceUSD": "Ціна (USD)",
     "page_TooltipKnowledgeCutoff": "Знання моделі на цьому етапі припиняються.",
     "modelCategory_MistralAIPremierModels": "Прем'єрні моделі",
-    "modelCategory_MistralAIOpenModels": "Відкриті моделі"
+    "modelCategory_MistralAIOpenModels": "Відкриті моделі",
+    "pricing": {
+        "perMillionTokens": "за 1 мільйон токенів",
+        "tokens": "жетони",
+        "free": "Безкоштовно"
+    }
 };
 export default uk;

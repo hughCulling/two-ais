@@ -362,6 +362,11 @@ const ko = {
     "imageModel_PriceUSD": "가격 (USD)",
     "page_TooltipKnowledgeCutoff": "이 날짜에 모델의 지식이 차단되었습니다.",
     "modelCategory_MistralAIPremierModels": "프리미어 모델",
-    "modelCategory_MistralAIOpenModels": "오픈 모델"
+    "modelCategory_MistralAIOpenModels": "오픈 모델",
+    "pricing": {
+        "perMillionTokens": "100만 개의 토큰당",
+        "tokens": "토큰",
+        "free": "무료"
+    }
 };
 export default ko;

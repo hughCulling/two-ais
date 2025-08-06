@@ -362,6 +362,11 @@ const ta = {
     "imageModel_PriceUSD": "விலை (USD)",
     "page_TooltipKnowledgeCutoff": "இந்த தேதியில் மாதிரியின் அறிவு துண்டிக்கப்பட்டுள்ளது.",
     "modelCategory_MistralAIPremierModels": "பிரீமியர் மாதிரிகள்",
-    "modelCategory_MistralAIOpenModels": "திறந்த மாதிரிகள்"
+    "modelCategory_MistralAIOpenModels": "திறந்த மாதிரிகள்",
+    "pricing": {
+        "perMillionTokens": "1 மில்லியன் டோக்கன்களுக்கு",
+        "tokens": "டோக்கன்கள்",
+        "free": "இலவசம்"
+    }
 };
 export default ta;

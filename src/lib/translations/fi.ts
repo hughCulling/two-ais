@@ -362,6 +362,11 @@ const fi = {
     "imageModel_PriceUSD": "Hinta (USD)",
     "page_TooltipKnowledgeCutoff": "Mallin tietämys on katkaistu tänä päivänä.",
     "modelCategory_MistralAIPremierModels": "Premier-mallit",
-    "modelCategory_MistralAIOpenModels": "Avoimet mallit"
+    "modelCategory_MistralAIOpenModels": "Avoimet mallit",
+    "pricing": {
+        "perMillionTokens": "miljoonaa tokenia kohden",
+        "tokens": "tokenit",
+        "free": "Ilmainen"
+    }
 };
 export default fi;

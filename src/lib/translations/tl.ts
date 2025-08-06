@@ -362,6 +362,11 @@ const tl = {
     "imageModel_PriceUSD": "Presyo (USD)",
     "page_TooltipKnowledgeCutoff": "Ang kaalaman ng modelo ay pinutol sa petsang ito.",
     "modelCategory_MistralAIPremierModels": "Mga pangunahing modelo",
-    "modelCategory_MistralAIOpenModels": "Buksan ang mga modelo"
+    "modelCategory_MistralAIOpenModels": "Buksan ang mga modelo",
+    "pricing": {
+        "perMillionTokens": "bawat 1 Milyong token",
+        "tokens": "mga token",
+        "free": "Libre"
+    }
 };
 export default tl;

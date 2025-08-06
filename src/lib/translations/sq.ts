@@ -362,6 +362,11 @@ const sq = {
     "imageModel_PriceUSD": "Çmimi (USD)",
     "page_TooltipKnowledgeCutoff": "Njohuritë e modelit janë ndërprerë në këtë datë.",
     "modelCategory_MistralAIPremierModels": "Modelet kryesore",
-    "modelCategory_MistralAIOpenModels": "Modele të hapura"
+    "modelCategory_MistralAIOpenModels": "Modele të hapura",
+    "pricing": {
+        "perMillionTokens": "për 1 milion tokenë",
+        "tokens": "tokena",
+        "free": "Falas"
+    }
 };
 export default sq;

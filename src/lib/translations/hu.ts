@@ -362,6 +362,11 @@ const hu = {
     "imageModel_PriceUSD": "Ár (USD)",
     "page_TooltipKnowledgeCutoff": "A modell tudása ezen a napon le van tiltva.",
     "modelCategory_MistralAIPremierModels": "Prémium modellek",
-    "modelCategory_MistralAIOpenModels": "Nyílt modellek"
+    "modelCategory_MistralAIOpenModels": "Nyílt modellek",
+    "pricing": {
+        "perMillionTokens": "1 millió tokenenként",
+        "tokens": "zsetonok",
+        "free": "Ingyenes"
+    }
 };
 export default hu;
