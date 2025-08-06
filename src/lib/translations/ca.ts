@@ -391,6 +391,14 @@ const ca = {
     },
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",
-    "imageModel_PriceUSD": "Preu (USD)"
+    "imageModel_PriceUSD": "Preu (USD)",
+    "gptImage1PricingTooltip": "Preu dels tokens per a GPT Image 1:\nEntrada: {inputPrice} / 1 milió de tokens\nEntrada emmagatzemada a la memòria cau: {cachedInputPrice} / 1 milió de tokens\nSortida: {outputPrice} / 1 milió de tokens\nNota: Els preus per imatge indicats anteriorment només són per a tokens d'imatge de sortida. Els tokens d'imatge/text d'entrada es facturen per separat.",
+    "imageQuality": {
+        "standard": "Estàndard",
+        "hd": "Alta definició",
+        "low": "Baix",
+        "medium": "Mitjà",
+        "high": "Alt"
+    }
 };
 export default ca;

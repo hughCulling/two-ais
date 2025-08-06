@@ -391,6 +391,14 @@ const hy = {
     },
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",
-    "imageModel_PriceUSD": "Գինը (USD)"
+    "imageModel_PriceUSD": "Գինը (USD)",
+    "gptImage1PricingTooltip": "Թոքենի գնագոյացումը GPT Image 1:\nՄուտք՝ {inputPrice} / 1 միլիոն տոկեն\nՔեշավորված մուտք՝ {cachedInputPrice} / 1 միլիոն տոկեն\nԵլք՝ {outputPrice} / 1 միլիոն տոկեն\nՆշում. Վերը նշված գները մեկ պատկերի համար միայն ելքային պատկերի տոկենների համար են: Մուտքային տեքստը/պատկերի տոկենները առանձին են հաշվարկվում:",
+    "imageQuality": {
+        "standard": "Ստանդարտ",
+        "hd": "Բարձր սահմանում",
+        "low": "Ցածր",
+        "medium": "Միջին",
+        "high": "Բարձր"
+    }
 };
 export default hy;

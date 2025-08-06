@@ -391,6 +391,14 @@ const uk = {
     },
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",
-    "imageModel_PriceUSD": "Ціна (USD)"
+    "imageModel_PriceUSD": "Ціна (USD)",
+    "gptImage1PricingTooltip": "Ціноутворення токенів для GPT Image 1:\nВхідні дані: {inputPrice} / 1 мільйон токенів\nКешовані вхідні дані: {cachedInputPrice} / 1 мільйон токенів\nВихідні дані: {outputPrice} / 1 мільйон токенів\nПримітка: Ціни за кожне зображення вказані вище лише для вихідних токенів зображень. Вхідні текстові/зображення оплачуються окремо.",
+    "imageQuality": {
+        "standard": "Стандартний",
+        "hd": "Висока чіткість",
+        "low": "Низький",
+        "medium": "Середній",
+        "high": "Високий"
+    }
 };
 export default uk;

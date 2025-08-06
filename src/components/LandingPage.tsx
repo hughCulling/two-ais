@@ -122,10 +122,6 @@ function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<strin
   return grouped;
 }
 
-// Token pricing tooltip content for GPT Image 1
-const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = `Token pricing for GPT Image 1:\nInput: $10.00 / 1M tokens\nCached input: $2.50 / 1M tokens\nOutput: $40.00 / 1M tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.`;
-
-
 const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 
 interface LandingPageProps {
@@ -158,6 +154,12 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
   if (loading || !t) return null;
+  const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = t?.gptImage1PricingTooltip
+    ? t.gptImage1PricingTooltip
+        .replace('{inputPrice}', '$10.00')
+        .replace('{cachedInputPrice}', '$2.50')
+        .replace('{outputPrice}', '$40.00')
+    : 'Token pricing for GPT Image 1:\nInput: $10.00 / 1 Million tokens\nCached input: $2.50 / 1 Million tokens\nOutput: $40.00 / 1 Million tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.';
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
       {/* Structured Data for SEO */}
@@ -571,7 +573,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   {model.qualities.map((q) => (
                                     q.sizes.map((s) => (
                                       <tr key={q.quality + s.size}>
-                                        <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
+                                        <td className="px-2 py-1">
+                                          {t?.imageQuality?.[q.quality as keyof typeof t.imageQuality] || 
+                                           q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}
+                                        </td>
                                         <td className="px-2 py-1">{s.size}</td>
                                         <td className="px-2 py-1">${s.price.toFixed(3)}</td>
                                       </tr>

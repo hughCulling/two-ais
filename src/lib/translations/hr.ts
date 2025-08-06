@@ -391,6 +391,14 @@ const hr = {
     },
     "imageModel_Quality": "Kvaliteta",
     "imageModel_Size": "Veličina",
-    "imageModel_PriceUSD": "Cijena (USD)"
+    "imageModel_PriceUSD": "Cijena (USD)",
+    "gptImage1PricingTooltip": "Cijena tokena za GPT Image 1:\nUlaz: {inputPrice} / 1 milijun tokena\nKeširani ulaz: {cachedInputPrice} / 1 milijun tokena\nIzlaz: {outputPrice} / 1 milijun tokena\nNapomena: Gore navedene cijene po slici odnose se samo na izlazne tokene slika. Ulazni tokeni teksta/slike naplaćuju se zasebno.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Visoka rezolucija",
+        "low": "Nisko",
+        "medium": "Srednji",
+        "high": "Visoko"
+    }
 };
 export default hr;

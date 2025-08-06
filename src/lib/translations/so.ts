@@ -391,6 +391,14 @@ const so = {
     },
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",
-    "imageModel_PriceUSD": "Qiimaha (USD)"
+    "imageModel_PriceUSD": "Qiimaha (USD)",
+    "gptImage1PricingTooltip": "Qiimaha calaamadda GPT Image 1:\nGelida: {inputPrice} / 1 Milyan oo calaamado ah\nSoo gelinta kaydsan: {cachedInputPrice} / 1 Milyan oo calaamado ah\nSoo saarida: {outputPrice} / 1 milyan oo calaamado ah\nFiiro gaar ah: Qiimaha halkii-sawir ee kore waxa loogu talagalay calaamadihii sawirka wax soo saarka oo keliya. Calaamadaha qoraalka/sawir gelinta si gaar ah ayaa loo dalacayaa.",
+    "imageQuality": {
+        "standard": "Heerka",
+        "hd": "Qeexitaan Sare",
+        "low": "Hoose",
+        "medium": "Dhexdhexaad",
+        "high": "Sare"
+    }
 };
 export default so;

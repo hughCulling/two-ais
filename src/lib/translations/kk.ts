@@ -391,6 +391,14 @@ const kk = {
     },
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
-    "imageModel_PriceUSD": "Бағасы (USD)"
+    "imageModel_PriceUSD": "Бағасы (USD)",
+    "gptImage1PricingTooltip": "Токен бағасы GPT Image 1:\nЕнгізу: {inputPrice} / 1 миллион токен\nКэштелген енгізу: {cachedInputPrice} / 1 миллион таңбалауыш\nШығару: {outputPrice} / 1 миллион токен\nЕскертпе: Жоғарыдағы суреттің бағасы тек шығыс кескін белгілеріне арналған. Енгізілген мәтін/кескін таңбалауыштары бөлек төленеді.",
+    "imageQuality": {
+        "standard": "Стандартты",
+        "hd": "Жоғары ажыратымдылық",
+        "low": "Төмен",
+        "medium": "Орташа",
+        "high": "Жоғары"
+    }
 };
 export default kk;

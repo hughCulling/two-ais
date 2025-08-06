@@ -391,6 +391,14 @@ const sv = {
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Storlek",
-    "imageModel_PriceUSD": "Pris (USD)"
+    "imageModel_PriceUSD": "Pris (USD)",
+    "gptImage1PricingTooltip": "Tokenprissättning för GPT Image 1:\nIndata: {inputPrice} / 1 miljon tokens\nCachad indata: {cachedInputPrice} / 1 miljon tokens\nUtdata: {outputPrice} / 1 miljon tokens\nObs: Priserna per bild ovan gäller endast för utdatabildtokens. Indatatext-/bildtokens faktureras separat.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Hög upplösning",
+        "low": "Låg",
+        "medium": "Medium",
+        "high": "Hög"
+    }
 };
 export default sv;

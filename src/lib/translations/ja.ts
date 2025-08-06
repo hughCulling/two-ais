@@ -391,6 +391,14 @@ const ja = {
     },
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",
-    "imageModel_PriceUSD": "価格 (USD)"
+    "imageModel_PriceUSD": "価格 (USD)",
+    "gptImage1PricingTooltip": "トークンの価格設定 GPT Image 1:\n入力: {inputPrice} / 100万トークン\nキャッシュされた入力: {cachedInputPrice} / 100万トークン\n出力: {outputPrice} / 100万トークン\n注: 上記の画像1枚あたりの料金は、出力画像トークンのみに適用されます。入力テキスト/画像トークンは別途課金されます。",
+    "imageQuality": {
+        "standard": "標準",
+        "hd": "高解像度",
+        "low": "低い",
+        "medium": "中くらい",
+        "high": "高い"
+    }
 };
 export default ja;

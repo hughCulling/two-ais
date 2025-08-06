@@ -391,6 +391,14 @@ const cs = {
     },
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "gptImage1PricingTooltip": "Cena tokenů pro GPT Image 1:\nVstup: {inputPrice} / 1 milion tokenů\nVstup v mezipaměti: {cachedInputPrice} / 1 milion tokenů\nVýstup: {outputPrice} / 1 milion tokenů\nPoznámka: Uvedené ceny za obrázek platí pouze pro výstupní obrazové tokeny. Vstupní textové/obrázkové tokeny se účtují samostatně.",
+    "imageQuality": {
+        "standard": "Norma",
+        "hd": "Vysoké rozlišení",
+        "low": "Nízký",
+        "medium": "Střední",
+        "high": "Vysoký"
+    }
 };
 export default cs;

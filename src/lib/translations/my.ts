@@ -391,6 +391,14 @@ const my = {
     },
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",
-    "imageModel_PriceUSD": "စျေးနှုန်း (USD)"
+    "imageModel_PriceUSD": "စျေးနှုန်း (USD)",
+    "gptImage1PricingTooltip": "တိုကင်စျေးနှုန်းများ GPT Image 1:\nထည့်သွင်းမှု- {inputPrice} / တိုကင် 1 သန်း\nကက်ရှ်ထည့်သွင်းမှု- {cachedInputPrice} / တိုကင် 1 သန်း\nအထွက်- {outputPrice} / တိုကင် ၁ သန်း\nမှတ်ချက်- အထက်ဖော်ပြပါ ပုံတစ်ပုံချင်းစီ၏ ဈေးနှုန်းများသည် ပုံထွက်တိုကင်များအတွက်သာ ဖြစ်ပါသည်။ ထည့်သွင်းသည့် စာသား/ရုပ်ပုံတိုကင်များကို သီးခြားစီ ကောက်ခံပါသည်။",
+    "imageQuality": {
+        "standard": "စံ",
+        "hd": "High Definition",
+        "low": "နိမ့်သည်။",
+        "medium": "လတ်",
+        "high": "မြင့်သည်။"
+    }
 };
 export default my;

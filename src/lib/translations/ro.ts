@@ -391,6 +391,14 @@ const ro = {
     },
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",
-    "imageModel_PriceUSD": "Preţ (USD)"
+    "imageModel_PriceUSD": "Preţ (USD)",
+    "gptImage1PricingTooltip": "Prețul tokenurilor pentru GPT Image 1Intrare: {inputPrice} / 1 milion de token-uri\nIntrare în cache: {cachedInputPrice} / 1 milion de token-uri\nIeșire: {outputPrice} / 1 milion de token-uri\nNotă: Prețurile per imagine de mai sus sunt doar pentru token-urile de imagine de ieșire. Token-urile de text/imagine de intrare sunt facturate separat.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Înaltă definiție",
+        "low": "Scăzut",
+        "medium": "Mediu",
+        "high": "Ridicat"
+    }
 };
 export default ro;

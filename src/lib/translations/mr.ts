@@ -391,6 +391,14 @@ const mr = {
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "किंमत (USD)"
+    "imageModel_PriceUSD": "किंमत (USD)",
+    "gptImage1PricingTooltip": "साठी टोकन किंमत GPT Image 1:\nइनपुट: {इनपुटप्राइस} / १ दशलक्ष टोकन\nकॅश्ड इनपुट: {कॅशेडइनपुटप्राइस} / १ दशलक्ष टोकन\nआउटपुट: {आउटपुटप्राइस} / १ दशलक्ष टोकन\nटीप: वरील प्रति-प्रतिमा किंमती फक्त आउटपुट इमेज टोकनसाठी आहेत. इनपुट मजकूर/इमेज टोकनचे बिल वेगळे केले जाते.",
+    "imageQuality": {
+        "standard": "मानक",
+        "hd": "हाय डेफिनेशन",
+        "low": "कमी",
+        "medium": "मध्यम",
+        "high": "उच्च"
+    }
 };
 export default mr;

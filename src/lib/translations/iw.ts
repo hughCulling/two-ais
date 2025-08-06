@@ -391,6 +391,14 @@ const iw = {
     },
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",
-    "imageModel_PriceUSD": "מְחִיר (USD)"
+    "imageModel_PriceUSD": "מְחִיר (USD)",
+    "gptImage1PricingTooltip": "תמחור אסימונים עבור GPT Image 1:\nקלט: {inputPrice} / מיליון טוקנים\nקלט במטמון: {cachedInputPrice} / מיליון טוקנים\nפלט: {outputPrice} / מיליון טוקנים\nהערה: המחירים לתמונה לעיל הם עבור טוקני תמונה פלט בלבד. טוקני טקסט/תמונה קלט מחויבים בנפרד.",
+    "imageQuality": {
+        "standard": "תֶקֶן",
+        "hd": "הגדרה גבוהה",
+        "low": "נָמוּך",
+        "medium": "בֵּינוֹנִי",
+        "high": "גָבוֹהַ"
+    }
 };
 export default iw;

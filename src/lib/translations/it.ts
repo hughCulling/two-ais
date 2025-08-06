@@ -391,6 +391,14 @@ const it = {
     },
     "imageModel_Quality": "Qualità",
     "imageModel_Size": "Misurare",
-    "imageModel_PriceUSD": "Prezzo (USD)"
+    "imageModel_PriceUSD": "Prezzo (USD)",
+    "gptImage1PricingTooltip": "Prezzi dei token per GPT Image 1:\nInput: {inputPrice} / 1 milione di token\nInput memorizzato nella cache: {cachedInputPrice} / 1 milione di token\nOutput: {outputPrice} / 1 milione di token\nNota: i prezzi per immagine sopra indicati si riferiscono solo ai token immagine di output. I token testo/immagine di input vengono fatturati separatamente.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Alta definizione",
+        "low": "Basso",
+        "medium": "Medio",
+        "high": "Alto"
+    }
 };
 export default it;

@@ -391,6 +391,14 @@ const lt = {
     },
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",
-    "imageModel_PriceUSD": "Kaina (USD)"
+    "imageModel_PriceUSD": "Kaina (USD)",
+    "gptImage1PricingTooltip": "Žetonų kainodara GPT Image 1:\nĮvestis: {inputPrice} / 1 milijonas žetonų\nTalpykloje išsaugota įvestis: {cachedInputPrice} / 1 milijonas žetonų\nIšvestis: {outputPrice} / 1 milijonas žetonų\nPastaba: nurodytos kainos už vaizdą taikomos tik išvesties vaizdo žetonams. Įvesties teksto / vaizdo žetonai apmokestinami atskirai.",
+    "imageQuality": {
+        "standard": "Standartinis",
+        "hd": "Didelės raiškos",
+        "low": "Žemas",
+        "medium": "Vidutinis",
+        "high": "Aukštas"
+    }
 };
 export default lt;

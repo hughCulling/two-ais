@@ -391,6 +391,14 @@ const ms = {
     },
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",
-    "imageModel_PriceUSD": "harga (USD)"
+    "imageModel_PriceUSD": "harga (USD)",
+    "gptImage1PricingTooltip": "Harga token untuk GPT Image 1:\nInput: {inputPrice} / 1 Juta token\nInput dicache: {cachedInputPrice} / 1 Juta token\nOutput: {outputPrice} / 1 Juta token\nNota: Harga setiap imej di atas adalah untuk token imej output sahaja. Token teks/imej input dibilkan secara berasingan.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Definisi Tinggi",
+        "low": "rendah",
+        "medium": "Sederhana",
+        "high": "tinggi"
+    }
 };
 export default ms;
