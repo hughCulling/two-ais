@@ -391,6 +391,7 @@ const ka = {
     },
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",
-    "imageModel_PriceUSD": "ფასი (USD)"
+    "imageModel_PriceUSD": "ფასი (USD)",
+    "gptImage1PricingTooltip": "ტოკენების ფასები GPT Image 1:\nშეყვანა: {inputPrice} / 1 მილიონი ტოკენი\nქეშირებული შეყვანა: {cachedInputPrice} / 1 მილიონი ტოკენი\nგამომავალი: {outputPrice} / 1 მილიონი ტოკენი\nშენიშვნა: ზემოთ მოცემული ფასები თითო სურათზე მხოლოდ გამოსატანი სურათის ტოკენებისთვისაა. შეყვანილი ტექსტის/სურათის ტოკენები ცალკე ანგარიშდება."
 };
 export default ka;

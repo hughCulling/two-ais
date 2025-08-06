@@ -391,6 +391,7 @@ const th = {
     },
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",
-    "imageModel_PriceUSD": "ราคา (USD)"
+    "imageModel_PriceUSD": "ราคา (USD)",
+    "gptImage1PricingTooltip": "ราคาโทเค็นสำหรับ GPT Image 1:\nอินพุต: {inputPrice} / 1 ล้านโทเค็น\nอินพุตแคช: {cachedInputPrice} / 1 ล้านโทเค็น\nเอาต์พุต: {outputPrice} / 1 ล้านโทเค็น\nหมายเหตุ: ราคาต่อภาพข้างต้นสำหรับโทเค็นภาพเอาต์พุตเท่านั้น โทเค็นข้อความ/ภาพอินพุตจะเรียกเก็บเงินแยกต่างหาก"
 };
 export default th;

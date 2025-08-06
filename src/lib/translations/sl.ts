@@ -391,6 +391,7 @@ const sl = {
     },
     "imageModel_Quality": "Kakovost",
     "imageModel_Size": "Velikost",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "gptImage1PricingTooltip": "Cena žetonov za GPT Image 1:\nVnos: {inputPrice} / 1 milijon žetonov\nPredpomnjeni vnos: {cachedInputPrice} / 1 milijon žetonov\nIzhod: {outputPrice} / 1 milijon žetonov\nOpomba: Zgornje cene na sliko veljajo samo za izhodne slikovne žetone. Vhodni besedilni/slikovni žetoni se zaračunavajo ločeno."
 };
 export default sl;

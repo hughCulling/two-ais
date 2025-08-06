@@ -391,6 +391,7 @@ const vi = {
     },
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",
-    "imageModel_PriceUSD": "Giá (USD)"
+    "imageModel_PriceUSD": "Giá (USD)",
+    "gptImage1PricingTooltip": "Giá mã thông báo cho GPT Image 1:\nĐầu vào: {inputPrice} / 1 triệu token\nĐầu vào được lưu trong bộ nhớ đệm: {cachedInputPrice} / 1 triệu token\nĐầu ra: {outputPrice} / 1 triệu token\nLưu ý: Giá trên mỗi hình ảnh chỉ áp dụng cho token hình ảnh đầu ra. Token văn bản/hình ảnh đầu vào được tính riêng."
 };
 export default vi;

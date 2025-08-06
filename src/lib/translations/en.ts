@@ -314,6 +314,7 @@ const en = {
     common_verifyHere: "verify here", // Added for link text
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
+    gptImage1PricingTooltip: "Token pricing for GPT Image 1:\nInput: {inputPrice} / 1 Million tokens\nCached input: {cachedInputPrice} / 1 Million tokens\nOutput: {outputPrice} / 1 Million tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.",
 
     // Pricing related terms
     pricing: {

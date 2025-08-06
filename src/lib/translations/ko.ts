@@ -391,6 +391,7 @@ const ko = {
     },
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",
-    "imageModel_PriceUSD": "가격 (USD)"
+    "imageModel_PriceUSD": "가격 (USD)",
+    "gptImage1PricingTooltip": "토큰 가격 GPT Image 1:\n입력: {inputPrice} / 토큰 100만 개\n캐시된 입력: {cachedInputPrice} / 토큰 100만 개\n출력: {outputPrice} / 토큰 100만 개\n참고: 위의 이미지당 가격은 출력 이미지 토큰에만 적용됩니다. 입력 텍스트/이미지 토큰은 별도로 청구됩니다."
 };
 export default ko;

@@ -391,6 +391,7 @@ const hi = {
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "कीमत (USD)"
+    "imageModel_PriceUSD": "कीमत (USD)",
+    "gptImage1PricingTooltip": "टोकन मूल्य निर्धारण GPT Image 1:\nइनपुट: {inputPrice} / 1 मिलियन टोकन\nकैश्ड इनपुट: {cachedInputPrice} / 1 मिलियन टोकन\nआउटपुट: {outputPrice} / 1 मिलियन टोकन\nनोट: ऊपर दी गई प्रति-इमेज कीमतें केवल आउटपुट इमेज टोकन के लिए हैं। इनपुट टेक्स्ट/इमेज टोकन का बिल अलग से लिया जाएगा।"
 };
 export default hi;

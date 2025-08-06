@@ -391,6 +391,7 @@ const sr = {
     },
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Величина",
-    "imageModel_PriceUSD": "Цена (USD)"
+    "imageModel_PriceUSD": "Цена (USD)",
+    "gptImage1PricingTooltip": "Цена токена за GPT Image 1:\nУнос: {inputPrice} / 1 милион токена\nКеширани унос: {cachedInputPrice} / 1 милион токена\nИзлаз: {outputPrice} / 1 милион токена\nНапомена: Горе наведене цене по слици важе само за излазне токене слика. Улазни текстуални/сликовни токени се наплаћују одвојено."
 };
 export default sr;

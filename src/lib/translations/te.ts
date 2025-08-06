@@ -391,6 +391,7 @@ const te = {
     },
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",
-    "imageModel_PriceUSD": "ధర (USD)"
+    "imageModel_PriceUSD": "ధర (USD)",
+    "gptImage1PricingTooltip": "టోకెన్ ధర నిర్ణయం GPT Image 1:\nఇన్‌పుట్: {inputPrice} / 1 మిలియన్ టోకెన్‌లు\nకాష్ చేయబడిన ఇన్‌పుట్: {cachedInputPrice} / 1 మిలియన్ టోకెన్‌లు\nఅవుట్‌పుట్: {outputPrice} / 1 మిలియన్ టోకెన్‌లు\nగమనిక: పైన పేర్కొన్న ప్రతి చిత్రం ధరలు అవుట్‌పుట్ ఇమేజ్ టోకెన్‌లకు మాత్రమే. ఇన్‌పుట్ టెక్స్ట్/ఇమేజ్ టోకెన్‌లు విడిగా బిల్ చేయబడతాయి."
 };
 export default te;

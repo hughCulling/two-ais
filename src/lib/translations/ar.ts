@@ -391,6 +391,7 @@ const ar = {
     },
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",
-    "imageModel_PriceUSD": "سعر (USD)"
+    "imageModel_PriceUSD": "سعر (USD)",
+    "gptImage1PricingTooltip": "تسعير الرمز المميز لـ GPT Image 1:\nالمدخلات: {inputPrice} / مليون رمز\nالمدخلات المخزنة مؤقتًا: {cachedInputPrice} / مليون رمز\nالمخرجات: {outputPrice} / مليون رمز\nملاحظة: أسعار الصورة المذكورة أعلاه خاصة برموز الصور المخرجة فقط. تُفرض رسوم رموز النصوص/الصور المدخلة بشكل منفصل."
 };
 export default ar;

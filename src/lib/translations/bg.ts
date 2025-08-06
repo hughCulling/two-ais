@@ -391,6 +391,7 @@ const bg = {
     },
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",
-    "imageModel_PriceUSD": "Цена (USD)"
+    "imageModel_PriceUSD": "Цена (USD)",
+    "gptImage1PricingTooltip": "Ценообразуване на токени за GPT Image 1:\nВход: {inputPrice} / 1 милион токена\nКеширан вход: {cachedInputPrice} / 1 милион токена\nИзход: {outputPrice} / 1 милион токена\nЗабележка: Цените за изображение по-горе са само за изходни токени за изображения. Входните токени за текст/изображение се таксуват отделно."
 };
 export default bg;

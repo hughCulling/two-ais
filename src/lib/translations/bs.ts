@@ -391,6 +391,7 @@ const bs = {
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Veličina",
-    "imageModel_PriceUSD": "Cijena (USD)"
+    "imageModel_PriceUSD": "Cijena (USD)",
+    "gptImage1PricingTooltip": "Cijena tokena za GPT Image 1:\nUlaz: {inputPrice} / 1 milion tokena\nKeširani unos: {cachedInputPrice} / 1 milion tokena\nIzlaz: {outputPrice} / 1 milion tokena\nNapomena: Gore navedene cijene po slici odnose se samo na izlazne tokene slika. Ulazni tokeni teksta/slike naplaćuju se zasebno."
 };
 export default bs;

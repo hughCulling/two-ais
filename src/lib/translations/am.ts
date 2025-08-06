@@ -391,6 +391,7 @@ const am = {
     },
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",
-    "imageModel_PriceUSD": "ዋጋ (USD)"
+    "imageModel_PriceUSD": "ዋጋ (USD)",
+    "gptImage1PricingTooltip": "ማስመሰያ ዋጋ ለ GPT Image 1:\nግቤት፡ {inputPrice} / 1 ሚሊዮን ቶከኖች\nየተሸጎጠ ግቤት፡ {cachedInputPrice} / 1 ሚሊዮን ቶከኖች\nውጤት፡ {outputPrice} / 1 ሚሊዮን ቶከኖች\nማስታወሻ፡- ከላይ ያሉት የምስል ዋጋዎች የውጤት ምስል ማስመሰያዎች ብቻ ናቸው። የግቤት ጽሑፍ/ምስል ቶከኖች ለየብቻ ይከፈላሉ።"
 };
 export default am;

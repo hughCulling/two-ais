@@ -391,6 +391,7 @@ const ru = {
     },
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",
-    "imageModel_PriceUSD": "Цена (USD)"
+    "imageModel_PriceUSD": "Цена (USD)",
+    "gptImage1PricingTooltip": "Цена токенов для GPT Image 1:\nВход: {inputPrice} / 1 миллион токенов\nКэшированный вход: {cachedInputPrice} / 1 миллион токенов\nВыход: {outputPrice} / 1 миллион токенов\nПримечание: Указанные выше цены за изображение действительны только для токенов выходных изображений. Токены входного текста/изображения оплачиваются отдельно."
 };
 export default ru;

@@ -391,6 +391,7 @@ const mt = {
     },
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",
-    "imageModel_PriceUSD": "Prezz (USD)"
+    "imageModel_PriceUSD": "Prezz (USD)",
+    "gptImage1PricingTooltip": "Prezzijiet tat-tokens għal GPT Image 1:\nInput: {inputPrice} / 1 Miljun token\nInput fil-cache: {cachedInputPrice} / 1 Miljun token\nOutput: {outputPrice} / 1 Miljun token\nNota: Il-prezzijiet għal kull immaġni ta' hawn fuq huma għal tokens tal-immaġni tal-output biss. It-tokens tat-test/immaġni tal-input jiġu ċċarġjati separatament."
 };
 export default mt;

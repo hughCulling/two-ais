@@ -391,6 +391,7 @@ const tr = {
     },
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",
-    "imageModel_PriceUSD": "Fiyat (USD)"
+    "imageModel_PriceUSD": "Fiyat (USD)",
+    "gptImage1PricingTooltip": "Token fiyatlandırması GPT Image 1:\nGirdi: {inputPrice} / 1 Milyon token\nÖnbelleğe alınan girdi: {cachedInputPrice} / 1 Milyon token\nÇıktı: {outputPrice} / 1 Milyon token\nNot: Yukarıdaki görsel başına fiyatlar yalnızca çıktı görsel tokenları içindir. Giriş metni/görüntü tokenları ayrı olarak faturalandırılır."
 };
 export default tr;

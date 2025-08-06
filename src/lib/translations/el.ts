@@ -391,6 +391,7 @@ const el = {
     },
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",
-    "imageModel_PriceUSD": "Τιμή (USD)"
+    "imageModel_PriceUSD": "Τιμή (USD)",
+    "gptImage1PricingTooltip": "Τιμολόγηση διακριτικών για GPT Image 1:\nΕίσοδος: {inputPrice} / 1 εκατομμύριο tokens\nΑποθηκευμένη είσοδος στην κρυφή μνήμη: {cachedInputPrice} / 1 εκατομμύριο tokens\nΈξοδος: {outputPrice} / 1 εκατομμύριο tokens\nΣημείωση: Οι παραπάνω τιμές ανά εικόνα ισχύουν μόνο για tokens εικόνας εξόδου. Τα tokens κειμένου/εικόνας εισόδου χρεώνονται ξεχωριστά."
 };
 export default el;

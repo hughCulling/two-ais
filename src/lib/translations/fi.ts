@@ -391,6 +391,7 @@ const fi = {
     },
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",
-    "imageModel_PriceUSD": "Hinta (USD)"
+    "imageModel_PriceUSD": "Hinta (USD)",
+    "gptImage1PricingTooltip": "Token-hinnoittelu GPT Image 1:\nSyöte: {inputPrice} / 1 miljoona tokenia\nVälimuistissa oleva syöte: {cachedInputPrice} / 1 miljoona tokenia\nTuloste: {outputPrice} / 1 miljoona tokenia\nHuomautus: Yllä olevat kuvakohtaiset hinnat koskevat vain tulostekuvia. Syöteteksti-/kuvatokenit laskutetaan erikseen."
 };
 export default fi;

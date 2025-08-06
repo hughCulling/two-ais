@@ -391,6 +391,7 @@ const tl = {
     },
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",
-    "imageModel_PriceUSD": "Presyo (USD)"
+    "imageModel_PriceUSD": "Presyo (USD)",
+    "gptImage1PricingTooltip": "Pagpepresyo ng token para sa GPT Image 1:\nInput: {inputPrice} / 1 Milyong token\nNaka-cache na input: {cachedInputPrice} / 1 Milyong token\nOutput: {outputPrice} / 1 Milyong token\nTandaan: Ang mga presyo sa bawat larawan sa itaas ay para sa mga token ng output na imahe lamang. Ang mga input na text/image token ay sinisingil nang hiwalay."
 };
 export default tl;

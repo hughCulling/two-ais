@@ -391,6 +391,7 @@ const is = {
     },
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",
-    "imageModel_PriceUSD": "Verð (USD)"
+    "imageModel_PriceUSD": "Verð (USD)",
+    "gptImage1PricingTooltip": "Verðlagning á táknum fyrir GPT Image 1:\nInntak: {inputPrice} / 1 milljón tákn\nSkyndiminni inntak: {cachedInputPrice} / 1 milljón tákn\nÚttak: {outputPrice} / 1 milljón tákn\nAthugið: Verð á mynd hér að ofan gildir aðeins fyrir úttaksmyndartákn. Inntakstexta-/myndartákn eru rukkuð sérstaklega."
 };
 export default is;

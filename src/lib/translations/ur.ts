@@ -391,6 +391,7 @@ const ur = {
     },
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",
-    "imageModel_PriceUSD": "قیمت (USD)"
+    "imageModel_PriceUSD": "قیمت (USD)",
+    "gptImage1PricingTooltip": "کے لیے ٹوکن کی قیمت GPT Image 1:\nان پٹ: {inputPrice} / 1 ملین ٹوکن\nکیشڈ ان پٹ: {cachedInputPrice} / 1 ملین ٹوکن\nآؤٹ پٹ: {outputPrice} / 1 ملین ٹوکن\nنوٹ: اوپر کی فی تصویر کی قیمتیں صرف آؤٹ پٹ امیج ٹوکنز کے لیے ہیں۔ ان پٹ ٹیکسٹ/امیج ٹوکنز کا بل الگ سے لگایا جاتا ہے۔"
 };
 export default ur;

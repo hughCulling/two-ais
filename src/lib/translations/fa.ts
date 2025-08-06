@@ -391,6 +391,7 @@ const fa = {
     },
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",
-    "imageModel_PriceUSD": "قیمت (USD)"
+    "imageModel_PriceUSD": "قیمت (USD)",
+    "gptImage1PricingTooltip": "قیمت گذاری توکن برای GPT Image 1:\nورودی: {inputPrice} / 1 میلیون توکن\nورودی ذخیره شده: {cachedInputPrice} / 1 میلیون توکن\nخروجی: {outputPrice} / 1 میلیون توکن\nتوجه: قیمت‌های هر تصویر فوق فقط برای توکن‌های تصویر خروجی است. توکن‌های متن/تصویر ورودی جداگانه محاسبه می‌شوند."
 };
 export default fa;

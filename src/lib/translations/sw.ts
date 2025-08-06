@@ -391,6 +391,7 @@ const sw = {
     },
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",
-    "imageModel_PriceUSD": "Bei (USD)"
+    "imageModel_PriceUSD": "Bei (USD)",
+    "gptImage1PricingTooltip": "Bei ya ishara kwa GPT Image 1:\nIngizo: {inputPrice} / tokeni Milioni 1\nIngizo lililoakibishwa: {cachedInputPrice} / tokeni Milioni 1\nPato: {outputPrice} / tokeni Milioni 1\nKumbuka: Bei za kila picha hapo juu ni za tokeni za picha zinazotolewa pekee. Ishara za maandishi/picha hutozwa kando."
 };
 export default sw;

@@ -391,6 +391,7 @@ const ta = {
     },
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",
-    "imageModel_PriceUSD": "விலை (USD)"
+    "imageModel_PriceUSD": "விலை (USD)",
+    "gptImage1PricingTooltip": "டோக்கன் விலை நிர்ணயம் GPT Image 1:\nஉள்ளீடு: {inputPrice} / 1 மில்லியன் டோக்கன்கள்\nதற்காலிகமாகச் சேமிக்கப்பட்ட உள்ளீடு: {cachedInputPrice} / 1 மில்லியன் டோக்கன்கள்\nவெளியீடு: {outputPrice} / 1 மில்லியன் டோக்கன்கள்\nகுறிப்பு: மேலே உள்ள ஒவ்வொரு படத்திற்கும் விலைகள் வெளியீட்டு பட டோக்கன்களுக்கு மட்டுமே. உள்ளீட்டு உரை/பட டோக்கன்கள் தனித்தனியாக பில் செய்யப்படுகின்றன."
 };
 export default ta;

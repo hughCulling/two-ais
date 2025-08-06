@@ -391,6 +391,7 @@ const lv = {
     },
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",
-    "imageModel_PriceUSD": "Cena (USD)"
+    "imageModel_PriceUSD": "Cena (USD)",
+    "gptImage1PricingTooltip": "Žetonu cenas GPT Image 1:\nIevade: {inputPrice} / 1 miljons žetonu\nKešatmiņā saglabāta ievade: {cachedInputPrice} / 1 miljons žetonu\nIzvade: {outputPrice} / 1 miljons žetonu\nPiezīme. Iepriekš minētās cenas par attēlu attiecas tikai uz izvades attēlu žetoniem. Ievades teksta/attēlu žetoni tiek apmaksāti atsevišķi."
 };
 export default lv;

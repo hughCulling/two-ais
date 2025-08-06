@@ -186,6 +186,8 @@ const PROTECTED_TERMS = [
     "Ministral 3B 24.10",
     "Mistral Small 3.2",
     "Magistral Small",
+    "GPT Image 1",
+
     //...LANGUAGE_NAMES_EN
 ];
 
