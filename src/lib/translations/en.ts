@@ -309,7 +309,7 @@ const en = {
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
     page_PricesLastVerifiedOn: 'Prices last verified on {date}',
-    page_PricingPerTokens: 'per {amount} Tokens',
+    page_PricingPerTokens: 'per 1 Million Tokens',
     page_ModelCategoryModels: '{model} models',
     common_verifyHere: "verify here", // Added for link text
     // Text To Speech specific voice names (if needed globally)
