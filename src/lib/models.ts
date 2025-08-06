@@ -38,7 +38,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         categoryKey: 'modelCategory_FlagshipChat',
-        knowledgeCutoff: 'October 01, 2023',
+        knowledgeCutoff: '2023-10-01',
     },
     {
         id: 'gpt-4o',
@@ -50,7 +50,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         categoryKey: 'modelCategory_FlagshipChat',
-        knowledgeCutoff: 'October 01, 2023',
+        knowledgeCutoff: '2023-10-01',
     },
     {
         id: 'gpt-4o-mini',
@@ -63,7 +63,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         categoryKey: 'modelCategory_CostOptimized',
-        knowledgeCutoff: 'October 01, 2023',
+        knowledgeCutoff: '2023-10-01',
     },
     {
         id: 'gpt-4.1',
@@ -75,7 +75,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         categoryKey: 'modelCategory_FlagshipChat',
-        knowledgeCutoff: 'June 01, 2024',
+        knowledgeCutoff: '2024-06-01',
     },
      {
         id: 'gpt-4.1-mini',
@@ -88,7 +88,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         categoryKey: 'modelCategory_CostOptimized',
-        knowledgeCutoff: 'June 01, 2024',
+        knowledgeCutoff: '2024-06-01',
     },
     {
         id: 'gpt-4.1-nano',
@@ -101,7 +101,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         categoryKey: 'modelCategory_CostOptimized',
-        knowledgeCutoff: 'June 01, 2024',
+        knowledgeCutoff: '2024-06-01',
     },
     {
         id: 'gpt-4-turbo',
@@ -113,7 +113,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         categoryKey: 'modelCategory_OlderGPT',
-        knowledgeCutoff: 'December 01, 2023',
+        knowledgeCutoff: '2023-12-01',
     },
     {
         id: 'gpt-4',
@@ -125,7 +125,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         categoryKey: 'modelCategory_OlderGPT',
-        knowledgeCutoff: 'December 01, 2023',
+        knowledgeCutoff: '2023-12-01',
     },
     {
         id: 'gpt-3.5-turbo',
@@ -137,7 +137,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'openai',
         status: 'stable',
         categoryKey: 'modelCategory_OlderGPT',
-        knowledgeCutoff: 'September 01, 2021',
+        knowledgeCutoff: '2021-09-01',
     },
     {
         id: 'o4-mini',
@@ -150,7 +150,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Reasoning',
-        knowledgeCutoff: 'June 01, 2024',
+        knowledgeCutoff: '2024-06-01',
     },
     {
         id: 'o3',
@@ -164,7 +164,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         requiresOrgVerification: true,
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Reasoning',
-        knowledgeCutoff: 'June 01, 2024',
+        knowledgeCutoff: '2024-06-01',
     },
     {
         id: 'o3-mini',
@@ -178,7 +178,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         requiresOrgVerification: false,
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Reasoning',
-        knowledgeCutoff: 'October 01, 2023',
+        knowledgeCutoff: '2023-10-01',
     },
     {
         id: 'o1',
@@ -192,7 +192,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         requiresOrgVerification: false,
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Reasoning',
-        knowledgeCutoff: 'October 01, 2023',
+        knowledgeCutoff: '2023-10-01',
     },
 
     // === Google ===
@@ -211,7 +211,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         usesReasoningTokens: true, 
         categoryKey: 'modelCategory_Gemini2_5',
-        knowledgeCutoff: 'January 2025',
+        knowledgeCutoff: '2025-01',
     },
     {
         id: 'gemini-2.5-flash', 
@@ -228,7 +228,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         usesReasoningTokens: true, 
         categoryKey: 'modelCategory_Gemini2_5',
-        knowledgeCutoff: 'January 2025',
+        knowledgeCutoff: '2025-01',
     },
     {
         id: 'gemini-2.0-flash-001',
@@ -240,7 +240,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'google_ai',
         status: 'stable',
         categoryKey: 'modelCategory_Gemini2_0',
-        knowledgeCutoff: 'August 2024',
+        knowledgeCutoff: '2024-08',
     },
     {
         id: 'gemini-2.0-flash-lite-001',
@@ -252,7 +252,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'google_ai',
         status: 'stable',
         categoryKey: 'modelCategory_Gemini2_0',
-        knowledgeCutoff: 'August 2024',
+        knowledgeCutoff: '2024-08',
     },
     {
         id: 'gemini-1.5-pro',
@@ -313,7 +313,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'preview',
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Gemini2_5',
-        knowledgeCutoff: 'January 2025',
+        knowledgeCutoff: '2025-01',
     },
 
     // === Anthropic ===
@@ -328,7 +328,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Claude4',
-        knowledgeCutoff: 'March 2025',
+        knowledgeCutoff: '2025-03',
     },
     {
         id: 'claude-sonnet-4-20250514',
@@ -341,7 +341,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Claude4',
-        knowledgeCutoff: 'March 2025',
+        knowledgeCutoff: '2025-03',
     },
     {
         id: 'claude-3-7-sonnet-20250219',
@@ -354,7 +354,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable', 
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Claude3_7',
-        knowledgeCutoff: 'October 2024',
+        knowledgeCutoff: '2024-10',
     },
     {
         id: 'claude-3-5-haiku-20241022',
@@ -366,7 +366,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
         categoryKey: 'modelCategory_Claude3_5',
-        knowledgeCutoff: 'July 2024',
+        knowledgeCutoff: '2024-07',
     },
     {
         id: 'claude-3-5-sonnet-20241022', 
@@ -379,7 +379,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         requiresOrgVerification: false,
         categoryKey: 'modelCategory_Claude3_5',
-        knowledgeCutoff: 'April 2024',
+        knowledgeCutoff: '2024-04',
     },
     {
         id: 'claude-3-opus-20240229',
@@ -402,7 +402,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'anthropic',
         status: 'stable',
         categoryKey: 'modelCategory_Claude3',
-        knowledgeCutoff: 'August 2023',
+        knowledgeCutoff: '2023-08',
     },
 
     // === xAI (Grok) ===
@@ -417,7 +417,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Grok3',
         usesReasoningTokens: false, 
-        knowledgeCutoff: 'November 2024',
+        knowledgeCutoff: '2024-11',
     },
     {
         id: 'grok-3-fast-latest',
@@ -430,7 +430,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Grok3', 
         usesReasoningTokens: false, 
-        knowledgeCutoff: 'November 2024',
+        knowledgeCutoff: '2024-11',
     },
     {
         id: 'grok-3-mini-latest',
@@ -443,7 +443,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Grok3Mini',
         usesReasoningTokens: true, 
-        knowledgeCutoff: 'November 2024',
+        knowledgeCutoff: '2024-11',
     },
     {
         id: 'grok-3-mini-fast-latest',
@@ -456,7 +456,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Grok3Mini', 
         usesReasoningTokens: true, 
-        knowledgeCutoff: 'November 2024',
+        knowledgeCutoff: '2024-11',
     },
     {
         id: 'grok-4-latest',
@@ -469,7 +469,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_Grok4',
         usesReasoningTokens: true,
-        knowledgeCutoff: 'November 2024',
+        knowledgeCutoff: '2024-11',
     },
 
     // === DeepSeek ===
@@ -601,7 +601,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable', 
         categoryKey: 'modelCategory_Llama4',
-        knowledgeCutoff: 'August 2024',
+        knowledgeCutoff: '2024-08',
     },
     {
         id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -613,7 +613,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'together_ai',
         status: 'stable',
         categoryKey: 'modelCategory_Llama4',
-        knowledgeCutoff: 'August 2024',
+        knowledgeCutoff: '2024-08',
     },
     {
         id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
