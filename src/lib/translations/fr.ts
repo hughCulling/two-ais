@@ -392,6 +392,13 @@ const fr = {
     "imageModel_Quality": "Qualité",
     "imageModel_Size": "Taille",
     "imageModel_PriceUSD": "Prix (USD)",
-    "gptImage1PricingTooltip": "Tarification des jetons pour GPT Image 1:\nEntrée : {inputPrice} / 1 million de jetons\nEntrée en cache : {cachedInputPrice} / 1 million de jetons\nSortie : {outputPrice} / 1 million de jetons\nRemarque : Les prix par image ci-dessus concernent uniquement les jetons d'image de sortie. Les jetons de texte/image d'entrée sont facturés séparément."
+    "gptImage1PricingTooltip": "Tarification des jetons pour GPT Image 1:\nEntrée : {inputPrice} / 1 million de jetons\nEntrée en cache : {cachedInputPrice} / 1 million de jetons\nSortie : {outputPrice} / 1 million de jetons\nRemarque : Les prix par image ci-dessus concernent uniquement les jetons d'image de sortie. Les jetons de texte/image d'entrée sont facturés séparément.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Haute définition",
+        "low": "Faible",
+        "medium": "Moyen",
+        "high": "Haut"
+    }
 };
 export default fr;

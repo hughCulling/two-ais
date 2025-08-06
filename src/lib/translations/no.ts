@@ -392,6 +392,13 @@ const no = {
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
     "imageModel_PriceUSD": "Pris (USD)",
-    "gptImage1PricingTooltip": "Tokenpriser for GPT Image 1:\nInndata: {inputPrice} / 1 million tokens\nBufret inndata: {cachedInputPrice} / 1 million tokens\nUtdata: {outputPrice} / 1 million tokens\nMerk: Prisene per bilde ovenfor gjelder kun for utdatabildetokens. Inndatatekst-/bildetokens faktureres separat."
+    "gptImage1PricingTooltip": "Tokenpriser for GPT Image 1:\nInndata: {inputPrice} / 1 million tokens\nBufret inndata: {cachedInputPrice} / 1 million tokens\nUtdata: {outputPrice} / 1 million tokens\nMerk: Prisene per bilde ovenfor gjelder kun for utdatabildetokens. Inndatatekst-/bildetokens faktureres separat.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Høy oppløsning",
+        "low": "Lav",
+        "medium": "Medium",
+        "high": "Høy"
+    }
 };
 export default no;

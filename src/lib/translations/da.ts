@@ -392,6 +392,13 @@ const da = {
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
     "imageModel_PriceUSD": "Pris (USD)",
-    "gptImage1PricingTooltip": "Token-prissætning for GPT Image 1Input: {inputPrice} / 1 million tokens\nCachelagret input: {cachedInputPrice} / 1 million tokens\nOutput: {outputPrice} / 1 million tokens\nBemærk: Priserne pr. billede ovenfor er kun for outputbilledtokens. Inputtekst-/billedtokens faktureres separat."
+    "gptImage1PricingTooltip": "Token-prissætning for GPT Image 1Input: {inputPrice} / 1 million tokens\nCachelagret input: {cachedInputPrice} / 1 million tokens\nOutput: {outputPrice} / 1 million tokens\nBemærk: Priserne pr. billede ovenfor er kun for outputbilledtokens. Inputtekst-/billedtokens faktureres separat.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Høj opløsning",
+        "low": "Lav",
+        "medium": "Medium",
+        "high": "Høj"
+    }
 };
 export default da;

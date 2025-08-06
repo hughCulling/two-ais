@@ -392,6 +392,13 @@ const sk = {
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",
     "imageModel_PriceUSD": "Cena (USD)",
-    "gptImage1PricingTooltip": "Cena tokenov pre GPT Image 1:\nVstup: {inputPrice} / 1 milión tokenov\nVstup z vyrovnávacej pamäte: {cachedInputPrice} / 1 milión tokenov\nVýstup: {outputPrice} / 1 milión tokenov\nPoznámka: Uvedené ceny za obrázok platia len pre výstupné obrázkové tokeny. Vstupné textové/obrázkové tokeny sa účtujú samostatne."
+    "gptImage1PricingTooltip": "Cena tokenov pre GPT Image 1:\nVstup: {inputPrice} / 1 milión tokenov\nVstup z vyrovnávacej pamäte: {cachedInputPrice} / 1 milión tokenov\nVýstup: {outputPrice} / 1 milión tokenov\nPoznámka: Uvedené ceny za obrázok platia len pre výstupné obrázkové tokeny. Vstupné textové/obrázkové tokeny sa účtujú samostatne.",
+    "imageQuality": {
+        "standard": "Štandard",
+        "hd": "Vysoké rozlíšenie",
+        "low": "Nízka",
+        "medium": "Stredné",
+        "high": "Vysoká"
+    }
 };
 export default sk;

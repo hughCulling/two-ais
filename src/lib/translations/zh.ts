@@ -392,6 +392,13 @@ const zh = {
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",
     "imageModel_PriceUSD": "价格 (USD)",
-    "gptImage1PricingTooltip": "代币定价 GPT Image 1:\n输入：{inputPrice} / 100 万个令牌\n缓存输入：{cachedInputPrice} / 100 万个令牌\n输出：{outputPrice} / 100 万个令牌\n注意：以上每张图片价格仅适用于输出图片令牌。输入文本/图片令牌需单独计费。"
+    "gptImage1PricingTooltip": "代币定价 GPT Image 1:\n输入：{inputPrice} / 100 万个令牌\n缓存输入：{cachedInputPrice} / 100 万个令牌\n输出：{outputPrice} / 100 万个令牌\n注意：以上每张图片价格仅适用于输出图片令牌。输入文本/图片令牌需单独计费。",
+    "imageQuality": {
+        "standard": "标准",
+        "hd": "高清",
+        "low": "低的",
+        "medium": "中等的",
+        "high": "高的"
+    }
 };
 export default zh;

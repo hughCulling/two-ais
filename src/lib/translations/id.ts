@@ -392,6 +392,13 @@ const id = {
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",
     "imageModel_PriceUSD": "Harga (USD)",
-    "gptImage1PricingTooltip": "Harga token untuk GPT Image 1:\nInput: {inputPrice} / 1 Juta token\nInput yang di-cache: {cachedInputPrice} / 1 Juta token\nOutput: {outputPrice} / 1 Juta token\nCatatan: Harga per gambar di atas hanya untuk token gambar output. Token teks/gambar input ditagih secara terpisah."
+    "gptImage1PricingTooltip": "Harga token untuk GPT Image 1:\nInput: {inputPrice} / 1 Juta token\nInput yang di-cache: {cachedInputPrice} / 1 Juta token\nOutput: {outputPrice} / 1 Juta token\nCatatan: Harga per gambar di atas hanya untuk token gambar output. Token teks/gambar input ditagih secara terpisah.",
+    "imageQuality": {
+        "standard": "Standar",
+        "hd": "Definisi Tinggi",
+        "low": "Rendah",
+        "medium": "Sedang",
+        "high": "Tinggi"
+    }
 };
 export default id;

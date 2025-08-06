@@ -392,6 +392,13 @@ const pa = {
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",
     "imageModel_PriceUSD": "ਕੀਮਤ (USD)",
-    "gptImage1PricingTooltip": "ਲਈ ਟੋਕਨ ਕੀਮਤ GPT Image 1:\nਇਨਪੁਟ: {inputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਕੈਸ਼ਡ ਇਨਪੁਟ: {cachedInputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਆਉਟਪੁੱਟ: {outputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਨੋਟ: ਉੱਪਰ ਦਿੱਤੀਆਂ ਪ੍ਰਤੀ-ਚਿੱਤਰ ਕੀਮਤਾਂ ਸਿਰਫ਼ ਆਉਟਪੁੱਟ ਚਿੱਤਰ ਟੋਕਨਾਂ ਲਈ ਹਨ। ਇਨਪੁਟ ਟੈਕਸਟ/ਚਿੱਤਰ ਟੋਕਨਾਂ ਦਾ ਬਿੱਲ ਵੱਖਰੇ ਤੌਰ 'ਤੇ ਲਿਆ ਜਾਂਦਾ ਹੈ।"
+    "gptImage1PricingTooltip": "ਲਈ ਟੋਕਨ ਕੀਮਤ GPT Image 1:\nਇਨਪੁਟ: {inputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਕੈਸ਼ਡ ਇਨਪੁਟ: {cachedInputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਆਉਟਪੁੱਟ: {outputPrice} / 1 ਮਿਲੀਅਨ ਟੋਕਨ\nਨੋਟ: ਉੱਪਰ ਦਿੱਤੀਆਂ ਪ੍ਰਤੀ-ਚਿੱਤਰ ਕੀਮਤਾਂ ਸਿਰਫ਼ ਆਉਟਪੁੱਟ ਚਿੱਤਰ ਟੋਕਨਾਂ ਲਈ ਹਨ। ਇਨਪੁਟ ਟੈਕਸਟ/ਚਿੱਤਰ ਟੋਕਨਾਂ ਦਾ ਬਿੱਲ ਵੱਖਰੇ ਤੌਰ 'ਤੇ ਲਿਆ ਜਾਂਦਾ ਹੈ।",
+    "imageQuality": {
+        "standard": "ਮਿਆਰੀ",
+        "hd": "ਹਾਈ ਡੈਫੀਨੇਸ਼ਨ",
+        "low": "ਘੱਟ",
+        "medium": "ਦਰਮਿਆਨਾ",
+        "high": "ਉੱਚ"
+    }
 };
 export default pa;

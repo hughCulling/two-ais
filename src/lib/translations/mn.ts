@@ -392,6 +392,13 @@ const mn = {
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",
     "imageModel_PriceUSD": "Үнэ (USD)",
-    "gptImage1PricingTooltip": "Токен үнэ GPT Image 1:\nОруулга: {inputPrice} / 1 сая жетон\nКэш хийсэн оролт: {cachedInputPrice} / 1 сая жетон\nГаралт: {outputPrice} / 1 сая жетон\nТайлбар: Дээрх зураг бүрийн үнэ зөвхөн гаралтын зургийн жетонд зориулагдсан болно. Оруулсан текст/зургийн жетоныг тусад нь тооцдог."
+    "gptImage1PricingTooltip": "Токен үнэ GPT Image 1:\nОруулга: {inputPrice} / 1 сая жетон\nКэш хийсэн оролт: {cachedInputPrice} / 1 сая жетон\nГаралт: {outputPrice} / 1 сая жетон\nТайлбар: Дээрх зураг бүрийн үнэ зөвхөн гаралтын зургийн жетонд зориулагдсан болно. Оруулсан текст/зургийн жетоныг тусад нь тооцдог.",
+    "imageQuality": {
+        "standard": "Стандарт",
+        "hd": "Өндөр тодорхойлолт",
+        "low": "Бага",
+        "medium": "Дунд зэрэг",
+        "high": "Өндөр"
+    }
 };
 export default mn;

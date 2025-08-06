@@ -392,6 +392,13 @@ const nl = {
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",
     "imageModel_PriceUSD": "Prijs (USD)",
-    "gptImage1PricingTooltip": "Tokenprijzen voor GPT Image 1:\nInput: {inputPrice} / 1 miljoen tokens\nGecachte input: {cachedInputPrice} / 1 miljoen tokens\nOutput: {outputPrice} / 1 miljoen tokens\nLet op: Bovenstaande prijzen per afbeelding gelden alleen voor output-afbeeldingstokens. Inputtekst/-afbeeldingstokens worden apart gefactureerd."
+    "gptImage1PricingTooltip": "Tokenprijzen voor GPT Image 1:\nInput: {inputPrice} / 1 miljoen tokens\nGecachte input: {cachedInputPrice} / 1 miljoen tokens\nOutput: {outputPrice} / 1 miljoen tokens\nLet op: Bovenstaande prijzen per afbeelding gelden alleen voor output-afbeeldingstokens. Inputtekst/-afbeeldingstokens worden apart gefactureerd.",
+    "imageQuality": {
+        "standard": "Standaard",
+        "hd": "Hoge definitie",
+        "low": "Laag",
+        "medium": "Medium",
+        "high": "Hoog"
+    }
 };
 export default nl;

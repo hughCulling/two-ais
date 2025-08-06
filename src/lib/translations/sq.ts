@@ -392,6 +392,13 @@ const sq = {
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",
     "imageModel_PriceUSD": "Çmimi (USD)",
-    "gptImage1PricingTooltip": "Çmimi i tokenëve për GPT Image 1:\nInput: {inputPrice} / 1 Milion tokena\nInput i ruajtur në memorien e përkohshme: {cachedInputPrice} / 1 Milion tokena\nDalja: {outputPrice} / 1 Milion tokena\nShënim: Çmimet për imazh më sipër janë vetëm për tokenat e imazhit të daljes. Teksti/tokenat e imazhit të hyrjes faturohen veçmas."
+    "gptImage1PricingTooltip": "Çmimi i tokenëve për GPT Image 1:\nInput: {inputPrice} / 1 Milion tokena\nInput i ruajtur në memorien e përkohshme: {cachedInputPrice} / 1 Milion tokena\nDalja: {outputPrice} / 1 Milion tokena\nShënim: Çmimet për imazh më sipër janë vetëm për tokenat e imazhit të daljes. Teksti/tokenat e imazhit të hyrjes faturohen veçmas.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Përkufizim i Lartë",
+        "low": "I ulët",
+        "medium": "Mesatare",
+        "high": "I lartë"
+    }
 };
 export default sq;

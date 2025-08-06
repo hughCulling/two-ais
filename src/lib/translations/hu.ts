@@ -392,6 +392,13 @@ const hu = {
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",
     "imageModel_PriceUSD": "Ár (USD)",
-    "gptImage1PricingTooltip": "Token árazás GPT Image 1:\nBemenet: {inputPrice} / 1 millió token\nGyorsítótárazott bemenet: {cachedInputPrice} / 1 millió token\nKimenet: {outputPrice} / 1 millió token\nMegjegyzés: A fenti képenkénti árak csak a kimeneti kép tokenekre vonatkoznak. A bemeneti szöveg/kép tokenek számlázása külön történik."
+    "gptImage1PricingTooltip": "Token árazás GPT Image 1:\nBemenet: {inputPrice} / 1 millió token\nGyorsítótárazott bemenet: {cachedInputPrice} / 1 millió token\nKimenet: {outputPrice} / 1 millió token\nMegjegyzés: A fenti képenkénti árak csak a kimeneti kép tokenekre vonatkoznak. A bemeneti szöveg/kép tokenek számlázása külön történik.",
+    "imageQuality": {
+        "standard": "Standard",
+        "hd": "Nagyfelbontású",
+        "low": "Alacsony",
+        "medium": "Közepes",
+        "high": "Magas"
+    }
 };
 export default hu;

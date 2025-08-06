@@ -392,6 +392,13 @@ const et = {
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
     "imageModel_PriceUSD": "Hind (USD)",
-    "gptImage1PricingTooltip": "Tokeni hinnakujundus GPT Image 1:\nSisend: {inputPrice} / 1 miljon žetooni\nVahemälus olev sisend: {cachedInputPrice} / 1 miljon žetooni\nVäljund: {outputPrice} / 1 miljon žetooni\nMärkus. Ülaltoodud pildipõhised hinnad kehtivad ainult väljundpildi žetoonide kohta. Sisendteksti/pildi žetoonide eest esitatakse eraldi arve."
+    "gptImage1PricingTooltip": "Tokeni hinnakujundus GPT Image 1:\nSisend: {inputPrice} / 1 miljon žetooni\nVahemälus olev sisend: {cachedInputPrice} / 1 miljon žetooni\nVäljund: {outputPrice} / 1 miljon žetooni\nMärkus. Ülaltoodud pildipõhised hinnad kehtivad ainult väljundpildi žetoonide kohta. Sisendteksti/pildi žetoonide eest esitatakse eraldi arve.",
+    "imageQuality": {
+        "standard": "Standardne",
+        "hd": "Kõrglahutus",
+        "low": "Madal",
+        "medium": "Keskmine",
+        "high": "Kõrge"
+    }
 };
 export default et;

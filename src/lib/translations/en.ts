@@ -351,6 +351,15 @@ const en = {
         }
     },
     
+    // Image quality options
+    imageQuality: {
+      standard: 'Standard',
+      hd: 'High Definition',
+      low: 'Low',
+      medium: 'Medium',
+      high: 'High',
+      // Add any other quality options used in your image models
+    },
     // Common terms
 
     // Session Setup Form

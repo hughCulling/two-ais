@@ -392,6 +392,13 @@ const mk = {
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Големина",
     "imageModel_PriceUSD": "Цена (USD)",
-    "gptImage1PricingTooltip": "Цени на токени за GPT Image 1:\nВлез: {inputPrice} / 1 милион токени\nКеширан влез: {cachedInputPrice} / 1 милион токени\nИзлез: {outputPrice} / 1 милион токени\nЗабелешка: Цените по слика погоре се само за токени за излезни слики. Влезните текстуални/сликовити токени се фактурираат одделно."
+    "gptImage1PricingTooltip": "Цени на токени за GPT Image 1:\nВлез: {inputPrice} / 1 милион токени\nКеширан влез: {cachedInputPrice} / 1 милион токени\nИзлез: {outputPrice} / 1 милион токени\nЗабелешка: Цените по слика погоре се само за токени за излезни слики. Влезните текстуални/сликовити токени се фактурираат одделно.",
+    "imageQuality": {
+        "standard": "Стандарден",
+        "hd": "Висока дефиниција",
+        "low": "Ниско",
+        "medium": "Средно",
+        "high": "Висок"
+    }
 };
 export default mk;

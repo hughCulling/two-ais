@@ -573,7 +573,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   {model.qualities.map((q) => (
                                     q.sizes.map((s) => (
                                       <tr key={q.quality + s.size}>
-                                        <td className="px-2 py-1">{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</td>
+                                        <td className="px-2 py-1">
+                                          {t?.imageQuality?.[q.quality as keyof typeof t.imageQuality] || 
+                                           q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}
+                                        </td>
                                         <td className="px-2 py-1">{s.size}</td>
                                         <td className="px-2 py-1">${s.price.toFixed(3)}</td>
                                       </tr>
