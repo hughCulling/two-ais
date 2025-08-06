@@ -219,9 +219,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         provider: 'Google',
         contextWindow: 2000000,
         pricing: { 
-            input: 0.15, 
-            output: 3.50, 
-            note: '$0.15 / $0.60 (non-thinking), $3.50 (thinking) per 1M Tokens' // Removed trailing period
+            input: 0.30, 
+            output: 2.50, 
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
