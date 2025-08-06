@@ -71,6 +71,7 @@ const ko = {
         "mn": "몽고 어"
     },
     "settings": {
+        "loading": "설정을 로딩 중입니다...",
         "title": "설정",
         "sections": {
             "appearance": "모습",
@@ -95,17 +96,17 @@ const ko = {
         },
         "apiKeys": {
             "title": "API 키",
-            "description": "관리하세요 API 다른 키 AI 제공자",
-            "saved": "저장됨",
-            "notSet": "설정되지 않음",
-            "setKey": "키 설정",
-            "updateKey": "업데이트 키",
-            "removeKey": "키 제거",
-            "getKeyInstructions": "당신의 것을 얻으십시오 API 열쇠",
-            "noNewKeys": "새로운 것이 없습니다 API 저장하기 위해 입력된 키입니다.",
-            "unexpectedResponse": "서버에서 예상치 못한 응답을 받았습니다.",
+            "description": "관리하세요 API 다른 키 AI 서비스.",
+            "setKey": "세트",
+            "updateKey": "업데이트",
+            "saveUpdateKeys": "키 저장/업데이트",
+            "saving": "절약...",
+            "noNewKeys": "저장할 새 키가 없습니다.",
+            "keyStoredSecurely": "당신의 API 키는 안전하게 저장되고 암호화됩니다.",
+            "enteringNewKeyOverwrites": "새로운 키를 입력하면 기존 키를 덮어씁니다.",
             "failedToSaveKey": "{serviceName} 키를 저장하지 못했습니다.",
-            "someKeysNotSaved": "일부 API 키를 저장할 수 없습니다. 아래 세부 정보를 확인하세요.",
+            "unexpectedResponse": "서버에서 예상치 못한 응답이 왔습니다.",
+            "someKeysNotSaved": "일부 키를 저장할 수 없습니다. 위의 오류를 확인해 주세요.",
             "keyStatus": "주요 상태...",
             "apiKeySecurelySaved": "API 키가 안전하게 저장됨",
             "confirmRemoveTitle": "제거 확인",
@@ -114,16 +115,12 @@ const ko = {
             "successfullyRemovedKey": "{serviceName} 키를 성공적으로 제거했습니다.",
             "keyNotSet": "키 상태: 설정되지 않음",
             "keySet": "주요 상태: 설정됨",
-            "saveButton": "구하다 API 키(들)",
-            "enteringNewKeyOverwrites": "새로운 키를 입력하면 저장된 키를 덮어씁니다.",
-            "keyStoredSecurely": "귀하의 키는 다음을 사용하여 안전하게 저장됩니다. Google 비밀 관리자.",
-            "saveUpdateKeys": "키 저장/업데이트",
-            "saving": "절약..."
-        },
-        "loading": "설정을 로딩 중입니다..."
+            "saveButton": "구하다 API 키(들)"
+        }
     },
     "main": {
         "title": "AI 대화",
+        "aiConversation": "AI 대화",
         "setupForm": {
             "title": "대화를 설정하세요",
             "agentA": "에이전트 A",
@@ -141,7 +138,7 @@ const ko = {
                 "selectModel": "선택하다 TTS 모델"
             },
             "startConversation": "대화 시작",
-            "conversationPrompt": "대화를 시작하세요."
+            "conversationPrompt": "대화를 시작해주세요."
         },
         "conversation": {
             "thinking": "생각...",
@@ -153,8 +150,7 @@ const ko = {
             "perMillionTokens": "백만 토큰당",
             "input": "입력",
             "output": "산출"
-        },
-        "aiConversation": "AI 대화"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ko = {
             "signUpWithGoogle": "가입하기 Google",
             "hasAccount": "이미 계정이 있으신가요?",
             "signIn": "로그인",
-            "emailLabel": "Email 주소",
+            "emailLabel": "이메일 주소",
             "confirmPasswordPlaceholder": "비밀번호 확인",
             "signingUp": "가입 중..."
         },
@@ -185,7 +181,7 @@ const ko = {
             "invalidCredentials": "잘못된 이메일 또는 비밀번호입니다",
             "userNotFound": "사용자를 찾을 수 없습니다",
             "weakPassword": "비밀번호는 최소 6자 이상이어야 합니다.",
-            "emailInUse": "Email 이미 사용 중",
+            "emailInUse": "이미 사용 중인 이메일",
             "generic": "오류가 발생했습니다. 다시 시도해 주세요.",
             "initialization": "초기화 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
             "invalidEmail": "유효한 이메일 주소를 입력하세요.",
@@ -235,6 +231,8 @@ const ko = {
     "modelCategory_Grok4": "Grok 4 모델",
     "modelCategory_Grok3": "Grok 3 모델",
     "modelCategory_Grok3Mini": "Grok 3 미니 모델",
+    "modelCategory_MistralAIPremierModels": "프리미어 모델",
+    "modelCategory_MistralAIOpenModels": "오픈 모델",
     "modelCategory_Llama4": "Llama 4가지 모델",
     "modelCategory_Llama3_3": "Llama 3.3 모델",
     "modelCategory_Llama3_2": "Llama 3.2 모델",
@@ -251,12 +249,12 @@ const ko = {
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill 모델",
     "modelCategory_DeepSeekModels": "DeepSeek 모델",
     "modelCategory_MistralAIModels": "Mistral AI 모델",
-    "modelCategory_Qwen3": "Qwen3가지 모델",
+    "modelCategory_Qwen3": "Qwen3 모델",
     "modelCategory_QwQwQ": "Qwen QwQ 모델",
     "modelCategory_Qwen2_5": "Qwen2.5 모델",
     "modelCategory_Qwen2_5Vision": "Qwen2.5 비전 모델",
     "modelCategory_Qwen2_5Coder": "Qwen2.5 코더 모델",
-    "modelCategory_Qwen2": "Qwen2가지 모델",
+    "modelCategory_Qwen2": "Qwen2 모델",
     "modelCategory_Qwen2Vision": "Qwen2 비전 모델",
     "modelCategory_QwenModels": "Qwen 모델",
     "modelCategory_OtherModels": "다른 모델",
@@ -269,12 +267,13 @@ const ko = {
     "page_LoadingUserData": "사용자 데이터를 로드하는 중...",
     "page_ErrorAlertTitle": "오류",
     "page_WelcomeTitle": "환영합니다 Two AIs",
-    "page_WelcomeSubtitle": "이 웹사이트를 이용하면 두 사람 간의 대화를 들을 수 있습니다. Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "이 웹사이트를 이용하면 두 사람 간의 대화를 들을 수 있습니다. Large Language Models (LLMs) 그리고 각 턴에 대한 이미지를 생성합니다.",
     "page_ApiKeysRequiredTitle": "API 열쇠 필요",
     "page_ApiKeysRequiredDescription": "대화를 실행하려면 대화를 직접 제공해야 합니다. API 키 AI 사용하고 싶은 모델(예: OpenAI, Google, Anthropic) 로그인 후. 각 공급자에 대한 자세한 지침은 설정/ API 로그인 후 키 페이지입니다.",
-    "page_SignInPrompt": "세션을 시작하려면 헤더의 링크를 사용하여 로그인하거나 계정을 만드세요.",
+    "page_SignInPrompt": "자신의 세션을 시작하려면 헤더의 링크를 사용하여 로그인하거나 계정을 만드세요.",
     "page_VideoTitle": "Two AIs 대화 데모",
     "page_AvailableLLMsTitle": "현재 사용 가능 LLMs",
+    "page_TooltipKnowledgeCutoff": "이 날짜에 모델의 지식이 차단되었습니다.",
     "page_TooltipGoogleThinkingBudget": "이것 Google 이 모델은 '생각 예산'을 사용합니다. '생각' 출력은 청구되지만 채팅에는 표시되지 않습니다.",
     "page_TooltipAnthropicExtendedThinking": "이것 Anthropic 이 모델은 '확장된 사고'를 사용합니다. '사고' 출력은 요금이 청구되지만 채팅에는 표시되지 않습니다.",
     "page_TooltipXaiThinking": "이것 xAI 모델은 'thinking'을 사용합니다. 이 출력은 요금이 청구되지만 채팅에는 표시되지 않습니다.",
@@ -282,18 +281,53 @@ const ko = {
     "page_TooltipDeepSeekReasoning": "이것 DeepSeek 모델은 '추론/사고'를 사용합니다. 출력은 청구되지만 채팅에는 표시되지 않습니다.",
     "page_TooltipGenericReasoning": "이 모델은 채팅에서는 보이지 않지만 출력 토큰으로 청구되는 추론 토큰을 사용합니다.",
     "page_TooltipRequiresVerification": "검증이 필요합니다 OpenAI 조직입니다. 여기에서 확인할 수 있습니다.",
-    "page_TooltipSupportsLanguage": "{languageName}을 지원합니다",
-    "page_TooltipMayNotSupportLanguage": "이 모델은 대화에서 {languageName}을 완전히 지원하지 않을 수 있습니다.",
+    "page_TooltipSupportsLanguage": "지원합니다 {languageName}",
+    "page_TooltipMayNotSupportLanguage": "이 모델은 완전히 지원하지 않을 수 있습니다. {languageName} 대화를 위해서.",
     "page_BadgePreview": "시사",
     "page_BadgeExperimental": "실험적",
     "page_BadgeBeta": "베타",
     "page_AvailableTTSTitle": "현재 사용 가능 Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "현재 사용 가능한 이미지 모델",
     "page_NoTTSOptions": "아니요 TTS 현재 이용 가능한 옵션입니다.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "가격은 마지막으로 확인되었습니다. {date}",
-    "page_PricingPerTokens": "당 {amount} 토큰",
+    "page_PricingPerTokens": "100만 개의 토큰당",
     "page_ModelCategoryModels": "{model} 모델",
+    "common_verifyHere": "여기서 확인하세요",
     "ttsVoice_Ugne": "불 속에서",
+    "pricing": {
+        "perMillionTokens": "100만 개의 토큰당",
+        "tokens": "토큰",
+        "free": "무료",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 100만 개의 텍스트 토큰당",
+                "audioTokens": "{price} 100만 개의 오디오 토큰당"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 100만 개의 텍스트 토큰당",
+                "audioTokens": "{price} 100만 개의 오디오 토큰당"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 100만 개의 텍스트 토큰당",
+                "audioTokens": "{price} 100만 개의 오디오 토큰당"
+            },
+            "openAITTS1": {
+                "standard": "{price} 100만 개의 토큰당"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 100만 개의 토큰당"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 100만 자당",
+                "neural": "{price} 100만 자당",
+                "studio": "{price} 100만 자당",
+                "chirpHD": "확인할 수 없습니다",
+                "chirp3HD": "{price} 100만 자당"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "세션 설정 양식",
         "description": "여기서 LLM과 선택 사항을 선택할 수 있습니다. TTS 각 에이전트에 대한 설정.",
@@ -309,7 +343,7 @@ const ko = {
         "initialPromptDescription": "이 메시지는 대화를 시작하는 첫 번째 메시지로 전송됩니다. 비워 두면 메시지가 표시되지 않습니다.",
         "startConversation": "대화 시작",
         "starting": "시작합니다...",
-        "startTheConversation": "대화를 시작하세요.",
+        "startTheConversation": "대화를 시작해주세요.",
         "languageSupportNote": "언어 지원 표시기는 모델 호환성을 보여줍니다. {languageName}지원이 없는 모델은 비활성화됩니다.",
         "reasoningNote": "모델이 '사고' 또는 '추론' 토큰을 사용함을 나타냅니다. 이 출력은 요금이 청구되지만 채팅에는 표시되지 않습니다.",
         "openaiOrgVerificationNote": "를 나타냅니다 OpenAI 모델에는 검증된 조직이 필요합니다.",
@@ -329,21 +363,21 @@ const ko = {
         "defaultImagePromptSystemMessage": "이 턴을 기반으로 이미지 생성 모델에 제공할 프롬프트를 만듭니다. {turn}",
         "imagePromptSystemMessageHelp": "이 메시지는 이미지 프롬프트를 생성하는 LLM에 시스템 프롬프트로 전송됩니다. 사용 <code>{'{turn}'}</code> 에이전트의 메시지를 위한 자리 표시자로 사용됨.",
         "selectImageModel": "이미지 모델 선택",
-        "selectPromptLLM": "이미지 프롬프트에 LLM을 선택하세요"
+        "selectPromptLLM": "이미지 프롬프트에 대해 LLM을 선택하세요"
     },
     "history": {
         "backToMain": "메인으로 돌아가기",
         "conversationHistory": "대화 내역",
         "chatWith": "채팅하다 {agentA} & {agentB}",
+        "conversationDescription": "시작됨 {date} - 언어: {language}",
         "viewConversation": "대화 보기",
         "backToPreviousChats": "이전 채팅으로 돌아가기",
         "resumeConversation": "대화 재개",
         "resuming": "다시 시작합니다...",
         "sessionDetails": "세션 세부 정보",
-        "language": "언어:",
+        "language": "언어",
         "transcript": "성적 증명서",
         "loadingHistory": "로딩 기록...",
-        "conversationDescription": "시작됨 {date} - 언어: {language}",
         "loadingConversation": "대화를 로딩 중입니다...",
         "chatStartedOn": "채팅이 시작되었습니다 {date}",
         "agentAModel": "에이전트 A 모델",
@@ -355,18 +389,8 @@ const ko = {
         "model": "모델",
         "voice": "목소리"
     },
-    "common_verifyHere": "여기서 확인하세요",
-    "page_AvailableImageModelsTitle": "현재 사용 가능한 이미지 모델",
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",
-    "imageModel_PriceUSD": "가격 (USD)",
-    "page_TooltipKnowledgeCutoff": "이 날짜에 모델의 지식이 차단되었습니다.",
-    "modelCategory_MistralAIPremierModels": "프리미어 모델",
-    "modelCategory_MistralAIOpenModels": "오픈 모델",
-    "pricing": {
-        "perMillionTokens": "100만 개의 토큰당",
-        "tokens": "토큰",
-        "free": "무료"
-    }
+    "imageModel_PriceUSD": "가격 (USD)"
 };
 export default ko;

@@ -71,6 +71,7 @@ const it = {
         "mn": "mongolo"
     },
     "settings": {
+        "loading": "Caricamento delle impostazioni in corso...",
         "title": "Impostazioni",
         "sections": {
             "appearance": "Aspetto",
@@ -82,7 +83,7 @@ const it = {
             "light": "Leggero",
             "dark": "Buio",
             "system": "Sistema",
-            "description": "Personalizza l'aspetto dell'applicazione."
+            "description": "Personalizza l'aspetto e le funzionalità dell'applicazione."
         },
         "language": {
             "title": "Lingua",
@@ -95,18 +96,18 @@ const it = {
         },
         "apiKeys": {
             "title": "API Chiavi",
-            "description": "Gestisci il tuo API chiavi per diverse AI fornitori",
-            "saved": "Salvato",
-            "notSet": "Non impostato",
-            "setKey": "Imposta chiave",
-            "updateKey": "Aggiorna chiave",
-            "removeKey": "Rimuovi chiave",
-            "getKeyInstructions": "Ottieni il tuo API chiave",
-            "noNewKeys": "Nessuna novità API chiavi immesse per salvare.",
-            "unexpectedResponse": "Ho ricevuto una risposta inaspettata dal server.",
+            "description": "Gestisci il tuo API chiavi per diversi AI servizi.",
+            "setKey": "Impostato",
+            "updateKey": "Aggiornamento",
+            "saveUpdateKeys": "Salva/Aggiorna chiavi",
+            "saving": "Risparmio...",
+            "noNewKeys": "Nessuna nuova chiave da salvare.",
+            "keyStoredSecurely": "Tuo API la chiave verrà conservata in modo sicuro e crittografata.",
+            "enteringNewKeyOverwrites": "L'immissione di una nuova chiave sovrascriverà quella esistente.",
             "failedToSaveKey": "Impossibile salvare la chiave {serviceName}.",
-            "someKeysNotSaved": "Alcuni API Impossibile salvare le chiavi. Si prega di controllare i dettagli qui sotto.",
-            "keyStatus": "stato della chiave...",
+            "unexpectedResponse": "Risposta inaspettata dal server.",
+            "someKeysNotSaved": "Alcune chiavi non sono state salvate. Controlla gli errori sopra.",
+            "keyStatus": "stato chiave...",
             "apiKeySecurelySaved": "API Chiave salvata in modo sicuro",
             "confirmRemoveTitle": "Conferma rimozione",
             "confirmRemoveDescription": "Sei sicuro di voler rimuovere il API chiave per {serviceName}? Questa azione non può essere annullata.",
@@ -114,16 +115,12 @@ const it = {
             "successfullyRemovedKey": "Chiave {serviceName} rimossa correttamente.",
             "keyNotSet": "Stato chiave: non impostato",
             "keySet": "Stato chiave: impostato",
-            "saveButton": "Salva API Chiave(e)",
-            "enteringNewKeyOverwrites": "L'immissione di una nuova chiave sovrascriverà quella salvata.",
-            "keyStoredSecurely": "La tua chiave verrà conservata in modo sicuro utilizzando Google Responsabile dei segreti.",
-            "saveUpdateKeys": "Salva / Aggiorna chiavi",
-            "saving": "Risparmio..."
-        },
-        "loading": "Caricamento delle impostazioni..."
+            "saveButton": "Salva API Chiave(e)"
+        }
     },
     "main": {
         "title": "AI Conversazione",
+        "aiConversation": "AI Conversazione",
         "setupForm": {
             "title": "Imposta la tua conversazione",
             "agentA": "Agente A",
@@ -140,8 +137,8 @@ const it = {
                 "model": "TTS Modello",
                 "selectModel": "Selezionare TTS modello"
             },
-            "startConversation": "Inizia conversazione",
-            "conversationPrompt": "Inizia la conversazione."
+            "startConversation": "Inizia la conversazione",
+            "conversationPrompt": "Per favore, inizia la conversazione."
         },
         "conversation": {
             "thinking": "pensiero...",
@@ -153,8 +150,7 @@ const it = {
             "perMillionTokens": "per milione di token",
             "input": "Ingresso",
             "output": "Produzione"
-        },
-        "aiConversation": "AI Conversazione"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const it = {
             "signUpWithGoogle": "Iscriviti con Google",
             "hasAccount": "Hai già un account?",
             "signIn": "Registrazione",
-            "emailLabel": "Email indirizzo",
+            "emailLabel": "Indirizzo e-mail",
             "confirmPasswordPlaceholder": "Conferma password",
             "signingUp": "Registrazione in corso..."
         },
@@ -192,8 +188,8 @@ const it = {
             "tooManyRequests": "Accesso temporaneamente disabilitato a causa di troppi tentativi di accesso non riusciti. Reimposta la password o riprova più tardi.",
             "signInFailedPrefix": "Accesso non riuscito: ",
             "unknownSignInError": "Si è verificato un errore sconosciuto durante l'accesso.",
-            "profileSaveFailedPrefix": "Accedi, ma non riesci a salvare i dati del profilo: ",
-            "profileCheckSaveFailedPrefix": "Accedi, ma non riesci a controllare/salvare i dati del profilo: ",
+            "profileSaveFailedPrefix": "Hai effettuato l'accesso, ma non sei riuscito a salvare i dati del profilo: ",
+            "profileCheckSaveFailedPrefix": "Accesso effettuato, ma non è stato possibile controllare/salvare i dati del profilo: ",
             "accountExistsWithDifferentCredential": "Esiste già un account con questo indirizzo email che utilizza un metodo di accesso diverso.",
             "googleSignInFailedPrefix": "Google Accesso non riuscito: ",
             "unknownGoogleSignInError": "Si è verificato un errore sconosciuto durante Google Registrazione.",
@@ -202,7 +198,7 @@ const it = {
             "unknownProfileSaveError": "Si è verificato un errore sconosciuto durante il salvataggio del profilo.",
             "emailAlreadyRegistered": "Questo indirizzo email è già registrato.",
             "passwordTooShortSignUp": "La password deve essere lunga almeno 6 caratteri.",
-            "signUpFailedPrefix": "Registrazione non riuscita: ",
+            "signUpFailedPrefix": "Impossibile registrarsi: ",
             "unknownSignUpError": "Si è verificato un errore sconosciuto durante la registrazione."
         }
     },
@@ -223,18 +219,20 @@ const it = {
     "apiKeyFoundSubtext": "UN API la chiave è configurata per questo provider.",
     "modelCategory_FlagshipChat": "Modelli di chat di punta",
     "modelCategory_Reasoning": "Modelli di ragionamento",
-    "modelCategory_CostOptimized": "Modelli a costi ottimizzati",
+    "modelCategory_CostOptimized": "Modelli ottimizzati in termini di costi",
     "modelCategory_OlderGPT": "Modelli GPT più vecchi",
     "modelCategory_Gemini2_5": "Gemini 2.5 modelli",
     "modelCategory_Gemini2_0": "Gemini 2.0 modelli",
     "modelCategory_Gemini1_5": "Gemini 1.5 modelli",
     "modelCategory_Claude4": "Claude 4 modelli",
-    "modelCategory_Claude3_7": "Claude 3.7 modelli",
+    "modelCategory_Claude3_7": "Claude 3.7 modello",
     "modelCategory_Claude3_5": "Claude 3.5 modelli",
     "modelCategory_Claude3": "Claude 3 modelli",
-    "modelCategory_Grok4": "Grok 4 modelli",
+    "modelCategory_Grok4": "Grok 4 modello",
     "modelCategory_Grok3": "Grok 3 modelli",
     "modelCategory_Grok3Mini": "Grok 3 Mini modelli",
+    "modelCategory_MistralAIPremierModels": "Modelli Premier",
+    "modelCategory_MistralAIOpenModels": "Modello aperto",
     "modelCategory_Llama4": "Llama 4 modelli",
     "modelCategory_Llama3_3": "Llama 3.3 modelli",
     "modelCategory_Llama3_2": "Llama 3.2 modelli",
@@ -246,56 +244,92 @@ const it = {
     "modelCategory_Gemma2": "Gemma 2 modelli",
     "modelCategory_Gemma": "Gemma modelli",
     "modelCategory_GoogleGemma": "Google Gemma Modelli",
-    "modelCategory_DeepSeekR1": "DeepSeek Modelli R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modelli V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Modello R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modello V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modelli R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modelli",
     "modelCategory_MistralAIModels": "Mistral AI Modelli",
     "modelCategory_Qwen3": "Qwen3 modelli",
-    "modelCategory_QwQwQ": "Qwen Modelli QwQ",
+    "modelCategory_QwQwQ": "Qwen Modello QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 modelli",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modelli di visione",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modelli di codificatore",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modello di visione",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modello del codificatore",
     "modelCategory_Qwen2": "Qwen2 modelli",
-    "modelCategory_Qwen2Vision": "Qwen2 modelli di visione",
+    "modelCategory_Qwen2Vision": "Qwen2 Modello di visione",
     "modelCategory_QwenModels": "Qwen Modelli",
     "modelCategory_OtherModels": "Altri modelli",
     "page_ErrorLoadingUserData": "Impossibile caricare i dati utente: {errorMessage}. Prova ad aggiornare.",
-    "page_ErrorUserNotFound": "Utente non trovato. Accedi di nuovo.",
-    "page_ErrorUserApiKeyConfig": "Utente API Impossibile caricare la configurazione della chiave. Aggiorna o controlla le impostazioni.",
+    "page_ErrorUserNotFound": "Utente non trovato. Accedi nuovamente.",
+    "page_ErrorUserApiKeyConfig": "Utente API Impossibile caricare la configurazione della chiave. Aggiornare o controllare le impostazioni.",
     "page_ErrorStartingSessionAPI": "API Errore: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "Errore durante l'avvio della sessione: {errorMessage}",
     "page_ErrorSessionIdMissing": "API risposta riuscita ma non includeva un conversationId.",
-    "page_LoadingUserData": "Caricamento dati utente...",
+    "page_LoadingUserData": "Caricamento dati utente in corso...",
     "page_ErrorAlertTitle": "Errore",
     "page_WelcomeTitle": "Benvenuti a Two AIs",
-    "page_WelcomeSubtitle": "Questo sito web ti consente di ascoltare le conversazioni tra due Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Questo sito web ti consente di ascoltare le conversazioni tra due Large Language Models (LLMs) e generare immagini per ogni turno.",
     "page_ApiKeysRequiredTitle": "API Chiavi richieste",
-    "page_ApiKeysRequiredDescription": "Per avviare le conversazioni, dovrai fornire il tuo API chiavi per il AI modelli che desideri utilizzare (ad esempio, OpenAI, Google, Anthropic) dopo aver effettuato l'accesso. Le istruzioni dettagliate per ciascun fornitore sono disponibili nelle Impostazioni / API Pagina delle chiavi dopo aver effettuato l'accesso.",
-    "page_SignInPrompt": "Per avviare la tua sessione, puoi effettuare l'accesso o creare un account utilizzando il link nell'intestazione.",
+    "page_ApiKeysRequiredDescription": "Per avviare le conversazioni, dovrai fornire il tuo API chiavi per il AI modelli che desideri utilizzare (ad esempio, OpenAI, Google, Anthropic) dopo aver effettuato l'accesso. Le istruzioni dettagliate per ciascun provider sono disponibili nelle Impostazioni / API Pagina delle chiavi dopo aver effettuato l'accesso.",
+    "page_SignInPrompt": "Per iniziare la tua sessione, puoi effettuare l'accesso o creare un account utilizzando il link nell'intestazione.",
     "page_VideoTitle": "Two AIs Demo di conversazione",
     "page_AvailableLLMsTitle": "Attualmente disponibile LLMs",
-    "page_TooltipGoogleThinkingBudget": "Questo Google Il modello utilizza un \"budget ragionato\". L'output \"pensato\" viene fatturato, ma non è visibile nella chat.",
-    "page_TooltipAnthropicExtendedThinking": "Questo Anthropic Il modello utilizza il \"pensiero esteso\". L'output del \"pensiero\" viene fatturato, ma non è visibile nella chat.",
+    "page_TooltipKnowledgeCutoff": "A partire da questa data la conoscenza del modello è giunta al termine.",
+    "page_TooltipGoogleThinkingBudget": "Questo Google Il modello utilizza un \"budget di pensiero\". L'output \"di pensiero\" viene fatturato ma non è visibile nella chat.",
+    "page_TooltipAnthropicExtendedThinking": "Questo Anthropic Il modello utilizza il \"pensiero esteso\". L'output del \"pensiero\" viene fatturato ma non è visibile nella chat.",
     "page_TooltipXaiThinking": "Questo xAI Il modello utilizza \"pensiero\". Questo output viene fatturato ma non è visibile nella chat.",
     "page_TooltipQwenReasoning": "Questo Qwen Il modello utilizza \"ragionamento/pensiero\". Questo output viene fatturato ma non è visibile nella chat.",
     "page_TooltipDeepSeekReasoning": "Questo DeepSeek Il modello utilizza \"ragionamento/pensiero\". L'output viene fatturato ma non è visibile nella chat.",
     "page_TooltipGenericReasoning": "Questo modello utilizza token di ragionamento che non sono visibili nella chat ma vengono fatturati come token di output.",
-    "page_TooltipRequiresVerification": "Richiede verificato OpenAI organizzazione. Puoi verificarlo qui.",
-    "page_TooltipSupportsLanguage": "Supporta {languageName}",
+    "page_TooltipRequiresVerification": "Richiede verificato OpenAI organizzazione. Puoi verificare qui.",
+    "page_TooltipSupportsLanguage": "Supporti {languageName}",
     "page_TooltipMayNotSupportLanguage": "Questo modello potrebbe non supportare completamente {languageName} per la conversazione.",
     "page_BadgePreview": "Anteprima",
     "page_BadgeExperimental": "Sperimentale",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Attualmente disponibile Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Modelli di immagini attualmente disponibili",
     "page_NoTTSOptions": "NO TTS opzioni attualmente disponibili.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Prezzi verificati l'ultima volta il {date}",
-    "page_PricingPerTokens": "per {amount} Gettoni",
+    "page_PricingPerTokens": "per 1 milione di token",
     "page_ModelCategoryModels": "{model} modelli",
+    "common_verifyHere": "verifica qui",
     "ttsVoice_Ugne": "Nel fuoco",
+    "pricing": {
+        "perMillionTokens": "per 1 milione di token",
+        "tokens": "gettoni",
+        "free": "Gratuito",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 milione di token di testo",
+                "audioTokens": "{price} per 1 milione di token audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 milione di token di testo",
+                "audioTokens": "{price} per 1 milione di token audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 milione di token di testo",
+                "audioTokens": "{price} per 1 milione di token audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 milione di token"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 milione di token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 milione di caratteri",
+                "neural": "{price} per 1 milione di caratteri",
+                "studio": "{price} per 1 milione di caratteri",
+                "chirpHD": "Impossibile verificare",
+                "chirp3HD": "{price} per 1 milione di caratteri"
+            }
+        }
+    },
     "sessionSetupForm": {
-        "title": "Modulo di impostazione della sessione",
+        "title": "Modulo di configurazione della sessione",
         "description": "Qui puoi selezionare l'LLM e facoltativo TTS impostazioni per ciascun agente.",
         "agentAModel": "Agente A Modello",
         "agentBModel": "Modello dell'agente B",
@@ -307,9 +341,9 @@ const it = {
         "provider": "Fornitore",
         "initialSystemPrompt": "Prompt iniziale del sistema",
         "initialPromptDescription": "Questo messaggio verrà inviato come primo messaggio per iniziare la conversazione. Se lo lasci vuoto, non ci sarà alcun messaggio.",
-        "startConversation": "Inizia conversazione",
+        "startConversation": "Inizia la conversazione",
         "starting": "Di partenza...",
-        "startTheConversation": "Inizia la conversazione.",
+        "startTheConversation": "Per favore, inizia la conversazione.",
         "languageSupportNote": "Gli indicatori di supporto linguistico mostrano la compatibilità del modello con {languageName}I modelli senza supporto sono disabilitati.",
         "reasoningNote": "Indica che un modello utilizza token \"pensiero\" o \"ragionamento\". Questo output viene fatturato ma non è visibile nella chat.",
         "openaiOrgVerificationNote": "Indica un OpenAI il modello richiede un'organizzazione verificata. Puoi",
@@ -318,32 +352,32 @@ const it = {
         "noVoicesFor": "Nessuna voce per {languageName}",
         "ttsProviderModel": "{providerName} Modello",
         "selectTtsProviderModel": "Selezionare {providerName} Modello",
-        "selectProvider": "Seleziona fornitore",
+        "selectProvider": "Seleziona il fornitore",
         "per": "per",
-        "enableImageGen": "Abilita generazione immagini",
+        "enableImageGen": "Abilita la generazione di immagini",
         "imageModel": "Modello di immagine",
         "quality": "Qualità",
         "size": "Misurare",
         "promptLLM": "LLM rapido",
-        "imagePromptSystemMessage": "Messaggio di sistema di richiesta dell'immagine",
+        "imagePromptSystemMessage": "Messaggio di sistema di richiesta immagine",
         "defaultImagePromptSystemMessage": "Crea un prompt da fornire al modello di generazione delle immagini in base a questo turno: {turn}",
         "imagePromptSystemMessageHelp": "Questo messaggio verrà inviato come prompt di sistema all'LLM che genera il prompt dell'immagine. Utilizzare <code>{'{turn}'}</code> come segnaposto per il messaggio dell'agente.",
         "selectImageModel": "Seleziona il modello dell'immagine",
-        "selectPromptLLM": "Selezionare LLM per la richiesta di immagine"
+        "selectPromptLLM": "Seleziona LLM per il prompt dell'immagine"
     },
     "history": {
         "backToMain": "Torna alla pagina principale",
         "conversationHistory": "Cronologia delle conversazioni",
         "chatWith": "Chatta con {agentA} e {agentB}",
+        "conversationDescription": "Iniziato il {date} - Lingua: {language}",
         "viewConversation": "Visualizza conversazione",
         "backToPreviousChats": "Torna alle chat precedenti",
         "resumeConversation": "Riprendi la conversazione",
         "resuming": "Riprendendo...",
         "sessionDetails": "Dettagli della sessione",
-        "language": "Lingua:",
+        "language": "Lingua",
         "transcript": "Trascrizione",
         "loadingHistory": "Caricamento cronologia...",
-        "conversationDescription": "Iniziato il {date} - Lingua: {language}",
         "loadingConversation": "Caricamento conversazione...",
         "chatStartedOn": "La chat è iniziata il {date}",
         "agentAModel": "Agente A Modello",
@@ -355,18 +389,8 @@ const it = {
         "model": "Modello",
         "voice": "Voce"
     },
-    "common_verifyHere": "verifica qui",
-    "page_AvailableImageModelsTitle": "Modelli di immagini attualmente disponibili",
     "imageModel_Quality": "Qualità",
     "imageModel_Size": "Misurare",
-    "imageModel_PriceUSD": "Prezzo (USD)",
-    "page_TooltipKnowledgeCutoff": "A partire da questa data la conoscenza del modello è giunta al termine.",
-    "modelCategory_MistralAIPremierModels": "Modelli Premier",
-    "modelCategory_MistralAIOpenModels": "Modelli aperti",
-    "pricing": {
-        "perMillionTokens": "per 1 milione di token",
-        "tokens": "gettoni",
-        "free": "Gratuito"
-    }
+    "imageModel_PriceUSD": "Prezzo (USD)"
 };
 export default it;

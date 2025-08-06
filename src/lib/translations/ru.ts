@@ -71,6 +71,7 @@ const ru = {
         "mn": "монгольский"
     },
     "settings": {
+        "loading": "Загрузка настроек...",
         "title": "Настройки",
         "sections": {
             "appearance": "Появление",
@@ -95,17 +96,17 @@ const ru = {
         },
         "apiKeys": {
             "title": "API Ключи",
-            "description": "Управляйте своим API ключи для разных AI поставщики",
-            "saved": "Сохранено",
-            "notSet": "Не установлено",
-            "setKey": "Установить ключ",
-            "updateKey": "Обновить ключ",
-            "removeKey": "Удалить ключ",
-            "getKeyInstructions": "Получите ваш API ключ",
-            "noNewKeys": "Нет новых API ключи введены для сохранения.",
-            "unexpectedResponse": "Получен неожиданный ответ от сервера.",
+            "description": "Управляйте своим API ключи для разных AI услуги.",
+            "setKey": "Набор",
+            "updateKey": "Обновлять",
+            "saveUpdateKeys": "Сохранить/обновить ключи",
+            "saving": "Сохранение...",
+            "noNewKeys": "Нет новых ключей для сохранения.",
+            "keyStoredSecurely": "Твой API ключ будет храниться надежно и зашифрован.",
+            "enteringNewKeyOverwrites": "Ввод нового ключа заменит существующий.",
             "failedToSaveKey": "Не удалось сохранить ключ {serviceName}.",
-            "someKeysNotSaved": "Некоторый API Не удалось сохранить ключи. Пожалуйста, проверьте информацию ниже.",
+            "unexpectedResponse": "Неожиданный ответ от сервера.",
+            "someKeysNotSaved": "Некоторые ключи не удалось сохранить. Проверьте ошибки выше.",
             "keyStatus": "ключевой статус...",
             "apiKeySecurelySaved": "API Ключ надежно сохранен",
             "confirmRemoveTitle": "Подтвердить удаление",
@@ -114,16 +115,12 @@ const ru = {
             "successfullyRemovedKey": "Ключ {serviceName} успешно удален.",
             "keyNotSet": "Статус ключа: Не установлен",
             "keySet": "Статус ключа: установлен",
-            "saveButton": "Сохранять API Ключ(и)",
-            "enteringNewKeyOverwrites": "Ввод нового ключа заменит сохраненный.",
-            "keyStoredSecurely": "Ваш ключ будет надежно храниться с помощью Google Секретный менеджер.",
-            "saveUpdateKeys": "Сохранить/обновить ключи",
-            "saving": "Сохранение..."
-        },
-        "loading": "Загрузка настроек..."
+            "saveButton": "Сохранять API Ключ(и)"
+        }
     },
     "main": {
         "title": "AI Беседа",
+        "aiConversation": "AI Беседа",
         "setupForm": {
             "title": "Настройте свой разговор",
             "agentA": "Агент А",
@@ -141,7 +138,7 @@ const ru = {
                 "selectModel": "Выбирать TTS модель"
             },
             "startConversation": "Начать разговор",
-            "conversationPrompt": "Начните разговор."
+            "conversationPrompt": "Пожалуйста, начните разговор."
         },
         "conversation": {
             "thinking": "думаю...",
@@ -153,8 +150,7 @@ const ru = {
             "perMillionTokens": "за миллион токенов",
             "input": "Вход",
             "output": "Выход"
-        },
-        "aiConversation": "AI Беседа"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ru = {
             "signUpWithGoogle": "Зарегистрируйтесь с помощью Google",
             "hasAccount": "У вас уже есть аккаунт?",
             "signIn": "Войти",
-            "emailLabel": "Email адрес",
+            "emailLabel": "Адрес электронной почты",
             "confirmPasswordPlaceholder": "Подтвердите пароль",
             "signingUp": "Регистрация..."
         },
@@ -185,7 +181,7 @@ const ru = {
             "invalidCredentials": "Неверный адрес электронной почты или пароль",
             "userNotFound": "Пользователь не найден",
             "weakPassword": "Пароль должен быть не менее 6 символов.",
-            "emailInUse": "Email уже используется",
+            "emailInUse": "Электронная почта уже используется",
             "generic": "Произошла ошибка. Попробуйте ещё раз.",
             "initialization": "Ошибка инициализации. Повторите попытку позже.",
             "invalidEmail": "Пожалуйста, введите действительный адрес электронной почты.",
@@ -229,12 +225,14 @@ const ru = {
     "modelCategory_Gemini2_0": "Gemini 2.0 модели",
     "modelCategory_Gemini1_5": "Gemini 1.5 модели",
     "modelCategory_Claude4": "Claude 4 модели",
-    "modelCategory_Claude3_7": "Claude 3.7 модели",
+    "modelCategory_Claude3_7": "Claude 3.7 модель",
     "modelCategory_Claude3_5": "Claude 3.5 модели",
     "modelCategory_Claude3": "Claude 3 модели",
-    "modelCategory_Grok4": "Grok 4 модели",
+    "modelCategory_Grok4": "Grok 4 модель",
     "modelCategory_Grok3": "Grok 3 модели",
     "modelCategory_Grok3Mini": "Grok 3 Мини-модели",
+    "modelCategory_MistralAIPremierModels": "Премьер-модели",
+    "modelCategory_MistralAIOpenModels": "Открытая модель",
     "modelCategory_Llama4": "Llama 4 модели",
     "modelCategory_Llama3_3": "Llama 3.3 модели",
     "modelCategory_Llama3_2": "Llama 3.2 модели",
@@ -246,18 +244,18 @@ const ru = {
     "modelCategory_Gemma2": "Gemma 2 модель",
     "modelCategory_Gemma": "Gemma модели",
     "modelCategory_GoogleGemma": "Google Gemma Модели",
-    "modelCategory_DeepSeekR1": "DeepSeek модели R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Модели V3",
+    "modelCategory_DeepSeekR1": "DeepSeek модель R1",
+    "modelCategory_DeepSeekV3": "DeepSeek модель V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Модели R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Модели",
     "modelCategory_MistralAIModels": "Mistral AI Модели",
-    "modelCategory_Qwen3": "Qwen3 модели",
-    "modelCategory_QwQwQ": "Qwen модели QwQ",
+    "modelCategory_Qwen3": "Qwen3 модель",
+    "modelCategory_QwQwQ": "Qwen модель QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 модели",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Модели видения",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Модели кодера",
-    "modelCategory_Qwen2": "Qwen2 модели",
-    "modelCategory_Qwen2Vision": "Qwen2 модели Vision",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Модель видения",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Модель кодера",
+    "modelCategory_Qwen2": "Qwen2 модель",
+    "modelCategory_Qwen2Vision": "Qwen2 Модель видения",
     "modelCategory_QwenModels": "Qwen Модели",
     "modelCategory_OtherModels": "Другие модели",
     "page_ErrorLoadingUserData": "Не удалось загрузить данные пользователя: {errorMessage}. Попробуйте обновить страницу.",
@@ -269,12 +267,13 @@ const ru = {
     "page_LoadingUserData": "Загрузка данных пользователя...",
     "page_ErrorAlertTitle": "Ошибка",
     "page_WelcomeTitle": "Добро пожаловать в Two AIs",
-    "page_WelcomeSubtitle": "Этот сайт позволяет вам прослушивать разговоры между двумя Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Этот сайт позволяет вам прослушивать разговоры между двумя Large Language Models (LLMs) и генерировать изображения для каждого хода.",
     "page_ApiKeysRequiredTitle": "API Требуются ключи",
     "page_ApiKeysRequiredDescription": "Для ведения бесед вам необходимо предоставить свои собственные API ключи для AI модели, которые вы хотите использовать (например, OpenAI, Google, Anthropic) после входа в систему. Подробные инструкции для каждого провайдера можно найти в разделе «Настройки» / API Страница ключей после входа в систему.",
     "page_SignInPrompt": "Чтобы начать собственную сессию, вы можете войти в систему или создать учетную запись, используя ссылку в заголовке.",
     "page_VideoTitle": "Two AIs Демонстрация разговора",
     "page_AvailableLLMsTitle": "В настоящее время доступно LLMs",
+    "page_TooltipKnowledgeCutoff": "На этой дате сведения о модели обрываются.",
     "page_TooltipGoogleThinkingBudget": "Этот Google Модель использует «бюджет мышления». Результат «мышления» оплачивается, но не отображается в чате.",
     "page_TooltipAnthropicExtendedThinking": "Этот Anthropic Модель использует «расширенное мышление». Результат «мышления» оплачивается, но не отображается в чате.",
     "page_TooltipXaiThinking": "Этот xAI Модель использует «мышление». Этот результат оплачивается, но не отображается в чате.",
@@ -283,17 +282,52 @@ const ru = {
     "page_TooltipGenericReasoning": "В этой модели используются токены рассуждений, которые не видны в чате, но тарифицируются как выходные токены.",
     "page_TooltipRequiresVerification": "Требуется проверка OpenAI Организация. Вы можете проверить здесь.",
     "page_TooltipSupportsLanguage": "Поддерживает {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Эта модель может не полностью поддерживать {languageName} для общения.",
+    "page_TooltipMayNotSupportLanguage": "Эта модель может не полностью поддерживать {languageName} для разговора.",
     "page_BadgePreview": "Предварительный просмотр",
     "page_BadgeExperimental": "Экспериментальный",
     "page_BadgeBeta": "Бета",
     "page_AvailableTTSTitle": "В настоящее время доступно Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Доступные в настоящее время модели изображений",
     "page_NoTTSOptions": "Нет TTS доступные в настоящее время варианты.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Цены последний раз проверены {date}",
-    "page_PricingPerTokens": "за {amount} Токены",
+    "page_PricingPerTokens": "за 1 миллион токенов",
     "page_ModelCategoryModels": "{model} модели",
+    "common_verifyHere": "проверить здесь",
     "ttsVoice_Ugne": "В огне",
+    "pricing": {
+        "perMillionTokens": "за 1 миллион токенов",
+        "tokens": "жетоны",
+        "free": "Бесплатно",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} за 1 миллион текстовых токенов",
+                "audioTokens": "{price} за 1 миллион аудиотокенов"
+            },
+            "geminiPro": {
+                "textTokens": "{price} за 1 миллион текстовых токенов",
+                "audioTokens": "{price} за 1 миллион аудиотокенов"
+            },
+            "openAIMini": {
+                "textTokens": "{price} за 1 миллион текстовых токенов",
+                "audioTokens": "{price} за 1 миллион аудиотокенов"
+            },
+            "openAITTS1": {
+                "standard": "{price} за 1 миллион токенов"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} за 1 миллион токенов"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} на 1 миллион символов",
+                "neural": "{price} на 1 миллион символов",
+                "studio": "{price} на 1 миллион символов",
+                "chirpHD": "Не удалось проверить",
+                "chirp3HD": "{price} на 1 миллион символов"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Форма настройки сеанса",
         "description": "Здесь вы можете выбрать степень магистра права и по желанию TTS настройки для каждого агента.",
@@ -309,7 +343,7 @@ const ru = {
         "initialPromptDescription": "Это сообщение будет отправлено первым для начала разговора. Если вы оставите поле пустым, сообщение не будет отправлено.",
         "startConversation": "Начать разговор",
         "starting": "Начинаем...",
-        "startTheConversation": "Начните разговор.",
+        "startTheConversation": "Пожалуйста, начните разговор.",
         "languageSupportNote": "Индикаторы языковой поддержки показывают совместимость модели с {languageName}. Модели без поддержки отключены.",
         "reasoningNote": "Указывает, что модель использует токены «мышления» или «рассуждения». Этот результат оплачивается, но не отображается в чате.",
         "openaiOrgVerificationNote": "Указывает на OpenAI Модель требует проверенной организации. Вы можете",
@@ -335,15 +369,15 @@ const ru = {
         "backToMain": "Вернуться на главную",
         "conversationHistory": "История разговоров",
         "chatWith": "Пообщайтесь с {agentA} & {agentB}",
+        "conversationDescription": "Началось {date} - Язык: {language}",
         "viewConversation": "Просмотреть беседу",
         "backToPreviousChats": "Вернуться к предыдущим чатам",
         "resumeConversation": "Возобновить разговор",
         "resuming": "Возобновление...",
         "sessionDetails": "Подробности сеанса",
-        "language": "Язык:",
+        "language": "Язык",
         "transcript": "Транскрипт",
         "loadingHistory": "Загрузка истории...",
-        "conversationDescription": "Началось {date} - Язык: {language}",
         "loadingConversation": "Загрузка беседы...",
         "chatStartedOn": "Чат начался {date}",
         "agentAModel": "Модель агента А",
@@ -355,18 +389,8 @@ const ru = {
         "model": "Модель",
         "voice": "Голос"
     },
-    "common_verifyHere": "проверить здесь",
-    "page_AvailableImageModelsTitle": "Доступные в настоящее время модели изображений",
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",
-    "imageModel_PriceUSD": "Цена (USD)",
-    "page_TooltipKnowledgeCutoff": "На этой дате сведения о модели обрываются.",
-    "modelCategory_MistralAIPremierModels": "Премьер-модели",
-    "modelCategory_MistralAIOpenModels": "Открытые модели",
-    "pricing": {
-        "perMillionTokens": "за 1 миллион токенов",
-        "tokens": "жетоны",
-        "free": "Бесплатно"
-    }
+    "imageModel_PriceUSD": "Цена (USD)"
 };
 export default ru;

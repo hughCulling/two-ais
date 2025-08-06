@@ -71,6 +71,7 @@ const ml = {
         "mn": "മംഗോളിയൻ"
     },
     "settings": {
+        "loading": "ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
         "title": "ക്രമീകരണങ്ങൾ",
         "sections": {
             "appearance": "രൂപഭാവം",
@@ -95,17 +96,17 @@ const ml = {
         },
         "apiKeys": {
             "title": "API കീകൾ",
-            "description": "നിങ്ങളുടെ കൈകാര്യം ചെയ്യുക API വ്യത്യസ്തമായവയ്ക്കുള്ള കീകൾ AI ദാതാക്കൾ",
-            "saved": "സംരക്ഷിച്ചു",
-            "notSet": "സജ്ജീകരിച്ചിട്ടില്ല",
-            "setKey": "കീ സജ്ജമാക്കുക",
-            "updateKey": "കീ അപ്ഡേറ്റ് ചെയ്യുക",
-            "removeKey": "കീ നീക്കം ചെയ്യുക",
-            "getKeyInstructions": "നിങ്ങളുടെ API താക്കോൽ",
-            "noNewKeys": "പുതിയതൊന്നുമില്ല API സംരക്ഷിക്കാൻ കീകൾ നൽകി.",
-            "unexpectedResponse": "സെർവറിൽ നിന്ന് ഒരു അപ്രതീക്ഷിത പ്രതികരണം ലഭിച്ചു.",
+            "description": "നിങ്ങളുടെ കൈകാര്യം ചെയ്യുക API വ്യത്യസ്തമായവയ്ക്കുള്ള കീകൾ AI സേവനങ്ങൾ.",
+            "setKey": "സജ്ജമാക്കുക",
+            "updateKey": "അപ്ഡേറ്റ് ചെയ്യുക",
+            "saveUpdateKeys": "കീകൾ സംരക്ഷിക്കുക / അപ്ഡേറ്റ് ചെയ്യുക",
+            "saving": "സംരക്ഷിക്കുന്നു...",
+            "noNewKeys": "സംരക്ഷിക്കാൻ പുതിയ കീകളൊന്നുമില്ല.",
+            "keyStoredSecurely": "നിങ്ങളുടെ API കീ സുരക്ഷിതമായി സൂക്ഷിക്കുകയും എൻക്രിപ്റ്റ് ചെയ്യുകയും ചെയ്യും.",
+            "enteringNewKeyOverwrites": "പുതിയൊരു കീ നൽകുന്നത് നിലവിലുള്ളതിനെ ഓവർറൈറ്റ് ചെയ്യും.",
             "failedToSaveKey": "{serviceName} കീ സംരക്ഷിക്കുന്നതിൽ പരാജയപ്പെട്ടു.",
-            "someKeysNotSaved": "ചിലത് API കീകൾ സംരക്ഷിക്കാൻ കഴിഞ്ഞില്ല. താഴെയുള്ള വിശദാംശങ്ങൾ പരിശോധിക്കുക.",
+            "unexpectedResponse": "സെർവറിൽ നിന്ന് അപ്രതീക്ഷിത പ്രതികരണം.",
+            "someKeysNotSaved": "ചില കീകൾ സംരക്ഷിക്കാൻ കഴിഞ്ഞില്ല. മുകളിലുള്ള പിശകുകൾ പരിശോധിക്കുക.",
             "keyStatus": "പ്രധാന നില...",
             "apiKeySecurelySaved": "API കീ സുരക്ഷിതമായി സംരക്ഷിച്ചു",
             "confirmRemoveTitle": "നീക്കം ചെയ്യൽ സ്ഥിരീകരിക്കുക",
@@ -114,16 +115,12 @@ const ml = {
             "successfullyRemovedKey": "{serviceName} കീ വിജയകരമായി നീക്കം ചെയ്തു.",
             "keyNotSet": "കീ സ്റ്റാറ്റസ്: സജ്ജീകരിച്ചിട്ടില്ല",
             "keySet": "കീ സ്റ്റാറ്റസ്: സജ്ജമാക്കുക",
-            "saveButton": "രക്ഷിക്കും API കീ(കൾ)",
-            "enteringNewKeyOverwrites": "ഒരു പുതിയ കീ നൽകുന്നത് സേവ് ചെയ്ത കീയെ ഓവർറൈറ്റ് ചെയ്യും.",
-            "keyStoredSecurely": "നിങ്ങളുടെ താക്കോൽ സുരക്ഷിതമായി സൂക്ഷിക്കുന്നത് Google രഹസ്യ മാനേജർ.",
-            "saveUpdateKeys": "കീകൾ സംരക്ഷിക്കുക / അപ്ഡേറ്റ് ചെയ്യുക",
-            "saving": "സംരക്ഷിക്കുന്നു..."
-        },
-        "loading": "ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യുന്നു..."
+            "saveButton": "രക്ഷിക്കും API കീ(കൾ)"
+        }
     },
     "main": {
         "title": "AI സംഭാഷണം",
+        "aiConversation": "AI സംഭാഷണം",
         "setupForm": {
             "title": "നിങ്ങളുടെ സംഭാഷണം സജ്ജമാക്കുക",
             "agentA": "ഏജന്റ് എ",
@@ -141,7 +138,7 @@ const ml = {
                 "selectModel": "തിരഞ്ഞെടുക്കുക TTS മോഡൽ"
             },
             "startConversation": "സംഭാഷണം ആരംഭിക്കുക",
-            "conversationPrompt": "സംഭാഷണം ആരംഭിക്കുക."
+            "conversationPrompt": "ദയവായി സംഭാഷണം ആരംഭിക്കൂ."
         },
         "conversation": {
             "thinking": "ചിന്തിക്കുന്നു...",
@@ -153,8 +150,7 @@ const ml = {
             "perMillionTokens": "ഒരു ദശലക്ഷം ടോക്കണുകൾക്ക്",
             "input": "ഇൻപുട്ട്",
             "output": "ഔട്ട്പുട്ട്"
-        },
-        "aiConversation": "AI സംഭാഷണം"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ml = {
             "signUpWithGoogle": "ഉപയോഗിച്ച് സൈൻ അപ്പ് ചെയ്യുക Google",
             "hasAccount": "ഇതിനകം ഒരു അക്കൗണ്ട് ഉണ്ടോ?",
             "signIn": "സൈൻ ഇൻ",
-            "emailLabel": "Email വിലാസം",
+            "emailLabel": "ഇമെയിൽ വിലാസം",
             "confirmPasswordPlaceholder": "പാസ്വേഡ് സ്ഥിരീകരിക്കുക",
             "signingUp": "സൈൻ അപ്പ് ചെയ്യുന്നു..."
         },
@@ -185,7 +181,7 @@ const ml = {
             "invalidCredentials": "അസാധുവായ ഇമെയിൽ വിലാസം അല്ലെങ്കിൽ പാസ്‌വേഡ്",
             "userNotFound": "ഉപയോക്താവിനെ കണ്ടെത്തിയില്ല.",
             "weakPassword": "പാസ്‌വേഡിൽ കുറഞ്ഞത് 6 പ്രതീകങ്ങൾ ഉണ്ടായിരിക്കണം.",
-            "emailInUse": "Email ഉപയോഗത്തിലുണ്ട്",
+            "emailInUse": "ഇമെയിൽ ഇതിനകം ഉപയോഗത്തിലുണ്ട്.",
             "generic": "ഒരു പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.",
             "initialization": "ഇനിഷ്യലൈസേഷൻ പിശക്. ദയവായി പിന്നീട് വീണ്ടും ശ്രമിക്കുക.",
             "invalidEmail": "സാധുവായ ഒരു ഇമെയിൽ വിലാസം നൽകുക.",
@@ -229,12 +225,14 @@ const ml = {
     "modelCategory_Gemini2_0": "Gemini 2.0 മോഡലുകൾ",
     "modelCategory_Gemini1_5": "Gemini 1.5 മോഡലുകൾ",
     "modelCategory_Claude4": "Claude 4 മോഡലുകൾ",
-    "modelCategory_Claude3_7": "Claude 3.7 മോഡലുകൾ",
+    "modelCategory_Claude3_7": "Claude 3.7 മോഡൽ",
     "modelCategory_Claude3_5": "Claude 3.5 മോഡലുകൾ",
     "modelCategory_Claude3": "Claude 3 മോഡലുകൾ",
-    "modelCategory_Grok4": "Grok 4 മോഡലുകൾ",
+    "modelCategory_Grok4": "Grok 4 മോഡൽ",
     "modelCategory_Grok3": "Grok 3 മോഡലുകൾ",
     "modelCategory_Grok3Mini": "Grok 3 മിനി മോഡലുകൾ",
+    "modelCategory_MistralAIPremierModels": "പ്രീമിയർ മോഡലുകൾ",
+    "modelCategory_MistralAIOpenModels": "ഓപ്പൺ മോഡൽ",
     "modelCategory_Llama4": "Llama 4 മോഡലുകൾ",
     "modelCategory_Llama3_3": "Llama 3.3 മോഡലുകൾ",
     "modelCategory_Llama3_2": "Llama 3.2 മോഡലുകൾ",
@@ -246,18 +244,18 @@ const ml = {
     "modelCategory_Gemma2": "Gemma 2 മോഡൽ",
     "modelCategory_Gemma": "Gemma മോഡലുകൾ",
     "modelCategory_GoogleGemma": "Google Gemma മോഡലുകൾ",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 മോഡലുകൾ",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 മോഡലുകൾ",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 മോഡൽ",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 മോഡൽ",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 ഡിസ്റ്റിൽ മോഡലുകൾ",
     "modelCategory_DeepSeekModels": "DeepSeek മോഡലുകൾ",
     "modelCategory_MistralAIModels": "Mistral AI മോഡലുകൾ",
-    "modelCategory_Qwen3": "Qwen3 മോഡലുകൾ",
-    "modelCategory_QwQwQ": "Qwen QwQ മോഡലുകൾ",
+    "modelCategory_Qwen3": "Qwen3 മോഡൽ",
+    "modelCategory_QwQwQ": "Qwen QwQ മോഡൽ",
     "modelCategory_Qwen2_5": "Qwen2.5 മോഡലുകൾ",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 വിഷൻ മോഡലുകൾ",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 കോഡർ മോഡലുകൾ",
-    "modelCategory_Qwen2": "Qwen2 മോഡലുകൾ",
-    "modelCategory_Qwen2Vision": "Qwen2 വിഷൻ മോഡലുകൾ",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 വിഷൻ മോഡൽ",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 കോഡർ മോഡൽ",
+    "modelCategory_Qwen2": "Qwen2 മോഡൽ",
+    "modelCategory_Qwen2Vision": "Qwen2 വിഷൻ മോഡൽ",
     "modelCategory_QwenModels": "Qwen മോഡലുകൾ",
     "modelCategory_OtherModels": "മറ്റ് മോഡലുകൾ",
     "page_ErrorLoadingUserData": "ഉപയോക്തൃ ഡാറ്റ ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: {errorMessage}. പുതുക്കാൻ ശ്രമിക്കുക.",
@@ -269,12 +267,13 @@ const ml = {
     "page_LoadingUserData": "ഉപയോക്തൃ ഡാറ്റ ലോഡ് ചെയ്യുന്നു...",
     "page_ErrorAlertTitle": "പിശക്",
     "page_WelcomeTitle": "സ്വാഗതം Two AIs",
-    "page_WelcomeSubtitle": "ഈ വെബ്സൈറ്റ് രണ്ട് പേർ തമ്മിലുള്ള സംഭാഷണങ്ങൾ കേൾക്കാൻ നിങ്ങളെ അനുവദിക്കുന്നു Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ഈ വെബ്സൈറ്റ് രണ്ട് പേർ തമ്മിലുള്ള സംഭാഷണങ്ങൾ കേൾക്കാൻ നിങ്ങളെ അനുവദിക്കുന്നു Large Language Models (LLMs) ഓരോ ടേണിനും ഇമേജുകൾ സൃഷ്ടിക്കുക.",
     "page_ApiKeysRequiredTitle": "API കീകൾ ആവശ്യമാണ്",
     "page_ApiKeysRequiredDescription": "സംഭാഷണങ്ങൾ നടത്തുന്നതിന്, നിങ്ങളുടേതായവ നൽകേണ്ടതുണ്ട് API എന്നതിനായുള്ള താക്കോലുകൾ AI നിങ്ങൾ ഉപയോഗിക്കാൻ ആഗ്രഹിക്കുന്ന മോഡലുകൾ (ഉദാ., OpenAI, Google, Anthropic) സൈൻ ഇൻ ചെയ്ത ശേഷം. ഓരോ ദാതാവിനുമുള്ള വിശദമായ നിർദ്ദേശങ്ങൾ ക്രമീകരണങ്ങളിൽ കാണാം / API സൈൻ ഇൻ ചെയ്തതിനു ശേഷമുള്ള കീകൾ പേജ്.",
     "page_SignInPrompt": "നിങ്ങളുടെ സ്വന്തം സെഷൻ ആരംഭിക്കുന്നതിന്, തലക്കെട്ടിലെ ലിങ്ക് ഉപയോഗിച്ച് നിങ്ങൾക്ക് സൈൻ ഇൻ ചെയ്യാനോ ഒരു അക്കൗണ്ട് സൃഷ്ടിക്കാനോ കഴിയും.",
     "page_VideoTitle": "Two AIs സംഭാഷണ ഡെമോ",
     "page_AvailableLLMsTitle": "നിലവിൽ ലഭ്യമാണ് LLMs",
+    "page_TooltipKnowledgeCutoff": "ഈ തീയതിയിൽ മോഡലിന്റെ അറിവ് ഛേദിക്കപ്പെട്ടിരിക്കുന്നു.",
     "page_TooltipGoogleThinkingBudget": "ഈ Google മോഡൽ ഒരു 'ചിന്തിക്കുന്ന ബജറ്റ്' ഉപയോഗിക്കുന്നു. 'ചിന്തിക്കുന്ന' ഔട്ട്‌പുട്ട് ബിൽ ചെയ്‌തിട്ടുണ്ടെങ്കിലും ചാറ്റിൽ ദൃശ്യമാകില്ല.",
     "page_TooltipAnthropicExtendedThinking": "ഈ Anthropic മോഡൽ 'extended thinking' ഉപയോഗിക്കുന്നു. 'thinking' ഔട്ട്‌പുട്ട് ബിൽ ചെയ്‌തിട്ടുണ്ടെങ്കിലും ചാറ്റിൽ ദൃശ്യമാകില്ല.",
     "page_TooltipXaiThinking": "ഈ xAI മോഡൽ 'ചിന്തിക്കൽ' ഉപയോഗിക്കുന്നു. ഈ ഔട്ട്‌പുട്ട് ബിൽ ചെയ്‌തിട്ടുണ്ടെങ്കിലും ചാറ്റിൽ ദൃശ്യമാകില്ല.",
@@ -282,18 +281,53 @@ const ml = {
     "page_TooltipDeepSeekReasoning": "ഈ DeepSeek മോഡൽ 'യുക്തി/ചിന്ത' ഉപയോഗിക്കുന്നു. ഔട്ട്‌പുട്ട് ബിൽ ചെയ്‌തിട്ടുണ്ടെങ്കിലും ചാറ്റിൽ ദൃശ്യമാകില്ല.",
     "page_TooltipGenericReasoning": "ഈ മോഡൽ ചാറ്റിൽ ദൃശ്യമാകാത്ത യുക്തിപരമായ ടോക്കണുകൾ ഉപയോഗിക്കുന്നു, പക്ഷേ ഔട്ട്‌പുട്ട് ടോക്കണുകളായി ബിൽ ചെയ്യപ്പെടുന്നു.",
     "page_TooltipRequiresVerification": "പരിശോധിച്ചുറപ്പിക്കേണ്ടതുണ്ട് OpenAI ഓർഗനൈസേഷൻ. നിങ്ങൾക്ക് ഇവിടെ പരിശോധിക്കാം.",
-    "page_TooltipSupportsLanguage": "{languageName} പിന്തുണയ്ക്കുന്നു",
-    "page_TooltipMayNotSupportLanguage": "സംഭാഷണത്തിനായി ഈ മോഡൽ {languageName} പൂർണ്ണമായും പിന്തുണച്ചേക്കില്ല.",
+    "page_TooltipSupportsLanguage": "പിന്തുണയ്ക്കുന്നു {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ഈ മോഡൽ പൂർണ്ണമായി പിന്തുണച്ചേക്കില്ല {languageName} സംഭാഷണത്തിനായി.",
     "page_BadgePreview": "പ്രിവ്യൂ",
     "page_BadgeExperimental": "പരീക്ഷണാത്മകം",
     "page_BadgeBeta": "ബീറ്റ",
     "page_AvailableTTSTitle": "നിലവിൽ ലഭ്യമാണ് Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "നിലവിൽ ലഭ്യമായ ഇമേജ് മോഡലുകൾ",
     "page_NoTTSOptions": "ഇല്ല TTS നിലവിൽ ലഭ്യമായ ഓപ്ഷനുകൾ.",
     "page_TruncatableNoteFormat": "({കുറിപ്പ് വാചകം})",
     "page_PricesLastVerifiedOn": "വിലകൾ അവസാനം പരിശോധിച്ചത് {date}",
-    "page_PricingPerTokens": "ഓരോ {amount} ടോക്കണുകൾ",
+    "page_PricingPerTokens": "1 ദശലക്ഷം ടോക്കണുകൾക്ക്",
     "page_ModelCategoryModels": "{model} മോഡലുകൾ",
+    "common_verifyHere": "ഇവിടെ സ്ഥിരീകരിക്കുക",
     "ttsVoice_Ugne": "തീയിൽ",
+    "pricing": {
+        "perMillionTokens": "1 ദശലക്ഷം ടോക്കണുകൾക്ക്",
+        "tokens": "ടോക്കണുകൾ",
+        "free": "സൗ ജന്യം",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 ദശലക്ഷം ടെക്സ്റ്റ് ടോക്കണുകൾക്ക്",
+                "audioTokens": "{price} 1 ദശലക്ഷം ഓഡിയോ ടോക്കണുകൾക്ക്"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 ദശലക്ഷം ടെക്സ്റ്റ് ടോക്കണുകൾക്ക്",
+                "audioTokens": "{price} 1 ദശലക്ഷം ഓഡിയോ ടോക്കണുകൾക്ക്"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 ദശലക്ഷം ടെക്സ്റ്റ് ടോക്കണുകൾക്ക്",
+                "audioTokens": "{price} 1 ദശലക്ഷം ഓഡിയോ ടോക്കണുകൾക്ക്"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 ദശലക്ഷം ടോക്കണുകൾക്ക്"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 ദശലക്ഷം ടോക്കണുകൾക്ക്"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 ദശലക്ഷം പ്രതീകങ്ങൾക്ക്",
+                "neural": "{price} 1 ദശലക്ഷം പ്രതീകങ്ങൾക്ക്",
+                "studio": "{price} 1 ദശലക്ഷം പ്രതീകങ്ങൾക്ക്",
+                "chirpHD": "പരിശോധിച്ചുറപ്പിക്കാൻ കഴിഞ്ഞില്ല",
+                "chirp3HD": "{price} 1 ദശലക്ഷം പ്രതീകങ്ങൾക്ക്"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "സെഷൻ സജ്ജീകരണ ഫോം",
         "description": "ഇവിടെ നിങ്ങൾക്ക് LLM ഉം ഓപ്ഷണലും തിരഞ്ഞെടുക്കാം. TTS ഓരോ ഏജന്റിനുമുള്ള ക്രമീകരണങ്ങൾ.",
@@ -309,7 +343,7 @@ const ml = {
         "initialPromptDescription": "സംഭാഷണം ആരംഭിക്കുന്നതിനുള്ള ആദ്യ സന്ദേശമായി ഈ പ്രോംപ്റ്റ് അയയ്ക്കും. നിങ്ങൾ ഇത് ശൂന്യമായി വിട്ടാൽ, ഒരു പ്രോംപ്റ്റും ഉണ്ടാകില്ല.",
         "startConversation": "സംഭാഷണം ആരംഭിക്കുക",
         "starting": "ആരംഭിക്കുന്നു...",
-        "startTheConversation": "സംഭാഷണം ആരംഭിക്കുക.",
+        "startTheConversation": "ദയവായി സംഭാഷണം ആരംഭിക്കൂ.",
         "languageSupportNote": "ഭാഷാ പിന്തുണ സൂചകങ്ങൾ മോഡൽ അനുയോജ്യത കാണിക്കുന്നു {languageName}. പിന്തുണയില്ലാത്ത മോഡലുകൾ പ്രവർത്തനരഹിതമാക്കിയിരിക്കുന്നു.",
         "reasoningNote": "ഒരു മോഡൽ 'ചിന്തിക്കുന്ന' അല്ലെങ്കിൽ 'യുക്തിസഹിക്കുന്ന' ടോക്കണുകൾ ഉപയോഗിക്കുന്നതായി സൂചിപ്പിക്കുന്നു. ഈ ഔട്ട്‌പുട്ട് ബിൽ ചെയ്‌തിട്ടുണ്ടെങ്കിലും ചാറ്റിൽ ദൃശ്യമാകില്ല.",
         "openaiOrgVerificationNote": "ഒരു സൂചിപ്പിക്കുന്നു OpenAI മോഡലിന് ഒരു സ്ഥിരീകരിച്ച സ്ഥാപനം ആവശ്യമാണ്. നിങ്ങൾക്ക് കഴിയും",
@@ -335,15 +369,15 @@ const ml = {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",
         "conversationHistory": "സംഭാഷണ ചരിത്രം",
         "chatWith": "ചാറ്റ് ചെയ്യുക {agentA} & {agentB}",
+        "conversationDescription": "ആരംഭിച്ചത് {date} - ഭാഷ: {language}",
         "viewConversation": "സംഭാഷണം കാണുക",
         "backToPreviousChats": "മുൻ ചാറ്റുകളിലേക്ക് മടങ്ങുക",
         "resumeConversation": "സംഭാഷണം പുനരാരംഭിക്കുക",
         "resuming": "പുനരാരംഭിക്കുന്നു...",
         "sessionDetails": "സെഷൻ വിശദാംശങ്ങൾ",
-        "language": "ഭാഷ:",
+        "language": "ഭാഷ",
         "transcript": "ട്രാൻസ്ക്രിപ്റ്റ്",
         "loadingHistory": "ചരിത്രം ലോഡുചെയ്യുന്നു...",
-        "conversationDescription": "ആരംഭിച്ചത് {date} - ഭാഷ: {language}",
         "loadingConversation": "സംഭാഷണം ലോഡ് ചെയ്യുന്നു...",
         "chatStartedOn": "ചാറ്റ് ആരംഭിച്ചത് {date}",
         "agentAModel": "ഏജന്റ് എ മോഡൽ",
@@ -355,18 +389,8 @@ const ml = {
         "model": "മോഡൽ",
         "voice": "ശബ്ദം"
     },
-    "common_verifyHere": "ഇവിടെ സ്ഥിരീകരിക്കുക",
-    "page_AvailableImageModelsTitle": "നിലവിൽ ലഭ്യമായ ഇമേജ് മോഡലുകൾ",
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",
-    "imageModel_PriceUSD": "വില (USD)",
-    "page_TooltipKnowledgeCutoff": "ഈ തീയതിയിൽ മോഡലിന്റെ അറിവ് ഛേദിക്കപ്പെട്ടിരിക്കുന്നു.",
-    "modelCategory_MistralAIPremierModels": "പ്രീമിയർ മോഡലുകൾ",
-    "modelCategory_MistralAIOpenModels": "തുറന്ന മോഡലുകൾ",
-    "pricing": {
-        "perMillionTokens": "1 ദശലക്ഷം ടോക്കണുകൾക്ക്",
-        "tokens": "ടോക്കണുകൾ",
-        "free": "സൗ ജന്യം"
-    }
+    "imageModel_PriceUSD": "വില (USD)"
 };
 export default ml;

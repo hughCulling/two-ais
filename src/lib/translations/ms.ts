@@ -71,6 +71,7 @@ const ms = {
         "mn": "Mongolia"
     },
     "settings": {
+        "loading": "Memuatkan tetapan...",
         "title": "tetapan",
         "sections": {
             "appearance": "Penampilan",
@@ -95,17 +96,17 @@ const ms = {
         },
         "apiKeys": {
             "title": "API kunci",
-            "description": "Uruskan anda API kunci untuk berbeza AI pembekal",
-            "saved": "Disimpan",
-            "notSet": "Tidak ditetapkan",
-            "setKey": "Tetapkan kunci",
-            "updateKey": "Kemas kini kunci",
-            "removeKey": "Alih keluar kunci",
-            "getKeyInstructions": "Dapatkan anda API kunci",
-            "noNewKeys": "Tiada yang baru API kekunci dimasukkan untuk menyimpan.",
-            "unexpectedResponse": "Menerima respons yang tidak dijangka daripada pelayan.",
+            "description": "Uruskan anda API kunci untuk berbeza AI perkhidmatan.",
+            "setKey": "Tetapkan",
+            "updateKey": "Kemas kini",
+            "saveUpdateKeys": "Simpan / Kemas Kini Kekunci",
+            "saving": "Menyimpan...",
+            "noNewKeys": "Tiada kunci baharu untuk disimpan.",
+            "keyStoredSecurely": "awak API kunci akan disimpan dengan selamat dan disulitkan.",
+            "enteringNewKeyOverwrites": "Memasukkan kunci baharu akan menimpa kunci yang sedia ada.",
             "failedToSaveKey": "Gagal menyimpan kunci {serviceName}.",
-            "someKeysNotSaved": "Beberapa API kunci tidak dapat disimpan. Sila semak butiran di bawah.",
+            "unexpectedResponse": "Sambutan yang tidak dijangka daripada pelayan.",
+            "someKeysNotSaved": "Beberapa kunci tidak dapat disimpan. Sila semak ralat di atas.",
             "keyStatus": "status kunci...",
             "apiKeySecurelySaved": "API Kunci Disimpan dengan Selamat",
             "confirmRemoveTitle": "Sahkan Pembuangan",
@@ -114,16 +115,12 @@ const ms = {
             "successfullyRemovedKey": "Berjaya mengalih keluar kunci {serviceName}.",
             "keyNotSet": "Status Utama: Tidak Ditetapkan",
             "keySet": "Status Utama: Tetapkan",
-            "saveButton": "Jimat API kunci",
-            "enteringNewKeyOverwrites": "Memasukkan kunci baharu akan menimpa kunci yang disimpan.",
-            "keyStoredSecurely": "Kunci anda akan disimpan dengan selamat menggunakan Google Pengurus Rahsia.",
-            "saveUpdateKeys": "Simpan / Kemas Kini Kekunci",
-            "saving": "Menyimpan..."
-        },
-        "loading": "Memuatkan tetapan..."
+            "saveButton": "Jimat API kunci"
+        }
     },
     "main": {
         "title": "AI Perbualan",
+        "aiConversation": "AI Perbualan",
         "setupForm": {
             "title": "Sediakan perbualan anda",
             "agentA": "Ejen A",
@@ -141,7 +138,7 @@ const ms = {
                 "selectModel": "Pilih TTS model"
             },
             "startConversation": "Mulakan Perbualan",
-            "conversationPrompt": "Mulakan perbualan."
+            "conversationPrompt": "Sila mulakan perbualan."
         },
         "conversation": {
             "thinking": "berfikir...",
@@ -153,8 +150,7 @@ const ms = {
             "perMillionTokens": "setiap juta token",
             "input": "Input",
             "output": "Keluaran"
-        },
-        "aiConversation": "AI Perbualan"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ms = {
             "signUpWithGoogle": "Daftar dengan Google",
             "hasAccount": "Sudah mempunyai akaun?",
             "signIn": "Log masuk",
-            "emailLabel": "Email alamat",
+            "emailLabel": "Alamat e-mel",
             "confirmPasswordPlaceholder": "Sahkan Kata Laluan",
             "signingUp": "Mendaftar..."
         },
@@ -185,7 +181,7 @@ const ms = {
             "invalidCredentials": "E-mel atau kata laluan tidak sah",
             "userNotFound": "Pengguna tidak ditemui",
             "weakPassword": "Kata laluan hendaklah sekurang-kurangnya 6 aksara",
-            "emailInUse": "Email sudah digunakan",
+            "emailInUse": "E-mel sudah digunakan",
             "generic": "Ralat berlaku. Sila cuba lagi.",
             "initialization": "Ralat permulaan. Sila cuba lagi kemudian.",
             "invalidEmail": "Sila masukkan alamat e-mel yang sah.",
@@ -208,7 +204,7 @@ const ms = {
     },
     "common": {
         "loading": "Memuatkan...",
-        "error": "ralat",
+        "error": "Ralat",
         "save": "Jimat",
         "cancel": "Batal",
         "delete": "Padam",
@@ -235,6 +231,8 @@ const ms = {
     "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 model",
     "modelCategory_Grok3Mini": "Grok 3 Model mini",
+    "modelCategory_MistralAIPremierModels": "Model perdana",
+    "modelCategory_MistralAIOpenModels": "Model terbuka",
     "modelCategory_Llama4": "Llama 4 model",
     "modelCategory_Llama3_3": "Llama 3.3 model",
     "modelCategory_Llama3_2": "Llama 3.2 model",
@@ -267,14 +265,15 @@ const ms = {
     "page_ErrorStartingSessionGeneric": "Ralat memulakan sesi: {errorMessage}",
     "page_ErrorSessionIdMissing": "API respons berjaya tetapi tidak menyertakan id perbualan.",
     "page_LoadingUserData": "Memuatkan data pengguna...",
-    "page_ErrorAlertTitle": "ralat",
+    "page_ErrorAlertTitle": "Ralat",
     "page_WelcomeTitle": "Selamat datang ke Two AIs",
-    "page_WelcomeSubtitle": "Laman web ini membolehkan anda mendengar perbualan antara dua orang Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Laman web ini membolehkan anda mendengar perbualan antara dua orang Large Language Models (LLMs) dan jana imej untuk setiap giliran.",
     "page_ApiKeysRequiredTitle": "API Kunci Diperlukan",
     "page_ApiKeysRequiredDescription": "Untuk menjalankan perbualan, anda perlu menyediakan perbualan anda sendiri API kunci untuk AI model yang anda ingin gunakan (cth., OpenAI, Google, Anthropic) selepas melog masuk. Arahan terperinci untuk setiap pembekal boleh didapati pada Tetapan / API Halaman kunci selepas log masuk.",
     "page_SignInPrompt": "Untuk memulakan sesi anda sendiri, anda boleh log masuk atau buat akaun menggunakan pautan dalam pengepala.",
     "page_VideoTitle": "Two AIs Demo Perbualan",
     "page_AvailableLLMsTitle": "Tersedia pada masa ini LLMs",
+    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tarikh ini.",
     "page_TooltipGoogleThinkingBudget": "ini Google model menggunakan 'belanjawan berfikir'. Output 'berfikir' dibilkan tetapi tidak kelihatan dalam sembang.",
     "page_TooltipAnthropicExtendedThinking": "ini Anthropic model menggunakan 'pemikiran lanjutan'. Output 'berfikir' dibilkan tetapi tidak kelihatan dalam sembang.",
     "page_TooltipXaiThinking": "ini xAI model menggunakan 'berfikir'. Output ini dibilkan tetapi tidak kelihatan dalam sembang.",
@@ -288,12 +287,47 @@ const ms = {
     "page_BadgeExperimental": "Eksperimen",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Tersedia pada masa ini Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Model Imej Tersedia Pada Masa Ini",
     "page_NoTTSOptions": "Tidak TTS pilihan yang tersedia pada masa ini.",
     "page_TruncatableNoteFormat": "({noteTeks})",
     "page_PricesLastVerifiedOn": "Harga terakhir disahkan pada {date}",
-    "page_PricingPerTokens": "per {amount} Token",
+    "page_PricingPerTokens": "setiap 1 Juta Token",
     "page_ModelCategoryModels": "{model} model",
+    "common_verifyHere": "sahkan di sini",
     "ttsVoice_Ugne": "Dalam api",
+    "pricing": {
+        "perMillionTokens": "setiap 1 Juta token",
+        "tokens": "token",
+        "free": "Percuma",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} setiap 1 Juta token teks",
+                "audioTokens": "{price} setiap 1 Juta token audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} setiap 1 Juta token teks",
+                "audioTokens": "{price} setiap 1 Juta token audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} setiap 1 Juta token teks",
+                "audioTokens": "{price} setiap 1 Juta token audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} setiap 1 Juta token"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} setiap 1 Juta token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} setiap 1 Juta aksara",
+                "neural": "{price} setiap 1 Juta aksara",
+                "studio": "{price} setiap 1 Juta aksara",
+                "chirpHD": "Tidak dapat mengesahkan",
+                "chirp3HD": "{price} setiap 1 Juta aksara"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Borang Persediaan Sesi",
         "description": "Di sini anda boleh memilih LLM dan pilihan TTS tetapan untuk setiap ejen.",
@@ -309,7 +343,7 @@ const ms = {
         "initialPromptDescription": "Gesaan ini akan dihantar sebagai mesej pertama untuk memulakan perbualan. Jika anda membiarkannya kosong, tidak akan ada gesaan.",
         "startConversation": "Mulakan Perbualan",
         "starting": "Bermula...",
-        "startTheConversation": "Mulakan perbualan.",
+        "startTheConversation": "Sila mulakan perbualan.",
         "languageSupportNote": "Penunjuk sokongan bahasa menunjukkan keserasian model dengan {languageName}. Model tanpa sokongan dilumpuhkan.",
         "reasoningNote": "Menunjukkan model menggunakan token 'berfikir' atau 'menaakul'. Output ini dibilkan tetapi tidak kelihatan dalam sembang.",
         "openaiOrgVerificationNote": "Menunjukkan an OpenAI model memerlukan organisasi yang disahkan. awak boleh",
@@ -335,15 +369,15 @@ const ms = {
         "backToMain": "Kembali ke Utama",
         "conversationHistory": "Sejarah Perbualan",
         "chatWith": "Berbual dengan {agentA} & {agentB}",
+        "conversationDescription": "Bermula pada {date} - Bahasa: {language}",
         "viewConversation": "Lihat Perbualan",
         "backToPreviousChats": "Kembali ke Sembang Sebelumnya",
         "resumeConversation": "Sambung semula Perbualan",
         "resuming": "Menyambung semula...",
         "sessionDetails": "Butiran Sesi",
-        "language": "Bahasa:",
+        "language": "Bahasa",
         "transcript": "Transkrip",
         "loadingHistory": "Memuatkan sejarah...",
-        "conversationDescription": "Bermula pada {date} - Bahasa: {language}",
         "loadingConversation": "Memuatkan perbualan...",
         "chatStartedOn": "Sembang bermula {date}",
         "agentAModel": "Ejen A Model",
@@ -355,18 +389,8 @@ const ms = {
         "model": "Model",
         "voice": "Suara"
     },
-    "common_verifyHere": "sahkan di sini",
-    "page_AvailableImageModelsTitle": "Model Imej Tersedia Pada Masa Ini",
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",
-    "imageModel_PriceUSD": "harga (USD)",
-    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tarikh ini.",
-    "modelCategory_MistralAIPremierModels": "Model perdana",
-    "modelCategory_MistralAIOpenModels": "Model terbuka",
-    "pricing": {
-        "perMillionTokens": "setiap 1 Juta token",
-        "tokens": "token",
-        "free": "Percuma"
-    }
+    "imageModel_PriceUSD": "harga (USD)"
 };
 export default ms;

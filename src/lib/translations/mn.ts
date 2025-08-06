@@ -71,6 +71,7 @@ const mn = {
         "mn": "Монгол"
     },
     "settings": {
+        "loading": "Тохиргоог ачаалж байна...",
         "title": "Тохиргоо",
         "sections": {
             "appearance": "Гадаад төрх",
@@ -95,17 +96,17 @@ const mn = {
         },
         "apiKeys": {
             "title": "API Түлхүүрүүд",
-            "description": "Өөрийгөө удирдах API өөр өөр түлхүүрүүд AI үйлчилгээ үзүүлэгчид",
-            "saved": "Хадгалсан",
-            "notSet": "Тохируулаагүй",
-            "setKey": "Түлхүүрийг тохируулах",
-            "updateKey": "Шинэчлэх түлхүүр",
-            "removeKey": "Түлхүүрийг арилгах",
-            "getKeyInstructions": "Өөрийгөө аваарай API түлхүүр",
-            "noNewKeys": "Шинэ зүйл байхгүй API хадгалахын тулд түлхүүрүүдийг оруулсан.",
-            "unexpectedResponse": "Серверээс гэнэтийн хариу хүлээн авлаа.",
+            "description": "Өөрийгөө удирдах API өөр өөр түлхүүрүүд AI үйлчилгээ.",
+            "setKey": "Тохируулах",
+            "updateKey": "Шинэчлэх",
+            "saveUpdateKeys": "Түлхүүрүүдийг хадгалах / шинэчлэх",
+            "saving": "Хадгалж байна...",
+            "noNewKeys": "Хадгалах шинэ түлхүүр байхгүй.",
+            "keyStoredSecurely": "Таны API Түлхүүрийг найдвартай хадгалж, шифрлэнэ.",
+            "enteringNewKeyOverwrites": "Шинэ түлхүүр оруулах нь одоо байгаа түлхүүрийг дарж бичих болно.",
             "failedToSaveKey": "{serviceName} түлхүүрийг хадгалж чадсангүй.",
-            "someKeysNotSaved": "Зарим API түлхүүрүүдийг хадгалж чадсангүй. Доорх дэлгэрэнгүй мэдээллийг шалгана уу.",
+            "unexpectedResponse": "Серверээс гэнэтийн хариу ирсэн.",
+            "someKeysNotSaved": "Зарим түлхүүрүүдийг хадгалж чадсангүй. Дээрх алдааг шалгана уу.",
             "keyStatus": "гол төлөв...",
             "apiKeySecurelySaved": "API Түлхүүрийг найдвартай хадгалсан",
             "confirmRemoveTitle": "Устгасныг баталгаажуулна уу",
@@ -113,17 +114,13 @@ const mn = {
             "failedToRemoveKey": "{serviceName} түлхүүрийг устгаж чадсангүй.",
             "successfullyRemovedKey": "{serviceName} түлхүүрийг амжилттай устгалаа.",
             "keyNotSet": "Түлхүүр статус: тохируулаагүй",
-            "keySet": "Түлхүүр төлөв: Тохируулсан",
-            "saveButton": "Хадгалах API Түлхүүр(үүд)",
-            "enteringNewKeyOverwrites": "Шинэ түлхүүр оруулснаар хадгалсан түлхүүрийг дарж бичнэ.",
-            "keyStoredSecurely": "Таны түлхүүрийг ашиглан найдвартай хадгалагдах болно Google Нууц менежер.",
-            "saveUpdateKeys": "Түлхүүрүүдийг хадгалах / шинэчлэх",
-            "saving": "Хадгалж байна..."
-        },
-        "loading": "Тохиргоог ачаалж байна..."
+            "keySet": "Түлхүүр статус: Тохируулах",
+            "saveButton": "Хадгалах API Түлхүүр(үүд)"
+        }
     },
     "main": {
         "title": "AI Яриа",
+        "aiConversation": "AI Яриа",
         "setupForm": {
             "title": "Харилцаагаа тохируулна уу",
             "agentA": "Агент А",
@@ -141,7 +138,7 @@ const mn = {
                 "selectModel": "Сонго TTS загвар"
             },
             "startConversation": "Яриа эхлүүлэх",
-            "conversationPrompt": "Харилцаагаа эхлүүл."
+            "conversationPrompt": "Та яриагаа эхлүүлнэ үү."
         },
         "conversation": {
             "thinking": "бодож байна...",
@@ -153,8 +150,7 @@ const mn = {
             "perMillionTokens": "сая жетон тутамд",
             "input": "Оруулах",
             "output": "Гаралт"
-        },
-        "aiConversation": "AI Яриа"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const mn = {
             "signUpWithGoogle": "-тэй бүртгүүлнэ үү Google",
             "hasAccount": "Бүртгэлтэй юу?",
             "signIn": "Нэвтрэх",
-            "emailLabel": "Email хаяг",
+            "emailLabel": "Имэйл хаяг",
             "confirmPasswordPlaceholder": "Нууц үгээ баталгаажуулна уу",
             "signingUp": "Бүртгүүлж байна..."
         },
@@ -185,11 +181,11 @@ const mn = {
             "invalidCredentials": "Хүчингүй имэйл эсвэл нууц үг",
             "userNotFound": "Хэрэглэгч олдсонгүй",
             "weakPassword": "Нууц үг дор хаяж 6 тэмдэгттэй байх ёстой",
-            "emailInUse": "Email аль хэдийн ашиглагдаж байна",
+            "emailInUse": "Имэйлийг аль хэдийн ашиглаж байна",
             "generic": "Алдаа гарлаа. Дахин оролдоно уу.",
             "initialization": "Эхлүүлэх алдаа. Дараа дахин оролдоно уу.",
             "invalidEmail": "Хүчинтэй имэйл хаяг оруулна уу.",
-            "tooManyRequests": "Хэт олон амжилтгүй нэвтрэх оролдлогын улмаас нэвтрэх эрхийг түр хаасан. Нууц үгээ шинэчлэх эсвэл дараа дахин оролдоно уу.",
+            "tooManyRequests": "Хэт олон амжилтгүй нэвтрэх оролдлогын улмаас хандалтыг түр хаасан. Нууц үгээ шинэчлэх эсвэл дараа дахин оролдоно уу.",
             "signInFailedPrefix": "Нэвтэрч чадсангүй: ",
             "unknownSignInError": "Нэвтрэх үед үл мэдэгдэх алдаа гарлаа.",
             "profileSaveFailedPrefix": "Нэвтэрсэн боловч профайлын өгөгдлийг хадгалж чадсангүй: ",
@@ -215,10 +211,10 @@ const mn = {
         "confirm": "Баталгаажуулах",
         "or": "эсвэл"
     },
-    "apiKeyMissing": "API Түлхүүр алга",
+    "apiKeyMissing": "API Түлхүүр дутуу",
     "apiKeyMissingSubtext": "The API Энэ үйлчилгээ үзүүлэгчийн түлхүүр байхгүй эсвэл хүчингүй байна. Үүнийг тохиргоонд нэмнэ үү.",
     "apiKeyNotNeeded": "API Түлхүүр шаардлагагүй",
-    "apiKeyNotNeededSubtext": "Энэ үйлчилгээ үзүүлэгч нь шаардлагагүй API үнэ төлбөргүй түвшин эсвэл тодорхой загваруудын түлхүүр.",
+    "apiKeyNotNeededSubtext": "Энэ үйлчилгээ үзүүлэгч нь шаарддаггүй API үнэ төлбөргүй түвшин эсвэл тодорхой загваруудын түлхүүр.",
     "apiKeyFound": "API Түлхүүрийн багц",
     "apiKeyFoundSubtext": "Ан API түлхүүрийг энэ үйлчилгээ үзүүлэгчийн хувьд тохируулсан.",
     "modelCategory_FlagshipChat": "Тэргүүлэгч чатын загварууд",
@@ -229,12 +225,14 @@ const mn = {
     "modelCategory_Gemini2_0": "Gemini 2.0 загварууд",
     "modelCategory_Gemini1_5": "Gemini 1.5 загварууд",
     "modelCategory_Claude4": "Claude 4 загварууд",
-    "modelCategory_Claude3_7": "Claude 3.7 загварууд",
+    "modelCategory_Claude3_7": "Claude 3.7 загвар",
     "modelCategory_Claude3_5": "Claude 3.5 загварууд",
     "modelCategory_Claude3": "Claude 3 загварууд",
-    "modelCategory_Grok4": "Grok 4 загварууд",
+    "modelCategory_Grok4": "Grok 4 загвар",
     "modelCategory_Grok3": "Grok 3 загварууд",
     "modelCategory_Grok3Mini": "Grok 3 Мини загварууд",
+    "modelCategory_MistralAIPremierModels": "Дээд зэрэглэлийн загварууд",
+    "modelCategory_MistralAIOpenModels": "Нээлттэй загвар",
     "modelCategory_Llama4": "Llama 4 загвар",
     "modelCategory_Llama3_3": "Llama 3.3 загварууд",
     "modelCategory_Llama3_2": "Llama 3.2 загварууд",
@@ -246,16 +244,16 @@ const mn = {
     "modelCategory_Gemma2": "Gemma 2 загвар",
     "modelCategory_Gemma": "Gemma загварууд",
     "modelCategory_GoogleGemma": "Google Gemma Загварууд",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 загварууд",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 загварууд",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 загвар",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 загвар",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 нэрэх загварууд",
     "modelCategory_DeepSeekModels": "DeepSeek Загварууд",
     "modelCategory_MistralAIModels": "Mistral AI Загварууд",
     "modelCategory_Qwen3": "Qwen3 загвар",
-    "modelCategory_QwQwQ": "Qwen QwQ загварууд",
+    "modelCategory_QwQwQ": "Qwen QwQ загвар",
     "modelCategory_Qwen2_5": "Qwen2.5 загвар",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Харааны загварууд",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Кодерын загварууд",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Алсын харааны загвар",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Кодерын загвар",
     "modelCategory_Qwen2": "Qwen2 загвар",
     "modelCategory_Qwen2Vision": "Qwen2 Алсын харааны загвар",
     "modelCategory_QwenModels": "Qwen Загварууд",
@@ -269,31 +267,67 @@ const mn = {
     "page_LoadingUserData": "Хэрэглэгчийн өгөгдлийг ачаалж байна...",
     "page_ErrorAlertTitle": "Алдаа",
     "page_WelcomeTitle": "тавтай морил Two AIs",
-    "page_WelcomeSubtitle": "Энэ вэб сайт нь хоёрын яриаг сонсох боломжийг танд олгоно Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Энэ вэб сайт нь хоёрын яриаг сонсох боломжийг танд олгоно Large Language Models (LLMs) болон эргэлт бүрт зураг үүсгэх.",
     "page_ApiKeysRequiredTitle": "API Түлхүүрүүд шаардлагатай",
-    "page_ApiKeysRequiredDescription": "Харилцан яриа явуулахын тулд та өөрийн яриаг оруулах шаардлагатай API -д зориулсан түлхүүрүүд AI таны ашиглахыг хүссэн загварууд (жишээ нь, OpenAI, Google, Anthropic) нэвтэрсний дараа. Үйлчилгээ үзүүлэгч бүрийн нарийвчилсан зааврыг Тохиргооноос авах боломжтой / API Нэвтэрсэний дараа түлхүүр хуудас.",
+    "page_ApiKeysRequiredDescription": "Харилцан яриа явуулахын тулд та өөрийн яриаг оруулах шаардлагатай API -д зориулсан түлхүүрүүд AI таны ашиглахыг хүссэн загварууд (жишээ нь, OpenAI, Google, Anthropic) нэвтэрсний дараа. Үйлчилгээ үзүүлэгч бүрийн нарийвчилсан зааврыг Тохиргоо / хэсгээс авах боломжтой. API Нэвтэрсэний дараа түлхүүр хуудас.",
     "page_SignInPrompt": "Өөрийнхөө сессийг эхлүүлэхийн тулд та толгой хэсэгт байгаа холбоосыг ашиглан нэвтэрч эсвэл бүртгэл үүсгэж болно.",
     "page_VideoTitle": "Two AIs Ярилцлагын демо",
     "page_AvailableLLMsTitle": "Одоогоор ашиглах боломжтой LLMs",
+    "page_TooltipKnowledgeCutoff": "Загварын мэдлэг энэ өдөр тасарчээ.",
     "page_TooltipGoogleThinkingBudget": "Энэ Google загвар нь \"сэтгэн бодох төсөв\"-ийг ашигладаг. \"Сэтгэх\" гаралт нь төлбөртэй боловч чат дээр харагдахгүй.",
-    "page_TooltipAnthropicExtendedThinking": "Энэ Anthropic загвар нь \"өргөтгөсөн сэтгэлгээ\"-ийг ашигладаг. \"Сэтгэх\" гаралт нь төлбөртэй боловч чат дээр харагдахгүй.",
-    "page_TooltipXaiThinking": "Энэ xAI загвар нь \"сэтгэхүй\"-ийг ашигладаг. Энэ гаралтын тооцоо хийгдсэн боловч чат дээр харагдахгүй байна.",
-    "page_TooltipQwenReasoning": "Энэ Qwen загвар нь 'үдэшлэг/сэтгэлгээ' ашигладаг. Энэ гаралтын тооцоо хийгдсэн боловч чат дээр харагдахгүй байна.",
+    "page_TooltipAnthropicExtendedThinking": "Энэ Anthropic загвар нь \"өргөтгөсөн сэтгэлгээ\"-г ашигладаг. \"Сэтгэх\" гаралт нь төлбөртэй боловч чат дээр харагдахгүй.",
+    "page_TooltipXaiThinking": "Энэ xAI загвар нь \"сэтгэх\"-ийг ашигладаг. Энэ гаралтын тооцоо хийгдсэн боловч чат дээр харагдахгүй байна.",
+    "page_TooltipQwenReasoning": "Энэ Qwen загвар нь 'үдэшлэг/сэтгэлгээ' ашигладаг. Энэ гаралтын тооцоо хийгдсэн боловч чатад харагдахгүй байна.",
     "page_TooltipDeepSeekReasoning": "Энэ DeepSeek загвар нь 'үдэшлэг/сэтгэлгээ' ашигладаг. Гаралтын тооцоо хийгдсэн боловч чатад харагдахгүй байна.",
-    "page_TooltipGenericReasoning": "Энэ загвар нь чатад харагдахгүй боловч гаралтын жетон гэж тооцогддог учир шалтгааны жетонуудыг ашигладаг.",
+    "page_TooltipGenericReasoning": "Энэ загвар нь чат дээр харагдахгүй боловч гаралтын жетон гэж тооцогддог учир шалтгааны жетонуудыг ашигладаг.",
     "page_TooltipRequiresVerification": "Баталгаажуулах шаардлагатай OpenAI байгууллага. Та эндээс баталгаажуулах боломжтой.",
-    "page_TooltipSupportsLanguage": "{languageName}-г дэмждэг",
-    "page_TooltipMayNotSupportLanguage": "Энэ загвар нь харилцан ярианд {languageName} хэлийг бүрэн дэмжихгүй байж магадгүй.",
+    "page_TooltipSupportsLanguage": "Дэмждэг {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Энэ загвар нь бүрэн дэмжихгүй байж магадгүй юм {languageName} ярианы хувьд.",
     "page_BadgePreview": "Урьдчилан үзэх",
     "page_BadgeExperimental": "Туршилтын",
     "page_BadgeBeta": "Бета",
     "page_AvailableTTSTitle": "Одоогоор ашиглах боломжтой Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Одоогоор бэлэн байгаа зургийн загварууд",
     "page_NoTTSOptions": "Үгүй TTS одоо байгаа сонголтууд.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Үнийг хамгийн сүүлд баталгаажуулсан {date}",
-    "page_PricingPerTokens": "per {amount} Токенууд",
+    "page_PricingPerTokens": "1 сая жетон тутамд",
     "page_ModelCategoryModels": "{model} загварууд",
+    "common_verifyHere": "энд баталгаажуулна уу",
     "ttsVoice_Ugne": "Галд",
+    "pricing": {
+        "perMillionTokens": "1 сая жетон тутамд",
+        "tokens": "жетон",
+        "free": "Үнэгүй",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 сая текст жетон тутамд",
+                "audioTokens": "{price} 1 сая аудио жетон тутамд"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 сая текст жетон тутамд",
+                "audioTokens": "{price} 1 сая аудио жетон тутамд"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 сая текст жетон тутамд",
+                "audioTokens": "{price} 1 сая аудио жетон тутамд"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 сая жетон тутамд"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 сая жетон тутамд"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 сая тэмдэгт тутамд",
+                "neural": "{price} 1 сая тэмдэгт тутамд",
+                "studio": "{price} 1 сая тэмдэгт тутамд",
+                "chirpHD": "Баталгаажуулж чадсангүй",
+                "chirp3HD": "{price} 1 сая тэмдэгт тутамд"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Сеанс тохируулах маягт",
         "description": "Эндээс та LLM болон нэмэлтийг сонгож болно TTS агент бүрийн тохиргоо.",
@@ -309,7 +343,7 @@ const mn = {
         "initialPromptDescription": "Энэ мэдэгдлийг харилцан яриаг эхлүүлэх эхний мессеж болгон илгээх болно. Хэрэв та үүнийг хоосон орхивол ямар ч сануулга байхгүй болно.",
         "startConversation": "Яриа эхлүүлэх",
         "starting": "Эхэлж байна...",
-        "startTheConversation": "Харилцаагаа эхлүүл.",
+        "startTheConversation": "Ярилцлагаа эхлүүлнэ үү.",
         "languageSupportNote": "Хэлний дэмжлэгийн үзүүлэлтүүд нь загварт нийцэж байгааг харуулдаг {languageName}. Дэмжлэггүй загваруудыг идэвхгүй болгосон.",
         "reasoningNote": "Загвар нь 'сэтгэх' эсвэл 'эргэцүүлэн бодох' тэмдэгтүүдийг ашигладаг болохыг харуулж байна. Энэ гаралтын тооцоо хийгдсэн боловч чатад харагдахгүй байна.",
         "openaiOrgVerificationNote": "a-г заана OpenAI загвар нь баталгаажуулсан байгууллага шаарддаг. Та чадна",
@@ -335,15 +369,15 @@ const mn = {
         "backToMain": "Үндсэн рүү буцах",
         "conversationHistory": "Харилцааны түүх",
         "chatWith": "Чатлах {agentA} & {agentB}",
+        "conversationDescription": "Эхэлсэн {date} - Хэл: {language}",
         "viewConversation": "Харилцан яриаг харах",
         "backToPreviousChats": "Өмнөх чат руу буцах",
         "resumeConversation": "Харилцаагаа үргэлжлүүлэх",
         "resuming": "Үргэлжлүүлж байна...",
         "sessionDetails": "Хурлын дэлгэрэнгүй мэдээлэл",
-        "language": "Хэл:",
+        "language": "Хэл",
         "transcript": "Бичлэг",
         "loadingHistory": "Түүхийг ачаалж байна...",
-        "conversationDescription": "Эхэлсэн {date} - Хэл: {language}",
         "loadingConversation": "Харилцан яриаг ачаалж байна...",
         "chatStartedOn": "Чат эхэлсэн {date}",
         "agentAModel": "Агент А загвар",
@@ -355,18 +389,8 @@ const mn = {
         "model": "Загвар",
         "voice": "Дуу хоолой"
     },
-    "common_verifyHere": "энд баталгаажуулна уу",
-    "page_AvailableImageModelsTitle": "Одоогоор бэлэн байгаа зургийн загварууд",
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",
-    "imageModel_PriceUSD": "Үнэ (USD)",
-    "page_TooltipKnowledgeCutoff": "Загварын мэдлэг энэ өдөр тасарчээ.",
-    "modelCategory_MistralAIPremierModels": "Дээд зэрэглэлийн загварууд",
-    "modelCategory_MistralAIOpenModels": "Нээлттэй загварууд",
-    "pricing": {
-        "perMillionTokens": "1 сая жетон тутамд",
-        "tokens": "жетон",
-        "free": "Үнэгүй"
-    }
+    "imageModel_PriceUSD": "Үнэ (USD)"
 };
 export default mn;

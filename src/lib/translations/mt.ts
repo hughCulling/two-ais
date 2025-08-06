@@ -71,6 +71,7 @@ const mt = {
         "mn": "Mongoljan"
     },
     "settings": {
+        "loading": "Qed jitgħabbew is-settings...",
         "title": "Issettjar",
         "sections": {
             "appearance": "Dehra",
@@ -95,17 +96,17 @@ const mt = {
         },
         "apiKeys": {
             "title": "API Ċwievet",
-            "description": "Immaniġġja tiegħek API ċwievet għal differenti AI fornituri",
-            "saved": "Salvat",
-            "notSet": "Mhux issettjat",
-            "setKey": "Issettja ċavetta",
-            "updateKey": "Aġġorna ċ-ċavetta",
-            "removeKey": "Neħħi ċ-ċavetta",
-            "getKeyInstructions": "Ikseb tiegħek API ċavetta",
-            "noNewKeys": "L-ebda ġdid API ċwievet imdaħħla biex issalva.",
-            "unexpectedResponse": "Irċevejt tweġiba mhux mistennija mis-server.",
+            "description": "Immaniġġja tiegħek API ċwievet għal differenti AI servizzi.",
+            "setKey": "Issettja",
+            "updateKey": "Aġġornament",
+            "saveUpdateKeys": "Issejvja / Aġġorna ċ-Ċwievet",
+            "saving": "Qed niffranka...",
+            "noNewKeys": "M'hemm l-ebda ċwievet ġodda x'issalva.",
+            "keyStoredSecurely": "Tiegħek API Iċ-ċavetta se tinħażen b'mod sigur u kriptata.",
+            "enteringNewKeyOverwrites": "Id-dħul ta' ċavetta ġdida se jissostitwixxi dik eżistenti.",
             "failedToSaveKey": "Ma rnexxiex issalva ċ-ċavetta {serviceName}.",
-            "someKeysNotSaved": "Xi wħud API Iċ-ċwievet ma setgħux jiġu salvati. Jekk jogħġbok iċċekkja d-dettalji hawn taħt.",
+            "unexpectedResponse": "Rispons mhux mistenni mis-server.",
+            "someKeysNotSaved": "Xi ċwievet ma setgħux jiġu salvati. Jekk jogħġbok iċċekkja l-iżbalji ta' hawn fuq.",
             "keyStatus": "status ewlieni...",
             "apiKeySecurelySaved": "API Ċavetta Ssejvjata b'Mod Sikur",
             "confirmRemoveTitle": "Ikkonferma t-Tneħħija",
@@ -114,16 +115,12 @@ const mt = {
             "successfullyRemovedKey": "Iċ-ċavetta {serviceName} tneħħiet b'suċċess.",
             "keyNotSet": "Status Ewlieni: Mhux Issettjat",
             "keySet": "Status Ewlieni: Issettjat",
-            "saveButton": "Issejvja API Ċavetta(i)",
-            "enteringNewKeyOverwrites": "Id-dħul ta' ċavetta ġdida se jissostitwixxi dik salvata.",
-            "keyStoredSecurely": "Iċ-ċavetta tiegħek se tinħażen b'mod sigur bl-użu ta' Google Maniġer Sigriet.",
-            "saveUpdateKeys": "Issejvja / Aġġorna ċ-Ċwievet",
-            "saving": "Qed niffranka..."
-        },
-        "loading": "Qed jitgħabbew is-settings..."
+            "saveButton": "Issejvja API Ċavetta(i)"
+        }
     },
     "main": {
         "title": "AI Konverżazzjoni",
+        "aiConversation": "AI Konverżazzjoni",
         "setupForm": {
             "title": "Issettja l-konverżazzjoni tiegħek",
             "agentA": "Aġent A",
@@ -141,7 +138,7 @@ const mt = {
                 "selectModel": "Agħżel TTS mudell"
             },
             "startConversation": "Ibda Konversazzjoni",
-            "conversationPrompt": "Ibda l-konverżazzjoni."
+            "conversationPrompt": "Jekk jogħġbok ibda l-konverżazzjoni."
         },
         "conversation": {
             "thinking": "naħseb...",
@@ -153,8 +150,7 @@ const mt = {
             "perMillionTokens": "għal kull miljun token",
             "input": "Input",
             "output": "Output"
-        },
-        "aiConversation": "AI Konverżazzjoni"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const mt = {
             "signUpWithGoogle": "Irreġistra ma' Google",
             "hasAccount": "Diġà għandek kont?",
             "signIn": "Idħol",
-            "emailLabel": "Email indirizz",
+            "emailLabel": "Indirizz elettroniku",
             "confirmPasswordPlaceholder": "Ikkonferma l-Password",
             "signingUp": "Reġistrazzjoni..."
         },
@@ -185,7 +181,7 @@ const mt = {
             "invalidCredentials": "Email jew password mhux valida",
             "userNotFound": "Utent ma nstabx",
             "weakPassword": "Il-password għandha tkun ta' mill-inqas 6 karattri",
-            "emailInUse": "Email diġà qed jintuża",
+            "emailInUse": "L-email diġà qed tintuża",
             "generic": "Seħħ żball. Jekk jogħġbok erġa' pprova.",
             "initialization": "Żball fl-inizjalizzazzjoni. Jekk jogħġbok erġa' pprova aktar tard.",
             "invalidEmail": "Jekk jogħġbok daħħal indirizz elettroniku validu.",
@@ -229,12 +225,14 @@ const mt = {
     "modelCategory_Gemini2_0": "Gemini 2.0 mudelli",
     "modelCategory_Gemini1_5": "Gemini 1.5 mudelli",
     "modelCategory_Claude4": "Claude 4 mudelli",
-    "modelCategory_Claude3_7": "Claude 3.7 mudelli",
+    "modelCategory_Claude3_7": "Claude 3.7 mudell",
     "modelCategory_Claude3_5": "Claude 3.5 mudelli",
     "modelCategory_Claude3": "Claude 3 mudelli",
-    "modelCategory_Grok4": "Grok 4 mudelli",
+    "modelCategory_Grok4": "Grok 4 mudell",
     "modelCategory_Grok3": "Grok 3 mudelli",
     "modelCategory_Grok3Mini": "Grok 3 Mudelli żgħar",
+    "modelCategory_MistralAIPremierModels": "Mudelli Premier",
+    "modelCategory_MistralAIOpenModels": "Mudell miftuħ",
     "modelCategory_Llama4": "Llama 4 mudelli",
     "modelCategory_Llama3_3": "Llama 3.3 mudelli",
     "modelCategory_Llama3_2": "Llama 3.2 mudelli",
@@ -246,18 +244,18 @@ const mt = {
     "modelCategory_Gemma2": "Gemma 2 mudell",
     "modelCategory_Gemma": "Gemma mudelli",
     "modelCategory_GoogleGemma": "Google Gemma Mudelli",
-    "modelCategory_DeepSeekR1": "DeepSeek Mudelli R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Mudelli V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Mudell R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Mudell V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Mudelli tad-Distillazzjoni R1",
     "modelCategory_DeepSeekModels": "DeepSeek Mudelli",
     "modelCategory_MistralAIModels": "Mistral AI Mudelli",
-    "modelCategory_Qwen3": "Qwen3 mudelli",
-    "modelCategory_QwQwQ": "Qwen Mudelli QwQ",
+    "modelCategory_Qwen3": "Qwen3 mudell",
+    "modelCategory_QwQwQ": "Qwen Mudell QwQ",
     "modelCategory_Qwen2_5": "QwenMudelli 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Mudelli tal-viżjoni",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Mudelli tal-kodifikatur",
-    "modelCategory_Qwen2": "Qwen2 mudelli",
-    "modelCategory_Qwen2Vision": "Qwen2 Mudelli tal-viżjoni",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Mudell tal-viżjoni",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Mudell tal-kodifikatur",
+    "modelCategory_Qwen2": "Qwen2 mudell",
+    "modelCategory_Qwen2Vision": "Qwen2 Mudell tal-viżjoni",
     "modelCategory_QwenModels": "Qwen Mudelli",
     "modelCategory_OtherModels": "Mudelli Oħra",
     "page_ErrorLoadingUserData": "Ma rnexxiex titgħabba d-dejta tal-utent: {errorMessage}. Jekk jogħġbok ipprova aġġorna.",
@@ -269,12 +267,13 @@ const mt = {
     "page_LoadingUserData": "Qed tiċċarġja d-dejta tal-utent...",
     "page_ErrorAlertTitle": "Żball",
     "page_WelcomeTitle": "Merħba f' Two AIs",
-    "page_WelcomeSubtitle": "Dan is-sit elettroniku jippermettilek tisma' konversazzjonijiet bejn żewġ persuni Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Dan is-sit elettroniku jippermettilek tisma' konversazzjonijiet bejn żewġ persuni Large Language Models (LLMs) u jiġġeneraw immaġnijiet għal kull dawra.",
     "page_ApiKeysRequiredTitle": "API Ċwievet Meħtieġa",
     "page_ApiKeysRequiredDescription": "Biex tmexxi konversazzjonijiet, ikollok bżonn tipprovdi tiegħek API ċwievet għall- AI mudelli li tixtieq tuża (eż., OpenAI, Google, Anthropic) wara li tidħol. Istruzzjonijiet dettaljati għal kull fornitur jistgħu jinstabu fuq is-Settings / API Paġna taċ-ċwievet wara li tidħol.",
     "page_SignInPrompt": "Biex tibda s-sessjoni tiegħek stess, tista' tidħol jew toħloq kont billi tuża l-link fil-header.",
     "page_VideoTitle": "Two AIs Demo ta' Konverżazzjoni",
     "page_AvailableLLMsTitle": "Disponibbli bħalissa LLMs",
+    "page_TooltipKnowledgeCutoff": "L-għarfien tal-mudell jinqata' f'din id-data.",
     "page_TooltipGoogleThinkingBudget": "Dan Google Il-mudell juża 'baġit tal-ħsieb'. L-output tal-'ħsieb' jiġi fatturat iżda mhux viżibbli fiċ-chat.",
     "page_TooltipAnthropicExtendedThinking": "Dan Anthropic Il-mudell juża 'ħsieb estiż'. L-output tal-'ħsieb' jiġi fatturat iżda mhux viżibbli fiċ-chat.",
     "page_TooltipXaiThinking": "Dan xAI Il-mudell juża l-'ħsieb'. Dan l-output huwa fatturat iżda mhux viżibbli fiċ-chat.",
@@ -283,17 +282,52 @@ const mt = {
     "page_TooltipGenericReasoning": "Dan il-mudell juża tokens ta' raġunament li mhumiex viżibbli fiċ-chat iżda huma fatturati bħala tokens tal-output.",
     "page_TooltipRequiresVerification": "Jeħtieġ verifikat OpenAI organizzazzjoni. Tista' tivverifika hawn.",
     "page_TooltipSupportsLanguage": "Jappoġġja {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Dan il-mudell jista' ma jappoġġjax kompletament {languageName} għall-konverżazzjoni.",
+    "page_TooltipMayNotSupportLanguage": "Dan il-mudell jista' ma jappoġġjax bis-sħiħ {languageName} għal konverżazzjoni.",
     "page_BadgePreview": "Previżjoni",
     "page_BadgeExperimental": "Sperimentali",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Disponibbli bħalissa Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Mudelli ta' Immaġni Disponibbli Bħalissa",
     "page_NoTTSOptions": "Le TTS għażliet disponibbli bħalissa.",
     "page_TruncatableNoteFormat": "({notaTest})",
     "page_PricesLastVerifiedOn": "Prezzijiet verifikati l-aħħar fi {date}",
-    "page_PricingPerTokens": "kull {amount} Tokens",
+    "page_PricingPerTokens": "għal kull Miljun Tokens",
     "page_ModelCategoryModels": "{model} mudelli",
+    "common_verifyHere": "ivverifika hawn",
     "ttsVoice_Ugne": "Fin-nar",
+    "pricing": {
+        "perMillionTokens": "għal kull miljun token",
+        "tokens": "tokens",
+        "free": "B'xejn",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} għal kull miljun token tat-test",
+                "audioTokens": "{price} għal kull miljun token awdjo"
+            },
+            "geminiPro": {
+                "textTokens": "{price} għal kull miljun token tat-test",
+                "audioTokens": "{price} għal kull miljun token awdjo"
+            },
+            "openAIMini": {
+                "textTokens": "{price} għal kull miljun token tat-test",
+                "audioTokens": "{price} għal kull miljun token awdjo"
+            },
+            "openAITTS1": {
+                "standard": "{price} għal kull miljun token"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} għal kull miljun token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} għal kull miljun karattru",
+                "neural": "{price} għal kull miljun karattru",
+                "studio": "{price} għal kull miljun karattru",
+                "chirpHD": "Ma stajtx nivverifika",
+                "chirp3HD": "{price} għal kull miljun karattru"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formola ta' Twaqqif tas-Sessjoni",
         "description": "Hawnhekk tista' tagħżel l-LLM u mhux obbligatorju TTS settings għal kull aġent.",
@@ -309,7 +343,7 @@ const mt = {
         "initialPromptDescription": "Dan il-pront se jintbagħat bħala l-ewwel messaġġ biex tibda l-konverżazzjoni. Jekk tħallih vojt, ma jkun hemm l-ebda pront.",
         "startConversation": "Ibda Konversazzjoni",
         "starting": "Nibdew...",
-        "startTheConversation": "Ibda l-konverżazzjoni.",
+        "startTheConversation": "Jekk jogħġbok ibda l-konverżazzjoni.",
         "languageSupportNote": "L-indikaturi tal-appoġġ lingwistiku juru l-kompatibilità tal-mudell ma' {languageName}Mudelli mingħajr appoġġ huma diżattivati.",
         "reasoningNote": "Jindika li mudell juża tokens ta' 'ħsieb' jew 'raġunament'. Dan l-output huwa fatturat iżda mhux viżibbli fiċ-chat.",
         "openaiOrgVerificationNote": "Jindika OpenAI Il-mudell jirrikjedi organizzazzjoni verifikata. Tista'",
@@ -335,15 +369,15 @@ const mt = {
         "backToMain": "Lura għall-Prinċipali",
         "conversationHistory": "Storja tal-Konversazzjoni",
         "chatWith": "Iċċettja ma' {agentA} & {agentB}",
+        "conversationDescription": "Beda fi {date} - Lingwa: {language}",
         "viewConversation": "Ara l-Konversazzjoni",
         "backToPreviousChats": "Lura għal Chats Preċedenti",
         "resumeConversation": "Erġa' Ibda l-Konversazzjoni",
         "resuming": "Qed jerġa' jibda...",
         "sessionDetails": "Dettalji tas-Sessjoni",
-        "language": "Lingwa:",
+        "language": "Lingwa",
         "transcript": "Traskrizzjoni",
         "loadingHistory": "Qed tiċċarġja l-istorja...",
-        "conversationDescription": "Beda fi {date} - Lingwa: {language}",
         "loadingConversation": "Qed tiċċarġja l-konverżazzjoni...",
         "chatStartedOn": "Iċ-chat beda fi {date}",
         "agentAModel": "Mudell ta' Aġent A",
@@ -355,18 +389,8 @@ const mt = {
         "model": "Mudell",
         "voice": "Vuċi"
     },
-    "common_verifyHere": "ivverifika hawn",
-    "page_AvailableImageModelsTitle": "Mudelli ta' Immaġni Disponibbli Bħalissa",
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",
-    "imageModel_PriceUSD": "Prezz (USD)",
-    "page_TooltipKnowledgeCutoff": "L-għarfien tal-mudell jinqata' f'din id-data.",
-    "modelCategory_MistralAIPremierModels": "Mudelli Premier",
-    "modelCategory_MistralAIOpenModels": "Mudelli miftuħa",
-    "pricing": {
-        "perMillionTokens": "għal kull miljun token",
-        "tokens": "tokens",
-        "free": "B'xejn"
-    }
+    "imageModel_PriceUSD": "Prezz (USD)"
 };
 export default mt;

@@ -54,7 +54,7 @@ const ar = {
         "is": "الأيسلندية",
         "ka": "جورجي",
         "kk": "الكازاخستانية",
-        "kn": "الكانادا",
+        "kn": "كانادا",
         "mk": "المقدونية",
         "ml": "المالايالامية",
         "mr": "الماراثية",
@@ -71,6 +71,7 @@ const ar = {
         "mn": "المنغولية"
     },
     "settings": {
+        "loading": "جاري تحميل الإعدادات...",
         "title": "إعدادات",
         "sections": {
             "appearance": "مظهر",
@@ -95,17 +96,17 @@ const ar = {
         },
         "apiKeys": {
             "title": "API المفاتيح",
-            "description": "إدارة الخاص بك API مفاتيح مختلفة AI مقدمي الخدمات",
-            "saved": "أنقذ",
-            "notSet": "غير محدد",
-            "setKey": "مفتاح الضبط",
-            "updateKey": "مفتاح التحديث",
-            "removeKey": "إزالة المفتاح",
-            "getKeyInstructions": "احصل على API مفتاح",
-            "noNewKeys": "لا جديد API المفاتيح التي تم إدخالها للحفظ.",
-            "unexpectedResponse": "تلقيت استجابة غير متوقعة من الخادم.",
+            "description": "إدارة الخاص بك API مفاتيح مختلفة AI خدمات.",
+            "setKey": "تعيين",
+            "updateKey": "تحديث",
+            "saveUpdateKeys": "حفظ / تحديث المفاتيح",
+            "saving": "توفير...",
+            "noNewKeys": "لا توجد مفاتيح جديدة للحفظ.",
+            "keyStoredSecurely": "لك API سيتم تخزين المفتاح بشكل آمن ومشفر.",
+            "enteringNewKeyOverwrites": "سيؤدي إدخال مفتاح جديد إلى استبدال المفتاح الحالي.",
             "failedToSaveKey": "فشل حفظ مفتاح {serviceName}.",
-            "someKeysNotSaved": "بعض API تعذّر حفظ المفاتيح. يُرجى مراجعة التفاصيل أدناه.",
+            "unexpectedResponse": "استجابة غير متوقعة من الخادم.",
+            "someKeysNotSaved": "تعذر حفظ بعض المفاتيح. يُرجى مراجعة الأخطاء أعلاه.",
             "keyStatus": "حالة المفتاح...",
             "apiKeySecurelySaved": "API تم حفظ المفتاح بشكل آمن",
             "confirmRemoveTitle": "تأكيد الإزالة",
@@ -114,16 +115,12 @@ const ar = {
             "successfullyRemovedKey": "تمت إزالة مفتاح {serviceName} بنجاح.",
             "keyNotSet": "حالة المفتاح: غير مضبوط",
             "keySet": "حالة المفتاح: تم التعيين",
-            "saveButton": "يحفظ API المفتاح(المفاتيح)",
-            "enteringNewKeyOverwrites": "سيؤدي إدخال مفتاح جديد إلى استبدال المفتاح المحفوظ.",
-            "keyStoredSecurely": "سيتم تخزين مفتاحك بشكل آمن باستخدام Google مدير سري.",
-            "saveUpdateKeys": "حفظ / تحديث المفاتيح",
-            "saving": "توفير..."
-        },
-        "loading": "جاري تحميل الإعدادات..."
+            "saveButton": "يحفظ API المفتاح(المفاتيح)"
+        }
     },
     "main": {
         "title": "AI محادثة",
+        "aiConversation": "AI محادثة",
         "setupForm": {
             "title": "إعداد المحادثة الخاصة بك",
             "agentA": "العميل أ",
@@ -141,7 +138,7 @@ const ar = {
                 "selectModel": "يختار TTS نموذج"
             },
             "startConversation": "ابدأ المحادثة",
-            "conversationPrompt": "ابدأ المحادثة."
+            "conversationPrompt": "من فضلك ابدأ المحادثة."
         },
         "conversation": {
             "thinking": "التفكير...",
@@ -153,8 +150,7 @@ const ar = {
             "perMillionTokens": "لكل مليون رمز",
             "input": "مدخل",
             "output": "الناتج"
-        },
-        "aiConversation": "AI محادثة"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ar = {
             "signUpWithGoogle": "سجل مع Google",
             "hasAccount": "هل لديك حساب بالفعل؟",
             "signIn": "تسجيل الدخول",
-            "emailLabel": "Email عنوان",
+            "emailLabel": "عنوان البريد الإلكتروني",
             "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
             "signingUp": "جاري التسجيل..."
         },
@@ -185,7 +181,7 @@ const ar = {
             "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صالحة",
             "userNotFound": "لم يتم العثور على المستخدم",
             "weakPassword": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
-            "emailInUse": "Email قيد الاستخدام بالفعل",
+            "emailInUse": "البريد الإلكتروني قيد الاستخدام بالفعل",
             "generic": "حدث خطأ. يُرجى المحاولة مرة أخرى.",
             "initialization": "خطأ في التهيئة. يُرجى المحاولة لاحقًا.",
             "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صالح.",
@@ -201,7 +197,7 @@ const ar = {
             "accountCreatedProfileSaveFailedPrefix": "تم إنشاء الحساب، ولكن فشل في حفظ بيانات الملف الشخصي: ",
             "unknownProfileSaveError": "حدث خطأ غير معروف أثناء حفظ الملف الشخصي.",
             "emailAlreadyRegistered": "تم تسجيل عنوان البريد الإلكتروني هذا بالفعل.",
-            "passwordTooShortSignUp": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
+            "passwordTooShortSignUp": "ينبغي أن تتكون كلمة المرور من 6 أحرف على الأقل.",
             "signUpFailedPrefix": "فشل في التسجيل: ",
             "unknownSignUpError": "حدث خطأ غير معروف أثناء التسجيل."
         }
@@ -229,12 +225,14 @@ const ar = {
     "modelCategory_Gemini2_0": "Gemini 2.0 نماذج",
     "modelCategory_Gemini1_5": "Gemini 1.5 نماذج",
     "modelCategory_Claude4": "Claude 4 نماذج",
-    "modelCategory_Claude3_7": "Claude 3.7 نماذج",
+    "modelCategory_Claude3_7": "Claude 3.7 نموذج",
     "modelCategory_Claude3_5": "Claude 3.5 نماذج",
     "modelCategory_Claude3": "Claude 3 نماذج",
-    "modelCategory_Grok4": "Grok 4 نماذج",
+    "modelCategory_Grok4": "Grok 4 نموذج",
     "modelCategory_Grok3": "Grok 3 نماذج",
     "modelCategory_Grok3Mini": "Grok 3 نماذج صغيرة",
+    "modelCategory_MistralAIPremierModels": "موديلات بريميير",
+    "modelCategory_MistralAIOpenModels": "نموذج مفتوح",
     "modelCategory_Llama4": "Llama 4 نماذج",
     "modelCategory_Llama3_3": "Llama 3.3 نماذج",
     "modelCategory_Llama3_2": "Llama 3.2 نماذج",
@@ -246,35 +244,36 @@ const ar = {
     "modelCategory_Gemma2": "Gemma نموذجين",
     "modelCategory_Gemma": "Gemma نماذج",
     "modelCategory_GoogleGemma": "Google Gemma نماذج",
-    "modelCategory_DeepSeekR1": "DeepSeek موديلات R1",
-    "modelCategory_DeepSeekV3": "DeepSeek موديلات V3",
-    "modelCategory_DeepSeekR1Distill": "DeepSeek نماذج R1 Distill",
+    "modelCategory_DeepSeekR1": "DeepSeek موديل R1",
+    "modelCategory_DeepSeekV3": "DeepSeek موديل V3",
+    "modelCategory_DeepSeekR1Distill": "DeepSeek نماذج تقطير R1",
     "modelCategory_DeepSeekModels": "DeepSeek نماذج",
     "modelCategory_MistralAIModels": "Mistral AI نماذج",
     "modelCategory_Qwen3": "Qwen3 نماذج",
-    "modelCategory_QwQwQ": "Qwen نماذج QwQ",
+    "modelCategory_QwQwQ": "Qwen نموذج QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 نماذج",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 نماذج الرؤية",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 نماذج المبرمج",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 نموذج الرؤية",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 نموذج المبرمج",
     "modelCategory_Qwen2": "Qwenنموذجين",
-    "modelCategory_Qwen2Vision": "Qwen2 نماذج الرؤية",
+    "modelCategory_Qwen2Vision": "Qwenنموذج الرؤية 2",
     "modelCategory_QwenModels": "Qwen نماذج",
     "modelCategory_OtherModels": "نماذج أخرى",
     "page_ErrorLoadingUserData": "فشل تحميل بيانات المستخدم: {errorMessage}. يُرجى محاولة التحديث.",
     "page_ErrorUserNotFound": "لم يتم العثور على المستخدم. يُرجى تسجيل الدخول مرة أخرى.",
-    "page_ErrorUserApiKeyConfig": "مستخدم API تعذّر تحميل إعدادات المفتاح. يُرجى تحديث الصفحة أو التحقق من الإعدادات.",
+    "page_ErrorUserApiKeyConfig": "مستخدم API تعذّر تحميل إعدادات المفتاح. يُرجى تحديث الإعدادات أو التحقق منها.",
     "page_ErrorStartingSessionAPI": "API خطأ: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "خطأ في بدء الجلسة: {errorMessage}",
     "page_ErrorSessionIdMissing": "API كانت الاستجابة ناجحة ولكنها لم تتضمن معرف المحادثة.",
     "page_LoadingUserData": "جاري تحميل بيانات المستخدم...",
     "page_ErrorAlertTitle": "خطأ",
     "page_WelcomeTitle": "مرحباً بكم في Two AIs",
-    "page_WelcomeSubtitle": "يتيح لك هذا الموقع الاستماع إلى المحادثات بين شخصين Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "يتيح لك هذا الموقع الاستماع إلى المحادثات بين شخصين Large Language Models (LLMs) وتوليد الصور لكل دورة.",
     "page_ApiKeysRequiredTitle": "API المفاتيح المطلوبة",
     "page_ApiKeysRequiredDescription": "لإجراء المحادثات، ستحتاج إلى تقديم معلوماتك الخاصة API مفاتيح ل AI النماذج التي ترغب في استخدامها (على سبيل المثال، OpenAI، Google، Anthropic) بعد تسجيل الدخول. يمكن العثور على التعليمات التفصيلية لكل مزود في الإعدادات / API صفحة المفاتيح بعد تسجيل الدخول.",
     "page_SignInPrompt": "لبدء جلستك الخاصة، يمكنك تسجيل الدخول أو إنشاء حساب باستخدام الرابط الموجود في العنوان.",
     "page_VideoTitle": "Two AIs عرض توضيحي للمحادثة",
     "page_AvailableLLMsTitle": "متوفر حاليا LLMs",
+    "page_TooltipKnowledgeCutoff": "تم قطع معرفة النموذج في هذا التاريخ.",
     "page_TooltipGoogleThinkingBudget": "هذا Google يستخدم النموذج \"ميزانية تفكير\". يتم احتساب ناتج \"التفكير\" ولكنه غير مرئي في الدردشة.",
     "page_TooltipAnthropicExtendedThinking": "هذا Anthropic يستخدم النموذج \"التفكير الموسّع\". يتم احتساب ناتج \"التفكير\" ولكنه غير مرئي في الدردشة.",
     "page_TooltipXaiThinking": "هذا xAI يستخدم النموذج \"التفكير\". يتم احتساب هذا الناتج، ولكنه غير مرئي في الدردشة.",
@@ -283,17 +282,52 @@ const ar = {
     "page_TooltipGenericReasoning": "يستخدم هذا النموذج رموز الاستدلال التي لا يمكن رؤيتها في الدردشة ولكن يتم فرض رسوم عليها كرموز إخراج.",
     "page_TooltipRequiresVerification": "يتطلب التحقق OpenAI المنظمة. يمكنك التحقق هنا.",
     "page_TooltipSupportsLanguage": "يدعم {languageName}",
-    "page_TooltipMayNotSupportLanguage": "قد لا يدعم هذا النموذج اللغة {languageName} بالكامل للمحادثة.",
+    "page_TooltipMayNotSupportLanguage": "قد لا يدعم هذا النموذج بشكل كامل {languageName} للمحادثة.",
     "page_BadgePreview": "معاينة",
     "page_BadgeExperimental": "تجريبي",
     "page_BadgeBeta": "بيتا",
     "page_AvailableTTSTitle": "متوفر حاليا Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "نماذج الصور المتوفرة حاليًا",
     "page_NoTTSOptions": "لا TTS الخيارات المتاحة حاليًا.",
     "page_TruncatableNoteFormat": "({ملاحظة نصية})",
     "page_PricesLastVerifiedOn": "تم التحقق من الأسعار آخر مرة في {date}",
-    "page_PricingPerTokens": "لكل {amount} الرموز",
+    "page_PricingPerTokens": "لكل مليون رمز",
     "page_ModelCategoryModels": "{model} نماذج",
+    "common_verifyHere": "التحقق هنا",
     "ttsVoice_Ugne": "في النار",
+    "pricing": {
+        "perMillionTokens": "لكل مليون رمز",
+        "tokens": "الرموز",
+        "free": "حر",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} لكل مليون رمز نصي",
+                "audioTokens": "{price} لكل مليون رمز صوتي"
+            },
+            "geminiPro": {
+                "textTokens": "{price} لكل مليون رمز نصي",
+                "audioTokens": "{price} لكل مليون رمز صوتي"
+            },
+            "openAIMini": {
+                "textTokens": "{price} لكل مليون رمز نصي",
+                "audioTokens": "{price} لكل مليون رمز صوتي"
+            },
+            "openAITTS1": {
+                "standard": "{price} لكل مليون رمز"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} لكل مليون رمز"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} لكل مليون حرف",
+                "neural": "{price} لكل مليون حرف",
+                "studio": "{price} لكل مليون حرف",
+                "chirpHD": "لم أستطع التحقق",
+                "chirp3HD": "{price} لكل مليون حرف"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "نموذج إعداد الجلسة",
         "description": "هنا يمكنك اختيار LLM والاختياري TTS الإعدادات لكل وكيل.",
@@ -308,14 +342,14 @@ const ar = {
         "initialSystemPrompt": "موجه النظام الأولي",
         "initialPromptDescription": "سيتم إرسال هذه الرسالة كأول رسالة لبدء المحادثة. إذا تركتها فارغة، فلن تظهر أي رسالة.",
         "startConversation": "ابدأ المحادثة",
-        "starting": "البدء...",
-        "startTheConversation": "ابدأ المحادثة.",
+        "starting": "بدء...",
+        "startTheConversation": "من فضلك ابدأ المحادثة.",
         "languageSupportNote": "تُظهر مؤشرات دعم اللغة توافق النموذج مع {languageName}. سيتم تعطيل النماذج التي لا تحتوي على دعم.",
-        "reasoningNote": "يشير إلى أن النموذج يستخدم رموز \"التفكير\" أو \"الاستدلال\". يتم احتساب هذا الناتج، ولكنه غير مرئي في الدردشة.",
+        "reasoningNote": "يشير إلى أن النموذج يستخدم رموز \"التفكير\" أو \"الاستدلال\". يتم احتساب هذه النتيجة، ولكنها غير مرئية في الدردشة.",
         "openaiOrgVerificationNote": "يشير إلى OpenAI يتطلب النموذج منظمة معتمدة. يمكنك",
         "voice": "صوت",
         "selectVoice": "اختر الصوت",
-        "noVoicesFor": "لا يوجد أصوات ل {languageName}",
+        "noVoicesFor": "لا يوجد اصوات ل {languageName}",
         "ttsProviderModel": "{providerName} نموذج",
         "selectTtsProviderModel": "يختار {providerName} نموذج",
         "selectProvider": "حدد المزود",
@@ -326,7 +360,7 @@ const ar = {
         "size": "مقاس",
         "promptLLM": "ماجستير في القانون الفوري",
         "imagePromptSystemMessage": "رسالة نظام مطالبة الصورة",
-        "defaultImagePromptSystemMessage": "إنشاء مطالبة لتقديمها إلى نموذج إنشاء الصورة استنادًا إلى هذا الدور: {turn}",
+        "defaultImagePromptSystemMessage": "قم بإنشاء مطالبة لتقديمها إلى نموذج إنشاء الصورة استنادًا إلى هذا الدور: {turn}",
         "imagePromptSystemMessageHelp": "سيتم إرسال هذه الرسالة كموجه للنظام إلى وحدة إدارة التعلم (LLM) التي تُنشئ موجه الصورة. استخدم <code>{'{turn}'}</code> كعلامة نائبة لرسالة الوكيل.",
         "selectImageModel": "حدد نموذج الصورة",
         "selectPromptLLM": "حدد LLM لمطالبة الصورة"
@@ -335,15 +369,15 @@ const ar = {
         "backToMain": "العودة إلى الصفحة الرئيسية",
         "conversationHistory": "سجل المحادثة",
         "chatWith": "الدردشة مع {agentA} & {agentB}",
+        "conversationDescription": "بدأت في {date} - لغة: {language}",
         "viewConversation": "عرض المحادثة",
         "backToPreviousChats": "العودة إلى الدردشات السابقة",
         "resumeConversation": "استئناف المحادثة",
         "resuming": "استئناف...",
         "sessionDetails": "تفاصيل الجلسة",
-        "language": "لغة:",
+        "language": "لغة",
         "transcript": "نص",
         "loadingHistory": "جاري تحميل التاريخ...",
-        "conversationDescription": "بدأت في {date} - لغة: {language}",
         "loadingConversation": "جاري تحميل المحادثة...",
         "chatStartedOn": "بدأت الدردشة في {date}",
         "agentAModel": "العميل أ نموذج",
@@ -355,18 +389,8 @@ const ar = {
         "model": "نموذج",
         "voice": "صوت"
     },
-    "common_verifyHere": "التحقق هنا",
-    "page_AvailableImageModelsTitle": "نماذج الصور المتوفرة حاليًا",
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",
-    "imageModel_PriceUSD": "سعر (USD)",
-    "page_TooltipKnowledgeCutoff": "تم قطع معرفة النموذج في هذا التاريخ.",
-    "modelCategory_MistralAIPremierModels": "موديلات بريميير",
-    "modelCategory_MistralAIOpenModels": "نماذج مفتوحة",
-    "pricing": {
-        "perMillionTokens": "لكل مليون رمز",
-        "tokens": "الرموز",
-        "free": "حر"
-    }
+    "imageModel_PriceUSD": "سعر (USD)"
 };
 export default ar;

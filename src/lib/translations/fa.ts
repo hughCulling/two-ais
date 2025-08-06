@@ -71,6 +71,7 @@ const fa = {
         "mn": "مغولی"
     },
     "settings": {
+        "loading": "در حال بارگذاری تنظیمات...",
         "title": "تنظیمات",
         "sections": {
             "appearance": "ظاهر",
@@ -95,17 +96,17 @@ const fa = {
         },
         "apiKeys": {
             "title": "API کلیدها",
-            "description": "مدیریت خود را API کلیدهای مختلف AI ارائه دهندگان",
-            "saved": "ذخیره شده",
-            "notSet": "تنظیم نشده",
-            "setKey": "کلید تنظیم",
-            "updateKey": "کلید به‌روزرسانی",
-            "removeKey": "کلید را حذف کنید",
-            "getKeyInstructions": "دریافت کنید API کلید",
-            "noNewKeys": "جدید نیست API کلیدهای وارد شده برای ذخیره.",
-            "unexpectedResponse": "پاسخ غیرمنتظره‌ای از سرور دریافت کرد.",
+            "description": "مدیریت خود را API کلیدهای مختلف AI خدمات.",
+            "setKey": "تنظیم",
+            "updateKey": "به‌روزرسانی",
+            "saveUpdateKeys": "کلیدهای ذخیره/به‌روزرسانی",
+            "saving": "در حال ذخیره...",
+            "noNewKeys": "کلید جدیدی برای ذخیره وجود ندارد.",
+            "keyStoredSecurely": "شما API کلید به صورت امن و رمزگذاری شده ذخیره خواهد شد.",
+            "enteringNewKeyOverwrites": "وارد کردن یک کلید جدید، کلید موجود را جایگزین می‌کند.",
             "failedToSaveKey": "ذخیره کلید {serviceName} ناموفق بود.",
-            "someKeysNotSaved": "برخی API کلیدها ذخیره نشدند. لطفاً جزئیات زیر را بررسی کنید.",
+            "unexpectedResponse": "پاسخ غیرمنتظره از سرور.",
+            "someKeysNotSaved": "بعضی از کلیدها ذخیره نشدند. لطفاً خطاهای بالا را بررسی کنید.",
             "keyStatus": "وضعیت کلید ...",
             "apiKeySecurelySaved": "API کلید به طور ایمن ذخیره شده است",
             "confirmRemoveTitle": "تأیید حذف",
@@ -114,16 +115,12 @@ const fa = {
             "successfullyRemovedKey": "کلید {serviceName} با موفقیت حذف شد.",
             "keyNotSet": "وضعیت کلید: تنظیم نشده",
             "keySet": "وضعیت کلید: تنظیم شده",
-            "saveButton": "ذخیره API کلید(ها)",
-            "enteringNewKeyOverwrites": "وارد کردن یک کلید جدید، کلید ذخیره شده را جایگزین می‌کند.",
-            "keyStoredSecurely": "کلید شما با استفاده از موارد زیر به طور ایمن ذخیره خواهد شد Google مدیر مخفی.",
-            "saveUpdateKeys": "کلیدهای ذخیره/به‌روزرسانی",
-            "saving": "در حال ذخیره..."
-        },
-        "loading": "در حال بارگذاری تنظیمات..."
+            "saveButton": "ذخیره API کلید(ها)"
+        }
     },
     "main": {
         "title": "AI مکالمه",
+        "aiConversation": "AI مکالمه",
         "setupForm": {
             "title": "مکالمه خود را تنظیم کنید",
             "agentA": "مامور الف",
@@ -141,7 +138,7 @@ const fa = {
                 "selectModel": "انتخاب کنید TTS مدل"
             },
             "startConversation": "شروع مکالمه",
-            "conversationPrompt": "مکالمه را شروع کنید."
+            "conversationPrompt": "لطفا گفتگو را شروع کنید."
         },
         "conversation": {
             "thinking": "فکر کردن...",
@@ -153,8 +150,7 @@ const fa = {
             "perMillionTokens": "به ازای هر میلیون توکن",
             "input": "ورودی",
             "output": "خروجی"
-        },
-        "aiConversation": "AI مکالمه"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const fa = {
             "signUpWithGoogle": "ثبت نام با Google",
             "hasAccount": "قبلاً حساب کاربری دارید؟",
             "signIn": "ورود",
-            "emailLabel": "Email آدرس",
+            "emailLabel": "آدرس ایمیل",
             "confirmPasswordPlaceholder": "تأیید رمز عبور",
             "signingUp": "ثبت نام ..."
         },
@@ -185,13 +181,13 @@ const fa = {
             "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است",
             "userNotFound": "کاربر یافت نشد",
             "weakPassword": "رمز عبور باید حداقل 6 کاراکتر باشد",
-            "emailInUse": "Email قبلاً در حال استفاده است",
+            "emailInUse": "ایمیلی که قبلاً استفاده شده است",
             "generic": "خطایی رخ داده است. لطفا دوباره امتحان کنید.",
             "initialization": "خطای مقداردهی اولیه. لطفاً بعداً دوباره امتحان کنید.",
             "invalidEmail": "لطفا یک آدرس ایمیل معتبر وارد کنید.",
-            "tooManyRequests": "به دلیل تعداد زیاد تلاش‌های ناموفق برای ورود، دسترسی موقتاً غیرفعال شده است. لطفاً رمز عبور خود را تغییر دهید یا بعداً دوباره امتحان کنید.",
+            "tooManyRequests": "به دلیل تعداد زیاد تلاش‌های ناموفق برای ورود، دسترسی موقتاً غیرفعال شده است. لطفاً رمز عبور خود را بازنشانی کنید یا بعداً دوباره امتحان کنید.",
             "signInFailedPrefix": "ورود ناموفق بود: ",
-            "unknownSignInError": "هنگام ورود به سیستم، خطای ناشناخته‌ای رخ داد.",
+            "unknownSignInError": "هنگام ورود به سیستم خطای ناشناخته‌ای رخ داد.",
             "profileSaveFailedPrefix": "وارد سیستم شدم، اما نتوانستم اطلاعات پروفایل را ذخیره کنم: ",
             "profileCheckSaveFailedPrefix": "وارد سیستم شدم، اما نتوانستم اطلاعات پروفایل را بررسی/ذخیره کنم: ",
             "accountExistsWithDifferentCredential": "یک حساب کاربری با این ایمیل از قبل وجود دارد که از روش ورود متفاوتی استفاده می‌کند.",
@@ -229,12 +225,14 @@ const fa = {
     "modelCategory_Gemini2_0": "Gemini 2.0 مدل‌ها",
     "modelCategory_Gemini1_5": "Gemini 1.5 مدل‌ها",
     "modelCategory_Claude4": "Claude 4 مدل‌ها",
-    "modelCategory_Claude3_7": "Claude 3.7 مدل‌ها",
+    "modelCategory_Claude3_7": "Claude 3.7 مدل",
     "modelCategory_Claude3_5": "Claude 3.5 مدل‌ها",
     "modelCategory_Claude3": "Claude 3 مدل‌ها",
-    "modelCategory_Grok4": "Grok 4 مدل‌ها",
+    "modelCategory_Grok4": "Grok 4 مدل",
     "modelCategory_Grok3": "Grok 3 مدل‌ها",
     "modelCategory_Grok3Mini": "Grok 3 مدل‌های کوچک",
+    "modelCategory_MistralAIPremierModels": "مدل‌های برتر",
+    "modelCategory_MistralAIOpenModels": "مدل باز",
     "modelCategory_Llama4": "Llama ۴ مدل",
     "modelCategory_Llama3_3": "Llama ۳.۳ مدل",
     "modelCategory_Llama3_2": "Llama ۳.۲ مدل",
@@ -246,18 +244,18 @@ const fa = {
     "modelCategory_Gemma2": "Gemma ۲ مدل",
     "modelCategory_Gemma": "Gemma مدل‌ها",
     "modelCategory_GoogleGemma": "Google Gemma مدل‌ها",
-    "modelCategory_DeepSeekR1": "DeepSeek مدل‌های R1",
-    "modelCategory_DeepSeekV3": "DeepSeek مدل‌های V3",
+    "modelCategory_DeepSeekR1": "DeepSeek مدل R1",
+    "modelCategory_DeepSeekV3": "DeepSeek مدل V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek مدل‌های تقطیر R1",
     "modelCategory_DeepSeekModels": "DeepSeek مدل‌ها",
     "modelCategory_MistralAIModels": "Mistral AI مدل‌ها",
     "modelCategory_Qwen3": "Qwen۳ مدل",
-    "modelCategory_QwQwQ": "Qwen مدل‌های QwQ",
+    "modelCategory_QwQwQ": "Qwen مدل QwQ",
     "modelCategory_Qwen2_5": "Qwen۲.۵ مدل",
-    "modelCategory_Qwen2_5Vision": "Qwen۲.۵ مدل‌های بینایی",
-    "modelCategory_Qwen2_5Coder": "Qwen۲.۵ مدل‌های کدنویسی",
+    "modelCategory_Qwen2_5Vision": "Qwen۲.۵ مدل بینایی",
+    "modelCategory_Qwen2_5Coder": "Qwen۲.۵ مدل کدگذار",
     "modelCategory_Qwen2": "Qwen۲ مدل",
-    "modelCategory_Qwen2Vision": "Qwen۲ مدل ویژن",
+    "modelCategory_Qwen2Vision": "Qwen۲ مدل بینایی",
     "modelCategory_QwenModels": "Qwen مدل‌ها",
     "modelCategory_OtherModels": "مدل‌های دیگر",
     "page_ErrorLoadingUserData": "خطای بارگیری داده‌های کاربر: {errorMessage}. لطفاً صفحه را به‌روزرسانی کنید.",
@@ -269,12 +267,13 @@ const fa = {
     "page_LoadingUserData": "در حال بارگذاری داده‌های کاربر...",
     "page_ErrorAlertTitle": "خطا",
     "page_WelcomeTitle": "خوش آمدید به Two AIs",
-    "page_WelcomeSubtitle": "این وب‌سایت به شما امکان می‌دهد مکالمات بین دو نفر را گوش دهید Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "این وب‌سایت به شما امکان می‌دهد مکالمات بین دو نفر را گوش دهید Large Language Models (LLMs) و برای هر نوبت تصاویر تولید کنید.",
     "page_ApiKeysRequiredTitle": "API کلیدهای مورد نیاز",
     "page_ApiKeysRequiredDescription": "برای اجرای مکالمات، باید خودتان را ارائه دهید API کلیدها برای AI مدل‌هایی که مایل به استفاده از آنها هستید (مثلاً OpenAI، Google، Anthropic) پس از ورود به سیستم. دستورالعمل‌های دقیق برای هر ارائه‌دهنده را می‌توانید در تنظیمات / API صفحه کلیدها پس از ورود به سیستم.",
     "page_SignInPrompt": "برای شروع جلسه خود، می‌توانید با استفاده از لینک موجود در سربرگ، وارد سیستم شوید یا یک حساب کاربری ایجاد کنید.",
     "page_VideoTitle": "Two AIs نسخه آزمایشی مکالمه",
     "page_AvailableLLMsTitle": "در حال حاضر موجود است LLMs",
+    "page_TooltipKnowledgeCutoff": "دانش مدل در این تاریخ قطع شده است.",
     "page_TooltipGoogleThinkingBudget": "این Google مدل از «بودجه تفکر» استفاده می‌کند. خروجی «تفکر» صورتحساب می‌شود اما در چت قابل مشاهده نیست.",
     "page_TooltipAnthropicExtendedThinking": "این Anthropic این مدل از «تفکر توسعه‌یافته» استفاده می‌کند. خروجی «تفکر» صورتحساب می‌شود اما در چت قابل مشاهده نیست.",
     "page_TooltipXaiThinking": "این xAI مدل از «تفکر» استفاده می‌کند. این خروجی صورتحساب می‌شود اما در چت قابل مشاهده نیست.",
@@ -282,18 +281,53 @@ const fa = {
     "page_TooltipDeepSeekReasoning": "این DeepSeek مدل از «استدلال/تفکر» استفاده می‌کند. خروجی صورتحساب می‌شود اما در چت قابل مشاهده نیست.",
     "page_TooltipGenericReasoning": "این مدل از توکن‌های استدلال استفاده می‌کند که در چت قابل مشاهده نیستند اما به عنوان توکن‌های خروجی محاسبه می‌شوند.",
     "page_TooltipRequiresVerification": "نیاز به تأیید دارد OpenAI سازمان. می‌توانید اینجا تأیید کنید.",
-    "page_TooltipSupportsLanguage": "از {languageName} پشتیبانی می‌کند",
-    "page_TooltipMayNotSupportLanguage": "این مدل ممکن است به طور کامل از {languageName} برای مکالمه پشتیبانی نکند.",
+    "page_TooltipSupportsLanguage": "پشتیبانی‌ها {languageName}",
+    "page_TooltipMayNotSupportLanguage": "این مدل ممکن است به طور کامل پشتیبانی نکند {languageName} برای مکالمه.",
     "page_BadgePreview": "پیش‌نمایش",
     "page_BadgeExperimental": "تجربی",
     "page_BadgeBeta": "بتا",
     "page_AvailableTTSTitle": "در حال حاضر موجود است Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "مدل‌های تصویر موجود در حال حاضر",
     "page_NoTTSOptions": "خیر TTS گزینه‌های موجود در حال حاضر.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "قیمت‌ها آخرین بار در تاریخ تأیید شده‌اند {date}",
-    "page_PricingPerTokens": "به ازای هر {amount} توکن‌ها",
+    "page_PricingPerTokens": "به ازای هر ۱ میلیون توکن",
     "page_ModelCategoryModels": "{model} مدل‌ها",
+    "common_verifyHere": "اینجا تأیید کنید",
     "ttsVoice_Ugne": "در آتش",
+    "pricing": {
+        "perMillionTokens": "به ازای هر ۱ میلیون توکن",
+        "tokens": "توکن ها",
+        "free": "رایگان",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} به ازای هر ۱ میلیون توکن متنی",
+                "audioTokens": "{price} به ازای هر ۱ میلیون توکن صوتی"
+            },
+            "geminiPro": {
+                "textTokens": "{price} به ازای هر ۱ میلیون توکن متنی",
+                "audioTokens": "{price} به ازای هر ۱ میلیون توکن صوتی"
+            },
+            "openAIMini": {
+                "textTokens": "{price} به ازای هر ۱ میلیون توکن متنی",
+                "audioTokens": "{price} به ازای هر ۱ میلیون توکن صوتی"
+            },
+            "openAITTS1": {
+                "standard": "{price} به ازای هر ۱ میلیون توکن"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} به ازای هر ۱ میلیون توکن"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} به ازای هر ۱ میلیون کاراکتر",
+                "neural": "{price} به ازای هر ۱ میلیون کاراکتر",
+                "studio": "{price} به ازای هر ۱ میلیون کاراکتر",
+                "chirpHD": "تأیید نشد",
+                "chirp3HD": "{price} به ازای هر ۱ میلیون کاراکتر"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "فرم تنظیم جلسه",
         "description": "در اینجا می‌توانید LLM و اختیاری را انتخاب کنید TTS تنظیمات مربوط به هر عامل",
@@ -309,7 +343,7 @@ const fa = {
         "initialPromptDescription": "این پیام به عنوان اولین پیام برای شروع مکالمه ارسال می‌شود. اگر آن را خالی بگذارید، هیچ پیامی ارسال نخواهد شد.",
         "startConversation": "شروع مکالمه",
         "starting": "شروع ...",
-        "startTheConversation": "مکالمه را شروع کنید.",
+        "startTheConversation": "لطفا گفتگو را شروع کنید.",
         "languageSupportNote": "شاخص‌های پشتیبانی زبان، سازگاری مدل با ... را نشان می‌دهند. {languageName}مدل‌های بدون پشتیبانی غیرفعال هستند.",
         "reasoningNote": "نشان می‌دهد که یک مدل از توکن‌های «تفکر» یا «استدلال» استفاده می‌کند. این خروجی ثبت شده اما در چت قابل مشاهده نیست.",
         "openaiOrgVerificationNote": "نشان می‌دهد OpenAI مدل به یک سازمان تأیید شده نیاز دارد. شما می‌توانید",
@@ -335,15 +369,15 @@ const fa = {
         "backToMain": "بازگشت به صفحه اصلی",
         "conversationHistory": "تاریخچه مکالمه",
         "chatWith": "چت با {agentA} و {agentB}",
+        "conversationDescription": "شروع شده در {date} - زبان: {language}",
         "viewConversation": "مشاهده مکالمه",
         "backToPreviousChats": "بازگشت به چت‌های قبلی",
         "resumeConversation": "مکالمه رزومه",
         "resuming": "از سرگیری...",
         "sessionDetails": "جزئیات جلسه",
-        "language": "زبان:",
+        "language": "زبان",
         "transcript": "رونوشت",
         "loadingHistory": "در حال بارگذاری تاریخچه...",
-        "conversationDescription": "شروع شده در {date} - زبان: {language}",
         "loadingConversation": "در حال بارگذاری مکالمه...",
         "chatStartedOn": "چت شروع شد {date}",
         "agentAModel": "مدل عامل A",
@@ -355,18 +389,8 @@ const fa = {
         "model": "مدل",
         "voice": "صدا"
     },
-    "common_verifyHere": "اینجا تأیید کنید",
-    "page_AvailableImageModelsTitle": "مدل‌های تصویر موجود در حال حاضر",
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",
-    "imageModel_PriceUSD": "قیمت (USD)",
-    "page_TooltipKnowledgeCutoff": "دانش مدل در این تاریخ قطع شده است.",
-    "modelCategory_MistralAIPremierModels": "مدل‌های برتر",
-    "modelCategory_MistralAIOpenModels": "مدل‌های باز",
-    "pricing": {
-        "perMillionTokens": "به ازای هر ۱ میلیون توکن",
-        "tokens": "توکن ها",
-        "free": "رایگان"
-    }
+    "imageModel_PriceUSD": "قیمت (USD)"
 };
 export default fa;

@@ -71,6 +71,7 @@ const ca = {
         "mn": "Mongol"
     },
     "settings": {
+        "loading": "S'està carregant la configuració...",
         "title": "Configuració",
         "sections": {
             "appearance": "Aspecte",
@@ -95,17 +96,17 @@ const ca = {
         },
         "apiKeys": {
             "title": "API Claus",
-            "description": "Gestiona el teu API claus per a diferents AI proveïdors",
-            "saved": "Desat",
-            "notSet": "No definit",
-            "setKey": "Defineix la clau",
-            "updateKey": "Actualitza la clau",
-            "removeKey": "Treure la clau",
-            "getKeyInstructions": "Aconsegueix el teu API clau",
-            "noNewKeys": "Cap de nou API tecles introduïdes per desar.",
-            "unexpectedResponse": "He rebut una resposta inesperada del servidor.",
+            "description": "Gestiona el teu API claus per a diferents AI serveis.",
+            "setKey": "Conjunt",
+            "updateKey": "Actualització",
+            "saveUpdateKeys": "Desa / Actualitza les claus",
+            "saving": "Desant...",
+            "noNewKeys": "No hi ha claus noves per desar.",
+            "keyStoredSecurely": "El vostre API la clau s'emmagatzemarà de manera segura i xifrada.",
+            "enteringNewKeyOverwrites": "Si introduïu una clau nova, se sobreescriurà l'existent.",
             "failedToSaveKey": "No s'ha pogut desar la clau {serviceName}.",
-            "someKeysNotSaved": "Alguns API No s'han pogut desar les claus. Si us plau, comproveu els detalls a continuació.",
+            "unexpectedResponse": "Resposta inesperada del servidor.",
+            "someKeysNotSaved": "No s'han pogut desar algunes claus. Si us plau, comproveu els errors anteriors.",
             "keyStatus": "estat clau...",
             "apiKeySecurelySaved": "API Clau desada de manera segura",
             "confirmRemoveTitle": "Confirma l'eliminació",
@@ -114,16 +115,12 @@ const ca = {
             "successfullyRemovedKey": "La clau {serviceName} s'ha eliminat correctament.",
             "keyNotSet": "Estat de la clau: No definit",
             "keySet": "Estat de la clau: Definit",
-            "saveButton": "Desa API Clau(es)",
-            "enteringNewKeyOverwrites": "Si introduïu una clau nova, se sobreescriurà la clau desada.",
-            "keyStoredSecurely": "La vostra clau es guardarà de forma segura mitjançant Google Gestor secret.",
-            "saveUpdateKeys": "Desa / Actualitza les claus",
-            "saving": "Desant..."
-        },
-        "loading": "S'està carregant la configuració..."
+            "saveButton": "Desa API Clau(es)"
+        }
     },
     "main": {
         "title": "AI Conversa",
+        "aiConversation": "AI Conversa",
         "setupForm": {
             "title": "Configura la teva conversa",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const ca = {
                 "selectModel": "Selecciona TTS model"
             },
             "startConversation": "Inicia la conversa",
-            "conversationPrompt": "Comença la conversa."
+            "conversationPrompt": "Si us plau, inicia la conversa."
         },
         "conversation": {
             "thinking": "pensant...",
@@ -153,8 +150,7 @@ const ca = {
             "perMillionTokens": "per milió de fitxes",
             "input": "Entrada",
             "output": "Sortida"
-        },
-        "aiConversation": "AI Conversa"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ca = {
             "signUpWithGoogle": "Registra't amb Google",
             "hasAccount": "Ja tens un compte?",
             "signIn": "Inicia la sessió",
-            "emailLabel": "Email adreça",
+            "emailLabel": "Adreça electrònica",
             "confirmPasswordPlaceholder": "Confirma la contrasenya",
             "signingUp": "Registrant-se..."
         },
@@ -185,9 +181,9 @@ const ca = {
             "invalidCredentials": "Correu electrònic o contrasenya no vàlids",
             "userNotFound": "No s'ha trobat l'usuari",
             "weakPassword": "La contrasenya ha de tenir com a mínim 6 caràcters",
-            "emailInUse": "Email ja en ús",
+            "emailInUse": "Correu electrònic ja en ús",
             "generic": "S'ha produït un error. Torna-ho a intentar.",
-            "initialization": "Error d'inicialització. Si us plau, torneu-ho a provar més tard.",
+            "initialization": "Error d'inicialització. Torna-ho a provar més tard.",
             "invalidEmail": "Si us plau, introduïu una adreça electrònica vàlida.",
             "tooManyRequests": "Accés temporalment desactivat a causa de massa intents d'inici de sessió fallits. Si us plau, restableix la contrasenya o torna-ho a provar més tard.",
             "signInFailedPrefix": "Error d'inici de sessió: ",
@@ -229,12 +225,14 @@ const ca = {
     "modelCategory_Gemini2_0": "Gemini 2.0 models",
     "modelCategory_Gemini1_5": "Gemini 1.5 models",
     "modelCategory_Claude4": "Claude 4 models",
-    "modelCategory_Claude3_7": "Claude 3.7 models",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 models",
     "modelCategory_Claude3": "Claude 3 models",
-    "modelCategory_Grok4": "Grok 4 models",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 models",
     "modelCategory_Grok3Mini": "Grok 3 Models mini",
+    "modelCategory_MistralAIPremierModels": "Models de primera línia",
+    "modelCategory_MistralAIOpenModels": "Model obert",
     "modelCategory_Llama4": "Llama 4 models",
     "modelCategory_Llama3_3": "Llama 3.3 models",
     "modelCategory_Llama3_2": "Llama 3.2 models",
@@ -246,18 +244,18 @@ const ca = {
     "modelCategory_Gemma2": "Gemma 2 models",
     "modelCategory_Gemma": "Gemma models",
     "modelCategory_GoogleGemma": "Google Gemma Models",
-    "modelCategory_DeepSeekR1": "DeepSeek Models R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Models V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Model V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Models R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Models",
     "modelCategory_MistralAIModels": "Mistral AI Models",
     "modelCategory_Qwen3": "Qwen3 models",
-    "modelCategory_QwQwQ": "Qwen Models QwQ",
+    "modelCategory_QwQwQ": "Qwen Model QwQ",
     "modelCategory_Qwen2_5": "QwenModels 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Models de visió",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Models de codificador",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model de visió",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model de codificador",
     "modelCategory_Qwen2": "Qwen2 models",
-    "modelCategory_Qwen2Vision": "Qwen2 models de visió",
+    "modelCategory_Qwen2Vision": "Qwen2 Model de visió",
     "modelCategory_QwenModels": "Qwen Models",
     "modelCategory_OtherModels": "Altres models",
     "page_ErrorLoadingUserData": "No s'han pogut carregar les dades de l'usuari: {errorMessage}. Si us plau, proveu d'actualitzar.",
@@ -269,12 +267,13 @@ const ca = {
     "page_LoadingUserData": "S'estan carregant les dades de l'usuari...",
     "page_ErrorAlertTitle": "Error",
     "page_WelcomeTitle": "Benvingut a Two AIs",
-    "page_WelcomeSubtitle": "Aquest lloc web et permet escoltar converses entre dos Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Aquest lloc web et permet escoltar converses entre dos Large Language Models (LLMs) i generar imatges per a cada torn.",
     "page_ApiKeysRequiredTitle": "API Claus necessàries",
     "page_ApiKeysRequiredDescription": "Per dur a terme converses, haureu de proporcionar les vostres pròpies dades API claus per a la AI models que voleu utilitzar (per exemple, OpenAI, Google, Anthropic) després d'iniciar la sessió. Podeu trobar instruccions detallades per a cada proveïdor a Configuració / API Pàgina de claus després d'iniciar la sessió.",
     "page_SignInPrompt": "Per iniciar la vostra pròpia sessió, podeu iniciar la sessió o crear un compte mitjançant l'enllaç de la capçalera.",
     "page_VideoTitle": "Two AIs Demostració de conversa",
     "page_AvailableLLMsTitle": "Actualment disponible LLMs",
+    "page_TooltipKnowledgeCutoff": "El coneixement del model està tallat en aquesta data.",
     "page_TooltipGoogleThinkingBudget": "Això Google El model utilitza un \"pressupost de pensament\". El resultat del \"pensament\" es factura però no és visible al xat.",
     "page_TooltipAnthropicExtendedThinking": "Això Anthropic El model utilitza el \"pensament ampliat\". La sortida del \"pensament\" es factura però no és visible al xat.",
     "page_TooltipXaiThinking": "Això xAI El model utilitza el \"pensament\". Aquesta sortida es factura però no és visible al xat.",
@@ -282,18 +281,53 @@ const ca = {
     "page_TooltipDeepSeekReasoning": "Això DeepSeek El model utilitza \"raonament/pensament\". La sortida es factura però no és visible al xat.",
     "page_TooltipGenericReasoning": "Aquest model utilitza fitxes de raonament que no són visibles al xat però que es facturen com a fitxes de sortida.",
     "page_TooltipRequiresVerification": "Requereix verificació OpenAI organització. Podeu verificar-ho aquí.",
-    "page_TooltipSupportsLanguage": "Admet {languageName}",
-    "page_TooltipMayNotSupportLanguage": "És possible que aquest model no sigui completament compatible amb {languageName} per a converses.",
+    "page_TooltipSupportsLanguage": "Suports {languageName}",
+    "page_TooltipMayNotSupportLanguage": "És possible que aquest model no sigui completament compatible {languageName} per a la conversa.",
     "page_BadgePreview": "Vista prèvia",
     "page_BadgeExperimental": "Experimental",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Actualment disponible Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Models d'imatge disponibles actualment",
     "page_NoTTSOptions": "No TTS opcions disponibles actualment.",
     "page_TruncatableNoteFormat": "({notaText})",
     "page_PricesLastVerifiedOn": "Preus verificats per última vegada el {date}",
-    "page_PricingPerTokens": "per {amount} Fitxes",
+    "page_PricingPerTokens": "per 1 milió de fitxes",
     "page_ModelCategoryModels": "{model} models",
+    "common_verifyHere": "verifica aquí",
     "ttsVoice_Ugne": "En el foc",
+    "pricing": {
+        "perMillionTokens": "per 1 milió de fitxes",
+        "tokens": "fitxes",
+        "free": "Gratuït",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 milió de tokens de text",
+                "audioTokens": "{price} per 1 milió de fitxes d'àudio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 milió de tokens de text",
+                "audioTokens": "{price} per 1 milió de fitxes d'àudio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 milió de tokens de text",
+                "audioTokens": "{price} per 1 milió de fitxes d'àudio"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 milió de fitxes"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 milió de fitxes"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 milió de caràcters",
+                "neural": "{price} per cada milió de caràcters",
+                "studio": "{price} per cada milió de caràcters",
+                "chirpHD": "No s'ha pogut verificar",
+                "chirp3HD": "{price} per 1 milió de caràcters"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulari de configuració de sessió",
         "description": "Aquí podeu seleccionar el LLM i opcional TTS configuració per a cada agent.",
@@ -309,7 +343,7 @@ const ca = {
         "initialPromptDescription": "Aquest missatge s'enviarà com a primer missatge per iniciar la conversa. Si el deixeu en blanc, no hi haurà cap missatge.",
         "startConversation": "Inicia la conversa",
         "starting": "Començant...",
-        "startTheConversation": "Comença la conversa.",
+        "startTheConversation": "Si us plau, inicia la conversa.",
         "languageSupportNote": "Els indicadors de suport lingüístic mostren la compatibilitat del model amb {languageName}Els models sense suport estan desactivats.",
         "reasoningNote": "Indica que un model utilitza fitxes de \"pensament\" o \"raonament\". Aquesta sortida es factura però no és visible al xat.",
         "openaiOrgVerificationNote": "Indica un OpenAI el model requereix una organització verificada. Podeu",
@@ -335,15 +369,15 @@ const ca = {
         "backToMain": "Torna a la pàgina principal",
         "conversationHistory": "Historial de converses",
         "chatWith": "Xateja amb {agentA} i {agentB}",
+        "conversationDescription": "Va començar el {date} - Idioma: {language}",
         "viewConversation": "Veure la conversa",
         "backToPreviousChats": "Torna a les xerrades anteriors",
         "resumeConversation": "Reprendre la conversa",
         "resuming": "Reprenent...",
         "sessionDetails": "Detalls de la sessió",
-        "language": "Idioma:",
+        "language": "Llengua",
         "transcript": "Transcripció",
         "loadingHistory": "S'està carregant l'historial...",
-        "conversationDescription": "Va començar el {date} - Idioma: {language}",
         "loadingConversation": "S'està carregant la conversa...",
         "chatStartedOn": "El xat va començar el {date}",
         "agentAModel": "Agent A Model",
@@ -355,18 +389,8 @@ const ca = {
         "model": "Model",
         "voice": "Veu"
     },
-    "common_verifyHere": "verifica aquí",
-    "page_AvailableImageModelsTitle": "Models d'imatge disponibles actualment",
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",
-    "imageModel_PriceUSD": "Preu (USD)",
-    "page_TooltipKnowledgeCutoff": "El coneixement del model està tallat en aquesta data.",
-    "modelCategory_MistralAIPremierModels": "Models de primera línia",
-    "modelCategory_MistralAIOpenModels": "Models oberts",
-    "pricing": {
-        "perMillionTokens": "per 1 milió de fitxes",
-        "tokens": "fitxes",
-        "free": "Gratuït"
-    }
+    "imageModel_PriceUSD": "Preu (USD)"
 };
 export default ca;

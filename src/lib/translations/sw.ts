@@ -24,7 +24,7 @@ const sw = {
         "el": "Kigiriki",
         "iw": "Kiebrania",
         "hi": "Hapana",
-        "hu": "Kihungaria",
+        "hu": "Kihungari",
         "id": "Kiindonesia",
         "it": "Kiitaliano",
         "ja": "Kijapani",
@@ -71,6 +71,7 @@ const sw = {
         "mn": "Kimongolia"
     },
     "settings": {
+        "loading": "Inapakia mipangilio...",
         "title": "Mipangilio",
         "sections": {
             "appearance": "Muonekano",
@@ -95,17 +96,17 @@ const sw = {
         },
         "apiKeys": {
             "title": "API Funguo",
-            "description": "Dhibiti yako API funguo kwa tofauti AI watoa huduma",
-            "saved": "Imehifadhiwa",
-            "notSet": "Haijawekwa",
-            "setKey": "Weka ufunguo",
-            "updateKey": "Kitufe cha kusasisha",
-            "removeKey": "Ondoa ufunguo",
-            "getKeyInstructions": "Pata yako API ufunguo",
-            "noNewKeys": "Hakuna jipya API funguo zilizowekwa ili kuhifadhi.",
-            "unexpectedResponse": "Imepokea jibu lisilotarajiwa kutoka kwa seva.",
+            "description": "Dhibiti yako API funguo kwa tofauti AI huduma.",
+            "setKey": "Weka",
+            "updateKey": "Sasisha",
+            "saveUpdateKeys": "Hifadhi / Sasisha Funguo",
+            "saving": "Inahifadhi...",
+            "noNewKeys": "Hakuna funguo mpya za kuhifadhi.",
+            "keyStoredSecurely": "Wako API ufunguo utahifadhiwa kwa usalama na kusimbwa kwa njia fiche.",
+            "enteringNewKeyOverwrites": "Kuingiza ufunguo mpya kutabatilisha ufunguo uliopo.",
             "failedToSaveKey": "Imeshindwa kuhifadhi ufunguo wa {serviceName}.",
-            "someKeysNotSaved": "Baadhi API funguo hazikuweza kuhifadhiwa. Tafadhali angalia maelezo hapa chini.",
+            "unexpectedResponse": "Jibu lisilotarajiwa kutoka kwa seva.",
+            "someKeysNotSaved": "Baadhi ya funguo hazikuweza kuhifadhiwa. Tafadhali angalia hitilafu zilizo hapo juu.",
             "keyStatus": "hali muhimu...",
             "apiKeySecurelySaved": "API Ufunguo Umehifadhiwa kwa Usalama",
             "confirmRemoveTitle": "Thibitisha Kuondolewa",
@@ -114,16 +115,12 @@ const sw = {
             "successfullyRemovedKey": "Umeondoa kitufe cha {serviceName}.",
             "keyNotSet": "Hali Muhimu: Haijawekwa",
             "keySet": "Hali Muhimu: Weka",
-            "saveButton": "Hifadhi API Vifunguo",
-            "enteringNewKeyOverwrites": "Kuingiza ufunguo mpya kutabatilisha ufunguo uliohifadhiwa.",
-            "keyStoredSecurely": "Ufunguo wako utahifadhiwa kwa usalama ukitumia Google Meneja wa Siri.",
-            "saveUpdateKeys": "Hifadhi / Sasisha Funguo",
-            "saving": "Inahifadhi..."
-        },
-        "loading": "Inapakia mipangilio..."
+            "saveButton": "Hifadhi API Vifunguo"
+        }
     },
     "main": {
         "title": "AI Mazungumzo",
+        "aiConversation": "AI Mazungumzo",
         "setupForm": {
             "title": "Sanidi mazungumzo yako",
             "agentA": "Wakala A",
@@ -141,7 +138,7 @@ const sw = {
                 "selectModel": "Chagua TTS mfano"
             },
             "startConversation": "Anza Mazungumzo",
-            "conversationPrompt": "Anza mazungumzo."
+            "conversationPrompt": "Tafadhali anza mazungumzo."
         },
         "conversation": {
             "thinking": "kufikiri...",
@@ -153,8 +150,7 @@ const sw = {
             "perMillionTokens": "kwa tokeni milioni",
             "input": "Ingizo",
             "output": "Pato"
-        },
-        "aiConversation": "AI Mazungumzo"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const sw = {
             "signUpWithGoogle": "Jisajili na Google",
             "hasAccount": "Je, tayari una akaunti?",
             "signIn": "Ingia",
-            "emailLabel": "Email anwani",
+            "emailLabel": "Anwani ya barua pepe",
             "confirmPasswordPlaceholder": "Thibitisha Nenosiri",
             "signingUp": "Unajisajili..."
         },
@@ -185,7 +181,7 @@ const sw = {
             "invalidCredentials": "Barua pepe au nenosiri batili",
             "userNotFound": "Mtumiaji hajapatikana",
             "weakPassword": "Nenosiri lazima liwe angalau vibambo 6",
-            "emailInUse": "Email tayari inatumika",
+            "emailInUse": "Barua pepe tayari inatumika",
             "generic": "Hitilafu imetokea. Tafadhali jaribu tena.",
             "initialization": "Hitilafu ya uanzishaji. Tafadhali jaribu tena baadaye.",
             "invalidEmail": "Tafadhali weka barua pepe halali.",
@@ -229,12 +225,14 @@ const sw = {
     "modelCategory_Gemini2_0": "Gemini 2.0 mifano",
     "modelCategory_Gemini1_5": "Gemini 1.5 mifano",
     "modelCategory_Claude4": "Claude 4 mifano",
-    "modelCategory_Claude3_7": "Claude 3.7 mifano",
+    "modelCategory_Claude3_7": "Claude 3.7 mfano",
     "modelCategory_Claude3_5": "Claude 3.5 mifano",
     "modelCategory_Claude3": "Claude 3 mifano",
-    "modelCategory_Grok4": "Grok 4 mifano",
+    "modelCategory_Grok4": "Grok 4 mfano",
     "modelCategory_Grok3": "Grok 3 mifano",
     "modelCategory_Grok3Mini": "Grok 3 Mifano ndogo",
+    "modelCategory_MistralAIPremierModels": "Mifano kuu",
+    "modelCategory_MistralAIOpenModels": "Fungua mfano",
     "modelCategory_Llama4": "Llama 4 mifano",
     "modelCategory_Llama3_3": "Llama 3.3 mifano",
     "modelCategory_Llama3_2": "Llama 3.2 mifano",
@@ -246,18 +244,18 @@ const sw = {
     "modelCategory_Gemma2": "Gemma 2 mfano",
     "modelCategory_Gemma": "Gemma mifano",
     "modelCategory_GoogleGemma": "Google Gemma Mifano",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 mifano",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 mifano",
+    "modelCategory_DeepSeekR1": "DeepSeek Mfano wa R1",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 mfano",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Aina za R1 za Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Mifano",
     "modelCategory_MistralAIModels": "Mistral AI Mifano",
-    "modelCategory_Qwen3": "Qwen3 mifano",
-    "modelCategory_QwQwQ": "Qwen Mifano ya QwQ",
+    "modelCategory_Qwen3": "Qwen3 mfano",
+    "modelCategory_QwQwQ": "Qwen Mfano wa QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 mifano",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vielelezo vya maono",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Miundo ya coder",
-    "modelCategory_Qwen2": "Qwen2 mifano",
-    "modelCategory_Qwen2Vision": "Qwen2 Vielelezo vya maono",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Muundo wa maono",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Muundo wa msimbo",
+    "modelCategory_Qwen2": "Qwen2 mfano",
+    "modelCategory_Qwen2Vision": "Qwen2 Muundo wa maono",
     "modelCategory_QwenModels": "Qwen Mifano",
     "modelCategory_OtherModels": "Mifano Nyingine",
     "page_ErrorLoadingUserData": "Imeshindwa kupakia data ya mtumiaji: {errorMessage}. Tafadhali jaribu kuonyesha upya.",
@@ -269,31 +267,67 @@ const sw = {
     "page_LoadingUserData": "Inapakia data ya mtumiaji...",
     "page_ErrorAlertTitle": "Hitilafu",
     "page_WelcomeTitle": "Karibu kwa Two AIs",
-    "page_WelcomeSubtitle": "Tovuti hii inakuwezesha kusikiliza mazungumzo kati ya wawili Large Language Models (LLMs)",
+    "page_WelcomeSubtitle": "Tovuti hii inakuwezesha kusikiliza mazungumzo kati ya wawili Large Language Models (LLMs) na toa picha kwa kila zamu.",
     "page_ApiKeysRequiredTitle": "API Vifunguo Inahitajika",
     "page_ApiKeysRequiredDescription": "Ili kuendesha mazungumzo, utahitaji kutoa yako mwenyewe API funguo za AI mifano unayotaka kutumia (k.m., OpenAI, Google, Anthropic) baada ya kuingia. Maagizo ya kina kwa kila mtoa huduma yanaweza kupatikana kwenye Mipangilio / API Vifunguo vya ukurasa baada ya kuingia.",
     "page_SignInPrompt": "Ili kuanza kipindi chako mwenyewe, unaweza kuingia au kuunda akaunti kwa kutumia kiungo kilicho kwenye kichwa.",
     "page_VideoTitle": "Two AIs Onyesho la Mazungumzo",
     "page_AvailableLLMsTitle": "Inapatikana Kwa Sasa LLMs",
+    "page_TooltipKnowledgeCutoff": "Ujuzi wa mfano umekatwa kwa tarehe hii.",
     "page_TooltipGoogleThinkingBudget": "Hii Google mfano hutumia 'bajeti ya kufikiria'. Pato la 'kufikiri' linatozwa lakini halionekani kwenye gumzo.",
     "page_TooltipAnthropicExtendedThinking": "Hii Anthropic model hutumia 'extended thinking'. Pato la 'kufikiri' linatozwa lakini halionekani kwenye gumzo.",
     "page_TooltipXaiThinking": "Hii xAI mfano hutumia 'kufikiri'. Toleo hili linatozwa lakini halionekani kwenye gumzo.",
-    "page_TooltipQwenReasoning": "Hii Qwen mfano hutumia 'kuwaza/kufikiri'. Toleo hili linatozwa lakini halionekani kwenye gumzo.",
+    "page_TooltipQwenReasoning": "Hii Qwen mfano hutumia 'kufikiri/kufikiri'. Toleo hili linatozwa lakini halionekani kwenye gumzo.",
     "page_TooltipDeepSeekReasoning": "Hii DeepSeek mfano hutumia 'kuwaza/kufikiri'. Pato linatozwa lakini halionekani kwenye gumzo.",
     "page_TooltipGenericReasoning": "Muundo huu hutumia tokeni za hoja ambazo hazionekani kwenye gumzo lakini hutozwa kama tokeni za matokeo.",
     "page_TooltipRequiresVerification": "Inahitaji kuthibitishwa OpenAI shirika. Unaweza kuthibitisha hapa.",
-    "page_TooltipSupportsLanguage": "Inaauni {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Muundo huu hauwezi kutumika kikamilifu na {languageName} kwa mazungumzo.",
+    "page_TooltipSupportsLanguage": "Inasaidia {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Mtindo huu hauwezi kutumika kikamilifu {languageName} kwa mazungumzo.",
     "page_BadgePreview": "Hakiki",
     "page_BadgeExperimental": "Majaribio",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Inapatikana Kwa Sasa Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Miundo ya Picha Inayopatikana Kwa Sasa",
     "page_NoTTSOptions": "Hapana TTS chaguzi zinazopatikana kwa sasa.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Bei zilithibitishwa mara ya mwisho tarehe {date}",
-    "page_PricingPerTokens": "kwa {amount} Ishara",
+    "page_PricingPerTokens": "kwa Tokeni Milioni 1",
     "page_ModelCategoryModels": "{model} mifano",
+    "common_verifyHere": "thibitisha hapa",
     "ttsVoice_Ugne": "Katika moto",
+    "pricing": {
+        "perMillionTokens": "kwa tokeni Milioni 1",
+        "tokens": "ishara",
+        "free": "Bure",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} kwa tokeni za maandishi Milioni 1",
+                "audioTokens": "{price} kwa tokeni za sauti Milioni 1"
+            },
+            "geminiPro": {
+                "textTokens": "{price} kwa tokeni za maandishi Milioni 1",
+                "audioTokens": "{price} kwa tokeni za sauti Milioni 1"
+            },
+            "openAIMini": {
+                "textTokens": "{price} kwa tokeni za maandishi Milioni 1",
+                "audioTokens": "{price} kwa tokeni za sauti Milioni 1"
+            },
+            "openAITTS1": {
+                "standard": "{price} kwa tokeni Milioni 1"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} kwa tokeni Milioni 1"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} kwa kila herufi Milioni 1",
+                "neural": "{price} kwa kila herufi Milioni 1",
+                "studio": "{price} kwa kila herufi Milioni 1",
+                "chirpHD": "Haikuweza kuthibitisha",
+                "chirp3HD": "{price} kwa kila herufi Milioni 1"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Fomu ya Kuweka Kikao",
         "description": "Hapa unaweza kuchagua LLM na hiari TTS mipangilio kwa kila wakala.",
@@ -309,7 +343,7 @@ const sw = {
         "initialPromptDescription": "Kidokezo hiki kitatumwa kama ujumbe wa kwanza wa kuanzisha mazungumzo. Ukiiacha wazi, hakutakuwa na kidokezo.",
         "startConversation": "Anza Mazungumzo",
         "starting": "Inaanza...",
-        "startTheConversation": "Anza mazungumzo.",
+        "startTheConversation": "Tafadhali anza mazungumzo.",
         "languageSupportNote": "Viashirio vya usaidizi wa lugha vinaonyesha utangamano wa kielelezo na {languageName}. Miundo isiyo na usaidizi imezimwa.",
         "reasoningNote": "Inaonyesha mfano hutumia ishara za 'kufikiri' au 'kuwaza'. Toleo hili linatozwa lakini halionekani kwenye gumzo.",
         "openaiOrgVerificationNote": "Inaonyesha a OpenAI mfano unahitaji shirika lililothibitishwa. Unaweza",
@@ -318,7 +352,7 @@ const sw = {
         "noVoicesFor": "Hakuna sauti kwa {languageName}",
         "ttsProviderModel": "{providerName} Mfano",
         "selectTtsProviderModel": "Chagua {providerName} Mfano",
-        "selectProvider": "Chagua Mtoa huduma",
+        "selectProvider": "Chagua Mtoa Huduma",
         "per": "kwa",
         "enableImageGen": "Washa Uzalishaji wa Picha",
         "imageModel": "Mfano wa Picha",
@@ -335,15 +369,15 @@ const sw = {
         "backToMain": "Rudi kwa Kuu",
         "conversationHistory": "Historia ya Mazungumzo",
         "chatWith": "Piga gumzo na {agentA} & {agentB}",
+        "conversationDescription": "Ilianza {date} - Lugha: {language}",
         "viewConversation": "Tazama Mazungumzo",
         "backToPreviousChats": "Rudi kwa Gumzo Zilizotangulia",
         "resumeConversation": "Rejesha Mazungumzo",
         "resuming": "Inaendelea...",
         "sessionDetails": "Maelezo ya Kikao",
-        "language": "Lugha:",
+        "language": "Lugha",
         "transcript": "Nakala",
         "loadingHistory": "Inapakia historia...",
-        "conversationDescription": "Ilianza {date} - Lugha: {language}",
         "loadingConversation": "Inapakia mazungumzo...",
         "chatStartedOn": "Gumzo lilianza {date}",
         "agentAModel": "Wakala A Mfano",
@@ -355,18 +389,8 @@ const sw = {
         "model": "Mfano",
         "voice": "Sauti"
     },
-    "common_verifyHere": "thibitisha hapa",
-    "page_AvailableImageModelsTitle": "Miundo ya Picha Inayopatikana Kwa Sasa",
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",
-    "imageModel_PriceUSD": "Bei (USD)",
-    "page_TooltipKnowledgeCutoff": "Ujuzi wa mfano umekatwa kwa tarehe hii.",
-    "modelCategory_MistralAIPremierModels": "Mifano kuu",
-    "modelCategory_MistralAIOpenModels": "Fungua mifano",
-    "pricing": {
-        "perMillionTokens": "kwa tokeni Milioni 1",
-        "tokens": "ishara",
-        "free": "Bure"
-    }
+    "imageModel_PriceUSD": "Bei (USD)"
 };
 export default sw;

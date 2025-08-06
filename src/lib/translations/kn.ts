@@ -71,6 +71,7 @@ const kn = {
         "mn": "ಮಂಗೋಲಿಯನ್"
     },
     "settings": {
+        "loading": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
         "title": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
         "sections": {
             "appearance": "ಗೋಚರತೆ",
@@ -95,17 +96,17 @@ const kn = {
         },
         "apiKeys": {
             "title": "API ಕೀಲಿಗಳು",
-            "description": "ನಿಮ್ಮ ನಿರ್ವಹಿಸಿ API ವಿಭಿನ್ನವಾದ ಕೀಲಿಗಳು AI ಪೂರೈಕೆದಾರರು",
-            "saved": "ಉಳಿಸಲಾಗಿದೆ",
-            "notSet": "ಹೊಂದಿಸಿಲ್ಲ",
-            "setKey": "ಕೀಲಿಯನ್ನು ಹೊಂದಿಸಿ",
-            "updateKey": "ಕೀಯನ್ನು ನವೀಕರಿಸಿ",
-            "removeKey": "ಕೀಲಿಯನ್ನು ತೆಗೆದುಹಾಕಿ",
-            "getKeyInstructions": "ನಿಮ್ಮದನ್ನು ಪಡೆಯಿರಿ API ಕೀ",
-            "noNewKeys": "ಹೊಸದೇನೂ ಇಲ್ಲ API ಉಳಿಸಲು ಕೀಲಿಗಳನ್ನು ನಮೂದಿಸಲಾಗಿದೆ.",
-            "unexpectedResponse": "ಸರ್ವರ್‌ನಿಂದ ಅನಿರೀಕ್ಷಿತ ಪ್ರತಿಕ್ರಿಯೆ ಸಿಕ್ಕಿದೆ.",
+            "description": "ನಿಮ್ಮ ನಿರ್ವಹಿಸಿ API ವಿಭಿನ್ನವಾದ ಕೀಲಿಗಳು AI ಸೇವೆಗಳು.",
+            "setKey": "ಹೊಂದಿಸಿ",
+            "updateKey": "ನವೀಕರಿಸಿ",
+            "saveUpdateKeys": "ಕೀಲಿಗಳನ್ನು ಉಳಿಸಿ / ನವೀಕರಿಸಿ",
+            "saving": "ಉಳಿಸಲಾಗುತ್ತಿದೆ...",
+            "noNewKeys": "ಉಳಿಸಲು ಯಾವುದೇ ಹೊಸ ಕೀಲಿಗಳಿಲ್ಲ.",
+            "keyStoredSecurely": "ನಿಮ್ಮ API ಕೀಲಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಎನ್‌ಕ್ರಿಪ್ಟ್ ಮಾಡಲಾಗುತ್ತದೆ.",
+            "enteringNewKeyOverwrites": "ಹೊಸ ಕೀಲಿಯನ್ನು ನಮೂದಿಸುವುದರಿಂದ ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಕೀಲಿಯನ್ನು ತಿದ್ದಿ ಬರೆಯಲಾಗುತ್ತದೆ.",
             "failedToSaveKey": "{serviceName} ಕೀಯನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ.",
-            "someKeysNotSaved": "ಕೆಲವು API ಕೀಲಿಗಳನ್ನು ಉಳಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಕೆಳಗಿನ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
+            "unexpectedResponse": "ಸರ್ವರ್‌ನಿಂದ ಅನಿರೀಕ್ಷಿತ ಪ್ರತಿಕ್ರಿಯೆ.",
+            "someKeysNotSaved": "ಕೆಲವು ಕೀಲಿಗಳನ್ನು ಉಳಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮೇಲಿನ ದೋಷಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
             "keyStatus": "ಪ್ರಮುಖ ಸ್ಥಿತಿ...",
             "apiKeySecurelySaved": "API ಕೀಲಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಉಳಿಸಲಾಗಿದೆ",
             "confirmRemoveTitle": "ತೆಗೆದುಹಾಕುವಿಕೆಯನ್ನು ದೃಢೀಕರಿಸಿ",
@@ -114,16 +115,12 @@ const kn = {
             "successfullyRemovedKey": "{serviceName} ಕೀಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.",
             "keyNotSet": "ಪ್ರಮುಖ ಸ್ಥಿತಿ: ಹೊಂದಿಸಲಾಗಿಲ್ಲ",
             "keySet": "ಪ್ರಮುಖ ಸ್ಥಿತಿ: ಹೊಂದಿಸಿ",
-            "saveButton": "ಉಳಿಸಿ API ಕೀ(ಗಳು)",
-            "enteringNewKeyOverwrites": "ಹೊಸ ಕೀಲಿಯನ್ನು ನಮೂದಿಸುವುದರಿಂದ ಉಳಿಸಿದ ಕೀಲಿಯನ್ನು ಓವರ್‌ರೈಟ್ ಮಾಡಲಾಗುತ್ತದೆ.",
-            "keyStoredSecurely": "ನಿಮ್ಮ ಕೀಲಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ Google ರಹಸ್ಯ ವ್ಯವಸ್ಥಾಪಕ.",
-            "saveUpdateKeys": "ಕೀಲಿಗಳನ್ನು ಉಳಿಸಿ / ನವೀಕರಿಸಿ",
-            "saving": "ಉಳಿಸಲಾಗುತ್ತಿದೆ..."
-        },
-        "loading": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+            "saveButton": "ಉಳಿಸಿ API ಕೀ(ಗಳು)"
+        }
     },
     "main": {
         "title": "AI ಸಂವಾದ",
+        "aiConversation": "AI ಸಂವಾದ",
         "setupForm": {
             "title": "ನಿಮ್ಮ ಸಂಭಾಷಣೆಯನ್ನು ಹೊಂದಿಸಿ",
             "agentA": "ಏಜೆಂಟ್ ಎ",
@@ -141,7 +138,7 @@ const kn = {
                 "selectModel": "ಆಯ್ಕೆ ಮಾಡಿ TTS ಮಾದರಿ"
             },
             "startConversation": "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ",
-            "conversationPrompt": "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ."
+            "conversationPrompt": "ದಯವಿಟ್ಟು ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ."
         },
         "conversation": {
             "thinking": "ಯೋಚಿಸುತ್ತಿದ್ದೇನೆ...",
@@ -153,8 +150,7 @@ const kn = {
             "perMillionTokens": "ಪ್ರತಿ ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
             "input": "ಇನ್ಪುಟ್",
             "output": "ಔಟ್ಪುಟ್"
-        },
-        "aiConversation": "AI ಸಂವಾದ"
+        }
     },
     "auth": {
         "login": {
@@ -177,15 +173,15 @@ const kn = {
             "signUpWithGoogle": "ಇದರೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಮಾಡಿ Google",
             "hasAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
             "signIn": "ಸೈನ್ ಇನ್",
-            "emailLabel": "Email ವಿಳಾಸ",
-            "confirmPasswordPlaceholder": "ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ",
+            "emailLabel": "ಇಮೇಲ್ ವಿಳಾಸ",
+            "confirmPasswordPlaceholder": "ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
             "signingUp": "ಸೈನ್ ಅಪ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
         },
         "errors": {
             "invalidCredentials": "ಅಮಾನ್ಯ ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್",
             "userNotFound": "ಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ.",
             "weakPassword": "ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು.",
-            "emailInUse": "Email ಈಗಾಗಲೇ ಬಳಕೆಯಲ್ಲಿದೆ",
+            "emailInUse": "ಇಮೇಲ್ ಈಗಾಗಲೇ ಬಳಕೆಯಲ್ಲಿದೆ.",
             "generic": "ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
             "initialization": "ಪ್ರಾರಂಭಿಕ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
             "invalidEmail": "ದಯವಿಟ್ಟು ಸರಿಯಾದ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ.",
@@ -229,12 +225,14 @@ const kn = {
     "modelCategory_Gemini2_0": "Gemini 2.0 ಮಾದರಿಗಳು",
     "modelCategory_Gemini1_5": "Gemini 1.5 ಮಾದರಿಗಳು",
     "modelCategory_Claude4": "Claude 4 ಮಾದರಿಗಳು",
-    "modelCategory_Claude3_7": "Claude 3.7 ಮಾದರಿಗಳು",
+    "modelCategory_Claude3_7": "Claude 3.7 ಮಾದರಿ",
     "modelCategory_Claude3_5": "Claude 3.5 ಮಾದರಿಗಳು",
     "modelCategory_Claude3": "Claude 3 ಮಾದರಿಗಳು",
-    "modelCategory_Grok4": "Grok 4 ಮಾದರಿಗಳು",
+    "modelCategory_Grok4": "Grok 4 ಮಾದರಿ",
     "modelCategory_Grok3": "Grok 3 ಮಾದರಿಗಳು",
     "modelCategory_Grok3Mini": "Grok 3 ಮಿನಿ ಮಾದರಿಗಳು",
+    "modelCategory_MistralAIPremierModels": "ಪ್ರೀಮಿಯರ್ ಮಾದರಿಗಳು",
+    "modelCategory_MistralAIOpenModels": "ಮುಕ್ತ ಮಾದರಿ",
     "modelCategory_Llama4": "Llama 4 ಮಾದರಿಗಳು",
     "modelCategory_Llama3_3": "Llama 3.3 ಮಾದರಿಗಳು",
     "modelCategory_Llama3_2": "Llama 3.2 ಮಾದರಿಗಳು",
@@ -246,18 +244,18 @@ const kn = {
     "modelCategory_Gemma2": "Gemma 2 ಮಾದರಿ",
     "modelCategory_Gemma": "Gemma ಮಾದರಿಗಳು",
     "modelCategory_GoogleGemma": "Google Gemma ಮಾದರಿಗಳು",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 ಮಾದರಿಗಳು",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 ಮಾದರಿಗಳು",
+    "modelCategory_DeepSeekR1": "DeepSeek ಆರ್1 ಮಾದರಿ",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 ಮಾದರಿ",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 ಡಿಸ್ಟಿಲ್ ಮಾದರಿಗಳು",
     "modelCategory_DeepSeekModels": "DeepSeek ಮಾದರಿಗಳು",
     "modelCategory_MistralAIModels": "Mistral AI ಮಾದರಿಗಳು",
-    "modelCategory_Qwen3": "Qwen3 ಮಾದರಿಗಳು",
-    "modelCategory_QwQwQ": "Qwen QwQ ಮಾದರಿಗಳು",
+    "modelCategory_Qwen3": "Qwen3 ಮಾದರಿ",
+    "modelCategory_QwQwQ": "Qwen QwQ ಮಾದರಿ",
     "modelCategory_Qwen2_5": "Qwen2.5 ಮಾದರಿಗಳು",
-    "modelCategory_Qwen2_5Vision": "Qwen೨.೫ ವಿಷನ್ ಮಾದರಿಗಳು",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 ಕೋಡರ್ ಮಾದರಿಗಳು",
-    "modelCategory_Qwen2": "Qwen2 ಮಾದರಿಗಳು",
-    "modelCategory_Qwen2Vision": "Qwen೨ ವಿಷನ್ ಮಾದರಿಗಳು",
+    "modelCategory_Qwen2_5Vision": "Qwen೨.೫ ದೃಷ್ಟಿ ಮಾದರಿ",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 ಕೋಡರ್ ಮಾದರಿ",
+    "modelCategory_Qwen2": "Qwen2 ಮಾದರಿ",
+    "modelCategory_Qwen2Vision": "Qwen೨ ದೃಷ್ಟಿ ಮಾದರಿ",
     "modelCategory_QwenModels": "Qwen ಮಾದರಿಗಳು",
     "modelCategory_OtherModels": "ಇತರ ಮಾದರಿಗಳು",
     "page_ErrorLoadingUserData": "ಬಳಕೆದಾರರ ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: {errorMessage}. ದಯವಿಟ್ಟು ರಿಫ್ರೆಶ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ.",
@@ -265,16 +263,17 @@ const kn = {
     "page_ErrorUserApiKeyConfig": "ಬಳಕೆದಾರ API ಕೀಲಿ ಸಂರಚನೆಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ರಿಫ್ರೆಶ್ ಮಾಡಿ ಅಥವಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
     "page_ErrorStartingSessionAPI": "API ದೋಷ: {ಸ್ಥಿತಿ} {ಸ್ಥಿತಿಪಠ್ಯ}",
     "page_ErrorStartingSessionGeneric": "ಸೆಷನ್ ಪ್ರಾರಂಭಿಸುವಲ್ಲಿ ದೋಷ: {errorMessage}",
-    "page_ErrorSessionIdMissing": "API ಪ್ರತಿಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿದೆ ಆದರೆ ಸಂಭಾಷಣೆ ಐಡಿಯನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ.",
+    "page_ErrorSessionIdMissing": "API ಪ್ರತಿಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿದೆ ಆದರೆ ಸಂಭಾಷಣೆ ಐಡಿ ಸೇರಿಸಲಾಗಿಲ್ಲ.",
     "page_LoadingUserData": "ಬಳಕೆದಾರ ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
     "page_ErrorAlertTitle": "ದೋಷ",
     "page_WelcomeTitle": "ಸ್ವಾಗತ Two AIs",
-    "page_WelcomeSubtitle": "ಈ ವೆಬ್‌ಸೈಟ್ ನಿಮಗೆ ಇಬ್ಬರ ನಡುವಿನ ಸಂಭಾಷಣೆಗಳನ್ನು ಕೇಳಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ಈ ವೆಬ್‌ಸೈಟ್ ನಿಮಗೆ ಇಬ್ಬರ ನಡುವಿನ ಸಂಭಾಷಣೆಗಳನ್ನು ಕೇಳಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ Large Language Models (LLMs) ಮತ್ತು ಪ್ರತಿ ತಿರುವಿಗೆ ಚಿತ್ರಗಳನ್ನು ರಚಿಸಿ.",
     "page_ApiKeysRequiredTitle": "API ಕೀಲಿಗಳು ಅಗತ್ಯವಿದೆ",
     "page_ApiKeysRequiredDescription": "ಸಂಭಾಷಣೆಗಳನ್ನು ನಡೆಸಲು, ನೀವು ನಿಮ್ಮದೇ ಆದದನ್ನು ಒದಗಿಸಬೇಕಾಗುತ್ತದೆ API ಕೀಲಿಗಳು AI ನೀವು ಬಳಸಲು ಬಯಸುವ ಮಾದರಿಗಳು (ಉದಾ., OpenAI, Google, Anthropic) ಸೈನ್ ಇನ್ ಮಾಡಿದ ನಂತರ. ಪ್ರತಿ ಪೂರೈಕೆದಾರರಿಗೆ ವಿವರವಾದ ಸೂಚನೆಗಳನ್ನು ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಕಾಣಬಹುದು / API ಸೈನ್ ಇನ್ ಮಾಡಿದ ನಂತರ ಕೀಸ್ ಪುಟ.",
     "page_SignInPrompt": "ನಿಮ್ಮ ಸ್ವಂತ ಅಧಿವೇಶನವನ್ನು ಪ್ರಾರಂಭಿಸಲು, ನೀವು ಹೆಡರ್‌ನಲ್ಲಿರುವ ಲಿಂಕ್ ಬಳಸಿ ಸೈನ್ ಇನ್ ಮಾಡಬಹುದು ಅಥವಾ ಖಾತೆಯನ್ನು ರಚಿಸಬಹುದು.",
     "page_VideoTitle": "Two AIs ಸಂಭಾಷಣೆ ಡೆಮೊ",
     "page_AvailableLLMsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿದೆ LLMs",
+    "page_TooltipKnowledgeCutoff": "ಈ ದಿನಾಂಕದಂದು ಮಾದರಿಯ ಜ್ಞಾನವು ಕಡಿತಗೊಂಡಿದೆ.",
     "page_TooltipGoogleThinkingBudget": "ಇದು Google ಮಾದರಿಯು 'ಚಿಂತನಾ ಬಜೆಟ್' ಅನ್ನು ಬಳಸುತ್ತದೆ. 'ಚಿಂತನಾ' ಔಟ್‌ಪುಟ್ ಅನ್ನು ಬಿಲ್ ಮಾಡಲಾಗುತ್ತದೆ ಆದರೆ ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸುವುದಿಲ್ಲ.",
     "page_TooltipAnthropicExtendedThinking": "ಇದು Anthropic ಮಾದರಿಯು 'ವಿಸ್ತೃತ ಚಿಂತನೆ'ಯನ್ನು ಬಳಸುತ್ತದೆ. 'ಚಿಂತನೆ' ಔಟ್‌ಪುಟ್‌ಗೆ ಬಿಲ್ ಮಾಡಲಾಗುತ್ತದೆ ಆದರೆ ಅದು ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸುವುದಿಲ್ಲ.",
     "page_TooltipXaiThinking": "ಇದು xAI ಮಾದರಿಯು 'ಚಿಂತನೆ' ಅನ್ನು ಬಳಸುತ್ತದೆ. ಈ ಔಟ್‌ಪುಟ್‌ಗೆ ಬಿಲ್ ಮಾಡಲಾಗಿದೆ ಆದರೆ ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸುವುದಿಲ್ಲ.",
@@ -282,18 +281,53 @@ const kn = {
     "page_TooltipDeepSeekReasoning": "ಇದು DeepSeek ಮಾದರಿಯು 'ತಾರ್ಕಿಕ/ಚಿಂತನೆ' ಅನ್ನು ಬಳಸುತ್ತದೆ. ಔಟ್‌ಪುಟ್‌ಗೆ ಬಿಲ್ ಮಾಡಲಾಗುತ್ತದೆ ಆದರೆ ಅದು ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸುವುದಿಲ್ಲ.",
     "page_TooltipGenericReasoning": "ಈ ಮಾದರಿಯು ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸದ ಆದರೆ ಔಟ್‌ಪುಟ್ ಟೋಕನ್‌ಗಳಾಗಿ ಬಿಲ್ ಮಾಡಲಾದ ತಾರ್ಕಿಕ ಟೋಕನ್‌ಗಳನ್ನು ಬಳಸುತ್ತದೆ.",
     "page_TooltipRequiresVerification": "ಪರಿಶೀಲಿಸುವ ಅಗತ್ಯವಿದೆ OpenAI ಸಂಸ್ಥೆ. ನೀವು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಬಹುದು.",
-    "page_TooltipSupportsLanguage": "{languageName} ಅನ್ನು ಬೆಂಬಲಿಸುತ್ತದೆ",
-    "page_TooltipMayNotSupportLanguage": "ಈ ಮಾದರಿಯು ಸಂಭಾಷಣೆಗಾಗಿ {languageName} ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಬೆಂಬಲಿಸದಿರಬಹುದು.",
+    "page_TooltipSupportsLanguage": "ಬೆಂಬಲಿಸುತ್ತದೆ {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ಈ ಮಾದರಿಯು ಸಂಪೂರ್ಣವಾಗಿ ಬೆಂಬಲಿಸದಿರಬಹುದು {languageName} ಸಂಭಾಷಣೆಗಾಗಿ.",
     "page_BadgePreview": "ಪೂರ್ವವೀಕ್ಷಣೆ",
     "page_BadgeExperimental": "ಪ್ರಾಯೋಗಿಕ",
     "page_BadgeBeta": "ಬೀಟಾ",
     "page_AvailableTTSTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿದೆ Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಇಮೇಜ್ ಮಾದರಿಗಳು",
     "page_NoTTSOptions": "ಇಲ್ಲ TTS ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಆಯ್ಕೆಗಳು.",
     "page_TruncatableNoteFormat": "({ಟಿಪ್ಪಣಿ ಪಠ್ಯ})",
     "page_PricesLastVerifiedOn": "ಬೆಲೆಗಳನ್ನು ಕೊನೆಯದಾಗಿ ಪರಿಶೀಲಿಸಿದ ದಿನಾಂಕ {date}",
-    "page_PricingPerTokens": "ಪ್ರತಿ {amount} ಟೋಕನ್‌ಗಳು",
+    "page_PricingPerTokens": "ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
     "page_ModelCategoryModels": "{model} ಮಾದರಿಗಳು",
+    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
     "ttsVoice_Ugne": "ಬೆಂಕಿಯಲ್ಲಿ",
+    "pricing": {
+        "perMillionTokens": "ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
+        "tokens": "ಟೋಕನ್‌ಗಳು",
+        "free": "ಉಚಿತ",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಪಠ್ಯ ಟೋಕನ್‌ಗಳಿಗೆ",
+                "audioTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಆಡಿಯೋ ಟೋಕನ್‌ಗಳಿಗೆ"
+            },
+            "geminiPro": {
+                "textTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಪಠ್ಯ ಟೋಕನ್‌ಗಳಿಗೆ",
+                "audioTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಆಡಿಯೋ ಟೋಕನ್‌ಗಳಿಗೆ"
+            },
+            "openAIMini": {
+                "textTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಪಠ್ಯ ಟೋಕನ್‌ಗಳಿಗೆ",
+                "audioTokens": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಆಡಿಯೋ ಟೋಕನ್‌ಗಳಿಗೆ"
+            },
+            "openAITTS1": {
+                "standard": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಅಕ್ಷರಗಳಿಗೆ",
+                "neural": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಅಕ್ಷರಗಳಿಗೆ",
+                "studio": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಅಕ್ಷರಗಳಿಗೆ",
+                "chirpHD": "ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+                "chirp3HD": "{price} ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಅಕ್ಷರಗಳಿಗೆ"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "ಸೆಷನ್ ಸೆಟಪ್ ಫಾರ್ಮ್",
         "description": "ಇಲ್ಲಿ ನೀವು LLM ಮತ್ತು ಐಚ್ಛಿಕವನ್ನು ಆಯ್ಕೆ ಮಾಡಬಹುದು TTS ಪ್ರತಿ ಏಜೆಂಟ್‌ಗೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು.",
@@ -309,7 +343,7 @@ const kn = {
         "initialPromptDescription": "ಈ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸುವ ಮೊದಲ ಸಂದೇಶವಾಗಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ನೀವು ಅದನ್ನು ಖಾಲಿ ಬಿಟ್ಟರೆ, ಯಾವುದೇ ಪ್ರಾಂಪ್ಟ್ ಇರುವುದಿಲ್ಲ.",
         "startConversation": "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ",
         "starting": "ಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ...",
-        "startTheConversation": "ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ.",
+        "startTheConversation": "ದಯವಿಟ್ಟು ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ.",
         "languageSupportNote": "ಭಾಷಾ ಬೆಂಬಲ ಸೂಚಕಗಳು ಮಾದರಿ ಹೊಂದಾಣಿಕೆಯನ್ನು ತೋರಿಸುತ್ತವೆ {languageName}. ಬೆಂಬಲವಿಲ್ಲದ ಮಾದರಿಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ.",
         "reasoningNote": "'ಥಿಂಕಿಂಗ್' ಅಥವಾ 'ರೇಸಿಂಗ್' ಟೋಕನ್‌ಗಳನ್ನು ಬಳಸುವ ಮಾದರಿಯನ್ನು ಸೂಚಿಸುತ್ತದೆ. ಈ ಔಟ್‌ಪುಟ್ ಅನ್ನು ಬಿಲ್ ಮಾಡಲಾಗಿದೆ ಆದರೆ ಚಾಟ್‌ನಲ್ಲಿ ಗೋಚರಿಸುವುದಿಲ್ಲ.",
         "openaiOrgVerificationNote": "ಸೂಚಿಸುತ್ತದೆ OpenAI ಮಾದರಿಗೆ ಪರಿಶೀಲಿಸಿದ ಸಂಸ್ಥೆಯ ಅಗತ್ಯವಿದೆ. ನೀವು ಮಾಡಬಹುದು",
@@ -335,15 +369,15 @@ const kn = {
         "backToMain": "ಮುಖ್ಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",
         "conversationHistory": "ಸಂಭಾಷಣೆ ಇತಿಹಾಸ",
         "chatWith": "ಚಾಟ್ ಮಾಡಿ {agentA} & {agentB}",
+        "conversationDescription": "ಪ್ರಾರಂಭವಾದ ದಿನಾಂಕ {date} - ಭಾಷೆ: {language}",
         "viewConversation": "ಸಂಭಾಷಣೆ ವೀಕ್ಷಿಸಿ",
         "backToPreviousChats": "ಹಿಂದಿನ ಚಾಟ್‌ಗಳಿಗೆ ಹಿಂತಿರುಗಿ",
         "resumeConversation": "ಸಂಭಾಷಣೆಯನ್ನು ಪುನರಾರಂಭಿಸಿ",
         "resuming": "ಪುನರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ...",
         "sessionDetails": "ಅಧಿವೇಶನ ವಿವರಗಳು",
-        "language": "ಭಾಷೆ:",
+        "language": "ಭಾಷೆ",
         "transcript": "ಪ್ರತಿಲಿಪಿ",
         "loadingHistory": "ಇತಿಹಾಸವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-        "conversationDescription": "ಪ್ರಾರಂಭವಾದ ದಿನಾಂಕ {date} - ಭಾಷೆ: {language}",
         "loadingConversation": "ಸಂಭಾಷಣೆಯನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
         "chatStartedOn": "ಚಾಟ್ ಪ್ರಾರಂಭವಾದ ದಿನಾಂಕ {date}",
         "agentAModel": "ಏಜೆಂಟ್ ಎ ಮಾಡೆಲ್",
@@ -355,18 +389,8 @@ const kn = {
         "model": "ಮಾದರಿ",
         "voice": "ಧ್ವನಿ"
     },
-    "common_verifyHere": "ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
-    "page_AvailableImageModelsTitle": "ಪ್ರಸ್ತುತ ಲಭ್ಯವಿರುವ ಇಮೇಜ್ ಮಾದರಿಗಳು",
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",
-    "imageModel_PriceUSD": "ಬೆಲೆ (USD)",
-    "page_TooltipKnowledgeCutoff": "ಈ ದಿನಾಂಕದಂದು ಮಾದರಿಯ ಜ್ಞಾನವು ಕಡಿತಗೊಂಡಿದೆ.",
-    "modelCategory_MistralAIPremierModels": "ಪ್ರೀಮಿಯರ್ ಮಾದರಿಗಳು",
-    "modelCategory_MistralAIOpenModels": "ಮುಕ್ತ ಮಾದರಿಗಳು",
-    "pricing": {
-        "perMillionTokens": "ಪ್ರತಿ 1 ಮಿಲಿಯನ್ ಟೋಕನ್‌ಗಳಿಗೆ",
-        "tokens": "ಟೋಕನ್‌ಗಳು",
-        "free": "ಉಚಿತ"
-    }
+    "imageModel_PriceUSD": "ಬೆಲೆ (USD)"
 };
 export default kn;

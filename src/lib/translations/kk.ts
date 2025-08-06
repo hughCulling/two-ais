@@ -71,6 +71,7 @@ const kk = {
         "mn": "моңғол"
     },
     "settings": {
+        "loading": "Параметрлер жүктелуде...",
         "title": "Параметрлер",
         "sections": {
             "appearance": "Сыртқы түрі",
@@ -95,17 +96,17 @@ const kk = {
         },
         "apiKeys": {
             "title": "API Кілттер",
-            "description": "Өзіңізді басқарыңыз API әртүрлі кілттер AI провайдерлер",
-            "saved": "Сақталды",
-            "notSet": "Орнатылмаған",
-            "setKey": "Кілтті орнату",
-            "updateKey": "Жаңарту кілті",
-            "removeKey": "Кілтті алып тастаңыз",
-            "getKeyInstructions": "Өзіңізді алыңыз API кілт",
-            "noNewKeys": "Жаңа жоқ API сақтау үшін енгізілген пернелер.",
-            "unexpectedResponse": "Серверден күтпеген жауап алынды.",
+            "description": "Өзіңізді басқарыңыз API әртүрлі кілттер AI қызметтер.",
+            "setKey": "Орнату",
+            "updateKey": "Жаңарту",
+            "saveUpdateKeys": "Кілттерді сақтау/жаңарту",
+            "saving": "Сақталуда...",
+            "noNewKeys": "Сақтау үшін жаңа кілттер жоқ.",
+            "keyStoredSecurely": "Сіздің API кілт қауіпсіз және шифрланған сақталады.",
+            "enteringNewKeyOverwrites": "Жаңа кілтті енгізу бұрыннан бар кілтті қайта жазады.",
             "failedToSaveKey": "{serviceName} кілтін сақтау сәтсіз аяқталды.",
-            "someKeysNotSaved": "Кейбір API кілттерді сақтау мүмкін болмады. Төмендегі мәліметтерді тексеріңіз.",
+            "unexpectedResponse": "Серверден күтпеген жауап.",
+            "someKeysNotSaved": "Кейбір кілттерді сақтау мүмкін болмады. Жоғарыдағы қателерді тексеріңіз.",
             "keyStatus": "негізгі күй...",
             "apiKeySecurelySaved": "API Кілт қауіпсіз сақталған",
             "confirmRemoveTitle": "Жоюды растау",
@@ -114,16 +115,12 @@ const kk = {
             "successfullyRemovedKey": "{serviceName} кілті сәтті жойылды.",
             "keyNotSet": "Негізгі күй: Орнатылмаған",
             "keySet": "Негізгі күй: орнату",
-            "saveButton": "Сақтау API Кілт(тер)",
-            "enteringNewKeyOverwrites": "Жаңа кілтті енгізу сақталған кілттің үстінен жазады.",
-            "keyStoredSecurely": "Сіздің кілтіңіз қауіпсіз түрде сақталады Google Құпия менеджер.",
-            "saveUpdateKeys": "Кілттерді сақтау/жаңарту",
-            "saving": "Сақталуда..."
-        },
-        "loading": "Параметрлер жүктелуде..."
+            "saveButton": "Сақтау API Кілт(тер)"
+        }
     },
     "main": {
         "title": "AI Әңгімелесу",
+        "aiConversation": "AI Әңгімелесу",
         "setupForm": {
             "title": "Сөйлесуді реттеңіз",
             "agentA": "Агент А",
@@ -153,8 +150,7 @@ const kk = {
             "perMillionTokens": "миллион токенге",
             "input": "Енгізу",
             "output": "Шығару"
-        },
-        "aiConversation": "AI Әңгімелесу"
+        }
     },
     "auth": {
         "login": {
@@ -175,9 +171,9 @@ const kk = {
             "passwordPlaceholder": "Құпия сөз (кемінде 6 таңба)",
             "signUp": "Тіркелу",
             "signUpWithGoogle": "-мен тіркеліңіз Google",
-            "hasAccount": "Есептік жазбаңыз әлдеқашан бар ма?",
+            "hasAccount": "Есептік жазбаңыз бар ма?",
             "signIn": "Кіру",
-            "emailLabel": "Email мекенжайы",
+            "emailLabel": "Электрондық поштаның адресі",
             "confirmPasswordPlaceholder": "Құпия сөзді Растау",
             "signingUp": "Тіркелуде..."
         },
@@ -185,7 +181,7 @@ const kk = {
             "invalidCredentials": "Жарамсыз электрондық пошта немесе құпия сөз",
             "userNotFound": "Пайдаланушы табылмады",
             "weakPassword": "Құпия сөз кемінде 6 таңбадан тұруы керек",
-            "emailInUse": "Email қазірдің өзінде қолданыста",
+            "emailInUse": "Электрондық пошта бұрыннан қолданыста",
             "generic": "Қате орын алды. Қайталап көріңіз.",
             "initialization": "Инициализация қатесі. Тағы жасауды сәл кейінірек көріңізді өтінеміз.",
             "invalidEmail": "Жарамды электрондық пошта мекенжайын енгізіңіз.",
@@ -229,12 +225,14 @@ const kk = {
     "modelCategory_Gemini2_0": "Gemini 2.0 модельдер",
     "modelCategory_Gemini1_5": "Gemini 1.5 модельдер",
     "modelCategory_Claude4": "Claude 4 модельдер",
-    "modelCategory_Claude3_7": "Claude 3.7 модельдер",
+    "modelCategory_Claude3_7": "Claude 3.7 үлгі",
     "modelCategory_Claude3_5": "Claude 3.5 модельдер",
     "modelCategory_Claude3": "Claude 3 модельдер",
-    "modelCategory_Grok4": "Grok 4 модельдер",
+    "modelCategory_Grok4": "Grok 4 үлгі",
     "modelCategory_Grok3": "Grok 3 модельдер",
     "modelCategory_Grok3Mini": "Grok 3 Шағын модельдер",
+    "modelCategory_MistralAIPremierModels": "Бастапқы модельдер",
+    "modelCategory_MistralAIOpenModels": "Ашық үлгі",
     "modelCategory_Llama4": "Llama 4 үлгі",
     "modelCategory_Llama3_3": "Llama 3.3 үлгілері",
     "modelCategory_Llama3_2": "Llama 3.2 үлгілері",
@@ -246,18 +244,18 @@ const kk = {
     "modelCategory_Gemma2": "Gemma 2 үлгі",
     "modelCategory_Gemma": "Gemma модельдер",
     "modelCategory_GoogleGemma": "Google Gemma Модельдер",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 үлгілері",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 үлгілері",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 үлгісі",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 моделі",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill үлгілері",
     "modelCategory_DeepSeekModels": "DeepSeek Модельдер",
     "modelCategory_MistralAIModels": "Mistral AI Модельдер",
-    "modelCategory_Qwen3": "Qwen3 модель",
-    "modelCategory_QwQwQ": "Qwen QwQ үлгілері",
+    "modelCategory_Qwen3": "Qwen3 үлгі",
+    "modelCategory_QwQwQ": "Qwen QwQ үлгісі",
     "modelCategory_Qwen2_5": "Qwen2.5 үлгілері",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Көру үлгілері",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Кодер модельдері",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Көру моделі",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Кодер үлгісі",
     "modelCategory_Qwen2": "Qwen2 үлгі",
-    "modelCategory_Qwen2Vision": "Qwen2 Көру үлгілері",
+    "modelCategory_Qwen2Vision": "Qwen2 Көру үлгісі",
     "modelCategory_QwenModels": "Qwen Модельдер",
     "modelCategory_OtherModels": "Басқа үлгілер",
     "page_ErrorLoadingUserData": "Пайдаланушы деректерін жүктеу мүмкін болмады: {errorMessage}. Жаңартып көріңіз.",
@@ -269,31 +267,67 @@ const kk = {
     "page_LoadingUserData": "Пайдаланушы деректері жүктелуде...",
     "page_ErrorAlertTitle": "Қате",
     "page_WelcomeTitle": "қош келдіңіз Two AIs",
-    "page_WelcomeSubtitle": "Бұл веб-сайт екі арасындағы әңгімелерді тыңдауға мүмкіндік береді Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Бұл веб-сайт екі арасындағы әңгімелерді тыңдауға мүмкіндік береді Large Language Models (LLMs) және әр бұрылыс үшін кескіндерді жасаңыз.",
     "page_ApiKeysRequiredTitle": "API Кілттер қажет",
     "page_ApiKeysRequiredDescription": "Әңгімелесулерді іске қосу үшін өзіңізді қамтамасыз етуіңіз керек API үшін кілттер AI пайдаланғыңыз келетін үлгілер (мысалы, OpenAI, Google, Anthropic) жүйеге кіргеннен кейін. Әрбір провайдерге арналған егжей-тегжейлі нұсқауларды Параметрлер / бөлімінде табуға болады. API Жүйеге кіргеннен кейін кілттер беті.",
-    "page_SignInPrompt": "Жеке сеансты бастау үшін тақырыптағы сілтемені пайдаланып жүйеге кіруге немесе тіркелгі жасауыңызға болады.",
+    "page_SignInPrompt": "Жеке сеансты бастау үшін тақырыптағы сілтеме арқылы жүйеге кіруге немесе тіркелгі жасауыңызға болады.",
     "page_VideoTitle": "Two AIs Әңгімелесу демо",
     "page_AvailableLLMsTitle": "Қазіргі уақытта қол жетімді LLMs",
+    "page_TooltipKnowledgeCutoff": "Модельдің білімі осы күні үзіледі.",
     "page_TooltipGoogleThinkingBudget": "Бұл Google модель «ойлау бюджетін» пайдаланады. «Ойлау» шығысы шоттан тұрады, бірақ чатта көрінбейді.",
     "page_TooltipAnthropicExtendedThinking": "Бұл Anthropic модель «кеңейтілген ойлауды» пайдаланады. «Ойлау» шығысы шоттан тұрады, бірақ чатта көрінбейді.",
     "page_TooltipXaiThinking": "Бұл xAI модель «ойлауды» пайдаланады. Бұл шығыс шоттан тұрады, бірақ чатта көрінбейді.",
     "page_TooltipQwenReasoning": "Бұл Qwen модель «ойлау/ойлауды» пайдаланады. Бұл шығыс шоттан тұрады, бірақ чатта көрінбейді.",
     "page_TooltipDeepSeekReasoning": "Бұл DeepSeek модель «ойлау/ойлауды» пайдаланады. Шығару шоттан тұрады, бірақ чатта көрінбейді.",
     "page_TooltipGenericReasoning": "Бұл модель чатта көрінбейтін, бірақ шығыс таңбалауыштары ретінде есептелетін пайымдау таңбалауыштарын пайдаланады.",
-    "page_TooltipRequiresVerification": "Тексеруді талап етеді OpenAI ұйымдастыру. Мұнда тексеруге болады.",
-    "page_TooltipSupportsLanguage": "{languageName} тілін қолдайды",
-    "page_TooltipMayNotSupportLanguage": "Бұл модель сөйлесу үшін {languageName} тілін толық қолдамауы мүмкін.",
+    "page_TooltipRequiresVerification": "Тексеруді талап етеді OpenAI ұйымдастыру. Мұнда растауға болады.",
+    "page_TooltipSupportsLanguage": "Қолдайды {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Бұл модель толық қолдау көрсетпеуі мүмкін {languageName} әңгіме үшін.",
     "page_BadgePreview": "Алдын ала қарау",
     "page_BadgeExperimental": "Эксперименттік",
     "page_BadgeBeta": "Бета",
     "page_AvailableTTSTitle": "Қазіргі уақытта қол жетімді Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Қазіргі уақытта қол жетімді кескін үлгілері",
     "page_NoTTSOptions": "Жоқ TTS опциялар қазіргі уақытта қол жетімді.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Бағалар соңғы рет расталған күні {date}",
-    "page_PricingPerTokens": "пер {amount} Токендер",
+    "page_PricingPerTokens": "1 миллион токенге",
     "page_ModelCategoryModels": "{model} модельдер",
+    "common_verifyHere": "осы жерден тексеріңіз",
     "ttsVoice_Ugne": "Өртте",
+    "pricing": {
+        "perMillionTokens": "1 миллион токенге",
+        "tokens": "жетондар",
+        "free": "Тегін",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 миллион мәтіндік токенге",
+                "audioTokens": "{price} 1 миллион аудио токенге"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 миллион мәтіндік токенге",
+                "audioTokens": "{price} 1 миллион аудио токенге"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 миллион мәтіндік токенге",
+                "audioTokens": "{price} 1 миллион аудио токенге"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 миллион токенге"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 миллион токенге"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 миллион таңбаға",
+                "neural": "{price} 1 миллион таңбаға",
+                "studio": "{price} 1 миллион таңбаға",
+                "chirpHD": "Растау мүмкін болмады",
+                "chirp3HD": "{price} 1 миллион таңбаға"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Сеансты орнату пішімі",
         "description": "Мұнда LLM және қосымша таңдауға болады TTS әр агент үшін параметрлер.",
@@ -335,15 +369,15 @@ const kk = {
         "backToMain": "Бастыға оралу",
         "conversationHistory": "Әңгімелесу тарихы",
         "chatWith": "Чат {agentA} & {agentB}",
+        "conversationDescription": "Басталды {date} - Тіл: {language}",
         "viewConversation": "Сөйлесуді көру",
         "backToPreviousChats": "Алдыңғы чаттарға оралу",
         "resumeConversation": "Сөйлесуді жалғастыру",
         "resuming": "Жалғастыруда...",
         "sessionDetails": "Сеанс мәліметтері",
-        "language": "Тіл:",
+        "language": "Тіл",
         "transcript": "Транскрипт",
         "loadingHistory": "Тарих жүктелуде...",
-        "conversationDescription": "Басталды {date} - Тіл: {language}",
         "loadingConversation": "Әңгімелесу жүктелуде...",
         "chatStartedOn": "Чат басталды {date}",
         "agentAModel": "Модель агенті",
@@ -355,18 +389,8 @@ const kk = {
         "model": "Үлгі",
         "voice": "Дауыс"
     },
-    "common_verifyHere": "осы жерден тексеріңіз",
-    "page_AvailableImageModelsTitle": "Қазіргі уақытта қол жетімді кескін үлгілері",
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
-    "imageModel_PriceUSD": "Бағасы (USD)",
-    "page_TooltipKnowledgeCutoff": "Модельдің білімі осы күні үзіледі.",
-    "modelCategory_MistralAIPremierModels": "Бастапқы модельдер",
-    "modelCategory_MistralAIOpenModels": "Ашық үлгілер",
-    "pricing": {
-        "perMillionTokens": "1 миллион токенге",
-        "tokens": "жетондар",
-        "free": "Тегін"
-    }
+    "imageModel_PriceUSD": "Бағасы (USD)"
 };
 export default kk;

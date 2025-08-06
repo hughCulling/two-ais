@@ -57,7 +57,7 @@ const sv = {
         "kn": "Kannada",
         "mk": "Makedonska",
         "ml": "malayalam",
-        "mr": "marathiska",
+        "mr": "Marathiska",
         "ms": "Malajiska",
         "my": "Burmesiska",
         "pa": "Punjabi",
@@ -71,6 +71,7 @@ const sv = {
         "mn": "Mongoliska"
     },
     "settings": {
+        "loading": "Laddar inställningar...",
         "title": "Inställningar",
         "sections": {
             "appearance": "Utseende",
@@ -95,17 +96,17 @@ const sv = {
         },
         "apiKeys": {
             "title": "API Nycklar",
-            "description": "Hantera din API nycklar för olika AI leverantörer",
-            "saved": "Sparad",
-            "notSet": "Inte inställd",
-            "setKey": "Ställ in nyckel",
-            "updateKey": "Uppdatera nyckel",
-            "removeKey": "Ta bort nyckel",
-            "getKeyInstructions": "Få din API nyckel",
-            "noNewKeys": "Inget nytt API tangenterna anges för att spara.",
-            "unexpectedResponse": "Fick ett oväntat svar från servern.",
+            "description": "Hantera din API nycklar för olika AI tjänster.",
+            "setKey": "Uppsättning",
+            "updateKey": "Uppdatera",
+            "saveUpdateKeys": "Spara/uppdatera nycklar",
+            "saving": "Sparande...",
+            "noNewKeys": "Inga nya nycklar att spara.",
+            "keyStoredSecurely": "Din API Nyckeln kommer att lagras säkert och krypterad.",
+            "enteringNewKeyOverwrites": "Om du anger en ny nyckel skrivs den befintliga över.",
             "failedToSaveKey": "Kunde inte spara nyckeln {serviceName}.",
-            "someKeysNotSaved": "Några API Nycklarna kunde inte sparas. Kontrollera informationen nedan.",
+            "unexpectedResponse": "Oväntat svar från servern.",
+            "someKeysNotSaved": "Vissa nycklar kunde inte sparas. Kontrollera felen ovan.",
             "keyStatus": "nyckelstatus...",
             "apiKeySecurelySaved": "API Nyckel säkert sparad",
             "confirmRemoveTitle": "Bekräfta borttagning",
@@ -114,18 +115,14 @@ const sv = {
             "successfullyRemovedKey": "Nyckeln {serviceName} har tagits bort.",
             "keyNotSet": "Nyckelstatus: Inte inställd",
             "keySet": "Nyckelstatus: Inställd",
-            "saveButton": "Spara API Nyckel(ar)",
-            "enteringNewKeyOverwrites": "Om du anger en ny nyckel skrivs den sparade över.",
-            "keyStoredSecurely": "Din nyckel kommer att förvaras säkert med hjälp av Google Hemlig chef.",
-            "saveUpdateKeys": "Spara/uppdatera nycklar",
-            "saving": "Sparande..."
-        },
-        "loading": "Laddar inställningar..."
+            "saveButton": "Spara API Nyckel(ar)"
+        }
     },
     "main": {
         "title": "AI Konversation",
+        "aiConversation": "AI Konversation",
         "setupForm": {
-            "title": "Ställ in din konversation",
+            "title": "Konfigurera din konversation",
             "agentA": "Agent A",
             "agentB": "Agent B",
             "model": "Modell",
@@ -141,7 +138,7 @@ const sv = {
                 "selectModel": "Välja TTS modell"
             },
             "startConversation": "Starta konversation",
-            "conversationPrompt": "Börja samtalet."
+            "conversationPrompt": "Vänligen starta konversationen."
         },
         "conversation": {
             "thinking": "tänkande...",
@@ -153,8 +150,7 @@ const sv = {
             "perMillionTokens": "per miljon tokens",
             "input": "Input",
             "output": "Produktion"
-        },
-        "aiConversation": "AI Konversation"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const sv = {
             "signUpWithGoogle": "Registrera dig med Google",
             "hasAccount": "Har du redan ett konto?",
             "signIn": "Logga in",
-            "emailLabel": "Email adress",
+            "emailLabel": "E-postadress",
             "confirmPasswordPlaceholder": "Bekräfta lösenord",
             "signingUp": "Registrerar dig..."
         },
@@ -185,7 +181,7 @@ const sv = {
             "invalidCredentials": "Ogiltig e-postadress eller lösenord",
             "userNotFound": "Användaren hittades inte",
             "weakPassword": "Lösenordet ska vara minst 6 tecken långt",
-            "emailInUse": "Email redan i bruk",
+            "emailInUse": "E-postadressen används redan",
             "generic": "Ett fel uppstod. Försök igen.",
             "initialization": "Initialiseringsfel. Försök igen senare.",
             "invalidEmail": "Ange en giltig e-postadress.",
@@ -194,7 +190,7 @@ const sv = {
             "unknownSignInError": "Ett okänt fel uppstod under inloggningen.",
             "profileSaveFailedPrefix": "Inloggad, men misslyckades med att spara profildata: ",
             "profileCheckSaveFailedPrefix": "Inloggad, men misslyckades med att kontrollera/spara profildata: ",
-            "accountExistsWithDifferentCredential": "Ett konto finns redan med den här e-postadressen som använder en annan inloggningsmetod.",
+            "accountExistsWithDifferentCredential": "Det finns redan ett konto med den här e-postadressen som använder en annan inloggningsmetod.",
             "googleSignInFailedPrefix": "Google Inloggningen misslyckades: ",
             "unknownGoogleSignInError": "Ett okänt fel uppstod under Google Logga in.",
             "passwordsDoNotMatch": "Lösenorden matchar inte.",
@@ -229,12 +225,14 @@ const sv = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeller",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeller",
     "modelCategory_Claude4": "Claude 4 modeller",
-    "modelCategory_Claude3_7": "Claude 3.7 modeller",
+    "modelCategory_Claude3_7": "Claude 3.7 modell",
     "modelCategory_Claude3_5": "Claude 3.5 modeller",
     "modelCategory_Claude3": "Claude 3 modeller",
-    "modelCategory_Grok4": "Grok 4 modeller",
+    "modelCategory_Grok4": "Grok 4 modell",
     "modelCategory_Grok3": "Grok 3 modeller",
     "modelCategory_Grok3Mini": "Grok 3 Minimodeller",
+    "modelCategory_MistralAIPremierModels": "Premier-modeller",
+    "modelCategory_MistralAIOpenModels": "Öppen modell",
     "modelCategory_Llama4": "Llama 4 modeller",
     "modelCategory_Llama3_3": "Llama 3.3-modeller",
     "modelCategory_Llama3_2": "Llama 3.2-modeller",
@@ -246,18 +244,18 @@ const sv = {
     "modelCategory_Gemma2": "Gemma 2-modell",
     "modelCategory_Gemma": "Gemma modeller",
     "modelCategory_GoogleGemma": "Google Gemma Modeller",
-    "modelCategory_DeepSeekR1": "DeepSeek R1-modeller",
-    "modelCategory_DeepSeekV3": "DeepSeek V3-modeller",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-modellen",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-modell",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Destill-modeller",
     "modelCategory_DeepSeekModels": "DeepSeek Modeller",
     "modelCategory_MistralAIModels": "Mistral AI Modeller",
-    "modelCategory_Qwen3": "Qwen3 modeller",
-    "modelCategory_QwQwQ": "Qwen QwQ-modeller",
+    "modelCategory_Qwen3": "Qwen3-modell",
+    "modelCategory_QwQwQ": "Qwen QwQ-modellen",
     "modelCategory_Qwen2_5": "Qwen2.5-modeller",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-modeller",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodarmodeller",
-    "modelCategory_Qwen2": "Qwen2 modeller",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision-modeller",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-modell",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodarmodell",
+    "modelCategory_Qwen2": "Qwen2-modell",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision-modell",
     "modelCategory_QwenModels": "Qwen Modeller",
     "modelCategory_OtherModels": "Andra modeller",
     "page_ErrorLoadingUserData": "Misslyckades med att ladda användardata: {errorMessage}. Försök att uppdatera.",
@@ -269,12 +267,13 @@ const sv = {
     "page_LoadingUserData": "Laddar användardata...",
     "page_ErrorAlertTitle": "Fel",
     "page_WelcomeTitle": "Välkommen till Two AIs",
-    "page_WelcomeSubtitle": "Den här webbplatsen låter dig lyssna på samtal mellan två Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Den här webbplatsen låter dig lyssna på samtal mellan två Large Language Models (LLMs) och generera bilder för varje tur.",
     "page_ApiKeysRequiredTitle": "API Nycklar krävs",
     "page_ApiKeysRequiredDescription": "För att kunna genomföra konversationer måste du ange dina egna API nycklar för AI modeller du vill använda (t.ex. OpenAI, Google, Anthropic) efter inloggning. Detaljerade instruktioner för varje leverantör finns i Inställningar / API Nyckelsidan efter inloggning.",
     "page_SignInPrompt": "För att starta din egen session kan du logga in eller skapa ett konto med hjälp av länken i rubriken.",
     "page_VideoTitle": "Two AIs Konversationsdemo",
     "page_AvailableLLMsTitle": "För närvarande tillgänglig LLMs",
+    "page_TooltipKnowledgeCutoff": "Modellens kunskap är avstängd vid detta datum.",
     "page_TooltipGoogleThinkingBudget": "Detta Google Modellen använder en \"tänkande budget\". \"Tänkande\"-utdata faktureras men syns inte i chatten.",
     "page_TooltipAnthropicExtendedThinking": "Detta Anthropic Modellen använder \"utökat tänkande\". Utdata för \"tänkande\" faktureras men syns inte i chatten.",
     "page_TooltipXaiThinking": "Detta xAI Modellen använder \"tänkande\". Denna utdata faktureras men syns inte i chatten.",
@@ -283,17 +282,52 @@ const sv = {
     "page_TooltipGenericReasoning": "Den här modellen använder resonemangstokens som inte syns i chatten men faktureras som utdatatokens.",
     "page_TooltipRequiresVerification": "Kräver verifiering OpenAI organisation. Du kan verifiera här.",
     "page_TooltipSupportsLanguage": "Stöder {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Den här modellen kanske inte har fullt stöd för {languageName} för konversation.",
+    "page_TooltipMayNotSupportLanguage": "Den här modellen kanske inte stöder helt {languageName} för samtal.",
     "page_BadgePreview": "Förhandsvisning",
     "page_BadgeExperimental": "Experimentell",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "För närvarande tillgänglig Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "För närvarande tillgängliga bildmodeller",
     "page_NoTTSOptions": "Inga TTS alternativ som för närvarande finns tillgängliga.",
     "page_TruncatableNoteFormat": "({nottext})",
     "page_PricesLastVerifiedOn": "Priserna senast verifierade {date}",
-    "page_PricingPerTokens": "per {amount} Polletter",
+    "page_PricingPerTokens": "per 1 miljon tokens",
     "page_ModelCategoryModels": "{model} modeller",
+    "common_verifyHere": "verifiera här",
     "ttsVoice_Ugne": "I elden",
+    "pricing": {
+        "perMillionTokens": "per 1 miljon tokens",
+        "tokens": "tokens",
+        "free": "Gratis",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 miljon texttokens",
+                "audioTokens": "{price} per 1 miljon ljudtokens"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 miljon texttokens",
+                "audioTokens": "{price} per 1 miljon ljudtokens"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 miljon texttokens",
+                "audioTokens": "{price} per 1 miljon ljudtokens"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 miljon tokens"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 miljon tokens"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 miljon tecken",
+                "neural": "{price} per 1 miljon tecken",
+                "studio": "{price} per 1 miljon tecken",
+                "chirpHD": "Kunde inte verifiera",
+                "chirp3HD": "{price} per 1 miljon tecken"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulär för sessionsuppsättning",
         "description": "Här kan du välja LLM och valfria TTS inställningar för varje agent.",
@@ -309,7 +343,7 @@ const sv = {
         "initialPromptDescription": "Den här frågan skickas som det första meddelandet för att starta konversationen. Om du lämnar den tom kommer det ingen fråga att visas.",
         "startConversation": "Starta konversation",
         "starting": "Startande...",
-        "startTheConversation": "Börja samtalet.",
+        "startTheConversation": "Vänligen starta konversationen.",
         "languageSupportNote": "Indikatorer för språkstöd visar modellkompatibilitet med {languageName}Modeller utan stöd är inaktiverade.",
         "reasoningNote": "Indikerar att en modell använder \"tänkande\"- eller \"resonemangs\"-tokens. Denna utdata faktureras men syns inte i chatten.",
         "openaiOrgVerificationNote": "Indikerar en OpenAI modellen kräver en verifierad organisation. Du kan",
@@ -335,15 +369,15 @@ const sv = {
         "backToMain": "Tillbaka till huvudmenyn",
         "conversationHistory": "Konversationshistorik",
         "chatWith": "Chatta med {agentA} & {agentB}",
+        "conversationDescription": "Började den {date} - Språk: {language}",
         "viewConversation": "Visa konversation",
         "backToPreviousChats": "Tillbaka till tidigare chattar",
         "resumeConversation": "Återuppta konversationen",
         "resuming": "Återupptar...",
         "sessionDetails": "Sessionsdetaljer",
-        "language": "Språk:",
+        "language": "Språk",
         "transcript": "Avskrift",
         "loadingHistory": "Laddar historik...",
-        "conversationDescription": "Började den {date} - Språk: {language}",
         "loadingConversation": "Laddar konversation...",
         "chatStartedOn": "Chatten startade den {date}",
         "agentAModel": "Agent A-modell",
@@ -355,18 +389,8 @@ const sv = {
         "model": "Modell",
         "voice": "Röst"
     },
-    "common_verifyHere": "verifiera här",
-    "page_AvailableImageModelsTitle": "För närvarande tillgängliga bildmodeller",
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Storlek",
-    "imageModel_PriceUSD": "Pris (USD)",
-    "page_TooltipKnowledgeCutoff": "Modellens kunskap är avstängd vid detta datum.",
-    "modelCategory_MistralAIPremierModels": "Premier-modeller",
-    "modelCategory_MistralAIOpenModels": "Öppna modeller",
-    "pricing": {
-        "perMillionTokens": "per 1 miljon tokens",
-        "tokens": "tokens",
-        "free": "Gratis"
-    }
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default sv;

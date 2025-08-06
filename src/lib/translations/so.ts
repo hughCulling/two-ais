@@ -71,6 +71,7 @@ const so = {
         "mn": "Mongoliyaan"
     },
     "settings": {
+        "loading": "Dejinta dejinta...",
         "title": "Dejinta",
         "sections": {
             "appearance": "Muuqashada",
@@ -88,42 +89,38 @@ const so = {
             "title": "Luuqad",
             "description": "Dooro luqadda aad doorbidayso interface-ka",
             "conversationLanguage": "Luuqadda Wadahadalka",
-            "conversationLanguageDescription": "Luuqada loo isticmaalo AI wada sheekaysigu waxa uu ku haboonaan doona luqadaada interneedka",
+            "conversationLanguageDescription": "Luuqada loo isticmaalo AI wada sheekaysigu waxa uu ku haboonaan doona luuqadaada interneedka",
             "supportedLanguages": "Luuqadaha la taageeray",
             "languageSupportInformation": "Macluumaadka Taageerada Luuqadda",
             "aiAgentsLanguageDescription": "Sheekadii dhexmartay AI Wakiilada waxaa lagu qaban doonaa luqadaada aad dooratay."
         },
         "apiKeys": {
             "title": "API Furayaasha",
-            "description": "Maamul kaaga API furayaasha kala duwan AI bixiyayaasha",
-            "saved": "Badbaadiyay",
-            "notSet": "Lama dejin",
-            "setKey": "Deji furaha",
-            "updateKey": "Cusbooneysii furaha",
-            "removeKey": "Ka saar furaha",
-            "getKeyInstructions": "Hel kaaga API furaha",
-            "noNewKeys": "Wax cusub maaha API furayaasha la geliyey si loo kaydiyo.",
-            "unexpectedResponse": "Waxa uu ka helay server-ka jawaab lama filaan ah",
+            "description": "Maamul kaaga API furayaasha kala duwan AI adeegyada.",
+            "setKey": "Deji",
+            "updateKey": "Cusbooneysii",
+            "saveUpdateKeys": "Keydi / Cusbooneysii furayaasha",
+            "saving": "Keydinaya...",
+            "noNewKeys": "Ma jiraan fureyaal cusub oo la keydiyo",
+            "keyStoredSecurely": "Adiga API furaha si ammaan ah ayaa loo kaydin doonaa oo si qarsoodi ah loo dhigi doonaa.",
+            "enteringNewKeyOverwrites": "Gelida furaha cusub waxay dib u qori doontaa kii hore.",
             "failedToSaveKey": "Ku guuldareystay inuu keydiyo {serviceName} furaha.",
-            "someKeysNotSaved": "Qaar API furayaasha waa la keydin waayay Fadlan hoos ka hubi faahfaahinta",
+            "unexpectedResponse": "Jawaab lama filaan ah oo ka timid server-ka",
+            "someKeysNotSaved": "Furayaasha qaar waa la keydin waayay Fadlan hubi khaladaadka sare",
             "keyStatus": "heerka muhiimka ah...",
-            "apiKeySecurelySaved": "API Furaha si ammaan ah ayaa loo keydiyay",
+            "apiKeySecurelySaved": "API Furaha si ammaan ah loo xafiday",
             "confirmRemoveTitle": "Xaqiiji ka saarida",
             "confirmRemoveDescription": "Ma hubtaa inaad rabto inaad meesha ka saarto API furaha {serviceName}? Tallaabadan lama noqon karo.",
             "failedToRemoveKey": "Ku guuldareystay in la saaro {serviceName} furaha.",
-            "successfullyRemovedKey": "Si guul leh ayaa looga saaray furaha {serviceName}",
+            "successfullyRemovedKey": "Si guul leh ayaa meesha looga saaray furaha {serviceName}",
             "keyNotSet": "Xaaladda Furaha: Lama Dejin",
             "keySet": "Xaaladda Furaha: Deji",
-            "saveButton": "Badbaadin API Furayaasha",
-            "enteringNewKeyOverwrites": "Gelida furaha cusub waxay dib u qori doontaa kii la badbaadiyay.",
-            "keyStoredSecurely": "Furahaaga waxaa loo kaydin doonaa si ammaan ah iyadoo la isticmaalayo Google Maareeyaha Sirta.",
-            "saveUpdateKeys": "Keydi / Cusbooneysii furayaasha",
-            "saving": "Keydinaya..."
-        },
-        "loading": "Dejinta dejinta..."
+            "saveButton": "Badbaadin API Furayaasha"
+        }
     },
     "main": {
         "title": "AI Wada sheekeysi",
+        "aiConversation": "AI Wada sheekeysi",
         "setupForm": {
             "title": "deji wadahadalkaaga",
             "agentA": "Wakiilka A",
@@ -141,7 +138,7 @@ const so = {
                 "selectModel": "Dooro TTS model"
             },
             "startConversation": "Bilow wada sheekeysiga",
-            "conversationPrompt": "Bilow wada hadalka"
+            "conversationPrompt": "Fadlan bilow wada hadalka"
         },
         "conversation": {
             "thinking": "fikirka...",
@@ -153,8 +150,7 @@ const so = {
             "perMillionTokens": "halkii milyan oo calaamadood",
             "input": "Gelida",
             "output": "Wax soo saarka"
-        },
-        "aiConversation": "AI Wada sheekeysi"
+        }
     },
     "auth": {
         "login": {
@@ -165,7 +161,7 @@ const so = {
             "signInWithGoogle": "La soo gal Google",
             "noAccount": "Xisaab ma lihid?",
             "signUp": "Isdiiwaangeli",
-            "forgotPassword": "Ilowday erayga sirta ah?",
+            "forgotPassword": "Ilmaamay erayga sirta ah?",
             "orContinueWith": "Ama sii wad",
             "signingIn": "Soo galitaanka..."
         },
@@ -175,9 +171,9 @@ const so = {
             "passwordPlaceholder": "Furaha (ugu yaraan 6 xaraf)",
             "signUp": "Isdiiwaangeli",
             "signUpWithGoogle": "Ku biir Google",
-            "hasAccount": "Horeba akoon baad u leedahay?",
+            "hasAccount": "Horeba akoon u yeeshay?",
             "signIn": "Soo gal",
-            "emailLabel": "Email ciwaanka",
+            "emailLabel": "Ciwaanka iimaylka",
             "confirmPasswordPlaceholder": "Xaqiiji erayga sirta ah",
             "signingUp": "Isdiiwaangalinta..."
         },
@@ -185,15 +181,15 @@ const so = {
             "invalidCredentials": "Iimayl ama erayga sirta ah ee aan sax ahayn",
             "userNotFound": "Isticmaalaha lama helin",
             "weakPassword": "Erayga sirta ah waa inuu ahaadaa ugu yaraan 6 xaraf",
-            "emailInUse": "Email mar hore la isticmaalay",
+            "emailInUse": "Iimayl horay loo isticmaalay",
             "generic": "Khalad ayaa dhacay Fadlan isku day mar kale",
             "initialization": "Khaladka bilaabista Fadlan isku day mar kale hadhow",
             "invalidEmail": "Fadlan geli ciwaan email sax ah",
-            "tooManyRequests": "Gelitaanka si ku meel gaar ah ayaa loo joojiyay sababo la xiriira isku dayo galitaanka oo aad u badan. Fadlan dib u deji eraygaaga sirta ah ama isku day mar kale hadhow.",
+            "tooManyRequests": "Gelitaanka si ku meel gaar ah ayaa loo joojiyay sababo la xiriira isku dayo galitaanka oo aad u badan oo fashilmay. Fadlan dib u deji eraygaaga sirta ah ama isku day mar kale hadhow.",
             "signInFailedPrefix": "Soo galitaanka waa guuldareystay: ",
             "unknownSignInError": "Khalad aan la garanayn ayaa dhacay markii la soo galayay",
             "profileSaveFailedPrefix": "Soo gal, laakiin wuu ku guul daraystay inuu kaydiyo xogta astaanta guud: ",
-            "profileCheckSaveFailedPrefix": "Soo gal, laakiin wuu ku guul daraystay inuu hubiyo/ kaydiyo xogta astaanta guud: ",
+            "profileCheckSaveFailedPrefix": "Soo gal, laakiin wuu ku guul daraystay inuu hubiyo/ kaydiyo xogta astaanta: ",
             "accountExistsWithDifferentCredential": "Koonto ayaa hore ugu jirtay iimaylkan iyadoo la isticmaalayo hab gelid ka duwan.",
             "googleSignInFailedPrefix": "Google Soo gelitaanku waa fashilmay: ",
             "unknownGoogleSignInError": "Khalad aan la garanayn ayaa dhacay intii lagu jiray Google Soo gal",
@@ -229,12 +225,14 @@ const so = {
     "modelCategory_Gemini2_0": "Gemini 2.0 moodooyinka",
     "modelCategory_Gemini1_5": "Gemini 1.5 moodooyinka",
     "modelCategory_Claude4": "Claude 4 moodooyinka",
-    "modelCategory_Claude3_7": "Claude 3.7 moodooyinka",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 moodooyinka",
     "modelCategory_Claude3": "Claude 3 moodooyinka",
-    "modelCategory_Grok4": "Grok 4 moodooyinka",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 moodooyinka",
     "modelCategory_Grok3Mini": "Grok 3 Moodooyinka yaryar",
+    "modelCategory_MistralAIPremierModels": "moodooyinka Premier",
+    "modelCategory_MistralAIOpenModels": "Qaabka furan",
     "modelCategory_Llama4": "Llama 4 nooc",
     "modelCategory_Llama3_3": "Llama 3.3 moodooyinka",
     "modelCategory_Llama3_2": "Llama 3.2 moodooyinka",
@@ -246,18 +244,18 @@ const so = {
     "modelCategory_Gemma2": "Gemma 2 nooc",
     "modelCategory_Gemma": "Gemma moodooyinka",
     "modelCategory_GoogleGemma": "Google Gemma Qaababka",
-    "modelCategory_DeepSeekR1": "DeepSeek moodooyinka R1",
-    "modelCategory_DeepSeekV3": "DeepSeek moodooyinka V3",
+    "modelCategory_DeepSeekR1": "DeepSeek model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek qaabka V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill moodooyinka",
     "modelCategory_DeepSeekModels": "DeepSeek Qaababka",
     "modelCategory_MistralAIModels": "Mistral AI Qaababka",
     "modelCategory_Qwen3": "Qwen3 nooc",
-    "modelCategory_QwQwQ": "Qwen moodooyinka QwQ",
+    "modelCategory_QwQwQ": "Qwen Qaabka QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 moodooyinka",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 moodooyinka aragga",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Moodooyinka Coder",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Qaabka aragga",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Qaabka Coder",
     "modelCategory_Qwen2": "Qwen2 nooc",
-    "modelCategory_Qwen2Vision": "Qwen2 moodooyinka aragga",
+    "modelCategory_Qwen2Vision": "Qwen2 Qaabka aragga",
     "modelCategory_QwenModels": "Qwen Qaababka",
     "modelCategory_OtherModels": "Qaababka kale",
     "page_ErrorLoadingUserData": "Ku guuldareystay inuu soo geliyo xogta isticmaalaha: {errorMessage}. Fadlan isku day inaad soo cusboonaysiiso",
@@ -269,34 +267,70 @@ const so = {
     "page_LoadingUserData": "Soo dejinaya xogta isticmaalaha...",
     "page_ErrorAlertTitle": "Khalad",
     "page_WelcomeTitle": "Ku soo dhawoow Two AIs",
-    "page_WelcomeSubtitle": "Mareegtan ayaa kuu ogolaanaysa inaad dhegaysato wada sheekaysiga laba u dhexeeya Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Mareegtan ayaa kuu ogolaanaysa inaad dhegaysato wada sheekaysiga laba u dhexeeya Large Language Models (LLMs) oo soo saar sawiro wareeg kasta.",
     "page_ApiKeysRequiredTitle": "API Furayaasha loo baahan yahay",
     "page_ApiKeysRequiredDescription": "Si aad u socodsiiso wada sheekaysiga, waxaad u baahan doontaa inaad bixiso kaaga API furayaasha AI moodooyinka aad rabto inaad isticmaasho ( tusaale, OpenAI, Google, AnthropicKadib markaad saxiixdo. Tilmaamaha faahfaahsan ee bixiye kasta waxaa laga heli karaa Settings / API Bogga furayaasha ka dib marka la soo galo",
     "page_SignInPrompt": "Si aad u bilowdo fadhigaaga, waxaad gali kartaa ama samayn kartaa akoon addoo isticmaalaya isku xirka madaxa.",
     "page_VideoTitle": "Two AIs Muujinta Wadahadalka",
     "page_AvailableLLMsTitle": "Hadda la heli karo LLMs",
+    "page_TooltipKnowledgeCutoff": "Aqoonta moodeelku waa la jaray taariikhdan.",
     "page_TooltipGoogleThinkingBudget": "Tani Google moodelku waxa uu isticmaalaa 'miisaaniyadda fikirka'. Wax soo saarka 'fekerka' waa la soo dalacayaa laakiin kama muuqato sheekada.",
     "page_TooltipAnthropicExtendedThinking": "Tani Anthropic model wuxuu isticmaalaa 'feker dheer'. Wax soo saarka 'fekerka' waa la soo dalacayaa laakiin kama muuqato sheekada.",
     "page_TooltipXaiThinking": "Tani xAI model wuxuu isticmaalaa 'feker'. Wax soo saarkan waa la soo dalacayaa laakiin kama muuqato wada sheekaysiga",
     "page_TooltipQwenReasoning": "Tani Qwen model wuxuu isticmaalaa 'macnaha/feker'. Wax soo saarkan waa la soo dalacayaa laakiin kama muuqato wada sheekaysiga",
     "page_TooltipDeepSeekReasoning": "Tani DeepSeek moodelku waxa uu adeegsadaa 'macnaha/fekerka'. Wax soo saarka waa la soo dalacayaa laakiin kama muuqato wada sheekaysiga",
-    "page_TooltipGenericReasoning": "Habkani waxa uu isticmaalaa calaamado sababaysan oo aan ka muuqan wada sheekaysiga laakiin loo soo dalaco sidii calaamado wax soo saar leh.",
+    "page_TooltipGenericReasoning": "Qaabkani waxa uu isticmaalayaa calaamado sababaysan oo aan ka muuqan wada sheekaysiga laakiin loo soo dalaco sidii calaamado wax soo saar leh.",
     "page_TooltipRequiresVerification": "Waxay u baahan tahay in la xaqiijiyo OpenAI urur. Waxaad ku xaqiijin kartaa halkan",
-    "page_TooltipSupportsLanguage": "Waxay taageertaa {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Qaabkani waxa laga yaabaa inaanu si buuxda u taageerin {languageName} wada hadalka.",
+    "page_TooltipSupportsLanguage": "Taageero {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Qaabkani waxa laga yaabaa inaanu si buuxda u taageerin {languageName} wada hadal.",
     "page_BadgePreview": "Horudhac",
     "page_BadgeExperimental": "Tijaabi",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Hadda la heli karo Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Qaababka Sawirka ee Hadda La Heli karo",
     "page_NoTTSOptions": "Maya TTS fursadaha hadda la heli karo.",
     "page_TruncatableNoteFormat": "({noteText})",
-    "page_PricesLastVerifiedOn": "Sicirrada markii u dambaysay la xaqiijiyay {date}",
-    "page_PricingPerTokens": "per {amount} Calaamadaha",
+    "page_PricesLastVerifiedOn": "Sicirrada markii ugu dambeysay la xaqiijiyay {date}",
+    "page_PricingPerTokens": "halkii 1 Milyan ee Token",
     "page_ModelCategoryModels": "{model} moodooyinka",
+    "common_verifyHere": "halkan ka xaqiiji",
     "ttsVoice_Ugne": "Dabka dhexdiisa",
+    "pricing": {
+        "perMillionTokens": "1 Milyan oo calaamadood",
+        "tokens": "calaamado",
+        "free": "Bilaash",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 Milyan oo calaamado qoraal ah",
+                "audioTokens": "{price} 1 Milyan oo calaamado maqal ah"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 Milyan oo calaamado qoraal ah",
+                "audioTokens": "{price} 1 Milyan oo calaamado maqal ah"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 Milyan oo calaamado qoraal ah",
+                "audioTokens": "{price} 1 Milyan oo calaamado maqal ah"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 Milyan oo calaamadood"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 Milyan oo calaamadood"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 Milyan oo xaraf",
+                "neural": "{price} 1 Milyan oo xaraf",
+                "studio": "{price} 1 Milyan oo xaraf",
+                "chirpHD": "Waa la xaqiijin kari waayay",
+                "chirp3HD": "{price} 1 Milyan oo xaraf"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Foomka Dejinta Kulanka",
-        "description": "Halkan waxaad ka dooran kartaa LLM iyo ikhtiyaari TTS goobaha wakiilka kasta.",
+        "description": "Halkan waxaad ka dooran kartaa LLM iyo ikhtiyaari TTS goobaha wakiil kasta.",
         "agentAModel": "Wakiilka A Model",
         "agentBModel": "Wakiilka B Model",
         "selectLLMForAgentA": "U dooro LLM wakiilka A",
@@ -306,10 +340,10 @@ const so = {
         "agentBTTS": "Wakiilka B TTS",
         "provider": "Bixiye",
         "initialSystemPrompt": "Nidaamka Bilowga ah degdegga ah",
-        "initialPromptDescription": "Dakhligan waxa loo diri doona fariintii ugu horaysay ee la bilaabo wada hadalka Haddii aad ka tagto meel bannaan, ma jiri doonto wax degdeg ah.",
+        "initialPromptDescription": "Dajintan waxa loo diri doona fariintii ugu horaysay ee la bilaabo wada hadalka Haddii aad ka tagto meel bannaan, ma jiri doonto wax degdeg ah.",
         "startConversation": "Bilow wada sheekeysiga",
         "starting": "Laga bilaabo...",
-        "startTheConversation": "Bilow wada hadalka",
+        "startTheConversation": "Fadlan bilow wada hadalka",
         "languageSupportNote": "Tilmaamayaasha taageerada luqadda waxay muujinayaan la jaanqaadka moodalka {languageName}. Moodooyinka aan lahayn taageero waa naafo.",
         "reasoningNote": "Waxay tusinaysaa moodalku inuu isticmaalo calaamadaha 'fekerka' ama 'macnaha'. Wax soo saarkan waa la soo dalacayaa laakiin kama muuqato wada sheekaysiga",
         "openaiOrgVerificationNote": "Waxay tilmaamaysaa a OpenAI model wuxuu u baahan yahay urur la xaqiijiyay. Waad awoodaa",
@@ -335,15 +369,15 @@ const so = {
         "backToMain": "Ku laabo Main",
         "conversationHistory": "Taariikhda Wadahadalka",
         "chatWith": "Kala hadal {agentA} & {agentB}",
+        "conversationDescription": "Bilaawday {date} - Luuqadda: {language}",
         "viewConversation": "Daawo Wadahadalka",
         "backToPreviousChats": "Ku laabo sheekadii hore",
-        "resumeConversation": "Dib u bilaw Wadahadalka",
+        "resumeConversation": "Dib u bilow Wadahadalka",
         "resuming": "Dib u bilaabaya...",
         "sessionDetails": "Faahfaahinta Kulanka",
-        "language": "Luuqadda:",
+        "language": "Luuqad",
         "transcript": "Qoraal",
         "loadingHistory": "Soodejinaya taariikhda...",
-        "conversationDescription": "Bilaawday {date} - Luuqadda: {language}",
         "loadingConversation": "Soo raraynaya wada hadalka...",
         "chatStartedOn": "Sheeko ayaa bilaabatay {date}",
         "agentAModel": "Wakiilka A Model",
@@ -355,18 +389,8 @@ const so = {
         "model": "Qaabka",
         "voice": "Codka"
     },
-    "common_verifyHere": "halkan ka xaqiiji",
-    "page_AvailableImageModelsTitle": "Qaababka Sawirka ee Hadda La Heli karo",
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",
-    "imageModel_PriceUSD": "Qiimaha (USD)",
-    "page_TooltipKnowledgeCutoff": "Aqoonta moodeelku waa la jaray taariikhdan.",
-    "modelCategory_MistralAIPremierModels": "moodooyinka Premier",
-    "modelCategory_MistralAIOpenModels": "Moodooyinka furan",
-    "pricing": {
-        "perMillionTokens": "1 Milyan oo calaamadood",
-        "tokens": "calaamado",
-        "free": "Bilaash"
-    }
+    "imageModel_PriceUSD": "Qiimaha (USD)"
 };
 export default so;

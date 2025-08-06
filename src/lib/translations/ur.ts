@@ -30,7 +30,7 @@ const ur = {
         "ja": "جاپانی",
         "ko": "کورین",
         "lv": "لیٹوین",
-        "lt": "لتھوانیائی",
+        "lt": "لتھوینیائی",
         "no": "ناروے",
         "pl": "پولش",
         "pt": "پرتگالی",
@@ -71,6 +71,7 @@ const ur = {
         "mn": "منگول"
     },
     "settings": {
+        "loading": "ترتیبات لوڈ ہو رہی ہیں...",
         "title": "ترتیبات",
         "sections": {
             "appearance": "ظاہری شکل",
@@ -88,24 +89,24 @@ const ur = {
             "title": "زبان",
             "description": "انٹرفیس کے لیے اپنی پسند کی زبان کا انتخاب کریں۔",
             "conversationLanguage": "گفتگو کی زبان",
-            "conversationLanguageDescription": "کے لیے استعمال ہونے والی زبان AI گفتگو آپ کے انٹرفیس کی زبان سے مماثل ہوگی۔",
+            "conversationLanguageDescription": "کے لیے استعمال ہونے والی زبان AI بات چیت آپ کے انٹرفیس کی زبان سے مماثل ہوگی۔",
             "supportedLanguages": "تائید شدہ زبانیں",
             "languageSupportInformation": "زبان کی معاونت کی معلومات",
             "aiAgentsLanguageDescription": "کے درمیان گفتگو AI ایجنٹوں کو آپ کی منتخب زبان میں کیا جائے گا۔"
         },
         "apiKeys": {
             "title": "API چابیاں",
-            "description": "اپنا انتظام کریں۔ API مختلف کے لئے چابیاں AI فراہم کرنے والے",
-            "saved": "محفوظ کیا گیا۔",
-            "notSet": "سیٹ نہیں ہے۔",
-            "setKey": "کلید سیٹ کریں۔",
-            "updateKey": "اپ ڈیٹ کلید",
-            "removeKey": "کلید کو ہٹا دیں۔",
-            "getKeyInstructions": "اپنا حاصل کریں۔ API کلید",
-            "noNewKeys": "کوئی نیا نہیں۔ API محفوظ کرنے کے لیے داخل کی گئی چابیاں۔",
-            "unexpectedResponse": "سرور سے ایک غیر متوقع جواب موصول ہوا۔",
+            "description": "اپنا انتظام کریں۔ API مختلف کے لئے چابیاں AI خدمات",
+            "setKey": "سیٹ",
+            "updateKey": "اپ ڈیٹ کریں۔",
+            "saveUpdateKeys": "کیز کو محفوظ کریں / اپ ڈیٹ کریں۔",
+            "saving": "محفوظ کر رہا ہے...",
+            "noNewKeys": "محفوظ کرنے کے لیے کوئی نئی چابیاں نہیں ہیں۔",
+            "keyStoredSecurely": "آپ کا API کلید کو محفوظ طریقے سے محفوظ کیا جائے گا اور انکرپٹ کیا جائے گا۔",
+            "enteringNewKeyOverwrites": "نئی کلید داخل کرنے سے موجودہ کلید کو اوور رائٹ کر دیا جائے گا۔",
             "failedToSaveKey": "{serviceName} کلید محفوظ کرنے میں ناکام۔",
-            "someKeysNotSaved": "کچھ API چابیاں محفوظ نہیں ہو سکیں۔ براہ کرم ذیل میں تفصیلات چیک کریں۔",
+            "unexpectedResponse": "سرور سے غیر متوقع جواب۔",
+            "someKeysNotSaved": "کچھ کلیدوں کو محفوظ نہیں کیا جا سکا۔ براہ کرم اوپر کی غلطیاں چیک کریں۔",
             "keyStatus": "اہم حیثیت...",
             "apiKeySecurelySaved": "API کلید محفوظ طریقے سے محفوظ کی گئی۔",
             "confirmRemoveTitle": "ہٹانے کی تصدیق کریں۔",
@@ -114,16 +115,12 @@ const ur = {
             "successfullyRemovedKey": "{serviceName} کلید کامیابی کے ساتھ ہٹا دی گئی۔",
             "keyNotSet": "کلیدی حیثیت: سیٹ نہیں ہے۔",
             "keySet": "کلیدی حیثیت: سیٹ کریں۔",
-            "saveButton": "محفوظ کریں۔ API کلیدیں",
-            "enteringNewKeyOverwrites": "نئی کلید داخل کرنے سے محفوظ کردہ کو اوور رائٹ کر دیا جائے گا۔",
-            "keyStoredSecurely": "آپ کی کلید کو محفوظ طریقے سے استعمال کرتے ہوئے محفوظ کیا جائے گا۔ Google خفیہ مینیجر۔",
-            "saveUpdateKeys": "کیز کو محفوظ کریں / اپ ڈیٹ کریں۔",
-            "saving": "محفوظ کر رہا ہے..."
-        },
-        "loading": "ترتیبات لوڈ ہو رہی ہیں..."
+            "saveButton": "محفوظ کریں۔ API کلیدیں"
+        }
     },
     "main": {
         "title": "AI بات چیت",
+        "aiConversation": "AI بات چیت",
         "setupForm": {
             "title": "اپنی گفتگو کو ترتیب دیں۔",
             "agentA": "ایجنٹ اے",
@@ -141,7 +138,7 @@ const ur = {
                 "selectModel": "منتخب کریں۔ TTS ماڈل"
             },
             "startConversation": "بات چیت شروع کریں۔",
-            "conversationPrompt": "گفتگو شروع کریں۔"
+            "conversationPrompt": "براہ کرم گفتگو شروع کریں۔"
         },
         "conversation": {
             "thinking": "سوچ...",
@@ -153,8 +150,7 @@ const ur = {
             "perMillionTokens": "فی ملین ٹوکن",
             "input": "ان پٹ",
             "output": "آؤٹ پٹ"
-        },
-        "aiConversation": "AI بات چیت"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ur = {
             "signUpWithGoogle": "کے ساتھ سائن اپ کریں۔ Google",
             "hasAccount": "پہلے سے ہی اکاؤنٹ ہے؟",
             "signIn": "سائن ان کریں۔",
-            "emailLabel": "Email پتہ",
+            "emailLabel": "ای میل ایڈریس",
             "confirmPasswordPlaceholder": "پاس ورڈ کی تصدیق کریں۔",
             "signingUp": "سائن اپ ہو رہا ہے..."
         },
@@ -185,9 +181,9 @@ const ur = {
             "invalidCredentials": "غلط ای میل یا پاس ورڈ",
             "userNotFound": "صارف نہیں ملا",
             "weakPassword": "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے۔",
-            "emailInUse": "Email پہلے سے ہی استعمال میں ہے",
-            "generic": "ایک خرابی پیش آگئی۔ براہ کرم دوبارہ کوشش کریں۔",
-            "initialization": "ابتدا کی خرابی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔",
+            "emailInUse": "ای میل پہلے سے استعمال میں ہے۔",
+            "generic": "ایک خرابی پیش آ گئی۔ براہ کرم دوبارہ کوشش کریں۔",
+            "initialization": "ابتدا کی خرابی براہ کرم بعد میں دوبارہ کوشش کریں۔",
             "invalidEmail": "براہ کرم ایک درست ای میل ایڈریس درج کریں۔",
             "tooManyRequests": "لاگ ان کی بہت ساری ناکام کوششوں کی وجہ سے رسائی کو عارضی طور پر غیر فعال کر دیا گیا۔ براہ کرم اپنا پاس ورڈ دوبارہ ترتیب دیں یا بعد میں دوبارہ کوشش کریں۔",
             "signInFailedPrefix": "سائن ان ناکام: ",
@@ -229,12 +225,14 @@ const ur = {
     "modelCategory_Gemini2_0": "Gemini 2.0 ماڈلز",
     "modelCategory_Gemini1_5": "Gemini 1.5 ماڈلز",
     "modelCategory_Claude4": "Claude 4 ماڈلز",
-    "modelCategory_Claude3_7": "Claude 3.7 ماڈلز",
+    "modelCategory_Claude3_7": "Claude 3.7 ماڈل",
     "modelCategory_Claude3_5": "Claude 3.5 ماڈلز",
     "modelCategory_Claude3": "Claude 3 ماڈلز",
-    "modelCategory_Grok4": "Grok 4 ماڈلز",
+    "modelCategory_Grok4": "Grok 4 ماڈل",
     "modelCategory_Grok3": "Grok 3 ماڈلز",
     "modelCategory_Grok3Mini": "Grok 3 چھوٹے ماڈلز",
+    "modelCategory_MistralAIPremierModels": "پریمیئر ماڈلز",
+    "modelCategory_MistralAIOpenModels": "اوپن ماڈل",
     "modelCategory_Llama4": "Llama 4 ماڈل",
     "modelCategory_Llama3_3": "Llama 3.3 ماڈل",
     "modelCategory_Llama3_2": "Llama 3.2 ماڈل",
@@ -252,12 +250,12 @@ const ur = {
     "modelCategory_DeepSeekModels": "DeepSeek ماڈلز",
     "modelCategory_MistralAIModels": "Mistral AI ماڈلز",
     "modelCategory_Qwen3": "Qwen3 ماڈل",
-    "modelCategory_QwQwQ": "Qwen QwQ ماڈلز",
+    "modelCategory_QwQwQ": "Qwen QwQ ماڈل",
     "modelCategory_Qwen2_5": "Qwen2.5 ماڈل",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 ویژن ماڈلز",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 کوڈر ماڈلز",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 ویژن ماڈل",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 کوڈر ماڈل",
     "modelCategory_Qwen2": "Qwen2 ماڈل",
-    "modelCategory_Qwen2Vision": "Qwen2 ویژن ماڈلز",
+    "modelCategory_Qwen2Vision": "Qwen2 ویژن ماڈل",
     "modelCategory_QwenModels": "Qwen ماڈلز",
     "modelCategory_OtherModels": "دوسرے ماڈلز",
     "page_ErrorLoadingUserData": "صارف کا ڈیٹا لوڈ کرنے میں ناکام: {errorMessage}۔ براہ کرم ریفریش کرنے کی کوشش کریں۔",
@@ -269,34 +267,70 @@ const ur = {
     "page_LoadingUserData": "صارف کا ڈیٹا لوڈ ہو رہا ہے...",
     "page_ErrorAlertTitle": "خرابی",
     "page_WelcomeTitle": "میں خوش آمدید Two AIs",
-    "page_WelcomeSubtitle": "یہ ویب سائٹ آپ کو دونوں کے درمیان ہونے والی گفتگو سننے دیتی ہے۔ Large Language Models (LLMs)۔",
+    "page_WelcomeSubtitle": "یہ ویب سائٹ آپ کو دونوں کے درمیان ہونے والی گفتگو سننے دیتی ہے۔ Large Language Models (LLMs) اور ہر موڑ کے لیے تصاویر بنائیں۔",
     "page_ApiKeysRequiredTitle": "API چابیاں درکار ہیں۔",
-    "page_ApiKeysRequiredDescription": "بات چیت کو چلانے کے لیے، آپ کو اپنا فراہم کرنا ہوگا۔ API کے لئے چابیاں AI وہ ماڈل جو آپ استعمال کرنا چاہتے ہیں (مثال کے طور پر، OpenAI, Google, Anthropic) سائن ان کرنے کے بعد۔ ہر فراہم کنندہ کے لیے تفصیلی ہدایات سیٹنگز / پر مل سکتی ہیں۔ API سائن ان کرنے کے بعد کلید کا صفحہ۔",
+    "page_ApiKeysRequiredDescription": "بات چیت کو چلانے کے لیے، آپ کو اپنا فراہم کرنا ہوگا۔ API کے لئے چابیاں AI وہ ماڈل جو آپ استعمال کرنا چاہتے ہیں (مثال کے طور پر، OpenAI، Google، Anthropic) سائن ان کرنے کے بعد۔ ہر فراہم کنندہ کے لیے تفصیلی ہدایات سیٹنگز / پر مل سکتی ہیں۔ API سائن ان کرنے کے بعد کلید کا صفحہ۔",
     "page_SignInPrompt": "اپنا سیشن شروع کرنے کے لیے، آپ ہیڈر میں موجود لنک کا استعمال کر کے سائن ان کر سکتے ہیں یا اکاؤنٹ بنا سکتے ہیں۔",
     "page_VideoTitle": "Two AIs گفتگو کا ڈیمو",
     "page_AvailableLLMsTitle": "فی الحال دستیاب ہے۔ LLMs",
+    "page_TooltipKnowledgeCutoff": "اس تاریخ میں ماڈل کا علم منقطع ہے۔",
     "page_TooltipGoogleThinkingBudget": "یہ Google ماڈل ایک 'سوچ بجٹ' استعمال کرتا ہے۔ 'سوچ' آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
-    "page_TooltipAnthropicExtendedThinking": "یہ Anthropic ماڈل 'توسیعی سوچ' کا استعمال کرتا ہے۔ 'سوچ' آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا ہے۔",
+    "page_TooltipAnthropicExtendedThinking": "یہ Anthropic ماڈل 'توسیعی سوچ' کا استعمال کرتا ہے۔ 'سوچ' آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
     "page_TooltipXaiThinking": "یہ xAI ماڈل 'سوچ' کا استعمال کرتا ہے۔ اس آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
     "page_TooltipQwenReasoning": "یہ Qwen ماڈل 'استدلال/سوچ' کا استعمال کرتا ہے۔ اس آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
     "page_TooltipDeepSeekReasoning": "یہ DeepSeek ماڈل 'استدلال/سوچ' کا استعمال کرتا ہے۔ آؤٹ پٹ بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
     "page_TooltipGenericReasoning": "یہ ماڈل استدلال کے ٹوکن استعمال کرتا ہے جو چیٹ میں نظر نہیں آتے لیکن آؤٹ پٹ ٹوکن کے طور پر بل کیے جاتے ہیں۔",
     "page_TooltipRequiresVerification": "تصدیق کی ضرورت ہے۔ OpenAI تنظیم آپ یہاں تصدیق کر سکتے ہیں۔",
-    "page_TooltipSupportsLanguage": "{languageName} کو سپورٹ کرتا ہے",
-    "page_TooltipMayNotSupportLanguage": "ہو سکتا ہے کہ یہ ماڈل مکمل طور پر بات چیت کے لیے {languageName} کو سپورٹ نہ کرے۔",
+    "page_TooltipSupportsLanguage": "حمایت کرتا ہے۔ {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ہو سکتا ہے یہ ماڈل پوری طرح سپورٹ نہ کرے۔ {languageName} بات چیت کے لئے.",
     "page_BadgePreview": "پیش نظارہ",
     "page_BadgeExperimental": "تجرباتی",
     "page_BadgeBeta": "بیٹا",
     "page_AvailableTTSTitle": "فی الحال دستیاب ہے۔ Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "فی الحال دستیاب تصویری ماڈلز",
     "page_NoTTSOptions": "نہیں TTS فی الحال دستیاب اختیارات۔",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "قیمتوں کی آخری بار تصدیق کی گئی۔ {date}",
-    "page_PricingPerTokens": "فی {amount} ٹوکنز",
+    "page_PricingPerTokens": "فی 1 ملین ٹوکن",
     "page_ModelCategoryModels": "{model} ماڈلز",
+    "common_verifyHere": "یہاں تصدیق کریں",
     "ttsVoice_Ugne": "آگ میں",
+    "pricing": {
+        "perMillionTokens": "فی 1 ملین ٹوکن",
+        "tokens": "ٹوکن",
+        "free": "مفت",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "{price} فی 1 ملین آڈیو ٹوکن"
+            },
+            "geminiPro": {
+                "textTokens": "{price} فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "{price} فی 1 ملین آڈیو ٹوکن"
+            },
+            "openAIMini": {
+                "textTokens": "{price} فی 1 ملین ٹیکسٹ ٹوکن",
+                "audioTokens": "{price} فی 1 ملین آڈیو ٹوکن"
+            },
+            "openAITTS1": {
+                "standard": "{price} فی 1 ملین ٹوکن"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} فی 1 ملین ٹوکن"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} فی 1 ملین حروف",
+                "neural": "{price} فی 1 ملین حروف",
+                "studio": "{price} فی 1 ملین حروف",
+                "chirpHD": "تصدیق نہیں ہو سکی",
+                "chirp3HD": "{price} فی 1 ملین حروف"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "سیشن سیٹ اپ فارم",
-        "description": "یہاں آپ LLM اور اختیاری کو منتخب کر سکتے ہیں۔ TTS ہر ایجنٹ کے لیے ترتیبات۔",
+        "description": "یہاں آپ LLM اور اختیاری کو منتخب کر سکتے ہیں۔ TTS ہر ایجنٹ کے لئے ترتیبات",
         "agentAModel": "ایجنٹ ایک ماڈل",
         "agentBModel": "ایجنٹ بی ماڈل",
         "selectLLMForAgentA": "ایجنٹ A کے لیے LLM منتخب کریں۔",
@@ -309,13 +343,13 @@ const ur = {
         "initialPromptDescription": "یہ پرامپٹ بات چیت شروع کرنے کے لیے پہلے پیغام کے طور پر بھیجا جائے گا۔ اگر آپ اسے خالی چھوڑ دیتے ہیں تو کوئی اشارہ نہیں ہوگا۔",
         "startConversation": "بات چیت شروع کریں۔",
         "starting": "شروع ہو رہا ہے...",
-        "startTheConversation": "گفتگو شروع کریں۔",
+        "startTheConversation": "براہ کرم گفتگو شروع کریں۔",
         "languageSupportNote": "زبان کی معاونت کے اشارے ماڈل کی مطابقت کو ظاہر کرتے ہیں۔ {languageName}. سپورٹ کے بغیر ماڈلز غیر فعال ہیں۔",
         "reasoningNote": "اشارہ کرتا ہے کہ ماڈل 'سوچ' یا 'استدلال' ٹوکن استعمال کرتا ہے۔ اس آؤٹ پٹ کو بل کیا جاتا ہے لیکن چیٹ میں نظر نہیں آتا۔",
         "openaiOrgVerificationNote": "ایک کی طرف اشارہ کرتا ہے۔ OpenAI ماڈل کو ایک تصدیق شدہ تنظیم کی ضرورت ہے۔ آپ کر سکتے ہیں۔",
         "voice": "آواز",
         "selectVoice": "آواز منتخب کریں۔",
-        "noVoicesFor": "کے لیے کوئی آواز نہیں ہے۔ {languageName}",
+        "noVoicesFor": "کے لیے کوئی آوازیں نہیں۔ {languageName}",
         "ttsProviderModel": "{providerName} ماڈل",
         "selectTtsProviderModel": "منتخب کریں۔ {providerName} ماڈل",
         "selectProvider": "فراہم کنندہ کو منتخب کریں۔",
@@ -324,26 +358,26 @@ const ur = {
         "imageModel": "تصویری ماڈل",
         "quality": "معیار",
         "size": "سائز",
-        "promptLLM": "فوری ایل ایل ایم",
+        "promptLLM": "فوری طور پر ایل ایل ایم",
         "imagePromptSystemMessage": "امیج پرامپٹ سسٹم کا پیغام",
         "defaultImagePromptSystemMessage": "اس موڑ کی بنیاد پر امیج جنریشن ماڈل کو دینے کے لیے ایک پرامپٹ بنائیں: {turn}",
         "imagePromptSystemMessageHelp": "یہ پیغام LLM کو سسٹم پرامپٹ کے طور پر بھیجا جائے گا جو امیج پرامپٹ تیار کرتا ہے۔ استعمال کریں۔ <code>{'{turn}'}</code> ایجنٹ کے پیغام کے پلیس ہولڈر کے طور پر۔",
-        "selectImageModel": "تصویر کا ماڈل منتخب کریں۔",
+        "selectImageModel": "تصویری ماڈل منتخب کریں۔",
         "selectPromptLLM": "امیج پرامپٹ کے لیے ایل ایل ایم منتخب کریں۔"
     },
     "history": {
         "backToMain": "واپس مین پر",
-        "conversationHistory": "گفتگو کی سرگزشت",
+        "conversationHistory": "گفتگو کی تاریخ",
         "chatWith": "کے ساتھ چیٹ کریں۔ {agentA} اور {agentB}",
+        "conversationDescription": "پر شروع ہوا۔ {date} - زبان: {language}",
         "viewConversation": "گفتگو دیکھیں",
         "backToPreviousChats": "پچھلی چیٹس پر واپس جائیں۔",
         "resumeConversation": "بات چیت دوبارہ شروع کریں۔",
         "resuming": "دوبارہ شروع ہو رہا ہے...",
         "sessionDetails": "سیشن کی تفصیلات",
-        "language": "زبان:",
+        "language": "زبان",
         "transcript": "نقل",
         "loadingHistory": "تاریخ لوڈ ہو رہی ہے...",
-        "conversationDescription": "پر شروع ہوا۔ {date} - زبان: {language}",
         "loadingConversation": "گفتگو لوڈ ہو رہی ہے...",
         "chatStartedOn": "گپ شپ شروع ہو گئی۔ {date}",
         "agentAModel": "ایجنٹ ایک ماڈل",
@@ -355,18 +389,8 @@ const ur = {
         "model": "ماڈل",
         "voice": "آواز"
     },
-    "common_verifyHere": "یہاں تصدیق کریں",
-    "page_AvailableImageModelsTitle": "فی الحال دستیاب تصویری ماڈلز",
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",
-    "imageModel_PriceUSD": "قیمت (USD)",
-    "page_TooltipKnowledgeCutoff": "اس تاریخ میں ماڈل کا علم منقطع ہے۔",
-    "modelCategory_MistralAIPremierModels": "پریمیئر ماڈلز",
-    "modelCategory_MistralAIOpenModels": "ماڈلز کھولیں۔",
-    "pricing": {
-        "perMillionTokens": "فی 1 ملین ٹوکن",
-        "tokens": "ٹوکن",
-        "free": "مفت"
-    }
+    "imageModel_PriceUSD": "قیمت (USD)"
 };
 export default ur;

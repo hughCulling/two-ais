@@ -48,7 +48,7 @@ const hy = {
         "vi": "վիետնամերեն",
         "mt": "մալթերեն",
         "bs": "բոսնիերեն",
-        "ca": "կատալոներեն",
+        "ca": "կատալաներեն",
         "gu": "գուջարաթի",
         "hy": "հայ",
         "is": "իսլանդերեն",
@@ -71,6 +71,7 @@ const hy = {
         "mn": "մոնղոլական"
     },
     "settings": {
+        "loading": "Կարգավորումները բեռնվում են...",
         "title": "Կարգավորումներ",
         "sections": {
             "appearance": "Արտաքին տեսք",
@@ -95,17 +96,17 @@ const hy = {
         },
         "apiKeys": {
             "title": "API Ստեղներ",
-            "description": "Կառավարեք ձեր API բանալիներ տարբերի համար AI մատակարարներ",
-            "saved": "Պահպանված է",
-            "notSet": "Սահմանված չէ",
-            "setKey": "Սահմանել ստեղնը",
-            "updateKey": "Թարմացման բանալի",
-            "removeKey": "Հեռացնել բանալին",
-            "getKeyInstructions": "Ստացեք ձեր API բանալի",
-            "noNewKeys": "Նորություն չկա API մուտքագրված են պահպանման համար նախատեսված ստեղները։",
-            "unexpectedResponse": "Սերվերից անսպասելի պատասխան ստացվեց։",
+            "description": "Կառավարեք ձեր API բանալիներ տարբերի համար AI ծառայություններ։",
+            "setKey": "Սահմանել",
+            "updateKey": "Թարմացում",
+            "saveUpdateKeys": "Պահպանել / թարմացնել բանալիները",
+            "saving": "Պահպանվում է...",
+            "noNewKeys": "Նոր բանալիներ չկան պահպանելու համար։",
+            "keyStoredSecurely": "Ձեր API բանալին կպահվի անվտանգ և կոդավորված։",
+            "enteringNewKeyOverwrites": "Նոր բանալի մուտքագրելը կփոխարինի եղածը։",
             "failedToSaveKey": "Չհաջողվեց պահպանել {serviceName} բանալին։",
-            "someKeysNotSaved": "Որոշ API բանալիները չհաջողվեց պահպանել։ Խնդրում ենք ստուգել ստորև նշված մանրամասները։",
+            "unexpectedResponse": "Անսպասելի պատասխան սերվերից։",
+            "someKeysNotSaved": "Որոշ բանալիներ չհաջողվեց պահպանել: Խնդրում ենք ստուգել վերևում նշված սխալները:",
             "keyStatus": "բանալիների կարգավիճակը...",
             "apiKeySecurelySaved": "API Բանալին անվտանգ կերպով պահպանված է",
             "confirmRemoveTitle": "Հաստատեք հեռացումը",
@@ -114,16 +115,12 @@ const hy = {
             "successfullyRemovedKey": "{serviceName} բանալին հաջողությամբ հեռացվեց։",
             "keyNotSet": "Բանալու կարգավիճակը՝ սահմանված չէ",
             "keySet": "Բանալու կարգավիճակը՝ Սահմանված",
-            "saveButton": "Պահպանել API Բանալի(ներ)",
-            "enteringNewKeyOverwrites": "Նոր բանալի մուտքագրելը կփոխարինի պահպանվածը։",
-            "keyStoredSecurely": "Ձեր բանալին անվտանգ կերպով կպահվի՝ օգտագործելով Google Գաղտնի մենեջեր։",
-            "saveUpdateKeys": "Պահպանել / թարմացնել բանալիները",
-            "saving": "Պահպանվում է..."
-        },
-        "loading": "Կարգավորումները բեռնվում են..."
+            "saveButton": "Պահպանել API Բանալի(ներ)"
+        }
     },
     "main": {
         "title": "AI Զրույց",
+        "aiConversation": "AI Զրույց",
         "setupForm": {
             "title": "Կարգավորեք ձեր զրույցը",
             "agentA": "Գործակալ Ա",
@@ -141,7 +138,7 @@ const hy = {
                 "selectModel": "Ընտրել TTS մոդել"
             },
             "startConversation": "Սկսել զրույցը",
-            "conversationPrompt": "Սկսեք զրույցը։"
+            "conversationPrompt": "Խնդրում եմ սկսեք զրույցը։"
         },
         "conversation": {
             "thinking": "մտածելով...",
@@ -153,8 +150,7 @@ const hy = {
             "perMillionTokens": "մեկ միլիոն տոկենների համար",
             "input": "Մուտքագրում",
             "output": "Արդյունք"
-        },
-        "aiConversation": "AI Զրույց"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const hy = {
             "signUpWithGoogle": "Գրանցվել Google",
             "hasAccount": "Արդեն ունե՞ք հաշիվ։",
             "signIn": "Մուտք գործել",
-            "emailLabel": "Email հասցե",
+            "emailLabel": "Էլ․ հասցե",
             "confirmPasswordPlaceholder": "Հաստատել գաղտնաբառը",
             "signingUp": "Գրանցվում է..."
         },
@@ -185,7 +181,7 @@ const hy = {
             "invalidCredentials": "Անվավեր էլ․ հասցե կամ գաղտնաբառ",
             "userNotFound": "Օգտատերը չի գտնվել",
             "weakPassword": "Գաղտնաբառը պետք է լինի առնվազն 6 նիշ",
-            "emailInUse": "Email արդեն օգտագործվում է",
+            "emailInUse": "Էլ․ հասցեն արդեն օգտագործվում է",
             "generic": "Սխալ տեղի ունեցավ։ Խնդրում ենք կրկին փորձել։",
             "initialization": "Սկզբնականացման սխալ։ Խնդրում ենք փորձել կրկին ավելի ուշ։",
             "invalidEmail": "Խնդրում ենք մուտքագրել վավեր էլեկտրոնային հասցե։",
@@ -229,12 +225,14 @@ const hy = {
     "modelCategory_Gemini2_0": "Gemini 2.0 մոդելներ",
     "modelCategory_Gemini1_5": "Gemini 1.5 մոդելներ",
     "modelCategory_Claude4": "Claude 4 մոդելներ",
-    "modelCategory_Claude3_7": "Claude 3.7 մոդելներ",
+    "modelCategory_Claude3_7": "Claude 3.7 մոդել",
     "modelCategory_Claude3_5": "Claude 3.5 մոդելներ",
     "modelCategory_Claude3": "Claude 3 մոդելներ",
-    "modelCategory_Grok4": "Grok 4 մոդելներ",
+    "modelCategory_Grok4": "Grok 4 մոդել",
     "modelCategory_Grok3": "Grok 3 մոդելներ",
     "modelCategory_Grok3Mini": "Grok 3 Մինի մոդելներ",
+    "modelCategory_MistralAIPremierModels": "Պրեմիեր մոդելներ",
+    "modelCategory_MistralAIOpenModels": "Բաց մոդել",
     "modelCategory_Llama4": "Llama 4 մոդել",
     "modelCategory_Llama3_3": "Llama 3.3 մոդելներ",
     "modelCategory_Llama3_2": "Llama 3.2 մոդելներ",
@@ -246,18 +244,18 @@ const hy = {
     "modelCategory_Gemma2": "Gemma 2 մոդել",
     "modelCategory_Gemma": "Gemma մոդելներ",
     "modelCategory_GoogleGemma": "Google Gemma Մոդելներ",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 մոդելներ",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 մոդելներ",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 մոդել",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 մոդել",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill մոդելներ",
     "modelCategory_DeepSeekModels": "DeepSeek Մոդելներ",
     "modelCategory_MistralAIModels": "Mistral AI Մոդելներ",
     "modelCategory_Qwen3": "Qwen3 մոդել",
-    "modelCategory_QwQwQ": "Qwen QwQ մոդելներ",
+    "modelCategory_QwQwQ": "Qwen QwQ մոդել",
     "modelCategory_Qwen2_5": "Qwen2.5 մոդելներ",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Տեսողության մոդելներ",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Կոդավորողի մոդելներ",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Տեսողության մոդել",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Կոդավորողի մոդել",
     "modelCategory_Qwen2": "Qwen2 մոդել",
-    "modelCategory_Qwen2Vision": "Qwen2 տեսողական մոդելներ",
+    "modelCategory_Qwen2Vision": "Qwen2 Տեսողության մոդել",
     "modelCategory_QwenModels": "Qwen Մոդելներ",
     "modelCategory_OtherModels": "Այլ մոդելներ",
     "page_ErrorLoadingUserData": "Չհաջողվեց բեռնել օգտատիրոջ տվյալները՝ {errorMessage}: Խնդրում ենք փորձել թարմացնել:",
@@ -269,12 +267,13 @@ const hy = {
     "page_LoadingUserData": "Օգտատիրոջ տվյալները բեռնվում են...",
     "page_ErrorAlertTitle": "Սխալ",
     "page_WelcomeTitle": "Բարի գալուստ Two AIs",
-    "page_WelcomeSubtitle": "Այս կայքը թույլ է տալիս լսել երկուսի միջև զրույցները Large Language Models (LLMs)։",
+    "page_WelcomeSubtitle": "Այս կայքը թույլ է տալիս լսել երկուսի միջև զրույցները Large Language Models (LLMs) և ստեղծել պատկերներ յուրաքանչյուր շրջադարձի համար։",
     "page_ApiKeysRequiredTitle": "API Անհրաժեշտ են բանալիներ",
-    "page_ApiKeysRequiredDescription": "Զրույցներ վարելու համար դուք պետք է տրամադրեք ձեր սեփականը API բանալիներ՝ AI մոդելներ, որոնք դուք ցանկանում եք օգտագործել (օրինակ՝ OpenAI, Google, Anthropic) մուտք գործելուց հետո: Յուրաքանչյուր մատակարարի համար մանրամասն հրահանգները կարող եք գտնել Կարգավորումներ / բաժնում: API Մուտք գործելուց հետո բանալիների էջը։",
+    "page_ApiKeysRequiredDescription": "Զրույցներ վարելու համար դուք պետք է տրամադրեք ձեր սեփականը API բանալիներ՝ AI մոդելներ, որոնք դուք ցանկանում եք օգտագործել (օրինակ՝ OpenAI, Google, Anthropic) մուտք գործելուց հետո: Յուրաքանչյուր մատակարարի համար մանրամասն հրահանգները կարող եք գտնել Կարգավորումներ / բաժնում: API Մուտք գործելուց հետո «Բանալիներ» էջը։",
     "page_SignInPrompt": "Ձեր սեփական սեսիան սկսելու համար կարող եք մուտք գործել կամ հաշիվ ստեղծել՝ օգտագործելով վերնագրում գտնվող հղումը։",
     "page_VideoTitle": "Two AIs Զրույցի ցուցադրություն",
     "page_AvailableLLMsTitle": "Ներկայումս հասանելի է LLMs",
+    "page_TooltipKnowledgeCutoff": "Մոդելի գիտելիքները այս ամսաթվին կտրված են։",
     "page_TooltipGoogleThinkingBudget": "Սա Google Մոդելը օգտագործում է «մտածողության բյուջե»։ «Մտածողության» արդյունքը հաշվարկվում է, բայց տեսանելի չէ զրույցում։",
     "page_TooltipAnthropicExtendedThinking": "Սա Anthropic Մոդելը օգտագործում է «ընդլայնված մտածողություն»։ «Մտածողության» արդյունքը հաշվարկվում է, բայց տեսանելի չէ զրույցում։",
     "page_TooltipXaiThinking": "Սա xAI մոդելը օգտագործում է «մտածողություն»։ Այս արդյունքը հաշվարկվում է, բայց տեսանելի չէ զրույցում։",
@@ -282,18 +281,53 @@ const hy = {
     "page_TooltipDeepSeekReasoning": "Սա DeepSeek Մոդելը օգտագործում է «մտածողություն/մտածողություն»։ Արդյունքը հաշվարկվում է, բայց տեսանելի չէ զրույցում։",
     "page_TooltipGenericReasoning": "Այս մոդելն օգտագործում է դատողության տոկեններ, որոնք տեսանելի չեն զրույցում, բայց ներկայացվում են որպես ելքային տոկեններ։",
     "page_TooltipRequiresVerification": "Պահանջվում է հաստատված OpenAI կազմակերպություն։ Կարող եք ստուգել այստեղ։",
-    "page_TooltipSupportsLanguage": "Աջակցում է {languageName}-ին",
-    "page_TooltipMayNotSupportLanguage": "Այս մոդելը կարող է լիովին չաջակցել {languageName}-ին զրույցի համար։",
+    "page_TooltipSupportsLanguage": "Աջակցում է {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Այս մոդելը կարող է լիովին չաջակցել {languageName} զրույցի համար։",
     "page_BadgePreview": "Նախադիտում",
     "page_BadgeExperimental": "Փորձարարական",
     "page_BadgeBeta": "Բետա",
     "page_AvailableTTSTitle": "Ներկայումս հասանելի է Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Ներկայումս հասանելի պատկերի մոդելներ",
     "page_NoTTSOptions": "Ոչ TTS ներկայումս հասանելի տարբերակները։",
     "page_TruncatableNoteFormat": "({նշում})",
     "page_PricesLastVerifiedOn": "Գները վերջին անգամ ստուգվել են {date}",
-    "page_PricingPerTokens": "յուրաքանչյուր {amount} Թոքեններ",
+    "page_PricingPerTokens": "յուրաքանչյուր 1 միլիոն տոկենի համար",
     "page_ModelCategoryModels": "{model} մոդելներ",
+    "common_verifyHere": "ստուգել այստեղ",
     "ttsVoice_Ugne": "Կրակի մեջ",
+    "pricing": {
+        "perMillionTokens": "յուրաքանչյուր 1 միլիոն տոկենի համար",
+        "tokens": "ժետոններ",
+        "free": "Անվճար",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 միլիոն տեքստային տոկենների համար",
+                "audioTokens": "{price} յուրաքանչյուր 1 միլիոն աուդիո տոկենի համար"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 միլիոն տեքստային տոկենների համար",
+                "audioTokens": "{price} յուրաքանչյուր 1 միլիոն աուդիո տոկենի համար"
+            },
+            "openAIMini": {
+                "textTokens": "{price} յուրաքանչյուր 1 միլիոն տեքստային տոկենների համար",
+                "audioTokens": "{price} յուրաքանչյուր 1 միլիոն աուդիո տոկենների համար"
+            },
+            "openAITTS1": {
+                "standard": "{price} յուրաքանչյուր 1 միլիոն տոկենի համար"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} յուրաքանչյուր 1 միլիոն տոկենի համար"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 միլիոն նիշերի համար",
+                "neural": "{price} 1 միլիոն նիշերի համար",
+                "studio": "{price} 1 միլիոն նիշերի համար",
+                "chirpHD": "Հնարավոր չէ ստուգել",
+                "chirp3HD": "{price} 1 միլիոն նիշերի համար"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Սեսիայի կարգավորման ձև",
         "description": "Այստեղ դուք կարող եք ընտրել LLM և լրացուցիչ TTS կարգավորումներ յուրաքանչյուր գործակալի համար։",
@@ -309,7 +343,7 @@ const hy = {
         "initialPromptDescription": "Այս հուշումը կուղարկվի որպես զրույցը սկսելու առաջին հաղորդագրություն: Եթե այն դատարկ թողնեք, հուշում չի լինի:",
         "startConversation": "Սկսել զրույցը",
         "starting": "Սկսվում է...",
-        "startTheConversation": "Սկսեք զրույցը։",
+        "startTheConversation": "Խնդրում եմ սկսեք զրույցը։",
         "languageSupportNote": "Լեզվի աջակցության ցուցիչները ցույց են տալիս մոդելի համատեղելիությունը {languageName}Աջակցություն չունեցող մոդելները անջատված են։",
         "reasoningNote": "Ցույց է տալիս, որ մոդելն օգտագործում է «մտածողության» կամ «բանականության» տոկեններ: Այս արդյունքը հաշվարկվում է, բայց տեսանելի չէ զրույցում:",
         "openaiOrgVerificationNote": "Նշում է OpenAI մոդելը պահանջում է հաստատված կազմակերպություն։ Դուք կարող եք",
@@ -335,15 +369,15 @@ const hy = {
         "backToMain": "Վերադառնալ գլխավոր էջ",
         "conversationHistory": "Զրույցի պատմություն",
         "chatWith": "Զրուցեք {agentA} և {agentB}",
+        "conversationDescription": "Սկսվել է {date} - Լեզու: {language}",
         "viewConversation": "Դիտել զրույցը",
         "backToPreviousChats": "Վերադառնալ նախորդ զրույցներին",
         "resumeConversation": "Վերսկսել զրույցը",
         "resuming": "Վերսկսվում է...",
         "sessionDetails": "Նիստի մանրամասները",
-        "language": "Լեզու՝",
+        "language": "Լեզու",
         "transcript": "Տառադարձություն",
         "loadingHistory": "Պատմությունը բեռնվում է...",
-        "conversationDescription": "Սկսվել է {date} - Լեզու: {language}",
         "loadingConversation": "Զրույցը բեռնվում է...",
         "chatStartedOn": "Զրույցը սկսվել է {date}",
         "agentAModel": "Գործակալ Ա մոդել",
@@ -355,18 +389,8 @@ const hy = {
         "model": "Մոդել",
         "voice": "Ձայն"
     },
-    "common_verifyHere": "ստուգել այստեղ",
-    "page_AvailableImageModelsTitle": "Ներկայումս հասանելի պատկերի մոդելներ",
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",
-    "imageModel_PriceUSD": "Գինը (USD)",
-    "page_TooltipKnowledgeCutoff": "Մոդելի գիտելիքները այս ամսաթվին կտրված են։",
-    "modelCategory_MistralAIPremierModels": "Պրեմիեր մոդելներ",
-    "modelCategory_MistralAIOpenModels": "Բաց մոդելներ",
-    "pricing": {
-        "perMillionTokens": "յուրաքանչյուր 1 միլիոն տոկենի համար",
-        "tokens": "ժետոններ",
-        "free": "Անվճար"
-    }
+    "imageModel_PriceUSD": "Գինը (USD)"
 };
 export default hy;

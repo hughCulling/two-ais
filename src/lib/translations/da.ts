@@ -71,6 +71,7 @@ const da = {
         "mn": "Mongolsk"
     },
     "settings": {
+        "loading": "Indlæser indstillinger...",
         "title": "Indstillinger",
         "sections": {
             "appearance": "Udseende",
@@ -95,17 +96,17 @@ const da = {
         },
         "apiKeys": {
             "title": "API Nøgler",
-            "description": "Administrer din API nøgler til forskellige AI udbydere",
-            "saved": "Gemt",
-            "notSet": "Ikke indstillet",
-            "setKey": "Indstil nøgle",
-            "updateKey": "Opdateringsnøgle",
-            "removeKey": "Fjern nøgle",
-            "getKeyInstructions": "Få din API nøgle",
-            "noNewKeys": "Ingen nye API tasterne indtastet for at gemme.",
-            "unexpectedResponse": "Modtog et uventet svar fra serveren.",
+            "description": "Administrer din API nøgler til forskellige AI tjenester.",
+            "setKey": "Sæt",
+            "updateKey": "Opdatering",
+            "saveUpdateKeys": "Gem/opdater nøgler",
+            "saving": "Gemmer...",
+            "noNewKeys": "Ingen nye nøgler at gemme.",
+            "keyStoredSecurely": "Dine API Nøglen vil blive opbevaret sikkert og krypteret.",
+            "enteringNewKeyOverwrites": "Indtastning af en ny nøgle vil overskrive den eksisterende.",
             "failedToSaveKey": "Nøglen {serviceName} kunne ikke gemmes.",
-            "someKeysNotSaved": "Nogle API Nøglerne kunne ikke gemmes. Tjek venligst detaljerne nedenfor.",
+            "unexpectedResponse": "Uventet svar fra serveren.",
+            "someKeysNotSaved": "Nogle nøgler kunne ikke gemmes. Kontroller venligst fejlene ovenfor.",
             "keyStatus": "nøglestatus...",
             "apiKeySecurelySaved": "API Nøglen er sikkert gemt",
             "confirmRemoveTitle": "Bekræft fjernelse",
@@ -114,16 +115,12 @@ const da = {
             "successfullyRemovedKey": "Nøglen {serviceName} er fjernet.",
             "keyNotSet": "Nøglestatus: Ikke indstillet",
             "keySet": "Nøglestatus: Indstillet",
-            "saveButton": "Spare API Nøgle(r)",
-            "enteringNewKeyOverwrites": "Indtastning af en ny nøgle vil overskrive den gemte.",
-            "keyStoredSecurely": "Din nøgle vil blive opbevaret sikkert ved hjælp af Google Hemmelig leder.",
-            "saveUpdateKeys": "Gem/opdater nøgler",
-            "saving": "Gemmer..."
-        },
-        "loading": "Indlæser indstillinger..."
+            "saveButton": "Spare API Nøgle(r)"
+        }
     },
     "main": {
         "title": "AI Samtale",
+        "aiConversation": "AI Samtale",
         "setupForm": {
             "title": "Opret din samtale",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const da = {
                 "selectModel": "Vælge TTS model"
             },
             "startConversation": "Start samtale",
-            "conversationPrompt": "Start samtalen."
+            "conversationPrompt": "Start venligst samtalen."
         },
         "conversation": {
             "thinking": "tænker...",
@@ -153,8 +150,7 @@ const da = {
             "perMillionTokens": "pr. million tokens",
             "input": "Input",
             "output": "Produktion"
-        },
-        "aiConversation": "AI Samtale"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const da = {
             "signUpWithGoogle": "Tilmeld dig med Google",
             "hasAccount": "Har du allerede en konto?",
             "signIn": "Log ind",
-            "emailLabel": "Email adresse",
+            "emailLabel": "E-mailadresse",
             "confirmPasswordPlaceholder": "Bekræft adgangskode",
             "signingUp": "Tilmelding..."
         },
@@ -185,7 +181,7 @@ const da = {
             "invalidCredentials": "Ugyldig e-mail eller adgangskode",
             "userNotFound": "Bruger ikke fundet",
             "weakPassword": "Adgangskoden skal være mindst 6 tegn lang",
-            "emailInUse": "Email allerede i brug",
+            "emailInUse": "E-mail allerede i brug",
             "generic": "Der opstod en fejl. Prøv igen.",
             "initialization": "Initialiseringsfejl. Prøv igen senere.",
             "invalidEmail": "Indtast venligst en gyldig e-mailadresse.",
@@ -229,12 +225,14 @@ const da = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeller",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeller",
     "modelCategory_Claude4": "Claude 4 modeller",
-    "modelCategory_Claude3_7": "Claude 3.7 modeller",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modeller",
     "modelCategory_Claude3": "Claude 3 modeller",
-    "modelCategory_Grok4": "Grok 4 modeller",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modeller",
     "modelCategory_Grok3Mini": "Grok 3 Minimodeller",
+    "modelCategory_MistralAIPremierModels": "Premier-modeller",
+    "modelCategory_MistralAIOpenModels": "Åben model",
     "modelCategory_Llama4": "Llama 4 modeller",
     "modelCategory_Llama3_3": "Llama 3.3 modeller",
     "modelCategory_Llama3_2": "Llama 3.2 modeller",
@@ -246,18 +244,18 @@ const da = {
     "modelCategory_Gemma2": "Gemma 2 modeller",
     "modelCategory_Gemma": "Gemma modeller",
     "modelCategory_GoogleGemma": "Google Gemma Modeller",
-    "modelCategory_DeepSeekR1": "DeepSeek R1-modeller",
-    "modelCategory_DeepSeekV3": "DeepSeek V3-modeller",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-model",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-model",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Destill-modeller",
     "modelCategory_DeepSeekModels": "DeepSeek Modeller",
     "modelCategory_MistralAIModels": "Mistral AI Modeller",
     "modelCategory_Qwen3": "Qwen3 modeller",
-    "modelCategory_QwQwQ": "Qwen QwQ-modeller",
+    "modelCategory_QwQwQ": "Qwen QwQ-model",
     "modelCategory_Qwen2_5": "Qwen2,5 modeller",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-modeller",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodermodeller",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-model",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodermodel",
     "modelCategory_Qwen2": "Qwen2 modeller",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision-modeller",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision-model",
     "modelCategory_QwenModels": "Qwen Modeller",
     "modelCategory_OtherModels": "Andre modeller",
     "page_ErrorLoadingUserData": "Kunne ikke indlæse brugerdata: {errorMessage}. Prøv at opdatere.",
@@ -269,12 +267,13 @@ const da = {
     "page_LoadingUserData": "Indlæser brugerdata...",
     "page_ErrorAlertTitle": "Fejl",
     "page_WelcomeTitle": "Velkommen til Two AIs",
-    "page_WelcomeSubtitle": "Denne hjemmeside giver dig mulighed for at lytte til samtaler mellem to Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Denne hjemmeside giver dig mulighed for at lytte til samtaler mellem to Large Language Models (LLMs) og generer billeder for hver tur.",
     "page_ApiKeysRequiredTitle": "API Nødvendige nøgler",
     "page_ApiKeysRequiredDescription": "For at kunne føre samtaler skal du selv angive dine API nøgler til AI modeller, du ønsker at bruge (f.eks. OpenAI, Google, Anthropic) efter indlogning. Detaljerede instruktioner for hver udbyder kan findes under Indstillinger / API Nøgleside efter indlogning.",
     "page_SignInPrompt": "For at starte din egen session kan du logge ind eller oprette en konto ved hjælp af linket i overskriften.",
     "page_VideoTitle": "Two AIs Samtaledemo",
     "page_AvailableLLMsTitle": "Aktuelt tilgængelig LLMs",
+    "page_TooltipKnowledgeCutoff": "Modellens kendskab er afskåret på denne dato.",
     "page_TooltipGoogleThinkingBudget": "Denne Google Modellen bruger et 'tænkebudget'. Outputtet 'tænkebudget' faktureres, men er ikke synligt i chatten.",
     "page_TooltipAnthropicExtendedThinking": "Denne Anthropic Modellen bruger 'udvidet tænkning'. Outputtet 'tænkning' faktureres, men er ikke synligt i chatten.",
     "page_TooltipXaiThinking": "Denne xAI Modellen bruger 'tænkning'. Dette output faktureres, men er ikke synligt i chatten.",
@@ -282,18 +281,53 @@ const da = {
     "page_TooltipDeepSeekReasoning": "Denne DeepSeek Modellen bruger 'ræsonnement/tænkning'. Outputtet faktureres, men er ikke synligt i chatten.",
     "page_TooltipGenericReasoning": "Denne model bruger ræsonnementstokens, der ikke er synlige i chatten, men som faktureres som outputtokens.",
     "page_TooltipRequiresVerification": "Kræver verificeret OpenAI organisation. Du kan bekræfte her.",
-    "page_TooltipSupportsLanguage": "Understøtter {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Denne model understøtter muligvis ikke {languageName} fuldt ud til samtaler.",
+    "page_TooltipSupportsLanguage": "Støtter {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Denne model understøtter muligvis ikke fuldt ud {languageName} til samtale.",
     "page_BadgePreview": "Forhåndsvisning",
     "page_BadgeExperimental": "Eksperimentel",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Aktuelt tilgængelig Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Aktuelt tilgængelige billedmodeller",
     "page_NoTTSOptions": "Ingen TTS muligheder, der er tilgængelige i øjeblikket.",
     "page_TruncatableNoteFormat": "({noteTekst})",
     "page_PricesLastVerifiedOn": "Priser sidst bekræftet den {date}",
-    "page_PricingPerTokens": "om {amount} Poletter",
+    "page_PricingPerTokens": "pr. 1 million tokens",
     "page_ModelCategoryModels": "{model} modeller",
+    "common_verifyHere": "bekræft her",
     "ttsVoice_Ugne": "I ilden",
+    "pricing": {
+        "perMillionTokens": "pr. 1 million tokens",
+        "tokens": "tokens",
+        "free": "Gratis",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} pr. 1 million teksttokens",
+                "audioTokens": "{price} pr. 1 million lydtokens"
+            },
+            "geminiPro": {
+                "textTokens": "{price} pr. 1 million teksttokens",
+                "audioTokens": "{price} pr. 1 million lydtokens"
+            },
+            "openAIMini": {
+                "textTokens": "{price} pr. 1 million teksttokens",
+                "audioTokens": "{price} pr. 1 million lydtokens"
+            },
+            "openAITTS1": {
+                "standard": "{price} pr. 1 million tokens"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} pr. 1 million tokens"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} pr. 1 million tegn",
+                "neural": "{price} pr. 1 million tegn",
+                "studio": "{price} pr. 1 million tegn",
+                "chirpHD": "Kunne ikke bekræfte",
+                "chirp3HD": "{price} pr. 1 million tegn"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formular til opsætning af session",
         "description": "Her kan du vælge LLM og valgfrie TTS indstillinger for hver agent.",
@@ -309,7 +343,7 @@ const da = {
         "initialPromptDescription": "Denne prompt sendes som den første besked, der starter samtalen. Hvis du lader den stå tom, vil der ikke være nogen prompt.",
         "startConversation": "Start samtale",
         "starting": "Starter...",
-        "startTheConversation": "Start samtalen.",
+        "startTheConversation": "Start venligst samtalen.",
         "languageSupportNote": "Indikatorer for sprogunderstøttelse viser modelkompatibilitet med {languageName}Modeller uden understøttelse er deaktiveret.",
         "reasoningNote": "Angiver, at en model bruger 'tænknings'- eller 'ræsonnements'-tokens. Dette output faktureres, men er ikke synligt i chatten.",
         "openaiOrgVerificationNote": "Indikerer en OpenAI modellen kræver en verificeret organisation. Du kan",
@@ -335,15 +369,15 @@ const da = {
         "backToMain": "Tilbage til hovedindholdet",
         "conversationHistory": "Samtalehistorik",
         "chatWith": "Chat med {agentA} & {agentB}",
+        "conversationDescription": "Startede den {date} - Sprog: {language}",
         "viewConversation": "Se samtale",
         "backToPreviousChats": "Tilbage til tidligere chats",
         "resumeConversation": "Genoptag samtalen",
         "resuming": "Genoptager...",
         "sessionDetails": "Sessionsdetaljer",
-        "language": "Sprog:",
+        "language": "Sprog",
         "transcript": "Transskription",
         "loadingHistory": "Indlæser historik...",
-        "conversationDescription": "Startede den {date} - Sprog: {language}",
         "loadingConversation": "Indlæser samtale...",
         "chatStartedOn": "Chatten startede den {date}",
         "agentAModel": "Agent A-model",
@@ -355,18 +389,8 @@ const da = {
         "model": "Model",
         "voice": "Stemme"
     },
-    "common_verifyHere": "bekræft her",
-    "page_AvailableImageModelsTitle": "Aktuelt tilgængelige billedmodeller",
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
-    "imageModel_PriceUSD": "Pris (USD)",
-    "page_TooltipKnowledgeCutoff": "Modellens kendskab er afskåret på denne dato.",
-    "modelCategory_MistralAIPremierModels": "Premier-modeller",
-    "modelCategory_MistralAIOpenModels": "Åbne modeller",
-    "pricing": {
-        "perMillionTokens": "pr. 1 million tokens",
-        "tokens": "tokens",
-        "free": "Gratis"
-    }
+    "imageModel_PriceUSD": "Pris (USD)"
 };
 export default da;

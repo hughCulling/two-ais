@@ -71,6 +71,7 @@ const id = {
         "mn": "orang Mongolia"
     },
     "settings": {
+        "loading": "Memuat pengaturan...",
         "title": "Pengaturan",
         "sections": {
             "appearance": "Penampilan",
@@ -95,17 +96,17 @@ const id = {
         },
         "apiKeys": {
             "title": "API Kunci",
-            "description": "Kelola Anda API kunci untuk berbeda AI penyedia",
-            "saved": "Tersimpan",
-            "notSet": "Belum diatur",
-            "setKey": "Atur kunci",
-            "updateKey": "Perbarui kunci",
-            "removeKey": "Hapus kunci",
-            "getKeyInstructions": "Dapatkan milikmu API kunci",
-            "noNewKeys": "Tidak ada yang baru API tombol yang dimasukkan untuk menyimpan.",
-            "unexpectedResponse": "Menerima respons yang tidak diharapkan dari server.",
+            "description": "Kelola Anda API kunci untuk berbeda AI layanan.",
+            "setKey": "Mengatur",
+            "updateKey": "Memperbarui",
+            "saveUpdateKeys": "Simpan / Perbarui Kunci",
+            "saving": "Penghematan...",
+            "noNewKeys": "Tidak ada kunci baru yang perlu disimpan.",
+            "keyStoredSecurely": "Milikmu API Kunci akan disimpan dengan aman dan dienkripsi.",
+            "enteringNewKeyOverwrites": "Memasukkan kunci baru akan menimpa kunci yang sudah ada.",
             "failedToSaveKey": "Gagal menyimpan kunci {serviceName}.",
-            "someKeysNotSaved": "Beberapa API Kunci tidak dapat disimpan. Silakan periksa detail di bawah ini.",
+            "unexpectedResponse": "Respons tak terduga dari server.",
+            "someKeysNotSaved": "Beberapa kunci tidak dapat disimpan. Silakan periksa kesalahan di atas.",
             "keyStatus": "status kunci...",
             "apiKeySecurelySaved": "API Kunci Tersimpan dengan Aman",
             "confirmRemoveTitle": "Konfirmasi Penghapusan",
@@ -114,16 +115,12 @@ const id = {
             "successfullyRemovedKey": "Berhasil menghapus kunci {serviceName}.",
             "keyNotSet": "Status Kunci: Belum Ditetapkan",
             "keySet": "Status Kunci: Ditetapkan",
-            "saveButton": "Menyimpan API Kunci",
-            "enteringNewKeyOverwrites": "Memasukkan kunci baru akan menimpa kunci yang sudah disimpan.",
-            "keyStoredSecurely": "Kunci Anda akan disimpan dengan aman menggunakan Google Manajer Rahasia.",
-            "saveUpdateKeys": "Simpan / Perbarui Kunci",
-            "saving": "Penghematan..."
-        },
-        "loading": "Memuat pengaturan..."
+            "saveButton": "Menyimpan API Kunci"
+        }
     },
     "main": {
         "title": "AI Percakapan",
+        "aiConversation": "AI Percakapan",
         "setupForm": {
             "title": "Siapkan percakapan Anda",
             "agentA": "Agen A",
@@ -141,7 +138,7 @@ const id = {
                 "selectModel": "Memilih TTS model"
             },
             "startConversation": "Mulai Percakapan",
-            "conversationPrompt": "Mulai percakapan."
+            "conversationPrompt": "Silakan memulai percakapan."
         },
         "conversation": {
             "thinking": "pemikiran...",
@@ -153,8 +150,7 @@ const id = {
             "perMillionTokens": "per juta token",
             "input": "Masukan",
             "output": "Keluaran"
-        },
-        "aiConversation": "AI Percakapan"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const id = {
             "signUpWithGoogle": "Daftar dengan Google",
             "hasAccount": "Sudah punya akun?",
             "signIn": "Masuk",
-            "emailLabel": "Email alamat",
+            "emailLabel": "Alamat email",
             "confirmPasswordPlaceholder": "Konfirmasi Kata Sandi",
             "signingUp": "Mendaftar..."
         },
@@ -235,6 +231,8 @@ const id = {
     "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 model",
     "modelCategory_Grok3Mini": "Grok 3 Model mini",
+    "modelCategory_MistralAIPremierModels": "Model utama",
+    "modelCategory_MistralAIOpenModels": "Model terbuka",
     "modelCategory_Llama4": "Llama 4 model",
     "modelCategory_Llama3_3": "Llama 3.3 model",
     "modelCategory_Llama3_2": "Llama 3.2 model",
@@ -253,11 +251,11 @@ const id = {
     "modelCategory_MistralAIModels": "Mistral AI Model",
     "modelCategory_Qwen3": "Qwen3 model",
     "modelCategory_QwQwQ": "Qwen Model QwQ",
-    "modelCategory_Qwen2_5": "Qwenmodel 2.5",
+    "modelCategory_Qwen2_5": "Qwen2.5 model",
     "modelCategory_Qwen2_5Vision": "Qwen2.5 Model Visi",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model Coder",
+    "modelCategory_Qwen2_5Coder": "QwenModel pembuat kode 2.5",
     "modelCategory_Qwen2": "Qwen2 model",
-    "modelCategory_Qwen2Vision": "Qwen2 model Visi",
+    "modelCategory_Qwen2Vision": "Qwen2 Model Visi",
     "modelCategory_QwenModels": "Qwen Model",
     "modelCategory_OtherModels": "Model Lainnya",
     "page_ErrorLoadingUserData": "Gagal memuat data pengguna: {errorMessage}. Silakan coba menyegarkan.",
@@ -269,12 +267,13 @@ const id = {
     "page_LoadingUserData": "Memuat data pengguna...",
     "page_ErrorAlertTitle": "Kesalahan",
     "page_WelcomeTitle": "Selamat Datang di Two AIs",
-    "page_WelcomeSubtitle": "Situs web ini memungkinkan Anda mendengarkan percakapan antara dua orang Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Situs web ini memungkinkan Anda mendengarkan percakapan antara dua orang Large Language Models (LLMs) dan menghasilkan gambar untuk setiap putaran.",
     "page_ApiKeysRequiredTitle": "API Kunci Diperlukan",
     "page_ApiKeysRequiredDescription": "Untuk menjalankan percakapan, Anda harus menyediakan API kunci untuk AI model yang ingin Anda gunakan (misalnya, OpenAI, Google, Anthropic) setelah masuk. Petunjuk terperinci untuk setiap penyedia dapat ditemukan di Pengaturan / API Halaman kunci setelah masuk.",
     "page_SignInPrompt": "Untuk memulai sesi Anda sendiri, Anda dapat masuk atau membuat akun menggunakan tautan di header.",
     "page_VideoTitle": "Two AIs Demo Percakapan",
     "page_AvailableLLMsTitle": "Tersedia saat ini LLMs",
+    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tanggal ini.",
     "page_TooltipGoogleThinkingBudget": "Ini Google Model ini menggunakan 'anggaran berpikir'. Output 'berpikir' ditagih tetapi tidak terlihat dalam obrolan.",
     "page_TooltipAnthropicExtendedThinking": "Ini Anthropic Model ini menggunakan 'pemikiran yang diperluas'. Output 'pemikiran' ditagih tetapi tidak terlihat dalam obrolan.",
     "page_TooltipXaiThinking": "Ini xAI Model menggunakan 'berpikir'. Output ini ditagih tetapi tidak terlihat dalam obrolan.",
@@ -288,12 +287,47 @@ const id = {
     "page_BadgeExperimental": "Eksperimental",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Tersedia saat ini Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Model Gambar yang Tersedia Saat Ini",
     "page_NoTTSOptions": "TIDAK TTS pilihan yang tersedia saat ini.",
-    "page_TruncatableNoteFormat": "({teks catatan})",
+    "page_TruncatableNoteFormat": "({catatanteks})",
     "page_PricesLastVerifiedOn": "Harga terakhir diverifikasi pada {date}",
-    "page_PricingPerTokens": "per {amount} Token",
+    "page_PricingPerTokens": "per 1 Juta Token",
     "page_ModelCategoryModels": "{model} model",
+    "common_verifyHere": "verifikasi di sini",
     "ttsVoice_Ugne": "Di dalam api",
+    "pricing": {
+        "perMillionTokens": "per 1 Juta token",
+        "tokens": "token",
+        "free": "Bebas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 Juta token teks",
+                "audioTokens": "{price} per 1 Juta token audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 Juta token teks",
+                "audioTokens": "{price} per 1 Juta token audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 Juta token teks",
+                "audioTokens": "{price} per 1 Juta token audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 Juta token"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 Juta token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 Juta karakter",
+                "neural": "{price} per 1 Juta karakter",
+                "studio": "{price} per 1 Juta karakter",
+                "chirpHD": "Tidak dapat memverifikasi",
+                "chirp3HD": "{price} per 1 Juta karakter"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulir Pengaturan Sesi",
         "description": "Di sini Anda dapat memilih LLM dan opsional TTS pengaturan untuk setiap agen.",
@@ -309,7 +343,7 @@ const id = {
         "initialPromptDescription": "Prompt ini akan dikirim sebagai pesan pertama untuk memulai percakapan. Jika Anda membiarkannya kosong, prompt tidak akan muncul.",
         "startConversation": "Mulai Percakapan",
         "starting": "Memulai...",
-        "startTheConversation": "Mulai percakapan.",
+        "startTheConversation": "Silakan memulai percakapan.",
         "languageSupportNote": "Indikator dukungan bahasa menunjukkan kompatibilitas model dengan {languageName}Model tanpa dukungan dinonaktifkan.",
         "reasoningNote": "Menunjukkan model menggunakan token 'berpikir' atau 'bernalar'. Output ini ditagih tetapi tidak terlihat dalam obrolan.",
         "openaiOrgVerificationNote": "Menunjukkan sebuah OpenAI model membutuhkan organisasi yang terverifikasi. Anda dapat",
@@ -335,15 +369,15 @@ const id = {
         "backToMain": "Kembali ke Utama",
         "conversationHistory": "Riwayat Percakapan",
         "chatWith": "Ngobrol dengan {agentA} & {agentB}",
+        "conversationDescription": "Dimulai pada {date} - Bahasa: {language}",
         "viewConversation": "Lihat Percakapan",
         "backToPreviousChats": "Kembali ke Obrolan Sebelumnya",
         "resumeConversation": "Lanjutkan Percakapan",
         "resuming": "Melanjutkan...",
         "sessionDetails": "Detail Sesi",
-        "language": "Bahasa:",
+        "language": "Bahasa",
         "transcript": "Salinan",
         "loadingHistory": "Memuat riwayat...",
-        "conversationDescription": "Dimulai pada {date} - Bahasa: {language}",
         "loadingConversation": "Memuat percakapan...",
         "chatStartedOn": "Obrolan dimulai pada {date}",
         "agentAModel": "Agen A Model",
@@ -355,18 +389,8 @@ const id = {
         "model": "Model",
         "voice": "Suara"
     },
-    "common_verifyHere": "verifikasi di sini",
-    "page_AvailableImageModelsTitle": "Model Gambar yang Tersedia Saat Ini",
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",
-    "imageModel_PriceUSD": "Harga (USD)",
-    "page_TooltipKnowledgeCutoff": "Pengetahuan model terputus pada tanggal ini.",
-    "modelCategory_MistralAIPremierModels": "Model utama",
-    "modelCategory_MistralAIOpenModels": "Model terbuka",
-    "pricing": {
-        "perMillionTokens": "per 1 Juta token",
-        "tokens": "token",
-        "free": "Bebas"
-    }
+    "imageModel_PriceUSD": "Harga (USD)"
 };
 export default id;

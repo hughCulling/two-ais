@@ -71,6 +71,7 @@ const th = {
         "mn": "ชาวมองโกเลีย"
     },
     "settings": {
+        "loading": "กำลังโหลดการตั้งค่า...",
         "title": "การตั้งค่า",
         "sections": {
             "appearance": "รูปร่าง",
@@ -95,17 +96,17 @@ const th = {
         },
         "apiKeys": {
             "title": "API กุญแจ",
-            "description": "จัดการของคุณ API กุญแจสำหรับที่แตกต่างกัน AI ผู้ให้บริการ",
-            "saved": "บันทึกแล้ว",
-            "notSet": "ไม่ได้ตั้งค่า",
-            "setKey": "ตั้งค่าคีย์",
-            "updateKey": "อัปเดตคีย์",
-            "removeKey": "ถอดกุญแจออก",
-            "getKeyInstructions": "รับของคุณ API สำคัญ",
-            "noNewKeys": "ไม่มีใหม่ API ป้อนคีย์เพื่อบันทึก",
-            "unexpectedResponse": "ได้รับการตอบรับที่ไม่คาดคิดจากเซิร์ฟเวอร์",
+            "description": "จัดการของคุณ API กุญแจสำหรับที่แตกต่างกัน AI การบริการ",
+            "setKey": "ชุด",
+            "updateKey": "อัปเดต",
+            "saveUpdateKeys": "บันทึก / อัปเดตคีย์",
+            "saving": "ประหยัด...",
+            "noNewKeys": "ไม่มีคีย์ใหม่ที่จะบันทึก",
+            "keyStoredSecurely": "ของคุณ API คีย์จะถูกเก็บไว้อย่างปลอดภัยและเข้ารหัส",
+            "enteringNewKeyOverwrites": "การป้อนรหัสใหม่จะเขียนทับรหัสที่มีอยู่",
             "failedToSaveKey": "ไม่สามารถบันทึกคีย์ {serviceName} ได้",
-            "someKeysNotSaved": "บาง API ไม่สามารถบันทึกคีย์ได้ โปรดตรวจสอบรายละเอียดด้านล่าง",
+            "unexpectedResponse": "การตอบสนองที่ไม่คาดคิดจากเซิร์ฟเวอร์",
+            "someKeysNotSaved": "ไม่สามารถบันทึกคีย์บางรายการได้ โปรดตรวจสอบข้อผิดพลาดด้านบน",
             "keyStatus": "สถานะคีย์...",
             "apiKeySecurelySaved": "API บันทึกคีย์อย่างปลอดภัย",
             "confirmRemoveTitle": "ยืนยันการลบ",
@@ -114,16 +115,12 @@ const th = {
             "successfullyRemovedKey": "ลบคีย์ {serviceName} สำเร็จแล้ว",
             "keyNotSet": "สถานะคีย์: ไม่ได้ตั้งค่า",
             "keySet": "สถานะคีย์: ตั้งค่า",
-            "saveButton": "บันทึก API คีย์",
-            "enteringNewKeyOverwrites": "การป้อนรหัสใหม่จะเขียนทับรหัสที่บันทึกไว้",
-            "keyStoredSecurely": "กุญแจของคุณจะถูกเก็บไว้อย่างปลอดภัยโดยใช้ Google ผู้จัดการลับ",
-            "saveUpdateKeys": "บันทึก / อัปเดตคีย์",
-            "saving": "ประหยัด..."
-        },
-        "loading": "กำลังโหลดการตั้งค่า..."
+            "saveButton": "บันทึก API คีย์"
+        }
     },
     "main": {
         "title": "AI การสนทนา",
+        "aiConversation": "AI การสนทนา",
         "setupForm": {
             "title": "ตั้งค่าการสนทนาของคุณ",
             "agentA": "ตัวแทนเอ",
@@ -141,7 +138,7 @@ const th = {
                 "selectModel": "เลือก TTS แบบอย่าง"
             },
             "startConversation": "เริ่มการสนทนา",
-            "conversationPrompt": "เริ่มการสนทนา"
+            "conversationPrompt": "กรุณาเริ่มการสนทนา"
         },
         "conversation": {
             "thinking": "กำลังคิด...",
@@ -153,8 +150,7 @@ const th = {
             "perMillionTokens": "ต่อหนึ่งล้านโทเค็น",
             "input": "ป้อนข้อมูล",
             "output": "เอาท์พุต"
-        },
-        "aiConversation": "AI การสนทนา"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const th = {
             "signUpWithGoogle": "สมัครสมาชิกด้วย Google",
             "hasAccount": "มีบัญชีอยู่แล้วใช่ไหม?",
             "signIn": "ลงชื่อเข้าใช้",
-            "emailLabel": "Email ที่อยู่",
+            "emailLabel": "ที่อยู่อีเมล",
             "confirmPasswordPlaceholder": "ยืนยันรหัสผ่าน",
             "signingUp": "กำลังสมัครสมาชิก..."
         },
@@ -185,7 +181,7 @@ const th = {
             "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
             "userNotFound": "ไม่พบผู้ใช้",
             "weakPassword": "รหัสผ่านควรมีอย่างน้อย 6 ตัวอักษร",
-            "emailInUse": "Email ใช้งานแล้ว",
+            "emailInUse": "อีเมล์ถูกใช้งานแล้ว",
             "generic": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
             "initialization": "เกิดข้อผิดพลาดในการเริ่มต้น โปรดลองอีกครั้งในภายหลัง",
             "invalidEmail": "กรุณากรอกที่อยู่อีเมลที่ถูกต้อง",
@@ -229,12 +225,14 @@ const th = {
     "modelCategory_Gemini2_0": "Gemini 2.0 แบบจำลอง",
     "modelCategory_Gemini1_5": "Gemini 1.5 แบบจำลอง",
     "modelCategory_Claude4": "Claude 4 แบบจำลอง",
-    "modelCategory_Claude3_7": "Claude 3.7 แบบจำลอง",
+    "modelCategory_Claude3_7": "Claude 3.7 แบบอย่าง",
     "modelCategory_Claude3_5": "Claude 3.5 แบบจำลอง",
     "modelCategory_Claude3": "Claude 3 แบบจำลอง",
-    "modelCategory_Grok4": "Grok 4 แบบจำลอง",
+    "modelCategory_Grok4": "Grok 4 แบบอย่าง",
     "modelCategory_Grok3": "Grok 3 แบบจำลอง",
     "modelCategory_Grok3Mini": "Grok 3 โมเดลมินิ",
+    "modelCategory_MistralAIPremierModels": "นางแบบชั้นนำ",
+    "modelCategory_MistralAIOpenModels": "โมเดลเปิด",
     "modelCategory_Llama4": "Llama 4 รุ่น",
     "modelCategory_Llama3_3": "Llama 3.3 โมเดล",
     "modelCategory_Llama3_2": "Llama 3.2 โมเดล",
@@ -257,7 +255,7 @@ const th = {
     "modelCategory_Qwen2_5Vision": "Qwen2.5 โมเดลวิสัยทัศน์",
     "modelCategory_Qwen2_5Coder": "Qwen2.5 โมเดลโค้ดเดอร์",
     "modelCategory_Qwen2": "Qwen2 รุ่น",
-    "modelCategory_Qwen2Vision": "Qwenโมเดลวิสัยทัศน์ 2 แบบ",
+    "modelCategory_Qwen2Vision": "Qwen2 วิสัยทัศน์โมเดล",
     "modelCategory_QwenModels": "Qwen แบบจำลอง",
     "modelCategory_OtherModels": "รุ่นอื่นๆ",
     "page_ErrorLoadingUserData": "ไม่สามารถโหลดข้อมูลผู้ใช้: {errorMessage} โปรดลองรีเฟรช",
@@ -269,31 +267,67 @@ const th = {
     "page_LoadingUserData": "กำลังโหลดข้อมูลผู้ใช้...",
     "page_ErrorAlertTitle": "ข้อผิดพลาด",
     "page_WelcomeTitle": "ยินดีต้อนรับสู่ Two AIs",
-    "page_WelcomeSubtitle": "เว็บไซต์นี้ช่วยให้คุณฟังบทสนทนาระหว่างสองคน Large Language Models -LLMs-",
+    "page_WelcomeSubtitle": "เว็บไซต์นี้ช่วยให้คุณฟังบทสนทนาระหว่างสองคน Large Language Models -LLMs) และสร้างภาพสำหรับแต่ละรอบ",
     "page_ApiKeysRequiredTitle": "API ต้องมีกุญแจ",
     "page_ApiKeysRequiredDescription": "หากต้องการสนทนา คุณต้องระบุข้อมูลของคุณเอง API กุญแจสำหรับ AI โมเดลที่คุณต้องการใช้ (เช่น OpenAI- Google- Anthropic) หลังจากลงชื่อเข้าใช้แล้ว สามารถดูคำแนะนำโดยละเอียดสำหรับแต่ละผู้ให้บริการได้ที่ การตั้งค่า / API หน้าคีย์หลังจากลงชื่อเข้าใช้",
     "page_SignInPrompt": "หากต้องการเริ่มเซสชันของคุณเอง คุณสามารถลงชื่อเข้าใช้หรือสร้างบัญชีโดยใช้ลิงก์ในส่วนหัว",
     "page_VideoTitle": "Two AIs การสาธิตการสนทนา",
     "page_AvailableLLMsTitle": "มีจำหน่ายในปัจจุบัน LLMs",
+    "page_TooltipKnowledgeCutoff": "ความรู้ของโมเดลถูกตัดออกในวันที่นี้",
     "page_TooltipGoogleThinkingBudget": "นี้ Google แบบจำลองนี้ใช้ 'งบประมาณการคิด' ผลลัพธ์ 'การคิด' จะถูกเรียกเก็บเงิน แต่จะไม่ปรากฏในแชท",
     "page_TooltipAnthropicExtendedThinking": "นี้ Anthropic แบบจำลองนี้ใช้ 'การคิดแบบขยาย' ผลลัพธ์ของการ 'คิด' จะถูกเรียกเก็บเงิน แต่จะไม่ปรากฏในแชท",
     "page_TooltipXaiThinking": "นี้ xAI โมเดลใช้ 'การคิด' ผลลัพธ์นี้ถูกเรียกเก็บเงินแต่ไม่ปรากฏในแชท",
-    "page_TooltipQwenReasoning": "นี้ Qwen แบบจำลองนี้ใช้ 'การใช้เหตุผล/การคิด' ผลลัพธ์นี้ถูกเรียกเก็บเงินแล้ว แต่จะไม่ปรากฏในแชท",
+    "page_TooltipQwenReasoning": "นี้ Qwen โมเดลใช้ 'การใช้เหตุผล/การคิด' ผลลัพธ์นี้ถูกเรียกเก็บเงินแล้ว แต่จะไม่ปรากฏในแชท",
     "page_TooltipDeepSeekReasoning": "นี้ DeepSeek โมเดลใช้ 'การใช้เหตุผล/การคิด' ผลลัพธ์ถูกเรียกเก็บเงินแต่ไม่ปรากฏในแชท",
     "page_TooltipGenericReasoning": "โมเดลนี้ใช้โทเค็นการให้เหตุผลที่ไม่ปรากฏในแชทแต่จะถูกเรียกเก็บเงินเป็นโทเค็นเอาต์พุต",
     "page_TooltipRequiresVerification": "ต้องได้รับการตรวจสอบ OpenAI องค์กร คุณสามารถตรวจสอบได้ที่นี่",
     "page_TooltipSupportsLanguage": "รองรับ {languageName}",
-    "page_TooltipMayNotSupportLanguage": "รุ่นนี้อาจไม่รองรับ {languageName} สำหรับการสนทนาได้อย่างสมบูรณ์",
+    "page_TooltipMayNotSupportLanguage": "รุ่นนี้อาจไม่รองรับเต็มที่ {languageName} เพื่อการสนทนา",
     "page_BadgePreview": "ตัวอย่าง",
     "page_BadgeExperimental": "การทดลอง",
     "page_BadgeBeta": "เบต้า",
     "page_AvailableTTSTitle": "มีจำหน่ายในปัจจุบัน Text-to-Speech -TTS-",
+    "page_AvailableImageModelsTitle": "โมเดลภาพที่มีอยู่ในปัจจุบัน",
     "page_NoTTSOptions": "เลขที่ TTS ตัวเลือกที่มีอยู่ในปัจจุบัน",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "ราคาตรวจสอบล่าสุดเมื่อ {date}",
-    "page_PricingPerTokens": "ต่อ {amount} โทเค็น",
+    "page_PricingPerTokens": "ต่อ 1 ล้านโทเค็น",
     "page_ModelCategoryModels": "{model} แบบจำลอง",
+    "common_verifyHere": "ยืนยันที่นี่",
     "ttsVoice_Ugne": "ในกองไฟ",
+    "pricing": {
+        "perMillionTokens": "ต่อ 1 ล้านโทเค็น",
+        "tokens": "โทเค็น",
+        "free": "ฟรี",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} ต่อโทเค็นข้อความ 1 ล้านรายการ",
+                "audioTokens": "{price} ต่อโทเค็นเสียง 1 ล้าน"
+            },
+            "geminiPro": {
+                "textTokens": "{price} ต่อโทเค็นข้อความ 1 ล้านรายการ",
+                "audioTokens": "{price} ต่อโทเค็นเสียง 1 ล้าน"
+            },
+            "openAIMini": {
+                "textTokens": "{price} ต่อโทเค็นข้อความ 1 ล้านรายการ",
+                "audioTokens": "{price} ต่อโทเค็นเสียง 1 ล้าน"
+            },
+            "openAITTS1": {
+                "standard": "{price} ต่อ 1 ล้านโทเค็น"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} ต่อ 1 ล้านโทเค็น"
+            },
+            "plusSign": " - ",
+            "googleCloud": {
+                "standard": "{price} ต่อ 1 ล้านตัวอักษร",
+                "neural": "{price} ต่อ 1 ล้านตัวอักษร",
+                "studio": "{price} ต่อ 1 ล้านตัวอักษร",
+                "chirpHD": "ไม่สามารถตรวจสอบได้",
+                "chirp3HD": "{price} ต่อ 1 ล้านตัวอักษร"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "แบบฟอร์มการตั้งค่าเซสชัน",
         "description": "ที่นี่คุณสามารถเลือก LLM และตัวเลือกเพิ่มเติม TTS การตั้งค่าสำหรับแต่ละตัวแทน",
@@ -305,11 +339,11 @@ const th = {
         "agentATTS": "ตัวแทนเอ TTS",
         "agentBTTS": "เอเจนท์ บี TTS",
         "provider": "ผู้ให้บริการ",
-        "initialSystemPrompt": "การแจ้งเตือนระบบเริ่มต้น",
+        "initialSystemPrompt": "การแจ้งเตือนระบบเบื้องต้น",
         "initialPromptDescription": "ข้อความแจ้งเตือนนี้จะถูกส่งเป็นข้อความแรกเพื่อเริ่มการสนทนา หากคุณเว้นว่างไว้ จะไม่มีข้อความแจ้งเตือนเกิดขึ้น",
         "startConversation": "เริ่มการสนทนา",
         "starting": "กำลังเริ่มต้น...",
-        "startTheConversation": "เริ่มการสนทนา",
+        "startTheConversation": "กรุณาเริ่มการสนทนา",
         "languageSupportNote": "ตัวบ่งชี้การรองรับภาษาแสดงความเข้ากันได้ของโมเดลกับ {languageName}. โมเดลที่ไม่มีการรองรับจะถูกปิดใช้งาน",
         "reasoningNote": "ระบุว่าโมเดลใช้โทเค็น 'การคิด' หรือ 'การใช้เหตุผล' ผลลัพธ์นี้ถูกเรียกเก็บเงินแต่จะไม่ปรากฏในแชท",
         "openaiOrgVerificationNote": "บ่งชี้ถึง OpenAI โมเดลต้องมีองค์กรที่ได้รับการตรวจสอบ คุณสามารถ",
@@ -335,15 +369,15 @@ const th = {
         "backToMain": "กลับสู่หน้าหลัก",
         "conversationHistory": "ประวัติการสนทนา",
         "chatWith": "แชทกับ {agentA} - {agentB}",
+        "conversationDescription": "เริ่มต้นเมื่อ {date} - ภาษา: {language}",
         "viewConversation": "ดูการสนทนา",
         "backToPreviousChats": "กลับไปที่การสนทนาครั้งก่อน",
         "resumeConversation": "การสนทนาต่อ",
         "resuming": "กำลังดำเนินการต่อ...",
         "sessionDetails": "รายละเอียดเซสชัน",
-        "language": "ภาษา:",
+        "language": "ภาษา",
         "transcript": "บทบันทึก",
         "loadingHistory": "กำลังโหลดประวัติ...",
-        "conversationDescription": "เริ่มต้นเมื่อ {date} - ภาษา: {language}",
         "loadingConversation": "กำลังโหลดการสนทนา...",
         "chatStartedOn": "เริ่มแชทเมื่อ {date}",
         "agentAModel": "ตัวแทนรุ่น A",
@@ -355,18 +389,8 @@ const th = {
         "model": "แบบอย่าง",
         "voice": "เสียง"
     },
-    "common_verifyHere": "ยืนยันที่นี่",
-    "page_AvailableImageModelsTitle": "โมเดลภาพที่มีอยู่ในปัจจุบัน",
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",
-    "imageModel_PriceUSD": "ราคา (USD)",
-    "page_TooltipKnowledgeCutoff": "ความรู้ของโมเดลถูกตัดออกในวันที่นี้",
-    "modelCategory_MistralAIPremierModels": "นางแบบชั้นนำ",
-    "modelCategory_MistralAIOpenModels": "โมเดลเปิด",
-    "pricing": {
-        "perMillionTokens": "ต่อ 1 ล้านโทเค็น",
-        "tokens": "โทเค็น",
-        "free": "ฟรี"
-    }
+    "imageModel_PriceUSD": "ราคา (USD)"
 };
 export default th;

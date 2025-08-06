@@ -71,6 +71,7 @@ const ja = {
         "mn": "モンゴル語"
     },
     "settings": {
+        "loading": "設定を読み込んでいます...",
         "title": "設定",
         "sections": {
             "appearance": "外観",
@@ -95,17 +96,17 @@ const ja = {
         },
         "apiKeys": {
             "title": "API キー",
-            "description": "管理する API 異なるキー AI プロバイダー",
-            "saved": "保存されました",
-            "notSet": "未設定",
-            "setKey": "キーを設定する",
-            "updateKey": "更新キー",
-            "removeKey": "キーを削除",
-            "getKeyInstructions": "手に入れよう API 鍵",
-            "noNewKeys": "新しいものはありません API 保存するためにキーを入力しました。",
-            "unexpectedResponse": "サーバーから予期しない応答を受信しました。",
+            "description": "管理する API 異なるキー AI サービス。",
+            "setKey": "セット",
+            "updateKey": "アップデート",
+            "saveUpdateKeys": "キーの保存/更新",
+            "saving": "保存中...",
+            "noNewKeys": "保存する新しいキーはありません。",
+            "keyStoredSecurely": "あなたの API キーは安全に暗号化されて保管されます。",
+            "enteringNewKeyOverwrites": "新しいキーを入力すると、既存のキーが上書きされます。",
             "failedToSaveKey": "{serviceName} キーを保存できませんでした。",
-            "someKeysNotSaved": "いくつかの API キーを保存できませんでした。以下の詳細をご確認ください。",
+            "unexpectedResponse": "サーバーからの予期しない応答。",
+            "someKeysNotSaved": "一部のキーを保存できませんでした。上記のエラーを確認してください。",
             "keyStatus": "キーステータス...",
             "apiKeySecurelySaved": "API キーは安全に保存されました",
             "confirmRemoveTitle": "削除の確認",
@@ -114,16 +115,12 @@ const ja = {
             "successfullyRemovedKey": "{serviceName} キーを正常に削除しました。",
             "keyNotSet": "キーステータス: 未設定",
             "keySet": "キーステータス: 設定済み",
-            "saveButton": "保存 API キー",
-            "enteringNewKeyOverwrites": "新しいキーを入力すると、保存されているキーが上書きされます。",
-            "keyStoredSecurely": "あなたの鍵は安全に保管されます Google シークレットマネージャー。",
-            "saveUpdateKeys": "キーの保存/更新",
-            "saving": "保存中..."
-        },
-        "loading": "設定を読み込んでいます..."
+            "saveButton": "保存 API キー"
+        }
     },
     "main": {
         "title": "AI 会話",
+        "aiConversation": "AI 会話",
         "setupForm": {
             "title": "会話を設定する",
             "agentA": "エージェントA",
@@ -141,7 +138,7 @@ const ja = {
                 "selectModel": "選択 TTS モデル"
             },
             "startConversation": "会話を始める",
-            "conversationPrompt": "会話を始めましょう。"
+            "conversationPrompt": "会話を始めてください。"
         },
         "conversation": {
             "thinking": "考え...",
@@ -153,8 +150,7 @@ const ja = {
             "perMillionTokens": "100万トークンあたり",
             "input": "入力",
             "output": "出力"
-        },
-        "aiConversation": "AI 会話"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ja = {
             "signUpWithGoogle": "サインアップ Google",
             "hasAccount": "すでにアカウントをお持ちですか?",
             "signIn": "サインイン",
-            "emailLabel": "Email 住所",
+            "emailLabel": "電子メールアドレス",
             "confirmPasswordPlaceholder": "パスワードを認証する",
             "signingUp": "サインアップ中..."
         },
@@ -185,7 +181,7 @@ const ja = {
             "invalidCredentials": "メールアドレスまたはパスワードが無効です",
             "userNotFound": "ユーザーが見つかりません",
             "weakPassword": "パスワードは6文字以上である必要があります",
-            "emailInUse": "Email すでに使用中",
+            "emailInUse": "メールアドレスはすでに使用されています",
             "generic": "エラーが発生しました。もう一度お試しください。",
             "initialization": "初期化エラーが発生しました。しばらくしてからもう一度お試しください。",
             "invalidEmail": "有効なメールアドレスを入力してください。",
@@ -235,6 +231,8 @@ const ja = {
     "modelCategory_Grok4": "Grok 4 モデル",
     "modelCategory_Grok3": "Grok 3 モデル",
     "modelCategory_Grok3Mini": "Grok 3 ミニモデル",
+    "modelCategory_MistralAIPremierModels": "プレミアモデル",
+    "modelCategory_MistralAIOpenModels": "オープンモデル",
     "modelCategory_Llama4": "Llama 4つのモデル",
     "modelCategory_Llama3_3": "Llama 3.3 モデル",
     "modelCategory_Llama3_2": "Llama 3.2 モデル",
@@ -251,13 +249,13 @@ const ja = {
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distillモデル",
     "modelCategory_DeepSeekModels": "DeepSeek モデル",
     "modelCategory_MistralAIModels": "Mistral AI モデル",
-    "modelCategory_Qwen3": "Qwen3つのモデル",
+    "modelCategory_Qwen3": "Qwen3モデル",
     "modelCategory_QwQwQ": "Qwen QwQモデル",
     "modelCategory_Qwen2_5": "Qwen2.5モデル",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 視覚モデル",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 コーダモデル",
-    "modelCategory_Qwen2": "Qwen2つのモデル",
-    "modelCategory_Qwen2Vision": "Qwen2つのビジョンモデル",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 ビジョンモデル",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 コーダーモデル",
+    "modelCategory_Qwen2": "Qwen2モデル",
+    "modelCategory_Qwen2Vision": "Qwen2 ビジョンモデル",
     "modelCategory_QwenModels": "Qwen モデル",
     "modelCategory_OtherModels": "その他のモデル",
     "page_ErrorLoadingUserData": "ユーザーデータの読み込みに失敗しました: {errorMessage}。更新してください。",
@@ -269,12 +267,13 @@ const ja = {
     "page_LoadingUserData": "ユーザーデータを読み込んでいます...",
     "page_ErrorAlertTitle": "エラー",
     "page_WelcomeTitle": "ようこそ Two AIs",
-    "page_WelcomeSubtitle": "このウェブサイトでは、2人の会話を聞くことができます Large Language Models （LLMs）。",
+    "page_WelcomeSubtitle": "このウェブサイトでは、2人の会話を聞くことができます Large Language Models （LLMs）を実行し、各ターンごとに画像を生成します。",
     "page_ApiKeysRequiredTitle": "API 必要なキー",
     "page_ApiKeysRequiredDescription": "会話を行うには、独自の API キー AI 使用したいモデル（例： OpenAI、 Google、 Anthropic）にログイン後、各プロバイダの詳細な手順については、設定/ API サインイン後のキーページ。",
     "page_SignInPrompt": "独自のセッションを開始するには、ヘッダーのリンクを使用してサインインするか、アカウントを作成します。",
     "page_VideoTitle": "Two AIs 会話デモ",
     "page_AvailableLLMsTitle": "現在入手可能 LLMs",
+    "page_TooltipKnowledgeCutoff": "モデルの知識はこの時点で切断されます。",
     "page_TooltipGoogleThinkingBudget": "これ Google このモデルは「思考予算」を使用します。「思考」の出力は課金されますが、チャットには表示されません。",
     "page_TooltipAnthropicExtendedThinking": "これ Anthropic このモデルは「拡張思考」を使用します。「思考」の出力は課金対象となりますが、チャットには表示されません。",
     "page_TooltipXaiThinking": "これ xAI モデルは「思考」を使用します。この出力は課金対象ですが、チャットには表示されません。",
@@ -282,18 +281,53 @@ const ja = {
     "page_TooltipDeepSeekReasoning": "これ DeepSeek モデルは「推論/思考」を使用します。出力は課金されますが、チャットには表示されません。",
     "page_TooltipGenericReasoning": "このモデルでは、チャットには表示されないが出力トークンとして課金される推論トークンが使用されます。",
     "page_TooltipRequiresVerification": "認証が必要です OpenAI 組織。こちらで確認できます。",
-    "page_TooltipSupportsLanguage": "{languageName} をサポートしています",
-    "page_TooltipMayNotSupportLanguage": "このモデルは会話用の {languageName} を完全にサポートしていない可能性があります。",
+    "page_TooltipSupportsLanguage": "サポート {languageName}",
+    "page_TooltipMayNotSupportLanguage": "このモデルは完全にサポートされていない可能性があります {languageName} 会話のために。",
     "page_BadgePreview": "プレビュー",
     "page_BadgeExperimental": "実験的",
     "page_BadgeBeta": "ベータ",
     "page_AvailableTTSTitle": "現在入手可能 Text-to-Speech （TTS）",
+    "page_AvailableImageModelsTitle": "現在利用可能な画像モデル",
     "page_NoTTSOptions": "いいえ TTS 現在利用可能なオプション。",
     "page_TruncatableNoteFormat": "（{noteText}）",
     "page_PricesLastVerifiedOn": "最終確認価格 {date}",
-    "page_PricingPerTokens": "あたり {amount} トークン",
+    "page_PricingPerTokens": "100万トークンあたり",
     "page_ModelCategoryModels": "{model} モデル",
+    "common_verifyHere": "こちらで確認",
     "ttsVoice_Ugne": "火の中で",
+    "pricing": {
+        "perMillionTokens": "100万トークンあたり",
+        "tokens": "トークン",
+        "free": "無料",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 100万テキストトークンあたり",
+                "audioTokens": "{price} 100万オーディオトークンあたり"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 100万テキストトークンあたり",
+                "audioTokens": "{price} 100万オーディオトークンあたり"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 100万テキストトークンあたり",
+                "audioTokens": "{price} 100万オーディオトークンあたり"
+            },
+            "openAITTS1": {
+                "standard": "{price} 100万トークンあたり"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 100万トークンあたり"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 100万文字あたり",
+                "neural": "{price} 100万文字あたり",
+                "studio": "{price} 100万文字あたり",
+                "chirpHD": "確認できませんでした",
+                "chirp3HD": "{price} 100万文字あたり"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "セッション設定フォーム",
         "description": "ここでLLMとオプションを選択できます TTS 各エージェントの設定。",
@@ -309,7 +343,7 @@ const ja = {
         "initialPromptDescription": "このプロンプトは、会話を開始するための最初のメッセージとして送信されます。空白のままにすると、プロンプトは表示されません。",
         "startConversation": "会話を始める",
         "starting": "起動...",
-        "startTheConversation": "会話を始めましょう。",
+        "startTheConversation": "会話を始めてください。",
         "languageSupportNote": "言語サポートインジケーターは、モデルの互換性を示します。 {languageName}サポートされていないモデルは無効になります。",
         "reasoningNote": "モデルが「思考」または「推論」トークンを使用していることを示します。この出力は課金対象ですが、チャットには表示されません。",
         "openaiOrgVerificationNote": "を示します OpenAI モデルには認証済みの組織が必要です。",
@@ -335,15 +369,15 @@ const ja = {
         "backToMain": "メインに戻る",
         "conversationHistory": "会話履歴",
         "chatWith": "チャット {agentA} ＆ {agentB}",
+        "conversationDescription": "開始日 {date} - 言語： {language}",
         "viewConversation": "会話を表示",
         "backToPreviousChats": "前のチャットに戻る",
         "resumeConversation": "会話を再開する",
         "resuming": "再開しています...",
         "sessionDetails": "セッションの詳細",
-        "language": "言語：",
+        "language": "言語",
         "transcript": "トランスクリプト",
         "loadingHistory": "履歴を読み込んでいます...",
-        "conversationDescription": "開始日 {date} - 言語： {language}",
         "loadingConversation": "会話を読み込んでいます...",
         "chatStartedOn": "チャット開始日時 {date}",
         "agentAModel": "エージェントAモデル",
@@ -355,18 +389,8 @@ const ja = {
         "model": "モデル",
         "voice": "声"
     },
-    "common_verifyHere": "こちらで確認",
-    "page_AvailableImageModelsTitle": "現在利用可能な画像モデル",
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",
-    "imageModel_PriceUSD": "価格 (USD)",
-    "page_TooltipKnowledgeCutoff": "モデルの知識はこの時点で切断されます。",
-    "modelCategory_MistralAIPremierModels": "プレミアモデル",
-    "modelCategory_MistralAIOpenModels": "オープンモデル",
-    "pricing": {
-        "perMillionTokens": "100万トークンあたり",
-        "tokens": "トークン",
-        "free": "無料"
-    }
+    "imageModel_PriceUSD": "価格 (USD)"
 };
 export default ja;

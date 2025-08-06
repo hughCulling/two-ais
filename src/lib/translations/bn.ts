@@ -71,6 +71,7 @@ const bn = {
         "mn": "মঙ্গোলীয়"
     },
     "settings": {
+        "loading": "সেটিংস লোড হচ্ছে...",
         "title": "সেটিংস",
         "sections": {
             "appearance": "চেহারা",
@@ -95,17 +96,17 @@ const bn = {
         },
         "apiKeys": {
             "title": "API চাবি",
-            "description": "তোমার পরিচালনা করো API বিভিন্ন ধরণের জন্য কী AI সরবরাহকারী",
-            "saved": "সংরক্ষিত",
-            "notSet": "সেট করা নেই",
-            "setKey": "সেট কী",
-            "updateKey": "আপডেট কী",
-            "removeKey": "কী সরান",
-            "getKeyInstructions": "তোমারটা নাও API চাবি",
-            "noNewKeys": "নতুন নেই API সংরক্ষণ করার জন্য কী প্রবেশ করানো হয়েছে।",
-            "unexpectedResponse": "সার্ভার থেকে একটি অপ্রত্যাশিত প্রতিক্রিয়া পেয়েছি।",
+            "description": "তোমার পরিচালনা করো API বিভিন্ন জন্য কী AI পরিষেবা।",
+            "setKey": "সেট",
+            "updateKey": "আপডেট",
+            "saveUpdateKeys": "কীগুলি সংরক্ষণ / আপডেট করুন",
+            "saving": "সংরক্ষণ করা হচ্ছে...",
+            "noNewKeys": "সংরক্ষণ করার জন্য কোনও নতুন কী নেই।",
+            "keyStoredSecurely": "তোমার API কীটি নিরাপদে সংরক্ষণ করা হবে এবং এনক্রিপ্ট করা হবে।",
+            "enteringNewKeyOverwrites": "একটি নতুন কী প্রবেশ করালে বিদ্যমান কীটি ওভাররাইট হয়ে যাবে।",
             "failedToSaveKey": "{serviceName} কী সংরক্ষণ করা যায়নি।",
-            "someKeysNotSaved": "কিছু API কীগুলি সংরক্ষণ করা যায়নি। অনুগ্রহ করে নীচের বিবরণগুলি পরীক্ষা করুন।",
+            "unexpectedResponse": "সার্ভার থেকে অপ্রত্যাশিত প্রতিক্রিয়া।",
+            "someKeysNotSaved": "কিছু কী সংরক্ষণ করা যায়নি। দয়া করে উপরের ত্রুটিগুলি পরীক্ষা করুন।",
             "keyStatus": "গুরুত্বপূর্ণ অবস্থা...",
             "apiKeySecurelySaved": "API চাবি নিরাপদে সংরক্ষিত",
             "confirmRemoveTitle": "অপসারণ নিশ্চিত করুন",
@@ -114,16 +115,12 @@ const bn = {
             "successfullyRemovedKey": "{serviceName} কী সফলভাবে সরানো হয়েছে।",
             "keyNotSet": "মূল স্থিতি: সেট করা নেই",
             "keySet": "মূল অবস্থা: সেট করুন",
-            "saveButton": "সংরক্ষণ করুন API চাবি(গুলি)",
-            "enteringNewKeyOverwrites": "একটি নতুন কী প্রবেশ করালে সংরক্ষিত কীটি ওভাররাইট হয়ে যাবে।",
-            "keyStoredSecurely": "আপনার চাবি নিরাপদে সংরক্ষণ করা হবে ব্যবহার করে Google সিক্রেট ম্যানেজার।",
-            "saveUpdateKeys": "কীগুলি সংরক্ষণ / আপডেট করুন",
-            "saving": "সংরক্ষণ করা হচ্ছে..."
-        },
-        "loading": "সেটিংস লোড হচ্ছে..."
+            "saveButton": "সংরক্ষণ করুন API চাবি(গুলি)"
+        }
     },
     "main": {
         "title": "AI কথা-বার্তা",
+        "aiConversation": "AI কথা-বার্তা",
         "setupForm": {
             "title": "আপনার কথোপকথন সেট আপ করুন",
             "agentA": "এজেন্ট এ",
@@ -141,7 +138,7 @@ const bn = {
                 "selectModel": "নির্বাচন করুন TTS মডেল"
             },
             "startConversation": "কথোপকথন শুরু করুন",
-            "conversationPrompt": "কথোপকথন শুরু করুন।"
+            "conversationPrompt": "দয়া করে কথোপকথন শুরু করুন।"
         },
         "conversation": {
             "thinking": "ভাবছি...",
@@ -153,8 +150,7 @@ const bn = {
             "perMillionTokens": "প্রতি মিলিয়ন টোকেনে",
             "input": "ইনপুট",
             "output": "আউটপুট"
-        },
-        "aiConversation": "AI কথা-বার্তা"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const bn = {
             "signUpWithGoogle": "সাইন আপ করুন Google",
             "hasAccount": "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
             "signIn": "প্রবেশ কর",
-            "emailLabel": "Email ঠিকানা",
+            "emailLabel": "ইমেল ঠিকানা",
             "confirmPasswordPlaceholder": "পাসওয়ার্ড নিশ্চিত করুন",
             "signingUp": "সাইন আপ করা হচ্ছে..."
         },
@@ -185,7 +181,7 @@ const bn = {
             "invalidCredentials": "অবৈধ ইমেল বা পাসওয়ার্ড",
             "userNotFound": "ব্যবহারকারী খুঁজে পাওয়া যায়নি",
             "weakPassword": "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে",
-            "emailInUse": "Email ইতিমধ্যেই ব্যবহৃত",
+            "emailInUse": "ইমেল ইতিমধ্যেই ব্যবহৃত হচ্ছে",
             "generic": "একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
             "initialization": "আরম্ভের ত্রুটি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
             "invalidEmail": "দয়া করে একটি বৈধ ইমেল ঠিকানা লিখুন।",
@@ -196,7 +192,7 @@ const bn = {
             "profileCheckSaveFailedPrefix": "সাইন ইন করেছেন, কিন্তু প্রোফাইল ডেটা পরীক্ষা/সংরক্ষণ করতে ব্যর্থ হয়েছেন: ",
             "accountExistsWithDifferentCredential": "এই ইমেলটি ব্যবহার করে একটি অ্যাকাউন্ট ইতিমধ্যেই বিদ্যমান, যা একটি ভিন্ন সাইন-ইন পদ্ধতি ব্যবহার করে।",
             "googleSignInFailedPrefix": "Google সাইন-ইন ব্যর্থ হয়েছে: ",
-            "unknownGoogleSignInError": "এই সময় একটি অজানা ত্রুটি ঘটেছে Google সাইন-ইন করুন।",
+            "unknownGoogleSignInError": "একটি অজানা ত্রুটি ঘটেছে Google সাইন-ইন করুন।",
             "passwordsDoNotMatch": "পাসওয়ার্ড মিলছে না।",
             "accountCreatedProfileSaveFailedPrefix": "অ্যাকাউন্ট তৈরি করা হয়েছে, কিন্তু প্রোফাইল ডেটা সংরক্ষণ করা যায়নি: ",
             "unknownProfileSaveError": "প্রোফাইল সংরক্ষণ করার সময় একটি অজানা ত্রুটি ঘটেছে।",
@@ -235,6 +231,8 @@ const bn = {
     "modelCategory_Grok4": "Grok 4 মডেল",
     "modelCategory_Grok3": "Grok 3 মডেল",
     "modelCategory_Grok3Mini": "Grok 3 মিনি মডেল",
+    "modelCategory_MistralAIPremierModels": "প্রিমিয়ার মডেল",
+    "modelCategory_MistralAIOpenModels": "মডেল খুলুন",
     "modelCategory_Llama4": "Llama ৪টি মডেল",
     "modelCategory_Llama3_3": "Llama ৩.৩ মডেল",
     "modelCategory_Llama3_2": "Llama ৩.২ মডেল",
@@ -251,13 +249,13 @@ const bn = {
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 ডিস্টিল মডেল",
     "modelCategory_DeepSeekModels": "DeepSeek মডেল",
     "modelCategory_MistralAIModels": "Mistral AI মডেল",
-    "modelCategory_Qwen3": "Qwen৩টি মডেল",
+    "modelCategory_Qwen3": "Qwen৩ মডেল",
     "modelCategory_QwQwQ": "Qwen QwQ মডেল",
     "modelCategory_Qwen2_5": "Qwen২.৫ মডেল",
     "modelCategory_Qwen2_5Vision": "Qwen২.৫ ভিশন মডেল",
     "modelCategory_Qwen2_5Coder": "Qwen২.৫ কোডার মডেল",
-    "modelCategory_Qwen2": "Qwen২টি মডেল",
-    "modelCategory_Qwen2Vision": "Qwen২টি ভিশন মডেল",
+    "modelCategory_Qwen2": "Qwen২ মডেল",
+    "modelCategory_Qwen2Vision": "Qwen২ ভিশন মডেল",
     "modelCategory_QwenModels": "Qwen মডেল",
     "modelCategory_OtherModels": "অন্যান্য মডেল",
     "page_ErrorLoadingUserData": "ব্যবহারকারীর ডেটা লোড করা যায়নি: {errorMessage}। অনুগ্রহ করে রিফ্রেশ করার চেষ্টা করুন।",
@@ -265,16 +263,17 @@ const bn = {
     "page_ErrorUserApiKeyConfig": "ব্যবহারকারী API কী কনফিগারেশন লোড করা যায়নি। অনুগ্রহ করে রিফ্রেশ করুন অথবা সেটিংস পরীক্ষা করুন।",
     "page_ErrorStartingSessionAPI": "API ত্রুটি: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "সেশন শুরু করার সময় সমস্যা: {errorMessage}",
-    "page_ErrorSessionIdMissing": "API উত্তর সফল হয়েছে কিন্তু কথোপকথন আইডি অন্তর্ভুক্ত ছিল না।",
+    "page_ErrorSessionIdMissing": "API উত্তর সফল হয়েছে কিন্তু কথোপকথন অন্তর্ভুক্ত ছিল না।",
     "page_LoadingUserData": "ব্যবহারকারীর ডেটা লোড হচ্ছে...",
     "page_ErrorAlertTitle": "ত্রুটি",
     "page_WelcomeTitle": "স্বাগতম Two AIs",
-    "page_WelcomeSubtitle": "এই ওয়েবসাইটটি আপনাকে দুজনের মধ্যে কথোপকথন শুনতে দেয় Large Language Models (LLMs)।",
-    "page_ApiKeysRequiredTitle": "API চাবি প্রয়োজন",
+    "page_WelcomeSubtitle": "এই ওয়েবসাইটটি আপনাকে দুজনের মধ্যে কথোপকথন শুনতে দেয় Large Language Models (LLMs) এবং প্রতিটি পালা জন্য ছবি তৈরি করুন।",
+    "page_ApiKeysRequiredTitle": "API চাবি প্রয়োজন",
     "page_ApiKeysRequiredDescription": "কথোপকথন চালানোর জন্য, আপনাকে নিজের API এর জন্য চাবি AI আপনি যে মডেলগুলি ব্যবহার করতে চান (যেমন, OpenAI, Google, Anthropic) সাইন ইন করার পর। প্রতিটি প্রদানকারীর জন্য বিস্তারিত নির্দেশাবলী সেটিংস / এ পাওয়া যাবে। API সাইন ইন করার পর কী পৃষ্ঠা।",
     "page_SignInPrompt": "আপনার নিজস্ব সেশন শুরু করতে, আপনি হেডারের লিঙ্কটি ব্যবহার করে সাইন ইন করতে পারেন অথবা একটি অ্যাকাউন্ট তৈরি করতে পারেন।",
     "page_VideoTitle": "Two AIs কথোপকথনের ডেমো",
     "page_AvailableLLMsTitle": "বর্তমানে উপলব্ধ LLMs",
+    "page_TooltipKnowledgeCutoff": "এই তারিখে মডেলের জ্ঞান শেষ হয়ে গেছে।",
     "page_TooltipGoogleThinkingBudget": "এই Google মডেলটি 'চিন্তা বাজেট' ব্যবহার করে। 'চিন্তা' আউটপুটটি বিল করা হয় কিন্তু চ্যাটে দৃশ্যমান হয় না।",
     "page_TooltipAnthropicExtendedThinking": "এই Anthropic মডেলটি 'বর্ধিত চিন্তাভাবনা' ব্যবহার করে। 'চিন্তাভাবনা' আউটপুটটি বিল করা হয়েছে কিন্তু চ্যাটে দৃশ্যমান নয়।",
     "page_TooltipXaiThinking": "এই xAI মডেল 'চিন্তা' ব্যবহার করে। এই আউটপুটটি বিল করা হয়েছে কিন্তু চ্যাটে দৃশ্যমান নয়।",
@@ -282,18 +281,53 @@ const bn = {
     "page_TooltipDeepSeekReasoning": "এই DeepSeek মডেল 'যুক্তি/চিন্তা' ব্যবহার করে। আউটপুট বিল করা হয়েছে কিন্তু চ্যাটে দৃশ্যমান নয়।",
     "page_TooltipGenericReasoning": "এই মডেলটিতে যুক্তি টোকেন ব্যবহার করা হয় যা চ্যাটে দৃশ্যমান নয় কিন্তু আউটপুট টোকেন হিসেবে বিল করা হয়।",
     "page_TooltipRequiresVerification": "যাচাই করা প্রয়োজন OpenAI প্রতিষ্ঠান। আপনি এখানে যাচাই করতে পারেন।",
-    "page_TooltipSupportsLanguage": "{languageName} সমর্থন করে",
-    "page_TooltipMayNotSupportLanguage": "এই মডেলটি কথোপকথনের জন্য {languageName} সম্পূর্ণরূপে সমর্থন নাও করতে পারে।",
+    "page_TooltipSupportsLanguage": "সমর্থন করে {languageName}",
+    "page_TooltipMayNotSupportLanguage": "এই মডেলটি সম্পূর্ণরূপে সমর্থন নাও করতে পারে {languageName} কথোপকথনের জন্য।",
     "page_BadgePreview": "প্রিভিউ",
     "page_BadgeExperimental": "পরীক্ষামূলক",
     "page_BadgeBeta": "বিটা",
     "page_AvailableTTSTitle": "বর্তমানে উপলব্ধ Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "বর্তমানে উপলব্ধ চিত্র মডেল",
     "page_NoTTSOptions": "না TTS বর্তমানে উপলব্ধ বিকল্পগুলি।",
     "page_TruncatableNoteFormat": "({নোটটেক্সট})",
     "page_PricesLastVerifiedOn": "দামগুলি শেষবার যাচাই করা হয়েছে {date}",
-    "page_PricingPerTokens": "প্রতি {amount} টোকেন",
+    "page_PricingPerTokens": "প্রতি ১ মিলিয়ন টোকেনে",
     "page_ModelCategoryModels": "{model} মডেল",
+    "common_verifyHere": "এখানে যাচাই করুন",
     "ttsVoice_Ugne": "আগুনে",
+    "pricing": {
+        "perMillionTokens": "প্রতি ১ মিলিয়ন টোকেনে",
+        "tokens": "টোকেন",
+        "free": "বিনামূল্যে",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} প্রতি ১ মিলিয়ন টেক্সট টোকেন",
+                "audioTokens": "{price} প্রতি ১ মিলিয়ন অডিও টোকেনে"
+            },
+            "geminiPro": {
+                "textTokens": "{price} প্রতি ১ মিলিয়ন টেক্সট টোকেন",
+                "audioTokens": "{price} প্রতি ১ মিলিয়ন অডিও টোকেনে"
+            },
+            "openAIMini": {
+                "textTokens": "{price} প্রতি ১ মিলিয়ন টেক্সট টোকেন",
+                "audioTokens": "{price} প্রতি ১ মিলিয়ন অডিও টোকেনে"
+            },
+            "openAITTS1": {
+                "standard": "{price} প্রতি ১ মিলিয়ন টোকেনে"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} প্রতি ১ মিলিয়ন টোকেনে"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} প্রতি ১০ লক্ষ অক্ষরে",
+                "neural": "{price} প্রতি ১০ লক্ষ অক্ষরে",
+                "studio": "{price} প্রতি ১০ লক্ষ অক্ষরে",
+                "chirpHD": "যাচাই করা যায়নি",
+                "chirp3HD": "{price} প্রতি ১০ লক্ষ অক্ষরে"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "সেশন সেটআপ ফর্ম",
         "description": "এখানে আপনি LLM এবং ঐচ্ছিক নির্বাচন করতে পারেন TTS প্রতিটি এজেন্টের জন্য সেটিংস।",
@@ -309,7 +343,7 @@ const bn = {
         "initialPromptDescription": "এই প্রম্পটটি কথোপকথন শুরু করার জন্য প্রথম বার্তা হিসেবে পাঠানো হবে। যদি আপনি এটি খালি রাখেন, তাহলে কোনও প্রম্পট থাকবে না।",
         "startConversation": "কথোপকথন শুরু করুন",
         "starting": "শুরু হচ্ছে...",
-        "startTheConversation": "কথোপকথন শুরু করুন।",
+        "startTheConversation": "দয়া করে কথোপকথন শুরু করুন।",
         "languageSupportNote": "ভাষা সহায়তা সূচকগুলি মডেলের সাথে সামঞ্জস্যপূর্ণতা দেখায় {languageName}. সমর্থন ছাড়া মডেলগুলি অক্ষম করা হয়।",
         "reasoningNote": "একটি মডেল 'চিন্তা' বা 'যুক্তি' টোকেন ব্যবহার করে তা নির্দেশ করে। এই আউটপুটটি বিল করা হয়েছে কিন্তু চ্যাটে দৃশ্যমান নয়।",
         "openaiOrgVerificationNote": "একটি নির্দেশ করে OpenAI মডেলের জন্য একটি যাচাইকৃত প্রতিষ্ঠান প্রয়োজন। আপনি পারেন",
@@ -335,15 +369,15 @@ const bn = {
         "backToMain": "মূল বিভাগে ফিরে যান",
         "conversationHistory": "কথোপকথনের ইতিহাস",
         "chatWith": "সাথে চ্যাট করুন {agentA} & {agentB}",
+        "conversationDescription": "শুরু হয়েছে {date} - ভাষা: {language}",
         "viewConversation": "কথোপকথন দেখুন",
         "backToPreviousChats": "পূর্ববর্তী চ্যাটগুলিতে ফিরে যান",
         "resumeConversation": "কথোপকথন পুনরায় শুরু করুন",
         "resuming": "আবার শুরু হচ্ছে...",
         "sessionDetails": "সেশনের বিবরণ",
-        "language": "ভাষা:",
+        "language": "ভাষা",
         "transcript": "প্রতিলিপি",
         "loadingHistory": "ইতিহাস লোড হচ্ছে...",
-        "conversationDescription": "শুরু হয়েছে {date} - ভাষা: {language}",
         "loadingConversation": "কথোপকথন লোড হচ্ছে...",
         "chatStartedOn": "চ্যাট শুরু হয়েছে {date}",
         "agentAModel": "এজেন্ট এ মডেল",
@@ -355,18 +389,8 @@ const bn = {
         "model": "মডেল",
         "voice": "কণ্ঠস্বর"
     },
-    "common_verifyHere": "এখানে যাচাই করুন",
-    "page_AvailableImageModelsTitle": "বর্তমানে উপলব্ধ চিত্র মডেল",
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",
-    "imageModel_PriceUSD": "দাম (USD)",
-    "page_TooltipKnowledgeCutoff": "এই তারিখে মডেলের জ্ঞান শেষ হয়ে গেছে।",
-    "modelCategory_MistralAIPremierModels": "প্রিমিয়ার মডেল",
-    "modelCategory_MistralAIOpenModels": "খোলা মডেল",
-    "pricing": {
-        "perMillionTokens": "প্রতি ১ মিলিয়ন টোকেনে",
-        "tokens": "টোকেন",
-        "free": "বিনামূল্যে"
-    }
+    "imageModel_PriceUSD": "দাম (USD)"
 };
 export default bn;

@@ -4,7 +4,7 @@ const is = {
         "appName": "Two AIs",
         "settings": "Stillingar",
         "signIn": "Innskráning",
-        "signOut": "Skrá út",
+        "signOut": "Útskráning",
         "previousChats": "Fyrri spjall"
     },
     "languages": {
@@ -71,6 +71,7 @@ const is = {
         "mn": "Mongólska"
     },
     "settings": {
+        "loading": "Hleður stillingar...",
         "title": "Stillingar",
         "sections": {
             "appearance": "Útlit",
@@ -82,7 +83,7 @@ const is = {
             "light": "Ljós",
             "dark": "Dökkt",
             "system": "Kerfi",
-            "description": "Sérsníddu útlit og notkun forritsins."
+            "description": "Sérsníddu útlit og áferð forritsins."
         },
         "language": {
             "title": "Tungumál",
@@ -95,35 +96,31 @@ const is = {
         },
         "apiKeys": {
             "title": "API Lyklar",
-            "description": "Stjórnaðu þínum API lyklar fyrir mismunandi AI þjónustuaðilar",
-            "saved": "Vistað",
-            "notSet": "Ekki stillt",
-            "setKey": "Setja lykil",
-            "updateKey": "Uppfærslulykill",
-            "removeKey": "Fjarlægja lykil",
-            "getKeyInstructions": "Fáðu þinn API lykill",
-            "noNewKeys": "Ekkert nýtt API lyklar slegnir inn til að vista.",
-            "unexpectedResponse": "Fékk óvænt svar frá netþjóninum.",
+            "description": "Stjórnaðu þínum API lyklar fyrir mismunandi AI þjónustu.",
+            "setKey": "Setja",
+            "updateKey": "Uppfæra",
+            "saveUpdateKeys": "Vista / Uppfæra lykla",
+            "saving": "Vistar...",
+            "noNewKeys": "Engir nýir lyklar til að vista.",
+            "keyStoredSecurely": "Þín API Lykillinn verður geymdur á öruggan hátt og dulkóðaður.",
+            "enteringNewKeyOverwrites": "Ef nýr lykill er sleginn inn mun það yfirskrifa þann sem fyrir er.",
             "failedToSaveKey": "Mistókst að vista lykilinn fyrir {serviceName}.",
-            "someKeysNotSaved": "Sumir API Ekki var hægt að vista lykla. Vinsamlegast athugaðu upplýsingarnar hér að neðan.",
+            "unexpectedResponse": "Óvænt svar frá netþjóni.",
+            "someKeysNotSaved": "Ekki var hægt að vista suma lykla. Vinsamlegast athugaðu villurnar hér að ofan.",
             "keyStatus": "lykilstaða...",
             "apiKeySecurelySaved": "API Lykillinn er öruggur vistaður",
             "confirmRemoveTitle": "Staðfesta fjarlægingu",
             "confirmRemoveDescription": "Ertu viss um að þú viljir fjarlægja API lykill fyrir {serviceName}? Ekki er hægt að afturkalla þessa aðgerð.",
             "failedToRemoveKey": "Mistókst að fjarlægja lykilinn fyrir {serviceName}.",
-            "successfullyRemovedKey": "Lykillinn {serviceName} var fjarlægður.",
+            "successfullyRemovedKey": "Lykillinn {serviceName} var fjarlægður með góðum árangri.",
             "keyNotSet": "Lykilstaða: Ekki stillt",
             "keySet": "Lykilstaða: Stillt",
-            "saveButton": "Vista API Lykill(ar)",
-            "enteringNewKeyOverwrites": "Ef nýr lykill er sleginn inn mun sá sem var vistaður yfirskrifast.",
-            "keyStoredSecurely": "Lykillinn þinn verður geymdur á öruggan hátt með Google Leynistjóri.",
-            "saveUpdateKeys": "Vista / Uppfæra lykla",
-            "saving": "Vistar..."
-        },
-        "loading": "Hleður stillingar..."
+            "saveButton": "Vista API Lykill(ar)"
+        }
     },
     "main": {
         "title": "AI Samtal",
+        "aiConversation": "AI Samtal",
         "setupForm": {
             "title": "Settu upp samtalið þitt",
             "agentA": "Umboðsmaður A",
@@ -141,7 +138,7 @@ const is = {
                 "selectModel": "Veldu TTS fyrirmynd"
             },
             "startConversation": "Hefja samtal",
-            "conversationPrompt": "Byrjaðu samtalið."
+            "conversationPrompt": "Vinsamlegast byrjaðu samtalið."
         },
         "conversation": {
             "thinking": "að hugsa...",
@@ -153,8 +150,7 @@ const is = {
             "perMillionTokens": "á hverja milljón tákn",
             "input": "Inntak",
             "output": "Úttak"
-        },
-        "aiConversation": "AI Samtal"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const is = {
             "signUpWithGoogle": "Skráðu þig með Google",
             "hasAccount": "Ertu nú þegar með aðgang?",
             "signIn": "Innskráning",
-            "emailLabel": "Email heimilisfang",
+            "emailLabel": "Netfang",
             "confirmPasswordPlaceholder": "Staðfesta lykilorð",
             "signingUp": "Skráning..."
         },
@@ -185,9 +181,9 @@ const is = {
             "invalidCredentials": "Ógilt netfang eða lykilorð",
             "userNotFound": "Notandi fannst ekki",
             "weakPassword": "Lykilorðið ætti að vera að minnsta kosti 6 stafir",
-            "emailInUse": "Email þegar í notkun",
+            "emailInUse": "Netfangið er þegar í notkun",
             "generic": "Villa kom upp. Vinsamlegast reyndu aftur.",
-            "initialization": "Upphafsvilla. Vinsamlegast reynið aftur síðar.",
+            "initialization": "Upphafsvilla. Reyndu aftur síðar.",
             "invalidEmail": "Vinsamlegast sláðu inn gilt netfang.",
             "tooManyRequests": "Aðgangur tímabundið óvirkur vegna of margra misheppnaðra innskráningartilrauna. Vinsamlegast endurstilltu lykilorðið þitt eða reyndu aftur síðar.",
             "signInFailedPrefix": "Innskráning mistókst: ",
@@ -229,12 +225,14 @@ const is = {
     "modelCategory_Gemini2_0": "Gemini 2.0 fyrirmyndir",
     "modelCategory_Gemini1_5": "Gemini 1.5 fyrirmyndir",
     "modelCategory_Claude4": "Claude 4 fyrirmyndir",
-    "modelCategory_Claude3_7": "Claude 3.7 fyrirmyndir",
+    "modelCategory_Claude3_7": "Claude 3.7 fyrirmynd",
     "modelCategory_Claude3_5": "Claude 3.5 fyrirmyndir",
     "modelCategory_Claude3": "Claude 3 fyrirmyndir",
-    "modelCategory_Grok4": "Grok 4 fyrirmyndir",
+    "modelCategory_Grok4": "Grok 4 fyrirmynd",
     "modelCategory_Grok3": "Grok 3 fyrirmyndir",
     "modelCategory_Grok3Mini": "Grok 3 Mini-líkön",
+    "modelCategory_MistralAIPremierModels": "Fyrsta flokks gerðir",
+    "modelCategory_MistralAIOpenModels": "Opið líkan",
     "modelCategory_Llama4": "Llama 4 gerðir",
     "modelCategory_Llama3_3": "Llama 3.3 gerðir",
     "modelCategory_Llama3_2": "Llama 3.2 gerðir",
@@ -246,18 +244,18 @@ const is = {
     "modelCategory_Gemma2": "Gemma 2 gerðir",
     "modelCategory_Gemma": "Gemma fyrirmyndir",
     "modelCategory_GoogleGemma": "Google Gemma Líkön",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 gerðir",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 gerðir",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 líkanið",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 líkan",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill gerðir",
     "modelCategory_DeepSeekModels": "DeepSeek Líkön",
     "modelCategory_MistralAIModels": "Mistral AI Líkön",
     "modelCategory_Qwen3": "Qwen3 gerðir",
-    "modelCategory_QwQwQ": "Qwen QwQ gerðir",
+    "modelCategory_QwQwQ": "Qwen QwQ líkanið",
     "modelCategory_Qwen2_5": "Qwen2,5 gerðir",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision gerðir",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Forritarlíkön",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision líkan",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kóðaralíkan",
     "modelCategory_Qwen2": "Qwen2 gerðir",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision gerðir",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision líkan",
     "modelCategory_QwenModels": "Qwen Líkön",
     "modelCategory_OtherModels": "Aðrar gerðir",
     "page_ErrorLoadingUserData": "Mistókst að hlaða notandagögnum: {errorMessage}. Reyndu að endurnýja.",
@@ -269,12 +267,13 @@ const is = {
     "page_LoadingUserData": "Hleður inn notendagögn...",
     "page_ErrorAlertTitle": "Villa",
     "page_WelcomeTitle": "Velkomin(n) í Two AIs",
-    "page_WelcomeSubtitle": "Þessi vefsíða gerir þér kleift að hlusta á samræður milli tveggja Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Þessi vefsíða gerir þér kleift að hlusta á samræður milli tveggja Large Language Models (LLMs) og búa til myndir fyrir hverja beygju.",
     "page_ApiKeysRequiredTitle": "API Lyklar nauðsynlegir",
     "page_ApiKeysRequiredDescription": "Til að keyra samræður þarftu að leggja fram þínar eigin API lyklar fyrir AI fyrirmyndir sem þú vilt nota (t.d. OpenAI, Google, Anthropic) eftir innskráningu. Ítarlegar leiðbeiningar fyrir hvern þjónustuaðila er að finna í Stillingum / API Lyklasíða eftir innskráningu.",
     "page_SignInPrompt": "Til að hefja þína eigin lotu geturðu skráð þig inn eða stofnað aðgang með því að nota tengilinn í hausnum.",
     "page_VideoTitle": "Two AIs Sýnishorn af samtali",
     "page_AvailableLLMsTitle": "Nú fáanlegt LLMs",
+    "page_TooltipKnowledgeCutoff": "Þekking líkansins er rofin á þessum degi.",
     "page_TooltipGoogleThinkingBudget": "Þetta Google Líkanið notar „hugsunarfjárhagsáætlun“. Úttak „hugsunar“ er gjaldfært en sést ekki í spjallinu.",
     "page_TooltipAnthropicExtendedThinking": "Þetta Anthropic Líkanið notar „útvíkkaða hugsun“. Úttak „hugsunar“ er gjaldfært en sést ekki í spjallinu.",
     "page_TooltipXaiThinking": "Þetta xAI Líkanið notar „hugsun“. Þessi úttak er rukkað en sést ekki í spjallinu.",
@@ -283,17 +282,52 @@ const is = {
     "page_TooltipGenericReasoning": "Þessi líkan notar rökstuðningstákn sem eru ekki sýnileg í spjallinu en eru gefin upp sem úttakstákn.",
     "page_TooltipRequiresVerification": "Krefst staðfestingar OpenAI stofnun. Þú getur staðfest það hér.",
     "page_TooltipSupportsLanguage": "Styður {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Þessi líkan styður hugsanlega ekki {languageName} að fullu fyrir samræður.",
+    "page_TooltipMayNotSupportLanguage": "Þessi líkan styður hugsanlega ekki að fullu {languageName} fyrir samtal.",
     "page_BadgePreview": "Forskoðun",
     "page_BadgeExperimental": "Tilraunakennd",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Nú fáanlegt Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Myndlíkön sem eru nú fáanleg",
     "page_NoTTSOptions": "Nei TTS valkostir sem eru í boði núna.",
     "page_TruncatableNoteFormat": "({athugasemd})",
     "page_PricesLastVerifiedOn": "Verð síðast staðfest þann {date}",
-    "page_PricingPerTokens": "á hverja {amount} Tákn",
+    "page_PricingPerTokens": "á hverja 1 milljón tákn",
     "page_ModelCategoryModels": "{model} fyrirmyndir",
+    "common_verifyHere": "staðfesta hér",
     "ttsVoice_Ugne": "Í eldinum",
+    "pricing": {
+        "perMillionTokens": "á hverja 1 milljón tákn",
+        "tokens": "tákn",
+        "free": "Ókeypis",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} á hverja 1 milljón textamerki",
+                "audioTokens": "{price} á hverja 1 milljón hljóðmerki"
+            },
+            "geminiPro": {
+                "textTokens": "{price} á hverja 1 milljón textamerki",
+                "audioTokens": "{price} á hverja 1 milljón hljóðmerki"
+            },
+            "openAIMini": {
+                "textTokens": "{price} á hverja 1 milljón textamerki",
+                "audioTokens": "{price} á hverja 1 milljón hljóðmerki"
+            },
+            "openAITTS1": {
+                "standard": "{price} á hverja 1 milljón tákn"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} á hverja 1 milljón tákn"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} á hverja 1 milljón stafi",
+                "neural": "{price} á hverja 1 milljón stafi",
+                "studio": "{price} á hverja 1 milljón stafi",
+                "chirpHD": "Gat ekki staðfest",
+                "chirp3HD": "{price} á hverja 1 milljón stafi"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Uppsetningarform fyrir lotur",
         "description": "Hér getur þú valið LLM og valfrjálst TTS stillingar fyrir hvern umboðsmann.",
@@ -309,7 +343,7 @@ const is = {
         "initialPromptDescription": "Þessi fyrirspurn verður send sem fyrsta skilaboðin til að hefja samtalið. Ef þú skilur þetta eftir autt verður engin fyrirspurn.",
         "startConversation": "Hefja samtal",
         "starting": "Byrjar...",
-        "startTheConversation": "Byrjaðu samtalið.",
+        "startTheConversation": "Vinsamlegast byrjaðu samtalið.",
         "languageSupportNote": "Vísar fyrir tungumálastuðning sýna samhæfni líkana við {languageName}Líkön án stuðnings eru óvirk.",
         "reasoningNote": "Gefur til kynna að líkan noti „hugsunar-“ eða „rökhugsunar-“ tákn. Þessi úttak er rukkað en sést ekki í spjallinu.",
         "openaiOrgVerificationNote": "Gefur til kynna OpenAI líkanið krefst staðfestrar stofnunar. Þú getur",
@@ -335,15 +369,15 @@ const is = {
         "backToMain": "Til baka í aðalinnganginn",
         "conversationHistory": "Samræðusaga",
         "chatWith": "Spjallaðu við {agentA} og {agentB}",
+        "conversationDescription": "Byrjaði á {date} - Tungumál: {language}",
         "viewConversation": "Skoða samtal",
         "backToPreviousChats": "Til baka í fyrri spjall",
         "resumeConversation": "Halda áfram samtali",
-        "resuming": "Hefst aftur...",
+        "resuming": "Hefjum aftur...",
         "sessionDetails": "Upplýsingar um lotu",
-        "language": "Tungumál:",
+        "language": "Tungumál",
         "transcript": "Afrit",
         "loadingHistory": "Hleður sögu...",
-        "conversationDescription": "Byrjaði á {date} - Tungumál: {language}",
         "loadingConversation": "Hleður samtal...",
         "chatStartedOn": "Spjall hófst kl. {date}",
         "agentAModel": "Umboðsmaður A-líkan",
@@ -355,18 +389,8 @@ const is = {
         "model": "Fyrirmynd",
         "voice": "Rödd"
     },
-    "common_verifyHere": "staðfesta hér",
-    "page_AvailableImageModelsTitle": "Myndlíkön sem eru nú fáanleg",
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",
-    "imageModel_PriceUSD": "Verð (USD)",
-    "page_TooltipKnowledgeCutoff": "Þekking líkansins er rofin á þessum degi.",
-    "modelCategory_MistralAIPremierModels": "Fyrsta flokks gerðir",
-    "modelCategory_MistralAIOpenModels": "Opnar gerðir",
-    "pricing": {
-        "perMillionTokens": "á hverja 1 milljón tákn",
-        "tokens": "tákn",
-        "free": "Ókeypis"
-    }
+    "imageModel_PriceUSD": "Verð (USD)"
 };
 export default is;

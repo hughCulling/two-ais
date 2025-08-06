@@ -9,7 +9,7 @@ const et = {
     },
     "languages": {
         "ar": "araabia",
-        "bn": "Bengali keel",
+        "bn": "bengali keel",
         "bg": "Bulgaaria",
         "zh": "Hiina keel",
         "hr": "Horvaadi",
@@ -71,6 +71,7 @@ const et = {
         "mn": "Mongoli"
     },
     "settings": {
+        "loading": "Seadete laadimine...",
         "title": "Seaded",
         "sections": {
             "appearance": "Välimus",
@@ -95,17 +96,17 @@ const et = {
         },
         "apiKeys": {
             "title": "API Võtmed",
-            "description": "Halda oma API võtmed erinevatele AI teenusepakkujad",
-            "saved": "Salvestatud",
-            "notSet": "Pole määratud",
-            "setKey": "Määra võti",
-            "updateKey": "Värskenda võtit",
-            "removeKey": "Eemalda võti",
-            "getKeyInstructions": "Hankige oma API võti",
-            "noNewKeys": "Uut pole API salvestamiseks sisestatud võtmed.",
-            "unexpectedResponse": "Serverilt saadi ootamatu vastus.",
+            "description": "Halda oma API võtmed erinevatele AI teenused.",
+            "setKey": "Komplekt",
+            "updateKey": "Värskendus",
+            "saveUpdateKeys": "Salvesta/värskenda võtmeid",
+            "saving": "Salvestamine...",
+            "noNewKeys": "Uusi võtmeid pole vaja salvestada.",
+            "keyStoredSecurely": "Sinu API võtit hoitakse turvaliselt ja krüpteeritult.",
+            "enteringNewKeyOverwrites": "Uue võtme sisestamine kirjutab olemasoleva üle.",
             "failedToSaveKey": "{serviceName} võtme salvestamine ebaõnnestus.",
-            "someKeysNotSaved": "Mõned API Võtmeid ei õnnestunud salvestada. Palun kontrollige allolevaid üksikasju.",
+            "unexpectedResponse": "Ootamatu vastus serverilt.",
+            "someKeysNotSaved": "Mõnda võtit ei õnnestunud salvestada. Palun kontrollige ülaltoodud vigu.",
             "keyStatus": "võtme olek...",
             "apiKeySecurelySaved": "API Võti on turvaliselt salvestatud",
             "confirmRemoveTitle": "Eemaldamise kinnitamine",
@@ -114,16 +115,12 @@ const et = {
             "successfullyRemovedKey": "{serviceName} võti edukalt eemaldatud.",
             "keyNotSet": "Võtme olek: pole määratud",
             "keySet": "Võtme olek: Määratud",
-            "saveButton": "Salvesta API Võti(d)",
-            "enteringNewKeyOverwrites": "Uue võtme sisestamine kirjutab salvestatud võtme üle.",
-            "keyStoredSecurely": "Teie võtit hoitakse turvaliselt, kasutades Google Salajane haldur.",
-            "saveUpdateKeys": "Salvesta/värskenda võtmeid",
-            "saving": "Salvestamine..."
-        },
-        "loading": "Seadete laadimine..."
+            "saveButton": "Salvesta API Võti(d)"
+        }
     },
     "main": {
         "title": "AI Vestlus",
+        "aiConversation": "AI Vestlus",
         "setupForm": {
             "title": "Seadista oma vestlus",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const et = {
                 "selectModel": "Vali TTS mudel"
             },
             "startConversation": "Alusta vestlust",
-            "conversationPrompt": "Alusta vestlust."
+            "conversationPrompt": "Palun alustage vestlust."
         },
         "conversation": {
             "thinking": "mõtlemine...",
@@ -153,8 +150,7 @@ const et = {
             "perMillionTokens": "miljoni žetooni kohta",
             "input": "Sisend",
             "output": "Väljund"
-        },
-        "aiConversation": "AI Vestlus"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const et = {
             "signUpWithGoogle": "Registreeru Google",
             "hasAccount": "Kas sul on juba konto?",
             "signIn": "Logi sisse",
-            "emailLabel": "Email aadress",
+            "emailLabel": "E-posti aadress",
             "confirmPasswordPlaceholder": "Kinnita parool",
             "signingUp": "Registreerumine..."
         },
@@ -185,7 +181,7 @@ const et = {
             "invalidCredentials": "Kehtetu e-posti aadress või parool",
             "userNotFound": "Kasutajat ei leitud",
             "weakPassword": "Parool peaks olema vähemalt 6 tähemärki pikk",
-            "emailInUse": "Email juba kasutusel",
+            "emailInUse": "Meiliaadress on juba kasutusel",
             "generic": "Tekkis viga. Palun proovige uuesti.",
             "initialization": "Initsialiseerimisviga. Palun proovige hiljem uuesti.",
             "invalidEmail": "Palun sisesta kehtiv e-posti aadress.",
@@ -229,12 +225,14 @@ const et = {
     "modelCategory_Gemini2_0": "Gemini 2.0 mudelid",
     "modelCategory_Gemini1_5": "Gemini 1.5 mudelid",
     "modelCategory_Claude4": "Claude 4 mudelid",
-    "modelCategory_Claude3_7": "Claude 3.7 mudelid",
+    "modelCategory_Claude3_7": "Claude 3.7 mudel",
     "modelCategory_Claude3_5": "Claude 3.5 mudelid",
     "modelCategory_Claude3": "Claude 3 mudelid",
-    "modelCategory_Grok4": "Grok 4 mudelid",
+    "modelCategory_Grok4": "Grok 4 mudel",
     "modelCategory_Grok3": "Grok 3 mudelid",
     "modelCategory_Grok3Mini": "Grok 3 Minimudelid",
+    "modelCategory_MistralAIPremierModels": "Premier mudelid",
+    "modelCategory_MistralAIOpenModels": "Avatud mudel",
     "modelCategory_Llama4": "Llama 4 mudelit",
     "modelCategory_Llama3_3": "Llama 3.3 mudelid",
     "modelCategory_Llama3_2": "Llama 3.2 mudelid",
@@ -246,18 +244,18 @@ const et = {
     "modelCategory_Gemma2": "Gemma 2 mudelit",
     "modelCategory_Gemma": "Gemma mudelid",
     "modelCategory_GoogleGemma": "Google Gemma Mudelid",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 mudelid",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 mudelid",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 mudel",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 mudel",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 destilleerimismudelid",
     "modelCategory_DeepSeekModels": "DeepSeek Mudelid",
     "modelCategory_MistralAIModels": "Mistral AI Mudelid",
-    "modelCategory_Qwen3": "Qwen3 mudelit",
-    "modelCategory_QwQwQ": "Qwen QwQ mudelid",
+    "modelCategory_Qwen3": "Qwen3. mudel",
+    "modelCategory_QwQwQ": "Qwen QwQ mudel",
     "modelCategory_Qwen2_5": "Qwen2.5 mudelid",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Visioonimudelid",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodeerija mudelid",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Visioonimudel",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodeerija mudel",
     "modelCategory_Qwen2": "Qwen2 mudelit",
-    "modelCategory_Qwen2Vision": "Qwen2 Visioni mudelit",
+    "modelCategory_Qwen2Vision": "Qwen2 Visioni mudel",
     "modelCategory_QwenModels": "Qwen Mudelid",
     "modelCategory_OtherModels": "Teised mudelid",
     "page_ErrorLoadingUserData": "Kasutajaandmete laadimine ebaõnnestus: {errorMessage}. Palun proovige värskendada.",
@@ -269,12 +267,13 @@ const et = {
     "page_LoadingUserData": "Kasutajaandmete laadimine...",
     "page_ErrorAlertTitle": "Viga",
     "page_WelcomeTitle": "Tere tulemast Two AIs",
-    "page_WelcomeSubtitle": "See veebisait võimaldab teil kuulata kahe inimese vahelisi vestlusi Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "See veebisait võimaldab teil kuulata kahe inimese vahelisi vestlusi Large Language Models (LLMs) ja genereerige iga pöörde jaoks pilte.",
     "page_ApiKeysRequiredTitle": "API Nõutavad võtmed",
     "page_ApiKeysRequiredDescription": "Vestluste pidamiseks peate esitama oma API võtmed AI mudelid, mida soovite kasutada (nt OpenAI, Google, Anthropic) pärast sisselogimist. Iga teenusepakkuja kohta leiate üksikasjalikud juhised menüüst Seaded / API Võtmete leht pärast sisselogimist.",
     "page_SignInPrompt": "Oma seansi alustamiseks saate sisse logida või konto luua päises oleva lingi abil.",
     "page_VideoTitle": "Two AIs Vestluse demo",
     "page_AvailableLLMsTitle": "Praegu saadaval LLMs",
+    "page_TooltipKnowledgeCutoff": "Mudeli teadmised on sellel kuupäeval piiratud.",
     "page_TooltipGoogleThinkingBudget": "See Google Mudel kasutab „mõtlemiseelarvet“. „Mõtlemise“ väljundit arveldatakse, kuid see pole vestluses nähtav.",
     "page_TooltipAnthropicExtendedThinking": "See Anthropic Mudel kasutab laiendatud mõtlemist. Mõtlemise väljundit kajastatakse, kuid see pole vestluses nähtav.",
     "page_TooltipXaiThinking": "See xAI Mudel kasutab 'mõtlemist'. See väljund on arveldatud, kuid vestluses nähtav.",
@@ -282,18 +281,53 @@ const et = {
     "page_TooltipDeepSeekReasoning": "See DeepSeek Mudel kasutab 'arutluskäiku/mõtlemist'. Väljund on tasuline, aga seda vestluses näha ei ole.",
     "page_TooltipGenericReasoning": "See mudel kasutab arutlusmärke, mis pole vestluses nähtavad, kuid mida arvestatakse väljundmärkidena.",
     "page_TooltipRequiresVerification": "Nõuab kinnitatud OpenAI organisatsioon. Saate seda siin kontrollida.",
-    "page_TooltipSupportsLanguage": "Toetab {languageName} keelt",
-    "page_TooltipMayNotSupportLanguage": "See mudel ei pruugi vestluse jaoks täielikult toetada keelt {languageName}.",
+    "page_TooltipSupportsLanguage": "Toetab {languageName}",
+    "page_TooltipMayNotSupportLanguage": "See mudel ei pruugi täielikult toetada {languageName} vestluse jaoks.",
     "page_BadgePreview": "Eelvaade",
     "page_BadgeExperimental": "Eksperimentaalne",
     "page_BadgeBeta": "Beeta",
     "page_AvailableTTSTitle": "Praegu saadaval Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Praegu saadaolevad pildimudelid",
     "page_NoTTSOptions": "Ei TTS hetkel saadaolevad valikud.",
     "page_TruncatableNoteFormat": "({noteText})",
-    "page_PricesLastVerifiedOn": "Hinnad viimati kontrolliti kuupäeval {date}",
-    "page_PricingPerTokens": "iga {amount} Tokenid",
+    "page_PricesLastVerifiedOn": "Hinnad viimati kontrollitud {date}",
+    "page_PricingPerTokens": "1 miljoni žetooni kohta",
     "page_ModelCategoryModels": "{model} mudelid",
+    "common_verifyHere": "kinnita siin",
     "ttsVoice_Ugne": "Tules",
+    "pricing": {
+        "perMillionTokens": "1 miljoni žetooni kohta",
+        "tokens": "märgid",
+        "free": "Tasuta",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 miljoni tekstitokeni kohta",
+                "audioTokens": "{price} 1 miljoni heližetooni kohta"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 miljoni tekstitokeni kohta",
+                "audioTokens": "{price} 1 miljoni heližetooni kohta"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 miljoni tekstitokeni kohta",
+                "audioTokens": "{price} 1 miljoni heližetooni kohta"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 miljoni žetooni kohta"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 miljoni žetooni kohta"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} miljoni tähemärgi kohta",
+                "neural": "{price} miljoni tähemärgi kohta",
+                "studio": "{price} miljoni tähemärgi kohta",
+                "chirpHD": "Ei õnnestunud kinnitada",
+                "chirp3HD": "{price} miljoni tähemärgi kohta"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Seansi seadistamise vorm",
         "description": "Siin saate valida LLM-i ja valikulise TTS iga agendi seaded.",
@@ -309,7 +343,7 @@ const et = {
         "initialPromptDescription": "See viip saadetakse esimese vestluse alustamise sõnumina. Kui jätate selle tühjaks, siis viipa ei kuvata.",
         "startConversation": "Alusta vestlust",
         "starting": "Alustades...",
-        "startTheConversation": "Alusta vestlust.",
+        "startTheConversation": "Palun alustage vestlust.",
         "languageSupportNote": "Keeletoe indikaatorid näitavad mudeli ühilduvust {languageName}Toetamata mudelid on keelatud.",
         "reasoningNote": "Näitab, et mudel kasutab 'mõtlemise' või 'arutluskäigu' tokeneid. See väljund on arveldusväärne, kuid seda vestluses ei nähta.",
         "openaiOrgVerificationNote": "Näitab OpenAI mudel nõuab kinnitatud organisatsiooni. Saate",
@@ -335,15 +369,15 @@ const et = {
         "backToMain": "Tagasi põhisisu juurde",
         "conversationHistory": "Vestluste ajalugu",
         "chatWith": "Vestle kellega {agentA} & {agentB}",
+        "conversationDescription": "Alustatud kuupäeval {date} - Keel: {language}",
         "viewConversation": "Kuva vestlus",
         "backToPreviousChats": "Tagasi eelmiste vestluste juurde",
         "resumeConversation": "Jätka vestlust",
         "resuming": "Jätkamine...",
         "sessionDetails": "Seansi üksikasjad",
-        "language": "Keel:",
+        "language": "Keel",
         "transcript": "Transkript",
         "loadingHistory": "Ajaloo laadimine...",
-        "conversationDescription": "Alustatud kuupäeval {date} - Keel: {language}",
         "loadingConversation": "Vestluse laadimine...",
         "chatStartedOn": "Vestlus algas {date}",
         "agentAModel": "Agent A mudel",
@@ -355,18 +389,8 @@ const et = {
         "model": "Mudel",
         "voice": "Hääl"
     },
-    "common_verifyHere": "kinnita siin",
-    "page_AvailableImageModelsTitle": "Praegu saadaolevad pildimudelid",
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
-    "imageModel_PriceUSD": "Hind (USD)",
-    "page_TooltipKnowledgeCutoff": "Mudeli teadmised on sellel kuupäeval piiratud.",
-    "modelCategory_MistralAIPremierModels": "Premier mudelid",
-    "modelCategory_MistralAIOpenModels": "Avatud mudelid",
-    "pricing": {
-        "perMillionTokens": "1 miljoni žetooni kohta",
-        "tokens": "märgid",
-        "free": "Tasuta"
-    }
+    "imageModel_PriceUSD": "Hind (USD)"
 };
 export default et;

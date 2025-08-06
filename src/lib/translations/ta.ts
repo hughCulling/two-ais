@@ -71,6 +71,7 @@ const ta = {
         "mn": "மங்கோலியன்"
     },
     "settings": {
+        "loading": "அமைப்புகளை ஏற்றுகிறது...",
         "title": "அமைப்புகள்",
         "sections": {
             "appearance": "தோற்றம்",
@@ -95,35 +96,31 @@ const ta = {
         },
         "apiKeys": {
             "title": "API விசைகள்",
-            "description": "உங்கள் நிர்வகிக்கவும் API வெவ்வேறு விசைகள் AI வழங்குநர்கள்",
-            "saved": "சேமிக்கப்பட்டது",
-            "notSet": "அமைக்கப்படவில்லை",
-            "setKey": "விசையை அமைக்கவும்",
-            "updateKey": "புதுப்பிப்பு விசை",
-            "removeKey": "விசையை அகற்று",
-            "getKeyInstructions": "உங்களுடையதைப் பெறுங்கள் API சாவி",
-            "noNewKeys": "புதியது இல்லை API சேமிக்க விசைகளை உள்ளிடவும்.",
-            "unexpectedResponse": "சேவையகத்திலிருந்து எதிர்பாராத பதில் கிடைத்தது.",
+            "description": "உங்கள் நிர்வகிக்கவும் API வெவ்வேறு விசைகள் AI சேவைகள்.",
+            "setKey": "அமைக்கவும்",
+            "updateKey": "புதுப்பிப்பு",
+            "saveUpdateKeys": "விசைகளைச் சேமி / புதுப்பி",
+            "saving": "சேமிக்கிறது...",
+            "noNewKeys": "சேமிக்க புதிய சாவிகள் எதுவும் இல்லை.",
+            "keyStoredSecurely": "உங்கள் API சாவி பாதுகாப்பாக சேமிக்கப்பட்டு குறியாக்கம் செய்யப்படும்.",
+            "enteringNewKeyOverwrites": "புதிய விசையை உள்ளிடுவது ஏற்கனவே உள்ளதை மேலெழுதும்.",
             "failedToSaveKey": "{serviceName} விசையைச் சேமிக்க முடியவில்லை.",
-            "someKeysNotSaved": "சில API விசைகளைச் சேமிக்க முடியவில்லை. கீழே உள்ள விவரங்களைச் சரிபார்க்கவும்.",
+            "unexpectedResponse": "சேவையகத்திலிருந்து எதிர்பாராத பதில்.",
+            "someKeysNotSaved": "சில விசைகளைச் சேமிக்க முடியவில்லை. மேலே உள்ள பிழைகளைச் சரிபார்க்கவும்.",
             "keyStatus": "முக்கிய நிலை...",
             "apiKeySecurelySaved": "API சாவி பாதுகாப்பாக சேமிக்கப்பட்டது",
             "confirmRemoveTitle": "அகற்றுதலை உறுதிப்படுத்தவும்",
-            "confirmRemoveDescription": "நீங்கள் நிச்சயமாக நீக்க விரும்புகிறீர்களா API {serviceName}க்கான விசையா? இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.",
+            "confirmRemoveDescription": "நீங்கள் நிச்சயமாக நீக்க விரும்புகிறீர்களா? API {serviceName}க்கான விசையா? இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.",
             "failedToRemoveKey": "{serviceName} விசையை அகற்ற முடியவில்லை.",
             "successfullyRemovedKey": "{serviceName} விசை வெற்றிகரமாக அகற்றப்பட்டது.",
             "keyNotSet": "முக்கிய நிலை: அமைக்கப்படவில்லை",
             "keySet": "முக்கிய நிலை: அமைக்கவும்",
-            "saveButton": "சேமிக்கவும் API விசை(கள்)",
-            "enteringNewKeyOverwrites": "புதிய விசையை உள்ளிடுவது சேமிக்கப்பட்ட விசையை மேலெழுதும்.",
-            "keyStoredSecurely": "உங்கள் சாவி இதைப் பயன்படுத்தி பாதுகாப்பாக சேமிக்கப்படும் Google ரகசிய மேலாளர்.",
-            "saveUpdateKeys": "விசைகளைச் சேமி / புதுப்பி",
-            "saving": "சேமிக்கிறது..."
-        },
-        "loading": "அமைப்புகளை ஏற்றுகிறது..."
+            "saveButton": "சேமிக்கவும் API விசை(கள்)"
+        }
     },
     "main": {
         "title": "AI உரையாடல்",
+        "aiConversation": "AI உரையாடல்",
         "setupForm": {
             "title": "உங்கள் உரையாடலை அமைக்கவும்.",
             "agentA": "முகவர் ஏ",
@@ -141,7 +138,7 @@ const ta = {
                 "selectModel": "தேர்ந்தெடுக்கவும் TTS மாதிரி"
             },
             "startConversation": "உரையாடலைத் தொடங்கு",
-            "conversationPrompt": "உரையாடலைத் தொடங்குங்கள்."
+            "conversationPrompt": "தயவுசெய்து உரையாடலைத் தொடங்குங்கள்."
         },
         "conversation": {
             "thinking": "யோசித்து...",
@@ -153,8 +150,7 @@ const ta = {
             "perMillionTokens": "மில்லியன் டோக்கன்களுக்கு",
             "input": "உள்ளீடு",
             "output": "வெளியீடு"
-        },
-        "aiConversation": "AI உரையாடல்"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ta = {
             "signUpWithGoogle": "உடன் பதிவு செய்யவும் Google",
             "hasAccount": "ஏற்கனவே ஒரு கணக்கு உள்ளதா?",
             "signIn": "உள்நுழையவும்",
-            "emailLabel": "Email முகவரி",
+            "emailLabel": "மின்னஞ்சல் முகவரி",
             "confirmPasswordPlaceholder": "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
             "signingUp": "பதிவு செய்கிறது..."
         },
@@ -185,8 +181,8 @@ const ta = {
             "invalidCredentials": "தவறான மின்னஞ்சல் அல்லது கடவுச்சொல்",
             "userNotFound": "பயனர் கிடைக்கவில்லை.",
             "weakPassword": "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்.",
-            "emailInUse": "Email ஏற்கனவே பயன்பாட்டில் உள்ளது",
-            "generic": "பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.",
+            "emailInUse": "மின்னஞ்சல் ஏற்கனவே பயன்பாட்டில் உள்ளது.",
+            "generic": "ஒரு பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.",
             "initialization": "துவக்கப் பிழை. பிறகு முயற்சிக்கவும்.",
             "invalidEmail": "தயவுசெய்து செல்லுபடியாகும் மின்னஞ்சல் முகவரியை உள்ளிடவும்.",
             "tooManyRequests": "பல முறை உள்நுழைவு முயற்சிகள் தோல்வியடைந்ததால், அணுகல் தற்காலிகமாக முடக்கப்பட்டுள்ளது. உங்கள் கடவுச்சொல்லை மீட்டமைக்கவும் அல்லது பின்னர் மீண்டும் முயற்சிக்கவும்.",
@@ -229,12 +225,14 @@ const ta = {
     "modelCategory_Gemini2_0": "Gemini 2.0 மாதிரிகள்",
     "modelCategory_Gemini1_5": "Gemini 1.5 மாதிரிகள்",
     "modelCategory_Claude4": "Claude 4 மாதிரிகள்",
-    "modelCategory_Claude3_7": "Claude 3.7 மாதிரிகள்",
+    "modelCategory_Claude3_7": "Claude 3.7 மாதிரி",
     "modelCategory_Claude3_5": "Claude 3.5 மாதிரிகள்",
     "modelCategory_Claude3": "Claude 3 மாதிரிகள்",
-    "modelCategory_Grok4": "Grok 4 மாதிரிகள்",
+    "modelCategory_Grok4": "Grok 4 மாதிரி",
     "modelCategory_Grok3": "Grok 3 மாதிரிகள்",
     "modelCategory_Grok3Mini": "Grok 3 மினி மாதிரிகள்",
+    "modelCategory_MistralAIPremierModels": "பிரீமியர் மாதிரிகள்",
+    "modelCategory_MistralAIOpenModels": "திறந்த மாதிரி",
     "modelCategory_Llama4": "Llama 4 மாதிரிகள்",
     "modelCategory_Llama3_3": "Llama 3.3 மாதிரிகள்",
     "modelCategory_Llama3_2": "Llama 3.2 மாதிரிகள்",
@@ -246,18 +244,18 @@ const ta = {
     "modelCategory_Gemma2": "Gemma 2 மாதிரி",
     "modelCategory_Gemma": "Gemma மாதிரிகள்",
     "modelCategory_GoogleGemma": "Google Gemma மாதிரிகள்",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 மாதிரிகள்",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 மாதிரிகள்",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 மாதிரி",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 மாடல்",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 டிஸ்டில் மாதிரிகள்",
     "modelCategory_DeepSeekModels": "DeepSeek மாதிரிகள்",
     "modelCategory_MistralAIModels": "Mistral AI மாதிரிகள்",
-    "modelCategory_Qwen3": "Qwen3 மாதிரிகள்",
-    "modelCategory_QwQwQ": "Qwen QwQ மாதிரிகள்",
+    "modelCategory_Qwen3": "Qwen3 மாதிரி",
+    "modelCategory_QwQwQ": "Qwen QwQ மாதிரி",
     "modelCategory_Qwen2_5": "Qwen2.5 மாதிரிகள்",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 பார்வை மாதிரிகள்",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 கோடர் மாதிரிகள்",
-    "modelCategory_Qwen2": "Qwen2 மாதிரிகள்",
-    "modelCategory_Qwen2Vision": "Qwen2 பார்வை மாதிரிகள்",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 பார்வை மாதிரி",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 குறியீட்டு மாதிரி",
+    "modelCategory_Qwen2": "Qwen2 மாதிரி",
+    "modelCategory_Qwen2Vision": "Qwen2 பார்வை மாதிரி",
     "modelCategory_QwenModels": "Qwen மாதிரிகள்",
     "modelCategory_OtherModels": "பிற மாதிரிகள்",
     "page_ErrorLoadingUserData": "பயனர் தரவை ஏற்ற முடியவில்லை: {errorMessage}. புதுப்பிக்க முயற்சிக்கவும்.",
@@ -269,12 +267,13 @@ const ta = {
     "page_LoadingUserData": "பயனர் தரவை ஏற்றுகிறது...",
     "page_ErrorAlertTitle": "பிழை",
     "page_WelcomeTitle": "வரவேற்கிறோம் Two AIs",
-    "page_WelcomeSubtitle": "இந்த வலைத்தளம் இரண்டு பேருக்கு இடையிலான உரையாடல்களைக் கேட்க உங்களை அனுமதிக்கிறது. Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "இந்த வலைத்தளம் இரண்டு பேருக்கு இடையிலான உரையாடல்களைக் கேட்க உங்களை அனுமதிக்கிறது. Large Language Models (LLMs) மற்றும் ஒவ்வொரு திருப்பத்திற்கும் படங்களை உருவாக்குங்கள்.",
     "page_ApiKeysRequiredTitle": "API விசைகள் தேவை",
     "page_ApiKeysRequiredDescription": "உரையாடல்களை நடத்த, நீங்கள் உங்களுடையதை வழங்க வேண்டும் API சாவிகள் AI நீங்கள் பயன்படுத்த விரும்பும் மாதிரிகள் (எ.கா., OpenAI, Google, Anthropic) உள்நுழைந்த பிறகு. ஒவ்வொரு வழங்குநருக்கான விரிவான வழிமுறைகளை அமைப்புகள் / இல் காணலாம். API உள்நுழைந்த பிறகு விசைகள் பக்கம்.",
     "page_SignInPrompt": "உங்கள் சொந்த அமர்வைத் தொடங்க, தலைப்பில் உள்ள இணைப்பைப் பயன்படுத்தி உள்நுழையலாம் அல்லது கணக்கை உருவாக்கலாம்.",
     "page_VideoTitle": "Two AIs உரையாடல் டெமோ",
     "page_AvailableLLMsTitle": "தற்போது கிடைக்கிறது LLMs",
+    "page_TooltipKnowledgeCutoff": "இந்த தேதியில் மாதிரியின் அறிவு துண்டிக்கப்பட்டுள்ளது.",
     "page_TooltipGoogleThinkingBudget": "இது Google மாதிரி 'சிந்தனை பட்ஜெட்டை' பயன்படுத்துகிறது. 'சிந்தனை' வெளியீடு பில் செய்யப்படுகிறது, ஆனால் அரட்டையில் தெரியவில்லை.",
     "page_TooltipAnthropicExtendedThinking": "இது Anthropic மாதிரி 'நீட்டிக்கப்பட்ட சிந்தனை'யைப் பயன்படுத்துகிறது. 'சிந்தனை' வெளியீடு பில் செய்யப்படுகிறது, ஆனால் அரட்டையில் தெரியவில்லை.",
     "page_TooltipXaiThinking": "இது xAI மாதிரி 'சிந்தனை' என்பதைப் பயன்படுத்துகிறது. இந்த வெளியீடு பில் செய்யப்படுகிறது ஆனால் அரட்டையில் தெரியவில்லை.",
@@ -282,18 +281,53 @@ const ta = {
     "page_TooltipDeepSeekReasoning": "இது DeepSeek மாதிரி 'பகுத்தறிவு/சிந்தனை' என்பதைப் பயன்படுத்துகிறது. வெளியீடு பில் செய்யப்படுகிறது ஆனால் அரட்டையில் தெரியவில்லை.",
     "page_TooltipGenericReasoning": "இந்த மாதிரி அரட்டையில் தெரியாத பகுத்தறிவு டோக்கன்களைப் பயன்படுத்துகிறது, ஆனால் வெளியீட்டு டோக்கன்களாக பில் செய்யப்படுகிறது.",
     "page_TooltipRequiresVerification": "சரிபார்க்கப்பட வேண்டும் OpenAI அமைப்பு. நீங்கள் இங்கே சரிபார்க்கலாம்.",
-    "page_TooltipSupportsLanguage": "{languageName} ஆதரிக்கிறது",
-    "page_TooltipMayNotSupportLanguage": "இந்த மாதிரி உரையாடலுக்கு {languageName} ஐ முழுமையாக ஆதரிக்காமல் போகலாம்.",
+    "page_TooltipSupportsLanguage": "ஆதரிக்கிறது {languageName}",
+    "page_TooltipMayNotSupportLanguage": "இந்த மாதிரி முழுமையாக ஆதரிக்காமல் போகலாம் {languageName} உரையாடலுக்கு.",
     "page_BadgePreview": "முன்னோட்டம்",
     "page_BadgeExperimental": "பரிசோதனை",
     "page_BadgeBeta": "பீட்டா",
     "page_AvailableTTSTitle": "தற்போது கிடைக்கிறது Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "தற்போது கிடைக்கும் பட மாதிரிகள்",
     "page_NoTTSOptions": "இல்லை TTS தற்போது கிடைக்கும் விருப்பங்கள்.",
     "page_TruncatableNoteFormat": "({குறிப்பு உரை})",
     "page_PricesLastVerifiedOn": "விலைகள் கடைசியாக சரிபார்க்கப்பட்ட தேதி {date}",
-    "page_PricingPerTokens": "ஒன்றுக்கு {amount} டோக்கன்கள்",
+    "page_PricingPerTokens": "1 மில்லியன் டோக்கன்களுக்கு",
     "page_ModelCategoryModels": "{model} மாதிரிகள்",
+    "common_verifyHere": "இங்கே சரிபார்க்கவும்",
     "ttsVoice_Ugne": "நெருப்பில்",
+    "pricing": {
+        "perMillionTokens": "1 மில்லியன் டோக்கன்களுக்கு",
+        "tokens": "டோக்கன்கள்",
+        "free": "இலவசம்",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 மில்லியன் உரை டோக்கன்களுக்கு",
+                "audioTokens": "{price} 1 மில்லியன் ஆடியோ டோக்கன்களுக்கு"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 மில்லியன் உரை டோக்கன்களுக்கு",
+                "audioTokens": "{price} 1 மில்லியன் ஆடியோ டோக்கன்களுக்கு"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 மில்லியன் உரை டோக்கன்களுக்கு",
+                "audioTokens": "{price} 1 மில்லியன் ஆடியோ டோக்கன்களுக்கு"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 மில்லியன் டோக்கன்களுக்கு"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 மில்லியன் டோக்கன்களுக்கு"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 மில்லியன் எழுத்துகளுக்கு",
+                "neural": "{price} 1 மில்லியன் எழுத்துகளுக்கு",
+                "studio": "{price} 1 மில்லியன் எழுத்துகளுக்கு",
+                "chirpHD": "சரிபார்க்க முடியவில்லை",
+                "chirp3HD": "{price} 1 மில்லியன் எழுத்துகளுக்கு"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "அமர்வு அமைவு படிவம்",
         "description": "இங்கே நீங்கள் LLM மற்றும் விருப்பத்தேர்வைத் தேர்ந்தெடுக்கலாம். TTS ஒவ்வொரு முகவருக்கும் அமைப்புகள்.",
@@ -309,7 +343,7 @@ const ta = {
         "initialPromptDescription": "உரையாடலைத் தொடங்குவதற்கான முதல் செய்தியாக இந்தப் ப்ராம்ட் அனுப்பப்படும். நீங்கள் அதை காலியாக விட்டால், எந்த ப்ராம்ட்டும் இருக்காது.",
         "startConversation": "உரையாடலைத் தொடங்கு",
         "starting": "தொடங்குகிறது...",
-        "startTheConversation": "உரையாடலைத் தொடங்குங்கள்.",
+        "startTheConversation": "தயவுசெய்து உரையாடலைத் தொடங்குங்கள்.",
         "languageSupportNote": "மொழி ஆதரவு குறிகாட்டிகள் மாதிரி இணக்கத்தன்மையைக் காட்டுகின்றன {languageName}. ஆதரவு இல்லாத மாதிரிகள் முடக்கப்பட்டுள்ளன.",
         "reasoningNote": "ஒரு மாதிரி 'சிந்தனை' அல்லது 'பகுத்தறிவு' டோக்கன்களைப் பயன்படுத்துவதைக் குறிக்கிறது. இந்த வெளியீடு பில் செய்யப்படுகிறது, ஆனால் அரட்டையில் தெரியவில்லை.",
         "openaiOrgVerificationNote": "குறிக்கிறது OpenAI மாதிரிக்கு சரிபார்க்கப்பட்ட நிறுவனம் தேவை. உங்களால் முடியும்",
@@ -335,15 +369,15 @@ const ta = {
         "backToMain": "முதன்மைக்குத் திரும்பு",
         "conversationHistory": "உரையாடல் வரலாறு",
         "chatWith": "அரட்டையடிக்கவும் {agentA} & {agentB}",
+        "conversationDescription": "தொடங்கப்பட்டது {date} - மொழி: {language}",
         "viewConversation": "உரையாடலைக் காண்க",
         "backToPreviousChats": "முந்தைய அரட்டைகளுக்குத் திரும்பு",
         "resumeConversation": "உரையாடலை மீண்டும் தொடங்கு",
         "resuming": "மீண்டும் தொடங்குகிறது...",
         "sessionDetails": "அமர்வு விவரங்கள்",
-        "language": "மொழி:",
-        "transcript": "எழுத்துப்படி",
+        "language": "மொழி",
+        "transcript": "எழுத்துவடிவம்",
         "loadingHistory": "வரலாற்றை ஏற்றுகிறது...",
-        "conversationDescription": "தொடங்கப்பட்டது {date} - மொழி: {language}",
         "loadingConversation": "உரையாடலை ஏற்றுகிறது...",
         "chatStartedOn": "அரட்டை தொடங்கிய தேதி {date}",
         "agentAModel": "முகவர் A மாதிரி",
@@ -355,18 +389,8 @@ const ta = {
         "model": "மாதிரி",
         "voice": "குரல்"
     },
-    "common_verifyHere": "இங்கே சரிபார்க்கவும்",
-    "page_AvailableImageModelsTitle": "தற்போது கிடைக்கும் பட மாதிரிகள்",
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",
-    "imageModel_PriceUSD": "விலை (USD)",
-    "page_TooltipKnowledgeCutoff": "இந்த தேதியில் மாதிரியின் அறிவு துண்டிக்கப்பட்டுள்ளது.",
-    "modelCategory_MistralAIPremierModels": "பிரீமியர் மாதிரிகள்",
-    "modelCategory_MistralAIOpenModels": "திறந்த மாதிரிகள்",
-    "pricing": {
-        "perMillionTokens": "1 மில்லியன் டோக்கன்களுக்கு",
-        "tokens": "டோக்கன்கள்",
-        "free": "இலவசம்"
-    }
+    "imageModel_PriceUSD": "விலை (USD)"
 };
 export default ta;

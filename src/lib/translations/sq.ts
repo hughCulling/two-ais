@@ -71,6 +71,7 @@ const sq = {
         "mn": "mongolisht"
     },
     "settings": {
+        "loading": "Duke ngarkuar cilësimet...",
         "title": "Cilësimet",
         "sections": {
             "appearance": "Pamja",
@@ -95,17 +96,17 @@ const sq = {
         },
         "apiKeys": {
             "title": "API Çelësat",
-            "description": "Menaxho API çelësa për të ndryshme AI ofruesit",
-            "saved": "Ruajtur",
-            "notSet": "Nuk është vendosur",
-            "setKey": "Vendos çelësin",
-            "updateKey": "Çelësi i përditësimit",
-            "removeKey": "Hiq çelësin",
-            "getKeyInstructions": "Merr tënden API çelës",
-            "noNewKeys": "Asnjë e re API çelësat e futur për të ruajtur.",
-            "unexpectedResponse": "Mora një përgjigje të papritur nga serveri.",
+            "description": "Menaxho API çelësa për të ndryshme AI shërbime.",
+            "setKey": "Vendos",
+            "updateKey": "Përditëso",
+            "saveUpdateKeys": "Ruaj / Përditëso Çelësat",
+            "saving": "Duke u ruajtur...",
+            "noNewKeys": "Nuk ka çelësa të rinj për të ruajtur.",
+            "keyStoredSecurely": "Juaj API Çelësi do të ruhet në mënyrë të sigurt dhe të koduar.",
+            "enteringNewKeyOverwrites": "Futja e një çelësi të ri do të mbishkruajë atë ekzistues.",
             "failedToSaveKey": "Ruajtja e çelësit {serviceName} dështoi.",
-            "someKeysNotSaved": "Disa API Çelësat nuk mund të ruheshin. Ju lutemi kontrolloni detajet më poshtë.",
+            "unexpectedResponse": "Përgjigje e papritur nga serveri.",
+            "someKeysNotSaved": "Disa çelësa nuk mund të ruheshin. Ju lutemi kontrolloni gabimet më sipër.",
             "keyStatus": "statusi kryesor...",
             "apiKeySecurelySaved": "API Çelësi u ruajt në mënyrë të sigurt",
             "confirmRemoveTitle": "Konfirmo heqjen",
@@ -114,16 +115,12 @@ const sq = {
             "successfullyRemovedKey": "Çelësi {serviceName} u hoq me sukses.",
             "keyNotSet": "Statusi i çelësit: Nuk është vendosur",
             "keySet": "Statusi i çelësit: I vendosur",
-            "saveButton": "Ruaj API Çelësi(ët)",
-            "enteringNewKeyOverwrites": "Futja e një çelësi të ri do të mbishkruajë atë të ruajtur.",
-            "keyStoredSecurely": "Çelësi juaj do të ruhet në mënyrë të sigurt duke përdorur Google Menaxher Sekret.",
-            "saveUpdateKeys": "Ruaj / Përditëso Çelësat",
-            "saving": "Duke u ruajtur..."
-        },
-        "loading": "Duke ngarkuar cilësimet..."
+            "saveButton": "Ruaj API Çelësi(ët)"
+        }
     },
     "main": {
         "title": "AI Bisedë",
+        "aiConversation": "AI Bisedë",
         "setupForm": {
             "title": "Konfiguroni bisedën tuaj",
             "agentA": "Agjenti A",
@@ -141,20 +138,19 @@ const sq = {
                 "selectModel": "Zgjidh TTS model"
             },
             "startConversation": "Fillo bisedën",
-            "conversationPrompt": "Fillo bisedën."
+            "conversationPrompt": "Ju lutem filloni bisedën."
         },
         "conversation": {
             "thinking": "duke menduar...",
             "stop": "Ndalo",
-            "restart": "Rinisni bisedën"
+            "restart": "Rinis bisedën"
         },
         "pricing": {
             "estimatedCost": "Kostoja e parashikuar",
             "perMillionTokens": "për milion tokena",
             "input": "Hyrje",
             "output": "Prodhimi"
-        },
-        "aiConversation": "AI Bisedë"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const sq = {
             "signUpWithGoogle": "Regjistrohu me Google",
             "hasAccount": "A keni tashmë një llogari?",
             "signIn": "Hyr",
-            "emailLabel": "Email adresë",
+            "emailLabel": "Adresa e email-it",
             "confirmPasswordPlaceholder": "Konfirmo fjalëkalimin",
             "signingUp": "Duke u regjistruar..."
         },
@@ -185,7 +181,7 @@ const sq = {
             "invalidCredentials": "Email ose fjalëkalim i pavlefshëm",
             "userNotFound": "Përdoruesi nuk u gjet",
             "weakPassword": "Fjalëkalimi duhet të jetë të paktën 6 karaktere",
-            "emailInUse": "Email tashmë në përdorim",
+            "emailInUse": "Email-i është tashmë në përdorim",
             "generic": "Ndodhi një gabim. Ju lutemi provoni përsëri.",
             "initialization": "Gabim inicializimi. Ju lutemi provoni përsëri më vonë.",
             "invalidEmail": "Ju lutemi shkruani një adresë të vlefshme email-i.",
@@ -202,7 +198,7 @@ const sq = {
             "unknownProfileSaveError": "Ndodhi një gabim i panjohur gjatë ruajtjes së profilit.",
             "emailAlreadyRegistered": "Kjo adresë emaili është regjistruar tashmë.",
             "passwordTooShortSignUp": "Fjalëkalimi duhet të jetë së paku 6 karaktere i gjatë.",
-            "signUpFailedPrefix": "Regjistrimi dështoi: ",
+            "signUpFailedPrefix": "Dështoi të regjistrohej: ",
             "unknownSignUpError": "Një gabim i panjohur ndodhi gjatë regjistrimit."
         }
     },
@@ -229,12 +225,14 @@ const sq = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modele",
     "modelCategory_Gemini1_5": "Gemini 1.5 modele",
     "modelCategory_Claude4": "Claude 4 modele",
-    "modelCategory_Claude3_7": "Claude 3.7 modele",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modele",
     "modelCategory_Claude3": "Claude 3 modele",
-    "modelCategory_Grok4": "Grok 4 modele",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modele",
     "modelCategory_Grok3Mini": "Grok 3 Mini modele",
+    "modelCategory_MistralAIPremierModels": "Modelet kryesore",
+    "modelCategory_MistralAIOpenModels": "Model i hapur",
     "modelCategory_Llama4": "Llama 4 modele",
     "modelCategory_Llama3_3": "Llama Modelet 3.3",
     "modelCategory_Llama3_2": "Llama Modelet 3.2",
@@ -246,18 +244,18 @@ const sq = {
     "modelCategory_Gemma2": "Gemma 2 modele",
     "modelCategory_Gemma": "Gemma modele",
     "modelCategory_GoogleGemma": "Google Gemma Modele",
-    "modelCategory_DeepSeekR1": "DeepSeek Modelet R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modelet V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Modeli R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modeli V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modelet R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modele",
     "modelCategory_MistralAIModels": "Mistral AI Modele",
     "modelCategory_Qwen3": "Qwen3 modele",
-    "modelCategory_QwQwQ": "Qwen Modelet QwQ",
+    "modelCategory_QwQwQ": "Qwen Modeli QwQ",
     "modelCategory_Qwen2_5": "QwenModele 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modele vizioni",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modelet e koduesve",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modeli i vizionit",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modeli i koduesit",
     "modelCategory_Qwen2": "Qwen2 modele",
-    "modelCategory_Qwen2Vision": "Qwen2 Modele Vizioni",
+    "modelCategory_Qwen2Vision": "Qwen2 Modeli i Vizionit",
     "modelCategory_QwenModels": "Qwen Modele",
     "modelCategory_OtherModels": "Modele të tjera",
     "page_ErrorLoadingUserData": "Ngarkimi i të dhënave të përdoruesit dështoi: {errorMessage}. Ju lutemi provoni ta rifreskoni.",
@@ -269,12 +267,13 @@ const sq = {
     "page_LoadingUserData": "Duke ngarkuar të dhënat e përdoruesit...",
     "page_ErrorAlertTitle": "Gabim",
     "page_WelcomeTitle": "Mirë se vini në Two AIs",
-    "page_WelcomeSubtitle": "Kjo faqe interneti ju lejon të dëgjoni biseda midis dy personave Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Kjo faqe interneti ju lejon të dëgjoni biseda midis dy personave Large Language Models (LLMs) dhe gjeneroni imazhe për çdo raund.",
     "page_ApiKeysRequiredTitle": "API Çelësat e nevojshëm",
     "page_ApiKeysRequiredDescription": "Për të zhvilluar biseda, do t'ju duhet të jepni të dhënat tuaja API çelësat për AI modelet që dëshironi të përdorni (p.sh., OpenAI, Google, Anthropic) pas hyrjes në sistem. Udhëzime të hollësishme për secilin ofrues mund të gjenden te Cilësimet / API Faqja e çelësave pas hyrjes.",
     "page_SignInPrompt": "Për të filluar seancën tuaj, mund të identifikoheni ose të krijoni një llogari duke përdorur lidhjen në kokë.",
     "page_VideoTitle": "Two AIs Demo e bisedës",
     "page_AvailableLLMsTitle": "Aktualisht në dispozicion LLMs",
+    "page_TooltipKnowledgeCutoff": "Njohuritë e modelit janë ndërprerë në këtë datë.",
     "page_TooltipGoogleThinkingBudget": "Kjo Google Modeli përdor një 'buxhet të të menduarit'. Rezultati i 'të menduarit' faturohet, por nuk është i dukshëm në bisedë.",
     "page_TooltipAnthropicExtendedThinking": "Kjo Anthropic Modeli përdor 'të menduarit e zgjeruar'. Rezultati i 'të menduarit' faturohet, por nuk është i dukshëm në bisedë.",
     "page_TooltipXaiThinking": "Kjo xAI Modeli përdor 'të menduarit'. Ky rezultat faturohet, por nuk është i dukshëm në bisedë.",
@@ -288,12 +287,47 @@ const sq = {
     "page_BadgeExperimental": "Eksperimentale",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Aktualisht në dispozicion Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Modelet e imazheve të disponueshme aktualisht",
     "page_NoTTSOptions": "Jo TTS opsionet aktualisht të disponueshme.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Çmimet u verifikuan për herë të fundit më {date}",
-    "page_PricingPerTokens": "për {amount} Tokenat",
+    "page_PricingPerTokens": "për 1 Milion Tokena",
     "page_ModelCategoryModels": "{model} modele",
+    "common_verifyHere": "verifiko këtu",
     "ttsVoice_Ugne": "Në zjarr",
+    "pricing": {
+        "perMillionTokens": "për 1 milion tokenë",
+        "tokens": "tokena",
+        "free": "Falas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} për 1 milion tokenë teksti",
+                "audioTokens": "{price} për 1 milion tokenë audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} për 1 milion tokenë teksti",
+                "audioTokens": "{price} për 1 milion tokenë audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} për 1 milion tokenë teksti",
+                "audioTokens": "{price} për 1 milion tokenë audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} për 1 milion tokenë"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} për 1 milion tokenë"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} për 1 milion karaktere",
+                "neural": "{price} për 1 milion karaktere",
+                "studio": "{price} për 1 milion karaktere",
+                "chirpHD": "Nuk mund të verifikohej",
+                "chirp3HD": "{price} për 1 milion karaktere"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulari i Konfigurimit të Sesionit",
         "description": "Këtu mund të zgjidhni LLM dhe opsionale TTS cilësimet për secilin agjent.",
@@ -309,7 +343,7 @@ const sq = {
         "initialPromptDescription": "Kjo kërkesë do të dërgohet si mesazhi i parë për të filluar bisedën. Nëse e lini bosh, nuk do të ketë asnjë kërkesë.",
         "startConversation": "Fillo bisedën",
         "starting": "Duke filluar...",
-        "startTheConversation": "Fillo bisedën.",
+        "startTheConversation": "Ju lutem filloni bisedën.",
         "languageSupportNote": "Treguesit e mbështetjes gjuhësore tregojnë përputhshmërinë e modelit me {languageName}Modelet pa mbështetje janë të çaktivizuara.",
         "reasoningNote": "Tregon se një model përdor tokena 'të menduarit' ose 'të arsyetimit'. Ky rezultat faturohet, por nuk është i dukshëm në bisedë.",
         "openaiOrgVerificationNote": "Tregon një OpenAI modeli kërkon një organizatë të verifikuar. Ju mundeni",
@@ -335,15 +369,15 @@ const sq = {
         "backToMain": "Kthehu te Kryesorja",
         "conversationHistory": "Historiku i bisedave",
         "chatWith": "Bisedo me {agentA} & {agentB}",
+        "conversationDescription": "Filloi më {date} - Gjuha: {language}",
         "viewConversation": "Shiko bisedën",
         "backToPreviousChats": "Kthehu te bisedat e mëparshme",
         "resumeConversation": "Rifillo bisedën",
         "resuming": "Duke rifilluar...",
         "sessionDetails": "Detajet e sesionit",
-        "language": "Gjuha:",
+        "language": "Gjuha",
         "transcript": "Transkripti",
         "loadingHistory": "Duke ngarkuar historikun...",
-        "conversationDescription": "Filloi më {date} - Gjuha: {language}",
         "loadingConversation": "Duke ngarkuar bisedën...",
         "chatStartedOn": "Biseda filloi më {date}",
         "agentAModel": "Agjenti A Model",
@@ -355,18 +389,8 @@ const sq = {
         "model": "Model",
         "voice": "Zëri"
     },
-    "common_verifyHere": "verifiko këtu",
-    "page_AvailableImageModelsTitle": "Modelet e imazheve të disponueshme aktualisht",
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",
-    "imageModel_PriceUSD": "Çmimi (USD)",
-    "page_TooltipKnowledgeCutoff": "Njohuritë e modelit janë ndërprerë në këtë datë.",
-    "modelCategory_MistralAIPremierModels": "Modelet kryesore",
-    "modelCategory_MistralAIOpenModels": "Modele të hapura",
-    "pricing": {
-        "perMillionTokens": "për 1 milion tokenë",
-        "tokens": "tokena",
-        "free": "Falas"
-    }
+    "imageModel_PriceUSD": "Çmimi (USD)"
 };
 export default sq;

@@ -71,6 +71,7 @@ const hi = {
         "mn": "मंगोलियन"
     },
     "settings": {
+        "loading": "सेटिंग्स लोड हो रही हैं...",
         "title": "सेटिंग्स",
         "sections": {
             "appearance": "उपस्थिति",
@@ -95,17 +96,17 @@ const hi = {
         },
         "apiKeys": {
             "title": "API चाबियाँ",
-            "description": "अपना मैनेज करें API विभिन्न कुंजियों के लिए AI प्रदाता",
-            "saved": "सहेजा गया",
-            "notSet": "सेट नहीं",
-            "setKey": "नियत कुंजी",
-            "updateKey": "अद्यतन कुंजी",
-            "removeKey": "कुंजी निकालें",
-            "getKeyInstructions": "अपना प्राप्त करें API चाबी",
-            "noNewKeys": "कोई नया नहीं API सहेजने के लिए कुंजी दर्ज की गई.",
-            "unexpectedResponse": "सर्वर से अप्रत्याशित प्रतिक्रिया प्राप्त हुई.",
+            "description": "अपना मैनेज करें API विभिन्न कुंजियों के लिए AI सेवाएं.",
+            "setKey": "तय करना",
+            "updateKey": "अद्यतन",
+            "saveUpdateKeys": "कुंजियाँ सहेजें/अपडेट करें",
+            "saving": "बचत...",
+            "noNewKeys": "सहेजने के लिए कोई नई कुंजी नहीं.",
+            "keyStoredSecurely": "आपका API कुंजी सुरक्षित और एन्क्रिप्टेड रूप से संग्रहीत की जाएगी।",
+            "enteringNewKeyOverwrites": "नई कुंजी दर्ज करने से मौजूदा कुंजी अधिलेखित हो जाएगी।",
             "failedToSaveKey": "{serviceName} कुंजी सहेजने में विफल.",
-            "someKeysNotSaved": "कुछ API कुंजियाँ सहेजी नहीं जा सकीं। कृपया नीचे दिए गए विवरण देखें।",
+            "unexpectedResponse": "सर्वर से अप्रत्याशित प्रतिक्रिया.",
+            "someKeysNotSaved": "कुछ कुंजियाँ सहेजी नहीं जा सकीं। कृपया ऊपर दी गई त्रुटियाँ जाँचें।",
             "keyStatus": "कुंजी स्थिति...",
             "apiKeySecurelySaved": "API कुंजी सुरक्षित रूप से सहेजी गई",
             "confirmRemoveTitle": "निष्कासन की पुष्टि करें",
@@ -114,16 +115,12 @@ const hi = {
             "successfullyRemovedKey": "{serviceName} कुंजी सफलतापूर्वक हटा दी गई.",
             "keyNotSet": "कुंजी स्थिति: सेट नहीं",
             "keySet": "कुंजी स्थिति: सेट",
-            "saveButton": "बचाना API कुंजी(याँ)",
-            "enteringNewKeyOverwrites": "नई कुंजी दर्ज करने से सहेजी गई कुंजी अधिलेखित हो जाएगी।",
-            "keyStoredSecurely": "आपकी कुंजी को सुरक्षित रूप से संग्रहीत किया जाएगा Google गुप्त प्रबंधक.",
-            "saveUpdateKeys": "कुंजियाँ सहेजें/अपडेट करें",
-            "saving": "बचत..."
-        },
-        "loading": "सेटिंग्स लोड हो रही हैं..."
+            "saveButton": "बचाना API कुंजी(याँ)"
+        }
     },
     "main": {
         "title": "AI बातचीत",
+        "aiConversation": "AI बातचीत",
         "setupForm": {
             "title": "अपनी बातचीत सेट करें",
             "agentA": "एजेंट ए",
@@ -141,7 +138,7 @@ const hi = {
                 "selectModel": "चुनना TTS नमूना"
             },
             "startConversation": "बातचीत शुरू करें",
-            "conversationPrompt": "बातचीत शुरू करें."
+            "conversationPrompt": "कृपया बातचीत शुरू करें."
         },
         "conversation": {
             "thinking": "सोच...",
@@ -153,8 +150,7 @@ const hi = {
             "perMillionTokens": "प्रति मिलियन टोकन",
             "input": "इनपुट",
             "output": "उत्पादन"
-        },
-        "aiConversation": "AI बातचीत"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const hi = {
             "signUpWithGoogle": "इसके साथ साइन अप करें Google",
             "hasAccount": "क्या आपके पास पहले से एक खाता मौजूद है?",
             "signIn": "दाखिल करना",
-            "emailLabel": "Email पता",
+            "emailLabel": "मेल पता",
             "confirmPasswordPlaceholder": "पासवर्ड की पुष्टि कीजिये",
             "signingUp": "साइन उप हो रहा है..."
         },
@@ -185,7 +181,7 @@ const hi = {
             "invalidCredentials": "अमान्य ईमेल या पासवर्ड",
             "userNotFound": "उपयोगकर्ता नहीं मिला",
             "weakPassword": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
-            "emailInUse": "Email पहले से ही प्रयोग में हैं",
+            "emailInUse": "ईमेल पहले से उपयोग में है",
             "generic": "एक त्रुटि हुई थी। कृपया दोबारा प्रयास करें।",
             "initialization": "आरंभीकरण त्रुटि. कृपया बाद में पुनः प्रयास करें.",
             "invalidEmail": "कृपया एक मान्य ईमेल पता प्रविष्ट करें।",
@@ -229,12 +225,14 @@ const hi = {
     "modelCategory_Gemini2_0": "Gemini 2.0 मॉडल",
     "modelCategory_Gemini1_5": "Gemini 1.5 मॉडल",
     "modelCategory_Claude4": "Claude 4 मॉडल",
-    "modelCategory_Claude3_7": "Claude 3.7 मॉडल",
+    "modelCategory_Claude3_7": "Claude 3.7 नमूना",
     "modelCategory_Claude3_5": "Claude 3.5 मॉडल",
     "modelCategory_Claude3": "Claude 3 मॉडल",
-    "modelCategory_Grok4": "Grok 4 मॉडल",
+    "modelCategory_Grok4": "Grok 4 नमूना",
     "modelCategory_Grok3": "Grok 3 मॉडल",
     "modelCategory_Grok3Mini": "Grok 3 मिनी मॉडल",
+    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडल",
+    "modelCategory_MistralAIOpenModels": "खुला मॉडल",
     "modelCategory_Llama4": "Llama 4 मॉडल",
     "modelCategory_Llama3_3": "Llama 3.3 मॉडल",
     "modelCategory_Llama3_2": "Llama 3.2 मॉडल",
@@ -254,10 +252,10 @@ const hi = {
     "modelCategory_Qwen3": "Qwen3 मॉडल",
     "modelCategory_QwQwQ": "Qwen QwQ मॉडल",
     "modelCategory_Qwen2_5": "Qwen2.5 मॉडल",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 विज़न मॉडल",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 विजन मॉडल",
     "modelCategory_Qwen2_5Coder": "Qwen2.5 कोडर मॉडल",
     "modelCategory_Qwen2": "Qwen2 मॉडल",
-    "modelCategory_Qwen2Vision": "Qwen2 विज़न मॉडल",
+    "modelCategory_Qwen2Vision": "Qwen2 विजन मॉडल",
     "modelCategory_QwenModels": "Qwen मॉडल",
     "modelCategory_OtherModels": "अन्य मॉडल",
     "page_ErrorLoadingUserData": "उपयोगकर्ता डेटा लोड करने में विफल: {errorMessage}. कृपया रीफ़्रेश करके देखें.",
@@ -269,31 +267,67 @@ const hi = {
     "page_LoadingUserData": "उपयोगकर्ता डेटा लोड हो रहा है...",
     "page_ErrorAlertTitle": "गलती",
     "page_WelcomeTitle": "आपका स्वागत है Two AIs",
-    "page_WelcomeSubtitle": "यह वेबसाइट आपको दो लोगों के बीच बातचीत सुनने की सुविधा देती है Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "यह वेबसाइट आपको दो लोगों के बीच बातचीत सुनने की सुविधा देती है। Large Language Models (LLMs) और प्रत्येक मोड़ के लिए छवियां उत्पन्न करें।",
     "page_ApiKeysRequiredTitle": "API कुंजियाँ आवश्यक",
     "page_ApiKeysRequiredDescription": "बातचीत चलाने के लिए, आपको अपना स्वयं का विवरण प्रदान करना होगा API के लिए कुंजियाँ AI वे मॉडल जिन्हें आप उपयोग करना चाहते हैं (उदाहरण के लिए, OpenAI, Google, Anthropic) पर क्लिक करें। प्रत्येक प्रदाता के लिए विस्तृत निर्देश सेटिंग्स/ API साइन इन करने के बाद कुंजियाँ पृष्ठ.",
     "page_SignInPrompt": "अपना सत्र शुरू करने के लिए, आप हेडर में दिए गए लिंक का उपयोग करके साइन इन कर सकते हैं या खाता बना सकते हैं।",
     "page_VideoTitle": "Two AIs वार्तालाप डेमो",
     "page_AvailableLLMsTitle": "अभी उपलब्ध है LLMs",
+    "page_TooltipKnowledgeCutoff": "इस तिथि पर मॉडल का ज्ञान समाप्त हो जाता है।",
     "page_TooltipGoogleThinkingBudget": "यह Google मॉडल एक 'थिंकिंग बजट' का उपयोग करता है। 'थिंकिंग' आउटपुट का बिल तो बनता है, लेकिन वह चैट में दिखाई नहीं देता।",
     "page_TooltipAnthropicExtendedThinking": "यह Anthropic मॉडल 'विस्तारित सोच' का उपयोग करता है। 'सोच' आउटपुट बिल किया गया है, लेकिन चैट में दिखाई नहीं देता है।",
     "page_TooltipXaiThinking": "यह xAI मॉडल 'सोच' का इस्तेमाल करता है। यह आउटपुट बिल किया गया है, लेकिन चैट में दिखाई नहीं देता।",
     "page_TooltipQwenReasoning": "यह Qwen मॉडल 'तर्क/सोच' का उपयोग करता है। यह आउटपुट बिल किया गया है, लेकिन चैट में दिखाई नहीं देता है।",
     "page_TooltipDeepSeekReasoning": "यह DeepSeek मॉडल 'तर्क/सोच' का उपयोग करता है। आउटपुट बिल किया गया है, लेकिन चैट में दिखाई नहीं देता।",
-    "page_TooltipGenericReasoning": "यह मॉडल ऐसे तर्क टोकन का उपयोग करता है जो चैट में दिखाई नहीं देते हैं लेकिन उन्हें आउटपुट टोकन के रूप में बिल किया जाता है।",
+    "page_TooltipGenericReasoning": "यह मॉडल तर्क टोकन का उपयोग करता है जो चैट में दिखाई नहीं देते हैं लेकिन आउटपुट टोकन के रूप में बिल किए जाते हैं।",
     "page_TooltipRequiresVerification": "सत्यापित आवश्यक है OpenAI संगठन. आप यहां सत्यापित कर सकते हैं.",
-    "page_TooltipSupportsLanguage": "{languageName} का समर्थन करता है",
-    "page_TooltipMayNotSupportLanguage": "यह मॉडल संभवतः वार्तालाप के लिए {languageName} का पूर्णतः समर्थन नहीं करता है।",
+    "page_TooltipSupportsLanguage": "समर्थन {languageName}",
+    "page_TooltipMayNotSupportLanguage": "यह मॉडल पूरी तरह से समर्थन नहीं कर सकता है {languageName} बातचीत के लिए.",
     "page_BadgePreview": "पूर्व दर्शन",
     "page_BadgeExperimental": "प्रयोगात्मक",
     "page_BadgeBeta": "बीटा",
     "page_AvailableTTSTitle": "अभी उपलब्ध है Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "वर्तमान में उपलब्ध छवि मॉडल",
     "page_NoTTSOptions": "नहीं TTS वर्तमान में उपलब्ध विकल्प.",
     "page_TruncatableNoteFormat": "({नोट टेक्स्ट})",
     "page_PricesLastVerifiedOn": "कीमतें अंतिम बार सत्यापित की गईं {date}",
-    "page_PricingPerTokens": "प्रति {amount} टोकन",
+    "page_PricingPerTokens": "प्रति 1 मिलियन टोकन",
     "page_ModelCategoryModels": "{model} मॉडल",
+    "common_verifyHere": "यहां सत्यापित करें",
     "ttsVoice_Ugne": "आग में",
+    "pricing": {
+        "perMillionTokens": "प्रति 1 मिलियन टोकन",
+        "tokens": "टोकन",
+        "free": "मुक्त",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "{price} प्रति 1 मिलियन ऑडियो टोकन"
+            },
+            "geminiPro": {
+                "textTokens": "{price} प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "{price} प्रति 1 मिलियन ऑडियो टोकन"
+            },
+            "openAIMini": {
+                "textTokens": "{price} प्रति 1 मिलियन टेक्स्ट टोकन",
+                "audioTokens": "{price} प्रति 1 मिलियन ऑडियो टोकन"
+            },
+            "openAITTS1": {
+                "standard": "{price} प्रति 1 मिलियन टोकन"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} प्रति 1 मिलियन टोकन"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} प्रति 1 मिलियन अक्षर",
+                "neural": "{price} प्रति 1 मिलियन अक्षर",
+                "studio": "{price} प्रति 1 मिलियन अक्षर",
+                "chirpHD": "सत्यापित नहीं किया जा सका",
+                "chirp3HD": "{price} प्रति 1 मिलियन अक्षर"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "सत्र सेटअप फ़ॉर्म",
         "description": "यहां आप एलएलएम और वैकल्पिक का चयन कर सकते हैं TTS प्रत्येक एजेंट के लिए सेटिंग्स.",
@@ -309,7 +343,7 @@ const hi = {
         "initialPromptDescription": "यह संकेत बातचीत शुरू करने के लिए पहले संदेश के रूप में भेजा जाएगा। अगर आप इसे खाली छोड़ देंगे, तो कोई संकेत नहीं आएगा।",
         "startConversation": "बातचीत शुरू करें",
         "starting": "शुरू...",
-        "startTheConversation": "बातचीत शुरू करें.",
+        "startTheConversation": "कृपया बातचीत शुरू करें.",
         "languageSupportNote": "भाषा समर्थन संकेतक मॉडल की अनुकूलता दर्शाते हैं {languageName}. बिना समर्थन वाले मॉडल अक्षम हैं.",
         "reasoningNote": "यह दर्शाता है कि मॉडल 'सोच' या 'तर्क' टोकन का उपयोग करता है। यह आउटपुट बिल किया गया है, लेकिन चैट में दिखाई नहीं देता है।",
         "openaiOrgVerificationNote": "इंगित करता है OpenAI मॉडल के लिए एक सत्यापित संगठन की आवश्यकता होती है। आप",
@@ -335,15 +369,15 @@ const hi = {
         "backToMain": "मुख्य पर वापस जाएँ",
         "conversationHistory": "बातचीत का इतिहास",
         "chatWith": "साथ बात {agentA} और {agentB}",
+        "conversationDescription": "को प्रारंभ करें {date} - भाषा: {language}",
         "viewConversation": "बातचीत देखें",
         "backToPreviousChats": "पिछली चैट पर वापस जाएं",
         "resumeConversation": "बातचीत फिर से शुरू करें",
         "resuming": "पुनः प्रारंभ...",
         "sessionDetails": "सत्र विवरण",
-        "language": "भाषा:",
+        "language": "भाषा",
         "transcript": "प्रतिलिपि",
         "loadingHistory": "इतिहास लोड हो रहा है...",
-        "conversationDescription": "को प्रारंभ करें {date} - भाषा: {language}",
         "loadingConversation": "बातचीत लोड हो रही है...",
         "chatStartedOn": "चैट शुरू हुई {date}",
         "agentAModel": "एजेंट ए मॉडल",
@@ -355,18 +389,8 @@ const hi = {
         "model": "नमूना",
         "voice": "आवाज़"
     },
-    "common_verifyHere": "यहां सत्यापित करें",
-    "page_AvailableImageModelsTitle": "वर्तमान में उपलब्ध छवि मॉडल",
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "कीमत (USD)",
-    "page_TooltipKnowledgeCutoff": "इस तिथि पर मॉडल का ज्ञान समाप्त हो जाता है।",
-    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडल",
-    "modelCategory_MistralAIOpenModels": "खुले मॉडल",
-    "pricing": {
-        "perMillionTokens": "प्रति 1 मिलियन टोकन",
-        "tokens": "टोकन",
-        "free": "मुक्त"
-    }
+    "imageModel_PriceUSD": "कीमत (USD)"
 };
 export default hi;

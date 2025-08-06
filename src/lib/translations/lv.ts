@@ -71,6 +71,7 @@ const lv = {
         "mn": "Mongoļu"
     },
     "settings": {
+        "loading": "Notiek iestatījumu ielāde...",
         "title": "Iestatījumi",
         "sections": {
             "appearance": "Izskats",
@@ -95,17 +96,17 @@ const lv = {
         },
         "apiKeys": {
             "title": "API Atslēgas",
-            "description": "Pārvaldiet savu API atslēgas dažādiem AI pakalpojumu sniedzēji",
-            "saved": "Saglabāts",
-            "notSet": "Nav iestatīts",
-            "setKey": "Iestatīt taustiņu",
-            "updateKey": "Atjaunināšanas atslēga",
-            "removeKey": "Noņemt atslēgu",
-            "getKeyInstructions": "Iegūstiet savu API atslēga",
-            "noNewKeys": "Nav jaunu API taustiņi ievadīti saglabāšanai.",
-            "unexpectedResponse": "Saņemta negaidīta atbilde no servera.",
+            "description": "Pārvaldiet savu API atslēgas dažādiem AI pakalpojumi.",
+            "setKey": "Komplekts",
+            "updateKey": "Atjauninājums",
+            "saveUpdateKeys": "Saglabāt/atjaunināt atslēgas",
+            "saving": "Saglabāšana...",
+            "noNewKeys": "Nav jaunu atslēgu, ko saglabāt.",
+            "keyStoredSecurely": "Tavs API atslēga tiks droši glabāta un šifrēta.",
+            "enteringNewKeyOverwrites": "Ievadot jaunu atslēgu, esošā tiks pārrakstīta.",
             "failedToSaveKey": "Neizdevās saglabāt {serviceName} atslēgu.",
-            "someKeysNotSaved": "Daži API Atslēgas nevarēja saglabāt. Lūdzu, pārbaudiet tālāk norādīto informāciju.",
+            "unexpectedResponse": "Negaidīta atbilde no servera.",
+            "someKeysNotSaved": "Dažas atslēgas nevarēja saglabāt. Lūdzu, pārbaudiet iepriekš minētās kļūdas.",
             "keyStatus": "atslēgas statuss...",
             "apiKeySecurelySaved": "API Atslēga droši saglabāta",
             "confirmRemoveTitle": "Apstiprināt noņemšanu",
@@ -114,16 +115,12 @@ const lv = {
             "successfullyRemovedKey": "Atslēga {serviceName} veiksmīgi noņemta.",
             "keyNotSet": "Atslēgas statuss: Nav iestatīts",
             "keySet": "Atslēgas statuss: Iestatīts",
-            "saveButton": "Saglabāt API Atslēga(-s)",
-            "enteringNewKeyOverwrites": "Ievadot jaunu atslēgu, saglabātā tiks pārrakstīta.",
-            "keyStoredSecurely": "Jūsu atslēga tiks droši glabāta, izmantojot Google Slepenais pārvaldnieks.",
-            "saveUpdateKeys": "Saglabāt/atjaunināt atslēgas",
-            "saving": "Saglabāšana..."
-        },
-        "loading": "Notiek iestatījumu ielāde..."
+            "saveButton": "Saglabāt API Atslēga(-s)"
+        }
     },
     "main": {
         "title": "AI Saruna",
+        "aiConversation": "AI Saruna",
         "setupForm": {
             "title": "Sarunas iestatīšana",
             "agentA": "Aģents A",
@@ -141,7 +138,7 @@ const lv = {
                 "selectModel": "Atlasīt TTS modelis"
             },
             "startConversation": "Sākt sarunu",
-            "conversationPrompt": "Sāciet sarunu."
+            "conversationPrompt": "Lūdzu, sāciet sarunu."
         },
         "conversation": {
             "thinking": "domājot...",
@@ -153,8 +150,7 @@ const lv = {
             "perMillionTokens": "uz miljonu žetonu",
             "input": "Ievade",
             "output": "Izvade"
-        },
-        "aiConversation": "AI Saruna"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const lv = {
             "signUpWithGoogle": "Reģistrēties ar Google",
             "hasAccount": "Vai jums jau ir konts?",
             "signIn": "Pierakstīties",
-            "emailLabel": "Email adrese",
+            "emailLabel": "E-pasta adrese",
             "confirmPasswordPlaceholder": "Apstiprināt paroli",
             "signingUp": "Reģistrēšanās..."
         },
@@ -185,7 +181,7 @@ const lv = {
             "invalidCredentials": "Nederīga e-pasta adrese vai parole",
             "userNotFound": "Lietotājs nav atrasts",
             "weakPassword": "Parolei jābūt vismaz 6 rakstzīmes garai",
-            "emailInUse": "Email jau tiek lietots",
+            "emailInUse": "E-pasts jau tiek lietots",
             "generic": "Radās kļūda. Lūdzu, mēģiniet vēlreiz.",
             "initialization": "Inicializācijas kļūda. Lūdzu, mēģiniet vēlreiz vēlāk.",
             "invalidEmail": "Lūdzu, ievadiet derīgu e-pasta adresi.",
@@ -216,7 +212,7 @@ const lv = {
         "or": "vai"
     },
     "apiKeyMissing": "API Trūkst atslēgas",
-    "apiKeyMissingSubtext": "The API Šī pakalpojumu sniedzēja atslēga nav derīga vai tā nav derīga. Lūdzu, pievienojiet to iestatījumos.",
+    "apiKeyMissingSubtext": "The API Šī pakalpojumu sniedzēja atslēga nav derīga vai arī tā nav derīga. Lūdzu, pievienojiet to iestatījumos.",
     "apiKeyNotNeeded": "API Atslēga nav nepieciešama",
     "apiKeyNotNeededSubtext": "Šim pakalpojumu sniedzējam nav nepieciešams API atslēga tā bezmaksas līmenim vai noteiktiem modeļiem.",
     "apiKeyFound": "API Atslēgu komplekts",
@@ -229,12 +225,14 @@ const lv = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeļi",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeļi",
     "modelCategory_Claude4": "Claude 4 modeļi",
-    "modelCategory_Claude3_7": "Claude 3.7 modeļi",
+    "modelCategory_Claude3_7": "Claude 3.7 modelis",
     "modelCategory_Claude3_5": "Claude 3.5 modeļi",
     "modelCategory_Claude3": "Claude 3 modeļi",
-    "modelCategory_Grok4": "Grok 4 modeļi",
+    "modelCategory_Grok4": "Grok 4 modelis",
     "modelCategory_Grok3": "Grok 3 modeļi",
     "modelCategory_Grok3Mini": "Grok 3 Mini modeļi",
+    "modelCategory_MistralAIPremierModels": "Augstākās klases modeļi",
+    "modelCategory_MistralAIOpenModels": "Atvērts modelis",
     "modelCategory_Llama4": "Llama 4 modeļi",
     "modelCategory_Llama3_3": "Llama 3.3 modeļi",
     "modelCategory_Llama3_2": "Llama 3.2 modeļi",
@@ -246,18 +244,18 @@ const lv = {
     "modelCategory_Gemma2": "Gemma 2. modelis",
     "modelCategory_Gemma": "Gemma modeļi",
     "modelCategory_GoogleGemma": "Google Gemma Modeļi",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 modeļi",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 modeļi",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 modelis",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modelis",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 destilācijas modeļi",
     "modelCategory_DeepSeekModels": "DeepSeek Modeļi",
     "modelCategory_MistralAIModels": "Mistral AI Modeļi",
-    "modelCategory_Qwen3": "Qwen3 modeļi",
-    "modelCategory_QwQwQ": "Qwen QwQ modeļi",
+    "modelCategory_Qwen3": "Qwen3. modelis",
+    "modelCategory_QwQwQ": "Qwen QwQ modelis",
     "modelCategory_Qwen2_5": "Qwen2,5 modeļi",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Redzes modeļi",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodētāju modeļi",
-    "modelCategory_Qwen2": "Qwen2 modeļi",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision modeļi",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Redzes modelis",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodētāja modelis",
+    "modelCategory_Qwen2": "Qwen2. modelis",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision modelis",
     "modelCategory_QwenModels": "Qwen Modeļi",
     "modelCategory_OtherModels": "Citi modeļi",
     "page_ErrorLoadingUserData": "Neizdevās ielādēt lietotāja datus: {kļūdas ziņojums}. Lūdzu, mēģiniet atsvaidzināt.",
@@ -269,12 +267,13 @@ const lv = {
     "page_LoadingUserData": "Notiek lietotāja datu ielāde...",
     "page_ErrorAlertTitle": "Kļūda",
     "page_WelcomeTitle": "Laipni lūdzam Two AIs",
-    "page_WelcomeSubtitle": "Šī vietne ļauj noklausīties sarunas starp diviem Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Šī vietne ļauj noklausīties sarunas starp diviem Large Language Models (LLMs) un ģenerēt attēlus katram pagriezienam.",
     "page_ApiKeysRequiredTitle": "API Nepieciešamās atslēgas",
     "page_ApiKeysRequiredDescription": "Lai vadītu sarunas, jums būs jānodrošina savs API atslēgas priekš AI modeļi, kurus vēlaties izmantot (piemēram, OpenAI, Google, Anthropic) pēc pieteikšanās. Detalizētus norādījumus par katru pakalpojumu sniedzēju var atrast sadaļā Iestatījumi / API Atslēgu lapa pēc pieteikšanās.",
     "page_SignInPrompt": "Lai sāktu savu sesiju, varat pieteikties vai izveidot kontu, izmantojot saiti galvenē.",
     "page_VideoTitle": "Two AIs Sarunas demonstrācija",
     "page_AvailableLLMsTitle": "Pašlaik pieejams LLMs",
+    "page_TooltipKnowledgeCutoff": "Šajā datumā modeļa zināšanas ir pārtrauktas.",
     "page_TooltipGoogleThinkingBudget": "Šis Google Modelis izmanto “domāšanas budžetu”. “Domāšanas” rezultāts tiek rēķināts, bet nav redzams tērzēšanā.",
     "page_TooltipAnthropicExtendedThinking": "Šis Anthropic Modelis izmanto “paplašināto domāšanu”. “Domāšanas” rezultāts tiek aprēķināts, bet nav redzams tērzēšanā.",
     "page_TooltipXaiThinking": "Šis xAI Modelis izmanto “domāšanu”. Šī izvade ir apmaksāta, bet nav redzama tērzēšanā.",
@@ -283,17 +282,52 @@ const lv = {
     "page_TooltipGenericReasoning": "Šis modelis izmanto spriešanas žetonus, kas nav redzami tērzēšanā, bet tiek uzskaitīti kā izvades žetoni.",
     "page_TooltipRequiresVerification": "Nepieciešams verificēts OpenAI organizācija. Varat pārbaudīt šeit.",
     "page_TooltipSupportsLanguage": "Atbalsta {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Šis modelis, iespējams, pilnībā neatbalsta {languageName} sarunvalodai.",
+    "page_TooltipMayNotSupportLanguage": "Šis modelis, iespējams, pilnībā neatbalsta {languageName} sarunai.",
     "page_BadgePreview": "Priekšskatījums",
     "page_BadgeExperimental": "Eksperimentāls",
     "page_BadgeBeta": "Beta versija",
     "page_AvailableTTSTitle": "Pašlaik pieejams Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Pašlaik pieejamie attēlu modeļi",
     "page_NoTTSOptions": "Nē TTS pašlaik pieejamās opcijas.",
     "page_TruncatableNoteFormat": "({piezīmesTeksts})",
     "page_PricesLastVerifiedOn": "Cenas pēdējo reizi pārbaudītas {date}",
-    "page_PricingPerTokens": "uz vienu {amount} Žetoni",
+    "page_PricingPerTokens": "par 1 miljonu žetonu",
     "page_ModelCategoryModels": "{model} modeļi",
+    "common_verifyHere": "pārbaudīt šeit",
     "ttsVoice_Ugne": "Ugunsgrēkā",
+    "pricing": {
+        "perMillionTokens": "uz 1 miljonu žetonu",
+        "tokens": "žetoni",
+        "free": "Bezmaksas",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} uz 1 miljonu teksta žetonu",
+                "audioTokens": "{price} uz 1 miljonu audio žetonu"
+            },
+            "geminiPro": {
+                "textTokens": "{price} uz 1 miljonu teksta žetonu",
+                "audioTokens": "{price} uz 1 miljonu audio žetonu"
+            },
+            "openAIMini": {
+                "textTokens": "{price} uz 1 miljonu teksta žetonu",
+                "audioTokens": "{price} uz 1 miljonu audio žetonu"
+            },
+            "openAITTS1": {
+                "standard": "{price} uz 1 miljonu žetonu"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} uz 1 miljonu žetonu"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} uz 1 miljonu rakstzīmju",
+                "neural": "{price} uz 1 miljonu rakstzīmju",
+                "studio": "{price} uz 1 miljonu rakstzīmju",
+                "chirpHD": "Nevarēja verificēt",
+                "chirp3HD": "{price} uz 1 miljonu rakstzīmju"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Sesijas iestatīšanas veidlapa",
         "description": "Šeit jūs varat izvēlēties LLM un pēc izvēles TTS iestatījumi katram aģentam.",
@@ -309,7 +343,7 @@ const lv = {
         "initialPromptDescription": "Šī uzvedne tiks nosūtīta kā pirmais ziņojums sarunas sākšanai. Ja atstāsiet to tukšu, uzvedne netiks nosūtīta.",
         "startConversation": "Sākt sarunu",
         "starting": "Sākot...",
-        "startTheConversation": "Sāciet sarunu.",
+        "startTheConversation": "Lūdzu, sāciet sarunu.",
         "languageSupportNote": "Valodu atbalsta indikatori parāda modeļa saderību ar {languageName}Modeļi bez atbalsta ir atspējoti.",
         "reasoningNote": "Norāda, ka modelis izmanto “domāšanas” vai “spriešanas” žetonus. Šī izvade ir apmaksāta, bet nav redzama tērzēšanā.",
         "openaiOrgVerificationNote": "Norāda uz OpenAI modelim ir nepieciešama verificēta organizācija. Jūs varat",
@@ -335,15 +369,15 @@ const lv = {
         "backToMain": "Atpakaļ uz galveno",
         "conversationHistory": "Sarunu vēsture",
         "chatWith": "Tērzēt ar {agentA} un {agentB}",
+        "conversationDescription": "Sākts {date} - Valoda: {language}",
         "viewConversation": "Skatīt sarunu",
         "backToPreviousChats": "Atpakaļ uz iepriekšējām sarunām",
         "resumeConversation": "Atsākt sarunu",
         "resuming": "Atsākšana...",
         "sessionDetails": "Sesijas informācija",
-        "language": "Valoda:",
+        "language": "Valoda",
         "transcript": "Transkripts",
         "loadingHistory": "Notiek vēstures ielāde...",
-        "conversationDescription": "Sākts {date} - Valoda: {language}",
         "loadingConversation": "Notiek sarunas ielāde...",
         "chatStartedOn": "Tērzēšana sākās {date}",
         "agentAModel": "Aģenta A modelis",
@@ -355,18 +389,8 @@ const lv = {
         "model": "Modelis",
         "voice": "Balss"
     },
-    "common_verifyHere": "pārbaudīt šeit",
-    "page_AvailableImageModelsTitle": "Pašlaik pieejamie attēlu modeļi",
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",
-    "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "Šajā datumā modeļa zināšanas ir pārtrauktas.",
-    "modelCategory_MistralAIPremierModels": "Augstākās klases modeļi",
-    "modelCategory_MistralAIOpenModels": "Atvērtie modeļi",
-    "pricing": {
-        "perMillionTokens": "uz 1 miljonu žetonu",
-        "tokens": "žetoni",
-        "free": "Bezmaksas"
-    }
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default lv;

@@ -65,12 +65,13 @@ const cs = {
         "sq": "Albánec",
         "ta": "Tamilština",
         "te": "Telugština",
-        "tl": "Tagalogština",
+        "tl": "Tagalog",
         "ur": "Urdu",
         "am": "Amharština",
         "mn": "mongolský"
     },
     "settings": {
+        "loading": "Načítání nastavení...",
         "title": "Nastavení",
         "sections": {
             "appearance": "Vzhled",
@@ -95,17 +96,17 @@ const cs = {
         },
         "apiKeys": {
             "title": "API Klíče",
-            "description": "Spravujte své API klíče pro různé AI poskytovatelé",
-            "saved": "Uloženo",
-            "notSet": "Není nastaveno",
-            "setKey": "Nastavení klíče",
-            "updateKey": "Aktualizační klíč",
-            "removeKey": "Vyjměte klíč",
-            "getKeyInstructions": "Získejte svůj API klíč",
-            "noNewKeys": "Žádné nové API zadané klíče pro uložení.",
-            "unexpectedResponse": "Obdržela jsem neočekávanou odpověď od serveru.",
+            "description": "Spravujte své API klíče pro různé AI služby.",
+            "setKey": "Soubor",
+            "updateKey": "Aktualizovat",
+            "saveUpdateKeys": "Uložit / aktualizovat klíče",
+            "saving": "Ukládání...",
+            "noNewKeys": "Žádné nové klíče k uložení.",
+            "keyStoredSecurely": "Váš API Klíč bude bezpečně uložen a zašifrován.",
+            "enteringNewKeyOverwrites": "Zadáním nového klíče se přepíše stávající klíč.",
             "failedToSaveKey": "Uložení klíče {serviceName} se nezdařilo.",
-            "someKeysNotSaved": "Nějaký API Klíče se nepodařilo uložit. Zkontrolujte prosím níže uvedené podrobnosti.",
+            "unexpectedResponse": "Neočekávaná odpověď ze serveru.",
+            "someKeysNotSaved": "Některé klíče se nepodařilo uložit. Zkontrolujte prosím výše uvedené chyby.",
             "keyStatus": "klíčový stav...",
             "apiKeySecurelySaved": "API Klíč bezpečně uložen",
             "confirmRemoveTitle": "Potvrdit odstranění",
@@ -114,16 +115,12 @@ const cs = {
             "successfullyRemovedKey": "Klíč {serviceName} byl úspěšně odstraněn.",
             "keyNotSet": "Stav klíče: Nenastaveno",
             "keySet": "Stav klíče: Nastaveno",
-            "saveButton": "Uložit API Klíč(e)",
-            "enteringNewKeyOverwrites": "Zadáním nového klíče se přepíše ten uložený.",
-            "keyStoredSecurely": "Váš klíč bude bezpečně uložen pomocí Google Tajný manažer.",
-            "saveUpdateKeys": "Uložit / aktualizovat klíče",
-            "saving": "Ukládání..."
-        },
-        "loading": "Načítání nastavení..."
+            "saveButton": "Uložit API Klíč(e)"
+        }
     },
     "main": {
         "title": "AI Konverzace",
+        "aiConversation": "AI Konverzace",
         "setupForm": {
             "title": "Nastavte si konverzaci",
             "agentA": "Agent A.",
@@ -141,7 +138,7 @@ const cs = {
                 "selectModel": "Vybrat TTS model"
             },
             "startConversation": "Zahájit konverzaci",
-            "conversationPrompt": "Začněte konverzaci."
+            "conversationPrompt": "Prosím, začněte konverzaci."
         },
         "conversation": {
             "thinking": "myslící...",
@@ -153,8 +150,7 @@ const cs = {
             "perMillionTokens": "na milion tokenů",
             "input": "Vstup",
             "output": "Výstup"
-        },
-        "aiConversation": "AI Konverzace"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const cs = {
             "signUpWithGoogle": "Zaregistrujte se u Google",
             "hasAccount": "Už máte účet?",
             "signIn": "Přihlásit se",
-            "emailLabel": "Email adresa",
+            "emailLabel": "E-mailová adresa",
             "confirmPasswordPlaceholder": "Potvrzení hesla",
             "signingUp": "Registrace..."
         },
@@ -185,7 +181,7 @@ const cs = {
             "invalidCredentials": "Neplatný e-mail nebo heslo",
             "userNotFound": "Uživatel nebyl nalezen",
             "weakPassword": "Heslo by mělo mít alespoň 6 znaků",
-            "emailInUse": "Email již v provozu",
+            "emailInUse": "E-mail se již používá",
             "generic": "Došlo k chybě. Zkuste to prosím znovu.",
             "initialization": "Chyba inicializace. Zkuste to prosím znovu později.",
             "invalidEmail": "Zadejte prosím platnou e-mailovou adresu.",
@@ -229,12 +225,14 @@ const cs = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modely",
     "modelCategory_Gemini1_5": "Gemini 1.5 modely",
     "modelCategory_Claude4": "Claude 4 modely",
-    "modelCategory_Claude3_7": "Claude 3.7 modely",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modely",
     "modelCategory_Claude3": "Claude 3 modely",
-    "modelCategory_Grok4": "Grok 4 modely",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modely",
     "modelCategory_Grok3Mini": "Grok 3 Mini modely",
+    "modelCategory_MistralAIPremierModels": "Prémiové modely",
+    "modelCategory_MistralAIOpenModels": "Otevřený model",
     "modelCategory_Llama4": "Llama 4 modely",
     "modelCategory_Llama3_3": "Llama 3.3 modely",
     "modelCategory_Llama3_2": "Llama 3.2 modely",
@@ -246,18 +244,18 @@ const cs = {
     "modelCategory_Gemma2": "Gemma 2 modely",
     "modelCategory_Gemma": "Gemma modely",
     "modelCategory_GoogleGemma": "Google Gemma Modely",
-    "modelCategory_DeepSeekR1": "DeepSeek Modely R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modely V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Model V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modely R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modely",
     "modelCategory_MistralAIModels": "Mistral AI Modely",
     "modelCategory_Qwen3": "Qwen3 modely",
-    "modelCategory_QwQwQ": "Qwen Modely QwQ",
+    "modelCategory_QwQwQ": "Qwen Model QwQ",
     "modelCategory_Qwen2_5": "Qwen2,5 modely",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modely vidění",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modely kodérů",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model vidění",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model kodéru",
     "modelCategory_Qwen2": "Qwen2 modely",
-    "modelCategory_Qwen2Vision": "Qwen2 modely Vision",
+    "modelCategory_Qwen2Vision": "Qwen2. Model vidění",
     "modelCategory_QwenModels": "Qwen Modely",
     "modelCategory_OtherModels": "Jiné modely",
     "page_ErrorLoadingUserData": "Nepodařilo se načíst uživatelská data: {errorMessage}. Zkuste prosím obnovit stránku.",
@@ -269,12 +267,13 @@ const cs = {
     "page_LoadingUserData": "Načítání uživatelských dat...",
     "page_ErrorAlertTitle": "Chyba",
     "page_WelcomeTitle": "Vítejte v Two AIs",
-    "page_WelcomeSubtitle": "Tato webová stránka vám umožňuje poslouchat rozhovory mezi dvěma Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Tato webová stránka vám umožňuje poslouchat rozhovory mezi dvěma Large Language Models (LLMs) a generovat obrázky pro každé kolo.",
     "page_ApiKeysRequiredTitle": "API Požadované klíče",
     "page_ApiKeysRequiredDescription": "Pro vedení konverzací budete muset zadat své vlastní API klíče pro AI modely, které chcete použít (např. OpenAI, Google, Anthropic) po přihlášení. Podrobné pokyny pro každého poskytovatele naleznete v Nastavení / API Stránka s klíči po přihlášení.",
     "page_SignInPrompt": "Chcete-li zahájit vlastní relaci, můžete se přihlásit nebo si vytvořit účet pomocí odkazu v záhlaví.",
     "page_VideoTitle": "Two AIs Ukázka konverzace",
     "page_AvailableLLMsTitle": "Aktuálně k dispozici LLMs",
+    "page_TooltipKnowledgeCutoff": "Znalosti modelu jsou k tomuto datu ukončeny.",
     "page_TooltipGoogleThinkingBudget": "Tento Google Model používá „rozpočet na přemýšlení“. Výstup „přemýšlení“ je fakturován, ale není viditelný v chatu.",
     "page_TooltipAnthropicExtendedThinking": "Tento Anthropic Model používá „rozšířené myšlení“. Výstup „myšlení“ je účtován, ale není viditelný v chatu.",
     "page_TooltipXaiThinking": "Tento xAI Model používá „myšlení“. Tento výstup je fakturován, ale není viditelný v chatu.",
@@ -283,17 +282,52 @@ const cs = {
     "page_TooltipGenericReasoning": "Tento model používá tokeny uvažování, které nejsou v chatu viditelné, ale jsou účtovány jako výstupní tokeny.",
     "page_TooltipRequiresVerification": "Vyžaduje ověření OpenAI organizace. Můžete si to ověřit zde.",
     "page_TooltipSupportsLanguage": "Podporuje {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Tento model nemusí plně podporovat jazyk {languageName} pro konverzaci.",
+    "page_TooltipMayNotSupportLanguage": "Tento model nemusí plně podporovat {languageName} pro konverzaci.",
     "page_BadgePreview": "Náhled",
     "page_BadgeExperimental": "Experimentální",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Aktuálně k dispozici Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Aktuálně dostupné obrazové modely",
     "page_NoTTSOptions": "Žádný TTS aktuálně dostupné možnosti.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Ceny naposledy ověřeny dne {date}",
-    "page_PricingPerTokens": "za {amount} Tokeny",
+    "page_PricingPerTokens": "na 1 milion tokenů",
     "page_ModelCategoryModels": "{model} modely",
+    "common_verifyHere": "ověřte zde",
     "ttsVoice_Ugne": "V ohni",
+    "pricing": {
+        "perMillionTokens": "na 1 milion tokenů",
+        "tokens": "žetony",
+        "free": "Uvolnit",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} na 1 milion textových tokenů",
+                "audioTokens": "{price} na 1 milion audio tokenů"
+            },
+            "geminiPro": {
+                "textTokens": "{price} na 1 milion textových tokenů",
+                "audioTokens": "{price} na 1 milion audio tokenů"
+            },
+            "openAIMini": {
+                "textTokens": "{price} na 1 milion textových tokenů",
+                "audioTokens": "{price} na 1 milion audio tokenů"
+            },
+            "openAITTS1": {
+                "standard": "{price} na 1 milion tokenů"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} na 1 milion tokenů"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} na 1 milion znaků",
+                "neural": "{price} na 1 milion znaků",
+                "studio": "{price} na 1 milion znaků",
+                "chirpHD": "Nepodařilo se ověřit",
+                "chirp3HD": "{price} na 1 milion znaků"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulář pro nastavení relace",
         "description": "Zde si můžete vybrat LLM a volitelné TTS nastavení pro každého agenta.",
@@ -309,7 +343,7 @@ const cs = {
         "initialPromptDescription": "Tato výzva bude odeslána jako první zpráva pro zahájení konverzace. Pokud toto pole necháte prázdné, výzva se nezobrazí.",
         "startConversation": "Zahájit konverzaci",
         "starting": "Začíná...",
-        "startTheConversation": "Začněte konverzaci.",
+        "startTheConversation": "Prosím, začněte konverzaci.",
         "languageSupportNote": "Indikátory jazykové podpory ukazují kompatibilitu modelu s {languageName}Modely bez podpory jsou deaktivovány.",
         "reasoningNote": "Označuje, že model používá tokeny „myšlení“ nebo „uvažování“. Tento výstup je účtován, ale není viditelný v chatu.",
         "openaiOrgVerificationNote": "Označuje OpenAI Model vyžaduje ověřenou organizaci. Můžete",
@@ -335,15 +369,15 @@ const cs = {
         "backToMain": "Zpět na hlavní stránku",
         "conversationHistory": "Historie konverzací",
         "chatWith": "Chatujte s {agentA} a {agentB}",
+        "conversationDescription": "Zahájeno dne {date} - Jazyk: {language}",
         "viewConversation": "Zobrazit konverzaci",
         "backToPreviousChats": "Zpět na předchozí chaty",
         "resumeConversation": "Obnovit konverzaci",
         "resuming": "Obnovení...",
         "sessionDetails": "Podrobnosti o relaci",
-        "language": "Jazyk:",
+        "language": "Jazyk",
         "transcript": "Přepis",
         "loadingHistory": "Načítání historie...",
-        "conversationDescription": "Zahájeno dne {date} - Jazyk: {language}",
         "loadingConversation": "Načítání konverzace...",
         "chatStartedOn": "Chat byl zahájen {date}",
         "agentAModel": "Model agenta A",
@@ -355,18 +389,8 @@ const cs = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "ověřte zde",
-    "page_AvailableImageModelsTitle": "Aktuálně dostupné obrazové modely",
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",
-    "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "Znalosti modelu jsou k tomuto datu ukončeny.",
-    "modelCategory_MistralAIPremierModels": "Prémiové modely",
-    "modelCategory_MistralAIOpenModels": "Otevřené modely",
-    "pricing": {
-        "perMillionTokens": "na 1 milion tokenů",
-        "tokens": "žetony",
-        "free": "Uvolnit"
-    }
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default cs;

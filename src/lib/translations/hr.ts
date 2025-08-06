@@ -71,6 +71,7 @@ const hr = {
         "mn": "mongolski"
     },
     "settings": {
+        "loading": "Učitavanje postavki...",
         "title": "Postavke",
         "sections": {
             "appearance": "Izgled",
@@ -95,17 +96,17 @@ const hr = {
         },
         "apiKeys": {
             "title": "API Ključevi",
-            "description": "Upravljajte svojim API ključevi za različite AI pružatelji usluga",
-            "saved": "Spremljeno",
-            "notSet": "Nije postavljeno",
-            "setKey": "Postavi ključ",
-            "updateKey": "Ažuriraj ključ",
-            "removeKey": "Ukloni ključ",
-            "getKeyInstructions": "Uzmite svoje API ključ",
-            "noNewKeys": "Nema novih API tipke unesene za spremanje.",
-            "unexpectedResponse": "Primljen je neočekivani odgovor od poslužitelja.",
+            "description": "Upravljajte svojim API ključevi za različite AI usluge.",
+            "setKey": "Postavi",
+            "updateKey": "Ažurirati",
+            "saveUpdateKeys": "Spremi/Ažuriraj ključeve",
+            "saving": "Spremanje...",
+            "noNewKeys": "Nema novih ključeva za spremanje.",
+            "keyStoredSecurely": "Tvoj API Ključ će biti sigurno pohranjen i šifriran.",
+            "enteringNewKeyOverwrites": "Unos novog ključa prebrisat će postojeći.",
             "failedToSaveKey": "Spremanje ključa {serviceName} nije uspjelo.",
-            "someKeysNotSaved": "Neki API Ključevi se nisu mogli spremiti. Molimo provjerite detalje u nastavku.",
+            "unexpectedResponse": "Neočekivani odgovor poslužitelja.",
+            "someKeysNotSaved": "Neki ključevi nisu mogli biti spremljeni. Molimo provjerite gore navedene pogreške.",
             "keyStatus": "ključno stanje...",
             "apiKeySecurelySaved": "API Ključ sigurno spremljen",
             "confirmRemoveTitle": "Potvrdi uklanjanje",
@@ -114,16 +115,12 @@ const hr = {
             "successfullyRemovedKey": "Ključ {serviceName} uspješno uklonjen.",
             "keyNotSet": "Status ključa: Nije postavljeno",
             "keySet": "Status ključa: Postavljeno",
-            "saveButton": "Uštedjeti API Ključ(evi)",
-            "enteringNewKeyOverwrites": "Unos novog ključa prebrisat će spremljeni.",
-            "keyStoredSecurely": "Vaš ključ će biti sigurno pohranjen pomoću Google Tajni upravitelj.",
-            "saveUpdateKeys": "Spremi/Ažuriraj ključeve",
-            "saving": "Spremanje..."
-        },
-        "loading": "Učitavanje postavki..."
+            "saveButton": "Uštedjeti API Ključ(evi)"
+        }
     },
     "main": {
         "title": "AI Razgovor",
+        "aiConversation": "AI Razgovor",
         "setupForm": {
             "title": "Postavite svoj razgovor",
             "agentA": "Agent A",
@@ -141,20 +138,19 @@ const hr = {
                 "selectModel": "Odaberite TTS model"
             },
             "startConversation": "Započni razgovor",
-            "conversationPrompt": "Započnite razgovor."
+            "conversationPrompt": "Molim vas, započnite razgovor."
         },
         "conversation": {
             "thinking": "razmišljanje...",
             "stop": "Stop",
-            "restart": "Ponovo pokreni razgovor"
+            "restart": "Ponovno pokretanje razgovora"
         },
         "pricing": {
             "estimatedCost": "Procijenjeni trošak",
             "perMillionTokens": "po milijun tokena",
             "input": "Ulazni",
             "output": "Izlaz"
-        },
-        "aiConversation": "AI Razgovor"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const hr = {
             "signUpWithGoogle": "Prijavite se s Google",
             "hasAccount": "Već imate račun?",
             "signIn": "Prijava",
-            "emailLabel": "Email adresa",
+            "emailLabel": "E-mail adresa",
             "confirmPasswordPlaceholder": "Potvrdite lozinku",
             "signingUp": "Prijava..."
         },
@@ -185,7 +181,7 @@ const hr = {
             "invalidCredentials": "Nevažeća e-pošta ili lozinka",
             "userNotFound": "Korisnik nije pronađen",
             "weakPassword": "Lozinka mora imati najmanje 6 znakova",
-            "emailInUse": "Email već u upotrebi",
+            "emailInUse": "E-pošta se već koristi",
             "generic": "Došlo je do pogreške. Pokušajte ponovno.",
             "initialization": "Pogreška inicijalizacije. Pokušajte ponovno kasnije.",
             "invalidEmail": "Molimo unesite važeću adresu e-pošte.",
@@ -201,9 +197,9 @@ const hr = {
             "accountCreatedProfileSaveFailedPrefix": "Račun je kreiran, ali nije uspjelo spremanje podataka profila: ",
             "unknownProfileSaveError": "Došlo je do nepoznate pogreške prilikom spremanja profila.",
             "emailAlreadyRegistered": "Ova adresa e-pošte je već registrirana.",
-            "passwordTooShortSignUp": "Lozinka mora biti dugačka najmanje 6 znakova.",
+            "passwordTooShortSignUp": "Lozinka treba biti dugačka najmanje 6 znakova.",
             "signUpFailedPrefix": "Prijava nije uspjela: ",
-            "unknownSignUpError": "Došlo je do nepoznate pogreške tijekom registracije."
+            "unknownSignUpError": "Došlo je do nepoznate greške tijekom registracije."
         }
     },
     "common": {
@@ -229,12 +225,14 @@ const hr = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeli",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeli",
     "modelCategory_Claude4": "Claude 4 modeli",
-    "modelCategory_Claude3_7": "Claude 3.7 modeli",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modeli",
     "modelCategory_Claude3": "Claude 3 modeli",
-    "modelCategory_Grok4": "Grok 4 modeli",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modeli",
     "modelCategory_Grok3Mini": "Grok 3 Mini modeli",
+    "modelCategory_MistralAIPremierModels": "Premier modeli",
+    "modelCategory_MistralAIOpenModels": "Otvoreni model",
     "modelCategory_Llama4": "Llama 4 modela",
     "modelCategory_Llama3_3": "Llama 3.3 modela",
     "modelCategory_Llama3_2": "Llama 3.2 modela",
@@ -246,35 +244,36 @@ const hr = {
     "modelCategory_Gemma2": "Gemma 2 modela",
     "modelCategory_Gemma": "Gemma modeli",
     "modelCategory_GoogleGemma": "Google Gemma Modeli",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 modeli",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 modeli",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 model",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 model",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill modeli",
     "modelCategory_DeepSeekModels": "DeepSeek Modeli",
     "modelCategory_MistralAIModels": "Mistral AI Modeli",
     "modelCategory_Qwen3": "Qwen3 modela",
-    "modelCategory_QwQwQ": "Qwen QwQ modeli",
+    "modelCategory_QwQwQ": "Qwen QwQ model",
     "modelCategory_Qwen2_5": "Qwen2.5 modela",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modeli vida",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modeli programera",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model vida",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model kodera",
     "modelCategory_Qwen2": "Qwen2 modela",
-    "modelCategory_Qwen2Vision": "Qwen2 modela vida",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision model",
     "modelCategory_QwenModels": "Qwen Modeli",
     "modelCategory_OtherModels": "Ostali modeli",
     "page_ErrorLoadingUserData": "Nije uspjelo učitavanje korisničkih podataka: {errorMessage}. Pokušajte osvježiti stranicu.",
     "page_ErrorUserNotFound": "Korisnik nije pronađen. Molimo vas da se ponovno prijavite.",
     "page_ErrorUserApiKeyConfig": "Korisnik API Konfiguracija ključa nije se mogla učitati. Osvježite ili provjerite postavke.",
-    "page_ErrorStartingSessionAPI": "API Pogreška: {status} {statusText}",
+    "page_ErrorStartingSessionAPI": "API Greška: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "Greška pri pokretanju sesije: {errorMessage}",
     "page_ErrorSessionIdMissing": "API Odgovor je bio uspješan, ali nije uključivao ID razgovora.",
     "page_LoadingUserData": "Učitavanje korisničkih podataka...",
     "page_ErrorAlertTitle": "Pogreška",
     "page_WelcomeTitle": "Dobrodošli u Two AIs",
-    "page_WelcomeSubtitle": "Ova web stranica vam omogućuje slušanje razgovora između dva Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Ova web stranica vam omogućuje slušanje razgovora između dva Large Language Models (LLMs) i generirati slike za svaki okret.",
     "page_ApiKeysRequiredTitle": "API Potrebni ključevi",
     "page_ApiKeysRequiredDescription": "Za vođenje razgovora morat ćete navesti vlastite API ključevi za AI modele koje želite koristiti (npr. OpenAI, Google, Anthropic) nakon prijave. Detaljne upute za svakog pružatelja usluga možete pronaći u Postavkama / API Stranica s ključevima nakon prijave.",
     "page_SignInPrompt": "Za početak vlastite sesije možete se prijaviti ili stvoriti račun pomoću poveznice u zaglavlju.",
     "page_VideoTitle": "Two AIs Demo razgovora",
     "page_AvailableLLMsTitle": "Trenutno dostupno LLMs",
+    "page_TooltipKnowledgeCutoff": "Znanje modela je na ovaj datum prekinuto.",
     "page_TooltipGoogleThinkingBudget": "Ovaj Google Model koristi 'proračun za razmišljanje'. Izlaz 'razmišljanja' se naplaćuje, ali nije vidljiv u chatu.",
     "page_TooltipAnthropicExtendedThinking": "Ovaj Anthropic Model koristi 'prošireno razmišljanje'. Izlaz 'razmišljanja' se naplaćuje, ali nije vidljiv u chatu.",
     "page_TooltipXaiThinking": "Ovaj xAI Model koristi 'razmišljanje'. Ovaj izlaz se naplaćuje, ali nije vidljiv u chatu.",
@@ -282,18 +281,53 @@ const hr = {
     "page_TooltipDeepSeekReasoning": "Ovaj DeepSeek Model koristi 'rasuđivanje/razmišljanje'. Izlaz se naplaćuje, ali nije vidljiv u chatu.",
     "page_TooltipGenericReasoning": "Ovaj model koristi tokene za zaključivanje koji nisu vidljivi u chatu, ali se naplaćuju kao izlazni tokeni.",
     "page_TooltipRequiresVerification": "Zahtijeva provjeru OpenAI organizacija. Možete provjeriti ovdje.",
-    "page_TooltipSupportsLanguage": "Podržava {languageName}",
+    "page_TooltipSupportsLanguage": "Podrška {languageName}",
     "page_TooltipMayNotSupportLanguage": "Ovaj model možda ne podržava u potpunosti {languageName} za razgovor.",
     "page_BadgePreview": "Pregled",
     "page_BadgeExperimental": "Eksperimentalno",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Trenutno dostupno Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Trenutno dostupni modeli slika",
     "page_NoTTSOptions": "Ne TTS trenutno dostupne opcije.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Cijene su zadnji put provjerene {date}",
-    "page_PricingPerTokens": "po {amount} Tokeni",
+    "page_PricingPerTokens": "po milijunu tokena",
     "page_ModelCategoryModels": "{model} modeli",
+    "common_verifyHere": "provjerite ovdje",
     "ttsVoice_Ugne": "U vatri",
+    "pricing": {
+        "perMillionTokens": "po milijun tokena",
+        "tokens": "žetoni",
+        "free": "Besplatno",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} po milijunu tekstualnih tokena",
+                "audioTokens": "{price} po milijunu audio tokena"
+            },
+            "geminiPro": {
+                "textTokens": "{price} po milijunu tekstualnih tokena",
+                "audioTokens": "{price} po milijunu audio tokena"
+            },
+            "openAIMini": {
+                "textTokens": "{price} po milijunu tekstualnih tokena",
+                "audioTokens": "{price} po milijunu audio tokena"
+            },
+            "openAITTS1": {
+                "standard": "{price} po milijunu tokena"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} po milijunu tokena"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} po milijunu znakova",
+                "neural": "{price} po milijunu znakova",
+                "studio": "{price} po milijunu znakova",
+                "chirpHD": "Nije moguće potvrditi",
+                "chirp3HD": "{price} po milijunu znakova"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Obrazac za postavljanje sesije",
         "description": "Ovdje možete odabrati LLM i opcionalno TTS postavke za svakog agenta.",
@@ -309,7 +343,7 @@ const hr = {
         "initialPromptDescription": "Ovaj upit bit će poslan kao prva poruka za početak razgovora. Ako ga ostavite praznim, upita neće biti.",
         "startConversation": "Započni razgovor",
         "starting": "Početak...",
-        "startTheConversation": "Započnite razgovor.",
+        "startTheConversation": "Molim vas, započnite razgovor.",
         "languageSupportNote": "Pokazatelji jezične podrške pokazuju kompatibilnost modela s {languageName}Modeli bez podrške su onemogućeni.",
         "reasoningNote": "Označava da model koristi tokene za 'razmišljanje' ili 'rasuđivanje'. Ovaj izlaz se naplaćuje, ali nije vidljiv u chatu.",
         "openaiOrgVerificationNote": "Označava OpenAI Model zahtijeva provjerenu organizaciju. Možete",
@@ -335,15 +369,15 @@ const hr = {
         "backToMain": "Natrag na glavni sadržaj",
         "conversationHistory": "Povijest razgovora",
         "chatWith": "Razgovarajte s {agentA} & {agentB}",
+        "conversationDescription": "Započeto {date} - Jezik: {language}",
         "viewConversation": "Prikaži razgovor",
         "backToPreviousChats": "Natrag na prethodne razgovore",
         "resumeConversation": "Nastavi razgovor",
         "resuming": "Nastavak...",
         "sessionDetails": "Detalji sesije",
-        "language": "Jezik:",
+        "language": "Jezik",
         "transcript": "Prijepis",
         "loadingHistory": "Učitavanje povijesti...",
-        "conversationDescription": "Započeto {date} - Jezik: {language}",
         "loadingConversation": "Učitavanje razgovora...",
         "chatStartedOn": "Razgovor je započeo {date}",
         "agentAModel": "Model agenta A",
@@ -355,18 +389,8 @@ const hr = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "provjerite ovdje",
-    "page_AvailableImageModelsTitle": "Trenutno dostupni modeli slika",
     "imageModel_Quality": "Kvaliteta",
     "imageModel_Size": "Veličina",
-    "imageModel_PriceUSD": "Cijena (USD)",
-    "page_TooltipKnowledgeCutoff": "Znanje modela je na ovaj datum prekinuto.",
-    "modelCategory_MistralAIPremierModels": "Premier modeli",
-    "modelCategory_MistralAIOpenModels": "Otvoreni modeli",
-    "pricing": {
-        "perMillionTokens": "po milijun tokena",
-        "tokens": "žetoni",
-        "free": "Besplatno"
-    }
+    "imageModel_PriceUSD": "Cijena (USD)"
 };
 export default hr;

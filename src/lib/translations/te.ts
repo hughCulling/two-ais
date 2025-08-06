@@ -71,6 +71,7 @@ const te = {
         "mn": "మంగోలియన్"
     },
     "settings": {
+        "loading": "సెట్టింగ్‌లను లోడ్ చేస్తోంది...",
         "title": "సెట్టింగులు",
         "sections": {
             "appearance": "స్వరూపం",
@@ -95,17 +96,17 @@ const te = {
         },
         "apiKeys": {
             "title": "API కీలు",
-            "description": "మీ నిర్వహించండి API వేర్వేరు కీలు AI ప్రొవైడర్లు",
-            "saved": "సేవ్ చేయబడింది",
-            "notSet": "సెట్ చేయబడలేదు",
-            "setKey": "కీని సెట్ చేయండి",
-            "updateKey": "కీని నవీకరించు",
-            "removeKey": "కీని తీసివేయండి",
-            "getKeyInstructions": "మీ పొందండి API కీ",
-            "noNewKeys": "కొత్తవి లేవు API సేవ్ చేయడానికి కీలను నమోదు చేయండి.",
-            "unexpectedResponse": "సర్వర్ నుండి ఊహించని ప్రతిస్పందన వచ్చింది.",
+            "description": "మీ నిర్వహించండి API వేర్వేరు కీలు AI సేవలు.",
+            "setKey": "సెట్",
+            "updateKey": "నవీకరణ",
+            "saveUpdateKeys": "కీలను సేవ్ చేయండి / నవీకరించండి",
+            "saving": "సేవ్ చేస్తోంది...",
+            "noNewKeys": "సేవ్ చేయడానికి కొత్త కీలు లేవు.",
+            "keyStoredSecurely": "మీ API కీ సురక్షితంగా నిల్వ చేయబడుతుంది మరియు గుప్తీకరించబడుతుంది.",
+            "enteringNewKeyOverwrites": "కొత్త కీని నమోదు చేయడం వలన ఇప్పటికే ఉన్న కీ ఓవర్‌రైట్ అవుతుంది.",
             "failedToSaveKey": "{serviceName} కీని సేవ్ చేయడంలో విఫలమైంది.",
-            "someKeysNotSaved": "కొన్ని API కీలను సేవ్ చేయడం సాధ్యం కాలేదు. దయచేసి దిగువ వివరాలను తనిఖీ చేయండి.",
+            "unexpectedResponse": "సర్వర్ నుండి ఊహించని ప్రతిస్పందన.",
+            "someKeysNotSaved": "కొన్ని కీలను సేవ్ చేయడం సాధ్యం కాలేదు. దయచేసి పైన ఉన్న లోపాలను తనిఖీ చేయండి.",
             "keyStatus": "కీలక స్థితి...",
             "apiKeySecurelySaved": "API కీ సురక్షితంగా సేవ్ చేయబడింది",
             "confirmRemoveTitle": "తొలగింపును నిర్ధారించండి",
@@ -114,16 +115,12 @@ const te = {
             "successfullyRemovedKey": "{serviceName} కీ విజయవంతంగా తీసివేయబడింది.",
             "keyNotSet": "కీ స్థితి: సెట్ చేయబడలేదు",
             "keySet": "కీ స్థితి: సెట్ చేయబడింది",
-            "saveButton": "సేవ్ చేయండి API కీ(లు)",
-            "enteringNewKeyOverwrites": "కొత్త కీని నమోదు చేయడం వలన సేవ్ చేయబడిన కీ ఓవర్‌రైట్ అవుతుంది.",
-            "keyStoredSecurely": "మీ కీ సురక్షితంగా నిల్వ చేయబడుతుంది Google సీక్రెట్ మేనేజర్.",
-            "saveUpdateKeys": "కీలను సేవ్ చేయండి / నవీకరించండి",
-            "saving": "సేవ్ చేస్తోంది..."
-        },
-        "loading": "సెట్టింగ్‌లను లోడ్ చేస్తోంది..."
+            "saveButton": "సేవ్ చేయండి API కీ(లు)"
+        }
     },
     "main": {
         "title": "AI సంభాషణ",
+        "aiConversation": "AI సంభాషణ",
         "setupForm": {
             "title": "మీ సంభాషణను సెటప్ చేయండి",
             "agentA": "ఏజెంట్ ఎ",
@@ -141,7 +138,7 @@ const te = {
                 "selectModel": "ఎంచుకోండి TTS మోడల్"
             },
             "startConversation": "సంభాషణను ప్రారంభించండి",
-            "conversationPrompt": "సంభాషణను ప్రారంభించండి."
+            "conversationPrompt": "దయచేసి సంభాషణను ప్రారంభించండి."
         },
         "conversation": {
             "thinking": "ఆలోచిస్తున్నాను...",
@@ -153,8 +150,7 @@ const te = {
             "perMillionTokens": "మిలియన్ టోకెన్లకు",
             "input": "ఇన్‌పుట్",
             "output": "అవుట్‌పుట్"
-        },
-        "aiConversation": "AI సంభాషణ"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const te = {
             "signUpWithGoogle": "దీనితో సైన్ అప్ చేయండి Google",
             "hasAccount": "ఖాతా ఉందా?",
             "signIn": "సైన్ ఇన్",
-            "emailLabel": "Email చిరునామా",
+            "emailLabel": "ఇమెయిల్ చిరునామా",
             "confirmPasswordPlaceholder": "పాస్‌వర్డ్‌ను నిర్ధారించండి",
             "signingUp": "సైన్ అప్ చేస్తోంది..."
         },
@@ -185,7 +181,7 @@ const te = {
             "invalidCredentials": "చెల్లని ఇమెయిల్ లేదా పాస్‌వర్డ్",
             "userNotFound": "వినియోగదారు కనుగొనబడలేదు",
             "weakPassword": "పాస్‌వర్డ్ కనీసం 6 అక్షరాలు ఉండాలి",
-            "emailInUse": "Email ఇప్పటికే ఉపయోగంలో ఉంది",
+            "emailInUse": "ఈమెయిల్ ఇప్పటికే ఉపయోగంలో ఉంది.",
             "generic": "ఒక లోపం సంభవించింది. దయచేసి మళ్ళీ ప్రయత్నించండి.",
             "initialization": "ప్రారంభ లోపం. దయచేసి తర్వాత మళ్ళీ ప్రయత్నించండి.",
             "invalidEmail": "దయచేసి చెల్లుబాటు అయ్యే ఇమెయిల్ చిరునామాను నమోదు చేయండి.",
@@ -229,12 +225,14 @@ const te = {
     "modelCategory_Gemini2_0": "Gemini 2.0 నమూనాలు",
     "modelCategory_Gemini1_5": "Gemini 1.5 నమూనాలు",
     "modelCategory_Claude4": "Claude 4 నమూనాలు",
-    "modelCategory_Claude3_7": "Claude 3.7 నమూనాలు",
+    "modelCategory_Claude3_7": "Claude 3.7 మోడల్",
     "modelCategory_Claude3_5": "Claude 3.5 నమూనాలు",
     "modelCategory_Claude3": "Claude 3 నమూనాలు",
-    "modelCategory_Grok4": "Grok 4 నమూనాలు",
+    "modelCategory_Grok4": "Grok 4 మోడల్",
     "modelCategory_Grok3": "Grok 3 నమూనాలు",
     "modelCategory_Grok3Mini": "Grok 3 మినీ మోడల్స్",
+    "modelCategory_MistralAIPremierModels": "ప్రీమియర్ మోడల్స్",
+    "modelCategory_MistralAIOpenModels": "ఓపెన్ మోడల్",
     "modelCategory_Llama4": "Llama 4 నమూనాలు",
     "modelCategory_Llama3_3": "Llama 3.3 నమూనాలు",
     "modelCategory_Llama3_2": "Llama 3.2 నమూనాలు",
@@ -246,18 +244,18 @@ const te = {
     "modelCategory_Gemma2": "Gemma 2 మోడల్",
     "modelCategory_Gemma": "Gemma నమూనాలు",
     "modelCategory_GoogleGemma": "Google Gemma మోడల్స్",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 నమూనాలు",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 నమూనాలు",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 మోడల్",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 మోడల్",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 డిస్టిల్ మోడల్స్",
     "modelCategory_DeepSeekModels": "DeepSeek మోడల్స్",
     "modelCategory_MistralAIModels": "Mistral AI మోడల్స్",
-    "modelCategory_Qwen3": "Qwen3 నమూనాలు",
-    "modelCategory_QwQwQ": "Qwen QwQ నమూనాలు",
+    "modelCategory_Qwen3": "Qwen3 మోడల్",
+    "modelCategory_QwQwQ": "Qwen QwQ మోడల్",
     "modelCategory_Qwen2_5": "Qwen2.5 నమూనాలు",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 విజన్ నమూనాలు",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 కోడర్ నమూనాలు",
-    "modelCategory_Qwen2": "Qwen2 నమూనాలు",
-    "modelCategory_Qwen2Vision": "Qwen2 విజన్ నమూనాలు",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 విజన్ మోడల్",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 కోడర్ మోడల్",
+    "modelCategory_Qwen2": "Qwen2 మోడల్",
+    "modelCategory_Qwen2Vision": "Qwen2 విజన్ మోడల్",
     "modelCategory_QwenModels": "Qwen మోడల్స్",
     "modelCategory_OtherModels": "ఇతర నమూనాలు",
     "page_ErrorLoadingUserData": "వినియోగదారు డేటాను లోడ్ చేయడంలో విఫలమైంది: {errorMessage}. దయచేసి రిఫ్రెష్ చేయడానికి ప్రయత్నించండి.",
@@ -269,12 +267,13 @@ const te = {
     "page_LoadingUserData": "వినియోగదారు డేటాను లోడ్ చేస్తోంది...",
     "page_ErrorAlertTitle": "లోపం",
     "page_WelcomeTitle": "స్వాగతం Two AIs",
-    "page_WelcomeSubtitle": "ఈ వెబ్‌సైట్ ఇద్దరి మధ్య సంభాషణలను వినడానికి మిమ్మల్ని అనుమతిస్తుంది Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ఈ వెబ్‌సైట్ ఇద్దరి మధ్య సంభాషణలను వినడానికి మిమ్మల్ని అనుమతిస్తుంది Large Language Models (LLMs) మరియు ప్రతి మలుపుకు చిత్రాలను రూపొందించండి.",
     "page_ApiKeysRequiredTitle": "API కీలు అవసరం",
     "page_ApiKeysRequiredDescription": "సంభాషణలను నిర్వహించడానికి, మీరు మీ స్వంతంగా అందించాలి API కోసం కీలు AI మీరు ఉపయోగించాలనుకుంటున్న నమూనాలు (ఉదా., OpenAI, Google, Anthropic) సైన్ ఇన్ చేసిన తర్వాత. ప్రతి ప్రొవైడర్ కోసం వివరణాత్మక సూచనలను సెట్టింగ్‌లలో చూడవచ్చు / API సైన్ ఇన్ చేసిన తర్వాత కీస్ పేజీ.",
     "page_SignInPrompt": "మీ స్వంత సెషన్‌ను ప్రారంభించడానికి, మీరు హెడర్‌లోని లింక్‌ను ఉపయోగించి సైన్ ఇన్ చేయవచ్చు లేదా ఖాతాను సృష్టించవచ్చు.",
     "page_VideoTitle": "Two AIs సంభాషణ డెమో",
     "page_AvailableLLMsTitle": "ప్రస్తుతం అందుబాటులో ఉంది LLMs",
+    "page_TooltipKnowledgeCutoff": "ఈ తేదీతో మోడల్ జ్ఞానం తెగిపోయింది.",
     "page_TooltipGoogleThinkingBudget": "ఇది Google మోడల్ 'థింకింగ్ బడ్జెట్'ని ఉపయోగిస్తుంది. 'థింకింగ్' అవుట్‌పుట్ బిల్ చేయబడుతుంది కానీ చాట్‌లో కనిపించదు.",
     "page_TooltipAnthropicExtendedThinking": "ఇది Anthropic మోడల్ 'ఎక్స్‌టెండెడ్ థింకింగ్'ని ఉపయోగిస్తుంది. 'థింకింగ్' అవుట్‌పుట్ బిల్ చేయబడుతుంది కానీ చాట్‌లో కనిపించదు.",
     "page_TooltipXaiThinking": "ఇది xAI మోడల్ 'థింకింగ్' ని ఉపయోగిస్తుంది. ఈ అవుట్‌పుట్ బిల్ చేయబడింది కానీ చాట్‌లో కనిపించదు.",
@@ -282,18 +281,53 @@ const te = {
     "page_TooltipDeepSeekReasoning": "ఇది DeepSeek మోడల్ 'రీజనింగ్/థింకింగ్' ని ఉపయోగిస్తుంది. అవుట్‌పుట్ బిల్ చేయబడుతుంది కానీ చాట్‌లో కనిపించదు.",
     "page_TooltipGenericReasoning": "ఈ మోడల్ చాట్‌లో కనిపించని రీజనింగ్ టోకెన్‌లను ఉపయోగిస్తుంది కానీ అవుట్‌పుట్ టోకెన్‌లుగా బిల్ చేయబడుతుంది.",
     "page_TooltipRequiresVerification": "ధృవీకరించబడాలి OpenAI సంస్థ. మీరు ఇక్కడ ధృవీకరించవచ్చు.",
-    "page_TooltipSupportsLanguage": "{languageName} కి మద్దతు ఇస్తుంది",
-    "page_TooltipMayNotSupportLanguage": "ఈ మోడల్ సంభాషణ కోసం {languageName}కి పూర్తిగా మద్దతు ఇవ్వకపోవచ్చు.",
+    "page_TooltipSupportsLanguage": "మద్దతు ఇస్తుంది {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ఈ మోడల్ పూర్తిగా మద్దతు ఇవ్వకపోవచ్చు {languageName} సంభాషణ కోసం.",
     "page_BadgePreview": "ప్రివ్యూ",
     "page_BadgeExperimental": "ప్రయోగాత్మకమైనది",
     "page_BadgeBeta": "బీటా",
     "page_AvailableTTSTitle": "ప్రస్తుతం అందుబాటులో ఉంది Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "ప్రస్తుతం అందుబాటులో ఉన్న చిత్ర నమూనాలు",
     "page_NoTTSOptions": "లేదు TTS ప్రస్తుతం అందుబాటులో ఉన్న ఎంపికలు.",
     "page_TruncatableNoteFormat": "({గమనిక వచనం})",
     "page_PricesLastVerifiedOn": "ధరలు చివరిగా ధృవీకరించబడిన తేదీ {date}",
-    "page_PricingPerTokens": "ప్రతి {amount} టోకెన్లు",
+    "page_PricingPerTokens": "1 మిలియన్ టోకెన్లకు",
     "page_ModelCategoryModels": "{model} నమూనాలు",
+    "common_verifyHere": "ఇక్కడ ధృవీకరించండి",
     "ttsVoice_Ugne": "మంటలో",
+    "pricing": {
+        "perMillionTokens": "1 మిలియన్ టోకెన్లకు",
+        "tokens": "టోకెన్లు",
+        "free": "ఉచితం",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 మిలియన్ టెక్స్ట్ టోకెన్లకు",
+                "audioTokens": "{price} 1 మిలియన్ ఆడియో టోకెన్‌లకు"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 మిలియన్ టెక్స్ట్ టోకెన్లకు",
+                "audioTokens": "{price} 1 మిలియన్ ఆడియో టోకెన్‌లకు"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 మిలియన్ టెక్స్ట్ టోకెన్లకు",
+                "audioTokens": "{price} 1 మిలియన్ ఆడియో టోకెన్‌లకు"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 మిలియన్ టోకెన్లకు"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 మిలియన్ టోకెన్లకు"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 మిలియన్ అక్షరాలకు",
+                "neural": "{price} 1 మిలియన్ అక్షరాలకు",
+                "studio": "{price} 1 మిలియన్ అక్షరాలకు",
+                "chirpHD": "ధృవీకరించలేకపోయింది",
+                "chirp3HD": "{price} 1 మిలియన్ అక్షరాలకు"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "సెషన్ సెటప్ ఫారమ్",
         "description": "ఇక్కడ మీరు LLM మరియు ఐచ్ఛికాలను ఎంచుకోవచ్చు TTS ప్రతి ఏజెంట్ కోసం సెట్టింగ్‌లు.",
@@ -309,7 +343,7 @@ const te = {
         "initialPromptDescription": "సంభాషణను ప్రారంభించడానికి ఈ ప్రాంప్ట్ మొదటి సందేశంగా పంపబడుతుంది. మీరు దానిని ఖాళీగా వదిలేస్తే, ఎటువంటి ప్రాంప్ట్ ఉండదు.",
         "startConversation": "సంభాషణను ప్రారంభించండి",
         "starting": "ప్రారంభిస్తోంది...",
-        "startTheConversation": "సంభాషణను ప్రారంభించండి.",
+        "startTheConversation": "దయచేసి సంభాషణను ప్రారంభించండి.",
         "languageSupportNote": "భాషా మద్దతు సూచికలు మోడల్ అనుకూలతను చూపుతాయి {languageName}. మద్దతు లేని మోడల్‌లు నిలిపివేయబడ్డాయి.",
         "reasoningNote": "'థింకింగ్' లేదా 'రీజనింగ్' టోకెన్‌లను ఉపయోగించే మోడల్‌ను సూచిస్తుంది. ఈ అవుట్‌పుట్ బిల్ చేయబడింది కానీ చాట్‌లో కనిపించదు.",
         "openaiOrgVerificationNote": "సూచిస్తుంది OpenAI మోడల్‌కు ధృవీకరించబడిన సంస్థ అవసరం. మీరు",
@@ -335,15 +369,15 @@ const te = {
         "backToMain": "ప్రధానానికి తిరిగి వెళ్ళు",
         "conversationHistory": "సంభాషణ చరిత్ర",
         "chatWith": "చాట్ చేయండి {agentA} & {agentB}",
+        "conversationDescription": "ప్రారంభమైన తేదీ {date} - భాష: {language}",
         "viewConversation": "సంభాషణను వీక్షించండి",
         "backToPreviousChats": "మునుపటి చాట్‌లకు తిరిగి వెళ్ళు",
         "resumeConversation": "సంభాషణను తిరిగి ప్రారంభించండి",
         "resuming": "పునఃప్రారంభిస్తోంది...",
         "sessionDetails": "సెషన్ వివరాలు",
-        "language": "భాష:",
+        "language": "భాష",
         "transcript": "ట్రాన్స్క్రిప్ట్",
         "loadingHistory": "చరిత్రను లోడ్ చేస్తోంది...",
-        "conversationDescription": "ప్రారంభించిన తేదీ {date} - భాష: {language}",
         "loadingConversation": "సంభాషణ లోడ్ అవుతోంది...",
         "chatStartedOn": "చాట్ ప్రారంభమైన తేదీ {date}",
         "agentAModel": "ఏజెంట్ ఎ మోడల్",
@@ -355,18 +389,8 @@ const te = {
         "model": "మోడల్",
         "voice": "వాయిస్"
     },
-    "common_verifyHere": "ఇక్కడ ధృవీకరించండి",
-    "page_AvailableImageModelsTitle": "ప్రస్తుతం అందుబాటులో ఉన్న చిత్ర నమూనాలు",
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",
-    "imageModel_PriceUSD": "ధర (USD)",
-    "page_TooltipKnowledgeCutoff": "ఈ తేదీతో మోడల్ జ్ఞానం తెగిపోయింది.",
-    "modelCategory_MistralAIPremierModels": "ప్రీమియర్ మోడల్స్",
-    "modelCategory_MistralAIOpenModels": "ఓపెన్ మోడల్స్",
-    "pricing": {
-        "perMillionTokens": "1 మిలియన్ టోకెన్లకు",
-        "tokens": "టోకెన్లు",
-        "free": "ఉచితం"
-    }
+    "imageModel_PriceUSD": "ధర (USD)"
 };
 export default te;

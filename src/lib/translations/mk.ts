@@ -71,6 +71,7 @@ const mk = {
         "mn": "монголски"
     },
     "settings": {
+        "loading": "Се вчитуваат поставките...",
         "title": "Поставки",
         "sections": {
             "appearance": "Изглед",
@@ -95,35 +96,31 @@ const mk = {
         },
         "apiKeys": {
             "title": "API Клучеви",
-            "description": "Управувајте со вашиот API клучеви за различни AI даватели на услуги",
-            "saved": "Зачувано",
-            "notSet": "Не е поставено",
-            "setKey": "Постави клуч",
-            "updateKey": "Клуч за ажурирање",
-            "removeKey": "Отстрани го клучот",
-            "getKeyInstructions": "Земи го твојот API клуч",
-            "noNewKeys": "Нема нови API внесени клучеви за зачувување.",
-            "unexpectedResponse": "Добив неочекуван одговор од серверот.",
+            "description": "Управувајте со вашиот API клучеви за различни AI услуги.",
+            "setKey": "Постави",
+            "updateKey": "Ажурирање",
+            "saveUpdateKeys": "Зачувај / Ажурирај клучеви",
+            "saving": "Се зачувува...",
+            "noNewKeys": "Нема нови клучеви за зачувување.",
+            "keyStoredSecurely": "Твој API Клучот ќе биде безбедно зачуван и криптиран.",
+            "enteringNewKeyOverwrites": "Внесувањето нов клуч ќе го пребрише постоечкиот.",
             "failedToSaveKey": "Неуспешно зачувување на клучот {serviceName}.",
-            "someKeysNotSaved": "Некои API Клучевите не можеа да се зачуваат. Проверете ги деталите подолу.",
+            "unexpectedResponse": "Неочекуван одговор од серверот.",
+            "someKeysNotSaved": "Некои клучеви не можеа да се зачуваат. Проверете ги грешките погоре.",
             "keyStatus": "статус на клуч...",
             "apiKeySecurelySaved": "API Клучот е безбедно зачуван",
             "confirmRemoveTitle": "Потврди отстранување",
             "confirmRemoveDescription": "Дали сте сигурни дека сакате да го отстраните API клуч за {serviceName}? Ова дејство не може да се врати.",
             "failedToRemoveKey": "Неуспешно отстранување на клучот {serviceName}.",
-            "successfullyRemovedKey": "Успешно отстранет клучот {serviceName}.",
+            "successfullyRemovedKey": "Клучот {serviceName} е успешно отстранет.",
             "keyNotSet": "Статус на клучот: Не е поставен",
             "keySet": "Статус на клучот: Поставен",
-            "saveButton": "Зачувај API Клуч(ови)",
-            "enteringNewKeyOverwrites": "Внесувањето нов клуч ќе го пребрише зачуваниот.",
-            "keyStoredSecurely": "Вашиот клуч ќе биде безбедно складиран со помош на Google Таен менаџер.",
-            "saveUpdateKeys": "Зачувај / Ажурирај клучеви",
-            "saving": "Се зачувува..."
-        },
-        "loading": "Се вчитуваат поставките..."
+            "saveButton": "Зачувај API Клуч(ови)"
+        }
     },
     "main": {
         "title": "AI Разговор",
+        "aiConversation": "AI Разговор",
         "setupForm": {
             "title": "Поставете го вашиот разговор",
             "agentA": "Агент А",
@@ -141,7 +138,7 @@ const mk = {
                 "selectModel": "Изберете TTS модел"
             },
             "startConversation": "Започни разговор",
-            "conversationPrompt": "Започнете го разговорот."
+            "conversationPrompt": "Ве молам започнете го разговорот."
         },
         "conversation": {
             "thinking": "размислување...",
@@ -153,8 +150,7 @@ const mk = {
             "perMillionTokens": "на милион токени",
             "input": "Внесување",
             "output": "Излез"
-        },
-        "aiConversation": "AI Разговор"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const mk = {
             "signUpWithGoogle": "Регистрирај се со Google",
             "hasAccount": "Веќе имате сметка?",
             "signIn": "Најави се",
-            "emailLabel": "Email адреса",
+            "emailLabel": "Е-адреса",
             "confirmPasswordPlaceholder": "Потврди ја лозинката",
             "signingUp": "Пријавување..."
         },
@@ -185,7 +181,7 @@ const mk = {
             "invalidCredentials": "Неважечка е-пошта или лозинка",
             "userNotFound": "Корисникот не е пронајден",
             "weakPassword": "Лозинката треба да биде најмалку 6 знаци",
-            "emailInUse": "Email веќе е во употреба",
+            "emailInUse": "Е-поштата веќе се користи",
             "generic": "Се појави грешка. Обидете се повторно.",
             "initialization": "Грешка при иницијализација. Обидете се повторно подоцна.",
             "invalidEmail": "Внесете важечка е-адреса.",
@@ -198,7 +194,7 @@ const mk = {
             "googleSignInFailedPrefix": "Google Најавувањето не успеа: ",
             "unknownGoogleSignInError": "Се појави непозната грешка за време на Google Најави се.",
             "passwordsDoNotMatch": "Лозинките не се совпаѓаат.",
-            "accountCreatedProfileSaveFailedPrefix": "Сметката е креирана, но податоците од профилот не се зачувани: ",
+            "accountCreatedProfileSaveFailedPrefix": "Сметката е креирана, но податоците од профилот не беа зачувани: ",
             "unknownProfileSaveError": "Се појави непозната грешка при зачувувањето на профилот.",
             "emailAlreadyRegistered": "Оваа е-адреса е веќе регистрирана.",
             "passwordTooShortSignUp": "Лозинката треба да биде долга најмалку 6 знаци.",
@@ -229,12 +225,14 @@ const mk = {
     "modelCategory_Gemini2_0": "Gemini 2.0 модели",
     "modelCategory_Gemini1_5": "Gemini 1.5 модели",
     "modelCategory_Claude4": "Claude 4 модели",
-    "modelCategory_Claude3_7": "Claude 3.7 модели",
+    "modelCategory_Claude3_7": "Claude 3.7 модел",
     "modelCategory_Claude3_5": "Claude 3.5 модели",
     "modelCategory_Claude3": "Claude 3 модели",
-    "modelCategory_Grok4": "Grok 4 модели",
+    "modelCategory_Grok4": "Grok 4 модел",
     "modelCategory_Grok3": "Grok 3 модели",
     "modelCategory_Grok3Mini": "Grok 3 Мини модели",
+    "modelCategory_MistralAIPremierModels": "Премиер модели",
+    "modelCategory_MistralAIOpenModels": "Отворен модел",
     "modelCategory_Llama4": "Llama 4 модели",
     "modelCategory_Llama3_3": "Llama 3.3 модели",
     "modelCategory_Llama3_2": "Llama 3.2 модели",
@@ -246,18 +244,18 @@ const mk = {
     "modelCategory_Gemma2": "Gemma 2 модел",
     "modelCategory_Gemma": "Gemma модели",
     "modelCategory_GoogleGemma": "Google Gemma Модели",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 модели",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 модели",
+    "modelCategory_DeepSeekR1": "DeepSeek Модел R1",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 модел",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 модели на дестилација",
     "modelCategory_DeepSeekModels": "DeepSeek Модели",
     "modelCategory_MistralAIModels": "Mistral AI Модели",
     "modelCategory_Qwen3": "Qwen3 модели",
-    "modelCategory_QwQwQ": "Qwen QwQ модели",
+    "modelCategory_QwQwQ": "Qwen QwQ модел",
     "modelCategory_Qwen2_5": "Qwen2.5 модели",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Модели на визија",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Модели на кодери",
-    "modelCategory_Qwen2": "Qwen2 модели",
-    "modelCategory_Qwen2Vision": "Qwen2 модели на визија",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Модел на визија",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Модел на кодер",
+    "modelCategory_Qwen2": "Qwen2 модел",
+    "modelCategory_Qwen2Vision": "Qwen2 Модел на визија",
     "modelCategory_QwenModels": "Qwen Модели",
     "modelCategory_OtherModels": "Други модели",
     "page_ErrorLoadingUserData": "Неуспешно вчитување на корисничките податоци: {errorMessage}. Обидете се со освежување.",
@@ -269,12 +267,13 @@ const mk = {
     "page_LoadingUserData": "Вчитување на кориснички податоци...",
     "page_ErrorAlertTitle": "Грешка",
     "page_WelcomeTitle": "Добредојдовте во Two AIs",
-    "page_WelcomeSubtitle": "Оваа веб-страница ви овозможува да слушате разговори меѓу двајца... Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Оваа веб-страница ви овозможува да слушате разговори меѓу двајца... Large Language Models (LLMs) и генерирајте слики за секој круг.",
     "page_ApiKeysRequiredTitle": "API Потребни се клучеви",
     "page_ApiKeysRequiredDescription": "За да водите разговори, ќе треба да ги обезбедите вашите сопствени API клучеви за AI модели што сакате да ги користите (на пр. OpenAI, Google, Anthropic) по најавувањето. Детални упатства за секој провајдер може да се најдат во Поставки / API Страница со клучеви по најавувањето.",
     "page_SignInPrompt": "За да започнете сопствена сесија, можете да се најавите или да креирате сметка користејќи ја врската во заглавието.",
     "page_VideoTitle": "Two AIs Демо за разговор",
     "page_AvailableLLMsTitle": "Моментално достапно LLMs",
+    "page_TooltipKnowledgeCutoff": "Знаењето на моделот е прекинато на овој датум.",
     "page_TooltipGoogleThinkingBudget": "Ова Google Моделот користи „буџет за размислување“. Резултатот од „размислувањето“ се фактурира, но не е видлив во разговорот.",
     "page_TooltipAnthropicExtendedThinking": "Ова Anthropic Моделот користи „проширено размислување“. Резултатот од „размислување“ е прикажан, но не е видлив во разговорот.",
     "page_TooltipXaiThinking": "Ова xAI Моделот користи „размислување“. Овој излез е фактуриран, но не е видлив во разговорот.",
@@ -283,17 +282,52 @@ const mk = {
     "page_TooltipGenericReasoning": "Овој модел користи токени за расудување кои не се видливи во разговорот, но се фактурираат како излезни токени.",
     "page_TooltipRequiresVerification": "Потребно е потврдено OpenAI организација. Можете да потврдите тука.",
     "page_TooltipSupportsLanguage": "Поддржува {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Овој модел можеби не го поддржува целосно {languageName} за разговор.",
+    "page_TooltipMayNotSupportLanguage": "Овој модел можеби не поддржува целосно {languageName} за разговор.",
     "page_BadgePreview": "Преглед",
     "page_BadgeExperimental": "Експериментално",
     "page_BadgeBeta": "Бета",
     "page_AvailableTTSTitle": "Моментално достапно Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Моментално достапни модели на слики",
     "page_NoTTSOptions": "Не TTS опции достапни моментално.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Цените последен пат се потврдени на {date}",
-    "page_PricingPerTokens": "на {amount} Токени",
+    "page_PricingPerTokens": "на 1 милион токени",
     "page_ModelCategoryModels": "{model} модели",
+    "common_verifyHere": "потврди тука",
     "ttsVoice_Ugne": "Во огнот",
+    "pricing": {
+        "perMillionTokens": "на 1 милион токени",
+        "tokens": "токени",
+        "free": "Бесплатно",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} на 1 милион текстуални токени",
+                "audioTokens": "{price} на 1 милион аудио токени"
+            },
+            "geminiPro": {
+                "textTokens": "{price} на 1 милион текстуални токени",
+                "audioTokens": "{price} на 1 милион аудио токени"
+            },
+            "openAIMini": {
+                "textTokens": "{price} на 1 милион текстуални токени",
+                "audioTokens": "{price} на 1 милион аудио токени"
+            },
+            "openAITTS1": {
+                "standard": "{price} на 1 милион токени"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} на 1 милион токени"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} на 1 милион знаци",
+                "neural": "{price} на 1 милион знаци",
+                "studio": "{price} на 1 милион знаци",
+                "chirpHD": "Не можеше да се потврди",
+                "chirp3HD": "{price} на 1 милион знаци"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Формулар за поставување сесија",
         "description": "Тука можете да го изберете LLM и опционално TTS поставки за секој агент.",
@@ -309,10 +343,10 @@ const mk = {
         "initialPromptDescription": "Ова прашање ќе биде испратено како прва порака за започнување на разговорот. Ако го оставите празно, нема да има прашање.",
         "startConversation": "Започни разговор",
         "starting": "Почнува...",
-        "startTheConversation": "Започнете го разговорот.",
+        "startTheConversation": "Ве молам започнете го разговорот.",
         "languageSupportNote": "Индикаторите за јазична поддршка покажуваат компатибилност на моделот со {languageName}Моделите без поддршка се оневозможени.",
         "reasoningNote": "Укажува дека моделот користи токени за „размислување“ или „расудување“. Овој резултат се наплаќа, но не е видлив во разговорот.",
-        "openaiOrgVerificationNote": "Укажува на OpenAI моделот бара верификувана организација. Можете да",
+        "openaiOrgVerificationNote": "Укажува на OpenAI моделот бара потврдена организација. Можете да",
         "voice": "Глас",
         "selectVoice": "Изберете глас",
         "noVoicesFor": "Нема гласови за {languageName}",
@@ -329,21 +363,21 @@ const mk = {
         "defaultImagePromptSystemMessage": "Креирај потсетник за давање на моделот за генерирање слики врз основа на овој потег: {turn}",
         "imagePromptSystemMessageHelp": "Оваа порака ќе биде испратена како системски потсетник до LLM кој го генерира потсетникот за слика. Користете <code>{'{turn}'}</code> како променлива вредност за пораката на агентот.",
         "selectImageModel": "Изберете модел на слика",
-        "selectPromptLLM": "Изберете LLM за слика"
+        "selectPromptLLM": "Изберете LLM за потсетник за слика"
     },
     "history": {
         "backToMain": "Назад кон главната страница",
         "conversationHistory": "Историја на разговори",
         "chatWith": "Разговарајте со {agentA} и {agentB}",
+        "conversationDescription": "Започнато на {date} - Јазик: {language}",
         "viewConversation": "Прикажи разговор",
         "backToPreviousChats": "Назад кон претходните разговори",
         "resumeConversation": "Продолжи го разговорот",
         "resuming": "Продолжувам...",
         "sessionDetails": "Детали за сесијата",
-        "language": "Јазик:",
+        "language": "Јазик",
         "transcript": "Транскрипт",
         "loadingHistory": "Вчитување на историјата...",
-        "conversationDescription": "Започнато на {date} - Јазик: {language}",
         "loadingConversation": "Се вчитува разговорот...",
         "chatStartedOn": "Разговорот започна на {date}",
         "agentAModel": "Агент А Модел",
@@ -355,18 +389,8 @@ const mk = {
         "model": "Модел",
         "voice": "Глас"
     },
-    "common_verifyHere": "потврди тука",
-    "page_AvailableImageModelsTitle": "Моментално достапни модели на слики",
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Големина",
-    "imageModel_PriceUSD": "Цена (USD)",
-    "page_TooltipKnowledgeCutoff": "Знаењето на моделот е прекинато на овој датум.",
-    "modelCategory_MistralAIPremierModels": "Премиер модели",
-    "modelCategory_MistralAIOpenModels": "Отворени модели",
-    "pricing": {
-        "perMillionTokens": "на 1 милион токени",
-        "tokens": "токени",
-        "free": "Бесплатно"
-    }
+    "imageModel_PriceUSD": "Цена (USD)"
 };
 export default mk;

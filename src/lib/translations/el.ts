@@ -71,6 +71,7 @@ const el = {
         "mn": "Μογγόλος"
     },
     "settings": {
+        "loading": "Φόρτωση ρυθμίσεων...",
         "title": "Ρυθμίσεις",
         "sections": {
             "appearance": "Εμφάνιση",
@@ -95,17 +96,17 @@ const el = {
         },
         "apiKeys": {
             "title": "API Κλειδιά",
-            "description": "Διαχειριστείτε το δικό σας API κλειδιά για διαφορετικά AI πάροχοι",
-            "saved": "Αποθηκεύτηκε",
-            "notSet": "Δεν έχει οριστεί",
-            "setKey": "Ορισμός κλειδιού",
-            "updateKey": "Κλειδί ενημέρωσης",
-            "removeKey": "Αφαίρεση κλειδιού",
-            "getKeyInstructions": "Αποκτήστε το δικό σας API κλειδί",
-            "noNewKeys": "Δεν υπάρχουν νέα API πλήκτρα που έχουν εισαχθεί για αποθήκευση.",
-            "unexpectedResponse": "Λάβα μια μη αναμενόμενη απάντηση από τον διακομιστή.",
+            "description": "Διαχειριστείτε το δικό σας API κλειδιά για διαφορετικά AI υπηρεσίες.",
+            "setKey": "Σειρά",
+            "updateKey": "Εκσυγχρονίζω",
+            "saveUpdateKeys": "Αποθήκευση / Ενημέρωση Κλειδιών",
+            "saving": "Οικονομία...",
+            "noNewKeys": "Δεν υπάρχουν νέα κλειδιά για αποθήκευση.",
+            "keyStoredSecurely": "Σας API Το κλειδί θα αποθηκευτεί με ασφάλεια και θα κρυπτογραφηθεί.",
+            "enteringNewKeyOverwrites": "Η εισαγωγή ενός νέου κλειδιού θα αντικαταστήσει το υπάρχον.",
             "failedToSaveKey": "Αποτυχία αποθήκευσης του κλειδιού {serviceName}.",
-            "someKeysNotSaved": "Μερικοί API Δεν ήταν δυνατή η αποθήκευση των κλειδιών. Ελέγξτε τις λεπτομέρειες παρακάτω.",
+            "unexpectedResponse": "Μη αναμενόμενη απόκριση από τον διακομιστή.",
+            "someKeysNotSaved": "Δεν ήταν δυνατή η αποθήκευση ορισμένων κλειδιών. Ελέγξτε τα παραπάνω σφάλματα.",
             "keyStatus": "κατάσταση κλειδιού...",
             "apiKeySecurelySaved": "API Το κλειδί αποθηκεύτηκε με ασφάλεια",
             "confirmRemoveTitle": "Επιβεβαίωση κατάργησης",
@@ -114,16 +115,12 @@ const el = {
             "successfullyRemovedKey": "Το κλειδί {serviceName} καταργήθηκε με επιτυχία.",
             "keyNotSet": "Κατάσταση κλειδιού: Δεν έχει οριστεί",
             "keySet": "Κατάσταση κλειδιού: Ορισμός",
-            "saveButton": "Εκτός API Κλειδί(α)",
-            "enteringNewKeyOverwrites": "Η εισαγωγή ενός νέου κλειδιού θα αντικαταστήσει το αποθηκευμένο.",
-            "keyStoredSecurely": "Το κλειδί σας θα αποθηκευτεί με ασφάλεια χρησιμοποιώντας Google Μυστικός Διευθυντής.",
-            "saveUpdateKeys": "Αποθήκευση / Ενημέρωση Κλειδιών",
-            "saving": "Οικονομία..."
-        },
-        "loading": "Φόρτωση ρυθμίσεων..."
+            "saveButton": "Εκτός API Κλειδί(α)"
+        }
     },
     "main": {
         "title": "AI Συνομιλία",
+        "aiConversation": "AI Συνομιλία",
         "setupForm": {
             "title": "Ρυθμίστε τη συνομιλία σας",
             "agentA": "Πράκτορας Α",
@@ -141,7 +138,7 @@ const el = {
                 "selectModel": "Επιλέγω TTS μοντέλο"
             },
             "startConversation": "Έναρξη συνομιλίας",
-            "conversationPrompt": "Ξεκινήστε τη συζήτηση."
+            "conversationPrompt": "Παρακαλώ ξεκινήστε τη συζήτηση."
         },
         "conversation": {
             "thinking": "σκέψη...",
@@ -153,8 +150,7 @@ const el = {
             "perMillionTokens": "ανά εκατομμύριο μάρκες",
             "input": "Εισαγωγή",
             "output": "Παραγωγή"
-        },
-        "aiConversation": "AI Συνομιλία"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const el = {
             "signUpWithGoogle": "Εγγραφείτε με Google",
             "hasAccount": "Έχετε ήδη λογαριασμό;",
             "signIn": "Σύνδεση",
-            "emailLabel": "Email διεύθυνση",
+            "emailLabel": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
             "confirmPasswordPlaceholder": "Επιβεβαίωση κωδικού πρόσβασης",
             "signingUp": "Εγγραφή..."
         },
@@ -185,7 +181,7 @@ const el = {
             "invalidCredentials": "Μη έγκυρο email ή κωδικός πρόσβασης",
             "userNotFound": "Ο χρήστης δεν βρέθηκε",
             "weakPassword": "Ο κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 6 χαρακτήρες",
-            "emailInUse": "Email ήδη σε χρήση",
+            "emailInUse": "Το ηλεκτρονικό ταχυδρομείο χρησιμοποιείται ήδη",
             "generic": "Παρουσιάστηκε σφάλμα. Δοκιμάστε ξανά.",
             "initialization": "Σφάλμα αρχικοποίησης. Δοκιμάστε ξανά αργότερα.",
             "invalidEmail": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου.",
@@ -218,7 +214,7 @@ const el = {
     "apiKeyMissing": "API Λείπει το κλειδί",
     "apiKeyMissingSubtext": "Ο API Το κλειδί για αυτόν τον πάροχο λείπει ή δεν είναι έγκυρο. Προσθέστε το στις ρυθμίσεις.",
     "apiKeyNotNeeded": "API Δεν χρειάζεται κλειδί",
-    "apiKeyNotNeededSubtext": "Αυτός ο πάροχος δεν απαιτεί API κλειδί για το δωρεάν επίπεδο ή για ορισμένα μοντέλα.",
+    "apiKeyNotNeededSubtext": "Αυτός ο πάροχος δεν απαιτεί API κλειδί για την δωρεάν έκδοση ή για ορισμένα μοντέλα.",
     "apiKeyFound": "API Σετ κλειδιών",
     "apiKeyFoundSubtext": "Ενα API Το κλειδί έχει διαμορφωθεί για αυτόν τον πάροχο.",
     "modelCategory_FlagshipChat": "Βασικά μοντέλα συνομιλίας",
@@ -229,12 +225,14 @@ const el = {
     "modelCategory_Gemini2_0": "Gemini 2.0 μοντέλα",
     "modelCategory_Gemini1_5": "Gemini 1.5 μοντέλα",
     "modelCategory_Claude4": "Claude 4 μοντέλα",
-    "modelCategory_Claude3_7": "Claude 3.7 μοντέλα",
+    "modelCategory_Claude3_7": "Claude 3.7 μοντέλο",
     "modelCategory_Claude3_5": "Claude 3.5 μοντέλα",
     "modelCategory_Claude3": "Claude 3 μοντέλα",
-    "modelCategory_Grok4": "Grok 4 μοντέλα",
+    "modelCategory_Grok4": "Grok 4 μοντέλο",
     "modelCategory_Grok3": "Grok 3 μοντέλα",
     "modelCategory_Grok3Mini": "Grok 3 Μίνι μοντέλα",
+    "modelCategory_MistralAIPremierModels": "Κορυφαία μοντέλα",
+    "modelCategory_MistralAIOpenModels": "Ανοιχτό μοντέλο",
     "modelCategory_Llama4": "Llama 4 μοντέλα",
     "modelCategory_Llama3_3": "Llama 3.3 μοντέλα",
     "modelCategory_Llama3_2": "Llama 3.2 μοντέλα",
@@ -246,18 +244,18 @@ const el = {
     "modelCategory_Gemma2": "Gemma 2 μοντέλα",
     "modelCategory_Gemma": "Gemma μοντέλα",
     "modelCategory_GoogleGemma": "Google Gemma Μοντέλα",
-    "modelCategory_DeepSeekR1": "DeepSeek Μοντέλα R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Μοντέλα V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Μοντέλο R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Μοντέλο V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Μοντέλα απόσταξης R1",
     "modelCategory_DeepSeekModels": "DeepSeek Μοντέλα",
     "modelCategory_MistralAIModels": "Mistral AI Μοντέλα",
     "modelCategory_Qwen3": "Qwen3 μοντέλα",
-    "modelCategory_QwQwQ": "Qwen Μοντέλα QwQ",
+    "modelCategory_QwQwQ": "Qwen Μοντέλο QwQ",
     "modelCategory_Qwen2_5": "Qwenμοντέλα 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Μοντέλα όρασης",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Μοντέλα κωδικοποιητή",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Μοντέλο όρασης",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Μοντέλο κωδικοποιητή",
     "modelCategory_Qwen2": "Qwen2 μοντέλα",
-    "modelCategory_Qwen2Vision": "Qwen2 μοντέλα όρασης",
+    "modelCategory_Qwen2Vision": "Qwen2 Μοντέλο όρασης",
     "modelCategory_QwenModels": "Qwen Μοντέλα",
     "modelCategory_OtherModels": "Άλλα μοντέλα",
     "page_ErrorLoadingUserData": "Αποτυχία φόρτωσης δεδομένων χρήστη: {errorMessage}. Δοκιμάστε να κάνετε ανανέωση.",
@@ -269,31 +267,67 @@ const el = {
     "page_LoadingUserData": "Φόρτωση δεδομένων χρήστη...",
     "page_ErrorAlertTitle": "Σφάλμα",
     "page_WelcomeTitle": "Καλώς ορίσατε στο Two AIs",
-    "page_WelcomeSubtitle": "Αυτή η ιστοσελίδα σάς επιτρέπει να ακούτε συνομιλίες μεταξύ δύο Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Αυτή η ιστοσελίδα σάς επιτρέπει να ακούτε συνομιλίες μεταξύ δύο Large Language Models (LLMs) και δημιουργήστε εικόνες για κάθε γύρο.",
     "page_ApiKeysRequiredTitle": "API Απαιτούνται κλειδιά",
     "page_ApiKeysRequiredDescription": "Για να διεξάγετε συνομιλίες, θα πρέπει να παρέχετε τα δικά σας API κλειδιά για το AI μοντέλα που θέλετε να χρησιμοποιήσετε (π.χ. OpenAI, Google, Anthropic) μετά τη σύνδεση. Λεπτομερείς οδηγίες για κάθε πάροχο μπορείτε να βρείτε στις Ρυθμίσεις / API Σελίδα κλειδιών μετά τη σύνδεση.",
     "page_SignInPrompt": "Για να ξεκινήσετε τη δική σας συνεδρία, μπορείτε να συνδεθείτε ή να δημιουργήσετε έναν λογαριασμό χρησιμοποιώντας τον σύνδεσμο στην κεφαλίδα.",
     "page_VideoTitle": "Two AIs Επίδειξη συνομιλίας",
     "page_AvailableLLMsTitle": "Διαθέσιμο αυτήν τη στιγμή LLMs",
+    "page_TooltipKnowledgeCutoff": "Οι γνώσεις του μοντέλου έχουν διακοπεί σε αυτήν την ημερομηνία.",
     "page_TooltipGoogleThinkingBudget": "Αυτό Google Το μοντέλο χρησιμοποιεί έναν «προϋπολογισμό σκέψης». Το αποτέλεσμα της «σκέψης» χρεώνεται αλλά δεν είναι ορατό στη συνομιλία.",
     "page_TooltipAnthropicExtendedThinking": "Αυτό Anthropic Το μοντέλο χρησιμοποιεί «εκτεταμένη σκέψη». Η έξοδος «σκέψης» χρεώνεται αλλά δεν είναι ορατή στη συνομιλία.",
     "page_TooltipXaiThinking": "Αυτό xAI Το μοντέλο χρησιμοποιεί τη λέξη «σκέψη». Αυτή η έξοδος χρεώνεται αλλά δεν είναι ορατή στη συνομιλία.",
     "page_TooltipQwenReasoning": "Αυτό Qwen Το μοντέλο χρησιμοποιεί «συλλογιστική/σκέψη». Αυτή η έξοδος χρεώνεται αλλά δεν είναι ορατή στη συνομιλία.",
     "page_TooltipDeepSeekReasoning": "Αυτό DeepSeek Το μοντέλο χρησιμοποιεί «συλλογιστική/σκέψη». Η έξοδος χρεώνεται αλλά δεν είναι ορατή στη συνομιλία.",
     "page_TooltipGenericReasoning": "Αυτό το μοντέλο χρησιμοποιεί διακριτικά συλλογισμού που δεν είναι ορατά στη συνομιλία αλλά χρεώνονται ως διακριτικά εξόδου.",
-    "page_TooltipRequiresVerification": "Απαιτείται επαλήθευση OpenAI οργανισμός. Μπορείτε να το επαληθεύσετε εδώ.",
+    "page_TooltipRequiresVerification": "Απαιτείται επαλήθευση OpenAI οργανισμός. Μπορείτε να επαληθεύσετε εδώ.",
     "page_TooltipSupportsLanguage": "Υποστηρίζει {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Αυτό το μοντέλο ενδέχεται να μην υποστηρίζει πλήρως τα {languageName} για συνομιλία.",
+    "page_TooltipMayNotSupportLanguage": "Αυτό το μοντέλο ενδέχεται να μην υποστηρίζει πλήρως {languageName} για συνομιλία.",
     "page_BadgePreview": "Πρεμιέρα",
     "page_BadgeExperimental": "Πειραματικός",
     "page_BadgeBeta": "Βήτα",
     "page_AvailableTTSTitle": "Διαθέσιμο αυτήν τη στιγμή Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Διαθέσιμα μοντέλα εικόνας αυτήν τη στιγμή",
     "page_NoTTSOptions": "Οχι TTS επιλογές που είναι διαθέσιμες αυτήν τη στιγμή.",
     "page_TruncatableNoteFormat": "({σημείωση κειμένου})",
     "page_PricesLastVerifiedOn": "Οι τιμές επαληθεύτηκαν τελευταία φορά στις {date}",
-    "page_PricingPerTokens": "ανά {amount} Κάρτες",
+    "page_PricingPerTokens": "ανά 1 εκατομμύριο Tokens",
     "page_ModelCategoryModels": "{model} μοντέλα",
+    "common_verifyHere": "επαλήθευση εδώ",
     "ttsVoice_Ugne": "Στη φωτιά",
+    "pricing": {
+        "perMillionTokens": "ανά 1 εκατομμύριο μάρκες",
+        "tokens": "μάρκες",
+        "free": "Δωρεάν",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} ανά 1 εκατομμύριο διακριτικά κειμένου",
+                "audioTokens": "{price} ανά 1 εκατομμύριο ηχητικά tokens"
+            },
+            "geminiPro": {
+                "textTokens": "{price} ανά 1 εκατομμύριο διακριτικά κειμένου",
+                "audioTokens": "{price} ανά 1 εκατομμύριο ηχητικά tokens"
+            },
+            "openAIMini": {
+                "textTokens": "{price} ανά 1 εκατομμύριο διακριτικά κειμένου",
+                "audioTokens": "{price} ανά 1 εκατομμύριο ηχητικά tokens"
+            },
+            "openAITTS1": {
+                "standard": "{price} ανά 1 εκατομμύριο μάρκες"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} ανά 1 εκατομμύριο μάρκες"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} ανά 1 εκατομμύριο χαρακτήρες",
+                "neural": "{price} ανά 1 εκατομμύριο χαρακτήρες",
+                "studio": "{price} ανά 1 εκατομμύριο χαρακτήρες",
+                "chirpHD": "Δεν ήταν δυνατή η επαλήθευση",
+                "chirp3HD": "{price} ανά 1 εκατομμύριο χαρακτήρες"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Φόρμα Ρύθμισης Συνεδρίας",
         "description": "Εδώ μπορείτε να επιλέξετε το LLM και προαιρετικά TTS ρυθμίσεις για κάθε πράκτορα.",
@@ -309,7 +343,7 @@ const el = {
         "initialPromptDescription": "Αυτή η προτροπή θα σταλεί ως το πρώτο μήνυμα για την έναρξη της συνομιλίας. Εάν το αφήσετε κενό, δεν θα υπάρχει προτροπή.",
         "startConversation": "Έναρξη συνομιλίας",
         "starting": "Εκκίνηση...",
-        "startTheConversation": "Ξεκινήστε τη συζήτηση.",
+        "startTheConversation": "Παρακαλώ ξεκινήστε τη συζήτηση.",
         "languageSupportNote": "Οι δείκτες υποστήριξης γλώσσας δείχνουν τη συμβατότητα του μοντέλου με {languageName}Τα μοντέλα χωρίς υποστήριξη είναι απενεργοποιημένα.",
         "reasoningNote": "Υποδεικνύει ότι ένα μοντέλο χρησιμοποιεί διακριτικά «σκέψης» ή «συλλογιστικής». Αυτή η έξοδος χρεώνεται αλλά δεν είναι ορατή στη συνομιλία.",
         "openaiOrgVerificationNote": "Υποδεικνύει ένα OpenAI το μοντέλο απαιτεί έναν επαληθευμένο οργανισμό. Μπορείτε",
@@ -335,15 +369,15 @@ const el = {
         "backToMain": "Επιστροφή στο κύριο μέρος",
         "conversationHistory": "Ιστορικό συνομιλίας",
         "chatWith": "Συνομιλία με {agentA} & {agentB}",
+        "conversationDescription": "Ξεκίνησε στις {date} - Γλώσσα: {language}",
         "viewConversation": "Προβολή συνομιλίας",
         "backToPreviousChats": "Επιστροφή στις προηγούμενες συνομιλίες",
         "resumeConversation": "Συνέχιση συνομιλίας",
         "resuming": "Συνέχιση...",
         "sessionDetails": "Λεπτομέρειες συνεδρίας",
-        "language": "Γλώσσα:",
+        "language": "Γλώσσα",
         "transcript": "Αντίγραφο",
         "loadingHistory": "Φόρτωση ιστορικού...",
-        "conversationDescription": "Ξεκίνησε στις {date} - Γλώσσα: {language}",
         "loadingConversation": "Φόρτωση συνομιλίας...",
         "chatStartedOn": "Η συνομιλία ξεκίνησε στις {date}",
         "agentAModel": "Πράκτορας Α Μοντέλο",
@@ -355,18 +389,8 @@ const el = {
         "model": "Μοντέλο",
         "voice": "Φωνή"
     },
-    "common_verifyHere": "επαλήθευση εδώ",
-    "page_AvailableImageModelsTitle": "Διαθέσιμα μοντέλα εικόνας αυτήν τη στιγμή",
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",
-    "imageModel_PriceUSD": "Τιμή (USD)",
-    "page_TooltipKnowledgeCutoff": "Οι γνώσεις του μοντέλου έχουν διακοπεί σε αυτήν την ημερομηνία.",
-    "modelCategory_MistralAIPremierModels": "Κορυφαία μοντέλα",
-    "modelCategory_MistralAIOpenModels": "Ανοιχτά μοντέλα",
-    "pricing": {
-        "perMillionTokens": "ανά 1 εκατομμύριο μάρκες",
-        "tokens": "μάρκες",
-        "free": "Δωρεάν"
-    }
+    "imageModel_PriceUSD": "Τιμή (USD)"
 };
 export default el;

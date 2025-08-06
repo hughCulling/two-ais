@@ -71,6 +71,7 @@ const tr = {
         "mn": "Moğolca"
     },
     "settings": {
+        "loading": "Ayarlar yükleniyor...",
         "title": "Ayarlar",
         "sections": {
             "appearance": "Dış görünüş",
@@ -95,17 +96,17 @@ const tr = {
         },
         "apiKeys": {
             "title": "API Anahtarlar",
-            "description": "Yönetin API farklı anahtarlar AI sağlayıcılar",
-            "saved": "Kaydedildi",
-            "notSet": "Ayarlanmamış",
-            "setKey": "Anahtar ayarla",
-            "updateKey": "Güncelleme anahtarı",
-            "removeKey": "Anahtarı kaldır",
-            "getKeyInstructions": "Al senin API anahtar",
-            "noNewKeys": "Yeni yok API kaydetmek için tuşlara basıldı.",
-            "unexpectedResponse": "Sunucudan beklenmeyen bir yanıt alındı.",
+            "description": "Yönetin API farklı anahtarlar AI hizmetler.",
+            "setKey": "Ayarlamak",
+            "updateKey": "Güncelleme",
+            "saveUpdateKeys": "Anahtarları Kaydet / Güncelle",
+            "saving": "Kaydediliyor...",
+            "noNewKeys": "Kaydedilecek yeni anahtar yok.",
+            "keyStoredSecurely": "Senin API Anahtar güvenli bir şekilde saklanacak ve şifrelenecektir.",
+            "enteringNewKeyOverwrites": "Yeni bir anahtar girildiğinde mevcut anahtar geçersiz kılınacaktır.",
             "failedToSaveKey": "{serviceName} anahtarı kaydedilemedi.",
-            "someKeysNotSaved": "Bazı API Anahtarlar kaydedilemedi. Lütfen aşağıdaki ayrıntıları kontrol edin.",
+            "unexpectedResponse": "Sunucudan beklenmeyen yanıt.",
+            "someKeysNotSaved": "Bazı anahtarlar kaydedilemedi. Lütfen yukarıdaki hataları kontrol edin.",
             "keyStatus": "anahtar durumu...",
             "apiKeySecurelySaved": "API Anahtar Güvenli Şekilde Kaydedildi",
             "confirmRemoveTitle": "Kaldırmayı Onayla",
@@ -114,16 +115,12 @@ const tr = {
             "successfullyRemovedKey": "{serviceName} anahtarı başarıyla kaldırıldı.",
             "keyNotSet": "Anahtar Durumu: Ayarlanmamış",
             "keySet": "Anahtar Durumu: Ayarlandı",
-            "saveButton": "Kaydetmek API Anahtar(lar)",
-            "enteringNewKeyOverwrites": "Yeni bir anahtar girildiğinde kayıtlı olanın üzerine yazılır.",
-            "keyStoredSecurely": "Anahtarınız güvenli bir şekilde saklanacaktır Google Gizli Yönetici.",
-            "saveUpdateKeys": "Anahtarları Kaydet / Güncelle",
-            "saving": "Kaydediliyor..."
-        },
-        "loading": "Ayarlar yükleniyor..."
+            "saveButton": "Kaydetmek API Anahtar(lar)"
+        }
     },
     "main": {
         "title": "AI Konuşma",
+        "aiConversation": "AI Konuşma",
         "setupForm": {
             "title": "Konuşmanızı ayarlayın",
             "agentA": "Ajan A",
@@ -141,7 +138,7 @@ const tr = {
                 "selectModel": "Seçme TTS model"
             },
             "startConversation": "Konuşmayı Başlat",
-            "conversationPrompt": "Konuşmayı başlatın."
+            "conversationPrompt": "Lütfen konuşmayı başlatın."
         },
         "conversation": {
             "thinking": "düşünüyorum...",
@@ -153,8 +150,7 @@ const tr = {
             "perMillionTokens": "milyon token başına",
             "input": "Giriş",
             "output": "Çıktı"
-        },
-        "aiConversation": "AI Konuşma"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const tr = {
             "signUpWithGoogle": "Kaydolun Google",
             "hasAccount": "Zaten bir hesabınız var mı?",
             "signIn": "Giriş yap",
-            "emailLabel": "Email adres",
+            "emailLabel": "E-posta adresi",
             "confirmPasswordPlaceholder": "Şifreyi Onayla",
             "signingUp": "Kayıt Olunuyor..."
         },
@@ -185,7 +181,7 @@ const tr = {
             "invalidCredentials": "Geçersiz e-posta veya şifre",
             "userNotFound": "Kullanıcı bulunamadı",
             "weakPassword": "Şifre en az 6 karakter olmalıdır",
-            "emailInUse": "Email zaten kullanımda",
+            "emailInUse": "E-posta zaten kullanımda",
             "generic": "Bir hata oluştu. Lütfen tekrar deneyin.",
             "initialization": "Başlatma hatası. Lütfen daha sonra tekrar deneyin.",
             "invalidEmail": "Geçerli bir e.",
@@ -229,12 +225,14 @@ const tr = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeller",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeller",
     "modelCategory_Claude4": "Claude 4 modeller",
-    "modelCategory_Claude3_7": "Claude 3.7 modeller",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modeller",
     "modelCategory_Claude3": "Claude 3 modeller",
-    "modelCategory_Grok4": "Grok 4 modeller",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modeller",
     "modelCategory_Grok3Mini": "Grok 3 Mini modeller",
+    "modelCategory_MistralAIPremierModels": "Premier modeller",
+    "modelCategory_MistralAIOpenModels": "Açık model",
     "modelCategory_Llama4": "Llama 4 model",
     "modelCategory_Llama3_3": "Llama 3.3 modelleri",
     "modelCategory_Llama3_2": "Llama 3.2 modelleri",
@@ -246,16 +244,16 @@ const tr = {
     "modelCategory_Gemma2": "Gemma 2 model",
     "modelCategory_Gemma": "Gemma modeller",
     "modelCategory_GoogleGemma": "Google Gemma Modeller",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 modelleri",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 modelleri",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 modeli",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modeli",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill modelleri",
     "modelCategory_DeepSeekModels": "DeepSeek Modeller",
     "modelCategory_MistralAIModels": "Mistral AI Modeller",
     "modelCategory_Qwen3": "Qwen3 model",
-    "modelCategory_QwQwQ": "Qwen QwQ modelleri",
-    "modelCategory_Qwen2_5": "Qwen2.5 modeli",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vizyon modelleri",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodlayıcı modelleri",
+    "modelCategory_QwQwQ": "Qwen QwQ modeli",
+    "modelCategory_Qwen2_5": "Qwen2.5 model",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vizyon modeli",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kodlayıcı modeli",
     "modelCategory_Qwen2": "Qwen2 model",
     "modelCategory_Qwen2Vision": "Qwen2 Vizyon modeli",
     "modelCategory_QwenModels": "Qwen Modeller",
@@ -269,12 +267,13 @@ const tr = {
     "page_LoadingUserData": "Kullanıcı verileri yükleniyor...",
     "page_ErrorAlertTitle": "Hata",
     "page_WelcomeTitle": "Hoş geldiniz Two AIs",
-    "page_WelcomeSubtitle": "Bu web sitesi, iki kişi arasındaki konuşmaları dinlemenize olanak tanır Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Bu web sitesi, iki kişi arasındaki konuşmaları dinlemenize olanak tanır Large Language Models (LLMs) ve her tur için görseller üretin.",
     "page_ApiKeysRequiredTitle": "API Gerekli Anahtarlar",
     "page_ApiKeysRequiredDescription": "Konuşmaları yürütmek için kendi konuşmanızı sağlamanız gerekir API anahtarlar için AI kullanmak istediğiniz modeller (örn. OpenAI, Google, Anthropic) oturum açtıktan sonra. Her sağlayıcı için ayrıntılı talimatlar Ayarlar / bölümünde bulunabilir. API Giriş yaptıktan sonra anahtar sayfası.",
     "page_SignInPrompt": "Kendi oturumunuzu başlatmak için başlıktaki bağlantıyı kullanarak oturum açabilir veya hesap oluşturabilirsiniz.",
     "page_VideoTitle": "Two AIs Konuşma Demosu",
     "page_AvailableLLMsTitle": "Şu anda mevcut LLMs",
+    "page_TooltipKnowledgeCutoff": "Modelin bilgisi bu tarihte kesilmiştir.",
     "page_TooltipGoogleThinkingBudget": "Bu Google Model bir 'düşünme bütçesi' kullanır. 'Düşünme' çıktısı faturalandırılır ancak sohbette görünmez.",
     "page_TooltipAnthropicExtendedThinking": "Bu Anthropic Model 'genişletilmiş düşünme' kullanır. 'Düşünme' çıktısı faturalandırılır ancak sohbette görünmez.",
     "page_TooltipXaiThinking": "Bu xAI Model 'düşünme'yi kullanır. Bu çıktı faturalandırılır ancak sohbette görünmez.",
@@ -282,18 +281,53 @@ const tr = {
     "page_TooltipDeepSeekReasoning": "Bu DeepSeek Model 'akıl yürütme/düşünme'yi kullanır. Çıktı faturalandırılır ancak sohbette görünmez.",
     "page_TooltipGenericReasoning": "Bu model, sohbette görünmeyen ancak çıktı tokenleri olarak faturalandırılan akıl yürütme tokenlerini kullanır.",
     "page_TooltipRequiresVerification": "Doğrulanması gerekiyor OpenAI kuruluş. Buradan doğrulayabilirsiniz.",
-    "page_TooltipSupportsLanguage": "{languageName} dilini destekler",
-    "page_TooltipMayNotSupportLanguage": "Bu model, konuşma için {languageName} dilini tam olarak desteklemeyebilir.",
+    "page_TooltipSupportsLanguage": "Destekler {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Bu model tam olarak desteklenmeyebilir {languageName} sohbet için.",
     "page_BadgePreview": "Önizleme",
     "page_BadgeExperimental": "Deneysel",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Şu anda mevcut Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Şu Anda Mevcut Görüntü Modelleri",
     "page_NoTTSOptions": "HAYIR TTS Şu anda mevcut seçenekler.",
     "page_TruncatableNoteFormat": "({notMetni})",
     "page_PricesLastVerifiedOn": "Fiyatlar son olarak şu tarihte doğrulandı: {date}",
-    "page_PricingPerTokens": "başına {amount} Jetonlar",
+    "page_PricingPerTokens": "1 Milyon Token başına",
     "page_ModelCategoryModels": "{model} modeller",
+    "common_verifyHere": "buradan doğrulayın",
     "ttsVoice_Ugne": "Ateşin içinde",
+    "pricing": {
+        "perMillionTokens": "1 Milyon token başına",
+        "tokens": "jetonlar",
+        "free": "Özgür",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 Milyon metin belirteci başına",
+                "audioTokens": "{price} 1 Milyon ses jetonu başına"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 Milyon metin belirteci başına",
+                "audioTokens": "{price} 1 Milyon ses jetonu başına"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 Milyon metin belirteci başına",
+                "audioTokens": "{price} 1 Milyon ses jetonu başına"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 Milyon token başına"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 Milyon token başına"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 Milyon karakter başına",
+                "neural": "{price} 1 Milyon karakter başına",
+                "studio": "{price} 1 Milyon karakter başına",
+                "chirpHD": "Doğrulanamadı",
+                "chirp3HD": "{price} 1 Milyon karakter başına"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Oturum Kurulum Formu",
         "description": "Burada LLM ve isteğe bağlı olarak seçebilirsiniz TTS her ajan için ayarlar.",
@@ -309,7 +343,7 @@ const tr = {
         "initialPromptDescription": "Bu mesaj, sohbeti başlatmak için ilk mesaj olarak gönderilecektir. Boş bırakırsanız, herhangi bir mesaj gönderilmeyecektir.",
         "startConversation": "Konuşmayı Başlat",
         "starting": "Başlangıç...",
-        "startTheConversation": "Konuşmayı başlatın.",
+        "startTheConversation": "Lütfen konuşmayı başlatın.",
         "languageSupportNote": "Dil destek göstergeleri, model uyumluluğunu gösterir {languageName}. Desteklenmeyen modeller devre dışıdır.",
         "reasoningNote": "Bir modelin 'düşünme' veya 'akıl yürütme' belirteçlerini kullandığını belirtir. Bu çıktı faturalandırılır ancak sohbette görünmez.",
         "openaiOrgVerificationNote": "Birini gösterir OpenAI model doğrulanmış bir kuruluş gerektirir.",
@@ -326,7 +360,7 @@ const tr = {
         "size": "Boyut",
         "promptLLM": "Hızlı LLM",
         "imagePromptSystemMessage": "Görüntü İstemi Sistem Mesajı",
-        "defaultImagePromptSystemMessage": "Bu dönüşe dayalı olarak görüntü oluşturma modeline verilecek bir istem oluşturun: {turn}",
+        "defaultImagePromptSystemMessage": "Bu dönüşe dayanarak görüntü oluşturma modeline verilecek bir istem oluşturun: {turn}",
         "imagePromptSystemMessageHelp": "Bu mesaj, görüntü istemini oluşturan LLM'ye sistem istemi olarak gönderilecektir. <code>{'{turn}'}</code> Temsilcinin mesajı için bir yer tutucu olarak.",
         "selectImageModel": "Görüntü modelini seçin",
         "selectPromptLLM": "Resim istemi için LLM'yi seçin"
@@ -335,15 +369,15 @@ const tr = {
         "backToMain": "Ana Sayfaya Dön",
         "conversationHistory": "Konuşma Geçmişi",
         "chatWith": "Sohbet et {agentA} & {agentB}",
+        "conversationDescription": "Başladı {date} - Dil: {language}",
         "viewConversation": "Konuşmayı Görüntüle",
         "backToPreviousChats": "Önceki Sohbetlere Geri Dön",
         "resumeConversation": "Konuşmayı Sürdür",
         "resuming": "Devam ediliyor...",
         "sessionDetails": "Oturum Ayrıntıları",
-        "language": "Dil:",
+        "language": "Dil",
         "transcript": "Deşifre metni",
         "loadingHistory": "Geçmiş yükleniyor...",
-        "conversationDescription": "Başladı {date} - Dil: {language}",
         "loadingConversation": "Konuşma yükleniyor...",
         "chatStartedOn": "Sohbet başladı {date}",
         "agentAModel": "Ajan A Modeli",
@@ -355,18 +389,8 @@ const tr = {
         "model": "Model",
         "voice": "Ses"
     },
-    "common_verifyHere": "buradan doğrulayın",
-    "page_AvailableImageModelsTitle": "Şu Anda Mevcut Görüntü Modelleri",
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",
-    "imageModel_PriceUSD": "Fiyat (USD)",
-    "page_TooltipKnowledgeCutoff": "Modelin bilgisi bu tarihte kesilmiştir.",
-    "modelCategory_MistralAIPremierModels": "Premier modeller",
-    "modelCategory_MistralAIOpenModels": "Açık modeller",
-    "pricing": {
-        "perMillionTokens": "1 Milyon token başına",
-        "tokens": "jetonlar",
-        "free": "Özgür"
-    }
+    "imageModel_PriceUSD": "Fiyat (USD)"
 };
 export default tr;

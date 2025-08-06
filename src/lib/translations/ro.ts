@@ -46,7 +46,7 @@ const ro = {
         "tr": "turc",
         "uk": "ucrainean",
         "vi": "Vietnameză",
-        "mt": "Malteză",
+        "mt": "Maltez",
         "bs": "Bosniac",
         "ca": "catalan",
         "gu": "Gujarati",
@@ -71,6 +71,7 @@ const ro = {
         "mn": "mongol"
     },
     "settings": {
+        "loading": "Se încarcă setările...",
         "title": "Setări",
         "sections": {
             "appearance": "Aspect",
@@ -95,17 +96,17 @@ const ro = {
         },
         "apiKeys": {
             "title": "API Chei",
-            "description": "Gestionează-ți API chei pentru diferite AI furnizori",
-            "saved": "Salvat",
-            "notSet": "Nesetat",
-            "setKey": "Setați cheia",
-            "updateKey": "Actualizare cheie",
-            "removeKey": "Scoateți cheia",
-            "getKeyInstructions": "Ia-ți API cheie",
-            "noNewKeys": "Nicio noutate API tastele introduse pentru salvare.",
-            "unexpectedResponse": "Am primit un răspuns neașteptat de la server.",
+            "description": "Gestionează-ți API chei pentru diferite AI servicii.",
+            "setKey": "Set",
+            "updateKey": "Actualizare",
+            "saveUpdateKeys": "Salvați / actualizați cheile",
+            "saving": "Economisire...",
+            "noNewKeys": "Nu există chei noi de salvat.",
+            "keyStoredSecurely": "Al tău API cheia va fi stocată în siguranță și criptată.",
+            "enteringNewKeyOverwrites": "Introducerea unei chei noi va suprascrie cheia existentă.",
             "failedToSaveKey": "Cheia {serviceName} nu a putut fi salvată.",
-            "someKeysNotSaved": "Unele API Cheile nu au putut fi salvate. Vă rugăm să verificați detaliile de mai jos.",
+            "unexpectedResponse": "Răspuns neașteptat de la server.",
+            "someKeysNotSaved": "Unele chei nu au putut fi salvate. Vă rugăm să verificați erorile de mai sus.",
             "keyStatus": "stare cheie...",
             "apiKeySecurelySaved": "API Cheie salvată în siguranță",
             "confirmRemoveTitle": "Confirmați eliminarea",
@@ -114,16 +115,12 @@ const ro = {
             "successfullyRemovedKey": "Cheia {serviceName} a fost eliminată cu succes.",
             "keyNotSet": "Stare cheie: Nesetată",
             "keySet": "Stare cheie: Setată",
-            "saveButton": "Salva API Cheie(le)",
-            "enteringNewKeyOverwrites": "Introducerea unei noi chei va suprascrie cheia salvată.",
-            "keyStoredSecurely": "Cheia dumneavoastră va fi stocată în siguranță folosind Google Managerul Secret.",
-            "saveUpdateKeys": "Salvați / actualizați cheile",
-            "saving": "Economisire..."
-        },
-        "loading": "Se încarcă setările..."
+            "saveButton": "Salva API Cheie(le)"
+        }
     },
     "main": {
         "title": "AI Conversaţie",
+        "aiConversation": "AI Conversaţie",
         "setupForm": {
             "title": "Configurați-vă conversația",
             "agentA": "Agentul A",
@@ -141,7 +138,7 @@ const ro = {
                 "selectModel": "Selecta TTS model"
             },
             "startConversation": "Începeți conversația",
-            "conversationPrompt": "Începe conversația."
+            "conversationPrompt": "Te rog să începi conversația."
         },
         "conversation": {
             "thinking": "gândire...",
@@ -153,8 +150,7 @@ const ro = {
             "perMillionTokens": "per milion de token-uri",
             "input": "Intrare",
             "output": "Ieșire"
-        },
-        "aiConversation": "AI Conversaţie"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ro = {
             "signUpWithGoogle": "Înregistrează-te cu Google",
             "hasAccount": "Ai deja un cont?",
             "signIn": "Conectare",
-            "emailLabel": "Email adresa",
+            "emailLabel": "Adresa de e-mail",
             "confirmPasswordPlaceholder": "Confirmați parola",
             "signingUp": "Înscriere..."
         },
@@ -185,7 +181,7 @@ const ro = {
             "invalidCredentials": "Adresă de e-mail sau parolă nevalidă",
             "userNotFound": "Utilizator negăsit",
             "weakPassword": "Parola trebuie să aibă cel puțin 6 caractere",
-            "emailInUse": "Email deja în uz",
+            "emailInUse": "Adresa de e-mail este deja utilizată",
             "generic": "A apărut o eroare. Vă rugăm să încercați din nou.",
             "initialization": "Eroare de inițializare. Vă rugăm să încercați din nou mai târziu.",
             "invalidEmail": "Vă rugăm să introduceți o adresă de email validă.",
@@ -229,12 +225,14 @@ const ro = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modele",
     "modelCategory_Gemini1_5": "Gemini 1.5 modele",
     "modelCategory_Claude4": "Claude 4 modele",
-    "modelCategory_Claude3_7": "Claude 3.7 modele",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modele",
     "modelCategory_Claude3": "Claude 3 modele",
-    "modelCategory_Grok4": "Grok 4 modele",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modele",
     "modelCategory_Grok3Mini": "Grok 3 Modele mini",
+    "modelCategory_MistralAIPremierModels": "Modele Premier",
+    "modelCategory_MistralAIOpenModels": "Model deschis",
     "modelCategory_Llama4": "Llama 4 modele",
     "modelCategory_Llama3_3": "Llama 3.3 modele",
     "modelCategory_Llama3_2": "Llama 3.2 modele",
@@ -246,18 +244,18 @@ const ro = {
     "modelCategory_Gemma2": "Gemma 2 modele",
     "modelCategory_Gemma": "Gemma modele",
     "modelCategory_GoogleGemma": "Google Gemma Modele",
-    "modelCategory_DeepSeekR1": "DeepSeek Modele R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modele V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Modelul R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modelul V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modele R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modele",
     "modelCategory_MistralAIModels": "Mistral AI Modele",
     "modelCategory_Qwen3": "Qwen3 modele",
-    "modelCategory_QwQwQ": "Qwen Modele QwQ",
+    "modelCategory_QwQwQ": "Qwen Modelul QwQ",
     "modelCategory_Qwen2_5": "QwenModele 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modele de viziune",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modele de coder",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modelul de viziune",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modelul codificatorului",
     "modelCategory_Qwen2": "Qwen2 modele",
-    "modelCategory_Qwen2Vision": "Qwen2 modele de viziune",
+    "modelCategory_Qwen2Vision": "Qwen2 Model de viziune",
     "modelCategory_QwenModels": "Qwen Modele",
     "modelCategory_OtherModels": "Alte modele",
     "page_ErrorLoadingUserData": "Nu s-au putut încărca datele utilizatorului: {errorMessage}. Vă rugăm să încercați să actualizați pagina.",
@@ -269,12 +267,13 @@ const ro = {
     "page_LoadingUserData": "Se încarcă datele utilizatorului...",
     "page_ErrorAlertTitle": "Eroare",
     "page_WelcomeTitle": "Bine ați venit la Two AIs",
-    "page_WelcomeSubtitle": "Acest site web vă permite să ascultați conversații între doi Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Acest site web vă permite să ascultați conversații între doi Large Language Models (LLMs) și generează imagini pentru fiecare viraj.",
     "page_ApiKeysRequiredTitle": "API Chei necesare",
     "page_ApiKeysRequiredDescription": "Pentru a purta conversații, va trebui să furnizați propriile date API chei pentru AI modelele pe care doriți să le utilizați (de exemplu, OpenAI, Google, Anthropic) după conectare. Instrucțiuni detaliate pentru fiecare furnizor pot fi găsite în Setări / API Pagina cu chei după conectare.",
     "page_SignInPrompt": "Pentru a începe propria sesiune, vă puteți conecta sau crea un cont folosind linkul din antet.",
     "page_VideoTitle": "Two AIs Demonstrație de conversație",
     "page_AvailableLLMsTitle": "Disponibil în prezent LLMs",
+    "page_TooltipKnowledgeCutoff": "Cunoștințele modelului sunt întrerupte la această dată.",
     "page_TooltipGoogleThinkingBudget": "Acest Google Modelul folosește un „buget de gândire”. Rezultatul „de gândire” este facturat, dar nu este vizibil în chat.",
     "page_TooltipAnthropicExtendedThinking": "Acest Anthropic Modelul folosește „gândire extinsă”. Rezultatul „gândirii” este facturat, dar nu este vizibil în chat.",
     "page_TooltipXaiThinking": "Acest xAI Modelul folosește „gândirea”. Această ieșire este facturată, dar nu este vizibilă în chat.",
@@ -282,18 +281,53 @@ const ro = {
     "page_TooltipDeepSeekReasoning": "Acest DeepSeek Modelul folosește „raționament/gândire”. Rezultatul este facturat, dar nu este vizibil în chat.",
     "page_TooltipGenericReasoning": "Acest model folosește jetoane de raționament care nu sunt vizibile în chat, dar sunt facturate ca jetoane de ieșire.",
     "page_TooltipRequiresVerification": "Necesită verificare OpenAI organizație. Puteți verifica aici.",
-    "page_TooltipSupportsLanguage": "Acceptă {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Este posibil ca acest model să nu fie complet compatibil cu {languageName} pentru conversație.",
+    "page_TooltipSupportsLanguage": "Suporturi {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Este posibil ca acest model să nu fie complet compatibil {languageName} pentru conversație.",
     "page_BadgePreview": "Previzualizare",
     "page_BadgeExperimental": "Experimental",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Disponibil în prezent Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Modele de imagine disponibile în prezent",
     "page_NoTTSOptions": "Nu TTS opțiunile disponibile în prezent.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Prețurile verificate ultima dată pe {date}",
-    "page_PricingPerTokens": "pe {amount} Jetoane",
+    "page_PricingPerTokens": "per 1 milion de tokenuri",
     "page_ModelCategoryModels": "{model} modele",
+    "common_verifyHere": "verifică aici",
     "ttsVoice_Ugne": "În foc",
+    "pricing": {
+        "perMillionTokens": "per 1 milion de token-uri",
+        "tokens": "jetoane",
+        "free": "Gratuit",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 milion de token-uri text",
+                "audioTokens": "{price} per 1 milion de token-uri audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 milion de token-uri text",
+                "audioTokens": "{price} per 1 milion de token-uri audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 milion de token-uri text",
+                "audioTokens": "{price} per 1 milion de token-uri audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 milion de token-uri"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 milion de token-uri"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 milion de caractere",
+                "neural": "{price} per 1 milion de caractere",
+                "studio": "{price} per 1 milion de caractere",
+                "chirpHD": "Nu s-a putut verifica",
+                "chirp3HD": "{price} per 1 milion de caractere"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formular de configurare a sesiunii",
         "description": "Aici puteți selecta LLM-ul și opționalul TTS setări pentru fiecare agent.",
@@ -309,7 +343,7 @@ const ro = {
         "initialPromptDescription": "Această solicitare va fi trimisă ca primul mesaj pentru a începe conversația. Dacă o lăsați necompletată, nu va exista nicio solicitare.",
         "startConversation": "Începeți conversația",
         "starting": "Pornire...",
-        "startTheConversation": "Începe conversația.",
+        "startTheConversation": "Te rog să începi conversația.",
         "languageSupportNote": "Indicatorii de suport lingvistic arată compatibilitatea modelului cu {languageName}Modelele fără suport sunt dezactivate.",
         "reasoningNote": "Indică faptul că un model folosește jetoane de „gândire” sau „raționament”. Această ieșire este facturată, dar nu este vizibilă în chat.",
         "openaiOrgVerificationNote": "Indică un OpenAI modelul necesită o organizație verificată. Puteți",
@@ -335,15 +369,15 @@ const ro = {
         "backToMain": "Înapoi la pagina principală",
         "conversationHistory": "Istoricul conversațiilor",
         "chatWith": "Chat cu {agentA} & {agentB}",
+        "conversationDescription": "A început pe {date} - Limbă: {language}",
         "viewConversation": "Vizualizați conversația",
         "backToPreviousChats": "Înapoi la chat-urile anterioare",
         "resumeConversation": "Reluați conversația",
         "resuming": "Se reia...",
         "sessionDetails": "Detalii sesiune",
-        "language": "Limbă:",
+        "language": "Limbă",
         "transcript": "Transcriere",
         "loadingHistory": "Se încarcă istoricul...",
-        "conversationDescription": "A început pe {date} - Limbă: {language}",
         "loadingConversation": "Se încarcă conversația...",
         "chatStartedOn": "Chatul a început pe {date}",
         "agentAModel": "Agent A Model",
@@ -355,18 +389,8 @@ const ro = {
         "model": "Model",
         "voice": "Voce"
     },
-    "common_verifyHere": "verifică aici",
-    "page_AvailableImageModelsTitle": "Modele de imagine disponibile în prezent",
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",
-    "imageModel_PriceUSD": "Preţ (USD)",
-    "page_TooltipKnowledgeCutoff": "Cunoștințele modelului sunt întrerupte la această dată.",
-    "modelCategory_MistralAIPremierModels": "Modele Premier",
-    "modelCategory_MistralAIOpenModels": "Modele deschise",
-    "pricing": {
-        "perMillionTokens": "per 1 milion de token-uri",
-        "tokens": "jetoane",
-        "free": "Gratuit"
-    }
+    "imageModel_PriceUSD": "Preţ (USD)"
 };
 export default ro;

@@ -71,6 +71,7 @@ const ka = {
         "mn": "მონღოლური"
     },
     "settings": {
+        "loading": "პარამეტრები იტვირთება...",
         "title": "პარამეტრები",
         "sections": {
             "appearance": "გარეგნობა",
@@ -95,17 +96,17 @@ const ka = {
         },
         "apiKeys": {
             "title": "API კლავიშები",
-            "description": "მართეთ თქვენი API გასაღებები სხვადასხვა ტიპისთვის AI პროვაიდერები",
-            "saved": "შენახულია",
-            "notSet": "არ არის დაყენებული",
-            "setKey": "გასაღების დაყენება",
-            "updateKey": "განახლების გასაღები",
-            "removeKey": "გასაღების ამოღება",
-            "getKeyInstructions": "მიიღეთ თქვენი API გასაღები",
-            "noNewKeys": "ახალი არ არის API შესანახად შეყვანილია გასაღებები.",
-            "unexpectedResponse": "სერვერისგან მოულოდნელი პასუხი მივიღე.",
+            "description": "მართეთ თქვენი API გასაღებები სხვადასხვა ტიპისთვის AI მომსახურება.",
+            "setKey": "კომპლექტი",
+            "updateKey": "განახლება",
+            "saveUpdateKeys": "გასაღებების შენახვა / განახლება",
+            "saving": "შენახვა...",
+            "noNewKeys": "შესანახი ახალი გასაღებები არ არის.",
+            "keyStoredSecurely": "შენი API გასაღები უსაფრთხოდ და დაშიფრული იქნება.",
+            "enteringNewKeyOverwrites": "ახალი გასაღების შეყვანა არსებულს ჩაანაცვლებს.",
             "failedToSaveKey": "{serviceName} გასაღების შენახვა ვერ მოხერხდა.",
-            "someKeysNotSaved": "ზოგიერთი API გასაღებების შენახვა შეუძლებელია. გთხოვთ, შეამოწმოთ ქვემოთ მოცემული დეტალები.",
+            "unexpectedResponse": "სერვერისგან მოულოდნელი პასუხი.",
+            "someKeysNotSaved": "ზოგიერთი გასაღების შენახვა ვერ მოხერხდა. გთხოვთ, შეამოწმოთ ზემოთ მოცემული შეცდომები.",
             "keyStatus": "გასაღების სტატუსი...",
             "apiKeySecurelySaved": "API გასაღები უსაფრთხოდ შენახულია",
             "confirmRemoveTitle": "დაადასტურეთ წაშლა",
@@ -114,16 +115,12 @@ const ka = {
             "successfullyRemovedKey": "{serviceName} გასაღები წარმატებით წაიშალა.",
             "keyNotSet": "გასაღების სტატუსი: არ არის დაყენებული",
             "keySet": "გასაღების სტატუსი: დაყენებულია",
-            "saveButton": "შენახვა API გასაღები(ები)",
-            "enteringNewKeyOverwrites": "ახალი გასაღების შეყვანა შენახულს გადაწერს.",
-            "keyStoredSecurely": "თქვენი გასაღები უსაფრთხოდ შეინახება Google საიდუმლო მენეჯერი.",
-            "saveUpdateKeys": "გასაღებების შენახვა / განახლება",
-            "saving": "შენახვა..."
-        },
-        "loading": "პარამეტრები იტვირთება..."
+            "saveButton": "შენახვა API გასაღები(ები)"
+        }
     },
     "main": {
         "title": "AI საუბარი",
+        "aiConversation": "AI საუბარი",
         "setupForm": {
             "title": "დააყენეთ თქვენი საუბარი",
             "agentA": "აგენტი A",
@@ -141,7 +138,7 @@ const ka = {
                 "selectModel": "არჩევა TTS მოდელი"
             },
             "startConversation": "საუბრის დაწყება",
-            "conversationPrompt": "დაიწყეთ საუბარი."
+            "conversationPrompt": "გთხოვთ, დაიწყოთ საუბარი."
         },
         "conversation": {
             "thinking": "ფიქრი...",
@@ -153,8 +150,7 @@ const ka = {
             "perMillionTokens": "მილიონ ტოკენებზე",
             "input": "შეყვანა",
             "output": "გამომავალი"
-        },
-        "aiConversation": "AI საუბარი"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const ka = {
             "signUpWithGoogle": "დარეგისტრირდით Google",
             "hasAccount": "უკვე გაქვთ ანგარიში?",
             "signIn": "შესვლა",
-            "emailLabel": "Email მისამართი",
+            "emailLabel": "ელექტრონული ფოსტის მისამართი",
             "confirmPasswordPlaceholder": "პაროლის დადასტურება",
             "signingUp": "რეგისტრაცია..."
         },
@@ -185,7 +181,7 @@ const ka = {
             "invalidCredentials": "არასწორი ელ. ფოსტა ან პაროლი",
             "userNotFound": "მომხმარებელი ვერ მოიძებნა",
             "weakPassword": "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო",
-            "emailInUse": "Email უკვე გამოიყენება",
+            "emailInUse": "ელ. ფოსტა უკვე გამოიყენება",
             "generic": "შეცდომა მოხდა. გთხოვთ, სცადოთ ხელახლა.",
             "initialization": "ინიციალიზაციის შეცდომა. გთხოვთ, სცადოთ მოგვიანებით.",
             "invalidEmail": "გთხოვთ, შეიყვანოთ სწორი ელექტრონული ფოსტის მისამართი.",
@@ -229,12 +225,14 @@ const ka = {
     "modelCategory_Gemini2_0": "Gemini 2.0 მოდელები",
     "modelCategory_Gemini1_5": "Gemini 1.5 მოდელები",
     "modelCategory_Claude4": "Claude 4 მოდელები",
-    "modelCategory_Claude3_7": "Claude 3.7 მოდელები",
+    "modelCategory_Claude3_7": "Claude 3.7 მოდელი",
     "modelCategory_Claude3_5": "Claude 3.5 მოდელები",
     "modelCategory_Claude3": "Claude 3 მოდელები",
-    "modelCategory_Grok4": "Grok 4 მოდელები",
+    "modelCategory_Grok4": "Grok 4 მოდელი",
     "modelCategory_Grok3": "Grok 3 მოდელები",
     "modelCategory_Grok3Mini": "Grok 3 მინი მოდელები",
+    "modelCategory_MistralAIPremierModels": "პრემიერ მოდელები",
+    "modelCategory_MistralAIOpenModels": "ღია მოდელი",
     "modelCategory_Llama4": "Llama 4 მოდელი",
     "modelCategory_Llama3_3": "Llama 3.3 მოდელები",
     "modelCategory_Llama3_2": "Llama 3.2 მოდელები",
@@ -246,16 +244,16 @@ const ka = {
     "modelCategory_Gemma2": "Gemma 2 მოდელი",
     "modelCategory_Gemma": "Gemma მოდელები",
     "modelCategory_GoogleGemma": "Google Gemma მოდელები",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 მოდელები",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 მოდელები",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 მოდელი",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 მოდელი",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 დისტილის მოდელები",
     "modelCategory_DeepSeekModels": "DeepSeek მოდელები",
     "modelCategory_MistralAIModels": "Mistral AI მოდელები",
     "modelCategory_Qwen3": "Qwen3 მოდელი",
-    "modelCategory_QwQwQ": "Qwen QwQ მოდელები",
+    "modelCategory_QwQwQ": "Qwen QwQ მოდელი",
     "modelCategory_Qwen2_5": "Qwen2.5 მოდელები",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 ხედვის მოდელები",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 კოდირების მოდელები",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 ხედვის მოდელი",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 კოდირების მოდელი",
     "modelCategory_Qwen2": "Qwen2 მოდელი",
     "modelCategory_Qwen2Vision": "Qwen2 ხედვის მოდელი",
     "modelCategory_QwenModels": "Qwen მოდელები",
@@ -269,12 +267,13 @@ const ka = {
     "page_LoadingUserData": "მომხმარებლის მონაცემების ჩატვირთვა...",
     "page_ErrorAlertTitle": "შეცდომა",
     "page_WelcomeTitle": "კეთილი იყოს თქვენი მობრძანება Two AIs",
-    "page_WelcomeSubtitle": "ეს ვებსაიტი საშუალებას გაძლევთ მოუსმინოთ ორ ადამიანს შორის საუბრებს Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ეს ვებსაიტი საშუალებას გაძლევთ მოუსმინოთ ორ ადამიანს შორის საუბრებს Large Language Models (LLMs) და თითოეული რაუნდისთვის სურათების გენერირება.",
     "page_ApiKeysRequiredTitle": "API საჭიროა გასაღებები",
     "page_ApiKeysRequiredDescription": "საუბრების წარმართვისთვის, თქვენ უნდა მოგვაწოდოთ თქვენი საკუთარი API გასაღებები AI მოდელები, რომელთა გამოყენებაც გსურთ (მაგ. OpenAI, Google, Anthropic) შესვლის შემდეგ. თითოეული პროვაიდერის დეტალური ინსტრუქციები შეგიძლიათ იხილოთ პარამეტრებში / API გასაღებების გვერდი შესვლის შემდეგ.",
     "page_SignInPrompt": "საკუთარი სესიის დასაწყებად, შეგიძლიათ შეხვიდეთ სისტემაში ან შექმნათ ანგარიში სათაურში მოცემული ბმულის გამოყენებით.",
     "page_VideoTitle": "Two AIs საუბრის დემო",
     "page_AvailableLLMsTitle": "ამჟამად ხელმისაწვდომია LLMs",
+    "page_TooltipKnowledgeCutoff": "მოდელის ცოდნა ამ თარიღში შეწყდა.",
     "page_TooltipGoogleThinkingBudget": "ეს Google მოდელი იყენებს „აზროვნების ბიუჯეტს“. „აზროვნების“ შედეგი დარიცხულია, მაგრამ ჩატში არ ჩანს.",
     "page_TooltipAnthropicExtendedThinking": "ეს Anthropic მოდელი იყენებს „გაფართოებულ აზროვნებას“. „აზროვნების“ შედეგი ანგარიშზეა, მაგრამ ჩატში არ ჩანს.",
     "page_TooltipXaiThinking": "ეს xAI მოდელი იყენებს „აზროვნებას“. ეს გამომავალი ანგარიშსწორებულია, მაგრამ ჩატში არ ჩანს.",
@@ -282,18 +281,53 @@ const ka = {
     "page_TooltipDeepSeekReasoning": "ეს DeepSeek მოდელი იყენებს „მსჯელობას/აზროვნებას“. გამომავალი ანგარიშსწორებულია, მაგრამ ჩატში არ ჩანს.",
     "page_TooltipGenericReasoning": "ეს მოდელი იყენებს მსჯელობის ტოკენებს, რომლებიც ჩატში არ ჩანს, მაგრამ გამომავალი ტოკენების სახით არის დაანგარიშებული.",
     "page_TooltipRequiresVerification": "საჭიროებს დადასტურებას OpenAI ორგანიზაცია. შეგიძლიათ აქ გადაამოწმოთ.",
-    "page_TooltipSupportsLanguage": "მხარს უჭერს {languageName}-ს",
-    "page_TooltipMayNotSupportLanguage": "შესაძლოა, ამ მოდელმა სრულად არ დაუჭიროს მხარი {languageName}-ს საუბრისთვის.",
+    "page_TooltipSupportsLanguage": "მხარს უჭერს {languageName}",
+    "page_TooltipMayNotSupportLanguage": "შესაძლოა, ეს მოდელი სრულად არ უჭერდეს მხარს {languageName} საუბრისთვის.",
     "page_BadgePreview": "გადახედვა",
     "page_BadgeExperimental": "ექსპერიმენტული",
     "page_BadgeBeta": "ბეტა",
     "page_AvailableTTSTitle": "ამჟამად ხელმისაწვდომია Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "ამჟამად ხელმისაწვდომი გამოსახულების მოდელები",
     "page_NoTTSOptions": "არა TTS ამჟამად ხელმისაწვდომი ვარიანტები.",
     "page_TruncatableNoteFormat": "({შენიშვნა})",
     "page_PricesLastVerifiedOn": "ფასები ბოლოს დადასტურდა {date}",
-    "page_PricingPerTokens": "თითო {amount} ჟეტონები",
+    "page_PricingPerTokens": "1 მილიონ ტოკენზე",
     "page_ModelCategoryModels": "{model} მოდელები",
+    "common_verifyHere": "გადაამოწმეთ აქ",
     "ttsVoice_Ugne": "ცეცხლში",
+    "pricing": {
+        "perMillionTokens": "1 მილიონ ტოკენზე",
+        "tokens": "ჟეტონები",
+        "free": "უფასო",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 მილიონ ტექსტურ ტოკენზე",
+                "audioTokens": "{price} 1 მილიონ აუდიო ტოკენზე"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 მილიონ ტექსტურ ტოკენზე",
+                "audioTokens": "{price} 1 მილიონ აუდიო ტოკენზე"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 მილიონ ტექსტურ ტოკენზე",
+                "audioTokens": "{price} 1 მილიონ აუდიო ტოკენზე"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 მილიონ ტოკენზე"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 მილიონ ტოკენზე"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 მილიონ სიმბოლოზე",
+                "neural": "{price} 1 მილიონ სიმბოლოზე",
+                "studio": "{price} 1 მილიონ სიმბოლოზე",
+                "chirpHD": "ვერიფიცირება ვერ მოხერხდა",
+                "chirp3HD": "{price} 1 მილიონ სიმბოლოზე"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "სესიის დაყენების ფორმა",
         "description": "აქ შეგიძლიათ აირჩიოთ LLM და სურვილისამებრ TTS პარამეტრები თითოეული აგენტისთვის.",
@@ -309,7 +343,7 @@ const ka = {
         "initialPromptDescription": "ეს მოთხოვნა გაიგზავნება, როგორც საუბრის დაწყების პირველი შეტყობინება. თუ მას ცარიელს დატოვებთ, მოთხოვნა არ გამოჩნდება.",
         "startConversation": "საუბრის დაწყება",
         "starting": "იწყება...",
-        "startTheConversation": "დაიწყეთ საუბარი.",
+        "startTheConversation": "გთხოვთ, დაიწყოთ საუბარი.",
         "languageSupportNote": "ენობრივი მხარდაჭერის ინდიკატორები აჩვენებს მოდელის თავსებადობას {languageName}მხარდაჭერის გარეშე მოდელები გამორთულია.",
         "reasoningNote": "მიუთითებს, რომ მოდელი იყენებს „აზროვნების“ ან „მსჯელობის“ ტოკენებს. ეს გამომავალი ანგარიშსწორებულია, მაგრამ ჩატში არ ჩანს.",
         "openaiOrgVerificationNote": "მიუთითებს OpenAI მოდელი საჭიროებს დამოწმებულ ორგანიზაციას. თქვენ შეგიძლიათ",
@@ -335,15 +369,15 @@ const ka = {
         "backToMain": "დაბრუნება მთავარზე",
         "conversationHistory": "საუბრის ისტორია",
         "chatWith": "ჩატი {agentA} და {agentB}",
+        "conversationDescription": "დაიწყო {date} - ენა: {language}",
         "viewConversation": "საუბრის ნახვა",
         "backToPreviousChats": "წინა ჩეთებზე დაბრუნება",
         "resumeConversation": "საუბრის გაგრძელება",
         "resuming": "განახლება...",
         "sessionDetails": "სესიის დეტალები",
-        "language": "ენა:",
+        "language": "ენა",
         "transcript": "ტრანსკრიპტი",
         "loadingHistory": "ისტორიის ჩატვირთვა...",
-        "conversationDescription": "დაიწყო {date} - ენა: {language}",
         "loadingConversation": "საუბარი იტვირთება...",
         "chatStartedOn": "ჩატი დაიწყო {date}",
         "agentAModel": "აგენტი A მოდელი",
@@ -355,18 +389,8 @@ const ka = {
         "model": "მოდელი",
         "voice": "ხმა"
     },
-    "common_verifyHere": "გადაამოწმეთ აქ",
-    "page_AvailableImageModelsTitle": "ამჟამად ხელმისაწვდომი გამოსახულების მოდელები",
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",
-    "imageModel_PriceUSD": "ფასი (USD)",
-    "page_TooltipKnowledgeCutoff": "მოდელის ცოდნა ამ თარიღში შეწყდა.",
-    "modelCategory_MistralAIPremierModels": "პრემიერ მოდელები",
-    "modelCategory_MistralAIOpenModels": "ღია მოდელები",
-    "pricing": {
-        "perMillionTokens": "1 მილიონ ტოკენზე",
-        "tokens": "ჟეტონები",
-        "free": "უფასო"
-    }
+    "imageModel_PriceUSD": "ფასი (USD)"
 };
 export default ka;

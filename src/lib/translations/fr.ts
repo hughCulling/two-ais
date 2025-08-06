@@ -71,6 +71,7 @@ const fr = {
         "mn": "mongol"
     },
     "settings": {
+        "loading": "Chargement des paramètres...",
         "title": "Paramètres",
         "sections": {
             "appearance": "Apparence",
@@ -95,17 +96,17 @@ const fr = {
         },
         "apiKeys": {
             "title": "API Clés",
-            "description": "Gérez votre API clés pour différentes AI fournisseurs",
-            "saved": "Sauvé",
-            "notSet": "Non défini",
-            "setKey": "Définir la clé",
-            "updateKey": "Clé de mise à jour",
-            "removeKey": "Retirer la clé",
-            "getKeyInstructions": "Obtenez votre API clé",
-            "noNewKeys": "Pas de nouveau API touches saisies pour sauvegarder.",
-            "unexpectedResponse": "J'ai reçu une réponse inattendue du serveur.",
+            "description": "Gérez votre API clés pour différentes AI services.",
+            "setKey": "Ensemble",
+            "updateKey": "Mise à jour",
+            "saveUpdateKeys": "Enregistrer/Mettre à jour les clés",
+            "saving": "Économie...",
+            "noNewKeys": "Aucune nouvelle clé à sauvegarder.",
+            "keyStoredSecurely": "Ton API la clé sera stockée de manière sécurisée et cryptée.",
+            "enteringNewKeyOverwrites": "La saisie d'une nouvelle clé écrasera la clé existante.",
             "failedToSaveKey": "Échec de l'enregistrement de la clé {serviceName}.",
-            "someKeysNotSaved": "Quelques API Impossible d'enregistrer les clés. Veuillez vérifier les informations ci-dessous.",
+            "unexpectedResponse": "Réponse inattendue du serveur.",
+            "someKeysNotSaved": "Certaines clés n'ont pas pu être enregistrées. Veuillez vérifier les erreurs ci-dessus.",
             "keyStatus": "statut clé...",
             "apiKeySecurelySaved": "API Clé sauvegardée en toute sécurité",
             "confirmRemoveTitle": "Confirmer la suppression",
@@ -114,16 +115,12 @@ const fr = {
             "successfullyRemovedKey": "Clé {serviceName} supprimée avec succès.",
             "keyNotSet": "État de la clé : non défini",
             "keySet": "État de la clé : défini",
-            "saveButton": "Sauvegarder API Clé(s)",
-            "enteringNewKeyOverwrites": "La saisie d'une nouvelle clé écrasera celle enregistrée.",
-            "keyStoredSecurely": "Votre clé sera stockée en toute sécurité à l'aide de Google Gestionnaire secret.",
-            "saveUpdateKeys": "Enregistrer/Mettre à jour les clés",
-            "saving": "Économie..."
-        },
-        "loading": "Chargement des paramètres..."
+            "saveButton": "Sauvegarder API Clé(s)"
+        }
     },
     "main": {
         "title": "AI Conversation",
+        "aiConversation": "AI Conversation",
         "setupForm": {
             "title": "Configurez votre conversation",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const fr = {
                 "selectModel": "Sélectionner TTS modèle"
             },
             "startConversation": "Démarrer une conversation",
-            "conversationPrompt": "Commencez la conversation."
+            "conversationPrompt": "S'il vous plaît, démarrez la conversation."
         },
         "conversation": {
             "thinking": "pensée...",
@@ -153,8 +150,7 @@ const fr = {
             "perMillionTokens": "par million de jetons",
             "input": "Saisir",
             "output": "Sortir"
-        },
-        "aiConversation": "AI Conversation"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const fr = {
             "signUpWithGoogle": "Inscrivez-vous avec Google",
             "hasAccount": "Vous avez déjà un compte ?",
             "signIn": "Se connecter",
-            "emailLabel": "Email adresse",
+            "emailLabel": "Adresse email",
             "confirmPasswordPlaceholder": "Confirmez le mot de passe",
             "signingUp": "Signature..."
         },
@@ -185,7 +181,7 @@ const fr = {
             "invalidCredentials": "E-mail ou mot de passe invalide",
             "userNotFound": "Utilisateur non trouvé",
             "weakPassword": "Le mot de passe doit comporter au moins 6 caractères",
-            "emailInUse": "Email déjà utilisé",
+            "emailInUse": "E-mail déjà utilisé",
             "generic": "Une erreur s'est produite. Veuillez réessayer.",
             "initialization": "Erreur d'initialisation. Veuillez réessayer ultérieurement.",
             "invalidEmail": "S'il vous plaît, mettez une adresse email valide.",
@@ -229,12 +225,14 @@ const fr = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modèles",
     "modelCategory_Gemini1_5": "Gemini 1.5 modèles",
     "modelCategory_Claude4": "Claude 4 modèles",
-    "modelCategory_Claude3_7": "Claude 3.7 modèles",
+    "modelCategory_Claude3_7": "Claude 3.7 modèle",
     "modelCategory_Claude3_5": "Claude 3.5 modèles",
     "modelCategory_Claude3": "Claude 3 modèles",
-    "modelCategory_Grok4": "Grok 4 modèles",
+    "modelCategory_Grok4": "Grok 4 modèle",
     "modelCategory_Grok3": "Grok 3 modèles",
     "modelCategory_Grok3Mini": "Grok 3 Mini modèles",
+    "modelCategory_MistralAIPremierModels": "Modèles Premier",
+    "modelCategory_MistralAIOpenModels": "Modèle ouvert",
     "modelCategory_Llama4": "Llama 4 modèles",
     "modelCategory_Llama3_3": "Llama 3.3 modèles",
     "modelCategory_Llama3_2": "Llama 3.2 modèles",
@@ -246,18 +244,18 @@ const fr = {
     "modelCategory_Gemma2": "Gemma 2 modèles",
     "modelCategory_Gemma": "Gemma modèles",
     "modelCategory_GoogleGemma": "Google Gemma Modèles",
-    "modelCategory_DeepSeekR1": "DeepSeek Modèles R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modèles V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Modèle R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Modèle V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modèles R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modèles",
     "modelCategory_MistralAIModels": "Mistral AI Modèles",
     "modelCategory_Qwen3": "Qwen3 modèles",
-    "modelCategory_QwQwQ": "Qwen Modèles QwQ",
+    "modelCategory_QwQwQ": "Qwen Modèle QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 modèles",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modèles de vision",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modèles de codeur",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modèle de vision",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modèle de codeur",
     "modelCategory_Qwen2": "Qwen2 modèles",
-    "modelCategory_Qwen2Vision": "Qwen2 modèles Vision",
+    "modelCategory_Qwen2Vision": "Qwen2 Modèle de vision",
     "modelCategory_QwenModels": "Qwen Modèles",
     "modelCategory_OtherModels": "Autres modèles",
     "page_ErrorLoadingUserData": "Échec du chargement des données utilisateur : {errorMessage}. Veuillez actualiser.",
@@ -269,12 +267,13 @@ const fr = {
     "page_LoadingUserData": "Chargement des données utilisateur...",
     "page_ErrorAlertTitle": "Erreur",
     "page_WelcomeTitle": "Bienvenue à Two AIs",
-    "page_WelcomeSubtitle": "Ce site Web vous permet d'écouter des conversations entre deux Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Ce site Web vous permet d'écouter des conversations entre deux Large Language Models (LLMs) et générer des images pour chaque tour.",
     "page_ApiKeysRequiredTitle": "API Clés requises",
     "page_ApiKeysRequiredDescription": "Pour mener des conversations, vous devrez fournir votre propre API clés pour le AI modèles que vous souhaitez utiliser (par exemple, OpenAI, Google, Anthropic) après la connexion. Des instructions détaillées pour chaque fournisseur peuvent être trouvées dans les Paramètres / API Page des clés après la connexion.",
     "page_SignInPrompt": "Pour démarrer votre propre session, vous pouvez vous connecter ou créer un compte en utilisant le lien dans l'en-tête.",
     "page_VideoTitle": "Two AIs Démo de conversation",
     "page_AvailableLLMsTitle": "Actuellement disponible LLMs",
+    "page_TooltipKnowledgeCutoff": "Les connaissances du modèle sont coupées à cette date.",
     "page_TooltipGoogleThinkingBudget": "Ce Google Le modèle utilise un « budget de réflexion ». Le résultat de cette « réflexion » est facturé, mais n'est pas visible dans le chat.",
     "page_TooltipAnthropicExtendedThinking": "Ce Anthropic Le modèle utilise la « réflexion étendue ». La sortie « réflexion » est facturée, mais n'est pas visible dans le chat.",
     "page_TooltipXaiThinking": "Ce xAI Le modèle utilise la fonction « pensée ». Cette sortie est facturée, mais n'est pas visible dans le chat.",
@@ -282,18 +281,53 @@ const fr = {
     "page_TooltipDeepSeekReasoning": "Ce DeepSeek Le modèle utilise le raisonnement/la réflexion. La sortie est facturée, mais n'est pas visible dans le chat.",
     "page_TooltipGenericReasoning": "Ce modèle utilise des jetons de raisonnement qui ne sont pas visibles dans le chat mais qui sont facturés comme des jetons de sortie.",
     "page_TooltipRequiresVerification": "Nécessite une vérification OpenAI organisation. Vous pouvez vérifier ici.",
-    "page_TooltipSupportsLanguage": "Prend en charge {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Ce modèle peut ne pas prendre entièrement en charge {languageName} pour la conversation.",
+    "page_TooltipSupportsLanguage": "Soutient {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ce modèle peut ne pas être entièrement pris en charge {languageName} pour la conversation.",
     "page_BadgePreview": "Aperçu",
     "page_BadgeExperimental": "Expérimental",
     "page_BadgeBeta": "Bêta",
     "page_AvailableTTSTitle": "Actuellement disponible Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Modèles d'images actuellement disponibles",
     "page_NoTTSOptions": "Non TTS options actuellement disponibles.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Prix vérifiés pour la dernière fois le {date}",
-    "page_PricingPerTokens": "par {amount} Jetons",
+    "page_PricingPerTokens": "pour 1 million de jetons",
     "page_ModelCategoryModels": "{model} modèles",
+    "common_verifyHere": "vérifier ici",
     "ttsVoice_Ugne": "Dans le feu",
+    "pricing": {
+        "perMillionTokens": "pour 1 million de jetons",
+        "tokens": "jetons",
+        "free": "Gratuit",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} pour 1 million de jetons de texte",
+                "audioTokens": "{price} pour 1 million de jetons audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} pour 1 million de jetons de texte",
+                "audioTokens": "{price} pour 1 million de jetons audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} pour 1 million de jetons de texte",
+                "audioTokens": "{price} pour 1 million de jetons audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} pour 1 million de jetons"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} pour 1 million de jetons"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} pour 1 million de caractères",
+                "neural": "{price} pour 1 million de caractères",
+                "studio": "{price} pour 1 million de caractères",
+                "chirpHD": "Impossible de vérifier",
+                "chirp3HD": "{price} pour 1 million de caractères"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulaire de configuration de session",
         "description": "Ici, vous pouvez sélectionner le LLM et les options TTS paramètres pour chaque agent.",
@@ -309,7 +343,7 @@ const fr = {
         "initialPromptDescription": "Ce message sera envoyé comme premier message pour démarrer la conversation. Si vous le laissez vide, il n'y aura pas de message.",
         "startConversation": "Démarrer une conversation",
         "starting": "Départ...",
-        "startTheConversation": "Commencez la conversation.",
+        "startTheConversation": "S'il vous plaît, démarrez la conversation.",
         "languageSupportNote": "Les indicateurs de prise en charge linguistique montrent la compatibilité du modèle avec {languageName}Les modèles sans support sont désactivés.",
         "reasoningNote": "Indique qu'un modèle utilise des jetons de « réflexion » ou de « raisonnement ». Cette sortie est facturée, mais n'est pas visible dans le chat.",
         "openaiOrgVerificationNote": "Indique un OpenAI Le modèle nécessite une organisation vérifiée. Vous pouvez",
@@ -335,15 +369,15 @@ const fr = {
         "backToMain": "Retour au menu principal",
         "conversationHistory": "Historique des conversations",
         "chatWith": "Discuter avec {agentA} & {agentB}",
+        "conversationDescription": "Commencé le {date} - Langue: {language}",
         "viewConversation": "Voir la conversation",
         "backToPreviousChats": "Retour aux discussions précédentes",
         "resumeConversation": "Reprendre la conversation",
         "resuming": "Reprise...",
         "sessionDetails": "Détails de la session",
-        "language": "Langue:",
+        "language": "Langue",
         "transcript": "Transcription",
         "loadingHistory": "Historique de chargement...",
-        "conversationDescription": "Commencé le {date} - Langue: {language}",
         "loadingConversation": "Chargement de la conversation...",
         "chatStartedOn": "Le chat a commencé le {date}",
         "agentAModel": "Agent A Modèle",
@@ -355,18 +389,8 @@ const fr = {
         "model": "Modèle",
         "voice": "Voix"
     },
-    "common_verifyHere": "vérifier ici",
-    "page_AvailableImageModelsTitle": "Modèles d'images actuellement disponibles",
     "imageModel_Quality": "Qualité",
     "imageModel_Size": "Taille",
-    "imageModel_PriceUSD": "Prix (USD)",
-    "page_TooltipKnowledgeCutoff": "Les connaissances du modèle sont coupées à cette date.",
-    "modelCategory_MistralAIPremierModels": "Modèles Premier",
-    "modelCategory_MistralAIOpenModels": "Modèles ouverts",
-    "pricing": {
-        "perMillionTokens": "pour 1 million de jetons",
-        "tokens": "jetons",
-        "free": "Gratuit"
-    }
+    "imageModel_PriceUSD": "Prix (USD)"
 };
 export default fr;

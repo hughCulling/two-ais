@@ -71,6 +71,7 @@ const sl = {
         "mn": "mongolščina"
     },
     "settings": {
+        "loading": "Nalaganje nastavitev ...",
         "title": "Nastavitve",
         "sections": {
             "appearance": "Videz",
@@ -95,17 +96,17 @@ const sl = {
         },
         "apiKeys": {
             "title": "API Ključi",
-            "description": "Upravljajte svoje API ključi za različne AI ponudniki",
-            "saved": "Shranjeno",
-            "notSet": "Ni nastavljeno",
-            "setKey": "Nastavi ključ",
-            "updateKey": "Posodobi ključ",
-            "removeKey": "Odstrani ključ",
-            "getKeyInstructions": "Pridobite si API ključ",
-            "noNewKeys": "Nič novega API vnesene tipke za shranjevanje.",
-            "unexpectedResponse": "Prejel sem nepričakovan odgovor strežnika.",
+            "description": "Upravljajte svoje API ključi za različne AI storitve.",
+            "setKey": "Nastavitev",
+            "updateKey": "Posodobitev",
+            "saveUpdateKeys": "Shrani/posodobi ključe",
+            "saving": "Shranjevanje ...",
+            "noNewKeys": "Ni novih ključev za shranjevanje.",
+            "keyStoredSecurely": "Tvoj API Ključ bo varno shranjen in šifriran.",
+            "enteringNewKeyOverwrites": "Z vnosom novega ključa boste prepisali obstoječega.",
             "failedToSaveKey": "Shranjevanje ključa {serviceName} ni uspelo.",
-            "someKeysNotSaved": "Nekateri API Ključev ni bilo mogoče shraniti. Prosimo, preverite spodnje podrobnosti.",
+            "unexpectedResponse": "Nepričakovan odgovor strežnika.",
+            "someKeysNotSaved": "Nekaterih ključev ni bilo mogoče shraniti. Preverite zgornje napake.",
             "keyStatus": "ključno stanje ...",
             "apiKeySecurelySaved": "API Ključ varno shranjen",
             "confirmRemoveTitle": "Potrdi odstranitev",
@@ -114,16 +115,12 @@ const sl = {
             "successfullyRemovedKey": "Ključ {serviceName} je bil uspešno odstranjen.",
             "keyNotSet": "Status ključa: Ni nastavljeno",
             "keySet": "Stanje ključa: Nastavljeno",
-            "saveButton": "Shrani API Ključ(i)",
-            "enteringNewKeyOverwrites": "Z vnosom novega ključa boste prepisali shranjenega.",
-            "keyStoredSecurely": "Vaš ključ bo varno shranjen z uporabo Google Skrivni upravitelj.",
-            "saveUpdateKeys": "Shrani/posodobi ključe",
-            "saving": "Shranjevanje ..."
-        },
-        "loading": "Nalaganje nastavitev ..."
+            "saveButton": "Shrani API Ključ(i)"
+        }
     },
     "main": {
         "title": "AI Pogovor",
+        "aiConversation": "AI Pogovor",
         "setupForm": {
             "title": "Nastavite svoj pogovor",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const sl = {
                 "selectModel": "Izberite TTS model"
             },
             "startConversation": "Začni pogovor",
-            "conversationPrompt": "Začni pogovor."
+            "conversationPrompt": "Prosim, začnite pogovor."
         },
         "conversation": {
             "thinking": "razmišljanje ...",
@@ -153,8 +150,7 @@ const sl = {
             "perMillionTokens": "na milijon žetonov",
             "input": "Vnos",
             "output": "Izhod"
-        },
-        "aiConversation": "AI Pogovor"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const sl = {
             "signUpWithGoogle": "Prijavite se z Google",
             "hasAccount": "Že imate račun?",
             "signIn": "Prijava",
-            "emailLabel": "Email naslov",
+            "emailLabel": "E-poštni naslov",
             "confirmPasswordPlaceholder": "Potrdite geslo",
             "signingUp": "Prijava ..."
         },
@@ -185,7 +181,7 @@ const sl = {
             "invalidCredentials": "Neveljaven e-poštni naslov ali geslo",
             "userNotFound": "Uporabnika ni bilo mogoče najti",
             "weakPassword": "Geslo mora imeti vsaj 6 znakov",
-            "emailInUse": "Email že v uporabi",
+            "emailInUse": "E-pošta je že v uporabi",
             "generic": "Prišlo je do napake. Poskusite znova.",
             "initialization": "Napaka pri inicializaciji. Poskusite znova pozneje.",
             "invalidEmail": "Vnesite veljaven e-poštni naslov.",
@@ -229,12 +225,14 @@ const sl = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeli",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeli",
     "modelCategory_Claude4": "Claude 4 modeli",
-    "modelCategory_Claude3_7": "Claude 3.7 modeli",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modeli",
     "modelCategory_Claude3": "Claude 3 modeli",
-    "modelCategory_Grok4": "Grok 4 modeli",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modeli",
     "modelCategory_Grok3Mini": "Grok 3 Mini modeli",
+    "modelCategory_MistralAIPremierModels": "Premier modeli",
+    "modelCategory_MistralAIOpenModels": "Odprti model",
     "modelCategory_Llama4": "Llama 4 modeli",
     "modelCategory_Llama3_3": "Llama 3,3 modelov",
     "modelCategory_Llama3_2": "Llama 3.2 modelov",
@@ -246,22 +244,22 @@ const sl = {
     "modelCategory_Gemma2": "Gemma 2 modela",
     "modelCategory_Gemma": "Gemma modeli",
     "modelCategory_GoogleGemma": "Google Gemma Modeli",
-    "modelCategory_DeepSeekR1": "DeepSeek Modeli R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modeli V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Model V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modeli R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modeli",
     "modelCategory_MistralAIModels": "Mistral AI Modeli",
     "modelCategory_Qwen3": "Qwen3 modeli",
-    "modelCategory_QwQwQ": "Qwen Modeli QwQ",
+    "modelCategory_QwQwQ": "Qwen Model QwQ",
     "modelCategory_Qwen2_5": "Qwen2,5 modelov",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modeli vida",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modeli kodirnikov",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model vida",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model kodirnika",
     "modelCategory_Qwen2": "Qwen2 modela",
-    "modelCategory_Qwen2Vision": "Qwen2 modela vida",
+    "modelCategory_Qwen2Vision": "Qwen2. Model vida",
     "modelCategory_QwenModels": "Qwen Modeli",
     "modelCategory_OtherModels": "Drugi modeli",
     "page_ErrorLoadingUserData": "Nalaganje uporabniških podatkov ni uspelo: {errorMessage}. Poskusite osvežiti.",
-    "page_ErrorUserNotFound": "Uporabnika ni bilo mogoče najti. Prosimo, prijavite se znova.",
+    "page_ErrorUserNotFound": "Uporabnika ni mogoče najti. Prosimo, prijavite se znova.",
     "page_ErrorUserApiKeyConfig": "Uporabnik API Konfiguracije ključa ni bilo mogoče naložiti. Osvežite ali preverite nastavitve.",
     "page_ErrorStartingSessionAPI": "API Napaka: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "Napaka pri zagonu seje: {errorMessage}",
@@ -269,12 +267,13 @@ const sl = {
     "page_LoadingUserData": "Nalaganje uporabniških podatkov ...",
     "page_ErrorAlertTitle": "Napaka",
     "page_WelcomeTitle": "Dobrodošli v Two AIs",
-    "page_WelcomeSubtitle": "To spletno mesto vam omogoča poslušanje pogovorov med dvema Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "To spletno mesto vam omogoča poslušanje pogovorov med dvema Large Language Models (LLMs) in ustvarite slike za vsak obrat.",
     "page_ApiKeysRequiredTitle": "API Potrebni ključi",
     "page_ApiKeysRequiredDescription": "Za vodenje pogovorov boste morali navesti svoje API ključi za AI modeli, ki jih želite uporabiti (npr. OpenAI, Google, Anthropic) po prijavi. Podrobna navodila za vsakega ponudnika najdete v nastavitvah / API Stran s ključi po prijavi.",
     "page_SignInPrompt": "Če želite začeti svojo sejo, se lahko prijavite ali ustvarite račun s pomočjo povezave v glavi.",
     "page_VideoTitle": "Two AIs Predstavitev pogovora",
     "page_AvailableLLMsTitle": "Trenutno na voljo LLMs",
+    "page_TooltipKnowledgeCutoff": "Znanje modela je na ta datum prekinjeno.",
     "page_TooltipGoogleThinkingBudget": "To Google Model uporablja »razmišljalni proračun«. Izhod »razmišljanja« se zaračuna, vendar ni viden v klepetu.",
     "page_TooltipAnthropicExtendedThinking": "To Anthropic Model uporablja »razširjeno razmišljanje«. Izhod »razmišljanja« se zaračuna, vendar ni viden v klepetu.",
     "page_TooltipXaiThinking": "To xAI Model uporablja »razmišljanje«. Ta izhod se zaračuna, vendar ni viden v klepetu.",
@@ -282,18 +281,53 @@ const sl = {
     "page_TooltipDeepSeekReasoning": "To DeepSeek Model uporablja »sklepanje/razmišljanje«. Izhod se zaračuna, vendar ni viden v klepetu.",
     "page_TooltipGenericReasoning": "Ta model uporablja žetone sklepanja, ki niso vidni v klepetu, vendar se zaračunavajo kot izhodni žetoni.",
     "page_TooltipRequiresVerification": "Zahteva preverjanje OpenAI organizacija. Preverite lahko tukaj.",
-    "page_TooltipSupportsLanguage": "Podpira {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Ta model morda ne podpira v celoti jezika {languageName} za pogovor.",
+    "page_TooltipSupportsLanguage": "Podpora {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ta model morda ne podpira v celoti {languageName} za pogovor.",
     "page_BadgePreview": "Predogled",
     "page_BadgeExperimental": "Eksperimentalno",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Trenutno na voljo Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Trenutno razpoložljivi modeli slik",
     "page_NoTTSOptions": "Ne TTS možnosti, ki so trenutno na voljo.",
     "page_TruncatableNoteFormat": "({noteText})",
-    "page_PricesLastVerifiedOn": "Cene so bile nazadnje potrjene {date}",
-    "page_PricingPerTokens": "na {amount} Žetoni",
+    "page_PricesLastVerifiedOn": "Cene so bile nazadnje potrjene dne {date}",
+    "page_PricingPerTokens": "na 1 milijon žetonov",
     "page_ModelCategoryModels": "{model} modeli",
+    "common_verifyHere": "preveri tukaj",
     "ttsVoice_Ugne": "V ognju",
+    "pricing": {
+        "perMillionTokens": "na 1 milijon žetonov",
+        "tokens": "žetoni",
+        "free": "Brezplačno",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} na 1 milijon besedilnih žetonov",
+                "audioTokens": "{price} na 1 milijon zvočnih žetonov"
+            },
+            "geminiPro": {
+                "textTokens": "{price} na 1 milijon besedilnih žetonov",
+                "audioTokens": "{price} na 1 milijon zvočnih žetonov"
+            },
+            "openAIMini": {
+                "textTokens": "{price} na 1 milijon besedilnih žetonov",
+                "audioTokens": "{price} na 1 milijon zvočnih žetonov"
+            },
+            "openAITTS1": {
+                "standard": "{price} na 1 milijon žetonov"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} na 1 milijon žetonov"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} na 1 milijon znakov",
+                "neural": "{price} na 1 milijon znakov",
+                "studio": "{price} na 1 milijon znakov",
+                "chirpHD": "Ni bilo mogoče preveriti",
+                "chirp3HD": "{price} na 1 milijon znakov"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Obrazec za nastavitev seje",
         "description": "Tukaj lahko izberete LLM in neobvezno TTS nastavitve za vsakega agenta.",
@@ -309,7 +343,7 @@ const sl = {
         "initialPromptDescription": "Ta poziv bo poslan kot prvo sporočilo za začetek pogovora. Če polje pustite prazno, poziva ne bo.",
         "startConversation": "Začni pogovor",
         "starting": "Začetek ...",
-        "startTheConversation": "Začni pogovor.",
+        "startTheConversation": "Prosim, začnite pogovor.",
         "languageSupportNote": "Kazalniki jezikovne podpore prikazujejo združljivost modela z {languageName}Modeli brez podpore so onemogočeni.",
         "reasoningNote": "Označuje, da model uporablja žetone za »razmišljanje« ali »sklepanje«. Ta izhod se zaračuna, vendar ni viden v klepetu.",
         "openaiOrgVerificationNote": "Označuje OpenAI Model zahteva preverjeno organizacijo. Lahko",
@@ -327,7 +361,7 @@ const sl = {
         "promptLLM": "Prompt LLM",
         "imagePromptSystemMessage": "Sistemsko sporočilo s slikovnim pozivom",
         "defaultImagePromptSystemMessage": "Na podlagi tega obrata ustvarite poziv, ki ga boste dali modelu za generiranje slik: {turn}",
-        "imagePromptSystemMessageHelp": "To sporočilo bo poslano kot sistemski poziv LLM-ju, ki ustvari poziv za sliko. Uporabite <code>{'{turn}'}</code> kot nadomestno besedilo za sporočilo agenta.",
+        "imagePromptSystemMessageHelp": "To sporočilo bo poslano kot sistemski poziv LLM-ju, ki ustvari slikovni poziv. Uporabite <code>{'{turn}'}</code> kot nadomestno besedilo za sporočilo agenta.",
         "selectImageModel": "Izberite model slike",
         "selectPromptLLM": "Izberite LLM za slikovni poziv"
     },
@@ -335,15 +369,15 @@ const sl = {
         "backToMain": "Nazaj na glavno stran",
         "conversationHistory": "Zgodovina pogovorov",
         "chatWith": "Klepetajte z {agentA} & {agentB}",
+        "conversationDescription": "Začelo se je {date} - Jezik: {language}",
         "viewConversation": "Ogled pogovora",
         "backToPreviousChats": "Nazaj na prejšnje klepete",
         "resumeConversation": "Nadaljuj pogovor",
         "resuming": "Nadaljevanje ...",
         "sessionDetails": "Podrobnosti seje",
-        "language": "Jezik:",
+        "language": "Jezik",
         "transcript": "Prepis",
         "loadingHistory": "Nalaganje zgodovine ...",
-        "conversationDescription": "Začelo se je {date} - Jezik: {language}",
         "loadingConversation": "Nalaganje pogovora ...",
         "chatStartedOn": "Klepet se je začel {date}",
         "agentAModel": "Model agenta A",
@@ -355,18 +389,8 @@ const sl = {
         "model": "Model",
         "voice": "Glas"
     },
-    "common_verifyHere": "preveri tukaj",
-    "page_AvailableImageModelsTitle": "Trenutno razpoložljivi modeli slik",
     "imageModel_Quality": "Kakovost",
     "imageModel_Size": "Velikost",
-    "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "Znanje modela je na ta datum prekinjeno.",
-    "modelCategory_MistralAIPremierModels": "Premier modeli",
-    "modelCategory_MistralAIOpenModels": "Odprti modeli",
-    "pricing": {
-        "perMillionTokens": "na 1 milijon žetonov",
-        "tokens": "žetoni",
-        "free": "Brezplačno"
-    }
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default sl;

@@ -46,7 +46,7 @@ const pl = {
         "tr": "turecki",
         "uk": "ukraiński",
         "vi": "wietnamski",
-        "mt": "maltański",
+        "mt": "Maltański",
         "bs": "bośniacki",
         "ca": "kataloński",
         "gu": "Gudżarati",
@@ -71,6 +71,7 @@ const pl = {
         "mn": "mongolski"
     },
     "settings": {
+        "loading": "Ładowanie ustawień...",
         "title": "Ustawienia",
         "sections": {
             "appearance": "Wygląd",
@@ -95,17 +96,17 @@ const pl = {
         },
         "apiKeys": {
             "title": "API Klawiatura",
-            "description": "Zarządzaj swoim API klucze do różnych AI dostawcy",
-            "saved": "Zapisano",
-            "notSet": "Nie ustawiono",
-            "setKey": "Ustaw klucz",
-            "updateKey": "Aktualizuj klucz",
-            "removeKey": "Wyjmij klucz",
-            "getKeyInstructions": "Zdobądź swoje API klawisz",
-            "noNewKeys": "Brak nowych API klawisze wciśnięte w celu zapisania.",
-            "unexpectedResponse": "Otrzymano nieoczekiwaną odpowiedź z serwera.",
+            "description": "Zarządzaj swoim API klucze do różnych AI usługi.",
+            "setKey": "Ustawić",
+            "updateKey": "Aktualizacja",
+            "saveUpdateKeys": "Zapisz/Aktualizuj klucze",
+            "saving": "Oszczędność...",
+            "noNewKeys": "Brak nowych kluczy do zapisania.",
+            "keyStoredSecurely": "Twój API Klucz będzie przechowywany bezpiecznie i zaszyfrowany.",
+            "enteringNewKeyOverwrites": "Wprowadzenie nowego klucza spowoduje nadpisanie istniejącego.",
             "failedToSaveKey": "Nie udało się zapisać klucza {serviceName}.",
-            "someKeysNotSaved": "Niektóre API Nie udało się zapisać kluczy. Sprawdź szczegóły poniżej.",
+            "unexpectedResponse": "Nieoczekiwana odpowiedź serwera.",
+            "someKeysNotSaved": "Niektórych kluczy nie udało się zapisać. Sprawdź powyższe błędy.",
             "keyStatus": "status klucza...",
             "apiKeySecurelySaved": "API Klucz bezpiecznie zapisany",
             "confirmRemoveTitle": "Potwierdź usunięcie",
@@ -114,16 +115,12 @@ const pl = {
             "successfullyRemovedKey": "Pomyślnie usunięto klucz {serviceName}.",
             "keyNotSet": "Status klucza: Nie ustawiono",
             "keySet": "Status klucza: Ustaw",
-            "saveButton": "Ratować API Klawiatura)",
-            "enteringNewKeyOverwrites": "Wprowadzenie nowego klucza spowoduje nadpisanie zapisanego klucza.",
-            "keyStoredSecurely": "Twój klucz będzie bezpiecznie przechowywany za pomocą Google Tajny menadżer.",
-            "saveUpdateKeys": "Zapisz/Aktualizuj klucze",
-            "saving": "Oszczędność..."
-        },
-        "loading": "Ładowanie ustawień..."
+            "saveButton": "Ratować API Klawiatura)"
+        }
     },
     "main": {
         "title": "AI Rozmowa",
+        "aiConversation": "AI Rozmowa",
         "setupForm": {
             "title": "Skonfiguruj swoją rozmowę",
             "agentA": "Agent A",
@@ -141,7 +138,7 @@ const pl = {
                 "selectModel": "Wybierać TTS model"
             },
             "startConversation": "Rozpocznij rozmowę",
-            "conversationPrompt": "Rozpocznij rozmowę."
+            "conversationPrompt": "Proszę rozpocząć rozmowę."
         },
         "conversation": {
             "thinking": "myślący...",
@@ -153,8 +150,7 @@ const pl = {
             "perMillionTokens": "na milion tokenów",
             "input": "Wejście",
             "output": "Wyjście"
-        },
-        "aiConversation": "AI Rozmowa"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const pl = {
             "signUpWithGoogle": "Zarejestruj się za pomocą Google",
             "hasAccount": "Masz już konto?",
             "signIn": "Zalogować się",
-            "emailLabel": "Email adres",
+            "emailLabel": "Adres e-mail",
             "confirmPasswordPlaceholder": "Potwierdź hasło",
             "signingUp": "Rejestracja..."
         },
@@ -185,7 +181,7 @@ const pl = {
             "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło",
             "userNotFound": "Użytkownik nie został znaleziony",
             "weakPassword": "Hasło powinno mieć co najmniej 6 znaków",
-            "emailInUse": "Email już w użyciu",
+            "emailInUse": "E-mail jest już używany",
             "generic": "Wystąpił błąd. Spróbuj ponownie.",
             "initialization": "Błąd inicjalizacji. Spróbuj ponownie później.",
             "invalidEmail": "Proszę podać prawidłowy adres e-mail.",
@@ -229,12 +225,14 @@ const pl = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modele",
     "modelCategory_Gemini1_5": "Gemini 1.5 modele",
     "modelCategory_Claude4": "Claude 4 modele",
-    "modelCategory_Claude3_7": "Claude 3.7 modele",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modele",
     "modelCategory_Claude3": "Claude 3 modele",
-    "modelCategory_Grok4": "Grok 4 modele",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modele",
     "modelCategory_Grok3Mini": "Grok 3 Mini modele",
+    "modelCategory_MistralAIPremierModels": "Modele Premier",
+    "modelCategory_MistralAIOpenModels": "Otwarty model",
     "modelCategory_Llama4": "Llama 4 modele",
     "modelCategory_Llama3_3": "Llama 3.3 modele",
     "modelCategory_Llama3_2": "Llama 3.2 modele",
@@ -246,18 +244,18 @@ const pl = {
     "modelCategory_Gemma2": "Gemma 2 modele",
     "modelCategory_Gemma": "Gemma modele",
     "modelCategory_GoogleGemma": "Google Gemma Modele",
-    "modelCategory_DeepSeekR1": "DeepSeek Modele R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modele V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Model V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modele R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modele",
     "modelCategory_MistralAIModels": "Mistral AI Modele",
     "modelCategory_Qwen3": "Qwen3 modele",
-    "modelCategory_QwQwQ": "Qwen Modele QwQ",
+    "modelCategory_QwQwQ": "Qwen Model QwQ",
     "modelCategory_Qwen2_5": "Qwen2,5 modelu",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modele wizji",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modele koderów",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model wizji",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model kodera",
     "modelCategory_Qwen2": "Qwen2 modele",
-    "modelCategory_Qwen2Vision": "Qwen2 modele Vision",
+    "modelCategory_Qwen2Vision": "QwenModel 2 Vision",
     "modelCategory_QwenModels": "Qwen Modele",
     "modelCategory_OtherModels": "Inne modele",
     "page_ErrorLoadingUserData": "Nie udało się załadować danych użytkownika: {errorMessage}. Spróbuj odświeżyć.",
@@ -269,12 +267,13 @@ const pl = {
     "page_LoadingUserData": "Ładowanie danych użytkownika...",
     "page_ErrorAlertTitle": "Błąd",
     "page_WelcomeTitle": "Witamy w Two AIs",
-    "page_WelcomeSubtitle": "Ta strona internetowa umożliwia słuchanie rozmów między dwoma osobami Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Ta strona internetowa umożliwia słuchanie rozmów między dwoma osobami Large Language Models (LLMs) i generować obrazy dla każdego zakrętu.",
     "page_ApiKeysRequiredTitle": "API Wymagane klucze",
     "page_ApiKeysRequiredDescription": "Aby prowadzić rozmowy, musisz podać własne API klucze do AI modele, których chcesz użyć (np. OpenAI, Google, Anthropic) po zalogowaniu. Szczegółowe instrukcje dla każdego dostawcy można znaleźć w Ustawieniach / API Strona kluczy po zalogowaniu.",
     "page_SignInPrompt": "Aby rozpocząć własną sesję, możesz się zalogować lub utworzyć konto, korzystając z łącza w nagłówku.",
     "page_VideoTitle": "Two AIs Demo rozmowy",
     "page_AvailableLLMsTitle": "Aktualnie dostępne LLMs",
+    "page_TooltipKnowledgeCutoff": "Wiedza modelu jest w tym momencie zablokowana.",
     "page_TooltipGoogleThinkingBudget": "Ten Google Model wykorzystuje „budżet myślowy”. Wynik „myślenia” jest rozliczany, ale nie jest widoczny na czacie.",
     "page_TooltipAnthropicExtendedThinking": "Ten Anthropic Model wykorzystuje „rozszerzone myślenie”. Wynik „myślenia” jest rozliczany, ale nie jest widoczny na czacie.",
     "page_TooltipXaiThinking": "Ten xAI Model wykorzystuje „myślenie”. Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
@@ -282,18 +281,53 @@ const pl = {
     "page_TooltipDeepSeekReasoning": "Ten DeepSeek Model wykorzystuje „rozumowanie/myślenie”. Wynik jest rozliczany, ale nie jest widoczny na czacie.",
     "page_TooltipGenericReasoning": "Model ten wykorzystuje tokeny rozumowania, które nie są widoczne na czacie, ale są rozliczane jako tokeny wyjściowe.",
     "page_TooltipRequiresVerification": "Wymaga weryfikacji OpenAI Organizacja. Możesz to sprawdzić tutaj.",
-    "page_TooltipSupportsLanguage": "Obsługuje {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Ten model może nie obsługiwać w pełni języka {languageName} podczas konwersacji.",
+    "page_TooltipSupportsLanguage": "Wspiera {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ten model może nie obsługiwać w pełni {languageName} do rozmowy.",
     "page_BadgePreview": "Zapowiedź",
     "page_BadgeExperimental": "Eksperymentalny",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Aktualnie dostępne Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Aktualnie dostępne modele obrazów",
     "page_NoTTSOptions": "NIE TTS opcje aktualnie dostępne.",
     "page_TruncatableNoteFormat": "({tekst notatki})",
     "page_PricesLastVerifiedOn": "Ceny ostatnio zweryfikowane w dniu {date}",
-    "page_PricingPerTokens": "za {amount} Tokeny",
+    "page_PricingPerTokens": "na 1 milion tokenów",
     "page_ModelCategoryModels": "{model} modele",
+    "common_verifyHere": "zweryfikuj tutaj",
     "ttsVoice_Ugne": "W ogniu",
+    "pricing": {
+        "perMillionTokens": "na 1 milion tokenów",
+        "tokens": "żetony",
+        "free": "Bezpłatny",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} za 1 milion tokenów tekstowych",
+                "audioTokens": "{price} za 1 milion tokenów audio"
+            },
+            "geminiPro": {
+                "textTokens": "{price} za 1 milion tokenów tekstowych",
+                "audioTokens": "{price} za 1 milion tokenów audio"
+            },
+            "openAIMini": {
+                "textTokens": "{price} za 1 milion tokenów tekstowych",
+                "audioTokens": "{price} za 1 milion tokenów audio"
+            },
+            "openAITTS1": {
+                "standard": "{price} na 1 milion tokenów"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} na 1 milion tokenów"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} na 1 milion znaków",
+                "neural": "{price} na 1 milion znaków",
+                "studio": "{price} na 1 milion znaków",
+                "chirpHD": "Nie udało się zweryfikować",
+                "chirp3HD": "{price} na 1 milion znaków"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formularz konfiguracji sesji",
         "description": "Tutaj możesz wybrać LLM i opcjonalne TTS ustawienia dla każdego agenta.",
@@ -309,7 +343,7 @@ const pl = {
         "initialPromptDescription": "Ten monit zostanie wysłany jako pierwsza wiadomość rozpoczynająca konwersację. Jeśli pozostawisz go pustym, monit nie zostanie wysłany.",
         "startConversation": "Rozpocznij rozmowę",
         "starting": "Startowy...",
-        "startTheConversation": "Rozpocznij rozmowę.",
+        "startTheConversation": "Proszę rozpocząć rozmowę.",
         "languageSupportNote": "Wskaźniki wsparcia językowego pokazują zgodność modelu z {languageName}Modele bez wsparcia są wyłączone.",
         "reasoningNote": "Oznacza, że model używa tokenów „myślenia” lub „rozumowania”. Ten wynik jest rozliczany, ale nie jest widoczny na czacie.",
         "openaiOrgVerificationNote": "Oznacza OpenAI Model wymaga zweryfikowanej organizacji. Możesz",
@@ -335,15 +369,15 @@ const pl = {
         "backToMain": "Powrót do strony głównej",
         "conversationHistory": "Historia konwersacji",
         "chatWith": "Porozmawiaj z {agentA} & {agentB}",
+        "conversationDescription": "Rozpoczęto dnia {date} - Język: {language}",
         "viewConversation": "Wyświetl konwersację",
         "backToPreviousChats": "Powrót do poprzednich czatów",
         "resumeConversation": "Wznów rozmowę",
         "resuming": "Wznawianie...",
         "sessionDetails": "Szczegóły sesji",
-        "language": "Język:",
+        "language": "Język",
         "transcript": "Transkrypcja",
         "loadingHistory": "Ładowanie historii...",
-        "conversationDescription": "Rozpoczęto dnia {date} - Język: {language}",
         "loadingConversation": "Ładowanie konwersacji...",
         "chatStartedOn": "Czat rozpoczął się {date}",
         "agentAModel": "Model Agenta A",
@@ -355,18 +389,8 @@ const pl = {
         "model": "Model",
         "voice": "Głos"
     },
-    "common_verifyHere": "zweryfikuj tutaj",
-    "page_AvailableImageModelsTitle": "Aktualnie dostępne modele obrazów",
     "imageModel_Quality": "Jakość",
     "imageModel_Size": "Rozmiar",
-    "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "Wiedza modelu jest w tym momencie zablokowana.",
-    "modelCategory_MistralAIPremierModels": "Modele Premier",
-    "modelCategory_MistralAIOpenModels": "Otwarte modele",
-    "pricing": {
-        "perMillionTokens": "na 1 milion tokenów",
-        "tokens": "żetony",
-        "free": "Bezpłatny"
-    }
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default pl;

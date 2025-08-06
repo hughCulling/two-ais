@@ -71,6 +71,7 @@ const tl = {
         "mn": "Mongolian"
     },
     "settings": {
+        "loading": "Nilo-load ang mga setting...",
         "title": "Mga setting",
         "sections": {
             "appearance": "Hitsura",
@@ -88,24 +89,24 @@ const tl = {
             "title": "Wika",
             "description": "Piliin ang iyong gustong wika para sa interface",
             "conversationLanguage": "Wika ng Pag-uusap",
-            "conversationLanguageDescription": "Ang wikang ginamit para sa AI ang mga pag-uusap ay tutugma sa iyong wika sa interface",
+            "conversationLanguageDescription": "Ang wikang ginagamit para sa AI ang mga pag-uusap ay tutugma sa iyong wika sa interface",
             "supportedLanguages": "Mga Sinusuportahang Wika",
             "languageSupportInformation": "Impormasyon sa Suporta sa Wika",
             "aiAgentsLanguageDescription": "Ang pag-uusap sa pagitan AI ang mga ahente ay isasagawa sa iyong napiling wika."
         },
         "apiKeys": {
             "title": "API Mga susi",
-            "description": "Pamahalaan ang iyong API mga susi para sa iba't ibang AI provider",
-            "saved": "Nai-save",
-            "notSet": "Hindi nakatakda",
-            "setKey": "Itakda ang susi",
-            "updateKey": "I-update ang key",
-            "removeKey": "Alisin ang susi",
-            "getKeyInstructions": "Kunin ang iyong API susi",
-            "noNewKeys": "Walang bago API mga key na ipinasok para i-save.",
-            "unexpectedResponse": "Nakatanggap ng hindi inaasahang tugon mula sa server.",
+            "description": "Pamahalaan ang iyong API mga susi para sa iba't ibang AI mga serbisyo.",
+            "setKey": "Itakda",
+            "updateKey": "Update",
+            "saveUpdateKeys": "I-save / I-update ang Mga Susi",
+            "saving": "Nagse-save...",
+            "noNewKeys": "Walang bagong key na ise-save.",
+            "keyStoredSecurely": "Iyong API Ang key ay maiimbak nang ligtas at naka-encrypt.",
+            "enteringNewKeyOverwrites": "Ang pagpasok ng bagong key ay o-overwrite ang dati nang key.",
             "failedToSaveKey": "Nabigong i-save ang {serviceName} key.",
-            "someKeysNotSaved": "Ang ilan API hindi ma-save ang mga susi. Pakisuri ang mga detalye sa ibaba.",
+            "unexpectedResponse": "Hindi inaasahang tugon mula sa server.",
+            "someKeysNotSaved": "Hindi ma-save ang ilang susi. Pakisuri ang mga error sa itaas.",
             "keyStatus": "pangunahing katayuan...",
             "apiKeySecurelySaved": "API Ligtas na Na-save ang Susi",
             "confirmRemoveTitle": "Kumpirmahin ang Pag-alis",
@@ -114,16 +115,12 @@ const tl = {
             "successfullyRemovedKey": "Matagumpay na naalis ang {serviceName} key.",
             "keyNotSet": "Key Status: Hindi Nakatakda",
             "keySet": "Key Status: Itakda",
-            "saveButton": "I-save API (mga) susi",
-            "enteringNewKeyOverwrites": "Ang pagpasok ng bagong key ay o-overwrite ang na-save.",
-            "keyStoredSecurely": "Ang iyong susi ay ligtas na maiimbak gamit Google Secret Manager.",
-            "saveUpdateKeys": "I-save / I-update ang Mga Susi",
-            "saving": "Nagse-save..."
-        },
-        "loading": "Nilo-load ang mga setting..."
+            "saveButton": "I-save API (mga) susi"
+        }
     },
     "main": {
         "title": "AI Pag-uusap",
+        "aiConversation": "AI Pag-uusap",
         "setupForm": {
             "title": "I-set up ang iyong pag-uusap",
             "agentA": "Ahente A",
@@ -141,7 +138,7 @@ const tl = {
                 "selectModel": "Pumili TTS modelo"
             },
             "startConversation": "Simulan ang Pag-uusap",
-            "conversationPrompt": "Simulan ang usapan."
+            "conversationPrompt": "Mangyaring simulan ang pag-uusap."
         },
         "conversation": {
             "thinking": "iniisip...",
@@ -153,8 +150,7 @@ const tl = {
             "perMillionTokens": "bawat milyong token",
             "input": "Input",
             "output": "Output"
-        },
-        "aiConversation": "AI Pag-uusap"
+        }
     },
     "auth": {
         "login": {
@@ -185,7 +181,7 @@ const tl = {
             "invalidCredentials": "Di-wastong email o password",
             "userNotFound": "Hindi nahanap ang user",
             "weakPassword": "Dapat na hindi bababa sa 6 na character ang password",
-            "emailInUse": "Email ginagamit na",
+            "emailInUse": "Ginagamit na ang email",
             "generic": "May naganap na error. Pakisubukang muli.",
             "initialization": "Error sa pagsisimula. Pakisubukang muli mamaya.",
             "invalidEmail": "Mangyaring magpasok ng wastong email address.",
@@ -229,12 +225,14 @@ const tl = {
     "modelCategory_Gemini2_0": "Gemini 2.0 mga modelo",
     "modelCategory_Gemini1_5": "Gemini 1.5 mga modelo",
     "modelCategory_Claude4": "Claude 4 mga modelo",
-    "modelCategory_Claude3_7": "Claude 3.7 mga modelo",
+    "modelCategory_Claude3_7": "Claude 3.7 modelo",
     "modelCategory_Claude3_5": "Claude 3.5 mga modelo",
     "modelCategory_Claude3": "Claude 3 mga modelo",
-    "modelCategory_Grok4": "Grok 4 mga modelo",
+    "modelCategory_Grok4": "Grok 4 modelo",
     "modelCategory_Grok3": "Grok 3 mga modelo",
     "modelCategory_Grok3Mini": "Grok 3 Mga mini model",
+    "modelCategory_MistralAIPremierModels": "Mga pangunahing modelo",
+    "modelCategory_MistralAIOpenModels": "Buksan ang modelo",
     "modelCategory_Llama4": "Llama 4 na modelo",
     "modelCategory_Llama3_3": "Llama 3.3 mga modelo",
     "modelCategory_Llama3_2": "Llama 3.2 mga modelo",
@@ -246,18 +244,18 @@ const tl = {
     "modelCategory_Gemma2": "Gemma 2 modelo",
     "modelCategory_Gemma": "Gemma mga modelo",
     "modelCategory_GoogleGemma": "Google Gemma Mga modelo",
-    "modelCategory_DeepSeekR1": "DeepSeek Mga modelo ng R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Mga modelo ng V3",
+    "modelCategory_DeepSeekR1": "DeepSeek modelo ng R1",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modelo",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill na mga modelo",
     "modelCategory_DeepSeekModels": "DeepSeek Mga modelo",
     "modelCategory_MistralAIModels": "Mistral AI Mga modelo",
     "modelCategory_Qwen3": "Qwen3 modelo",
-    "modelCategory_QwQwQ": "Qwen Mga modelo ng QwQ",
+    "modelCategory_QwQwQ": "Qwen modelo ng QwQ",
     "modelCategory_Qwen2_5": "Qwen2.5 na mga modelo",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Mga modelo ng pananaw",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Mga modelo ng coder",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modelo ng pananaw",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modelo ng Coder",
     "modelCategory_Qwen2": "Qwen2 modelo",
-    "modelCategory_Qwen2Vision": "Qwen2 Mga modelo ng pangitain",
+    "modelCategory_Qwen2Vision": "Qwen2 Modelo ng pangitain",
     "modelCategory_QwenModels": "Qwen Mga modelo",
     "modelCategory_OtherModels": "Iba pang mga Modelo",
     "page_ErrorLoadingUserData": "Nabigong i-load ang data ng user: {errorMessage}. Pakisubukang i-refresh.",
@@ -269,12 +267,13 @@ const tl = {
     "page_LoadingUserData": "Nilo-load ang data ng user...",
     "page_ErrorAlertTitle": "Error",
     "page_WelcomeTitle": "Maligayang pagdating sa Two AIs",
-    "page_WelcomeSubtitle": "Hinahayaan ka ng website na ito na makinig sa mga pag-uusap ng dalawa Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Hinahayaan ka ng website na ito na makinig sa mga pag-uusap ng dalawa Large Language Models (LLMs) at bumuo ng mga larawan para sa bawat pagliko.",
     "page_ApiKeysRequiredTitle": "API Kinakailangan ang mga Susi",
     "page_ApiKeysRequiredDescription": "Upang magpatakbo ng mga pag-uusap, kakailanganin mong ibigay ang iyong sarili API mga susi para sa AI mga modelong gusto mong gamitin (hal., OpenAI, Google, Anthropic) pagkatapos mag-sign in. Ang mga detalyadong tagubilin para sa bawat provider ay makikita sa Mga Setting / API Page ng mga key pagkatapos mag-sign in.",
     "page_SignInPrompt": "Upang simulan ang iyong sariling session, maaari kang mag-sign in o lumikha ng isang account gamit ang link sa header.",
     "page_VideoTitle": "Two AIs Demo ng Pag-uusap",
     "page_AvailableLLMsTitle": "Kasalukuyang Magagamit LLMs",
+    "page_TooltipKnowledgeCutoff": "Ang kaalaman ng modelo ay pinutol sa petsang ito.",
     "page_TooltipGoogleThinkingBudget": "Ito Google modelo ay gumagamit ng isang 'pag-iisip na badyet'. Ang output na 'nag-iisip' ay sinisingil ngunit hindi nakikita sa chat.",
     "page_TooltipAnthropicExtendedThinking": "Ito Anthropic modelo ay gumagamit ng 'pinalawig na pag-iisip'. Ang output na 'nag-iisip' ay sinisingil ngunit hindi nakikita sa chat.",
     "page_TooltipXaiThinking": "Ito xAI modelo ay gumagamit ng 'pag-iisip'. Ang output na ito ay sinisingil ngunit hindi nakikita sa chat.",
@@ -282,18 +281,53 @@ const tl = {
     "page_TooltipDeepSeekReasoning": "Ito DeepSeek modelo ay gumagamit ng 'pangangatwiran/pag-iisip'. Sinisingil ang output ngunit hindi nakikita sa chat.",
     "page_TooltipGenericReasoning": "Gumagamit ang modelong ito ng mga token ng pangangatwiran na hindi nakikita sa chat ngunit sinisingil bilang mga token ng output.",
     "page_TooltipRequiresVerification": "Nangangailangan ng na-verify OpenAI organisasyon. Maaari mong i-verify dito.",
-    "page_TooltipSupportsLanguage": "Sinusuportahan ang {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Maaaring hindi ganap na sinusuportahan ng modelong ito ang {languageName} para sa pag-uusap.",
+    "page_TooltipSupportsLanguage": "Mga sumusuporta {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Maaaring hindi ganap na sinusuportahan ng modelong ito {languageName} para sa pag-uusap.",
     "page_BadgePreview": "Silipin",
     "page_BadgeExperimental": "Pang-eksperimento",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Kasalukuyang Magagamit Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Kasalukuyang Magagamit na Mga Modelo ng Larawan",
     "page_NoTTSOptions": "Hindi TTS mga opsyon na kasalukuyang magagamit.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Huling na-verify ang mga presyo noong {date}",
-    "page_PricingPerTokens": "bawat {amount} Mga token",
+    "page_PricingPerTokens": "bawat 1 Milyong Token",
     "page_ModelCategoryModels": "{model} mga modelo",
+    "common_verifyHere": "verify dito",
     "ttsVoice_Ugne": "Sa apoy",
+    "pricing": {
+        "perMillionTokens": "bawat 1 Milyong token",
+        "tokens": "mga token",
+        "free": "Libre",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} bawat 1 Milyong text token",
+                "audioTokens": "{price} bawat 1 Milyong audio token"
+            },
+            "geminiPro": {
+                "textTokens": "{price} bawat 1 Milyong text token",
+                "audioTokens": "{price} bawat 1 Milyong audio token"
+            },
+            "openAIMini": {
+                "textTokens": "{price} bawat 1 Milyong text token",
+                "audioTokens": "{price} bawat 1 Milyong audio token"
+            },
+            "openAITTS1": {
+                "standard": "{price} bawat 1 Milyong token"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} bawat 1 Milyong token"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} bawat 1 Milyong character",
+                "neural": "{price} bawat 1 Milyong character",
+                "studio": "{price} bawat 1 Milyong character",
+                "chirpHD": "Hindi ma-verify",
+                "chirp3HD": "{price} bawat 1 Milyong character"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Form ng Pag-setup ng Session",
         "description": "Dito maaari mong piliin ang LLM at opsyonal TTS mga setting para sa bawat ahente.",
@@ -309,7 +343,7 @@ const tl = {
         "initialPromptDescription": "Ang prompt na ito ay ipapadala bilang ang unang mensahe upang simulan ang pag-uusap. Kung iiwan mo itong blangko, walang prompt.",
         "startConversation": "Simulan ang Pag-uusap",
         "starting": "Nagsisimula...",
-        "startTheConversation": "Simulan ang usapan.",
+        "startTheConversation": "Mangyaring simulan ang pag-uusap.",
         "languageSupportNote": "Ang mga tagapagpahiwatig ng suporta sa wika ay nagpapakita ng pagiging tugma ng modelo sa {languageName}. Ang mga modelong walang suporta ay hindi pinagana.",
         "reasoningNote": "Nagsasaad na ang isang modelo ay gumagamit ng mga token ng 'pag-iisip' o 'pangangatwiran'. Ang output na ito ay sinisingil ngunit hindi nakikita sa chat.",
         "openaiOrgVerificationNote": "Nagsasaad ng isang OpenAI modelo ay nangangailangan ng isang na-verify na organisasyon. kaya mo",
@@ -335,15 +369,15 @@ const tl = {
         "backToMain": "Bumalik sa Main",
         "conversationHistory": "Kasaysayan ng Pag-uusap",
         "chatWith": "Makipag-chat kay {agentA} at {agentB}",
+        "conversationDescription": "Nagsimula sa {date} - Wika: {language}",
         "viewConversation": "Tingnan ang Pag-uusap",
         "backToPreviousChats": "Bumalik sa Nakaraang Mga Chat",
         "resumeConversation": "Ipagpatuloy ang Pag-uusap",
         "resuming": "Ipinagpapatuloy...",
         "sessionDetails": "Mga Detalye ng Sesyon",
-        "language": "Wika:",
+        "language": "Wika",
         "transcript": "Transcript",
         "loadingHistory": "Nilo-load ang history...",
-        "conversationDescription": "Nagsimula sa {date} - Wika: {language}",
         "loadingConversation": "Nilo-load ang pag-uusap...",
         "chatStartedOn": "Nagsimula ang chat {date}",
         "agentAModel": "Ahente Isang Modelo",
@@ -355,18 +389,8 @@ const tl = {
         "model": "Modelo",
         "voice": "Boses"
     },
-    "common_verifyHere": "verify dito",
-    "page_AvailableImageModelsTitle": "Kasalukuyang Magagamit na Mga Modelo ng Larawan",
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",
-    "imageModel_PriceUSD": "Presyo (USD)",
-    "page_TooltipKnowledgeCutoff": "Ang kaalaman ng modelo ay pinutol sa petsang ito.",
-    "modelCategory_MistralAIPremierModels": "Mga pangunahing modelo",
-    "modelCategory_MistralAIOpenModels": "Buksan ang mga modelo",
-    "pricing": {
-        "perMillionTokens": "bawat 1 Milyong token",
-        "tokens": "mga token",
-        "free": "Libre"
-    }
+    "imageModel_PriceUSD": "Presyo (USD)"
 };
 export default tl;

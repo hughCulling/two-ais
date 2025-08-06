@@ -59,7 +59,7 @@ const iw = {
         "ml": "מלאיאלאם",
         "mr": "מרטהי",
         "ms": "מלאית",
-        "my": "בורמזי",
+        "my": "בורמזית",
         "pa": "פנג'אבי",
         "so": "סומלי",
         "sq": "אלבני",
@@ -71,6 +71,7 @@ const iw = {
         "mn": "מוֹנגוֹלִי"
     },
     "settings": {
+        "loading": "טוען הגדרות...",
         "title": "הגדרות",
         "sections": {
             "appearance": "הוֹפָעָה",
@@ -91,21 +92,21 @@ const iw = {
             "conversationLanguageDescription": "השפה שבה משתמשים AI השיחות יתאימו לשפת הממשק שלך",
             "supportedLanguages": "שפות נתמכות",
             "languageSupportInformation": "מידע על תמיכה בשפות",
-            "aiAgentsLanguageDescription": "השיחה בין AI סוכנים יבוצעו בשפה שבחרת."
+            "aiAgentsLanguageDescription": "השיחה בין AI הסוכנים יבוצעו בשפה שבחרתם."
         },
         "apiKeys": {
             "title": "API מפתחות",
-            "description": "נהל את API מפתחות עבור שונים AI ספקים",
-            "saved": "נשמר",
-            "notSet": "לא מוגדר",
-            "setKey": "הגדר מפתח",
-            "updateKey": "מפתח עדכון",
-            "removeKey": "הסר את המפתח",
-            "getKeyInstructions": "קבל את שלך API מַפְתֵחַ",
-            "noNewKeys": "אין חדש API מקשים שהוזנו כדי לשמור.",
-            "unexpectedResponse": "התקבלה תגובה בלתי צפויה מהשרת.",
+            "description": "נהל את API מפתחות עבור שונים AI שירותים.",
+            "setKey": "מַעֲרֶכֶת",
+            "updateKey": "לְעַדְכֵּן",
+            "saveUpdateKeys": "שמירה / עדכון מפתחות",
+            "saving": "חִסָכוֹן...",
+            "noNewKeys": "אין מפתחות חדשים לשמירה.",
+            "keyStoredSecurely": "שֶׁלְךָ API המפתח יאוחסן בצורה מאובטחת ומוצפנת.",
+            "enteringNewKeyOverwrites": "הזנת מפתח חדש תדרוס את הקיים.",
             "failedToSaveKey": "שמירת המפתח של {serviceName} נכשלה.",
-            "someKeysNotSaved": "כַּמָה API לא ניתן היה לשמור את המפתחות. אנא בדוק את הפרטים שלהלן.",
+            "unexpectedResponse": "תגובה בלתי צפויה מהשרת.",
+            "someKeysNotSaved": "לא ניתן היה לשמור חלק מהמפתחות. אנא בדוק את השגיאות שלמעלה.",
             "keyStatus": "סטטוס מפתח...",
             "apiKeySecurelySaved": "API המפתח נשמר בצורה מאובטחת",
             "confirmRemoveTitle": "אישור הסרה",
@@ -114,16 +115,12 @@ const iw = {
             "successfullyRemovedKey": "המפתח {serviceName} הוסר בהצלחה.",
             "keyNotSet": "סטטוס מפתח: לא מוגדר",
             "keySet": "סטטוס מפתח: מוגדר",
-            "saveButton": "לְהַצִיל API מפתח(ים)",
-            "enteringNewKeyOverwrites": "הזנת מפתח חדש תדרוס את המפתח שנשמר.",
-            "keyStoredSecurely": "המפתח שלך יאוחסן בצורה מאובטחת באמצעות Google מנהל סודי.",
-            "saveUpdateKeys": "שמירה / עדכון מפתחות",
-            "saving": "חִסָכוֹן..."
-        },
-        "loading": "טוען הגדרות..."
+            "saveButton": "לְהַצִיל API מפתח(ים)"
+        }
     },
     "main": {
         "title": "AI שִׂיחָה",
+        "aiConversation": "AI שִׂיחָה",
         "setupForm": {
             "title": "הגדר את השיחה שלך",
             "agentA": "סוכן א'",
@@ -141,7 +138,7 @@ const iw = {
                 "selectModel": "לִבחוֹר TTS דֶגֶם"
             },
             "startConversation": "התחל שיחה",
-            "conversationPrompt": "התחל את השיחה."
+            "conversationPrompt": "אנא התחל את השיחה."
         },
         "conversation": {
             "thinking": "חֲשִׁיבָה...",
@@ -153,8 +150,7 @@ const iw = {
             "perMillionTokens": "לכל מיליון אסימונים",
             "input": "קֶלֶט",
             "output": "תְפוּקָה"
-        },
-        "aiConversation": "AI שִׂיחָה"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const iw = {
             "signUpWithGoogle": "הירשם עם Google",
             "hasAccount": "כבר יש לך חשבון?",
             "signIn": "כניסה",
-            "emailLabel": "Email כְּתוֹבֶת",
+            "emailLabel": "כתובת דוא\"ל",
             "confirmPasswordPlaceholder": "אשר סיסמה",
             "signingUp": "הרשמה..."
         },
@@ -185,7 +181,7 @@ const iw = {
             "invalidCredentials": "כתובת דוא\"ל או סיסמה לא חוקיים",
             "userNotFound": "המשתמש לא נמצא",
             "weakPassword": "הסיסמה צריכה להיות באורך של לפחות 6 תווים",
-            "emailInUse": "Email כבר בשימוש",
+            "emailInUse": "האימייל כבר בשימוש",
             "generic": "אירעה שגיאה. אנא נסה שוב.",
             "initialization": "שגיאת אתחול. אנא נסה שוב מאוחר יותר.",
             "invalidEmail": "אנא הזן כתובת דוא\"ל תקפה.",
@@ -229,12 +225,14 @@ const iw = {
     "modelCategory_Gemini2_0": "Gemini 2.0 מודלים",
     "modelCategory_Gemini1_5": "Gemini 1.5 מודלים",
     "modelCategory_Claude4": "Claude 4 מודלים",
-    "modelCategory_Claude3_7": "Claude 3.7 מודלים",
+    "modelCategory_Claude3_7": "Claude 3.7 דֶגֶם",
     "modelCategory_Claude3_5": "Claude 3.5 מודלים",
     "modelCategory_Claude3": "Claude 3 מודלים",
-    "modelCategory_Grok4": "Grok 4 מודלים",
+    "modelCategory_Grok4": "Grok 4 דֶגֶם",
     "modelCategory_Grok3": "Grok 3 מודלים",
     "modelCategory_Grok3Mini": "Grok 3 דגמי מיני",
+    "modelCategory_MistralAIPremierModels": "דגמי פרימיום",
+    "modelCategory_MistralAIOpenModels": "דגם פתוח",
     "modelCategory_Llama4": "Llama 4 דגמים",
     "modelCategory_Llama3_3": "Llama דגמי 3.3",
     "modelCategory_Llama3_2": "Llama דגמי 3.2",
@@ -246,22 +244,22 @@ const iw = {
     "modelCategory_Gemma2": "Gemma 2 דגמים",
     "modelCategory_Gemma": "Gemma מודלים",
     "modelCategory_GoogleGemma": "Google Gemma מודלים",
-    "modelCategory_DeepSeekR1": "DeepSeek דגמי R1",
-    "modelCategory_DeepSeekV3": "DeepSeek דגמי V3",
+    "modelCategory_DeepSeekR1": "DeepSeek דגם R1",
+    "modelCategory_DeepSeekV3": "DeepSeek דגם V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek דגמי R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek מודלים",
     "modelCategory_MistralAIModels": "Mistral AI מודלים",
-    "modelCategory_Qwen3": "Qwen3 דגמים",
-    "modelCategory_QwQwQ": "Qwen דגמי QwQ",
+    "modelCategory_Qwen3": "Qwen3 מודלים",
+    "modelCategory_QwQwQ": "Qwen דגם QwQ",
     "modelCategory_Qwen2_5": "Qwenדגמי 2.5",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 דגמי Vision",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 מודלים של קודנים",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 מודל חזון",
+    "modelCategory_Qwen2_5Coder": "Qwenמודל 2.5 מקודד",
     "modelCategory_Qwen2": "Qwen2 דגמים",
-    "modelCategory_Qwen2Vision": "Qwen2 דגמי Vision",
+    "modelCategory_Qwen2Vision": "Qwenמודל 2 Vision",
     "modelCategory_QwenModels": "Qwen מודלים",
     "modelCategory_OtherModels": "דגמים אחרים",
     "page_ErrorLoadingUserData": "טעינת נתוני המשתמש נכשלה: {errorMessage}. אנא נסה לרענן.",
-    "page_ErrorUserNotFound": "המשתמש לא נמצא. אנא התחבר שוב.",
+    "page_ErrorUserNotFound": "המשתמש לא נמצא. אנא היכנס שוב.",
     "page_ErrorUserApiKeyConfig": "מִשׁתַמֵשׁ API לא ניתן היה לטעון את תצורת המפתח. אנא רענן או בדוק את ההגדרות.",
     "page_ErrorStartingSessionAPI": "API שגיאה: {status} {statusText}",
     "page_ErrorStartingSessionGeneric": "שגיאה בהתחלת סשן: {errorMessage}",
@@ -269,12 +267,13 @@ const iw = {
     "page_LoadingUserData": "טוען נתוני משתמש...",
     "page_ErrorAlertTitle": "שְׁגִיאָה",
     "page_WelcomeTitle": "ברוכים הבאים ל Two AIs",
-    "page_WelcomeSubtitle": "אתר זה מאפשר לך להאזין לשיחות בין שני אנשים Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "אתר זה מאפשר לך להאזין לשיחות בין שני אנשים Large Language Models (LLMs) וליצור תמונות עבור כל סיבוב.",
     "page_ApiKeysRequiredTitle": "API מפתחות נדרשים",
     "page_ApiKeysRequiredDescription": "כדי לנהל שיחות, תצטרכו לספק מידע משלכם API מפתחות עבור ה- AI מודלים שברצונך להשתמש בהם (למשל, OpenAI, Google, Anthropic) לאחר הכניסה. הוראות מפורטות עבור כל ספק ניתן למצוא בהגדרות / API דף מפתחות לאחר הכניסה.",
     "page_SignInPrompt": "כדי להתחיל את הסדנה שלך, תוכל להתחבר או ליצור חשבון באמצעות הקישור בכותרת.",
     "page_VideoTitle": "Two AIs הדגמת שיחה",
     "page_AvailableLLMsTitle": "זמין כעת LLMs",
+    "page_TooltipKnowledgeCutoff": "הידע של המודל מופסק בתאריך זה.",
     "page_TooltipGoogleThinkingBudget": "זֶה Google המודל משתמש ב'תקציב חשיבה'. הפלט של 'החשיבה' מחויב אך אינו גלוי בצ'אט.",
     "page_TooltipAnthropicExtendedThinking": "זֶה Anthropic המודל משתמש ב'חשיבה מורחבת'. הפלט של 'חשיבה' מחויב אך אינו גלוי בצ'אט.",
     "page_TooltipXaiThinking": "זֶה xAI המודל משתמש ב-'חשיבה'. פלט זה מחויב אך אינו גלוי בצ'אט.",
@@ -282,18 +281,53 @@ const iw = {
     "page_TooltipDeepSeekReasoning": "זֶה DeepSeek המודל משתמש ב'היגיון/חשיבה'. הפלט מחויב אך אינו גלוי בצ'אט.",
     "page_TooltipGenericReasoning": "מודל זה משתמש באסימוני הנמקה שאינם גלויים בצ'אט אך מחויבים כאסימוני פלט.",
     "page_TooltipRequiresVerification": "דורש אימות OpenAI ארגון. ניתן לאמת כאן.",
-    "page_TooltipSupportsLanguage": "תומך ב-{languageName}",
-    "page_TooltipMayNotSupportLanguage": "ייתכן שמודל זה אינו תומך באופן מלא ב-{languageName} לשיחה.",
+    "page_TooltipSupportsLanguage": "תומך {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ייתכן שמודל זה אינו תומך באופן מלא {languageName} לשיחה.",
     "page_BadgePreview": "תצוגה מקדימה",
     "page_BadgeExperimental": "נִסיוֹנִי",
     "page_BadgeBeta": "בטא",
     "page_AvailableTTSTitle": "זמין כעת Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "מודלי תמונה זמינים כעת",
     "page_NoTTSOptions": "לֹא TTS אפשרויות הזמינות כעת.",
     "page_TruncatableNoteFormat": "({הערה טקסט})",
     "page_PricesLastVerifiedOn": "המחירים אומתו לאחרונה בתאריך {date}",
-    "page_PricingPerTokens": "לְכָל {amount} אסימונים",
+    "page_PricingPerTokens": "לכל מיליון טוקנים",
     "page_ModelCategoryModels": "{model} מודלים",
+    "common_verifyHere": "אימות כאן",
     "ttsVoice_Ugne": "באש",
+    "pricing": {
+        "perMillionTokens": "לכל מיליון אסימונים",
+        "tokens": "אסימונים",
+        "free": "לְשַׁחְרֵר",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} לכל מיליון אסימוני טקסט",
+                "audioTokens": "{price} לכל מיליון אסימוני אודיו"
+            },
+            "geminiPro": {
+                "textTokens": "{price} לכל מיליון אסימוני טקסט",
+                "audioTokens": "{price} לכל מיליון אסימוני אודיו"
+            },
+            "openAIMini": {
+                "textTokens": "{price} לכל מיליון אסימוני טקסט",
+                "audioTokens": "{price} לכל מיליון אסימוני אודיו"
+            },
+            "openAITTS1": {
+                "standard": "{price} לכל מיליון אסימונים"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} לכל מיליון אסימונים"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} לכל מיליון תווים",
+                "neural": "{price} לכל מיליון תווים",
+                "studio": "{price} לכל מיליון תווים",
+                "chirpHD": "לא ניתן היה לאמת",
+                "chirp3HD": "{price} לכל מיליון תווים"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "טופס הגדרת מפגש",
         "description": "כאן תוכלו לבחור את תואר שני במשפטים (LLM) ואופציונלי TTS הגדרות עבור כל סוכן.",
@@ -309,7 +343,7 @@ const iw = {
         "initialPromptDescription": "בקשה זו תישלח כהודעה הראשונה שתתחיל את השיחה. אם תשאיר אותה ריקה, לא תופיע בקשה.",
         "startConversation": "התחל שיחה",
         "starting": "מתחיל...",
-        "startTheConversation": "התחל את השיחה.",
+        "startTheConversation": "אנא התחל את השיחה.",
         "languageSupportNote": "מחווני תמיכה בשפה מראים תאימות מודל עם {languageName}דגמים ללא תמיכה מושבתים.",
         "reasoningNote": "מציין שדוגמן משתמש באסימוני 'חשיבה' או 'היגיון'. פלט זה מחויב אך אינו גלוי בצ'אט.",
         "openaiOrgVerificationNote": "מציין OpenAI מודל דורש ארגון מאומת. אתה יכול",
@@ -335,15 +369,15 @@ const iw = {
         "backToMain": "חזרה לדף הראשי",
         "conversationHistory": "היסטוריית שיחות",
         "chatWith": "צ'אט עם {agentA} ו {agentB}",
+        "conversationDescription": "התחיל ב {date} - שפה: {language}",
         "viewConversation": "הצג שיחה",
         "backToPreviousChats": "חזרה לצ'אטים קודמים",
         "resumeConversation": "המשך שיחה",
         "resuming": "ממשיך...",
         "sessionDetails": "פרטי הפגישה",
-        "language": "שָׂפָה:",
+        "language": "שָׂפָה",
         "transcript": "תמלול",
         "loadingHistory": "טוען היסטוריה...",
-        "conversationDescription": "התחיל ב {date} - שפה: {language}",
         "loadingConversation": "טוען שיחה...",
         "chatStartedOn": "הצ'אט התחיל ב {date}",
         "agentAModel": "סוכן A מודל",
@@ -355,18 +389,8 @@ const iw = {
         "model": "דֶגֶם",
         "voice": "קוֹל"
     },
-    "common_verifyHere": "אימות כאן",
-    "page_AvailableImageModelsTitle": "דגמי תמונה זמינים כעת",
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",
-    "imageModel_PriceUSD": "מְחִיר (USD)",
-    "page_TooltipKnowledgeCutoff": "הידע של המודל מופסק בתאריך זה.",
-    "modelCategory_MistralAIPremierModels": "דגמי פרימיום",
-    "modelCategory_MistralAIOpenModels": "דגמים פתוחים",
-    "pricing": {
-        "perMillionTokens": "לכל מיליון אסימונים",
-        "tokens": "אסימונים",
-        "free": "לְשַׁחְרֵר"
-    }
+    "imageModel_PriceUSD": "מְחִיר (USD)"
 };
 export default iw;

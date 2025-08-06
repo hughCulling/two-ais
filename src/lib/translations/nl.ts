@@ -71,6 +71,7 @@ const nl = {
         "mn": "Mongools"
     },
     "settings": {
+        "loading": "Instellingen laden...",
         "title": "Instellingen",
         "sections": {
             "appearance": "Verschijning",
@@ -87,7 +88,7 @@ const nl = {
         "language": {
             "title": "Taal",
             "description": "Kies uw voorkeurstaal voor de interface",
-            "conversationLanguage": "Gesprekstaal",
+            "conversationLanguage": "Conversatietaal",
             "conversationLanguageDescription": "De taal die gebruikt wordt voor AI gesprekken komen overeen met uw interfacetaal",
             "supportedLanguages": "Ondersteunde talen",
             "languageSupportInformation": "Informatie over taalondersteuning",
@@ -95,35 +96,31 @@ const nl = {
         },
         "apiKeys": {
             "title": "API Sleutels",
-            "description": "Beheer uw API sleutels voor verschillende AI aanbieders",
-            "saved": "Opgeslagen",
-            "notSet": "Niet ingesteld",
-            "setKey": "Set-sleutel",
-            "updateKey": "Updatesleutel",
-            "removeKey": "Sleutel verwijderen",
-            "getKeyInstructions": "Haal je API sleutel",
-            "noNewKeys": "Geen nieuw API Toetsen ingevoerd om op te slaan.",
-            "unexpectedResponse": "Er is een onverwacht antwoord van de server ontvangen.",
+            "description": "Beheer uw API sleutels voor verschillende AI diensten.",
+            "setKey": "Set",
+            "updateKey": "Update",
+            "saveUpdateKeys": "Sleutels opslaan/bijwerken",
+            "saving": "Besparing...",
+            "noNewKeys": "Geen nieuwe sleutels om op te slaan.",
+            "keyStoredSecurely": "Jouw API De sleutel wordt veilig en versleuteld opgeslagen.",
+            "enteringNewKeyOverwrites": "Wanneer u een nieuwe sleutel invoert, wordt de bestaande sleutel overschreven.",
             "failedToSaveKey": "Het is niet gelukt om de sleutel {serviceName} op te slaan.",
-            "someKeysNotSaved": "Sommige API Sleutels konden niet worden opgeslagen. Controleer de onderstaande details.",
+            "unexpectedResponse": "Onverwachte reactie van de server.",
+            "someKeysNotSaved": "Sommige sleutels konden niet worden opgeslagen. Controleer de bovenstaande fouten.",
             "keyStatus": "sleutelstatus...",
             "apiKeySecurelySaved": "API Sleutel veilig opgeslagen",
             "confirmRemoveTitle": "Verwijdering bevestigen",
             "confirmRemoveDescription": "Weet u zeker dat u de API sleutel voor {serviceName}? Deze actie kan niet ongedaan worden gemaakt.",
-            "failedToRemoveKey": "Het is niet gelukt om de sleutel {serviceName} te verwijderen.",
+            "failedToRemoveKey": "Het verwijderen van de sleutel {serviceName} is mislukt.",
             "successfullyRemovedKey": "Sleutel {serviceName} is succesvol verwijderd.",
             "keyNotSet": "Sleutelstatus: Niet ingesteld",
             "keySet": "Sleutelstatus: ingesteld",
-            "saveButton": "Redden API Sleutel(s)",
-            "enteringNewKeyOverwrites": "Wanneer u een nieuwe sleutel invoert, wordt de opgeslagen sleutel overschreven.",
-            "keyStoredSecurely": "Uw sleutel wordt veilig bewaard met behulp van Google Geheime Beheerder.",
-            "saveUpdateKeys": "Sleutels opslaan/bijwerken",
-            "saving": "Besparing..."
-        },
-        "loading": "Instellingen laden..."
+            "saveButton": "Redden API Sleutel(s)"
+        }
     },
     "main": {
         "title": "AI Gesprek",
+        "aiConversation": "AI Gesprek",
         "setupForm": {
             "title": "Stel je gesprek in",
             "agentA": "Agent A",
@@ -153,8 +150,7 @@ const nl = {
             "perMillionTokens": "per miljoen tokens",
             "input": "Invoer",
             "output": "Uitvoer"
-        },
-        "aiConversation": "AI Gesprek"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const nl = {
             "signUpWithGoogle": "Meld je aan bij Google",
             "hasAccount": "Heeft u al een account?",
             "signIn": "Aanmelden",
-            "emailLabel": "Email adres",
+            "emailLabel": "E-mailadres",
             "confirmPasswordPlaceholder": "Bevestig wachtwoord",
             "signingUp": "Aanmelden..."
         },
@@ -185,7 +181,7 @@ const nl = {
             "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
             "userNotFound": "Gebruiker niet gevonden",
             "weakPassword": "Het wachtwoord moet minimaal 6 tekens lang zijn",
-            "emailInUse": "Email al in gebruik",
+            "emailInUse": "E-mail al in gebruik",
             "generic": "Er is een fout opgetreden. Probeer het opnieuw.",
             "initialization": "Initialisatiefout. Probeer het later opnieuw.",
             "invalidEmail": "Voer een geldig e-mailadres in.",
@@ -193,8 +189,8 @@ const nl = {
             "signInFailedPrefix": "Aanmelden mislukt: ",
             "unknownSignInError": "Er is een onbekende fout opgetreden tijdens het aanmelden.",
             "profileSaveFailedPrefix": "Ingelogd, maar profielgegevens konden niet worden opgeslagen: ",
-            "profileCheckSaveFailedPrefix": "Ingelogd, maar het is niet gelukt om de profielgegevens te controleren/opslaan: ",
-            "accountExistsWithDifferentCredential": "Er bestaat al een account met dit e-mailadres, maar u meldt zich hiervoor wel via een andere aanmeldmethode aan.",
+            "profileCheckSaveFailedPrefix": "Ingelogd, maar het controleren/opslaan van de profielgegevens is mislukt: ",
+            "accountExistsWithDifferentCredential": "Er bestaat al een account met dit e-mailadres, maar u meldt zich wel via een andere aanmeldmethode aan.",
             "googleSignInFailedPrefix": "Google Aanmelden mislukt: ",
             "unknownGoogleSignInError": "Er is een onbekende fout opgetreden tijdens Google Aanmelden.",
             "passwordsDoNotMatch": "Wachtwoorden komen niet overeen.",
@@ -229,12 +225,14 @@ const nl = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modellen",
     "modelCategory_Gemini1_5": "Gemini 1.5 modellen",
     "modelCategory_Claude4": "Claude 4 modellen",
-    "modelCategory_Claude3_7": "Claude 3.7 modellen",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modellen",
     "modelCategory_Claude3": "Claude 3 modellen",
-    "modelCategory_Grok4": "Grok 4 modellen",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modellen",
     "modelCategory_Grok3Mini": "Grok 3 Mini-modellen",
+    "modelCategory_MistralAIPremierModels": "Premier-modellen",
+    "modelCategory_MistralAIOpenModels": "Open model",
     "modelCategory_Llama4": "Llama 4 modellen",
     "modelCategory_Llama3_3": "Llama 3.3 modellen",
     "modelCategory_Llama3_2": "Llama 3.2 modellen",
@@ -246,21 +244,21 @@ const nl = {
     "modelCategory_Gemma2": "Gemma 2 modellen",
     "modelCategory_Gemma": "Gemma modellen",
     "modelCategory_GoogleGemma": "Google Gemma Modellen",
-    "modelCategory_DeepSeekR1": "DeepSeek R1-modellen",
-    "modelCategory_DeepSeekV3": "DeepSeek V3-modellen",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-model",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-model",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill-modellen",
     "modelCategory_DeepSeekModels": "DeepSeek Modellen",
     "modelCategory_MistralAIModels": "Mistral AI Modellen",
     "modelCategory_Qwen3": "Qwen3 modellen",
-    "modelCategory_QwQwQ": "Qwen QwQ-modellen",
+    "modelCategory_QwQwQ": "Qwen QwQ-model",
     "modelCategory_Qwen2_5": "Qwen2,5 modellen",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Visiemodellen",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder-modellen",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Visiemodel",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder-model",
     "modelCategory_Qwen2": "Qwen2 modellen",
-    "modelCategory_Qwen2Vision": "Qwen2 Visiemodellen",
+    "modelCategory_Qwen2Vision": "Qwen2 Visiemodel",
     "modelCategory_QwenModels": "Qwen Modellen",
     "modelCategory_OtherModels": "Andere modellen",
-    "page_ErrorLoadingUserData": "Gebruikersgegevens laden mislukt: {errorMessage}. Probeer te vernieuwen.",
+    "page_ErrorLoadingUserData": "Gebruikersgegevens kunnen niet worden geladen: {errorMessage}. Probeer te vernieuwen.",
     "page_ErrorUserNotFound": "Gebruiker niet gevonden. Meld u opnieuw aan.",
     "page_ErrorUserApiKeyConfig": "Gebruiker API De sleutelconfiguratie kon niet worden geladen. Vernieuw of controleer de instellingen.",
     "page_ErrorStartingSessionAPI": "API Fout: {status} {statusText}",
@@ -269,31 +267,67 @@ const nl = {
     "page_LoadingUserData": "Gebruikersgegevens worden geladen...",
     "page_ErrorAlertTitle": "Fout",
     "page_WelcomeTitle": "Welkom bij Two AIs",
-    "page_WelcomeSubtitle": "Op deze website kunt u luisteren naar gesprekken tussen twee Large Language Models (LLMs).",
-    "page_ApiKeysRequiredTitle": "API Sleutels vereist",
+    "page_WelcomeSubtitle": "Op deze website kunt u luisteren naar gesprekken tussen twee Large Language Models (LLMs) en genereer afbeeldingen voor elke beurt.",
+    "page_ApiKeysRequiredTitle": "API Vereiste sleutels",
     "page_ApiKeysRequiredDescription": "Om gesprekken te kunnen voeren, moet u uw eigen API sleutels voor de AI modellen die u wilt gebruiken (bijv. OpenAI, Google, Anthropic) na het inloggen. Gedetailleerde instructies voor elke provider vindt u op de pagina Instellingen / API Sleutelpagina na het inloggen.",
     "page_SignInPrompt": "Om uw eigen sessie te starten, kunt u zich aanmelden of een account aanmaken via de link in de header.",
     "page_VideoTitle": "Two AIs Gespreksdemo",
     "page_AvailableLLMsTitle": "Momenteel beschikbaar LLMs",
+    "page_TooltipKnowledgeCutoff": "Op dit moment is de kennis van het model afgesloten.",
     "page_TooltipGoogleThinkingBudget": "Dit Google Het model maakt gebruik van een 'denkbudget'. De 'denk'-output wordt gefactureerd, maar is niet zichtbaar in de chat.",
     "page_TooltipAnthropicExtendedThinking": "Dit Anthropic Het model maakt gebruik van 'uitgebreid denken'. De 'denk'-output wordt gefactureerd, maar is niet zichtbaar in de chat.",
     "page_TooltipXaiThinking": "Dit xAI Het model maakt gebruik van 'denken'. Deze output wordt gefactureerd, maar is niet zichtbaar in de chat.",
     "page_TooltipQwenReasoning": "Dit Qwen Het model maakt gebruik van 'redeneren/denken'. Deze output wordt gefactureerd, maar is niet zichtbaar in de chat.",
     "page_TooltipDeepSeekReasoning": "Dit DeepSeek Het model maakt gebruik van 'redeneren/denken'. De output wordt gefactureerd, maar is niet zichtbaar in de chat.",
-    "page_TooltipGenericReasoning": "Dit model maakt gebruik van redeneertokens die niet zichtbaar zijn in de chat, maar worden gefactureerd als uitvoertokens.",
+    "page_TooltipGenericReasoning": "Dit model maakt gebruik van redeneertokens die niet zichtbaar zijn in de chat, maar wel als uitvoertokens worden gefactureerd.",
     "page_TooltipRequiresVerification": "Vereist geverifieerd OpenAI organisatie. U kunt dit hier verifiëren.",
     "page_TooltipSupportsLanguage": "Ondersteunt {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Dit model biedt mogelijk geen volledige ondersteuning voor {languageName} voor conversatie.",
+    "page_TooltipMayNotSupportLanguage": "Dit model ondersteunt mogelijk niet volledig {languageName} voor een gesprek.",
     "page_BadgePreview": "Voorvertoning",
     "page_BadgeExperimental": "Experimenteel",
     "page_BadgeBeta": "Bèta",
     "page_AvailableTTSTitle": "Momenteel beschikbaar Text-to-Speech (TTS)",
-    "page_NoTTSOptions": "Nee TTS momenteel beschikbare opties.",
+    "page_AvailableImageModelsTitle": "Momenteel beschikbare afbeeldingsmodellen",
+    "page_NoTTSOptions": "Nee TTS opties die momenteel beschikbaar zijn.",
     "page_TruncatableNoteFormat": "({noottekst})",
     "page_PricesLastVerifiedOn": "Prijzen laatst geverifieerd op {date}",
-    "page_PricingPerTokens": "per {amount} Tokens",
+    "page_PricingPerTokens": "per 1 miljoen tokens",
     "page_ModelCategoryModels": "{model} modellen",
+    "common_verifyHere": "hier verifiëren",
     "ttsVoice_Ugne": "In het vuur",
+    "pricing": {
+        "perMillionTokens": "per 1 miljoen tokens",
+        "tokens": "tokens",
+        "free": "Vrij",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 miljoen teksttokens",
+                "audioTokens": "{price} per 1 miljoen audiotokens"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 miljoen teksttokens",
+                "audioTokens": "{price} per 1 miljoen audiotokens"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 miljoen teksttokens",
+                "audioTokens": "{price} per 1 miljoen audiotokens"
+            },
+            "openAITTS1": {
+                "standard": "{price} per 1 miljoen tokens"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 miljoen tokens"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} per 1 miljoen tekens",
+                "neural": "{price} per 1 miljoen tekens",
+                "studio": "{price} per 1 miljoen tekens",
+                "chirpHD": "Kon niet verifiëren",
+                "chirp3HD": "{price} per 1 miljoen tekens"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Sessie-instellingsformulier",
         "description": "Hier kunt u de LLM en optionele TTS instellingen voor elke agent.",
@@ -312,7 +346,7 @@ const nl = {
         "startTheConversation": "Begin het gesprek.",
         "languageSupportNote": "Taalondersteuningsindicatoren tonen de compatibiliteit van het model met {languageName}. Modellen zonder ondersteuning zijn uitgeschakeld.",
         "reasoningNote": "Geeft aan dat een model 'denk'- of 'redeneer'-tokens gebruikt. Deze output wordt gefactureerd, maar is niet zichtbaar in de chat.",
-        "openaiOrgVerificationNote": "Geeft een OpenAI model vereist een geverifieerde organisatie. U kunt",
+        "openaiOrgVerificationNote": "Geeft aan dat er een OpenAI model vereist een geverifieerde organisatie. U kunt",
         "voice": "Stem",
         "selectVoice": "Selecteer stem",
         "noVoicesFor": "Geen stemmen voor {languageName}",
@@ -329,21 +363,21 @@ const nl = {
         "defaultImagePromptSystemMessage": "Maak een prompt om aan het model voor het genereren van afbeeldingen te geven op basis van deze beurt: {turn}",
         "imagePromptSystemMessageHelp": "Dit bericht wordt verzonden als systeemprompt naar de LLM die de afbeeldingprompt genereert. Gebruik <code>{'{turn}'}</code> als tijdelijke aanduiding voor het bericht van de agent.",
         "selectImageModel": "Selecteer afbeeldingmodel",
-        "selectPromptLLM": "Selecteer LLM voor afbeeldingprompt"
+        "selectPromptLLM": "Selecteer LLM voor afbeeldingsprompt"
     },
     "history": {
         "backToMain": "Terug naar hoofdpagina",
         "conversationHistory": "Gespreksgeschiedenis",
         "chatWith": "Chatten met {agentA} & {agentB}",
+        "conversationDescription": "Begonnen op {date} - Taal: {language}",
         "viewConversation": "Bekijk gesprek",
         "backToPreviousChats": "Terug naar vorige chats",
         "resumeConversation": "Gesprek hervatten",
         "resuming": "Doorgaan...",
         "sessionDetails": "Sessiedetails",
-        "language": "Taal:",
+        "language": "Taal",
         "transcript": "Transcriptie",
         "loadingHistory": "Geschiedenis laden...",
-        "conversationDescription": "Begonnen op {date} - Taal: {language}",
         "loadingConversation": "Gesprek laden...",
         "chatStartedOn": "Chat gestart op {date}",
         "agentAModel": "Agent A-model",
@@ -355,18 +389,8 @@ const nl = {
         "model": "Model",
         "voice": "Stem"
     },
-    "common_verifyHere": "hier verifiëren",
-    "page_AvailableImageModelsTitle": "Momenteel beschikbare afbeeldingsmodellen",
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",
-    "imageModel_PriceUSD": "Prijs (USD)",
-    "page_TooltipKnowledgeCutoff": "Op dit moment is de kennis van het model afgesloten.",
-    "modelCategory_MistralAIPremierModels": "Premier-modellen",
-    "modelCategory_MistralAIOpenModels": "Open modellen",
-    "pricing": {
-        "perMillionTokens": "per 1 miljoen tokens",
-        "tokens": "tokens",
-        "free": "Vrij"
-    }
+    "imageModel_PriceUSD": "Prijs (USD)"
 };
 export default nl;

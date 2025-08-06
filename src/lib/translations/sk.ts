@@ -11,7 +11,7 @@ const sk = {
         "ar": "arabčina",
         "bn": "Bengálčina",
         "bg": "Bulharčina",
-        "zh": "Číňan",
+        "zh": "Čínština",
         "hr": "Chorvátčina",
         "cs": "čeština",
         "da": "Dánčina",
@@ -71,6 +71,7 @@ const sk = {
         "mn": "Mongolčina"
     },
     "settings": {
+        "loading": "Načítavajú sa nastavenia...",
         "title": "Nastavenia",
         "sections": {
             "appearance": "Vzhľad",
@@ -95,17 +96,17 @@ const sk = {
         },
         "apiKeys": {
             "title": "API Kľúče",
-            "description": "Spravujte svoje API kľúče pre rôzne AI poskytovatelia",
-            "saved": "Uložené",
-            "notSet": "Nie je nastavené",
-            "setKey": "Nastaviť kľúč",
-            "updateKey": "Aktualizačný kľúč",
-            "removeKey": "Odstráňte kľúč",
-            "getKeyInstructions": "Získajte svoje API kľúč",
-            "noNewKeys": "Žiadne nové API zadané kľúče na uloženie.",
-            "unexpectedResponse": "Prijatá neočakávaná odpoveď zo servera.",
+            "description": "Spravujte svoje API kľúče pre rôzne AI služby.",
+            "setKey": "Sada",
+            "updateKey": "Aktualizácia",
+            "saveUpdateKeys": "Uložiť / aktualizovať kľúče",
+            "saving": "Ukladá sa...",
+            "noNewKeys": "Žiadne nové kľúče na uloženie.",
+            "keyStoredSecurely": "Váš API Kľúč bude bezpečne uložený a zašifrovaný.",
+            "enteringNewKeyOverwrites": "Zadaním nového kľúča sa prepíše existujúci.",
             "failedToSaveKey": "Uloženie kľúča {serviceName} zlyhalo.",
-            "someKeysNotSaved": "Niektorí API Kľúče sa nepodarilo uložiť. Skontrolujte podrobnosti nižšie.",
+            "unexpectedResponse": "Neočakávaná odpoveď zo servera.",
+            "someKeysNotSaved": "Niektoré kľúče sa nepodarilo uložiť. Skontrolujte chyby uvedené vyššie.",
             "keyStatus": "kľúčový stav...",
             "apiKeySecurelySaved": "API Kľúč bezpečne uložený",
             "confirmRemoveTitle": "Potvrdiť odstránenie",
@@ -114,16 +115,12 @@ const sk = {
             "successfullyRemovedKey": "Kľúč {serviceName} bol úspešne odstránený.",
             "keyNotSet": "Stav kľúča: Nenastavené",
             "keySet": "Stav kľúča: Nastavený",
-            "saveButton": "Uložiť API Kľúč(e)",
-            "enteringNewKeyOverwrites": "Zadaním nového kľúča sa prepíše uložený kľúč.",
-            "keyStoredSecurely": "Váš kľúč bude bezpečne uložený pomocou Google Tajný manažér.",
-            "saveUpdateKeys": "Uložiť / aktualizovať kľúče",
-            "saving": "Ukladá sa..."
-        },
-        "loading": "Načítavajú sa nastavenia..."
+            "saveButton": "Uložiť API Kľúč(e)"
+        }
     },
     "main": {
         "title": "AI Konverzácia",
+        "aiConversation": "AI Konverzácia",
         "setupForm": {
             "title": "Naplánujte si konverzáciu",
             "agentA": "Agent A.",
@@ -141,7 +138,7 @@ const sk = {
                 "selectModel": "Vyberte TTS model"
             },
             "startConversation": "Začať konverzáciu",
-            "conversationPrompt": "Začnite konverzáciu."
+            "conversationPrompt": "Prosím, začnite konverzáciu."
         },
         "conversation": {
             "thinking": "premýšľanie...",
@@ -153,8 +150,7 @@ const sk = {
             "perMillionTokens": "na milión tokenov",
             "input": "Vstup",
             "output": "Výstup"
-        },
-        "aiConversation": "AI Konverzácia"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const sk = {
             "signUpWithGoogle": "Zaregistrujte sa u Google",
             "hasAccount": "Už máte účet?",
             "signIn": "Prihlásiť sa",
-            "emailLabel": "Email adresa",
+            "emailLabel": "E-mailová adresa",
             "confirmPasswordPlaceholder": "Potvrdiť heslo",
             "signingUp": "Registrácia..."
         },
@@ -185,7 +181,7 @@ const sk = {
             "invalidCredentials": "Neplatný e-mail alebo heslo",
             "userNotFound": "Používateľ sa nenašiel",
             "weakPassword": "Heslo by malo mať aspoň 6 znakov",
-            "emailInUse": "Email už v prevádzke",
+            "emailInUse": "E-mail sa už používa",
             "generic": "Vyskytla sa chyba. Skúste to znova.",
             "initialization": "Chyba inicializácie. Skúste to znova neskôr.",
             "invalidEmail": "Zadajte platnú e-mailovú adresu.",
@@ -220,7 +216,7 @@ const sk = {
     "apiKeyNotNeeded": "API Kľúč nie je potrebný",
     "apiKeyNotNeededSubtext": "Tento poskytovateľ nevyžaduje API kľúč pre svoju bezplatnú úroveň alebo určité modely.",
     "apiKeyFound": "API Sada kľúčov",
-    "apiKeyFoundSubtext": "Jeden API Kľúč je nakonfigurovaný pre tohto poskytovateľa.",
+    "apiKeyFoundSubtext": "Jeden API kľúč je nakonfigurovaný pre tohto poskytovateľa.",
     "modelCategory_FlagshipChat": "Vlajkové modely chatu",
     "modelCategory_Reasoning": "Modely uvažovania",
     "modelCategory_CostOptimized": "Modely s optimalizovanými nákladmi",
@@ -229,12 +225,14 @@ const sk = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modely",
     "modelCategory_Gemini1_5": "Gemini 1.5 modely",
     "modelCategory_Claude4": "Claude 4 modely",
-    "modelCategory_Claude3_7": "Claude 3.7 modely",
+    "modelCategory_Claude3_7": "Claude 3.7 model",
     "modelCategory_Claude3_5": "Claude 3.5 modely",
     "modelCategory_Claude3": "Claude 3 modely",
-    "modelCategory_Grok4": "Grok 4 modely",
+    "modelCategory_Grok4": "Grok 4 model",
     "modelCategory_Grok3": "Grok 3 modely",
     "modelCategory_Grok3Mini": "Grok 3 Mini modely",
+    "modelCategory_MistralAIPremierModels": "Prémiové modely",
+    "modelCategory_MistralAIOpenModels": "Otvorený model",
     "modelCategory_Llama4": "Llama 4 modely",
     "modelCategory_Llama3_3": "Llama 3,3 modely",
     "modelCategory_Llama3_2": "Llama 3.2 modely",
@@ -246,18 +244,18 @@ const sk = {
     "modelCategory_Gemma2": "Gemma 2 modely",
     "modelCategory_Gemma": "Gemma modely",
     "modelCategory_GoogleGemma": "Google Gemma Modely",
-    "modelCategory_DeepSeekR1": "DeepSeek Modely R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Modely V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Model R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Model V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Modely R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Modely",
     "modelCategory_MistralAIModels": "Mistral AI Modely",
     "modelCategory_Qwen3": "Qwen3 modely",
-    "modelCategory_QwQwQ": "Qwen Modely QwQ",
+    "modelCategory_QwQwQ": "Qwen Model QwQ",
     "modelCategory_Qwen2_5": "Qwen2,5 modely",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Modely videnia",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Modely kódovačov",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Model vízie",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Model kódera",
     "modelCategory_Qwen2": "Qwen2 modely",
-    "modelCategory_Qwen2Vision": "Qwen2 modely Vision",
+    "modelCategory_Qwen2Vision": "Qwen2. Model vízie",
     "modelCategory_QwenModels": "Qwen Modely",
     "modelCategory_OtherModels": "Iné modely",
     "page_ErrorLoadingUserData": "Nepodarilo sa načítať používateľské údaje: {errorMessage}. Skúste obnoviť stránku.",
@@ -269,12 +267,13 @@ const sk = {
     "page_LoadingUserData": "Načítavajú sa používateľské údaje...",
     "page_ErrorAlertTitle": "Chyba",
     "page_WelcomeTitle": "Vitajte na Two AIs",
-    "page_WelcomeSubtitle": "Táto webová stránka vám umožňuje počúvať rozhovory medzi dvoma Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Táto webová stránka vám umožňuje počúvať rozhovory medzi dvoma Large Language Models (LLMs) a generovať obrázky pre každé kolo.",
     "page_ApiKeysRequiredTitle": "API Požadované kľúče",
     "page_ApiKeysRequiredDescription": "Ak chcete viesť konverzácie, budete musieť poskytnúť svoje vlastné API kľúče pre AI modely, ktoré chcete použiť (napr. OpenAI, Google, Anthropic) po prihlásení. Podrobné pokyny pre každého poskytovateľa nájdete v časti Nastavenia / API Stránka s kľúčmi po prihlásení.",
     "page_SignInPrompt": "Ak chcete začať vlastnú reláciu, môžete sa prihlásiť alebo si vytvoriť účet pomocou odkazu v hlavičke.",
     "page_VideoTitle": "Two AIs Ukážka konverzácie",
     "page_AvailableLLMsTitle": "Momentálne k dispozícii LLMs",
+    "page_TooltipKnowledgeCutoff": "Znalosti modelu sú k tomuto dátumu ukončené.",
     "page_TooltipGoogleThinkingBudget": "Toto Google Model používa „rozpočet na premýšľanie“. Výstup „premýšľania“ je fakturovaný, ale nie je viditeľný v chate.",
     "page_TooltipAnthropicExtendedThinking": "Toto Anthropic Model používa „rozšírené myslenie“. Výstup „myslenia“ je fakturovaný, ale nie je viditeľný v chate.",
     "page_TooltipXaiThinking": "Toto xAI Model používa „myslenie“. Tento výstup je fakturovaný, ale nie je viditeľný v chate.",
@@ -283,17 +282,52 @@ const sk = {
     "page_TooltipGenericReasoning": "Tento model používa tokeny uvažovania, ktoré nie sú viditeľné v chate, ale sú účtované ako výstupné tokeny.",
     "page_TooltipRequiresVerification": "Vyžaduje sa overenie OpenAI organizácia. Môžete si to overiť tu.",
     "page_TooltipSupportsLanguage": "Podporuje {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Tento model nemusí plne podporovať jazyk {languageName} pre konverzáciu.",
+    "page_TooltipMayNotSupportLanguage": "Tento model nemusí plne podporovať {languageName} na konverzáciu.",
     "page_BadgePreview": "Náhľad",
     "page_BadgeExperimental": "Experimentálne",
     "page_BadgeBeta": "Beta verzia",
     "page_AvailableTTSTitle": "Momentálne k dispozícii Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Aktuálne dostupné modely obrázkov",
     "page_NoTTSOptions": "Nie TTS aktuálne dostupné možnosti.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Ceny boli naposledy overené dňa {date}",
-    "page_PricingPerTokens": "za {amount} Žetóny",
+    "page_PricingPerTokens": "na 1 milión tokenov",
     "page_ModelCategoryModels": "{model} modely",
+    "common_verifyHere": "overiť tu",
     "ttsVoice_Ugne": "V ohni",
+    "pricing": {
+        "perMillionTokens": "na 1 milión tokenov",
+        "tokens": "žetóny",
+        "free": "Zadarmo",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} na 1 milión textových tokenov",
+                "audioTokens": "{price} na 1 milión zvukových tokenov"
+            },
+            "geminiPro": {
+                "textTokens": "{price} na 1 milión textových tokenov",
+                "audioTokens": "{price} na 1 milión zvukových tokenov"
+            },
+            "openAIMini": {
+                "textTokens": "{price} na 1 milión textových tokenov",
+                "audioTokens": "{price} na 1 milión zvukových tokenov"
+            },
+            "openAITTS1": {
+                "standard": "{price} na 1 milión tokenov"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} na 1 milión tokenov"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} na 1 milión znakov",
+                "neural": "{price} na 1 milión znakov",
+                "studio": "{price} na 1 milión znakov",
+                "chirpHD": "Nepodarilo sa overiť",
+                "chirp3HD": "{price} na 1 milión znakov"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Formulár na nastavenie relácie",
         "description": "Tu si môžete vybrať LLM a voliteľné TTS nastavenia pre každého agenta.",
@@ -306,10 +340,10 @@ const sk = {
         "agentBTTS": "Agent B. TTS",
         "provider": "Poskytovateľ",
         "initialSystemPrompt": "Úvodná systémová výzva",
-        "initialPromptDescription": "Táto výzva sa odošle ako prvá správa na začatie konverzácie. Ak toto pole necháte prázdne, výzva sa nezobrazí.",
+        "initialPromptDescription": "Táto výzva sa odošle ako prvá správa na začatie konverzácie. Ak ju necháte prázdnu, výzva sa nezobrazí.",
         "startConversation": "Začať konverzáciu",
         "starting": "Začína sa...",
-        "startTheConversation": "Začnite konverzáciu.",
+        "startTheConversation": "Prosím, začnite konverzáciu.",
         "languageSupportNote": "Indikátory jazykovej podpory zobrazujú kompatibilitu modelu s {languageName}Modely bez podpory sú deaktivované.",
         "reasoningNote": "Označuje, že model používa tokeny „myslenia“ alebo „uvažovania“. Tento výstup je fakturovaný, ale nie je viditeľný v chate.",
         "openaiOrgVerificationNote": "Označuje OpenAI Model vyžaduje overenú organizáciu. Môžete",
@@ -335,15 +369,15 @@ const sk = {
         "backToMain": "Späť na hlavný obsah",
         "conversationHistory": "História konverzácií",
         "chatWith": "Chatujte s {agentA} a {agentB}",
+        "conversationDescription": "Začaté dňa {date} - Jazyk: {language}",
         "viewConversation": "Zobraziť konverzáciu",
         "backToPreviousChats": "Späť na predchádzajúce rozhovory",
         "resumeConversation": "Obnoviť konverzáciu",
         "resuming": "Obnovuje sa...",
         "sessionDetails": "Podrobnosti o relácii",
-        "language": "Jazyk:",
+        "language": "Jazyk",
         "transcript": "Prepis",
         "loadingHistory": "Načítava sa história...",
-        "conversationDescription": "Začaté dňa {date} - Jazyk: {language}",
         "loadingConversation": "Načítava sa konverzácia...",
         "chatStartedOn": "Chat sa začal dňa {date}",
         "agentAModel": "Model agenta A",
@@ -355,18 +389,8 @@ const sk = {
         "model": "Model",
         "voice": "Hlas"
     },
-    "common_verifyHere": "overiť tu",
-    "page_AvailableImageModelsTitle": "Aktuálne dostupné modely obrázkov",
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",
-    "imageModel_PriceUSD": "Cena (USD)",
-    "page_TooltipKnowledgeCutoff": "Znalosti modelu sú k tomuto dátumu ukončené.",
-    "modelCategory_MistralAIPremierModels": "Prémiové modely",
-    "modelCategory_MistralAIOpenModels": "Otvorené modely",
-    "pricing": {
-        "perMillionTokens": "na 1 milión tokenov",
-        "tokens": "žetóny",
-        "free": "Zadarmo"
-    }
+    "imageModel_PriceUSD": "Cena (USD)"
 };
 export default sk;

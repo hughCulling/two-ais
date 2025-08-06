@@ -71,6 +71,7 @@ const uk = {
         "mn": "Монгольська"
     },
     "settings": {
+        "loading": "Завантаження налаштувань...",
         "title": "Налаштування",
         "sections": {
             "appearance": "Зовнішній вигляд",
@@ -95,17 +96,17 @@ const uk = {
         },
         "apiKeys": {
             "title": "API Ключі",
-            "description": "Керуйте своїм API ключі для різних AI постачальники",
-            "saved": "Збережено",
-            "notSet": "Не встановлено",
-            "setKey": "Встановити ключ",
-            "updateKey": "Ключ оновлення",
-            "removeKey": "Видалити ключ",
-            "getKeyInstructions": "Отримайте свій API ключ",
-            "noNewKeys": "Нічого нового API ключі, введені для збереження.",
-            "unexpectedResponse": "Отримано неочікувану відповідь від сервера.",
+            "description": "Керуйте своїм API ключі для різних AI послуги.",
+            "setKey": "Набір",
+            "updateKey": "Оновлення",
+            "saveUpdateKeys": "Зберегти / оновити ключі",
+            "saving": "Збереження...",
+            "noNewKeys": "Немає нових ключів для збереження.",
+            "keyStoredSecurely": "Ваш API ключ буде зберігатися надійно та зашифровано.",
+            "enteringNewKeyOverwrites": "Введення нового ключа перезапише існуючий.",
             "failedToSaveKey": "Не вдалося зберегти ключ {serviceName}.",
-            "someKeysNotSaved": "Деякі API ключі не вдалося зберегти. Будь ласка, перевірте деталі нижче.",
+            "unexpectedResponse": "Неочікувана відповідь від сервера.",
+            "someKeysNotSaved": "Деякі ключі не вдалося зберегти. Будь ласка, перевірте помилки вище.",
             "keyStatus": "ключовий стан...",
             "apiKeySecurelySaved": "API Ключ надійно збережено",
             "confirmRemoveTitle": "Підтвердити видалення",
@@ -114,16 +115,12 @@ const uk = {
             "successfullyRemovedKey": "Ключ {serviceName} успішно видалено.",
             "keyNotSet": "Стан ключа: Не встановлено",
             "keySet": "Стан ключа: Встановлено",
-            "saveButton": "Зберегти API Ключ(и)",
-            "enteringNewKeyOverwrites": "Введення нового ключа перезапише збережений.",
-            "keyStoredSecurely": "Ваш ключ буде надійно збережено за допомогою Google Таємний менеджер.",
-            "saveUpdateKeys": "Зберегти / оновити ключі",
-            "saving": "Збереження..."
-        },
-        "loading": "Завантаження налаштувань..."
+            "saveButton": "Зберегти API Ключ(и)"
+        }
     },
     "main": {
         "title": "AI Розмова",
+        "aiConversation": "AI Розмова",
         "setupForm": {
             "title": "Налаштуйте свою розмову",
             "agentA": "Агент А",
@@ -141,7 +138,7 @@ const uk = {
                 "selectModel": "Виберіть TTS модель"
             },
             "startConversation": "Почати розмову",
-            "conversationPrompt": "Почніть розмову."
+            "conversationPrompt": "Будь ласка, почніть розмову."
         },
         "conversation": {
             "thinking": "мислення...",
@@ -153,8 +150,7 @@ const uk = {
             "perMillionTokens": "на мільйон токенів",
             "input": "Вхід",
             "output": "Вихід"
-        },
-        "aiConversation": "AI Розмова"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const uk = {
             "signUpWithGoogle": "Зареєструватися за допомогою Google",
             "hasAccount": "Вже маєте обліковий запис?",
             "signIn": "Увійти",
-            "emailLabel": "Email адреса",
+            "emailLabel": "Адреса електронної пошти",
             "confirmPasswordPlaceholder": "Підтвердьте пароль",
             "signingUp": "Реєстрація..."
         },
@@ -185,7 +181,7 @@ const uk = {
             "invalidCredentials": "Недійсна електронна адреса або пароль",
             "userNotFound": "Користувача не знайдено",
             "weakPassword": "Пароль має містити щонайменше 6 символів",
-            "emailInUse": "Email вже використовується",
+            "emailInUse": "Електронна пошта вже використовується",
             "generic": "Сталася помилка. Будь ласка, спробуйте ще раз.",
             "initialization": "Помилка ініціалізації. Будь ласка, спробуйте пізніше.",
             "invalidEmail": "Будь ласка, введіть дійсну адресу електронної пошти.",
@@ -229,12 +225,14 @@ const uk = {
     "modelCategory_Gemini2_0": "Gemini 2.0 моделі",
     "modelCategory_Gemini1_5": "Gemini 1.5 моделі",
     "modelCategory_Claude4": "Claude 4 моделі",
-    "modelCategory_Claude3_7": "Claude 3.7 моделі",
+    "modelCategory_Claude3_7": "Claude 3.7 модель",
     "modelCategory_Claude3_5": "Claude 3.5 моделі",
     "modelCategory_Claude3": "Claude 3 моделі",
-    "modelCategory_Grok4": "Grok 4 моделі",
+    "modelCategory_Grok4": "Grok 4 модель",
     "modelCategory_Grok3": "Grok 3 моделі",
     "modelCategory_Grok3Mini": "Grok 3 Міні-моделі",
+    "modelCategory_MistralAIPremierModels": "Прем'єрні моделі",
+    "modelCategory_MistralAIOpenModels": "Відкрита модель",
     "modelCategory_Llama4": "Llama 4 моделі",
     "modelCategory_Llama3_3": "Llama 3.3 моделі",
     "modelCategory_Llama3_2": "Llama 3.2 моделі",
@@ -246,18 +244,18 @@ const uk = {
     "modelCategory_Gemma2": "Gemma 2 моделі",
     "modelCategory_Gemma": "Gemma моделі",
     "modelCategory_GoogleGemma": "Google Gemma Моделі",
-    "modelCategory_DeepSeekR1": "DeepSeek Моделі R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Моделі V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Модель R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Модель V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Моделі R1 Distill",
     "modelCategory_DeepSeekModels": "DeepSeek Моделі",
     "modelCategory_MistralAIModels": "Mistral AI Моделі",
     "modelCategory_Qwen3": "Qwen3 моделі",
-    "modelCategory_QwQwQ": "Qwen Моделі QwQ",
+    "modelCategory_QwQwQ": "Qwen Модель QwQ",
     "modelCategory_Qwen2_5": "Qwen2,5 моделі",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Моделі зору",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Моделі кодера",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Модель зору",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Модель кодера",
     "modelCategory_Qwen2": "Qwen2 моделі",
-    "modelCategory_Qwen2Vision": "Qwen2 моделі Vision",
+    "modelCategory_Qwen2Vision": "Qwen2 Модель бачення",
     "modelCategory_QwenModels": "Qwen Моделі",
     "modelCategory_OtherModels": "Інші моделі",
     "page_ErrorLoadingUserData": "Не вдалося завантажити дані користувача: {errorMessage}. Спробуйте оновити сторінку.",
@@ -269,12 +267,13 @@ const uk = {
     "page_LoadingUserData": "Завантаження даних користувача...",
     "page_ErrorAlertTitle": "Помилка",
     "page_WelcomeTitle": "Ласкаво просимо до Two AIs",
-    "page_WelcomeSubtitle": "Цей вебсайт дозволяє прослуховувати розмови між двома Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Цей вебсайт дозволяє прослуховувати розмови між двома Large Language Models (LLMs) та генерувати зображення для кожного ходу.",
     "page_ApiKeysRequiredTitle": "API Необхідні ключі",
     "page_ApiKeysRequiredDescription": "Щоб вести розмови, вам потрібно буде надати власні API ключі для AI моделі, які ви хочете використовувати (наприклад, OpenAI, Google, Anthropic) після входу. Детальні інструкції для кожного постачальника можна знайти в розділі Налаштування / API Сторінка ключів після входу.",
     "page_SignInPrompt": "Щоб розпочати власний сеанс, ви можете увійти або створити обліковий запис, скориставшись посиланням у заголовку.",
     "page_VideoTitle": "Two AIs Демонстрація розмови",
     "page_AvailableLLMsTitle": "Наразі доступно LLMs",
+    "page_TooltipKnowledgeCutoff": "Знання моделі на цьому етапі припиняються.",
     "page_TooltipGoogleThinkingBudget": "Це Google Модель використовує «бюджет обдумування». Результат «обдумування» виставляється рахунок, але його не видно в чаті.",
     "page_TooltipAnthropicExtendedThinking": "Це Anthropic Модель використовує «розширене мислення». Результат «мислення» оплачується, але не відображається в чаті.",
     "page_TooltipXaiThinking": "Це xAI Модель використовує «мислення». Цей результат оплачується, але не відображається в чаті.",
@@ -283,17 +282,52 @@ const uk = {
     "page_TooltipGenericReasoning": "Ця модель використовує токени міркувань, які не видно в чаті, але оплачуються як вихідні токени.",
     "page_TooltipRequiresVerification": "Потрібно перевірити OpenAI організація. Ви можете перевірити тут.",
     "page_TooltipSupportsLanguage": "Підтримує {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Ця модель може не повністю підтримувати {languageName} для розмов.",
+    "page_TooltipMayNotSupportLanguage": "Ця модель може не повністю підтримувати {languageName} для розмови.",
     "page_BadgePreview": "Попередній перегляд",
     "page_BadgeExperimental": "Експериментальний",
     "page_BadgeBeta": "Бета-версія",
     "page_AvailableTTSTitle": "Наразі доступно Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Наразі доступні моделі зображень",
     "page_NoTTSOptions": "Ні TTS доступні наразі опції.",
     "page_TruncatableNoteFormat": "({примітка})",
     "page_PricesLastVerifiedOn": "Ціни востаннє перевірялися {date}",
-    "page_PricingPerTokens": "за {amount} Токени",
+    "page_PricingPerTokens": "за 1 мільйон токенів",
     "page_ModelCategoryModels": "{model} моделі",
+    "common_verifyHere": "перевірте тут",
     "ttsVoice_Ugne": "У вогні",
+    "pricing": {
+        "perMillionTokens": "за 1 мільйон токенів",
+        "tokens": "жетони",
+        "free": "Безкоштовно",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} за 1 мільйон текстових токенів",
+                "audioTokens": "{price} за 1 мільйон аудіотокенів"
+            },
+            "geminiPro": {
+                "textTokens": "{price} за 1 мільйон текстових токенів",
+                "audioTokens": "{price} за 1 мільйон аудіотокенів"
+            },
+            "openAIMini": {
+                "textTokens": "{price} за 1 мільйон текстових токенів",
+                "audioTokens": "{price} за 1 мільйон аудіотокенів"
+            },
+            "openAITTS1": {
+                "standard": "{price} за 1 мільйон токенів"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} за 1 мільйон токенів"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} на 1 мільйон символів",
+                "neural": "{price} на 1 мільйон символів",
+                "studio": "{price} на 1 мільйон символів",
+                "chirpHD": "Не вдалося перевірити",
+                "chirp3HD": "{price} на 1 мільйон символів"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Форма налаштування сеансу",
         "description": "Тут ви можете вибрати LLM та необов'язково TTS налаштування для кожного агента.",
@@ -309,13 +343,13 @@ const uk = {
         "initialPromptDescription": "Це повідомлення буде надіслано як перше для початку розмови. Якщо залишити це поле порожнім, запиту не буде.",
         "startConversation": "Почати розмову",
         "starting": "Початок...",
-        "startTheConversation": "Почніть розмову.",
+        "startTheConversation": "Будь ласка, почніть розмову.",
         "languageSupportNote": "Індикатори підтримки мов показують сумісність моделі з {languageName}Моделі без підтримки відключені.",
         "reasoningNote": "Вказує на використання моделі токенів «мислення» або «міркування». Цей результат оплачується, але не відображається в чаті.",
         "openaiOrgVerificationNote": "Вказує на OpenAI Модель вимагає перевіреної організації. Ви можете",
         "voice": "Голос",
         "selectVoice": "Виберіть голос",
-        "noVoicesFor": "Немає голосів за {languageName}",
+        "noVoicesFor": "Немає голосів для {languageName}",
         "ttsProviderModel": "{providerName} Модель",
         "selectTtsProviderModel": "Виберіть {providerName} Модель",
         "selectProvider": "Виберіть постачальника",
@@ -335,15 +369,15 @@ const uk = {
         "backToMain": "Назад до головного",
         "conversationHistory": "Історія розмов",
         "chatWith": "Спілкуйтеся з {agentA} & {agentB}",
+        "conversationDescription": "Розпочато {date} - Мова: {language}",
         "viewConversation": "Переглянути розмову",
         "backToPreviousChats": "Назад до попередніх чатів",
         "resumeConversation": "Відновити розмову",
         "resuming": "Відновлення...",
         "sessionDetails": "Деталі сеансу",
-        "language": "Мова:",
+        "language": "Мова",
         "transcript": "Стенограма",
         "loadingHistory": "Завантаження історії...",
-        "conversationDescription": "Розпочато {date} - Мова: {language}",
         "loadingConversation": "Завантаження розмови...",
         "chatStartedOn": "Чат розпочато {date}",
         "agentAModel": "Модель агента А",
@@ -355,18 +389,8 @@ const uk = {
         "model": "Модель",
         "voice": "Голос"
     },
-    "common_verifyHere": "перевірте тут",
-    "page_AvailableImageModelsTitle": "Доступні наразі моделі зображень",
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",
-    "imageModel_PriceUSD": "Ціна (USD)",
-    "page_TooltipKnowledgeCutoff": "Знання моделі на цьому етапі припиняються.",
-    "modelCategory_MistralAIPremierModels": "Прем'єрні моделі",
-    "modelCategory_MistralAIOpenModels": "Відкриті моделі",
-    "pricing": {
-        "perMillionTokens": "за 1 мільйон токенів",
-        "tokens": "жетони",
-        "free": "Безкоштовно"
-    }
+    "imageModel_PriceUSD": "Ціна (USD)"
 };
 export default uk;

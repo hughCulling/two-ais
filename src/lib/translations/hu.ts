@@ -71,6 +71,7 @@ const hu = {
         "mn": "mongol"
     },
     "settings": {
+        "loading": "Beállítások betöltése...",
         "title": "Beállítások",
         "sections": {
             "appearance": "Megjelenés",
@@ -95,17 +96,17 @@ const hu = {
         },
         "apiKeys": {
             "title": "API Kulcsok",
-            "description": "Kezelje a API kulcsok különböző AI szolgáltatók",
-            "saved": "Mentett",
-            "notSet": "Nincs beállítva",
-            "setKey": "Kulcs beállítása",
-            "updateKey": "Kulcs frissítése",
-            "removeKey": "Kulcs eltávolítása",
-            "getKeyInstructions": "Szerezd meg a API kulcsfontosságú",
-            "noNewKeys": "Nincs új API mentéshez megadott kulcsok.",
-            "unexpectedResponse": "Váratlan választ kaptam a szervertől.",
+            "description": "Kezelje a API kulcsok különböző AI szolgáltatások.",
+            "setKey": "Készlet",
+            "updateKey": "Frissítés",
+            "saveUpdateKeys": "Kulcsok mentése / frissítése",
+            "saving": "Megtakarítás...",
+            "noNewKeys": "Nincsenek új kulcsok, amiket menteni lehetne.",
+            "keyStoredSecurely": "A te API A kulcs biztonságosan és titkosítva lesz tárolva.",
+            "enteringNewKeyOverwrites": "Egy új kulcs beírása felülírja a meglévőt.",
             "failedToSaveKey": "Nem sikerült menteni a(z) {serviceName} kulcsot.",
-            "someKeysNotSaved": "Néhány API A kulcsok mentése nem sikerült. Kérjük, ellenőrizze az alábbi részleteket.",
+            "unexpectedResponse": "Váratlan válasz a szervertől.",
+            "someKeysNotSaved": "Néhány kulcsot nem sikerült menteni. Kérjük, ellenőrizze a fenti hibákat.",
             "keyStatus": "kulcsfontosságú állapot...",
             "apiKeySecurelySaved": "API A kulcs biztonságosan mentve",
             "confirmRemoveTitle": "Eltávolítás megerősítése",
@@ -114,16 +115,12 @@ const hu = {
             "successfullyRemovedKey": "A(z) {serviceName} kulcsot sikeresen eltávolítottuk.",
             "keyNotSet": "Kulcs állapota: Nincs beállítva",
             "keySet": "Kulcs állapota: Beállítva",
-            "saveButton": "Megtakarítás API Kulcs(ok)",
-            "enteringNewKeyOverwrites": "Egy új kulcs beírása felülírja a mentett kulcsot.",
-            "keyStoredSecurely": "A kulcsot biztonságosan tároljuk a következő használatával: Google Titkos menedzser.",
-            "saveUpdateKeys": "Kulcsok mentése / frissítése",
-            "saving": "Megtakarítás..."
-        },
-        "loading": "Beállítások betöltése..."
+            "saveButton": "Megtakarítás API Kulcs(ok)"
+        }
     },
     "main": {
         "title": "AI Beszélgetés",
+        "aiConversation": "AI Beszélgetés",
         "setupForm": {
             "title": "Állítsa be a beszélgetést",
             "agentA": "A ügynök",
@@ -141,7 +138,7 @@ const hu = {
                 "selectModel": "Válasszon TTS modell"
             },
             "startConversation": "Beszélgetés indítása",
-            "conversationPrompt": "Kezdje el a beszélgetést."
+            "conversationPrompt": "Kérlek, kezdd el a beszélgetést."
         },
         "conversation": {
             "thinking": "gondolkodás...",
@@ -153,8 +150,7 @@ const hu = {
             "perMillionTokens": "millió tokenenként",
             "input": "Bemenet",
             "output": "Kimenet"
-        },
-        "aiConversation": "AI Beszélgetés"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const hu = {
             "signUpWithGoogle": "Regisztrálj itt: Google",
             "hasAccount": "Már van fiókod?",
             "signIn": "Bejelentkezés",
-            "emailLabel": "Email cím",
+            "emailLabel": "E-mail cím",
             "confirmPasswordPlaceholder": "Jelszó megerősítése",
             "signingUp": "Regisztráció..."
         },
@@ -185,7 +181,7 @@ const hu = {
             "invalidCredentials": "Érvénytelen e-mail cím vagy jelszó",
             "userNotFound": "Felhasználó nem található",
             "weakPassword": "A jelszónak legalább 6 karakterből kell állnia",
-            "emailInUse": "Email már használatban van",
+            "emailInUse": "Az e-mail cím már használatban van",
             "generic": "Hiba történt. Kérjük, próbálja újra.",
             "initialization": "Inicializálási hiba. Kérjük, próbálja meg később.",
             "invalidEmail": "Kérjük, adjon meg egy érvényes e-mail címet.",
@@ -229,12 +225,14 @@ const hu = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modellek",
     "modelCategory_Gemini1_5": "Gemini 1.5 modellek",
     "modelCategory_Claude4": "Claude 4 modellek",
-    "modelCategory_Claude3_7": "Claude 3.7 modellek",
+    "modelCategory_Claude3_7": "Claude 3.7 modell",
     "modelCategory_Claude3_5": "Claude 3.5 modellek",
     "modelCategory_Claude3": "Claude 3 modellek",
-    "modelCategory_Grok4": "Grok 4 modellek",
+    "modelCategory_Grok4": "Grok 4 modell",
     "modelCategory_Grok3": "Grok 3 modellek",
     "modelCategory_Grok3Mini": "Grok 3 Mini modellek",
+    "modelCategory_MistralAIPremierModels": "Prémium modellek",
+    "modelCategory_MistralAIOpenModels": "Nyitott modell",
     "modelCategory_Llama4": "Llama 4 modell",
     "modelCategory_Llama3_3": "Llama 3.3 modellek",
     "modelCategory_Llama3_2": "Llama 3.2 modellek",
@@ -246,16 +244,16 @@ const hu = {
     "modelCategory_Gemma2": "Gemma 2 modell",
     "modelCategory_Gemma": "Gemma modellek",
     "modelCategory_GoogleGemma": "Google Gemma Modellek",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 modellek",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 modellek",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 modell",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modell",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 lepárló modellek",
     "modelCategory_DeepSeekModels": "DeepSeek Modellek",
     "modelCategory_MistralAIModels": "Mistral AI Modellek",
     "modelCategory_Qwen3": "Qwen3 modell",
-    "modelCategory_QwQwQ": "Qwen QwQ modellek",
+    "modelCategory_QwQwQ": "Qwen QwQ modell",
     "modelCategory_Qwen2_5": "Qwen2,5-ös modellek",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision modellek",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kódoló modellek",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision modell",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Kódoló modell",
     "modelCategory_Qwen2": "Qwen2 modell",
     "modelCategory_Qwen2Vision": "Qwen2 Vision modell",
     "modelCategory_QwenModels": "Qwen Modellek",
@@ -269,12 +267,13 @@ const hu = {
     "page_LoadingUserData": "Felhasználói adatok betöltése...",
     "page_ErrorAlertTitle": "Hiba",
     "page_WelcomeTitle": "Üdvözöljük a Two AIs",
-    "page_WelcomeSubtitle": "Ez a weboldal lehetővé teszi, hogy meghallgatd két ember közötti beszélgetéseket Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Ez a weboldal lehetővé teszi, hogy meghallgatd két ember közötti beszélgetéseket Large Language Models (LLMs) és képeket generál minden fordulathoz.",
     "page_ApiKeysRequiredTitle": "API Szükséges kulcsok",
     "page_ApiKeysRequiredDescription": "A beszélgetések lebonyolításához meg kell adnia a sajátját API kulcsok a AI a használni kívánt modellek (pl. OpenAI, Google, Anthropic) bejelentkezés után. Az egyes szolgáltatókra vonatkozó részletes utasítások a Beállítások / API Kulcsok oldal bejelentkezés után.",
     "page_SignInPrompt": "Saját munkamenet indításához bejelentkezhet vagy létrehozhat egy fiókot a fejlécben található link segítségével.",
     "page_VideoTitle": "Two AIs Beszélgetési demó",
     "page_AvailableLLMsTitle": "Jelenleg elérhető LLMs",
+    "page_TooltipKnowledgeCutoff": "A modell tudása ezen a napon le van tiltva.",
     "page_TooltipGoogleThinkingBudget": "Ez Google A modell egy „gondolkodó költségvetést” használ. A „gondolkodó” kimenet számlázásra kerül, de nem látható a chaten.",
     "page_TooltipAnthropicExtendedThinking": "Ez Anthropic A modell „kiterjesztett gondolkodást” használ. A „gondolkodás” kimenete számlázásra kerül, de nem látható a chaten.",
     "page_TooltipXaiThinking": "Ez xAI A modell a „gondolkodás” kifejezést használja. Ez a kimenet számlázásra kerül, de nem látható a chaten.",
@@ -282,22 +281,57 @@ const hu = {
     "page_TooltipDeepSeekReasoning": "Ez DeepSeek A modell az „érvelés/gondolkodás” módszert használja. A kimenet számlázásra kerül, de nem látható a chaten.",
     "page_TooltipGenericReasoning": "Ez a modell olyan érvelési tokeneket használ, amelyek nem láthatók a csevegésben, de kimeneti tokenekként számlázódnak.",
     "page_TooltipRequiresVerification": "Ellenőrzött OpenAI szervezet. Itt ellenőrizheti.",
-    "page_TooltipSupportsLanguage": "Támogatja a(z) {languageName} nyelvet",
-    "page_TooltipMayNotSupportLanguage": "Ez a modell nem feltétlenül támogatja teljes mértékben a(z) {languageName} nyelvet beszélgetésekhez.",
+    "page_TooltipSupportsLanguage": "Támogatások {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Ez a modell esetleg nem támogatja teljes mértékben {languageName} beszélgetéshez.",
     "page_BadgePreview": "Előnézet",
     "page_BadgeExperimental": "Kísérleti",
     "page_BadgeBeta": "Béta",
     "page_AvailableTTSTitle": "Jelenleg elérhető Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Jelenleg elérhető képmodellek",
     "page_NoTTSOptions": "Nem TTS jelenleg elérhető opciók.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Az árak utolsó ellenőrzésének dátuma: {date}",
-    "page_PricingPerTokens": "per {amount} Tokenek",
+    "page_PricingPerTokens": "1 millió tokenenként",
     "page_ModelCategoryModels": "{model} modellek",
+    "common_verifyHere": "ellenőrizze itt",
     "ttsVoice_Ugne": "A tűzben",
+    "pricing": {
+        "perMillionTokens": "1 millió tokenenként",
+        "tokens": "zsetonok",
+        "free": "Ingyenes",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 1 millió szöveges tokenenként",
+                "audioTokens": "{price} 1 millió audio tokenenként"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 1 millió szöveges tokenenként",
+                "audioTokens": "{price} 1 millió audio tokenenként"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 1 millió szöveges tokenenként",
+                "audioTokens": "{price} 1 millió audio tokenenként"
+            },
+            "openAITTS1": {
+                "standard": "{price} 1 millió tokenenként"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 1 millió tokenenként"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 1 millió karakterenként",
+                "neural": "{price} 1 millió karakterenként",
+                "studio": "{price} 1 millió karakterenként",
+                "chirpHD": "Nem sikerült ellenőrizni",
+                "chirp3HD": "{price} 1 millió karakterenként"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Munkamenet-beállítási űrlap",
         "description": "Itt kiválaszthatja az LLM-et és az opcionális TTS beállítások minden ügynökhöz.",
-        "agentAModel": "A. ügynök modellje",
+        "agentAModel": "A. ügynök modell",
         "agentBModel": "B ügynök modell",
         "selectLLMForAgentA": "Válassza ki az LLM-et az A ügynök számára",
         "selectLLMForAgentB": "Válassza ki az LLM-et a B ügynök számára",
@@ -309,7 +343,7 @@ const hu = {
         "initialPromptDescription": "Ez az üzenet a beszélgetés megkezdéséhez szükséges első üzenetként lesz elküldve. Ha üresen hagyja, nem lesz üzenet.",
         "startConversation": "Beszélgetés indítása",
         "starting": "Kezdés...",
-        "startTheConversation": "Kezdje el a beszélgetést.",
+        "startTheConversation": "Kérlek, kezdd el a beszélgetést.",
         "languageSupportNote": "A nyelvi támogatás jelzői a modell kompatibilitását mutatják. {languageName}A támogatás nélküli modellek le vannak tiltva.",
         "reasoningNote": "Azt jelzi, hogy a modell „gondolkodás” vagy „érvelés” tokeneket használ. Ez a kimenet számlázva van, de nem látható a chaten.",
         "openaiOrgVerificationNote": "Jelzi, hogy OpenAI modellhez ellenőrzött szervezet szükséges.",
@@ -335,38 +369,28 @@ const hu = {
         "backToMain": "Vissza a főoldalra",
         "conversationHistory": "Beszélgetési előzmények",
         "chatWith": "Csevegés {agentA} & {agentB}",
+        "conversationDescription": "Kezdés dátuma {date} - Nyelv: {language}",
         "viewConversation": "Beszélgetés megtekintése",
         "backToPreviousChats": "Vissza az előző csevegésekhez",
         "resumeConversation": "Beszélgetés folytatása",
         "resuming": "Folytatás...",
         "sessionDetails": "Munkamenet részletei",
-        "language": "Nyelv:",
+        "language": "Nyelv",
         "transcript": "Átirat",
         "loadingHistory": "Előzmények betöltése...",
-        "conversationDescription": "Kezdés dátuma {date} - Nyelv: {language}",
         "loadingConversation": "Beszélgetés betöltése...",
         "chatStartedOn": "Csevegés kezdete: {date}",
-        "agentAModel": "A. ügynök modellje",
+        "agentAModel": "A. ügynök modell",
         "agentBModel": "B ügynök modell",
         "ttsSettings": "TTS Beállítások",
         "agentATTS": "A ügynök TTS",
-        "agentBTTS": "B ügynök TTS",
+        "agentBTTS": "B. ügynök TTS",
         "provider": "Szolgáltató",
         "model": "Modell",
         "voice": "Hang"
     },
-    "common_verifyHere": "ellenőrizze itt",
-    "page_AvailableImageModelsTitle": "Jelenleg elérhető képmodellek",
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",
-    "imageModel_PriceUSD": "Ár (USD)",
-    "page_TooltipKnowledgeCutoff": "A modell tudása ezen a napon le van tiltva.",
-    "modelCategory_MistralAIPremierModels": "Prémium modellek",
-    "modelCategory_MistralAIOpenModels": "Nyílt modellek",
-    "pricing": {
-        "perMillionTokens": "1 millió tokenenként",
-        "tokens": "zsetonok",
-        "free": "Ingyenes"
-    }
+    "imageModel_PriceUSD": "Ár (USD)"
 };
 export default hu;

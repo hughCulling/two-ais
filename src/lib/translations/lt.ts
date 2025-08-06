@@ -71,6 +71,7 @@ const lt = {
         "mn": "Mongolų"
     },
     "settings": {
+        "loading": "Įkeliami nustatymai...",
         "title": "Nustatymai",
         "sections": {
             "appearance": "Išvaizda",
@@ -95,35 +96,31 @@ const lt = {
         },
         "apiKeys": {
             "title": "API Raktai",
-            "description": "Tvarkykite savo API raktai skirtingiems AI paslaugų teikėjai",
-            "saved": "Išsaugota",
-            "notSet": "Nenustatyta",
-            "setKey": "Nustatyti raktą",
-            "updateKey": "Atnaujinimo raktas",
-            "removeKey": "Pašalinti raktą",
-            "getKeyInstructions": "Gaukite savo API raktas",
-            "noNewKeys": "Nėra naujų API Įvesti raktai, skirti išsaugoti.",
-            "unexpectedResponse": "Gautas netikėtas atsakymas iš serverio.",
+            "description": "Tvarkykite savo API raktai skirtingiems AI paslaugos.",
+            "setKey": "Nustatyti",
+            "updateKey": "Atnaujinimas",
+            "saveUpdateKeys": "Įrašyti / atnaujinti raktus",
+            "saving": "Įrašoma...",
+            "noNewKeys": "Nėra naujų raktų, kuriuos būtų galima išsaugoti.",
+            "keyStoredSecurely": "Jūsų API raktas bus saugiai saugomas ir užšifruotas.",
+            "enteringNewKeyOverwrites": "Įvedus naują raktą, esamas bus perrašytas.",
             "failedToSaveKey": "Nepavyko išsaugoti {serviceName} rakto.",
-            "someKeysNotSaved": "Kai kurie API Nepavyko išsaugoti raktų. Patikrinkite toliau pateiktą informaciją.",
+            "unexpectedResponse": "Netikėtas atsakymas iš serverio.",
+            "someKeysNotSaved": "Kai kurių raktų išsaugoti nepavyko. Patikrinkite aukščiau pateiktas klaidas.",
             "keyStatus": "rakto būsena...",
             "apiKeySecurelySaved": "API Raktas saugiai išsaugotas",
             "confirmRemoveTitle": "Patvirtinti pašalinimą",
-            "confirmRemoveDescription": "Ar tikrai norite pašalinti API „{serviceName}“ raktas? Šio veiksmo negalima atšaukti.",
+            "confirmRemoveDescription": "Ar tikrai norite pašalinti API „{serviceName}“ raktas? Šio veiksmo atšaukti negalima.",
             "failedToRemoveKey": "Nepavyko pašalinti {serviceName} rakto.",
             "successfullyRemovedKey": "„{serviceName}“ raktas sėkmingai pašalintas.",
             "keyNotSet": "Rakto būsena: nenustatyta",
             "keySet": "Rakto būsena: Nustatyta",
-            "saveButton": "Išsaugoti API Raktas(-ai)",
-            "enteringNewKeyOverwrites": "Įvedus naują raktą, išsaugotas bus perrašytas.",
-            "keyStoredSecurely": "Jūsų raktas bus saugiai saugomas naudojant Google Slaptasis vadybininkas.",
-            "saveUpdateKeys": "Įrašyti / atnaujinti raktus",
-            "saving": "Įrašoma..."
-        },
-        "loading": "Įkeliami nustatymai..."
+            "saveButton": "Išsaugoti API Raktas(-ai)"
+        }
     },
     "main": {
         "title": "AI Pokalbis",
+        "aiConversation": "AI Pokalbis",
         "setupForm": {
             "title": "Nustatykite savo pokalbį",
             "agentA": "Agentas A",
@@ -141,7 +138,7 @@ const lt = {
                 "selectModel": "Pasirinkite TTS modelis"
             },
             "startConversation": "Pradėti pokalbį",
-            "conversationPrompt": "Pradėkite pokalbį."
+            "conversationPrompt": "Prašau pradėti pokalbį."
         },
         "conversation": {
             "thinking": "galvoju...",
@@ -153,8 +150,7 @@ const lt = {
             "perMillionTokens": "už milijoną žetonų",
             "input": "Įvestis",
             "output": "Išvestis"
-        },
-        "aiConversation": "AI Pokalbis"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const lt = {
             "signUpWithGoogle": "Registruotis naudojant Google",
             "hasAccount": "Jau turite paskyrą?",
             "signIn": "Prisijungti",
-            "emailLabel": "Email adresas",
+            "emailLabel": "El. pašto adresas",
             "confirmPasswordPlaceholder": "Patvirtinkite slaptažodį",
             "signingUp": "Registruojamės..."
         },
@@ -185,7 +181,7 @@ const lt = {
             "invalidCredentials": "Neteisingas el. pašto adresas arba slaptažodis",
             "userNotFound": "Vartotojas nerastas",
             "weakPassword": "Slaptažodis turi būti sudarytas iš bent 6 simbolių",
-            "emailInUse": "Email jau naudojamas",
+            "emailInUse": "El. pašto adresas jau naudojamas",
             "generic": "Įvyko klaida. Bandykite dar kartą.",
             "initialization": "Inicializacijos klaida. Bandykite dar kartą vėliau.",
             "invalidEmail": "Įveskite galiojantį el. pašto adresą.",
@@ -229,12 +225,14 @@ const lt = {
     "modelCategory_Gemini2_0": "Gemini 2.0 modeliai",
     "modelCategory_Gemini1_5": "Gemini 1.5 modeliai",
     "modelCategory_Claude4": "Claude 4 modeliai",
-    "modelCategory_Claude3_7": "Claude 3.7 modeliai",
+    "modelCategory_Claude3_7": "Claude 3.7 modelis",
     "modelCategory_Claude3_5": "Claude 3.5 modeliai",
     "modelCategory_Claude3": "Claude 3 modeliai",
-    "modelCategory_Grok4": "Grok 4 modeliai",
+    "modelCategory_Grok4": "Grok 4 modelis",
     "modelCategory_Grok3": "Grok 3 modeliai",
     "modelCategory_Grok3Mini": "Grok 3 Mini modeliai",
+    "modelCategory_MistralAIPremierModels": "Aukščiausios klasės modeliai",
+    "modelCategory_MistralAIOpenModels": "Atviras modelis",
     "modelCategory_Llama4": "Llama 4 modeliai",
     "modelCategory_Llama3_3": "Llama 3.3 modeliai",
     "modelCategory_Llama3_2": "Llama 3.2 modeliai",
@@ -246,18 +244,18 @@ const lt = {
     "modelCategory_Gemma2": "Gemma 2 modelis",
     "modelCategory_Gemma": "Gemma modeliai",
     "modelCategory_GoogleGemma": "Google Gemma Modeliai",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 modeliai",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 modeliai",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 modelis",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 modelis",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 distiliavimo modeliai",
     "modelCategory_DeepSeekModels": "DeepSeek Modeliai",
     "modelCategory_MistralAIModels": "Mistral AI Modeliai",
-    "modelCategory_Qwen3": "Qwen3 modeliai",
-    "modelCategory_QwQwQ": "Qwen QwQ modeliai",
+    "modelCategory_Qwen3": "Qwen3 modelis",
+    "modelCategory_QwQwQ": "Qwen QwQ modelis",
     "modelCategory_Qwen2_5": "Qwen2,5 modeliai",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Regėjimo modeliai",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Koderio modeliai",
-    "modelCategory_Qwen2": "Qwen2 modeliai",
-    "modelCategory_Qwen2Vision": "Qwen2 „Vision“ modeliai",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Regėjimo modelis",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Koduotojo modelis",
+    "modelCategory_Qwen2": "Qwen2 modelis",
+    "modelCategory_Qwen2Vision": "Qwen2 vizijos modelis",
     "modelCategory_QwenModels": "Qwen Modeliai",
     "modelCategory_OtherModels": "Kiti modeliai",
     "page_ErrorLoadingUserData": "Nepavyko įkelti naudotojo duomenų: {errorMessage}. Pabandykite atnaujinti.",
@@ -269,12 +267,13 @@ const lt = {
     "page_LoadingUserData": "Įkeliami naudotojo duomenys...",
     "page_ErrorAlertTitle": "Klaida",
     "page_WelcomeTitle": "Sveiki atvykę į Two AIs",
-    "page_WelcomeSubtitle": "Ši svetainė leidžia jums klausytis pokalbių tarp dviejų žmonių Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Ši svetainė leidžia jums klausytis pokalbių tarp dviejų žmonių Large Language Models (LLMs) ir sugeneruoti vaizdus kiekvienam posūkiui.",
     "page_ApiKeysRequiredTitle": "API Reikalingi raktai",
     "page_ApiKeysRequiredDescription": "Norėdami vesti pokalbius, turėsite pateikti savo API raktai, skirti AI modeliai, kuriuos norite naudoti (pvz., OpenAI, Google, Anthropic) prisijungus. Išsamias kiekvieno teikėjo instrukcijas galite rasti skiltyje „Nustatymai“ / API Raktų puslapis prisijungus.",
     "page_SignInPrompt": "Norėdami pradėti savo sesiją, galite prisijungti arba susikurti paskyrą naudodami nuorodą antraštėje.",
     "page_VideoTitle": "Two AIs Pokalbio demonstracija",
     "page_AvailableLLMsTitle": "Šiuo metu prieinama LLMs",
+    "page_TooltipKnowledgeCutoff": "Modelio žinios šią dieną yra nutrauktos.",
     "page_TooltipGoogleThinkingBudget": "Tai Google Modelis naudoja „mąstymo biudžetą“. „Mąstymo“ rezultatas yra apmokestinamas, bet pokalbyje nematomas.",
     "page_TooltipAnthropicExtendedThinking": "Tai Anthropic Modelis naudoja „išplėstinį mąstymą“. „Mąstymo“ rezultatas yra apmokestinamas, bet pokalbyje nematomas.",
     "page_TooltipXaiThinking": "Tai xAI Modelis naudoja „mąstymą“. Šis rezultatas yra apmokestinamas, bet nematomas pokalbyje.",
@@ -282,18 +281,53 @@ const lt = {
     "page_TooltipDeepSeekReasoning": "Tai DeepSeek Modelis naudoja „samprotavimą/mąstymą“. Rezultatas pateikiamas apmokestinamas, bet pokalbyje nematomas.",
     "page_TooltipGenericReasoning": "Šis modelis naudoja samprotavimo žetonus, kurie nėra matomi pokalbyje, bet yra apmokestinami kaip išvesties žetonai.",
     "page_TooltipRequiresVerification": "Reikalingas patvirtintas OpenAI organizacija. Galite patikrinti čia.",
-    "page_TooltipSupportsLanguage": "Palaiko {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Šis modelis gali nevisiškai palaikyti {languageName} pokalbiams.",
+    "page_TooltipSupportsLanguage": "Atramos {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Šis modelis gali nevisiškai palaikyti {languageName} pokalbiui.",
     "page_BadgePreview": "Peržiūra",
     "page_BadgeExperimental": "Eksperimentinis",
     "page_BadgeBeta": "Beta versija",
     "page_AvailableTTSTitle": "Šiuo metu prieinama Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Šiuo metu prieinami vaizdo modeliai",
     "page_NoTTSOptions": "Ne TTS šiuo metu galimų variantų.",
     "page_TruncatableNoteFormat": "({pastabos tekstas})",
     "page_PricesLastVerifiedOn": "Kainos paskutinį kartą patikrintos {date}",
-    "page_PricingPerTokens": "už {amount} Žetonai",
+    "page_PricingPerTokens": "už 1 milijoną žetonų",
     "page_ModelCategoryModels": "{model} modeliai",
+    "common_verifyHere": "patikrinkite čia",
     "ttsVoice_Ugne": "Ugne",
+    "pricing": {
+        "perMillionTokens": "už 1 milijoną žetonų",
+        "tokens": "žetonai",
+        "free": "Nemokama",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} už 1 milijoną teksto žetonų",
+                "audioTokens": "{price} už 1 milijoną garso žetonų"
+            },
+            "geminiPro": {
+                "textTokens": "{price} už 1 milijoną teksto žetonų",
+                "audioTokens": "{price} už 1 milijoną garso žetonų"
+            },
+            "openAIMini": {
+                "textTokens": "{price} už 1 milijoną teksto žetonų",
+                "audioTokens": "{price} už 1 milijoną garso žetonų"
+            },
+            "openAITTS1": {
+                "standard": "{price} už 1 milijoną žetonų"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} už 1 milijoną žetonų"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} už 1 milijoną simbolių",
+                "neural": "{price} už 1 milijoną simbolių",
+                "studio": "{price} už 1 milijoną simbolių",
+                "chirpHD": "Nepavyko patvirtinti",
+                "chirp3HD": "{price} už 1 milijoną simbolių"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Sesijos nustatymo forma",
         "description": "Čia galite pasirinkti LLM ir pasirinktinai TTS kiekvieno agento nustatymai.",
@@ -309,7 +343,7 @@ const lt = {
         "initialPromptDescription": "Šis raginimas bus išsiųstas kaip pirmoji žinutė pokalbiui pradėti. Jei paliksite jį tuščią, raginimo nebus.",
         "startConversation": "Pradėti pokalbį",
         "starting": "Pradedama...",
-        "startTheConversation": "Pradėkite pokalbį.",
+        "startTheConversation": "Prašau pradėti pokalbį.",
         "languageSupportNote": "Kalbos palaikymo indikatoriai rodo modelio suderinamumą su {languageName}Modeliai be palaikymo yra išjungti.",
         "reasoningNote": "Nurodo, kad modelis naudoja „mąstymo“ arba „samprotavimo“ žetonus. Už šią išvestį mokama, bet ji nematoma pokalbyje.",
         "openaiOrgVerificationNote": "Rodo OpenAI modeliui reikalinga patvirtinta organizacija. Galite",
@@ -335,15 +369,15 @@ const lt = {
         "backToMain": "Grįžti į pagrindinį puslapį",
         "conversationHistory": "Pokalbių istorija",
         "chatWith": "Pokalbis su {agentA} ir {agentB}",
+        "conversationDescription": "Pradėta {date} - Kalba: {language}",
         "viewConversation": "Peržiūrėti pokalbį",
         "backToPreviousChats": "Grįžti į ankstesnius pokalbius",
         "resumeConversation": "Tęsti pokalbį",
         "resuming": "Tęsiama...",
         "sessionDetails": "Sesijos informacija",
-        "language": "Kalba:",
+        "language": "Kalba",
         "transcript": "Nuorašas",
         "loadingHistory": "Kraunama istorija...",
-        "conversationDescription": "Pradėta {date} - Kalba: {language}",
         "loadingConversation": "Įkeliamas pokalbis...",
         "chatStartedOn": "Pokalbis pradėtas {date}",
         "agentAModel": "Agento A modelis",
@@ -355,18 +389,8 @@ const lt = {
         "model": "Modelis",
         "voice": "Balsas"
     },
-    "common_verifyHere": "patikrinkite čia",
-    "page_AvailableImageModelsTitle": "Šiuo metu prieinami vaizdo modeliai",
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",
-    "imageModel_PriceUSD": "Kaina (USD)",
-    "page_TooltipKnowledgeCutoff": "Modelio žinios šią dieną yra nutrauktos.",
-    "modelCategory_MistralAIPremierModels": "Aukščiausios klasės modeliai",
-    "modelCategory_MistralAIOpenModels": "Atviri modeliai",
-    "pricing": {
-        "perMillionTokens": "už 1 milijoną žetonų",
-        "tokens": "žetonai",
-        "free": "Nemokama"
-    }
+    "imageModel_PriceUSD": "Kaina (USD)"
 };
 export default lt;

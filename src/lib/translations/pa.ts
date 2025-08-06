@@ -71,6 +71,7 @@ const pa = {
         "mn": "ਮੰਗੋਲੀਆਈ"
     },
     "settings": {
+        "loading": "ਸੈਟਿੰਗਾਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ...",
         "title": "ਸੈਟਿੰਗਾਂ",
         "sections": {
             "appearance": "ਦਿੱਖ",
@@ -95,17 +96,17 @@ const pa = {
         },
         "apiKeys": {
             "title": "API ਕੁੰਜੀਆਂ",
-            "description": "ਆਪਣਾ ਪ੍ਰਬੰਧ ਕਰੋ API ਵੱਖ-ਵੱਖ ਲਈ ਕੁੰਜੀਆਂ AI ਪ੍ਰਦਾਤਾ",
-            "saved": "ਸੰਭਾਲਿਆ ਗਿਆ",
-            "notSet": "ਸੈੱਟ ਨਹੀਂ ਹੈ",
-            "setKey": "ਕੁੰਜੀ ਸੈੱਟ ਕਰੋ",
-            "updateKey": "ਅੱਪਡੇਟ ਕੁੰਜੀ",
-            "removeKey": "ਕੁੰਜੀ ਹਟਾਓ",
-            "getKeyInstructions": "ਆਪਣਾ ਪ੍ਰਾਪਤ ਕਰੋ API ਕੁੰਜੀ",
-            "noNewKeys": "ਕੋਈ ਨਵਾਂ ਨਹੀਂ API ਸੇਵ ਕਰਨ ਲਈ ਕੁੰਜੀਆਂ ਦਰਜ ਕੀਤੀਆਂ ਗਈਆਂ।",
-            "unexpectedResponse": "ਸਰਵਰ ਤੋਂ ਇੱਕ ਅਣਕਿਆਸਿਆ ਜਵਾਬ ਮਿਲਿਆ।",
+            "description": "ਆਪਣਾ ਪ੍ਰਬੰਧ ਕਰੋ API ਵੱਖ-ਵੱਖ ਲਈ ਕੁੰਜੀਆਂ AI ਸੇਵਾਵਾਂ।",
+            "setKey": "ਸੈੱਟ ਕਰੋ",
+            "updateKey": "ਅੱਪਡੇਟ",
+            "saveUpdateKeys": "ਕੁੰਜੀਆਂ ਨੂੰ ਸੇਵ / ਅੱਪਡੇਟ ਕਰੋ",
+            "saving": "ਸੇਵ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+            "noNewKeys": "ਸੇਵ ਕਰਨ ਲਈ ਕੋਈ ਨਵੀਆਂ ਕੁੰਜੀਆਂ ਨਹੀਂ ਹਨ।",
+            "keyStoredSecurely": "ਤੁਹਾਡਾ API ਕੁੰਜੀ ਨੂੰ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਸਟੋਰ ਕੀਤਾ ਜਾਵੇਗਾ ਅਤੇ ਇਨਕ੍ਰਿਪਟ ਕੀਤਾ ਜਾਵੇਗਾ।",
+            "enteringNewKeyOverwrites": "ਨਵੀਂ ਕੁੰਜੀ ਦਰਜ ਕਰਨ ਨਾਲ ਮੌਜੂਦਾ ਕੁੰਜੀ ਓਵਰਰਾਈਟ ਹੋ ਜਾਵੇਗੀ।",
             "failedToSaveKey": "{serviceName} ਕੁੰਜੀ ਨੂੰ ਰੱਖਿਅਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ।",
-            "someKeysNotSaved": "ਕੁਝ API ਕੁੰਜੀਆਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਹੇਠਾਂ ਦਿੱਤੇ ਵੇਰਵਿਆਂ ਦੀ ਜਾਂਚ ਕਰੋ।",
+            "unexpectedResponse": "ਸਰਵਰ ਤੋਂ ਅਣਕਿਆਸਿਆ ਜਵਾਬ।",
+            "someKeysNotSaved": "ਕੁਝ ਕੁੰਜੀਆਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਉੱਪਰ ਦਿੱਤੀਆਂ ਗਲਤੀਆਂ ਦੀ ਜਾਂਚ ਕਰੋ।",
             "keyStatus": "ਮੁੱਖ ਸਥਿਤੀ...",
             "apiKeySecurelySaved": "API ਕੁੰਜੀ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਗਈ",
             "confirmRemoveTitle": "ਹਟਾਉਣ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
@@ -114,16 +115,12 @@ const pa = {
             "successfullyRemovedKey": "{serviceName} ਕੁੰਜੀ ਸਫਲਤਾਪੂਰਵਕ ਹਟਾਈ ਗਈ।",
             "keyNotSet": "ਮੁੱਖ ਸਥਿਤੀ: ਸੈੱਟ ਨਹੀਂ ਹੈ",
             "keySet": "ਕੁੰਜੀ ਸਥਿਤੀ: ਸੈੱਟ ਕਰੋ",
-            "saveButton": "ਸੇਵ ਕਰੋ API ਕੁੰਜੀਆਂ",
-            "enteringNewKeyOverwrites": "ਨਵੀਂ ਕੁੰਜੀ ਦਰਜ ਕਰਨ ਨਾਲ ਸੇਵ ਕੀਤੀ ਕੁੰਜੀ ਓਵਰਰਾਈਟ ਹੋ ਜਾਵੇਗੀ।",
-            "keyStoredSecurely": "ਤੁਹਾਡੀ ਕੁੰਜੀ ਨੂੰ ਇਹਨਾਂ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਸਟੋਰ ਕੀਤਾ ਜਾਵੇਗਾ Google ਗੁਪਤ ਪ੍ਰਬੰਧਕ।",
-            "saveUpdateKeys": "ਕੁੰਜੀਆਂ ਨੂੰ ਸੇਵ / ਅੱਪਡੇਟ ਕਰੋ",
-            "saving": "ਸੇਵ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
-        },
-        "loading": "ਸੈਟਿੰਗਾਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ..."
+            "saveButton": "ਸੇਵ ਕਰੋ API ਕੁੰਜੀਆਂ"
+        }
     },
     "main": {
         "title": "AI ਗੱਲਬਾਤ",
+        "aiConversation": "AI ਗੱਲਬਾਤ",
         "setupForm": {
             "title": "ਆਪਣੀ ਗੱਲਬਾਤ ਸੈੱਟ ਕਰੋ",
             "agentA": "ਏਜੰਟ ਏ",
@@ -141,7 +138,7 @@ const pa = {
                 "selectModel": "ਚੁਣੋ TTS ਮਾਡਲ"
             },
             "startConversation": "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ",
-            "conversationPrompt": "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।"
+            "conversationPrompt": "ਕਿਰਪਾ ਕਰਕੇ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।"
         },
         "conversation": {
             "thinking": "ਸੋਚ ਰਿਹਾ ਹਾਂ...",
@@ -153,8 +150,7 @@ const pa = {
             "perMillionTokens": "ਪ੍ਰਤੀ ਮਿਲੀਅਨ ਟੋਕਨ",
             "input": "ਇਨਪੁੱਟ",
             "output": "ਆਉਟਪੁੱਟ"
-        },
-        "aiConversation": "AI ਗੱਲਬਾਤ"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const pa = {
             "signUpWithGoogle": "ਨਾਲ ਸਾਈਨ ਅੱਪ ਕਰੋ Google",
             "hasAccount": "ਕੀ ਪਹਿਲਾਂ ਤੋਂ ਹੀ ਕੋਈ ਖਾਤਾ ਹੈ?",
             "signIn": "ਸਾਈਨ - ਇਨ",
-            "emailLabel": "Email ਪਤਾ",
+            "emailLabel": "ਈਮੇਲ ਪਤਾ",
             "confirmPasswordPlaceholder": "ਪਾਸਵਰਡ ਪੱਕਾ ਕਰੋ",
             "signingUp": "ਸਾਈਨ ਅੱਪ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
         },
@@ -185,7 +181,7 @@ const pa = {
             "invalidCredentials": "ਗਲਤ ਈਮੇਲ ਜਾਂ ਪਾਸਵਰਡ",
             "userNotFound": "ਵਰਤੋਂਕਾਰ ਨਹੀਂ ਮਿਲਿਆ",
             "weakPassword": "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
-            "emailInUse": "Email ਪਹਿਲਾਂ ਹੀ ਵਰਤੋਂ ਵਿੱਚ ਹੈ",
+            "emailInUse": "ਈਮੇਲ ਪਹਿਲਾਂ ਹੀ ਵਰਤੋਂ ਵਿੱਚ ਹੈ",
             "generic": "ਇੱਕ ਗਲਤੀ ਹੋਈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
             "initialization": "ਸ਼ੁਰੂਆਤ ਵਿੱਚ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
             "invalidEmail": "ਇੱਕ ਜਾਇਜ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ.",
@@ -235,6 +231,8 @@ const pa = {
     "modelCategory_Grok4": "Grok 4 ਮਾਡਲ",
     "modelCategory_Grok3": "Grok 3 ਮਾਡਲ",
     "modelCategory_Grok3Mini": "Grok 3 ਮਿੰਨੀ ਮਾਡਲ",
+    "modelCategory_MistralAIPremierModels": "ਪ੍ਰੀਮੀਅਰ ਮਾਡਲ",
+    "modelCategory_MistralAIOpenModels": "ਮਾਡਲ ਖੋਲ੍ਹੋ",
     "modelCategory_Llama4": "Llama 4 ਮਾਡਲ",
     "modelCategory_Llama3_3": "Llama 3.3 ਮਾਡਲ",
     "modelCategory_Llama3_2": "Llama 3.2 ਮਾਡਲ",
@@ -269,31 +267,67 @@ const pa = {
     "page_LoadingUserData": "ਉਪਭੋਗਤਾ ਡਾਟਾ ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
     "page_ErrorAlertTitle": "ਗਲਤੀ",
     "page_WelcomeTitle": "ਸਵਾਗਤ ਹੈ Two AIs",
-    "page_WelcomeSubtitle": "ਇਹ ਵੈੱਬਸਾਈਟ ਤੁਹਾਨੂੰ ਦੋ ਵਿਚਕਾਰ ਗੱਲਬਾਤ ਸੁਣਨ ਦਿੰਦੀ ਹੈ Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ਇਹ ਵੈੱਬਸਾਈਟ ਤੁਹਾਨੂੰ ਦੋ ਵਿਚਕਾਰ ਗੱਲਬਾਤ ਸੁਣਨ ਦਿੰਦੀ ਹੈ Large Language Models (LLMs) ਅਤੇ ਹਰੇਕ ਮੋੜ ਲਈ ਚਿੱਤਰ ਤਿਆਰ ਕਰੋ।",
     "page_ApiKeysRequiredTitle": "API ਕੁੰਜੀਆਂ ਲੋੜੀਂਦੀਆਂ ਹਨ",
     "page_ApiKeysRequiredDescription": "ਗੱਲਬਾਤਾਂ ਚਲਾਉਣ ਲਈ, ਤੁਹਾਨੂੰ ਆਪਣਾ ਖੁਦ ਦਾ ਪ੍ਰਦਾਨ ਕਰਨ ਦੀ ਲੋੜ ਹੋਵੇਗੀ API ਲਈ ਕੁੰਜੀਆਂ AI ਉਹ ਮਾਡਲ ਜੋ ਤੁਸੀਂ ਵਰਤਣਾ ਚਾਹੁੰਦੇ ਹੋ (ਜਿਵੇਂ ਕਿ, OpenAI, Google, Anthropic) ਸਾਈਨ ਇਨ ਕਰਨ ਤੋਂ ਬਾਅਦ। ਹਰੇਕ ਪ੍ਰਦਾਤਾ ਲਈ ਵਿਸਤ੍ਰਿਤ ਨਿਰਦੇਸ਼ ਸੈਟਿੰਗਾਂ / 'ਤੇ ਮਿਲ ਸਕਦੇ ਹਨ। API ਸਾਈਨ ਇਨ ਕਰਨ ਤੋਂ ਬਾਅਦ ਕੁੰਜੀਆਂ ਵਾਲਾ ਪੰਨਾ।",
     "page_SignInPrompt": "ਆਪਣਾ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰਨ ਲਈ, ਤੁਸੀਂ ਹੈੱਡਰ ਵਿੱਚ ਦਿੱਤੇ ਲਿੰਕ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਸਾਈਨ ਇਨ ਕਰ ਸਕਦੇ ਹੋ ਜਾਂ ਖਾਤਾ ਬਣਾ ਸਕਦੇ ਹੋ।",
     "page_VideoTitle": "Two AIs ਗੱਲਬਾਤ ਡੈਮੋ",
     "page_AvailableLLMsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ LLMs",
-    "page_TooltipGoogleThinkingBudget": "ਇਹ Google ਮਾਡਲ 'ਸੋਚ ਬਜਟ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। 'ਸੋਚ' ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
+    "page_TooltipKnowledgeCutoff": "ਇਸ ਮਿਤੀ 'ਤੇ ਮਾਡਲ ਦਾ ਗਿਆਨ ਖਤਮ ਹੋ ਜਾਂਦਾ ਹੈ।",
+    "page_TooltipGoogleThinkingBudget": "ਇਹ Google ਮਾਡਲ ਇੱਕ 'ਸੋਚ ਬਜਟ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। 'ਸੋਚ' ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
     "page_TooltipAnthropicExtendedThinking": "ਇਹ Anthropic ਮਾਡਲ 'ਵਿਸਤ੍ਰਿਤ ਸੋਚ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। 'ਸੋਚ' ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਗਿਆ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
     "page_TooltipXaiThinking": "ਇਹ xAI ਮਾਡਲ 'ਸੋਚ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। ਇਹ ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਗਿਆ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
     "page_TooltipQwenReasoning": "ਇਹ Qwen ਮਾਡਲ 'ਤਰਕ/ਸੋਚ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। ਇਹ ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਗਿਆ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
     "page_TooltipDeepSeekReasoning": "ਇਹ DeepSeek ਮਾਡਲ 'ਤਰਕ/ਸੋਚ' ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਗਿਆ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
     "page_TooltipGenericReasoning": "ਇਹ ਮਾਡਲ ਤਰਕਸ਼ੀਲ ਟੋਕਨਾਂ ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ ਜੋ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦੇ ਪਰ ਆਉਟਪੁੱਟ ਟੋਕਨਾਂ ਵਜੋਂ ਬਿੱਲ ਕੀਤੇ ਜਾਂਦੇ ਹਨ।",
     "page_TooltipRequiresVerification": "ਪੁਸ਼ਟੀਕਰਨ ਦੀ ਲੋੜ ਹੈ OpenAI ਸੰਗਠਨ। ਤੁਸੀਂ ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰ ਸਕਦੇ ਹੋ।",
-    "page_TooltipSupportsLanguage": "{languageName} ਦਾ ਸਮਰਥਨ ਕਰਦਾ ਹੈ",
-    "page_TooltipMayNotSupportLanguage": "ਹੋ ਸਕਦਾ ਹੈ ਕਿ ਇਹ ਮਾਡਲ ਗੱਲਬਾਤ ਲਈ {languageName} ਦਾ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸਮਰਥਨ ਨਾ ਕਰੇ।",
+    "page_TooltipSupportsLanguage": "ਸਮਰਥਨ ਕਰਦਾ ਹੈ {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ਇਹ ਮਾਡਲ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸਮਰਥਿਤ ਨਹੀਂ ਹੋ ਸਕਦਾ {languageName} ਗੱਲਬਾਤ ਲਈ।",
     "page_BadgePreview": "ਝਲਕ",
     "page_BadgeExperimental": "ਪ੍ਰਯੋਗਾਤਮਕ",
     "page_BadgeBeta": "ਬੀਟਾ",
     "page_AvailableTTSTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਚਿੱਤਰ ਮਾਡਲ",
     "page_NoTTSOptions": "ਨਹੀਂ TTS ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਵਿਕਲਪ।",
     "page_TruncatableNoteFormat": "({ਨੋਟਟੈਕਸਟ})",
     "page_PricesLastVerifiedOn": "ਕੀਮਤਾਂ ਦੀ ਆਖਰੀ ਵਾਰ ਪੁਸ਼ਟੀ ਇਸ ਮਿਤੀ ਨੂੰ ਹੋਈ {date}",
-    "page_PricingPerTokens": "ਪ੍ਰਤੀ {amount} ਟੋਕਨ",
+    "page_PricingPerTokens": "ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ",
     "page_ModelCategoryModels": "{model} ਮਾਡਲ",
+    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ",
     "ttsVoice_Ugne": "ਅੱਗ ਵਿੱਚ",
+    "pricing": {
+        "perMillionTokens": "ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ",
+        "tokens": "ਟੋਕਨ",
+        "free": "ਮੁਫ਼ਤ",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨਾਂ ਲਈ"
+            },
+            "geminiPro": {
+                "textTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨਾਂ ਲਈ"
+            },
+            "openAIMini": {
+                "textTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੈਕਸਟ ਟੋਕਨ",
+                "audioTokens": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਆਡੀਓ ਟੋਕਨਾਂ ਲਈ"
+            },
+            "openAITTS1": {
+                "standard": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰਾਂ ਲਈ",
+                "neural": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰਾਂ ਲਈ",
+                "studio": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰਾਂ ਲਈ",
+                "chirpHD": "ਪੁਸ਼ਟੀ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ",
+                "chirp3HD": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰਾਂ ਲਈ"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "ਸੈਸ਼ਨ ਸੈੱਟਅੱਪ ਫਾਰਮ",
         "description": "ਇੱਥੇ ਤੁਸੀਂ LLM ਅਤੇ ਵਿਕਲਪਿਕ ਚੁਣ ਸਕਦੇ ਹੋ TTS ਹਰੇਕ ਏਜੰਟ ਲਈ ਸੈਟਿੰਗਾਂ।",
@@ -309,7 +343,7 @@ const pa = {
         "initialPromptDescription": "ਇਹ ਪ੍ਰੋਂਪਟ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਪਹਿਲੇ ਸੁਨੇਹੇ ਵਜੋਂ ਭੇਜਿਆ ਜਾਵੇਗਾ। ਜੇਕਰ ਤੁਸੀਂ ਇਸਨੂੰ ਖਾਲੀ ਛੱਡ ਦਿੰਦੇ ਹੋ, ਤਾਂ ਕੋਈ ਪ੍ਰੋਂਪਟ ਨਹੀਂ ਹੋਵੇਗਾ।",
         "startConversation": "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ",
         "starting": "ਸ਼ੁਰੂ ਹੋ ਰਿਹਾ ਹੈ...",
-        "startTheConversation": "ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।",
+        "startTheConversation": "ਕਿਰਪਾ ਕਰਕੇ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ।",
         "languageSupportNote": "ਭਾਸ਼ਾ ਸਹਾਇਤਾ ਸੂਚਕ ਮਾਡਲ ਅਨੁਕੂਲਤਾ ਦਰਸਾਉਂਦੇ ਹਨ {languageName}. ਬਿਨਾਂ ਸਹਾਇਤਾ ਵਾਲੇ ਮਾਡਲ ਅਯੋਗ ਹਨ।",
         "reasoningNote": "ਦਰਸਾਉਂਦਾ ਹੈ ਕਿ ਇੱਕ ਮਾਡਲ 'ਸੋਚ' ਜਾਂ 'ਤਰਕ' ਟੋਕਨਾਂ ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। ਇਹ ਆਉਟਪੁੱਟ ਬਿਲ ਕੀਤਾ ਗਿਆ ਹੈ ਪਰ ਚੈਟ ਵਿੱਚ ਦਿਖਾਈ ਨਹੀਂ ਦਿੰਦਾ।",
         "openaiOrgVerificationNote": "ਦਰਸਾਉਂਦਾ ਹੈ ਕਿ ਇੱਕ OpenAI ਮਾਡਲ ਲਈ ਇੱਕ ਪ੍ਰਮਾਣਿਤ ਸੰਗਠਨ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ। ਤੁਸੀਂ ਕਰ ਸਕਦੇ ਹੋ",
@@ -318,7 +352,7 @@ const pa = {
         "noVoicesFor": "ਲਈ ਕੋਈ ਆਵਾਜ਼ ਨਹੀਂ {languageName}",
         "ttsProviderModel": "{providerName} ਮਾਡਲ",
         "selectTtsProviderModel": "ਚੁਣੋ {providerName} ਮਾਡਲ",
-        "selectProvider": "ਪ੍ਰਦਾਤਾ ਚੁਣੋ",
+        "selectProvider": "ਪ੍ਰੋਵਾਈਡਰ ਚੁਣੋ",
         "per": "ਪ੍ਰਤੀ",
         "enableImageGen": "ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਨੂੰ ਸਮਰੱਥ ਬਣਾਓ",
         "imageModel": "ਚਿੱਤਰ ਮਾਡਲ",
@@ -335,15 +369,15 @@ const pa = {
         "backToMain": "ਮੁੱਖ ਤੇ ਵਾਪਸ ਜਾਓ",
         "conversationHistory": "ਗੱਲਬਾਤ ਇਤਿਹਾਸ",
         "chatWith": "ਨਾਲ ਗੱਲਬਾਤ ਕਰੋ {agentA} & {agentB}",
+        "conversationDescription": "ਸ਼ੁਰੂ ਹੋਇਆ {date} - ਭਾਸ਼ਾ: {language}",
         "viewConversation": "ਗੱਲਬਾਤ ਵੇਖੋ",
         "backToPreviousChats": "ਪਿਛਲੀਆਂ ਚੈਟਾਂ 'ਤੇ ਵਾਪਸ ਜਾਓ",
         "resumeConversation": "ਗੱਲਬਾਤ ਮੁੜ ਸ਼ੁਰੂ ਕਰੋ",
         "resuming": "ਮੁੜ ਸ਼ੁਰੂ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
         "sessionDetails": "ਸੈਸ਼ਨ ਵੇਰਵੇ",
-        "language": "ਭਾਸ਼ਾ:",
+        "language": "ਭਾਸ਼ਾ",
         "transcript": "ਟ੍ਰਾਂਸਕ੍ਰਿਪਟ",
         "loadingHistory": "ਇਤਿਹਾਸ ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
-        "conversationDescription": "ਸ਼ੁਰੂ ਹੋਇਆ {date} - ਭਾਸ਼ਾ: {language}",
         "loadingConversation": "ਗੱਲਬਾਤ ਲੋਡ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ...",
         "chatStartedOn": "ਚੈਟ ਇਸ ਤਾਰੀਖ ਨੂੰ ਸ਼ੁਰੂ ਹੋਈ {date}",
         "agentAModel": "ਏਜੰਟ ਏ ਮਾਡਲ",
@@ -355,18 +389,8 @@ const pa = {
         "model": "ਮਾਡਲ",
         "voice": "ਆਵਾਜ਼"
     },
-    "common_verifyHere": "ਇੱਥੇ ਪੁਸ਼ਟੀ ਕਰੋ",
-    "page_AvailableImageModelsTitle": "ਵਰਤਮਾਨ ਵਿੱਚ ਉਪਲਬਧ ਚਿੱਤਰ ਮਾਡਲ",
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",
-    "imageModel_PriceUSD": "ਕੀਮਤ (USD)",
-    "page_TooltipKnowledgeCutoff": "ਇਸ ਮਿਤੀ 'ਤੇ ਮਾਡਲ ਦਾ ਗਿਆਨ ਖਤਮ ਹੋ ਜਾਂਦਾ ਹੈ।",
-    "modelCategory_MistralAIPremierModels": "ਪ੍ਰੀਮੀਅਰ ਮਾਡਲ",
-    "modelCategory_MistralAIOpenModels": "ਖੁੱਲ੍ਹੇ ਮਾਡਲ",
-    "pricing": {
-        "perMillionTokens": "ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਟੋਕਨਾਂ ਲਈ",
-        "tokens": "ਟੋਕਨ",
-        "free": "ਮੁਫ਼ਤ"
-    }
+    "imageModel_PriceUSD": "ਕੀਮਤ (USD)"
 };
 export default pa;

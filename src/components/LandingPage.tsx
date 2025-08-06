@@ -454,7 +454,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             return (
                               <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
                                 <span className="whitespace-nowrap">{model.name}</span>
-                                <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({model.pricingText})</span>
+                                <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
                                 {supportsLanguage ? (
                                   <Tooltip>
                                     <TooltipTrigger asChild>

@@ -309,7 +309,7 @@ const en = {
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
     page_PricesLastVerifiedOn: 'Prices last verified on {date}',
-    page_PricingPerTokens: 'per {amount} Tokens',
+    page_PricingPerTokens: 'per 1 Million Tokens',
     page_ModelCategoryModels: '{model} models',
     common_verifyHere: "verify here", // Added for link text
     // Text To Speech specific voice names (if needed globally)
@@ -319,7 +319,35 @@ const en = {
     pricing: {
         perMillionTokens: "per 1 Million tokens",
         tokens: "tokens",
-        free: "Free"
+        free: "Free",
+        tts: {
+            geminiFlash: {
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
+            },
+            geminiPro: {
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
+            },
+            openAIMini: {
+                textTokens: "{price} per 1 Million text tokens",
+                audioTokens: "{price} per 1 Million audio tokens"
+            },
+            openAITTS1: {
+                standard: "{price} per 1 Million tokens"
+            },
+            openAITTS1HD: {
+                standard: "{price} per 1 Million tokens"
+            },
+            plusSign: " + ",
+            googleCloud: {
+                standard: "{price} per 1 Million characters",
+                neural: "{price} per 1 Million characters",
+                studio: "{price} per 1 Million characters",
+                chirpHD: "Couldn\'t verify",
+                chirp3HD: "{price} per 1 Million characters"
+            }
+        }
     },
     
     // Common terms

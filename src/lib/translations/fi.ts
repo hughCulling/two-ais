@@ -41,7 +41,7 @@ const fi = {
         "sl": "Slovenia",
         "es": "espanjaa",
         "sw": "swahili",
-        "sv": "Ruotsin",
+        "sv": "ruotsalainen",
         "th": "thaimaalainen",
         "tr": "Turkki",
         "uk": "Ukrainalainen",
@@ -71,6 +71,7 @@ const fi = {
         "mn": "Mongolialainen"
     },
     "settings": {
+        "loading": "Asetuksia ladataan...",
         "title": "Asetukset",
         "sections": {
             "appearance": "Ulkonäkö",
@@ -95,35 +96,31 @@ const fi = {
         },
         "apiKeys": {
             "title": "API Avaimet",
-            "description": "Hallitse omaa API avaimet eri AI palveluntarjoajat",
-            "saved": "Tallennettu",
-            "notSet": "Ei asetettu",
-            "setKey": "Aseta avain",
-            "updateKey": "Päivitä avain",
-            "removeKey": "Poista avain",
-            "getKeyInstructions": "Hanki omasi API avain",
-            "noNewKeys": "Ei uutta API tallennusnäppäimet syötetty.",
-            "unexpectedResponse": "Palvelimelta saatiin odottamaton vastaus.",
-            "failedToSaveKey": "{serviceName}-avaimen tallennus epäonnistui.",
-            "someKeysNotSaved": "Jotkut API Avaimia ei voitu tallentaa. Tarkista alla olevat tiedot.",
+            "description": "Hallitse omaa API avaimet eri AI palvelut.",
+            "setKey": "Sarja",
+            "updateKey": "Päivittää",
+            "saveUpdateKeys": "Tallenna/Päivitä avaimet",
+            "saving": "Tallennetaan...",
+            "noNewKeys": "Ei uusia tallennettavia avaimia.",
+            "keyStoredSecurely": "Sinun API avain tallennetaan turvallisesti ja salattuna.",
+            "enteringNewKeyOverwrites": "Uuden avaimen syöttäminen korvaa olemassa olevan.",
+            "failedToSaveKey": "{serviceName}-avaimen tallentaminen epäonnistui.",
+            "unexpectedResponse": "Odottamaton vastaus palvelimelta.",
+            "someKeysNotSaved": "Joitakin avaimia ei voitu tallentaa. Tarkista yllä olevat virheet.",
             "keyStatus": "avaintila...",
             "apiKeySecurelySaved": "API Avain tallennettu turvallisesti",
             "confirmRemoveTitle": "Vahvista poisto",
             "confirmRemoveDescription": "Oletko varma, että haluat poistaa API avain palvelulle {serviceName}? Tätä toimintoa ei voi perua.",
-            "failedToRemoveKey": "{serviceName}-avaimen poistaminen epäonnistui.",
+            "failedToRemoveKey": "Avaimen {serviceName} poistaminen epäonnistui.",
             "successfullyRemovedKey": "{serviceName}-avain poistettu onnistuneesti.",
             "keyNotSet": "Avaimen tila: Ei asetettu",
             "keySet": "Avaimen tila: Aseta",
-            "saveButton": "Tallentaa API Avaimet",
-            "enteringNewKeyOverwrites": "Uuden avaimen syöttäminen korvaa tallennetun avaimen.",
-            "keyStoredSecurely": "Avaintasi säilytetään turvallisesti käyttämällä Google Salainen johtaja.",
-            "saveUpdateKeys": "Tallenna/Päivitä avaimet",
-            "saving": "Tallennetaan..."
-        },
-        "loading": "Asetuksia ladataan..."
+            "saveButton": "Tallentaa API Avaimet"
+        }
     },
     "main": {
         "title": "AI Keskustelu",
+        "aiConversation": "AI Keskustelu",
         "setupForm": {
             "title": "Keskustelun aloittaminen",
             "agentA": "Agentti A",
@@ -153,8 +150,7 @@ const fi = {
             "perMillionTokens": "miljoonaa tokenia kohden",
             "input": "Syöttö",
             "output": "Lähtö"
-        },
-        "aiConversation": "AI Keskustelu"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const fi = {
             "signUpWithGoogle": "Rekisteröidy Google",
             "hasAccount": "Onko sinulla jo tili?",
             "signIn": "Kirjaudu sisään",
-            "emailLabel": "Email osoite",
+            "emailLabel": "Sähköpostiosoite",
             "confirmPasswordPlaceholder": "Vahvista salasana",
             "signingUp": "Rekisteröityminen..."
         },
@@ -185,7 +181,7 @@ const fi = {
             "invalidCredentials": "Virheellinen sähköpostiosoite tai salasana",
             "userNotFound": "Käyttäjää ei löydy",
             "weakPassword": "Salasanan tulee olla vähintään 6 merkkiä pitkä",
-            "emailInUse": "Email jo käytössä",
+            "emailInUse": "Sähköpostiosoite on jo käytössä",
             "generic": "Tapahtui virhe. Yritä uudelleen.",
             "initialization": "Alustusvirhe. Yritä myöhemmin uudelleen.",
             "invalidEmail": "Anna kelvollinen sähköpostiosoite.",
@@ -229,12 +225,14 @@ const fi = {
     "modelCategory_Gemini2_0": "Gemini 2.0 mallit",
     "modelCategory_Gemini1_5": "Gemini 1.5 mallit",
     "modelCategory_Claude4": "Claude 4 mallit",
-    "modelCategory_Claude3_7": "Claude 3.7 mallit",
+    "modelCategory_Claude3_7": "Claude 3.7 malli",
     "modelCategory_Claude3_5": "Claude 3.5 mallit",
     "modelCategory_Claude3": "Claude 3 mallit",
-    "modelCategory_Grok4": "Grok 4 mallit",
+    "modelCategory_Grok4": "Grok 4 malli",
     "modelCategory_Grok3": "Grok 3 mallit",
     "modelCategory_Grok3Mini": "Grok 3 Mini-mallit",
+    "modelCategory_MistralAIPremierModels": "Premier-mallit",
+    "modelCategory_MistralAIOpenModels": "Avoin malli",
     "modelCategory_Llama4": "Llama 4 mallia",
     "modelCategory_Llama3_3": "Llama 3.3 mallit",
     "modelCategory_Llama3_2": "Llama 3.2 mallia",
@@ -246,18 +244,18 @@ const fi = {
     "modelCategory_Gemma2": "Gemma 2 mallia",
     "modelCategory_Gemma": "Gemma mallit",
     "modelCategory_GoogleGemma": "Google Gemma Mallit",
-    "modelCategory_DeepSeekR1": "DeepSeek R1-mallit",
-    "modelCategory_DeepSeekV3": "DeepSeek V3-mallit",
+    "modelCategory_DeepSeekR1": "DeepSeek R1-malli",
+    "modelCategory_DeepSeekV3": "DeepSeek V3-malli",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill -mallit",
     "modelCategory_DeepSeekModels": "DeepSeek Mallit",
     "modelCategory_MistralAIModels": "Mistral AI Mallit",
     "modelCategory_Qwen3": "Qwen3 mallia",
-    "modelCategory_QwQwQ": "Qwen QwQ-mallit",
+    "modelCategory_QwQwQ": "Qwen QwQ-malli",
     "modelCategory_Qwen2_5": "Qwen2.5-mallit",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-mallit",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Koodaajamallit",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision-malli",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Koodaajamalli",
     "modelCategory_Qwen2": "Qwen2 mallia",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision-mallia",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision -malli",
     "modelCategory_QwenModels": "Qwen Mallit",
     "modelCategory_OtherModels": "Muut mallit",
     "page_ErrorLoadingUserData": "Käyttäjätietojen lataus epäonnistui: {errorMessage}. Yritä päivittää sivu.",
@@ -269,12 +267,13 @@ const fi = {
     "page_LoadingUserData": "Käyttäjätietoja ladataan...",
     "page_ErrorAlertTitle": "Virhe",
     "page_WelcomeTitle": "Tervetuloa Two AIs",
-    "page_WelcomeSubtitle": "Tämän verkkosivuston avulla voit kuunnella kahden välisiä keskusteluja Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Tämän verkkosivuston avulla voit kuunnella kahden välisiä keskusteluja Large Language Models (LLMs) ja luo kuvia jokaista vuoroa varten.",
     "page_ApiKeysRequiredTitle": "API Vaaditut avaimet",
     "page_ApiKeysRequiredDescription": "Keskustelujen käymiseksi sinun on annettava omat API avaimet AI mallit, joita haluat käyttää (esim. OpenAI, Google, Anthropic) sisäänkirjautumisen jälkeen. Tarkemmat ohjeet kullekin palveluntarjoajalle löytyvät Asetukset / API Avaimet-sivu sisäänkirjautumisen jälkeen.",
     "page_SignInPrompt": "Voit aloittaa oman istunnon kirjautumalla sisään tai luomalla tilin otsikossa olevan linkin kautta.",
     "page_VideoTitle": "Two AIs Keskusteludemo",
     "page_AvailableLLMsTitle": "Tällä hetkellä saatavilla LLMs",
+    "page_TooltipKnowledgeCutoff": "Mallin tietämys on katkaistu tänä päivänä.",
     "page_TooltipGoogleThinkingBudget": "Tämä Google malli käyttää 'ajattelubudjettia'. 'Ajattelun' tuotos laskutetaan, mutta se ei näy chatissa.",
     "page_TooltipAnthropicExtendedThinking": "Tämä Anthropic Malli käyttää 'laajennettua ajattelua'. 'Ajattelun' tuotos laskutetaan, mutta se ei näy chatissa.",
     "page_TooltipXaiThinking": "Tämä xAI malli käyttää 'ajattelua'. Tämä tuloste laskutetaan, mutta sitä ei näytetä chatissa.",
@@ -282,18 +281,53 @@ const fi = {
     "page_TooltipDeepSeekReasoning": "Tämä DeepSeek Malli käyttää 'päättelyä/ajattelua'. Tuloste laskutetaan, mutta sitä ei näytetä chatissa.",
     "page_TooltipGenericReasoning": "Tämä malli käyttää päättelytokeneja, jotka eivät ole näkyvissä chatissa, mutta jotka laskutetaan tulostokeneina.",
     "page_TooltipRequiresVerification": "Edellyttää vahvistettua OpenAI organisaatio. Voit tarkistaa sen täältä.",
-    "page_TooltipSupportsLanguage": "Tukee {languageName} -kieltä",
-    "page_TooltipMayNotSupportLanguage": "Tämä malli ei välttämättä tue täysin {languageName} -kieltä keskusteluissa.",
+    "page_TooltipSupportsLanguage": "Tukee {languageName}",
+    "page_TooltipMayNotSupportLanguage": "Tämä malli ei välttämättä tue täysin {languageName} keskustelua varten.",
     "page_BadgePreview": "Esikatselu",
     "page_BadgeExperimental": "Kokeellinen",
     "page_BadgeBeta": "Beeta",
     "page_AvailableTTSTitle": "Tällä hetkellä saatavilla Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Tällä hetkellä saatavilla olevat kuvamallit",
     "page_NoTTSOptions": "Ei TTS tällä hetkellä saatavilla olevat vaihtoehdot.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "Hinnat viimeksi vahvistettu {date}",
-    "page_PricingPerTokens": "per {amount} Tokenit",
+    "page_PricingPerTokens": "per 1 miljoonaa tokenia",
     "page_ModelCategoryModels": "{model} mallit",
+    "common_verifyHere": "vahvista tästä",
     "ttsVoice_Ugne": "Tulessa",
+    "pricing": {
+        "perMillionTokens": "per 1 miljoonaa tokenia",
+        "tokens": "tokenit",
+        "free": "Ilmainen",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} per 1 miljoonaa tekstitokenia",
+                "audioTokens": "{price} miljoonaa äänitokenia kohden"
+            },
+            "geminiPro": {
+                "textTokens": "{price} per 1 miljoonaa tekstitokenia",
+                "audioTokens": "{price} miljoonaa äänitokenia kohden"
+            },
+            "openAIMini": {
+                "textTokens": "{price} per 1 miljoonaa tekstitokenia",
+                "audioTokens": "{price} miljoonaa äänitokenia kohden"
+            },
+            "openAITTS1": {
+                "standard": "{price} miljoonaa tokenia kohden"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} per 1 miljoonaa tokenia"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} miljoonaa merkkiä kohden",
+                "neural": "{price} miljoonaa merkkiä kohden",
+                "studio": "{price} miljoonaa merkkiä kohden",
+                "chirpHD": "Vahvistus epäonnistui",
+                "chirp3HD": "{price} miljoonaa merkkiä kohden"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Istunnon määrityslomake",
         "description": "Tässä voit valita LLM:n ja valinnaisen TTS asetukset kullekin agentille.",
@@ -335,15 +369,15 @@ const fi = {
         "backToMain": "Takaisin pääsivulle",
         "conversationHistory": "Keskusteluhistoria",
         "chatWith": "Keskustele kanssa {agentA} & {agentB}",
+        "conversationDescription": "Aloitettu {date} - Kieli: {language}",
         "viewConversation": "Näytä keskustelu",
         "backToPreviousChats": "Takaisin edellisiin keskusteluihin",
         "resumeConversation": "Jatka keskustelua",
         "resuming": "Jatketaan...",
         "sessionDetails": "Istunnon tiedot",
-        "language": "Kieli:",
+        "language": "Kieli",
         "transcript": "transkriptio",
         "loadingHistory": "Ladataan historiaa...",
-        "conversationDescription": "Aloitettu {date} - Kieli: {language}",
         "loadingConversation": "Keskustelua ladataan...",
         "chatStartedOn": "Keskustelu aloitettiin {date}",
         "agentAModel": "Agentti A -malli",
@@ -355,18 +389,8 @@ const fi = {
         "model": "Malli",
         "voice": "Ääni"
     },
-    "common_verifyHere": "vahvista tästä",
-    "page_AvailableImageModelsTitle": "Tällä hetkellä saatavilla olevat kuvamallit",
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",
-    "imageModel_PriceUSD": "Hinta (USD)",
-    "page_TooltipKnowledgeCutoff": "Mallin tietämys on katkaistu tänä päivänä.",
-    "modelCategory_MistralAIPremierModels": "Premier-mallit",
-    "modelCategory_MistralAIOpenModels": "Avoimet mallit",
-    "pricing": {
-        "perMillionTokens": "miljoonaa tokenia kohden",
-        "tokens": "tokenit",
-        "free": "Ilmainen"
-    }
+    "imageModel_PriceUSD": "Hinta (USD)"
 };
 export default fi;

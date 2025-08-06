@@ -71,6 +71,7 @@ const am = {
         "mn": "ሞኒጎሊያን"
     },
     "settings": {
+        "loading": "ቅንብሮችን በመጫን ላይ...",
         "title": "ቅንብሮች",
         "sections": {
             "appearance": "መልክ",
@@ -95,35 +96,31 @@ const am = {
         },
         "apiKeys": {
             "title": "API ቁልፎች",
-            "description": "የእርስዎን ያስተዳድሩ API ለተለያዩ ቁልፎች AI አቅራቢዎች",
-            "saved": "ተቀምጧል",
-            "notSet": "አልተዘጋጀም።",
-            "setKey": "ቁልፍ አዘጋጅ",
-            "updateKey": "የዝማኔ ቁልፍ",
-            "removeKey": "ቁልፍ አስወግድ",
-            "getKeyInstructions": "የእርስዎን ያግኙ API ቁልፍ",
-            "noNewKeys": "አዲስ ነገር የለም። API ለማስቀመጥ ቁልፎች ገብተዋል።",
-            "unexpectedResponse": "ከአገልጋዩ ያልተጠበቀ ምላሽ አግኝቷል።",
+            "description": "የእርስዎን ያስተዳድሩ API ለተለያዩ ቁልፎች AI አገልግሎቶች.",
+            "setKey": "አዘጋጅ",
+            "updateKey": "አዘምን",
+            "saveUpdateKeys": "ቁልፎችን አስቀምጥ / አዘምን",
+            "saving": "በማስቀመጥ ላይ...",
+            "noNewKeys": "ለማስቀመጥ ምንም አዲስ ቁልፎች የሉም።",
+            "keyStoredSecurely": "ያንተ API ቁልፉ ደህንነቱ በተጠበቀ ሁኔታ ይከማቻል እና ኢንክሪፕት ይደረጋል።",
+            "enteringNewKeyOverwrites": "አዲስ ቁልፍ ማስገባት ነባሩን ይተካል።",
             "failedToSaveKey": "የ{serviceName} ቁልፍ ማስቀመጥ አልተሳካም።",
-            "someKeysNotSaved": "አንዳንድ API ቁልፎች ሊቀመጡ አልቻሉም. እባክዎን ከዚህ በታች ያለውን ዝርዝር ይመልከቱ።",
+            "unexpectedResponse": "ከአገልጋይ ያልተጠበቀ ምላሽ።",
+            "someKeysNotSaved": "አንዳንድ ቁልፎች ሊቀመጡ አልቻሉም። እባክዎ ከላይ ያሉትን ስህተቶች ያረጋግጡ።",
             "keyStatus": "ቁልፍ ሁኔታ...",
             "apiKeySecurelySaved": "API ቁልፍ በአስተማማኝ ሁኔታ ተቀምጧል",
             "confirmRemoveTitle": "መወገድን ያረጋግጡ",
             "confirmRemoveDescription": "እርግጠኛ ነዎት ማስወገድ ይፈልጋሉ API የ{serviceName} ቁልፍ? ይህ እርምጃ ሊቀለበስ አይችልም።",
             "failedToRemoveKey": "የ{serviceName} ቁልፍን ማስወገድ አልተሳካም።",
             "successfullyRemovedKey": "የ{serviceName} ቁልፍ በተሳካ ሁኔታ ተወግዷል።",
-            "keyNotSet": "ቁልፍ ሁኔታ፡ አልተዘጋጀም።",
+            "keyNotSet": "ቁልፍ ሁኔታ፡ አልተቀናበረም።",
             "keySet": "ቁልፍ ሁኔታ፡ አዘጋጅ",
-            "saveButton": "አስቀምጥ API ቁልፍ(ዎች)",
-            "enteringNewKeyOverwrites": "አዲስ ቁልፍ ማስገባት የተቀመጠውን ይተካዋል።",
-            "keyStoredSecurely": "ቁልፍዎ ደህንነቱ በተጠበቀ ሁኔታ ተጠቅሞ ይቀመጣል Google ሚስጥራዊ አስተዳዳሪ.",
-            "saveUpdateKeys": "ቁልፎችን አስቀምጥ / አዘምን",
-            "saving": "በማስቀመጥ ላይ..."
-        },
-        "loading": "ቅንብሮችን በመጫን ላይ..."
+            "saveButton": "አስቀምጥ API ቁልፍ(ዎች)"
+        }
     },
     "main": {
         "title": "AI ውይይት",
+        "aiConversation": "AI ውይይት",
         "setupForm": {
             "title": "ንግግርህን አዋቅር",
             "agentA": "ወኪል ኤ",
@@ -141,7 +138,7 @@ const am = {
                 "selectModel": "ይምረጡ TTS ሞዴል"
             },
             "startConversation": "ውይይት ጀምር",
-            "conversationPrompt": "ውይይቱን ጀምር።"
+            "conversationPrompt": "እባክዎን ውይይቱን ይጀምሩ።"
         },
         "conversation": {
             "thinking": "ማሰብ...",
@@ -153,8 +150,7 @@ const am = {
             "perMillionTokens": "በአንድ ሚሊዮን ቶከኖች",
             "input": "ግቤት",
             "output": "ውፅዓት"
-        },
-        "aiConversation": "AI ውይይት"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const am = {
             "signUpWithGoogle": "ጋር ይመዝገቡ Google",
             "hasAccount": "መለያ አለህ?",
             "signIn": "ይግቡ",
-            "emailLabel": "Email አድራሻ",
+            "emailLabel": "የኢሜል አድራሻ",
             "confirmPasswordPlaceholder": "የይለፍ ቃል ያረጋግጡ",
             "signingUp": "በመመዝገብ ላይ..."
         },
@@ -185,13 +181,13 @@ const am = {
             "invalidCredentials": "ልክ ያልሆነ ኢሜይል ወይም የይለፍ ቃል",
             "userNotFound": "ተጠቃሚ አልተገኘም።",
             "weakPassword": "የይለፍ ቃል ቢያንስ 6 ቁምፊዎች መሆን አለበት።",
-            "emailInUse": "Email ቀድሞውኑ ጥቅም ላይ የዋለ",
+            "emailInUse": "ኢሜይል አስቀድሞ ጥቅም ላይ ውሏል",
             "generic": "ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ።",
             "initialization": "የማስጀመር ስህተት። እባክዎ ቆይተው እንደገና ይሞክሩ።",
             "invalidEmail": "እባክህን ትክክለኛ ኢሜል አስገባ",
-            "tooManyRequests": "በብዙ ያልተሳኩ የመግባት ሙከራዎች ምክንያት መዳረሻ ለጊዜው ተሰናክሏል። እባክዎ የይለፍ ቃልዎን ዳግም ያስጀምሩ ወይም ቆይተው እንደገና ይሞክሩ።",
+            "tooManyRequests": "በብዙ ያልተሳኩ የመግባት ሙከራዎች ምክንያት መዳረሻ ለጊዜው ተሰናክሏል። እባክህ የይለፍ ቃልህን ዳግም አስጀምር ወይም ቆይተህ እንደገና ሞክር።",
             "signInFailedPrefix": "መግባት አልተሳካም፦ ",
-            "unknownSignInError": "በመግቢያ ጊዜ ያልታወቀ ስህተት ተከስቷል።",
+            "unknownSignInError": "በመግቢያው ወቅት ያልታወቀ ስህተት ተከስቷል።",
             "profileSaveFailedPrefix": "ገብቷል፣ ነገር ግን የመገለጫ ውሂብን ማስቀመጥ አልቻለም፡ ",
             "profileCheckSaveFailedPrefix": "ገብቷል፣ ነገር ግን የመገለጫ ውሂብን መፈተሽ/ማስቀመጥ አልተሳካም፦ ",
             "accountExistsWithDifferentCredential": "የተለየ የመግባት ዘዴን በመጠቀም መለያ ከዚህ ኢሜይል ጋር አስቀድሞ አለ።",
@@ -229,12 +225,14 @@ const am = {
     "modelCategory_Gemini2_0": "Gemini 2.0 ሞዴሎች",
     "modelCategory_Gemini1_5": "Gemini 1.5 ሞዴሎች",
     "modelCategory_Claude4": "Claude 4 ሞዴሎች",
-    "modelCategory_Claude3_7": "Claude 3.7 ሞዴሎች",
+    "modelCategory_Claude3_7": "Claude 3.7 ሞዴል",
     "modelCategory_Claude3_5": "Claude 3.5 ሞዴሎች",
     "modelCategory_Claude3": "Claude 3 ሞዴሎች",
-    "modelCategory_Grok4": "Grok 4 ሞዴሎች",
+    "modelCategory_Grok4": "Grok 4 ሞዴል",
     "modelCategory_Grok3": "Grok 3 ሞዴሎች",
     "modelCategory_Grok3Mini": "Grok 3 አነስተኛ ሞዴሎች",
+    "modelCategory_MistralAIPremierModels": "ዋና ሞዴሎች",
+    "modelCategory_MistralAIOpenModels": "ሞዴል ክፈት",
     "modelCategory_Llama4": "Llama 4 ሞዴሎች",
     "modelCategory_Llama3_3": "Llama 3.3 ሞዴሎች",
     "modelCategory_Llama3_2": "Llama 3.2 ሞዴሎች",
@@ -246,18 +244,18 @@ const am = {
     "modelCategory_Gemma2": "Gemma 2 ሞዴል",
     "modelCategory_Gemma": "Gemma ሞዴሎች",
     "modelCategory_GoogleGemma": "Google Gemma ሞዴሎች",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 ሞዴሎች",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 ሞዴሎች",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 ሞዴል",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 ሞዴል",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill ሞዴሎች",
     "modelCategory_DeepSeekModels": "DeepSeek ሞዴሎች",
     "modelCategory_MistralAIModels": "Mistral AI ሞዴሎች",
-    "modelCategory_Qwen3": "Qwen3 ሞዴሎች",
-    "modelCategory_QwQwQ": "Qwen QwQ ሞዴሎች",
+    "modelCategory_Qwen3": "Qwen3 ሞዴል",
+    "modelCategory_QwQwQ": "Qwen QwQ ሞዴል",
     "modelCategory_Qwen2_5": "Qwen2.5 ሞዴሎች",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 ራዕይ ሞዴሎች",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder ሞዴሎች",
-    "modelCategory_Qwen2": "Qwen2 ሞዴሎች",
-    "modelCategory_Qwen2Vision": "Qwen2 ራዕይ ሞዴሎች",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 ራዕይ ሞዴል",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder ሞዴል",
+    "modelCategory_Qwen2": "Qwen2 ሞዴል",
+    "modelCategory_Qwen2Vision": "Qwen2 ራዕይ ሞዴል",
     "modelCategory_QwenModels": "Qwen ሞዴሎች",
     "modelCategory_OtherModels": "ሌሎች ሞዴሎች",
     "page_ErrorLoadingUserData": "የተጠቃሚ ውሂብን መጫን አልተሳካም፦ {errorMessage}። እባክዎን ለማደስ ይሞክሩ።",
@@ -269,31 +267,67 @@ const am = {
     "page_LoadingUserData": "የተጠቃሚ ውሂብን በመጫን ላይ...",
     "page_ErrorAlertTitle": "ስህተት",
     "page_WelcomeTitle": "እንኳን በደህና መጡ Two AIs",
-    "page_WelcomeSubtitle": "ይህ ድህረ ገጽ በሁለት መካከል የሚደረጉ ንግግሮችን ለማዳመጥ ያስችላል Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ይህ ድህረ ገጽ በሁለት መካከል የሚደረጉ ንግግሮችን ለማዳመጥ ያስችላል Large Language Models (LLMs) እና ለእያንዳንዱ መዞር ምስሎችን ያመነጫሉ.",
     "page_ApiKeysRequiredTitle": "API የሚፈለጉ ቁልፎች",
     "page_ApiKeysRequiredDescription": "ንግግሮችን ለማሄድ የእራስዎን ማቅረብ ያስፈልግዎታል API ቁልፎች ለ AI ለመጠቀም የሚፈልጓቸው ሞዴሎች (ለምሳሌ፣ OpenAI, Google, Anthropic) ከገቡ በኋላ ለእያንዳንዱ አገልግሎት አቅራቢ ዝርዝር መመሪያዎች በቅንብሮች / ላይ ይገኛሉ API ከገቡ በኋላ የቁልፍ ገጽ።",
     "page_SignInPrompt": "የእራስዎን ክፍለ ጊዜ ለመጀመር በአርዕስቱ ውስጥ ያለውን አገናኝ በመጠቀም በመለያ መግባት ወይም መለያ መፍጠር ይችላሉ።",
     "page_VideoTitle": "Two AIs የውይይት ማሳያ",
     "page_AvailableLLMsTitle": "በአሁኑ ጊዜ ይገኛል። LLMs",
+    "page_TooltipKnowledgeCutoff": "በዚህ ቀን የአምሳያው ዕውቀት ይቋረጣል.",
     "page_TooltipGoogleThinkingBudget": "ይህ Google ሞዴል 'የማሰብ በጀት' ይጠቀማል። የ'አስተሳሰብ' ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
     "page_TooltipAnthropicExtendedThinking": "ይህ Anthropic ሞዴል 'የተራዘመ አስተሳሰብ' ይጠቀማል። የ'አስተሳሰብ' ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
-    "page_TooltipXaiThinking": "ይህ xAI ሞዴል \"ማሰብ\" ይጠቀማል. ይህ ውፅዓት ተከፍሎበታል ነገር ግን በቻት ውስጥ አይታይም።",
-    "page_TooltipQwenReasoning": "ይህ Qwen ሞዴል 'ምክንያታዊ/አስተሳሰብ' ይጠቀማል። ይህ ውፅዓት ተከፍሎበታል ነገር ግን በቻት ውስጥ አይታይም።",
+    "page_TooltipXaiThinking": "ይህ xAI ሞዴል \"ማሰብ\" ይጠቀማል. ይህ ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
+    "page_TooltipQwenReasoning": "ይህ Qwen ሞዴል 'ምክንያታዊ/አስተሳሰብ' ይጠቀማል። ይህ ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
     "page_TooltipDeepSeekReasoning": "ይህ DeepSeek ሞዴል 'ምክንያታዊ/አስተሳሰብ' ይጠቀማል። ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
     "page_TooltipGenericReasoning": "ይህ ሞዴል በቻት ውስጥ የማይታዩ ነገር ግን እንደ የውጤት ቶከኖች የሚከፈሉ የማመዛዘን ምልክቶችን ይጠቀማል።",
     "page_TooltipRequiresVerification": "ማረጋገጥን ይጠይቃል OpenAI ድርጅት. እዚህ ማረጋገጥ ትችላለህ።",
-    "page_TooltipSupportsLanguage": "{languageName}ን ይደግፋል",
-    "page_TooltipMayNotSupportLanguage": "ይህ ሞዴል {languageName}ን ለውይይት ሙሉ በሙሉ ላይደግፍ ይችላል።",
+    "page_TooltipSupportsLanguage": "ይደግፋል {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ይህ ሞዴል ሙሉ በሙሉ ላይደገፍ ይችላል {languageName} ለውይይት.",
     "page_BadgePreview": "ቅድመ እይታ",
     "page_BadgeExperimental": "የሙከራ",
     "page_BadgeBeta": "ቤታ",
     "page_AvailableTTSTitle": "በአሁኑ ጊዜ ይገኛል። Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "በአሁኑ ጊዜ የሚገኙ የምስል ሞዴሎች",
     "page_NoTTSOptions": "አይ TTS አማራጮች በአሁኑ ጊዜ ይገኛሉ.",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "ዋጋዎች በመጨረሻ የተረጋገጡት {date}",
-    "page_PricingPerTokens": "በ {amount} ማስመሰያዎች",
+    "page_PricingPerTokens": "በ 1 ሚሊዮን ቶከኖች",
     "page_ModelCategoryModels": "{model} ሞዴሎች",
+    "common_verifyHere": "እዚህ ያረጋግጡ",
     "ttsVoice_Ugne": "በእሳቱ ውስጥ",
+    "pricing": {
+        "perMillionTokens": "በ 1 ሚሊዮን ቶከኖች",
+        "tokens": "ማስመሰያዎች",
+        "free": "ፍርይ",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "{price} በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "geminiPro": {
+                "textTokens": "{price} በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "{price} በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "openAIMini": {
+                "textTokens": "{price} በ 1 ሚሊዮን የጽሑፍ ቶከኖች",
+                "audioTokens": "{price} በ 1 ሚሊዮን የድምጽ ቶከኖች"
+            },
+            "openAITTS1": {
+                "standard": "{price} በ 1 ሚሊዮን ቶከኖች"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} በ 1 ሚሊዮን ቶከኖች"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} በ 1 ሚሊዮን ቁምፊዎች",
+                "neural": "{price} በ 1 ሚሊዮን ቁምፊዎች",
+                "studio": "{price} በ 1 ሚሊዮን ቁምፊዎች",
+                "chirpHD": "ማረጋገጥ አልተቻለም",
+                "chirp3HD": "{price} በ 1 ሚሊዮን ቁምፊዎች"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "የክፍለ ጊዜ ማዋቀር ቅጽ",
         "description": "እዚህ LLM እና አማራጭ መምረጥ ይችላሉ። TTS ለእያንዳንዱ ወኪል ቅንብሮች.",
@@ -309,11 +343,11 @@ const am = {
         "initialPromptDescription": "ይህ ጥያቄ ውይይቱን ለመጀመር እንደ መጀመሪያው መልእክት ይላካል። ባዶ ከለቀቁት ምንም አይነት ጥያቄ አይኖርም።",
         "startConversation": "ውይይት ጀምር",
         "starting": "በመጀመር ላይ...",
-        "startTheConversation": "ውይይቱን ጀምር።",
+        "startTheConversation": "እባክዎን ውይይቱን ይጀምሩ።",
         "languageSupportNote": "የቋንቋ ድጋፍ አመልካቾች የሞዴል ተኳሃኝነትን ያሳያሉ {languageName}. ድጋፍ የሌላቸው ሞዴሎች ተሰናክለዋል።",
         "reasoningNote": "አንድ ሞዴል 'ማሰብ' ወይም 'ማመዛዘን' ቶከኖችን እንደሚጠቀም ያሳያል። ይህ ውፅዓት ተከፍሏል ነገር ግን በቻት ውስጥ አይታይም።",
-        "openaiOrgVerificationNote": "አንድ ያመለክታል OpenAI ሞዴል የተረጋገጠ ድርጅት ያስፈልገዋል. ትችላለህ",
-        "voice": "ድምጽ",
+        "openaiOrgVerificationNote": "አንድን ያመለክታል OpenAI ሞዴል የተረጋገጠ ድርጅት ያስፈልገዋል. ትችላለህ",
+        "voice": "ድምፅ",
         "selectVoice": "ድምጽ ይምረጡ",
         "noVoicesFor": "ምንም ድምጾች የሉም {languageName}",
         "ttsProviderModel": "{providerName} ሞዴል",
@@ -335,15 +369,15 @@ const am = {
         "backToMain": "ወደ ዋናው ተመለስ",
         "conversationHistory": "የውይይት ታሪክ",
         "chatWith": "ጋር ተወያይ {agentA} & {agentB}",
+        "conversationDescription": "ተጀመረ {date} ቋንቋ፡- {language}",
         "viewConversation": "ውይይት ይመልከቱ",
         "backToPreviousChats": "ወደ ቀደሙት ቻቶች ተመለስ",
         "resumeConversation": "ውይይት ከቆመበት ቀጥል",
         "resuming": "ከቆመበት በመጀመር ላይ...",
         "sessionDetails": "የክፍለ-ጊዜ ዝርዝሮች",
-        "language": "ቋንቋ፡",
+        "language": "ቋንቋ",
         "transcript": "ግልባጭ",
         "loadingHistory": "ታሪክን በመጫን ላይ...",
-        "conversationDescription": "ተጀመረ {date} ቋንቋ፡- {language}",
         "loadingConversation": "ውይይትን በመጫን ላይ...",
         "chatStartedOn": "ውይይት ተጀመረ {date}",
         "agentAModel": "ወኪል ኤ ሞዴል",
@@ -353,20 +387,10 @@ const am = {
         "agentBTTS": "ወኪል ቢ TTS",
         "provider": "አቅራቢ",
         "model": "ሞዴል",
-        "voice": "ድምጽ"
+        "voice": "ድምፅ"
     },
-    "common_verifyHere": "እዚህ ያረጋግጡ",
-    "page_AvailableImageModelsTitle": "በአሁኑ ጊዜ የሚገኙ የምስል ሞዴሎች",
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",
-    "imageModel_PriceUSD": "ዋጋ (USD)",
-    "page_TooltipKnowledgeCutoff": "በዚህ ቀን የአምሳያው ዕውቀት ይቋረጣል.",
-    "modelCategory_MistralAIPremierModels": "ዋና ሞዴሎች",
-    "modelCategory_MistralAIOpenModels": "ሞዴሎችን ይክፈቱ",
-    "pricing": {
-        "perMillionTokens": "በ 1 ሚሊዮን ቶከኖች",
-        "tokens": "ማስመሰያዎች",
-        "free": "ፍርይ"
-    }
+    "imageModel_PriceUSD": "ዋጋ (USD)"
 };
 export default am;

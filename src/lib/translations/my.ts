@@ -71,6 +71,7 @@ const my = {
         "mn": "မွန်ဂိုလီးယား"
     },
     "settings": {
+        "loading": "ဆက်တင်များကို ဖွင့်နေသည်...",
         "title": "ဆက်တင်များ",
         "sections": {
             "appearance": "အသွင်အပြင်",
@@ -91,21 +92,21 @@ const my = {
             "conversationLanguageDescription": "ဘာသာစကားအတွက် သုံးပါတယ်။ AI စကားဝိုင်းများသည် သင်၏ အင်တာဖေ့စ်ဘာသာစကားနှင့် ကိုက်ညီလိမ့်မည်။",
             "supportedLanguages": "ပံ့ပိုးထားသော ဘာသာစကားများ",
             "languageSupportInformation": "ဘာသာစကားပံ့ပိုးမှုအချက်အလက်",
-            "aiAgentsLanguageDescription": "စကားဝိုင်းကြား AI အေးဂျင့်များကို သင့်ရွေးချယ်ထားသော ဘာသာစကားဖြင့် ဆောင်ရွက်သွားပါမည်။"
+            "aiAgentsLanguageDescription": "အကြားစကားဝိုင်း AI အေးဂျင့်များကို သင့်ရွေးချယ်ထားသော ဘာသာစကားဖြင့် ဆောင်ရွက်သွားပါမည်။"
         },
         "apiKeys": {
             "title": "API သော့များ",
-            "description": "သင့်အားစီမံပါ။ API မတူညီသော သော့များ AI ပံ့ပိုးပေးသူများ",
-            "saved": "သိမ်းဆည်းထားသည်။",
-            "notSet": "မသတ်မှတ်ထားဘူး။",
-            "setKey": "သော့သတ်မှတ်ပါ။",
-            "updateKey": "အပ်ဒိတ်ကီး",
-            "removeKey": "သော့ကို ဖြုတ်ပါ။",
-            "getKeyInstructions": "သင်၏ရယူပါ။ API သော့",
-            "noNewKeys": "အသစ်မရှိပါ။ API သိမ်းဆည်းရန် သော့များ ထည့်သွင်းထားသည်။",
-            "unexpectedResponse": "ဆာဗာထံမှ မျှော်လင့်မထားသော တုံ့ပြန်မှုတစ်ခု ရရှိခဲ့သည်။",
+            "description": "သင့်အားစီမံပါ။ API မတူညီသော သော့များ AI ဝန်ဆောင်မှုများ။",
+            "setKey": "သတ်မှတ်",
+            "updateKey": "မွမ်းမံ",
+            "saveUpdateKeys": "သော့များကို သိမ်းဆည်း/မွမ်းမံပါ။",
+            "saving": "သိမ်းဆည်းနေသည်...",
+            "noNewKeys": "သိမ်းဆည်းရန် သော့အသစ်မရှိပါ။",
+            "keyStoredSecurely": "မင်းရဲ့ API သော့ကို လုံခြုံစွာသိမ်းဆည်းပြီး ကုဒ်ဝှက်ထားပါမည်။",
+            "enteringNewKeyOverwrites": "သော့အသစ်တစ်ခုထည့်ခြင်းသည် ရှိပြီးသားတစ်ခုအား ထပ်ရေးပါမည်။",
             "failedToSaveKey": "{serviceName} သော့ကို သိမ်းဆည်းရန် မအောင်မြင်ပါ။",
-            "someKeysNotSaved": "တချို့က API သော့များကို သိမ်းဆည်း၍မရပါ။ ကျေးဇူးပြု၍ အောက်ပါအသေးစိတ်အချက်အလက်များကို စစ်ဆေးပါ။",
+            "unexpectedResponse": "ဆာဗာမှ မျှော်လင့်မထားသော တုံ့ပြန်မှု။",
+            "someKeysNotSaved": "အချို့သော့များကို မသိမ်းဆည်းနိုင်ပါ။ အထက်ဖော်ပြပါ အမှားများကို စစ်ဆေးပါ။",
             "keyStatus": "သော့အခြေအနေ...",
             "apiKeySecurelySaved": "API သော့ကို လုံလုံခြုံခြုံ သိမ်းဆည်းထားသည်။",
             "confirmRemoveTitle": "ဖယ်ရှားခြင်းကို အတည်ပြုပါ။",
@@ -114,16 +115,12 @@ const my = {
             "successfullyRemovedKey": "{serviceName} သော့ကို အောင်မြင်စွာ ဖယ်ရှားခဲ့သည်။",
             "keyNotSet": "သော့အခြေအနေ- သတ်မှတ်မထားပါ။",
             "keySet": "သော့အခြေအနေ- သတ်မှတ်ရန်",
-            "saveButton": "သိမ်းဆည်းပါ။ API သော့(များ)",
-            "enteringNewKeyOverwrites": "သော့အသစ်တစ်ခုထည့်ခြင်းသည် သိမ်းဆည်းထားသည့်အရာကို ထပ်ရေးပါမည်။",
-            "keyStoredSecurely": "သင့်သော့ကိုအသုံးပြု၍ လုံခြုံစွာသိမ်းဆည်းထားမည်ဖြစ်သည်။ Google လျှို့ဝှက်မန်နေဂျာ။",
-            "saveUpdateKeys": "သော့များကို သိမ်းဆည်း/မွမ်းမံပါ။",
-            "saving": "သိမ်းဆည်းနေသည်..."
-        },
-        "loading": "ဆက်တင်များကို ဖွင့်နေသည်..."
+            "saveButton": "သိမ်းဆည်းပါ။ API သော့(များ)"
+        }
     },
     "main": {
         "title": "AI စကားဝိုင်း",
+        "aiConversation": "AI စကားဝိုင်း",
         "setupForm": {
             "title": "သင့်စကားဝိုင်းကို သတ်မှတ်ပါ။",
             "agentA": "အေးဂျင့် A",
@@ -134,11 +131,11 @@ const my = {
                 "title": "Text-to-Speech",
                 "enable": "ဖွင့်ပါ။ Text-to-Speech",
                 "provider": "TTS ပံ့ပိုးပေးသူ",
-                "selectProvider": "ရွေးပါ။ TTS ပံ့ပိုးပေးသူ",
+                "selectProvider": "ရွေးချယ်ပါ။ TTS ပံ့ပိုးပေးသူ",
                 "voice": "စကားသံ",
                 "selectVoice": "အသံကို ရွေးပါ။",
                 "model": "TTS မော်ဒယ်",
-                "selectModel": "ရွေးပါ။ TTS မော်ဒယ်"
+                "selectModel": "ရွေးချယ်ပါ။ TTS မော်ဒယ်"
             },
             "startConversation": "စကားဝိုင်းကို စတင်ပါ။",
             "conversationPrompt": "စကားဝိုင်းကို စတင်ပါ။"
@@ -153,8 +150,7 @@ const my = {
             "perMillionTokens": "တိုကင်တစ်သန်းနှုန်း",
             "input": "ထည့်သွင်းခြင်း။",
             "output": "အထွက်"
-        },
-        "aiConversation": "AI စကားဝိုင်း"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const my = {
             "signUpWithGoogle": "ဖြင့် စာရင်းသွင်းပါ။ Google",
             "hasAccount": "အကောင့်ရှိပြီးသားလား။",
             "signIn": "ဆိုင်းအင်လုပ်ခြင်း",
-            "emailLabel": "Email လိပ်စာ",
+            "emailLabel": "အီးမေးလ်လိပ်စာ",
             "confirmPasswordPlaceholder": "စကားဝှက်အတည်ပြုခြင်း",
             "signingUp": "စာရင်းသွင်းနေသည်..."
         },
@@ -185,7 +181,7 @@ const my = {
             "invalidCredentials": "မမှန်ကန်သော အီးမေးလ် သို့မဟုတ် စကားဝှက်",
             "userNotFound": "အသုံးပြုသူကို ရှာမတွေ့ပါ။",
             "weakPassword": "စကားဝှက်သည် အနည်းဆုံး အက္ခရာ 6 လုံး ရှိသင့်သည်။",
-            "emailInUse": "Email အသုံးပြုနေပြီဖြစ်သည်။",
+            "emailInUse": "အီးမေးလ်ကို အသုံးပြုနေပြီဖြစ်သည်။",
             "generic": "အမှားအယွင်းတစ်ခု ဖြစ်ပွားခဲ့သည်။ ထပ်စမ်းကြည့်ပါ။",
             "initialization": "အစပြုခြင်း အမှား။ နောက်မှ ထပ်စမ်းကြည့်ပါ။",
             "invalidEmail": "ကျေးဇူးပြု။ မှန်ကန်သောအီးမေးလ်လိပ်စာတစ်ခုဖြည့်ပါ။",
@@ -229,12 +225,14 @@ const my = {
     "modelCategory_Gemini2_0": "Gemini 2.0 မော်ဒယ်များ",
     "modelCategory_Gemini1_5": "Gemini 1.5 မော်ဒယ်များ",
     "modelCategory_Claude4": "Claude 4 မော်ဒယ်များ",
-    "modelCategory_Claude3_7": "Claude 3.7 မော်ဒယ်များ",
+    "modelCategory_Claude3_7": "Claude 3.7 မော်ဒယ်",
     "modelCategory_Claude3_5": "Claude 3.5 မော်ဒယ်များ",
     "modelCategory_Claude3": "Claude 3 မော်ဒယ်များ",
-    "modelCategory_Grok4": "Grok 4 မော်ဒယ်များ",
+    "modelCategory_Grok4": "Grok 4 မော်ဒယ်",
     "modelCategory_Grok3": "Grok 3 မော်ဒယ်များ",
     "modelCategory_Grok3Mini": "Grok 3 မီနီမော်ဒယ်များ",
+    "modelCategory_MistralAIPremierModels": "ပရီမီယာမော်ဒယ်များ",
+    "modelCategory_MistralAIOpenModels": "မော်ဒယ်ဖွင့်ပါ။",
     "modelCategory_Llama4": "Llama မော်ဒယ် ၄ မျိုး",
     "modelCategory_Llama3_3": "Llama 3.3 မော်ဒယ်များ",
     "modelCategory_Llama3_2": "Llama 3.2 မော်ဒယ်များ",
@@ -246,18 +244,18 @@ const my = {
     "modelCategory_Gemma2": "Gemma မော်ဒယ် ၂",
     "modelCategory_Gemma": "Gemma မော်ဒယ်များ",
     "modelCategory_GoogleGemma": "Google Gemma မော်ဒယ်များ",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 မော်ဒယ်များ",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 မော်ဒယ်များ",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 မော်ဒယ်",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 မော်ဒယ်",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill မော်ဒယ်များ",
     "modelCategory_DeepSeekModels": "DeepSeek မော်ဒယ်များ",
     "modelCategory_MistralAIModels": "Mistral AI မော်ဒယ်များ",
-    "modelCategory_Qwen3": "Qwenမော်ဒယ် ၃ မျိုး",
-    "modelCategory_QwQwQ": "Qwen QwQ မော်ဒယ်များ",
+    "modelCategory_Qwen3": "Qwen၃ မော်ဒယ်",
+    "modelCategory_QwQwQ": "Qwen QwQ မော်ဒယ်",
     "modelCategory_Qwen2_5": "Qwen2.5 မော်ဒယ်များ",
-    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision မော်ဒယ်များ",
-    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder မော်ဒယ်များ",
+    "modelCategory_Qwen2_5Vision": "Qwen2.5 Vision မော်ဒယ်",
+    "modelCategory_Qwen2_5Coder": "Qwen2.5 Coder မော်ဒယ်",
     "modelCategory_Qwen2": "Qwenမော်ဒယ် ၂",
-    "modelCategory_Qwen2Vision": "Qwen2 Vision မော်ဒယ်များ",
+    "modelCategory_Qwen2Vision": "Qwen2 Vision မော်ဒယ်",
     "modelCategory_QwenModels": "Qwen မော်ဒယ်များ",
     "modelCategory_OtherModels": "အခြားမော်ဒယ်များ",
     "page_ErrorLoadingUserData": "အသုံးပြုသူဒေတာကို တင်ရန် မအောင်မြင်ပါ- {errorMessage}။ ကျေးဇူးပြု၍ ပြန်လည်ဆန်းသစ်ကြည့်ပါ။",
@@ -269,31 +267,67 @@ const my = {
     "page_LoadingUserData": "အသုံးပြုသူဒေတာကို ဖွင့်နေသည်...",
     "page_ErrorAlertTitle": "အမှား",
     "page_WelcomeTitle": "မှကြိုဆိုပါတယ်။ Two AIs",
-    "page_WelcomeSubtitle": "ဤဝဘ်ဆိုဒ်သည် သင့်အား လူနှစ်ဦးကြား စကားပြောဆိုမှုများကို နားဆင်နိုင်စေပါသည်။ Large Language Models (LLMs)",
+    "page_WelcomeSubtitle": "ဤဝဘ်ဆိုက်သည် သင့်အား လူနှစ်ဦးကြား စကားပြောဆိုမှုများကို နားဆင်နိုင်စေပါသည်။ Large Language Models (LLMs) နှင့် အလှည့်တစ်ခုစီအတွက် ပုံများကို ဖန်တီးပါ။",
     "page_ApiKeysRequiredTitle": "API သော့များ လိုအပ်သည်။",
     "page_ApiKeysRequiredDescription": "စကားဝိုင်းများကို လုပ်ဆောင်ရန်၊ သင့်ကိုယ်ပိုင် ပေးဆောင်ရန် လိုအပ်ပါသည်။ API သော့များ AI သင်အသုံးပြုလိုသော မော်ဒယ်များ (ဥပမာ၊ OpenAI၊ Google၊ Anthropic) လက်မှတ်ထိုးဝင်ပြီးနောက်၊ ဝန်ဆောင်မှုပေးသူတိုင်းအတွက် အသေးစိတ်လမ်းညွှန်ချက်များကို ဆက်တင်များ / တွင် တွေ့နိုင်ပါသည်။ API လက်မှတ်ထိုးဝင်ပြီးနောက် သော့စာမျက်နှာ။",
     "page_SignInPrompt": "သင်၏ကိုယ်ပိုင်စက်ရှင်ကို စတင်ရန်အတွက် ခေါင်းစီးရှိလင့်ခ်ကို အသုံးပြု၍ အကောင့်တစ်ခုဝင်ရောက်နိုင်သည် သို့မဟုတ် ဖန်တီးနိုင်ပါသည်။",
     "page_VideoTitle": "Two AIs စကားဝိုင်းသရုပ်ပြ",
     "page_AvailableLLMsTitle": "လက်ရှိ ရရှိနိုင်ပါပြီ။ LLMs",
-    "page_TooltipGoogleThinkingBudget": "ဒီ Google မော်ဒယ်သည် 'တွေးခေါ် ဘတ်ဂျက်' ကို အသုံးပြုသည်။ 'တွေးခေါ်မှု' ရလဒ်ကို ငွေတောင်းခံထားသော်လည်း ချတ်တွင် မမြင်နိုင်ပါ။",
+    "page_TooltipKnowledgeCutoff": "မော်ဒယ်ရဲ့ အသိပညာက ဒီရက်စွဲနဲ့ ဖြတ်သွားတယ်။",
+    "page_TooltipGoogleThinkingBudget": "ဒီ Google မော်ဒယ်သည် 'တွေးခေါ် ဘတ်ဂျက်' ကို အသုံးပြုသည်။ 'တွေးခေါ်မှု' ရလဒ်ကို ငွေကောက်ခံသော်လည်း ချတ်တွင် မမြင်နိုင်ပါ။",
     "page_TooltipAnthropicExtendedThinking": "ဒီ Anthropic မော်ဒယ်သည် 'တိုးချဲ့တွေးခေါ်ခြင်း' ကို အသုံးပြုသည်။ 'တွေးခေါ်မှု' ရလဒ်ကို ငွေကောက်ခံသော်လည်း ချတ်တွင် မမြင်နိုင်ပါ။",
     "page_TooltipXaiThinking": "ဒီ xAI မော်ဒယ်သည် 'တွေးခေါ်ခြင်း' ကို အသုံးပြုသည်။ ဤအထွက်ကို ငွေတောင်းခံထားသော်လည်း ချတ်တွင် မမြင်နိုင်ပါ။",
     "page_TooltipQwenReasoning": "ဒီ Qwen မော်ဒယ်သည် 'ကျိုးကြောင်းဆင်ခြင်/တွေးခေါ်ခြင်း' ကို အသုံးပြုသည်။ ဤအထွက်ကို ငွေတောင်းခံထားသော်လည်း ချတ်တွင် မမြင်နိုင်ပါ။",
     "page_TooltipDeepSeekReasoning": "ဒီ DeepSeek မော်ဒယ်သည် 'ကျိုးကြောင်းဆင်ခြင်/တွေးခေါ်ခြင်း' ကို အသုံးပြုသည်။ အထွက်ကို ငွေကောက်ခံသော်လည်း ချတ်တွင် မတွေ့ပါ။",
     "page_TooltipGenericReasoning": "ဤမော်ဒယ်သည် ချတ်တွင်မမြင်နိုင်သော ကျိုးကြောင်းဆင်ခြင်ခြင်းတိုကင်များကို အသုံးပြုသော်လည်း အထွက်တိုကင်များအဖြစ် ငွေတောင်းခံပါသည်။",
     "page_TooltipRequiresVerification": "စစ်ဆေးအတည်ပြုရန် လိုအပ်ပါသည်။ OpenAI အဖွဲ့အစည်း။ သင်သည် ဤနေရာတွင် အတည်ပြုနိုင်သည်။",
-    "page_TooltipSupportsLanguage": "{languageName} ကို ပံ့ပိုးသည်",
-    "page_TooltipMayNotSupportLanguage": "ဤပုံစံသည် စကားဝိုင်းအတွက် {languageName} ကို အပြည့်အဝ မပံ့ပိုးနိုင်ပါ။",
+    "page_TooltipSupportsLanguage": "ထောက်ခံပါတယ်။ {languageName}",
+    "page_TooltipMayNotSupportLanguage": "ဤမော်ဒယ်ကို အပြည့်အဝ ပံ့ပိုးပေးနိုင်မည်မဟုတ်ပေ။ {languageName} စကားဝိုင်းအတွက်။",
     "page_BadgePreview": "စမ်းကြည့်ပါ။",
     "page_BadgeExperimental": "သမ္ဘာ",
     "page_BadgeBeta": "ဘီတာ",
     "page_AvailableTTSTitle": "လက်ရှိ ရရှိနိုင်ပါပြီ။ Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "လက်ရှိရနိုင်သော ရုပ်ပုံမော်ဒယ်များ",
     "page_NoTTSOptions": "မရှိ TTS လက်ရှိရရှိနိုင်သော ရွေးချယ်မှုများ။",
     "page_TruncatableNoteFormat": "({noteText})",
     "page_PricesLastVerifiedOn": "စျေးနှုန်းများကို နောက်ဆုံးစစ်ဆေးခဲ့သည်။ {date}",
-    "page_PricingPerTokens": "နှုန်း {amount} တိုကင်များ",
+    "page_PricingPerTokens": "1 Million Token တစ်ခုလျှင်",
     "page_ModelCategoryModels": "{model} မော်ဒယ်များ",
+    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။",
     "ttsVoice_Ugne": "မီးထဲမှာ",
+    "pricing": {
+        "perMillionTokens": "တိုကင် 1 သန်းအတွက်",
+        "tokens": "တိုကင်များ",
+        "free": "အခမဲ့",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} စာသားတိုကင် 1 သန်းအတွက်",
+                "audioTokens": "{price} အသံတိုကင် 1 သန်းအတွက်"
+            },
+            "geminiPro": {
+                "textTokens": "{price} စာသားတိုကင် 1 သန်းအတွက်",
+                "audioTokens": "{price} အသံတိုကင် 1 သန်းအတွက်"
+            },
+            "openAIMini": {
+                "textTokens": "{price} စာသားတိုကင် 1 သန်းအတွက်",
+                "audioTokens": "{price} အသံတိုကင် 1 သန်းအတွက်"
+            },
+            "openAITTS1": {
+                "standard": "{price} တိုကင် 1 သန်းအတွက်"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} တိုကင် 1 သန်းအတွက်"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} စာလုံးရေ 1 သန်းအတွက်",
+                "neural": "{price} စာလုံးရေ ၁ သန်းလျှင်",
+                "studio": "{price} စာလုံးရေ ၁ သန်းလျှင်",
+                "chirpHD": "အတည်မပြုနိုင်ပါ။",
+                "chirp3HD": "{price} စာလုံးရေ ၁ သန်းလျှင်"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Session Setup Form",
         "description": "ဤနေရာတွင် သင်သည် LLM ကို ရွေးချယ်နိုင်ပြီး စိတ်ကြိုက်ရွေးချယ်နိုင်ပါသည်။ TTS အေးဂျင့်တစ်ခုစီအတွက် ဆက်တင်များ။",
@@ -317,7 +351,7 @@ const my = {
         "selectVoice": "Voice ကို ရွေးပါ။",
         "noVoicesFor": "စကားသံ မရှိပါ။ {languageName}",
         "ttsProviderModel": "{providerName} မော်ဒယ်",
-        "selectTtsProviderModel": "ရွေးပါ။ {providerName} မော်ဒယ်",
+        "selectTtsProviderModel": "ရွေးချယ်ပါ။ {providerName} မော်ဒယ်",
         "selectProvider": "ပံ့ပိုးသူကို ရွေးပါ။",
         "per": "နှုန်း",
         "enableImageGen": "Image Generation ကိုဖွင့်ပါ။",
@@ -325,8 +359,8 @@ const my = {
         "quality": "အရည်အသွေး",
         "size": "အရွယ်အစား",
         "promptLLM": "LLM ကို အချက်ပြပါ။",
-        "imagePromptSystemMessage": "ပုံသတိပေးစနစ် မက်ဆေ့ဂျ်",
-        "defaultImagePromptSystemMessage": "ဤအလှည့်အပြောင်းအပေါ် အခြေခံ၍ ရုပ်ပုံထုတ်လုပ်သည့် မော်ဒယ်အား ပေးအပ်ရန် အချက်တစ်ချက်ကို ဖန်တီးပါ- {turn}",
+        "imagePromptSystemMessage": "ပုံသတိပေးစနစ် မက်ဆေ့ချ်",
+        "defaultImagePromptSystemMessage": "ဤအလှည့်အပြောင်းအပေါ်အခြေခံ၍ ရုပ်ပုံထုတ်လုပ်သည့်မော်ဒယ်အား ပေးအပ်ရန် အချက်တစ်ချက်ကို ဖန်တီးပါ- {turn}",
         "imagePromptSystemMessageHelp": "ပုံသတိပေးချက်ကို ထုတ်ပေးသည့် LLM သို့ စနစ်သတိပေးချက်အနေဖြင့် ဤစာကို ပေးပို့ပါမည်။ သုံးပါ။ <code>{'{turn}'}</code> အေးဂျင့်၏ မက်ဆေ့ချ်အတွက် နေရာပေးသူအဖြစ်။",
         "selectImageModel": "ပုံမော်ဒယ်ကို ရွေးပါ။",
         "selectPromptLLM": "ပုံသတိပေးချက်အတွက် LLM ကို ရွေးပါ။"
@@ -335,17 +369,17 @@ const my = {
         "backToMain": "Main သို့ ပြန်သွားရန်",
         "conversationHistory": "စကားဝိုင်းမှတ်တမ်း",
         "chatWith": "စကားစမြည် {agentA} & {agentB}",
+        "conversationDescription": "စတင်ခဲ့သည်။ {date} - ဘာသာစကား- {language}",
         "viewConversation": "စကားဝိုင်းကို ကြည့်ပါ။",
         "backToPreviousChats": "ယခင် Chats သို့ ပြန်သွားရန်",
         "resumeConversation": "စကားဝိုင်းကို ပြန်စပါ။",
         "resuming": "ပြန်လည်စတင်နေသည်...",
         "sessionDetails": "အပိုင်းအသေးစိတ်",
-        "language": "ဘာသာစကား-",
+        "language": "ဘာသာစကား",
         "transcript": "စာသားမှတ်တမ်း",
         "loadingHistory": "မှတ်တမ်းကို ဖွင့်နေသည်...",
-        "conversationDescription": "စတင်ခဲ့သည်။ {date} - ဘာသာစကား- {language}",
         "loadingConversation": "စကားဝိုင်းကို ဖွင့်နေသည်...",
-        "chatStartedOn": "Chat ကို စတင်ခဲ့သည်။ {date}",
+        "chatStartedOn": "ချတ်စတင်ခဲ့သည်။ {date}",
         "agentAModel": "အေးဂျင့် A မော်ဒယ်",
         "agentBModel": "အေးဂျင့် B မော်ဒယ်",
         "ttsSettings": "TTS ဆက်တင်များ",
@@ -355,18 +389,8 @@ const my = {
         "model": "မော်ဒယ်",
         "voice": "စကားသံ"
     },
-    "common_verifyHere": "ဤနေရာတွင် အတည်ပြုပါ။",
-    "page_AvailableImageModelsTitle": "လက်ရှိရနိုင်သော ရုပ်ပုံမော်ဒယ်များ",
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",
-    "imageModel_PriceUSD": "စျေးနှုန်း (USD)",
-    "page_TooltipKnowledgeCutoff": "မော်ဒယ်ရဲ့ အသိပညာကို ဒီရက်စွဲနဲ့ ဖြတ်လိုက်ပါတယ်။",
-    "modelCategory_MistralAIPremierModels": "ပရီမီယာမော်ဒယ်များ",
-    "modelCategory_MistralAIOpenModels": "မော်ဒယ်များကိုဖွင့်ပါ။",
-    "pricing": {
-        "perMillionTokens": "တိုကင် 1 သန်းအတွက်",
-        "tokens": "တိုကင်များ",
-        "free": "အခမဲ့"
-    }
+    "imageModel_PriceUSD": "စျေးနှုန်း (USD)"
 };
 export default my;

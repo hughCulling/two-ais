@@ -71,6 +71,7 @@ const mr = {
         "mn": "मंगोलियन"
     },
     "settings": {
+        "loading": "सेटिंग्ज लोड करत आहे...",
         "title": "सेटिंग्ज",
         "sections": {
             "appearance": "देखावा",
@@ -95,17 +96,17 @@ const mr = {
         },
         "apiKeys": {
             "title": "API कळा",
-            "description": "तुमचे व्यवस्थापित करा API वेगवेगळ्या साठी चाव्या AI पुरवठादार",
-            "saved": "जतन केले",
-            "notSet": "सेट नाही",
-            "setKey": "सेट की",
-            "updateKey": "अपडेट की",
-            "removeKey": "की काढा",
-            "getKeyInstructions": "तुमचे मिळवा API की",
-            "noNewKeys": "नवीन नाही API जतन करण्यासाठी की प्रविष्ट केल्या.",
-            "unexpectedResponse": "सर्व्हरकडून अनपेक्षित प्रतिसाद मिळाला.",
+            "description": "तुमचे व्यवस्थापित करा API वेगवेगळ्या साठी चाव्या AI सेवा.",
+            "setKey": "सेट",
+            "updateKey": "अपडेट करा",
+            "saveUpdateKeys": "की सेव्ह / अपडेट करा",
+            "saving": "जतन करत आहे...",
+            "noNewKeys": "सेव्ह करण्यासाठी नवीन की नाहीत.",
+            "keyStoredSecurely": "तुमचे API की सुरक्षितपणे संग्रहित आणि कूटबद्ध केली जाईल.",
+            "enteringNewKeyOverwrites": "नवीन की टाकल्याने विद्यमान की ओव्हरराईट होईल.",
             "failedToSaveKey": "{serviceName} की सेव्ह करता आली नाही.",
-            "someKeysNotSaved": "काही API की सेव्ह करता आल्या नाहीत. कृपया खालील तपशील तपासा.",
+            "unexpectedResponse": "सर्व्हरकडून अनपेक्षित प्रतिसाद.",
+            "someKeysNotSaved": "काही की सेव्ह करता आल्या नाहीत. कृपया वरील एरर तपासा.",
             "keyStatus": "महत्त्वाची स्थिती...",
             "apiKeySecurelySaved": "API की सुरक्षितपणे जतन केली",
             "confirmRemoveTitle": "काढून टाकण्याची पुष्टी करा",
@@ -114,16 +115,12 @@ const mr = {
             "successfullyRemovedKey": "{serviceName} की यशस्वीरित्या काढून टाकली.",
             "keyNotSet": "की स्थिती: सेट नाही",
             "keySet": "की स्थिती: सेट करा",
-            "saveButton": "जतन करा API चावी",
-            "enteringNewKeyOverwrites": "नवीन की टाकल्याने सेव्ह केलेली की ओव्हरराईट होईल.",
-            "keyStoredSecurely": "तुमची की सुरक्षितपणे वापरून साठवली जाईल Google गुप्त व्यवस्थापक.",
-            "saveUpdateKeys": "की सेव्ह / अपडेट करा",
-            "saving": "जतन करत आहे..."
-        },
-        "loading": "सेटिंग्ज लोड करत आहे..."
+            "saveButton": "जतन करा API चावी"
+        }
     },
     "main": {
         "title": "AI चर्चा",
+        "aiConversation": "AI चर्चा",
         "setupForm": {
             "title": "तुमचे संभाषण सेट करा",
             "agentA": "एजंट ए",
@@ -141,7 +138,7 @@ const mr = {
                 "selectModel": "निवडा TTS मॉडेल"
             },
             "startConversation": "संभाषण सुरू करा",
-            "conversationPrompt": "संभाषण सुरू करा."
+            "conversationPrompt": "कृपया संभाषण सुरू करा."
         },
         "conversation": {
             "thinking": "विचार करत आहे...",
@@ -153,8 +150,7 @@ const mr = {
             "perMillionTokens": "प्रति दशलक्ष टोकन",
             "input": "इनपुट",
             "output": "आउटपुट"
-        },
-        "aiConversation": "AI चर्चा"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const mr = {
             "signUpWithGoogle": "सह साइन अप करा Google",
             "hasAccount": "आधीपासूनच खाते आहे?",
             "signIn": "भाषा",
-            "emailLabel": "Email पत्ता",
+            "emailLabel": "ईमेल पत्ता",
             "confirmPasswordPlaceholder": "पासवर्डची पुष्टी करा",
             "signingUp": "साइन अप करत आहे..."
         },
@@ -185,7 +181,7 @@ const mr = {
             "invalidCredentials": "चुकीचा ईमेल किंवा पासवर्ड",
             "userNotFound": "वापरकर्ता आढळला नाही.",
             "weakPassword": "पासवर्ड कमीत कमी ६ वर्णांचा असावा",
-            "emailInUse": "Email आधीच वापरात आहे",
+            "emailInUse": "ईमेल आधीच वापरात आहे",
             "generic": "एक एरर आली. कृपया पुन्हा प्रयत्न करा.",
             "initialization": "सुरुवात करताना त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
             "invalidEmail": "कृपया एक वैध ईमेल पत्ता प्रविष्ट करा.",
@@ -229,12 +225,14 @@ const mr = {
     "modelCategory_Gemini2_0": "Gemini 2.0 मॉडेल्स",
     "modelCategory_Gemini1_5": "Gemini 1.5 मॉडेल्स",
     "modelCategory_Claude4": "Claude 4 मॉडेल्स",
-    "modelCategory_Claude3_7": "Claude 3.7 मॉडेल्स",
+    "modelCategory_Claude3_7": "Claude 3.7 मॉडेल",
     "modelCategory_Claude3_5": "Claude 3.5 मॉडेल्स",
     "modelCategory_Claude3": "Claude 3 मॉडेल्स",
-    "modelCategory_Grok4": "Grok 4 मॉडेल्स",
+    "modelCategory_Grok4": "Grok 4 मॉडेल",
     "modelCategory_Grok3": "Grok 3 मॉडेल्स",
     "modelCategory_Grok3Mini": "Grok 3 मिनी मॉडेल्स",
+    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडेल्स",
+    "modelCategory_MistralAIOpenModels": "मॉडेल उघडा",
     "modelCategory_Llama4": "Llama ४ मॉडेल्स",
     "modelCategory_Llama3_3": "Llama ३.३ मॉडेल्स",
     "modelCategory_Llama3_2": "Llama ३.२ मॉडेल्स",
@@ -246,18 +244,18 @@ const mr = {
     "modelCategory_Gemma2": "Gemma २ मॉडेल",
     "modelCategory_Gemma": "Gemma मॉडेल्स",
     "modelCategory_GoogleGemma": "Google Gemma मॉडेल्स",
-    "modelCategory_DeepSeekR1": "DeepSeek R1 मॉडेल्स",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 मॉडेल्स",
+    "modelCategory_DeepSeekR1": "DeepSeek R1 मॉडेल",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 मॉडेल",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 डिस्टिल मॉडेल्स",
     "modelCategory_DeepSeekModels": "DeepSeek मॉडेल्स",
     "modelCategory_MistralAIModels": "Mistral AI मॉडेल्स",
-    "modelCategory_Qwen3": "Qwen३ मॉडेल्स",
-    "modelCategory_QwQwQ": "Qwen QwQ मॉडेल्स",
+    "modelCategory_Qwen3": "Qwen३ मॉडेल",
+    "modelCategory_QwQwQ": "Qwen QwQ मॉडेल",
     "modelCategory_Qwen2_5": "Qwen२.५ मॉडेल्स",
-    "modelCategory_Qwen2_5Vision": "Qwen२.५ व्हिजन मॉडेल्स",
-    "modelCategory_Qwen2_5Coder": "Qwen२.५ कोडर मॉडेल्स",
-    "modelCategory_Qwen2": "Qwen२ मॉडेल्स",
-    "modelCategory_Qwen2Vision": "Qwen२ व्हिजन मॉडेल्स",
+    "modelCategory_Qwen2_5Vision": "Qwen२.५ व्हिजन मॉडेल",
+    "modelCategory_Qwen2_5Coder": "Qwen२.५ कोडर मॉडेल",
+    "modelCategory_Qwen2": "Qwen२ मॉडेल",
+    "modelCategory_Qwen2Vision": "Qwen२ व्हिजन मॉडेल",
     "modelCategory_QwenModels": "Qwen मॉडेल्स",
     "modelCategory_OtherModels": "इतर मॉडेल्स",
     "page_ErrorLoadingUserData": "वापरकर्ता डेटा लोड करण्यात अयशस्वी: {errorMessage}. कृपया रिफ्रेश करून पहा.",
@@ -269,12 +267,13 @@ const mr = {
     "page_LoadingUserData": "वापरकर्ता डेटा लोड करत आहे...",
     "page_ErrorAlertTitle": "त्रुटी",
     "page_WelcomeTitle": "स्वागत आहे Two AIs",
-    "page_WelcomeSubtitle": "ही वेबसाइट तुम्हाला दोघांमधील संभाषणे ऐकू देते Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "ही वेबसाइट तुम्हाला दोघांमधील संभाषणे ऐकू देते Large Language Models (LLMs) आणि प्रत्येक वळणासाठी प्रतिमा तयार करा.",
     "page_ApiKeysRequiredTitle": "API आवश्यक की",
     "page_ApiKeysRequiredDescription": "संभाषणे चालविण्यासाठी, तुम्हाला तुमचे स्वतःचे प्रदान करावे लागेल API साठी चाव्या AI तुम्हाला वापरायचे असलेले मॉडेल (उदा., OpenAI, Google, Anthropic) साइन इन केल्यानंतर. प्रत्येक प्रदात्यासाठी तपशीलवार सूचना सेटिंग्ज / वर आढळू शकतात. API साइन इन केल्यानंतर की पेज.",
     "page_SignInPrompt": "तुमचे स्वतःचे सत्र सुरू करण्यासाठी, तुम्ही हेडरमधील लिंक वापरून साइन इन करू शकता किंवा खाते तयार करू शकता.",
     "page_VideoTitle": "Two AIs संभाषण डेमो",
     "page_AvailableLLMsTitle": "सध्या उपलब्ध आहे LLMs",
+    "page_TooltipKnowledgeCutoff": "या तारखेला मॉडेलचे ज्ञान कमी झाले आहे.",
     "page_TooltipGoogleThinkingBudget": "हे Google मॉडेल 'विचार बजेट' वापरते. 'विचार' आउटपुट बिल केले जाते परंतु चॅटमध्ये दिसत नाही.",
     "page_TooltipAnthropicExtendedThinking": "हे Anthropic मॉडेल 'विस्तारित विचारसरणी' वापरते. 'विचार' आउटपुट बिल केले जाते परंतु चॅटमध्ये दिसत नाही.",
     "page_TooltipXaiThinking": "हे xAI मॉडेल 'विचार' वापरते. हे आउटपुट बिल केलेले आहे परंतु चॅटमध्ये दिसत नाही.",
@@ -282,18 +281,53 @@ const mr = {
     "page_TooltipDeepSeekReasoning": "हे DeepSeek मॉडेल 'तर्क/विचार' वापरते. आउटपुट बिल केले आहे परंतु चॅटमध्ये दिसत नाही.",
     "page_TooltipGenericReasoning": "हे मॉडेल रिजनिंग टोकन वापरते जे चॅटमध्ये दिसत नाहीत परंतु आउटपुट टोकन म्हणून बिल केले जातात.",
     "page_TooltipRequiresVerification": "पडताळणी आवश्यक आहे OpenAI संस्था. तुम्ही येथे पडताळणी करू शकता.",
-    "page_TooltipSupportsLanguage": "{languageName} ला सपोर्ट करते",
-    "page_TooltipMayNotSupportLanguage": "हे मॉडेल संभाषणासाठी {languageName} ला पूर्णपणे सपोर्ट करू शकत नाही.",
+    "page_TooltipSupportsLanguage": "समर्थन देते {languageName}",
+    "page_TooltipMayNotSupportLanguage": "हे मॉडेल कदाचित पूर्णपणे समर्थन देत नाही {languageName} संभाषणासाठी.",
     "page_BadgePreview": "पूर्वावलोकन",
     "page_BadgeExperimental": "प्रायोगिक",
     "page_BadgeBeta": "बीटा",
     "page_AvailableTTSTitle": "सध्या उपलब्ध आहे Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "सध्या उपलब्ध प्रतिमा मॉडेल्स",
     "page_NoTTSOptions": "नाही TTS सध्या उपलब्ध असलेले पर्याय.",
     "page_TruncatableNoteFormat": "({नोटटेक्स्ट})",
     "page_PricesLastVerifiedOn": "किंमती शेवटच्या वेळी पडताळल्या गेल्या {date}",
-    "page_PricingPerTokens": "प्रति {amount} टोकन",
+    "page_PricingPerTokens": "प्रति १ दशलक्ष टोकनसाठी",
     "page_ModelCategoryModels": "{model} मॉडेल्स",
+    "common_verifyHere": "येथे पडताळणी करा",
     "ttsVoice_Ugne": "आगीत",
+    "pricing": {
+        "perMillionTokens": "प्रति १ दशलक्ष टोकनसाठी",
+        "tokens": "टोकन",
+        "free": "मोफत",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} प्रति १ दशलक्ष मजकूर टोकन",
+                "audioTokens": "{price} प्रति १ दशलक्ष ऑडिओ टोकनसाठी"
+            },
+            "geminiPro": {
+                "textTokens": "{price} प्रति १ दशलक्ष मजकूर टोकन",
+                "audioTokens": "{price} प्रति १ दशलक्ष ऑडिओ टोकनसाठी"
+            },
+            "openAIMini": {
+                "textTokens": "{price} प्रति १ दशलक्ष मजकूर टोकन",
+                "audioTokens": "{price} प्रति १ दशलक्ष ऑडिओ टोकनसाठी"
+            },
+            "openAITTS1": {
+                "standard": "{price} प्रति १ दशलक्ष टोकनसाठी"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} प्रति १ दशलक्ष टोकनसाठी"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} प्रति १० लाख वर्णांमागे",
+                "neural": "{price} प्रति १० लाख वर्णांमागे",
+                "studio": "{price} प्रति १० लाख वर्णांमागे",
+                "chirpHD": "पडताळणी करता आली नाही",
+                "chirp3HD": "{price} प्रति १० लाख वर्णांमागे"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "सत्र सेटअप फॉर्म",
         "description": "येथे तुम्ही एलएलएम आणि पर्यायी निवडू शकता TTS प्रत्येक एजंटसाठी सेटिंग्ज.",
@@ -309,7 +343,7 @@ const mr = {
         "initialPromptDescription": "संभाषण सुरू करण्यासाठी हा प्रॉम्प्ट पहिला संदेश म्हणून पाठवला जाईल. जर तुम्ही तो रिकामा सोडला तर कोणताही प्रॉम्प्ट येणार नाही.",
         "startConversation": "संभाषण सुरू करा",
         "starting": "सुरू होत आहे...",
-        "startTheConversation": "संभाषण सुरू करा.",
+        "startTheConversation": "कृपया संभाषण सुरू करा.",
         "languageSupportNote": "भाषा समर्थन निर्देशक मॉडेल सुसंगतता दर्शवतात {languageName}. समर्थन नसलेले मॉडेल अक्षम केले जातात.",
         "reasoningNote": "मॉडेल 'विचार' किंवा 'तर्क' टोकन वापरते हे दर्शविते. हे आउटपुट बिल केलेले आहे परंतु चॅटमध्ये दिसत नाही.",
         "openaiOrgVerificationNote": "दर्शवते OpenAI मॉडेलला सत्यापित संस्था आवश्यक आहे. तुम्ही हे करू शकता",
@@ -335,15 +369,15 @@ const mr = {
         "backToMain": "मुख्य कडे परत",
         "conversationHistory": "संभाषण इतिहास",
         "chatWith": "यांच्याशी गप्पा मारा {agentA} आणि {agentB}",
+        "conversationDescription": "रोजी सुरू झाले {date} - भाषा: {language}",
         "viewConversation": "संभाषण पहा",
         "backToPreviousChats": "मागील चॅट्सवर परत जा",
         "resumeConversation": "संभाषण पुन्हा सुरू करा",
         "resuming": "पुन्हा सुरू करत आहे...",
         "sessionDetails": "सत्र तपशील",
-        "language": "भाषा:",
+        "language": "भाषा",
         "transcript": "उतारा",
         "loadingHistory": "इतिहास लोड करत आहे...",
-        "conversationDescription": "रोजी सुरू झाले {date} - भाषा: {language}",
         "loadingConversation": "संभाषण लोड करत आहे...",
         "chatStartedOn": "चॅट सुरू झाला {date}",
         "agentAModel": "एजंट ए मॉडेल",
@@ -355,18 +389,8 @@ const mr = {
         "model": "मॉडेल",
         "voice": "आवाज"
     },
-    "common_verifyHere": "येथे पडताळणी करा",
-    "page_AvailableImageModelsTitle": "सध्या उपलब्ध प्रतिमा मॉडेल्स",
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
-    "imageModel_PriceUSD": "किंमत (USD)",
-    "page_TooltipKnowledgeCutoff": "या तारखेला मॉडेलचे ज्ञान कमी झाले आहे.",
-    "modelCategory_MistralAIPremierModels": "प्रीमियर मॉडेल्स",
-    "modelCategory_MistralAIOpenModels": "उघडे मॉडेल",
-    "pricing": {
-        "perMillionTokens": "प्रति १ दशलक्ष टोकनसाठी",
-        "tokens": "टोकन",
-        "free": "मोफत"
-    }
+    "imageModel_PriceUSD": "किंमत (USD)"
 };
 export default mr;

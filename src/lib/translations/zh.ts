@@ -71,6 +71,7 @@ const zh = {
         "mn": "蒙"
     },
     "settings": {
+        "loading": "正在加载设置...",
         "title": "设置",
         "sections": {
             "appearance": "外貌",
@@ -95,17 +96,17 @@ const zh = {
         },
         "apiKeys": {
             "title": "API 按键",
-            "description": "管理您的 API 不同的键 AI 提供商",
-            "saved": "已保存",
-            "notSet": "未设置",
-            "setKey": "设置关键点",
-            "updateKey": "更新密钥",
-            "removeKey": "删除键",
-            "getKeyInstructions": "获取您的 API 钥匙",
-            "noNewKeys": "没有新的 API 输入键进行保存。",
-            "unexpectedResponse": "从服务器收到意外响应。",
+            "description": "管理您的 API 不同的键 AI 服务。",
+            "setKey": "放",
+            "updateKey": "更新",
+            "saveUpdateKeys": "保存/更新密钥",
+            "saving": "保存...",
+            "noNewKeys": "没有新的密钥需要保存。",
+            "keyStoredSecurely": "你的 API 密钥将被安全存储和加密。",
+            "enteringNewKeyOverwrites": "输入新密钥将覆盖现有密钥。",
             "failedToSaveKey": "无法保存 {serviceName} 密钥。",
-            "someKeysNotSaved": "一些 API 无法保存密钥。请查看以下详细信息。",
+            "unexpectedResponse": "服务器出现意外响应。",
+            "someKeysNotSaved": "某些密钥无法保存。请检查上述错误。",
             "keyStatus": "关键状态...",
             "apiKeySecurelySaved": "API 密钥已安全保存",
             "confirmRemoveTitle": "确认删除",
@@ -114,19 +115,15 @@ const zh = {
             "successfullyRemovedKey": "已成功删除 {serviceName} 键。",
             "keyNotSet": "密钥状态：未设置",
             "keySet": "密钥状态：已设置",
-            "saveButton": "节省 API 键",
-            "enteringNewKeyOverwrites": "输入新密钥将覆盖已保存的密钥。",
-            "keyStoredSecurely": "您的密钥将使用以下方式安全存储 Google 秘密经理。",
-            "saveUpdateKeys": "保存/更新密钥",
-            "saving": "保存..."
-        },
-        "loading": "正在加载设置..."
+            "saveButton": "节省 API 键"
+        }
     },
     "main": {
         "title": "AI 对话",
+        "aiConversation": "AI 对话",
         "setupForm": {
             "title": "设置你的对话",
-            "agentA": "特工A",
+            "agentA": "代理人A",
             "agentB": "特工B",
             "model": "模型",
             "selectModel": "选择模型",
@@ -141,7 +138,7 @@ const zh = {
                 "selectModel": "选择 TTS 模型"
             },
             "startConversation": "开始对话",
-            "conversationPrompt": "开始对话。"
+            "conversationPrompt": "请开始对话。"
         },
         "conversation": {
             "thinking": "思维...",
@@ -153,8 +150,7 @@ const zh = {
             "perMillionTokens": "每百万个代币",
             "input": "输入",
             "output": "输出"
-        },
-        "aiConversation": "AI 对话"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const zh = {
             "signUpWithGoogle": "注册 Google",
             "hasAccount": "已有账户？",
             "signIn": "登入",
-            "emailLabel": "Email 地址",
+            "emailLabel": "电子邮件",
             "confirmPasswordPlaceholder": "确认密码",
             "signingUp": "正在注册..."
         },
@@ -185,7 +181,7 @@ const zh = {
             "invalidCredentials": "无效的电子邮件或密码",
             "userNotFound": "未找到用户",
             "weakPassword": "密码至少应为 6 个字符",
-            "emailInUse": "Email 已在使用",
+            "emailInUse": "电子邮件已被使用",
             "generic": "发生错误。请重试。",
             "initialization": "初始化错误。请稍后重试。",
             "invalidEmail": "请输入有效的电子邮件地址。",
@@ -235,6 +231,8 @@ const zh = {
     "modelCategory_Grok4": "Grok 4 模型",
     "modelCategory_Grok3": "Grok 3 模型",
     "modelCategory_Grok3Mini": "Grok 3 迷你模型",
+    "modelCategory_MistralAIPremierModels": "顶级型号",
+    "modelCategory_MistralAIOpenModels": "开放模型",
     "modelCategory_Llama4": "Llama 4个模型",
     "modelCategory_Llama3_3": "Llama 3.3 模型",
     "modelCategory_Llama3_2": "Llama 3.2 模型",
@@ -247,16 +245,16 @@ const zh = {
     "modelCategory_Gemma": "Gemma 模型",
     "modelCategory_GoogleGemma": "Google Gemma 模型",
     "modelCategory_DeepSeekR1": "DeepSeek R1 型号",
-    "modelCategory_DeepSeekV3": "DeepSeek V3 型号",
+    "modelCategory_DeepSeekV3": "DeepSeek V3 模型",
     "modelCategory_DeepSeekR1Distill": "DeepSeek R1 Distill 模型",
     "modelCategory_DeepSeekModels": "DeepSeek 模型",
     "modelCategory_MistralAIModels": "Mistral AI 模型",
-    "modelCategory_Qwen3": "Qwen3个模型",
-    "modelCategory_QwQwQ": "Qwen QwQ 模型",
+    "modelCategory_Qwen3": "Qwen3 模型",
+    "modelCategory_QwQwQ": "Qwen QwQ模型",
     "modelCategory_Qwen2_5": "Qwen2.5 个模型",
     "modelCategory_Qwen2_5Vision": "Qwen2.5 视觉模型",
     "modelCategory_Qwen2_5Coder": "Qwen2.5 编码器模型",
-    "modelCategory_Qwen2": "Qwen2个模型",
+    "modelCategory_Qwen2": "Qwen2 模型",
     "modelCategory_Qwen2Vision": "Qwen2 视觉模型",
     "modelCategory_QwenModels": "Qwen 模型",
     "modelCategory_OtherModels": "其他型号",
@@ -269,12 +267,13 @@ const zh = {
     "page_LoadingUserData": "正在加载用户数据...",
     "page_ErrorAlertTitle": "错误",
     "page_WelcomeTitle": "欢迎来到 Two AIs",
-    "page_WelcomeSubtitle": "这个网站可以让你听到两个人之间的对话 Large Language Models (LLMs）。",
+    "page_WelcomeSubtitle": "这个网站可以让你听到两个人之间的对话 Large Language Models (LLMs) 并为每个转弯生成图像。",
     "page_ApiKeysRequiredTitle": "API 需要密钥",
     "page_ApiKeysRequiredDescription": "要进行对话，您需要提供自己的 API 键 AI 您希望使用的模型（例如， OpenAI， Google， Anthropic) 登录后。每个提供商的详细说明可以在“设置/ API 登录后的密钥页面。",
     "page_SignInPrompt": "要开始您自己的会话，您可以使用标题中的链接登录或创建一个帐户。",
     "page_VideoTitle": "Two AIs 对话演示",
     "page_AvailableLLMsTitle": "目前可用 LLMs",
+    "page_TooltipKnowledgeCutoff": "该模型的知识在该日期被切断。",
     "page_TooltipGoogleThinkingBudget": "这 Google 该模型使用“思考预算”。“思考”输出会被计费，但在聊天中不可见。",
     "page_TooltipAnthropicExtendedThinking": "这 Anthropic 模型使用了“扩展思维”。“思考”的输出会被计费，但在聊天中不可见。",
     "page_TooltipXaiThinking": "这 xAI 模型使用“思考”。此输出已计费，但在聊天中不可见。",
@@ -282,21 +281,56 @@ const zh = {
     "page_TooltipDeepSeekReasoning": "这 DeepSeek 模型使用“推理/思考”。输出会被计费，但在聊天中不可见。",
     "page_TooltipGenericReasoning": "该模型使用在聊天中不可见但被视为输出标记的推理标记。",
     "page_TooltipRequiresVerification": "需要验证 OpenAI 组织。您可以在此处验证。",
-    "page_TooltipSupportsLanguage": "支持{languageName}",
-    "page_TooltipMayNotSupportLanguage": "此模型可能不完全支持{languageName}对话。",
+    "page_TooltipSupportsLanguage": "支持 {languageName}",
+    "page_TooltipMayNotSupportLanguage": "此模型可能不完全支持 {languageName} 进行对话。",
     "page_BadgePreview": "预览",
     "page_BadgeExperimental": "实验",
     "page_BadgeBeta": "测试版",
     "page_AvailableTTSTitle": "目前可用 Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "当前可用的图像模型",
     "page_NoTTSOptions": "不 TTS 当前可用的选项。",
     "page_TruncatableNoteFormat": "（{noteText}）",
     "page_PricesLastVerifiedOn": "价格最后验证日期 {date}",
-    "page_PricingPerTokens": "每 {amount} 代币",
+    "page_PricingPerTokens": "每 100 万个代币",
     "page_ModelCategoryModels": "{model} 模型",
+    "common_verifyHere": "在此验证",
     "ttsVoice_Ugne": "在火中",
+    "pricing": {
+        "perMillionTokens": "每 100 万个代币",
+        "tokens": "代币",
+        "free": "自由的",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} 每 100 万个文本标记",
+                "audioTokens": "{price} 每 100 万个音频令牌"
+            },
+            "geminiPro": {
+                "textTokens": "{price} 每 100 万个文本标记",
+                "audioTokens": "{price} 每 100 万个音频令牌"
+            },
+            "openAIMini": {
+                "textTokens": "{price} 每 100 万个文本标记",
+                "audioTokens": "{price} 每 100 万个音频令牌"
+            },
+            "openAITTS1": {
+                "standard": "{price} 每 100 万个代币"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} 每 100 万个代币"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} 每百万字符",
+                "neural": "{price} 每百万字符",
+                "studio": "{price} 每百万字符",
+                "chirpHD": "无法验证",
+                "chirp3HD": "{price} 每百万字符"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "会话设置表",
-        "description": "在这里您可以选择法学硕士 (LLM) 和可选 TTS 每个代理的设置。",
+        "description": "在这里你可以选择法学硕士（LLM）和可选的 TTS 每个代理的设置。",
         "agentAModel": "特工A模型",
         "agentBModel": "代理B模型",
         "selectLLMForAgentA": "为代理人 A 选择 LLM",
@@ -309,7 +343,7 @@ const zh = {
         "initialPromptDescription": "此提示将作为启动对话的第一条消息发送。如果您将其留空，则不会出现提示。",
         "startConversation": "开始对话",
         "starting": "开始...",
-        "startTheConversation": "开始对话。",
+        "startTheConversation": "请开始对话。",
         "languageSupportNote": "语言支持指标显示模型兼容性 {languageName}. 不支持的型号将被禁用。",
         "reasoningNote": "表示模型使用“思考”或“推理”标记。此输出会计费，但在聊天中不可见。",
         "openaiOrgVerificationNote": "表示 OpenAI 模型需要经过验证的组织。您可以",
@@ -335,15 +369,15 @@ const zh = {
         "backToMain": "返回主页",
         "conversationHistory": "对话历史记录",
         "chatWith": "与聊天 {agentA} & {agentB}",
+        "conversationDescription": "开始于 {date} - 语言： {language}",
         "viewConversation": "查看对话",
         "backToPreviousChats": "返回之前的聊天",
         "resumeConversation": "恢复对话",
         "resuming": "正在恢复...",
         "sessionDetails": "会议详情",
-        "language": "语言：",
+        "language": "语言",
         "transcript": "抄本",
         "loadingHistory": "正在加载历史记录...",
-        "conversationDescription": "开始于 {date} - 语言： {language}",
         "loadingConversation": "正在加载对话...",
         "chatStartedOn": "聊天开始于 {date}",
         "agentAModel": "特工A模型",
@@ -355,18 +389,8 @@ const zh = {
         "model": "模型",
         "voice": "嗓音"
     },
-    "common_verifyHere": "在此验证",
-    "page_AvailableImageModelsTitle": "当前可用的图像模型",
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",
-    "imageModel_PriceUSD": "价格 (USD)",
-    "page_TooltipKnowledgeCutoff": "该模型的知识在该日期被切断。",
-    "modelCategory_MistralAIPremierModels": "顶级型号",
-    "modelCategory_MistralAIOpenModels": "开放模型",
-    "pricing": {
-        "perMillionTokens": "每 100 万个代币",
-        "tokens": "代币",
-        "free": "自由的"
-    }
+    "imageModel_PriceUSD": "价格 (USD)"
 };
 export default zh;

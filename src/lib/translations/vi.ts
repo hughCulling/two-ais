@@ -71,6 +71,7 @@ const vi = {
         "mn": "Mông Cổ"
     },
     "settings": {
+        "loading": "Đang tải cài đặt...",
         "title": "Cài đặt",
         "sections": {
             "appearance": "Vẻ bề ngoài",
@@ -95,17 +96,17 @@ const vi = {
         },
         "apiKeys": {
             "title": "API Chìa khóa",
-            "description": "Quản lý của bạn API chìa khóa cho các mục đích khác nhau AI nhà cung cấp",
-            "saved": "Đã lưu",
-            "notSet": "Chưa thiết lập",
-            "setKey": "Đặt khóa",
-            "updateKey": "Cập nhật khóa",
-            "removeKey": "Xóa khóa",
-            "getKeyInstructions": "Nhận của bạn API chìa khóa",
-            "noNewKeys": "Không có gì mới API nhập phím để lưu.",
-            "unexpectedResponse": "Nhận được phản hồi không mong muốn từ máy chủ.",
+            "description": "Quản lý của bạn API chìa khóa cho các mục đích khác nhau AI dịch vụ.",
+            "setKey": "Bộ",
+            "updateKey": "Cập nhật",
+            "saveUpdateKeys": "Lưu / Cập nhật Khóa",
+            "saving": "Đang lưu...",
+            "noNewKeys": "Không có khóa mới nào để lưu.",
+            "keyStoredSecurely": "Của bạn API chìa khóa sẽ được lưu trữ an toàn và mã hóa.",
+            "enteringNewKeyOverwrites": "Nhập khóa mới sẽ ghi đè lên khóa hiện có.",
             "failedToSaveKey": "Không lưu được khóa {serviceName}.",
-            "someKeysNotSaved": "Một số API Không thể lưu khóa. Vui lòng kiểm tra thông tin chi tiết bên dưới.",
+            "unexpectedResponse": "Phản hồi không mong muốn từ máy chủ.",
+            "someKeysNotSaved": "Không thể lưu một số khóa. Vui lòng kiểm tra các lỗi ở trên.",
             "keyStatus": "trạng thái chính...",
             "apiKeySecurelySaved": "API Khóa được lưu an toàn",
             "confirmRemoveTitle": "Xác nhận xóa",
@@ -114,16 +115,12 @@ const vi = {
             "successfullyRemovedKey": "Đã xóa thành công khóa {serviceName}.",
             "keyNotSet": "Trạng thái khóa: Chưa thiết lập",
             "keySet": "Trạng thái khóa: Đã đặt",
-            "saveButton": "Cứu API Khóa(s)",
-            "enteringNewKeyOverwrites": "Nhập khóa mới sẽ ghi đè lên khóa đã lưu.",
-            "keyStoredSecurely": "Chìa khóa của bạn sẽ được lưu trữ an toàn bằng cách sử dụng Google Người quản lý bí mật.",
-            "saveUpdateKeys": "Lưu / Cập nhật Khóa",
-            "saving": "Đang lưu..."
-        },
-        "loading": "Đang tải cài đặt..."
+            "saveButton": "Cứu API Khóa(s)"
+        }
     },
     "main": {
         "title": "AI Cuộc hội thoại",
+        "aiConversation": "AI Cuộc hội thoại",
         "setupForm": {
             "title": "Thiết lập cuộc trò chuyện của bạn",
             "agentA": "Đặc vụ A",
@@ -141,7 +138,7 @@ const vi = {
                 "selectModel": "Lựa chọn TTS người mẫu"
             },
             "startConversation": "Bắt đầu cuộc trò chuyện",
-            "conversationPrompt": "Bắt đầu cuộc trò chuyện."
+            "conversationPrompt": "Hãy bắt đầu cuộc trò chuyện."
         },
         "conversation": {
             "thinking": "đang suy nghĩ...",
@@ -153,8 +150,7 @@ const vi = {
             "perMillionTokens": "trên một triệu mã thông báo",
             "input": "Đầu vào",
             "output": "Đầu ra"
-        },
-        "aiConversation": "AI Cuộc hội thoại"
+        }
     },
     "auth": {
         "login": {
@@ -177,7 +173,7 @@ const vi = {
             "signUpWithGoogle": "Đăng ký với Google",
             "hasAccount": "Bạn đã có tài khoản?",
             "signIn": "Đăng nhập",
-            "emailLabel": "Email Địa chỉ",
+            "emailLabel": "Địa chỉ email",
             "confirmPasswordPlaceholder": "Xác nhận mật khẩu",
             "signingUp": "Đang đăng ký..."
         },
@@ -229,12 +225,14 @@ const vi = {
     "modelCategory_Gemini2_0": "Gemini 2.0 các mô hình",
     "modelCategory_Gemini1_5": "Gemini 1.5 các mô hình",
     "modelCategory_Claude4": "Claude 4 các mô hình",
-    "modelCategory_Claude3_7": "Claude 3.7 các mô hình",
+    "modelCategory_Claude3_7": "Claude 3.7 người mẫu",
     "modelCategory_Claude3_5": "Claude 3.5 các mô hình",
     "modelCategory_Claude3": "Claude 3 các mô hình",
-    "modelCategory_Grok4": "Grok 4 các mô hình",
+    "modelCategory_Grok4": "Grok 4 người mẫu",
     "modelCategory_Grok3": "Grok 3 các mô hình",
     "modelCategory_Grok3Mini": "Grok 3 Mô hình thu nhỏ",
+    "modelCategory_MistralAIPremierModels": "Các mẫu hàng đầu",
+    "modelCategory_MistralAIOpenModels": "Mô hình mở",
     "modelCategory_Llama4": "Llama 4 mô hình",
     "modelCategory_Llama3_3": "Llama 3.3 mô hình",
     "modelCategory_Llama3_2": "Llama 3.2 mô hình",
@@ -246,8 +244,8 @@ const vi = {
     "modelCategory_Gemma2": "Gemma 2 mô hình",
     "modelCategory_Gemma": "Gemma các mô hình",
     "modelCategory_GoogleGemma": "Google Gemma Các mô hình",
-    "modelCategory_DeepSeekR1": "DeepSeek Các mô hình R1",
-    "modelCategory_DeepSeekV3": "DeepSeek Các mô hình V3",
+    "modelCategory_DeepSeekR1": "DeepSeek Mô hình R1",
+    "modelCategory_DeepSeekV3": "DeepSeek Mô hình V3",
     "modelCategory_DeepSeekR1Distill": "DeepSeek Các mô hình chưng cất R1",
     "modelCategory_DeepSeekModels": "DeepSeek Các mô hình",
     "modelCategory_MistralAIModels": "Mistral AI Các mô hình",
@@ -269,12 +267,13 @@ const vi = {
     "page_LoadingUserData": "Đang tải dữ liệu người dùng...",
     "page_ErrorAlertTitle": "Lỗi",
     "page_WelcomeTitle": "Chào mừng đến với Two AIs",
-    "page_WelcomeSubtitle": "Trang web này cho phép bạn nghe các cuộc trò chuyện giữa hai Large Language Models (LLMs).",
+    "page_WelcomeSubtitle": "Trang web này cho phép bạn nghe các cuộc trò chuyện giữa hai Large Language Models (LLMs) và tạo hình ảnh cho mỗi lượt.",
     "page_ApiKeysRequiredTitle": "API Cần có chìa khóa",
     "page_ApiKeysRequiredDescription": "Để chạy các cuộc trò chuyện, bạn sẽ cần phải cung cấp của riêng bạn API chìa khóa cho AI các mô hình bạn muốn sử dụng (ví dụ: OpenAI, Google, Anthropic) sau khi đăng nhập. Hướng dẫn chi tiết cho từng nhà cung cấp có thể được tìm thấy trên Cài đặt / API Trang khóa sau khi đăng nhập.",
     "page_SignInPrompt": "Để bắt đầu phiên của riêng bạn, bạn có thể đăng nhập hoặc tạo tài khoản bằng liên kết ở đầu trang.",
     "page_VideoTitle": "Two AIs Bản demo hội thoại",
     "page_AvailableLLMsTitle": "Hiện có sẵn LLMs",
+    "page_TooltipKnowledgeCutoff": "Kiến thức của mô hình đã bị cắt bỏ vào thời điểm này.",
     "page_TooltipGoogleThinkingBudget": "Cái này Google Mô hình sử dụng 'ngân sách suy nghĩ'. Đầu ra 'suy nghĩ' được tính phí nhưng không hiển thị trong phần trò chuyện.",
     "page_TooltipAnthropicExtendedThinking": "Cái này Anthropic Mô hình sử dụng 'suy nghĩ mở rộng'. Đầu ra 'suy nghĩ' được tính phí nhưng không hiển thị trong phần trò chuyện.",
     "page_TooltipXaiThinking": "Cái này xAI Mô hình sử dụng 'suy nghĩ'. Đầu ra này được tính phí nhưng không hiển thị trong phần trò chuyện.",
@@ -283,17 +282,52 @@ const vi = {
     "page_TooltipGenericReasoning": "Mô hình này sử dụng mã thông báo lý luận không hiển thị trong cuộc trò chuyện nhưng được tính là mã thông báo đầu ra.",
     "page_TooltipRequiresVerification": "Yêu cầu xác minh OpenAI tổ chức. Bạn có thể xác minh tại đây.",
     "page_TooltipSupportsLanguage": "Hỗ trợ {languageName}",
-    "page_TooltipMayNotSupportLanguage": "Mô hình này có thể không hỗ trợ đầy đủ {languageName} cho cuộc trò chuyện.",
+    "page_TooltipMayNotSupportLanguage": "Mô hình này có thể không hỗ trợ đầy đủ {languageName} để trò chuyện.",
     "page_BadgePreview": "Xem trước",
     "page_BadgeExperimental": "Thí nghiệm",
     "page_BadgeBeta": "Beta",
     "page_AvailableTTSTitle": "Hiện có sẵn Text-to-Speech (TTS)",
+    "page_AvailableImageModelsTitle": "Các mô hình hình ảnh hiện có",
     "page_NoTTSOptions": "KHÔNG TTS các tùy chọn hiện có.",
     "page_TruncatableNoteFormat": "({NoteText})",
     "page_PricesLastVerifiedOn": "Giá được xác minh lần cuối vào {date}",
-    "page_PricingPerTokens": "mỗi {amount} Mã thông báo",
+    "page_PricingPerTokens": "trên 1 triệu mã thông báo",
     "page_ModelCategoryModels": "{model} các mô hình",
+    "common_verifyHere": "xác minh ở đây",
     "ttsVoice_Ugne": "Trong đám cháy",
+    "pricing": {
+        "perMillionTokens": "trên 1 triệu mã thông báo",
+        "tokens": "mã thông báo",
+        "free": "Miễn phí",
+        "tts": {
+            "geminiFlash": {
+                "textTokens": "{price} trên 1 triệu mã thông báo văn bản",
+                "audioTokens": "{price} trên 1 triệu token âm thanh"
+            },
+            "geminiPro": {
+                "textTokens": "{price} trên 1 triệu mã thông báo văn bản",
+                "audioTokens": "{price} trên 1 triệu token âm thanh"
+            },
+            "openAIMini": {
+                "textTokens": "{price} trên 1 triệu mã thông báo văn bản",
+                "audioTokens": "{price} trên 1 triệu token âm thanh"
+            },
+            "openAITTS1": {
+                "standard": "{price} trên 1 triệu mã thông báo"
+            },
+            "openAITTS1HD": {
+                "standard": "{price} trên 1 triệu mã thông báo"
+            },
+            "plusSign": " + ",
+            "googleCloud": {
+                "standard": "{price} trên 1 triệu ký tự",
+                "neural": "{price} trên 1 triệu ký tự",
+                "studio": "{price} trên 1 triệu ký tự",
+                "chirpHD": "Không thể xác minh",
+                "chirp3HD": "{price} trên 1 triệu ký tự"
+            }
+        }
+    },
     "sessionSetupForm": {
         "title": "Biểu mẫu thiết lập phiên",
         "description": "Ở đây bạn có thể chọn LLM và tùy chọn TTS cài đặt cho từng tác nhân.",
@@ -309,7 +343,7 @@ const vi = {
         "initialPromptDescription": "Lời nhắc này sẽ được gửi làm tin nhắn đầu tiên để bắt đầu cuộc trò chuyện. Nếu bạn để trống, sẽ không có lời nhắc nào được gửi.",
         "startConversation": "Bắt đầu cuộc trò chuyện",
         "starting": "Bắt đầu...",
-        "startTheConversation": "Bắt đầu cuộc trò chuyện.",
+        "startTheConversation": "Hãy bắt đầu cuộc trò chuyện.",
         "languageSupportNote": "Các chỉ số hỗ trợ ngôn ngữ cho thấy khả năng tương thích của mô hình với {languageName}. Các mô hình không được hỗ trợ sẽ bị vô hiệu hóa.",
         "reasoningNote": "Chỉ ra rằng mô hình sử dụng mã thông báo \"suy nghĩ\" hoặc \"lý luận\". Đầu ra này được tính phí nhưng không hiển thị trong cuộc trò chuyện.",
         "openaiOrgVerificationNote": "Chỉ ra một OpenAI mô hình yêu cầu một tổ chức đã được xác minh. Bạn có thể",
@@ -335,15 +369,15 @@ const vi = {
         "backToMain": "Quay lại trang chính",
         "conversationHistory": "Lịch sử hội thoại",
         "chatWith": "Trò chuyện với {agentA} & {agentB}",
+        "conversationDescription": "Bắt đầu vào {date} - Ngôn ngữ: {language}",
         "viewConversation": "Xem cuộc trò chuyện",
         "backToPreviousChats": "Quay lại các cuộc trò chuyện trước đó",
         "resumeConversation": "Tiếp tục cuộc trò chuyện",
         "resuming": "Đang tiếp tục...",
         "sessionDetails": "Chi tiết phiên họp",
-        "language": "Ngôn ngữ:",
+        "language": "Ngôn ngữ",
         "transcript": "Bản sao",
         "loadingHistory": "Đang tải lịch sử...",
-        "conversationDescription": "Bắt đầu vào {date} - Ngôn ngữ: {language}",
         "loadingConversation": "Đang tải cuộc trò chuyện...",
         "chatStartedOn": "Trò chuyện bắt đầu vào {date}",
         "agentAModel": "Mô hình Agent A",
@@ -355,18 +389,8 @@ const vi = {
         "model": "Người mẫu",
         "voice": "Tiếng nói"
     },
-    "common_verifyHere": "xác minh ở đây",
-    "page_AvailableImageModelsTitle": "Các mô hình hình ảnh hiện có",
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",
-    "imageModel_PriceUSD": "Giá (USD)",
-    "page_TooltipKnowledgeCutoff": "Kiến thức của mô hình đã bị cắt bỏ vào thời điểm này.",
-    "modelCategory_MistralAIPremierModels": "Các mẫu hàng đầu",
-    "modelCategory_MistralAIOpenModels": "Mô hình mở",
-    "pricing": {
-        "perMillionTokens": "trên 1 triệu mã thông báo",
-        "tokens": "mã thông báo",
-        "free": "Miễn phí"
-    }
+    "imageModel_PriceUSD": "Giá (USD)"
 };
 export default vi;
