@@ -460,7 +460,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
                             return (
                               <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
-                                <span className="whitespace-nowrap">{model.name}</span>
+                                <div className="flex items-center space-x-1">
+                                  <span className="whitespace-nowrap">{model.name}</span>
+                                  {/* {model.freeTier?.available && (
+                                    <FreeTierBadge
+                                      freeTier={model.freeTier}
+                                      t={t}
+                                      className="ml-1"
+                                    />
+                                  )} */}
+                                </div>
                                 <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
                                 {supportsLanguage ? (
                                   <Tooltip>
@@ -481,6 +490,13 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     </TooltipContent>
                                   </Tooltip>
                                 )}
+                                {model.freeTier?.available && (
+                                    <FreeTierBadge
+                                      freeTier={model.freeTier}
+                                      t={t}
+                                      className="ml-1"
+                                    />
+                                  )}  
                               </li>
                             );
                           })}
