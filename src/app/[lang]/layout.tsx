@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   // Fallbacks if translation keys are missing
   const title = t?.header?.appName || 'Two AIs';
   const description = t?.page_WelcomeSubtitle ||
-    'This website lets you listen to conversations between two Large Language Models (LLMs) and generate images for each turn.';
+    'This website lets you listen to conversations between two Large Language Models (LLMs) and generate an image for each turn.';
   return {
     metadataBase: new URL('https://www.two-ais.com'),
     title,
@@ -152,7 +152,7 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
               "name": "Two AIs",
               "operatingSystem": "All",
               "applicationCategory": "WebApplication",
-              "description": "This website lets you listen to conversations between two Large Language Models (LLMs) and generate images for each turn.",
+              "description": "This website lets you listen to conversations between two Large Language Models (LLMs) and generate an image for each turn.",
               "url": "https://www.two-ais.com/",
               "image": "https://www.two-ais.com/icon.png",
               "offers": {
