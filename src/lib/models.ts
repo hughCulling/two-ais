@@ -1100,6 +1100,24 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
+            
+            // Custom sorting for Frontier models to ensure GPT-5 Chat appears last
+            if (models.length > 0 && models[0].provider === 'OpenAI' && cat === t.modelCategory_Frontier) {
+                const frontierOrder = [
+                    'gpt-5',
+                    'gpt-5-mini',
+                    'gpt-5-nano',
+                    'gpt-5-chat-latest'
+                ];
+                byCategory[cat].sort((a, b) => {
+                    const idxA = frontierOrder.indexOf(a.id);
+                    const idxB = frontierOrder.indexOf(b.id);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            }
         }
     });
 
