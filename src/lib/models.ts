@@ -659,7 +659,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Medium 3',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.40, output: 2.00 }, //
+        pricing: { 
+            input: 0.40, 
+            output: 2.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -682,7 +689,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Large',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 2.00, output: 6.00 }, //
+        pricing: { 
+            input: 2.00, 
+            output: 6.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -693,7 +707,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 8B 24.10',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.10, output: 1.00 }, //
+        pricing: { 
+            input: 0.10, 
+            output: 1.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -704,7 +725,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 3B 24.10',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.04, output: 0.04 }, //
+        pricing: { 
+            input: 0.04, 
+            output: 0.04,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -728,7 +756,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Small 3.2',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.10, output: 0.30 }, //
+        pricing: { 
+            input: 0.10, 
+            output: 0.30,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
