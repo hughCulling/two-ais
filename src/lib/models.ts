@@ -424,8 +424,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Gemini1_5',
     },
     {
-        id: 'gemini-2.5-flash-lite-preview-06-17',
-        name: 'Gemini 2.5 Flash Lite Preview',
+        id: 'gemini-2.5-flash-lite',
+        name: 'Gemini 2.5 Flash-Lite',
         provider: 'Google',
         contextWindow: 1000000,
         pricing: {
@@ -438,7 +438,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
-        status: 'preview',
+        status: 'stable',
         usesReasoningTokens: true,
         categoryKey: 'modelCategory_Gemini2_5',
         knowledgeCutoff: '2025-01',
