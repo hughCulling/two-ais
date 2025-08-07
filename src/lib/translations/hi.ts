@@ -399,6 +399,7 @@ const hi = {
         "low": "कम",
         "medium": "मध्यम",
         "high": "उच्च"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)"
 };
 export default hi;

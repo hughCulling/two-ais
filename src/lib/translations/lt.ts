@@ -399,6 +399,7 @@ const lt = {
         "low": "Žemas",
         "medium": "Vidutinis",
         "high": "Aukštas"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)"
 };
 export default lt;

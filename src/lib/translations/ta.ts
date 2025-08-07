@@ -399,6 +399,7 @@ const ta = {
         "low": "குறைந்த",
         "medium": "நடுத்தரம்",
         "high": "உயர்"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)"
 };
 export default ta;

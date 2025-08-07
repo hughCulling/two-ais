@@ -399,6 +399,7 @@ const zh = {
         "low": "低的",
         "medium": "中等的",
         "high": "高的"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）"
 };
 export default zh;

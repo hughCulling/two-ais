@@ -399,6 +399,7 @@ const hr = {
         "low": "Nisko",
         "medium": "Srednji",
         "high": "Visoko"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)"
 };
 export default hr;

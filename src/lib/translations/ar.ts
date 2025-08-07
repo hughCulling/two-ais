@@ -399,6 +399,7 @@ const ar = {
         "low": "قليل",
         "medium": "واسطة",
         "high": "عالي"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub المستودع (يفتح في علامة تبويب جديدة)"
 };
 export default ar;

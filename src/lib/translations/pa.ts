@@ -399,6 +399,7 @@ const pa = {
         "low": "ਘੱਟ",
         "medium": "ਦਰਮਿਆਨਾ",
         "high": "ਉੱਚ"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)"
 };
 export default pa;

@@ -399,6 +399,7 @@ const mr = {
         "low": "कमी",
         "medium": "मध्यम",
         "high": "उच्च"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub रिपॉझिटरी (नवीन टॅबमध्ये उघडेल)"
 };
 export default mr;

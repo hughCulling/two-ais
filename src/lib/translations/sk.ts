@@ -399,6 +399,7 @@ const sk = {
         "low": "Nízka",
         "medium": "Stredné",
         "high": "Vysoká"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub úložisko (otvorí sa v novej karte)"
 };
 export default sk;

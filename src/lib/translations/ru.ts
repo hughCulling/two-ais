@@ -399,6 +399,7 @@ const ru = {
         "low": "Низкий",
         "medium": "Середина",
         "high": "Высокий"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)"
 };
 export default ru;

@@ -399,6 +399,7 @@ const ml = {
         "low": "താഴ്ന്നത്",
         "medium": "ഇടത്തരം",
         "high": "ഉയർന്ന"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)"
 };
 export default ml;

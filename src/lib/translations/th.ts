@@ -399,6 +399,7 @@ const th = {
         "low": "ต่ำ",
         "medium": "ปานกลาง",
         "high": "สูง"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)"
 };
 export default th;

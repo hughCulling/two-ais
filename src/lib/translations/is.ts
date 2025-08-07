@@ -399,6 +399,7 @@ const is = {
         "low": "Lágt",
         "medium": "Miðlungs",
         "high": "Hátt"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)"
 };
 export default is;

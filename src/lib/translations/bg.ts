@@ -399,6 +399,7 @@ const bg = {
         "low": "Ниско",
         "medium": "Среден",
         "high": "Високо"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub хранилище (отваря се в нов раздел)"
 };
 export default bg;

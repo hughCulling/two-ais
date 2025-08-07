@@ -399,6 +399,7 @@ const kk = {
         "low": "Төмен",
         "medium": "Орташа",
         "high": "Жоғары"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)"
 };
 export default kk;

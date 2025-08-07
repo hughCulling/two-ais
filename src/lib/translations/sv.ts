@@ -399,6 +399,7 @@ const sv = {
         "low": "Låg",
         "medium": "Medium",
         "high": "Hög"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub arkiv (öppnas i en ny flik)"
 };
 export default sv;

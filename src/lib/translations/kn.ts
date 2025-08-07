@@ -399,6 +399,7 @@ const kn = {
         "low": "ಕಡಿಮೆ",
         "medium": "ಮಧ್ಯಮ",
         "high": "ಹೆಚ್ಚಿನ"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ರೆಪೊಸಿಟರಿ (ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)"
 };
 export default kn;

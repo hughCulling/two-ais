@@ -399,6 +399,7 @@ const sw = {
         "low": "Chini",
         "medium": "Kati",
         "high": "Juu"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub hazina (hufungua kwenye kichupo kipya)"
 };
 export default sw;

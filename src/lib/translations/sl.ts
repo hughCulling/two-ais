@@ -399,6 +399,7 @@ const sl = {
         "low": "Nizko",
         "medium": "Srednje",
         "high": "Visoka"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub skladišče (odpre se v novem zavihku)"
 };
 export default sl;

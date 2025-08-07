@@ -399,6 +399,7 @@ const mt = {
         "low": "Baxx",
         "medium": "Medju",
         "high": "Għoli"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)"
 };
 export default mt;

@@ -399,6 +399,7 @@ const nl = {
         "low": "Laag",
         "medium": "Medium",
         "high": "Hoog"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repository (opent in een nieuw tabblad)"
 };
 export default nl;

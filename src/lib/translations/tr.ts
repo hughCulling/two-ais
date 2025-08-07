@@ -399,6 +399,7 @@ const tr = {
         "low": "Düşük",
         "medium": "Orta",
         "high": "Yüksek"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)"
 };
 export default tr;

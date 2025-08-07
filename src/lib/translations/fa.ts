@@ -399,6 +399,7 @@ const fa = {
         "low": "کم",
         "medium": "متوسط",
         "high": "بالا"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)"
 };
 export default fa;

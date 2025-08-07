@@ -399,6 +399,7 @@ const id = {
         "low": "Rendah",
         "medium": "Sedang",
         "high": "Tinggi"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repositori (dibuka di tab baru)"
 };
 export default id;

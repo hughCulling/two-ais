@@ -399,6 +399,7 @@ const am = {
         "low": "ዝቅተኛ",
         "medium": "መካከለኛ",
         "high": "ከፍተኛ"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)"
 };
 export default am;

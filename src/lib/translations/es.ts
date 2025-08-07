@@ -399,6 +399,7 @@ const es = {
         "low": "Bajo",
         "medium": "Medio",
         "high": "Alto"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repositorio (se abre en una nueva pestaña)"
 };
 export default es;

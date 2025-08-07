@@ -187,6 +187,7 @@ const PROTECTED_TERMS = [
     "Mistral Small 3.2",
     "Magistral Small",
     "GPT Image 1",
+    "GitHub",
 
     //...LANGUAGE_NAMES_EN
 ];

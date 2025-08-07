@@ -399,6 +399,7 @@ const ka = {
         "low": "დაბალი",
         "medium": "საშუალო",
         "high": "მაღალი"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)"
 };
 export default ka;
