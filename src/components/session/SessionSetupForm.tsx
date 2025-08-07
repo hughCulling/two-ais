@@ -263,7 +263,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                             >
                                                                 <span className="flex-shrink-0 flex items-center min-w-0">
                                                                     <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
-                                                                    {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">(Preview)</span>}
+                                                                    {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">({t?.page_BadgePreview || 'Preview'})</span>}
                                                                     {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
                                                                 </span>
                                                                 <span className="flex items-center space-x-2 min-w-0 max-w-[14rem]">
@@ -272,39 +272,33 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                             <TooltipTrigger asChild>
                                                                                 <span 
                                                                                     className="text-xs text-muted-foreground truncate max-w-[10rem] block" 
-                                                                                    title={typeof llm.pricing.note === 'string' ? llm.pricing.note : ''}
-                                                                                >
-                                                                                    ({typeof llm.pricing.note === 'string' ? llm.pricing.note : ''})
+                                                                                    title={llm.pricing.note ? 
+                                                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
+                                                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}>
+                                                                                    {llm.pricing.note ? (
+                                                                                        <span>({typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note})</span>
+                                                                                    ) : (
+                                                                                        <span>(${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'})</span>
+                                                                                    )}
                                                                                 </span>
                                                                             </TooltipTrigger>
                                                                             <TooltipContent side="top">
                                                                                 <span className="text-xs">
-                                                                                    {typeof llm.pricing.note === 'string' 
-                                                                                        ? llm.pricing.note 
-                                                                                        : llm.pricing.note((() => {
-                                                                                            // Create a proxy that returns empty strings for any property access
-                                                                                            // This is a fallback in case the actual translation function is not available
-                                                                                            return new Proxy({} as TranslationKeys, {
-                                                                                                get(_, prop) {
-                                                                                                    return prop === 'page_TruncatableNoteFormat' 
-                                                                                                        ? '{noteText}' 
-                                                                                                        : '';
-                                                                                                }
-                                                                                            });
-                                                                                        })())
-                                                                                    }
+                                                                                    {llm.pricing.note ? 
+                                                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
+                                                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}
                                                                                 </span>
                                                                             </TooltipContent>
                                                                         </Tooltip>
                                                                     ) : (
                                                                         <Tooltip>
                                                                             <TooltipTrigger asChild>
-                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.sessionSetupForm?.per} 1M`}>
-                                                                                    (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M)
+                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}>
+                                                                                    (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'})
                                                                                 </span>
                                                                             </TooltipTrigger>
                                                                             <TooltipContent side="top">
-                                                                                <span className="text-xs">${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M</span>
+                                                                                <span className="text-xs">${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'}</span>
                                                                             </TooltipContent>
                                                                         </Tooltip>
                                                                     )}
@@ -318,9 +312,11 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                             <div id={`model-${llm.id}-description`} className="sr-only">
                                                                 {llm.name} from {llm.provider}. 
                                                                 {supportsLanguage ? 'Supports current language.' : 'Does not support current language.'}
-                                                                {llm.status === 'preview' ? ' Preview model.' : ''}
+                                                                {llm.status === 'preview' ? ` ${t?.page_BadgePreview || 'Preview'} model.` : ''}
                                                                 {llm.status === 'beta' ? ' Beta model.' : ''}
-                                                                Pricing: ${formatPrice(llm.pricing.input)} {t?.sessionSetupForm?.per} 1M input tokens, ${formatPrice(llm.pricing.output)} {t?.sessionSetupForm?.per} 1M output tokens.
+                                                                Pricing: {llm.pricing.note ? 
+                                                                    (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
+                                                                    `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}.
                                                             </div>
                                                         </li>
                                                     );
@@ -747,7 +743,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <SelectValue placeholder={t?.sessionSetupForm?.selectProvider} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
+                            <SelectItem value="none">{t?.ttsNoneOption || 'None'}</SelectItem>
                             {AVAILABLE_TTS_PROVIDERS.map(p => {
                                 const isDisabled = isTTSProviderDisabled(p.id);
                                 return (
@@ -793,9 +789,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         ) : (
                                                             <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
                                                         )}
-                                                        <span className="truncate font-medium min-w-0" title={m.name}>
-                                                            {m.name}
-                                                        </span>
+                                                        <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{m.name}</span>
                                                         {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0">(No {language.nativeName})</span>}
                                                     </div>
                                                     <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0 truncate max-w-[8rem]" title={m.description}>
@@ -827,7 +821,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                             return (
                                                 <SelectItem key={v.id} value={v.id}>
                                                     {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">(Preview)</span> : ''}
+                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
                                                     {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
                                                 </SelectItem>
                                             );

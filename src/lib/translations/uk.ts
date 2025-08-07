@@ -400,6 +400,7 @@ const uk = {
         "medium": "Середній",
         "high": "Високий"
     },
-    "footer_githubLinkTitle": "GitHub репозиторій (відкриється в новій вкладці)"
+    "footer_githubLinkTitle": "GitHub репозиторій (відкриється в новій вкладці)",
+    "ttsNoneOption": "Жоден"
 };
 export default uk;

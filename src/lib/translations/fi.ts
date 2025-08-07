@@ -400,6 +400,7 @@ const fi = {
         "medium": "Keskikokoinen",
         "high": "Korkea"
     },
-    "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)"
+    "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)",
+    "ttsNoneOption": "Ei mitään"
 };
 export default fi;

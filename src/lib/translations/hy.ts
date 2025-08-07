@@ -400,6 +400,7 @@ const hy = {
         "medium": "Միջին",
         "high": "Բարձր"
     },
-    "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)"
+    "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)",
+    "ttsNoneOption": "Ոչ մեկը"
 };
 export default hy;

@@ -400,6 +400,7 @@ const hr = {
         "medium": "Srednji",
         "high": "Visoko"
     },
-    "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)"
+    "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)",
+    "ttsNoneOption": "Ništa"
 };
 export default hr;

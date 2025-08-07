@@ -400,6 +400,7 @@ const ms = {
         "medium": "Sederhana",
         "high": "tinggi"
     },
-    "footer_githubLinkTitle": "GitHub repositori (dibuka dalam tab baharu)"
+    "footer_githubLinkTitle": "GitHub repositori (dibuka dalam tab baharu)",
+    "ttsNoneOption": "tiada"
 };
 export default ms;

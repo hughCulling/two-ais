@@ -400,6 +400,7 @@ const ca = {
         "medium": "Mitjà",
         "high": "Alt"
     },
-    "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)"
+    "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)",
+    "ttsNoneOption": "Cap"
 };
 export default ca;

@@ -400,6 +400,7 @@ const es = {
         "medium": "Medio",
         "high": "Alto"
     },
-    "footer_githubLinkTitle": "GitHub repositorio (se abre en una nueva pestaña)"
+    "footer_githubLinkTitle": "GitHub repositorio (se abre en una nueva pestaña)",
+    "ttsNoneOption": "Ninguno"
 };
 export default es;

@@ -400,6 +400,7 @@ const lv = {
         "medium": "Vidējs",
         "high": "Augsts"
     },
-    "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)"
+    "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)",
+    "ttsNoneOption": "Neviens"
 };
 export default lv;

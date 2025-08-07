@@ -400,6 +400,7 @@ const ro = {
         "medium": "Mediu",
         "high": "Ridicat"
     },
-    "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)"
+    "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)",
+    "ttsNoneOption": "Nici unul"
 };
 export default ro;

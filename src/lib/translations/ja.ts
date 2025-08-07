@@ -400,6 +400,7 @@ const ja = {
         "medium": "中くらい",
         "high": "高い"
     },
-    "footer_githubLinkTitle": "GitHub リポジトリ（新しいタブで開きます）"
+    "footer_githubLinkTitle": "GitHub リポジトリ（新しいタブで開きます）",
+    "ttsNoneOption": "なし"
 };
 export default ja;

@@ -400,6 +400,7 @@ const lt = {
         "medium": "Vidutinis",
         "high": "Aukštas"
     },
-    "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)"
+    "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)",
+    "ttsNoneOption": "Nėra"
 };
 export default lt;

@@ -400,6 +400,7 @@ const te = {
         "medium": "మీడియం",
         "high": "అధిక"
     },
-    "footer_githubLinkTitle": "GitHub రిపోజిటరీ (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)"
+    "footer_githubLinkTitle": "GitHub రిపోజిటరీ (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",
+    "ttsNoneOption": "ఏదీ లేదు"
 };
 export default te;

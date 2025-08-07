@@ -400,6 +400,7 @@ const no = {
         "medium": "Medium",
         "high": "Høy"
     },
-    "footer_githubLinkTitle": "GitHub arkiv (åpnes i en ny fane)"
+    "footer_githubLinkTitle": "GitHub arkiv (åpnes i en ny fane)",
+    "ttsNoneOption": "Ingen"
 };
 export default no;

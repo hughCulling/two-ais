@@ -400,6 +400,7 @@ const da = {
         "medium": "Medium",
         "high": "Høj"
     },
-    "footer_githubLinkTitle": "GitHub arkiv (åbner i en ny fane)"
+    "footer_githubLinkTitle": "GitHub arkiv (åbner i en ny fane)",
+    "ttsNoneOption": "Ingen"
 };
 export default da;

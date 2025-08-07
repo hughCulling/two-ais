@@ -400,6 +400,7 @@ const gu = {
         "medium": "મધ્યમ",
         "high": "ઉચ્ચ"
     },
-    "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)"
+    "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)",
+    "ttsNoneOption": "કોઈ નહીં"
 };
 export default gu;

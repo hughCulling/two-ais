@@ -400,6 +400,7 @@ const my = {
         "medium": "လတ်",
         "high": "မြင့်သည်။"
     },
-    "footer_githubLinkTitle": "GitHub repository (တက်ဘ်အသစ်တစ်ခုတွင်ဖွင့်သည်)"
+    "footer_githubLinkTitle": "GitHub repository (တက်ဘ်အသစ်တစ်ခုတွင်ဖွင့်သည်)",
+    "ttsNoneOption": "တစ်ခုမှ"
 };
 export default my;

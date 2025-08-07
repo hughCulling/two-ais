@@ -400,6 +400,7 @@ const nl = {
         "medium": "Medium",
         "high": "Hoog"
     },
-    "footer_githubLinkTitle": "GitHub repository (opent in een nieuw tabblad)"
+    "footer_githubLinkTitle": "GitHub repository (opent in een nieuw tabblad)",
+    "ttsNoneOption": "Geen"
 };
 export default nl;

@@ -400,6 +400,7 @@ const ka = {
         "medium": "საშუალო",
         "high": "მაღალი"
     },
-    "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)"
+    "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)",
+    "ttsNoneOption": "არცერთი"
 };
 export default ka;

@@ -400,6 +400,7 @@ const cs = {
         "medium": "Střední",
         "high": "Vysoký"
     },
-    "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)"
+    "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)",
+    "ttsNoneOption": "Žádný"
 };
 export default cs;

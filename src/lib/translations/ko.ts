@@ -400,6 +400,7 @@ const ko = {
         "medium": "중간",
         "high": "높은"
     },
-    "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)"
+    "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)",
+    "ttsNoneOption": "없음"
 };
 export default ko;

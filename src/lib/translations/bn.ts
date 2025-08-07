@@ -400,6 +400,7 @@ const bn = {
         "medium": "মাঝারি",
         "high": "উচ্চ"
     },
-    "footer_githubLinkTitle": "GitHub সংগ্রহস্থল (একটি নতুন ট্যাবে খোলে)"
+    "footer_githubLinkTitle": "GitHub সংগ্রহস্থল (একটি নতুন ট্যাবে খোলে)",
+    "ttsNoneOption": "কোনটিই নয়"
 };
 export default bn;

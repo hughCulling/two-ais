@@ -400,6 +400,7 @@ const hi = {
         "medium": "मध्यम",
         "high": "उच्च"
     },
-    "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)"
+    "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)",
+    "ttsNoneOption": "कोई नहीं"
 };
 export default hi;

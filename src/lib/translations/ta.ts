@@ -400,6 +400,7 @@ const ta = {
         "medium": "நடுத்தரம்",
         "high": "உயர்"
     },
-    "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)"
+    "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)",
+    "ttsNoneOption": "யாரும் இல்லை"
 };
 export default ta;

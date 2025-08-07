@@ -400,6 +400,7 @@ const ur = {
         "medium": "درمیانہ",
         "high": "اعلی"
     },
-    "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)"
+    "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)",
+    "ttsNoneOption": "کوئی نہیں۔"
 };
 export default ur;
