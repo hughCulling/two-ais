@@ -400,6 +400,7 @@ const tr = {
         "medium": "Orta",
         "high": "Yüksek"
     },
-    "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)"
+    "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)",
+    "ttsNoneOption": "Hiçbiri"
 };
 export default tr;

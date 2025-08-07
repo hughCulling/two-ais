@@ -400,6 +400,7 @@ const kk = {
         "medium": "Орташа",
         "high": "Жоғары"
     },
-    "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)"
+    "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)",
+    "ttsNoneOption": "Жоқ"
 };
 export default kk;

@@ -400,6 +400,7 @@ const hu = {
         "medium": "Közepes",
         "high": "Magas"
     },
-    "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)"
+    "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)",
+    "ttsNoneOption": "Egyik sem"
 };
 export default hu;

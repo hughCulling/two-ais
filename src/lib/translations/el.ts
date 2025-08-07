@@ -400,6 +400,7 @@ const el = {
         "medium": "Μέσον",
         "high": "Ψηλά"
     },
-    "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)"
+    "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)",
+    "ttsNoneOption": "Κανένας"
 };
 export default el;

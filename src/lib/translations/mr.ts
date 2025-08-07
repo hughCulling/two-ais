@@ -400,6 +400,7 @@ const mr = {
         "medium": "मध्यम",
         "high": "उच्च"
     },
-    "footer_githubLinkTitle": "GitHub रिपॉझिटरी (नवीन टॅबमध्ये उघडेल)"
+    "footer_githubLinkTitle": "GitHub रिपॉझिटरी (नवीन टॅबमध्ये उघडेल)",
+    "ttsNoneOption": "काहीही नाही"
 };
 export default mr;

@@ -400,6 +400,7 @@ const pa = {
         "medium": "ਦਰਮਿਆਨਾ",
         "high": "ਉੱਚ"
     },
-    "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)"
+    "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)",
+    "ttsNoneOption": "ਕੋਈ ਨਹੀਂ"
 };
 export default pa;

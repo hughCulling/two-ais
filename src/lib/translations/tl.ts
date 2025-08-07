@@ -400,6 +400,7 @@ const tl = {
         "medium": "Katamtaman",
         "high": "Mataas"
     },
-    "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)"
+    "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)",
+    "ttsNoneOption": "wala"
 };
 export default tl;

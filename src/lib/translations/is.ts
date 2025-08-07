@@ -400,6 +400,7 @@ const is = {
         "medium": "Miðlungs",
         "high": "Hátt"
     },
-    "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)"
+    "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)",
+    "ttsNoneOption": "Enginn"
 };
 export default is;

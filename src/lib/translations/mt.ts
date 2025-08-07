@@ -400,6 +400,7 @@ const mt = {
         "medium": "Medju",
         "high": "Għoli"
     },
-    "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)"
+    "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)",
+    "ttsNoneOption": "Xejn"
 };
 export default mt;

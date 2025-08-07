@@ -400,6 +400,7 @@ const so = {
         "medium": "Dhexdhexaad",
         "high": "Sare"
     },
-    "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)"
+    "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)",
+    "ttsNoneOption": "Midna"
 };
 export default so;

@@ -400,6 +400,7 @@ const pl = {
         "medium": "Średni",
         "high": "Wysoki"
     },
-    "footer_githubLinkTitle": "GitHub repozytorium (otwiera się w nowej karcie)"
+    "footer_githubLinkTitle": "GitHub repozytorium (otwiera się w nowej karcie)",
+    "ttsNoneOption": "Nic"
 };
 export default pl;

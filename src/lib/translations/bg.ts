@@ -400,6 +400,7 @@ const bg = {
         "medium": "Среден",
         "high": "Високо"
     },
-    "footer_githubLinkTitle": "GitHub хранилище (отваря се в нов раздел)"
+    "footer_githubLinkTitle": "GitHub хранилище (отваря се в нов раздел)",
+    "ttsNoneOption": "Няма"
 };
 export default bg;

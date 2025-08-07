@@ -400,6 +400,7 @@ const fa = {
         "medium": "متوسط",
         "high": "بالا"
     },
-    "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)"
+    "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)",
+    "ttsNoneOption": "هیچکدام"
 };
 export default fa;

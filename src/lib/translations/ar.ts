@@ -400,6 +400,7 @@ const ar = {
         "medium": "واسطة",
         "high": "عالي"
     },
-    "footer_githubLinkTitle": "GitHub المستودع (يفتح في علامة تبويب جديدة)"
+    "footer_githubLinkTitle": "GitHub المستودع (يفتح في علامة تبويب جديدة)",
+    "ttsNoneOption": "لا أحد"
 };
 export default ar;

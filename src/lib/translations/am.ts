@@ -400,6 +400,7 @@ const am = {
         "medium": "መካከለኛ",
         "high": "ከፍተኛ"
     },
-    "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)"
+    "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)",
+    "ttsNoneOption": "ምንም"
 };
 export default am;

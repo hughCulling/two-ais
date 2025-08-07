@@ -400,6 +400,7 @@ const th = {
         "medium": "ปานกลาง",
         "high": "สูง"
     },
-    "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)"
+    "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)",
+    "ttsNoneOption": "ไม่มี"
 };
 export default th;

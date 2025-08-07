@@ -400,6 +400,7 @@ const id = {
         "medium": "Sedang",
         "high": "Tinggi"
     },
-    "footer_githubLinkTitle": "GitHub repositori (dibuka di tab baru)"
+    "footer_githubLinkTitle": "GitHub repositori (dibuka di tab baru)",
+    "ttsNoneOption": "Tidak ada"
 };
 export default id;

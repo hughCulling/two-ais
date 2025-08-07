@@ -400,6 +400,7 @@ const zh = {
         "medium": "中等的",
         "high": "高的"
     },
-    "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）"
+    "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）",
+    "ttsNoneOption": "没有任何"
 };
 export default zh;

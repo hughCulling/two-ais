@@ -400,6 +400,7 @@ const sv = {
         "medium": "Medium",
         "high": "Hög"
     },
-    "footer_githubLinkTitle": "GitHub arkiv (öppnas i en ny flik)"
+    "footer_githubLinkTitle": "GitHub arkiv (öppnas i en ny flik)",
+    "ttsNoneOption": "Ingen"
 };
 export default sv;

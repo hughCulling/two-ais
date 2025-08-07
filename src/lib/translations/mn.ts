@@ -400,6 +400,7 @@ const mn = {
         "medium": "Дунд зэрэг",
         "high": "Өндөр"
     },
-    "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)"
+    "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)",
+    "ttsNoneOption": "Байхгүй"
 };
 export default mn;

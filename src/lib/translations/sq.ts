@@ -400,6 +400,7 @@ const sq = {
         "medium": "Mesatare",
         "high": "I lartë"
     },
-    "footer_githubLinkTitle": "GitHub depo (hapet në një skedë të re)"
+    "footer_githubLinkTitle": "GitHub depo (hapet në një skedë të re)",
+    "ttsNoneOption": "Asnjë"
 };
 export default sq;

@@ -400,6 +400,7 @@ const bs = {
         "medium": "Srednji",
         "high": "Visoko"
     },
-    "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)"
+    "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)",
+    "ttsNoneOption": "Nijedan"
 };
 export default bs;

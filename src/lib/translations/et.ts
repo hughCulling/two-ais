@@ -400,6 +400,7 @@ const et = {
         "medium": "Keskmine",
         "high": "Kõrge"
     },
-    "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)"
+    "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)",
+    "ttsNoneOption": "Puudub"
 };
 export default et;

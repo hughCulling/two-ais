@@ -285,7 +285,7 @@ const en = {
     page_LoadingUserData: "Loading user data...",
     page_ErrorAlertTitle: "Error",
     page_WelcomeTitle: "Welcome to Two AIs",
-    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) and generate images for each turn.",
+    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) and generate an image for each turn.",
     page_ApiKeysRequiredTitle: "API Keys Required",
     page_ApiKeysRequiredDescription: "To run conversations, you'll need to provide your own API keys for the AI models you wish to use (e.g., OpenAI, Google, Anthropic) after signing in. Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.",
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
@@ -314,6 +314,7 @@ const en = {
     common_verifyHere: "verify here", // Added for link text
     // Text To Speech specific voice names (if needed globally)
     ttsVoice_Ugne: "Ugne", // Lithuanian voice name, added for consistency
+    ttsNoneOption: "None", // For TTS provider selection
     gptImage1PricingTooltip: "Token pricing for GPT Image 1:\nInput: {inputPrice} / 1 Million tokens\nCached input: {cachedInputPrice} / 1 Million tokens\nOutput: {outputPrice} / 1 Million tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.",
 
     // Pricing related terms
@@ -365,7 +366,7 @@ const en = {
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',
-        description: 'Here you can select the LLM and optional TTS settings for each agent.',
+        description: 'Here you can select the LLM and optional TTS and image generation settings for each agent.',
         agentAModel: 'Agent A Model',
         agentBModel: 'Agent B Model',
         selectLLMForAgentA: 'Select LLM for Agent A',

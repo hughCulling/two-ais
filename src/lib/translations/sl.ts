@@ -400,6 +400,7 @@ const sl = {
         "medium": "Srednje",
         "high": "Visoka"
     },
-    "footer_githubLinkTitle": "GitHub skladišče (odpre se v novem zavihku)"
+    "footer_githubLinkTitle": "GitHub skladišče (odpre se v novem zavihku)",
+    "ttsNoneOption": "Nobena"
 };
 export default sl;

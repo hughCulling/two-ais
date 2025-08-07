@@ -400,6 +400,7 @@ const sk = {
         "medium": "Stredné",
         "high": "Vysoká"
     },
-    "footer_githubLinkTitle": "GitHub úložisko (otvorí sa v novej karte)"
+    "footer_githubLinkTitle": "GitHub úložisko (otvorí sa v novej karte)",
+    "ttsNoneOption": "Žiadne"
 };
 export default sk;

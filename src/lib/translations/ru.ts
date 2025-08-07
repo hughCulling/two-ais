@@ -400,6 +400,7 @@ const ru = {
         "medium": "Середина",
         "high": "Высокий"
     },
-    "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)"
+    "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)",
+    "ttsNoneOption": "Никто"
 };
 export default ru;

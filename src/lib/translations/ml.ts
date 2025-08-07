@@ -400,6 +400,7 @@ const ml = {
         "medium": "ഇടത്തരം",
         "high": "ഉയർന്ന"
     },
-    "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)"
+    "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)",
+    "ttsNoneOption": "ഒന്നുമില്ല"
 };
 export default ml;

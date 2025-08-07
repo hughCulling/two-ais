@@ -400,6 +400,7 @@ const sr = {
         "medium": "Средњи",
         "high": "Високо"
     },
-    "footer_githubLinkTitle": "GitHub репозиторијум (отвара се у новој картици)"
+    "footer_githubLinkTitle": "GitHub репозиторијум (отвара се у новој картици)",
+    "ttsNoneOption": "Ниједан"
 };
 export default sr;
