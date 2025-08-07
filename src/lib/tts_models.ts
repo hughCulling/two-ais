@@ -742,6 +742,12 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
 //     { id: 't0jbNlBVZ17f02VDIeMI', name: 'Serena', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Smooth, articulate female voice.' },
 // ];
 
+// --- Interface for free tier information ---
+interface FreeTierInfo {
+    available: boolean;
+    note: string | ((t: TranslationKeys) => string);
+}
+
 // --- Interface for specific TTS model details within a provider ---
 export interface TTSModelDetail {
     id: string;
@@ -753,6 +759,7 @@ export interface TTSModelDetail {
     supportedLanguages?: string[]; // BCP-47 or ISO 639-1 codes
     inputLimitType?: 'tokens' | 'characters' | 'bytes'; // Optional: How the input limit is measured
     inputLimitValue?: number; // Optional: The maximum allowed per request
+    freeTier?: FreeTierInfo; // Optional: Information about free tier availability
 }
 
 // --- TTS Provider Interface ---
@@ -1066,6 +1073,10 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 ],
                 inputLimitType: 'tokens',
                 inputLimitValue: 8000,
+                freeTier: {
+                    available: true,
+                    note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+                },
             },
             {
                 id: 'gemini-2.5-pro-preview-tts',

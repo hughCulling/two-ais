@@ -188,6 +188,8 @@ const PROTECTED_TERMS = [
     "Magistral Small",
     "GPT Image 1",
     "GitHub",
+    "GCP",
+    "Google Cloud",
 
     //...LANGUAGE_NAMES_EN
 ];
