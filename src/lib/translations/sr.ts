@@ -405,6 +405,7 @@ const sr = {
         "high": "Високо"
     },
     "footer_githubLinkTitle": "GitHub репозиторијум (отвара се у новој картици)",
-    "ttsNoneOption": "Ниједан"
+    "ttsNoneOption": "Ниједан",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sr;

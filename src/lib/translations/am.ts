@@ -405,6 +405,7 @@ const am = {
         "high": "ከፍተኛ"
     },
     "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)",
-    "ttsNoneOption": "ምንም"
+    "ttsNoneOption": "ምንም",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default am;

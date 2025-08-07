@@ -405,6 +405,7 @@ const tl = {
         "high": "Mataas"
     },
     "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)",
-    "ttsNoneOption": "wala"
+    "ttsNoneOption": "wala",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default tl;

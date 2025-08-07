@@ -405,6 +405,7 @@ const ur = {
         "high": "اعلی"
     },
     "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)",
-    "ttsNoneOption": "کوئی نہیں۔"
+    "ttsNoneOption": "کوئی نہیں۔",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ur;

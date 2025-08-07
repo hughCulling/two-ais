@@ -405,6 +405,7 @@ const sk = {
         "high": "Vysoká"
     },
     "footer_githubLinkTitle": "GitHub úložisko (otvorí sa v novej karte)",
-    "ttsNoneOption": "Žiadne"
+    "ttsNoneOption": "Žiadne",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sk;

@@ -405,6 +405,7 @@ const bg = {
         "high": "Високо"
     },
     "footer_githubLinkTitle": "GitHub хранилище (отваря се в нов раздел)",
-    "ttsNoneOption": "Няма"
+    "ttsNoneOption": "Няма",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default bg;

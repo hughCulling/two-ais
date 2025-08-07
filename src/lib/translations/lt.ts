@@ -405,6 +405,7 @@ const lt = {
         "high": "Aukštas"
     },
     "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)",
-    "ttsNoneOption": "Nėra"
+    "ttsNoneOption": "Nėra",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default lt;

@@ -405,6 +405,7 @@ const is = {
         "high": "Hátt"
     },
     "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)",
-    "ttsNoneOption": "Enginn"
+    "ttsNoneOption": "Enginn",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default is;

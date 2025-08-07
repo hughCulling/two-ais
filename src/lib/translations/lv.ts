@@ -405,6 +405,7 @@ const lv = {
         "high": "Augsts"
     },
     "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)",
-    "ttsNoneOption": "Neviens"
+    "ttsNoneOption": "Neviens",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default lv;

@@ -405,6 +405,7 @@ const ar = {
         "high": "عالي"
     },
     "footer_githubLinkTitle": "GitHub المستودع (يفتح في علامة تبويب جديدة)",
-    "ttsNoneOption": "لا أحد"
+    "ttsNoneOption": "لا أحد",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ar;

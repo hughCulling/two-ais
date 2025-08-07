@@ -405,6 +405,7 @@ const zh = {
         "high": "高的"
     },
     "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）",
-    "ttsNoneOption": "没有任何"
+    "ttsNoneOption": "没有任何",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default zh;

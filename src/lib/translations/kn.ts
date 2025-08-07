@@ -405,6 +405,7 @@ const kn = {
         "high": "ಹೆಚ್ಚಿನ"
     },
     "footer_githubLinkTitle": "GitHub ರೆಪೊಸಿಟರಿ (ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",
-    "ttsNoneOption": "ಯಾವುದೂ ಇಲ್ಲ"
+    "ttsNoneOption": "ಯಾವುದೂ ಇಲ್ಲ",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default kn;

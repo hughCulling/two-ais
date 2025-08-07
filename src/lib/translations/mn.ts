@@ -405,6 +405,7 @@ const mn = {
         "high": "Өндөр"
     },
     "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)",
-    "ttsNoneOption": "Байхгүй"
+    "ttsNoneOption": "Байхгүй",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default mn;

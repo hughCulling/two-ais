@@ -405,6 +405,7 @@ const mr = {
         "high": "उच्च"
     },
     "footer_githubLinkTitle": "GitHub रिपॉझिटरी (नवीन टॅबमध्ये उघडेल)",
-    "ttsNoneOption": "काहीही नाही"
+    "ttsNoneOption": "काहीही नाही",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default mr;

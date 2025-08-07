@@ -405,6 +405,7 @@ const ko = {
         "high": "높은"
     },
     "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)",
-    "ttsNoneOption": "없음"
+    "ttsNoneOption": "없음",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ko;

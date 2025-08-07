@@ -405,6 +405,7 @@ const ka = {
         "high": "მაღალი"
     },
     "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)",
-    "ttsNoneOption": "არცერთი"
+    "ttsNoneOption": "არცერთი",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ka;

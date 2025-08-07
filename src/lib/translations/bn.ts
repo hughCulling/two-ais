@@ -405,6 +405,7 @@ const bn = {
         "high": "উচ্চ"
     },
     "footer_githubLinkTitle": "GitHub সংগ্রহস্থল (একটি নতুন ট্যাবে খোলে)",
-    "ttsNoneOption": "কোনটিই নয়"
+    "ttsNoneOption": "কোনটিই নয়",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default bn;

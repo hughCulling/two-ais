@@ -405,6 +405,7 @@ const hu = {
         "high": "Magas"
     },
     "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)",
-    "ttsNoneOption": "Egyik sem"
+    "ttsNoneOption": "Egyik sem",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default hu;

@@ -405,6 +405,7 @@ const ms = {
         "high": "tinggi"
     },
     "footer_githubLinkTitle": "GitHub repositori (dibuka dalam tab baharu)",
-    "ttsNoneOption": "tiada"
+    "ttsNoneOption": "tiada",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ms;

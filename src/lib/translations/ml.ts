@@ -405,6 +405,7 @@ const ml = {
         "high": "ഉയർന്ന"
     },
     "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)",
-    "ttsNoneOption": "ഒന്നുമില്ല"
+    "ttsNoneOption": "ഒന്നുമില്ല",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ml;

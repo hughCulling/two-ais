@@ -405,6 +405,7 @@ const id = {
         "high": "Tinggi"
     },
     "footer_githubLinkTitle": "GitHub repositori (dibuka di tab baru)",
-    "ttsNoneOption": "Tidak ada"
+    "ttsNoneOption": "Tidak ada",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default id;

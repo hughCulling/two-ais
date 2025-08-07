@@ -405,6 +405,7 @@ const bs = {
         "high": "Visoko"
     },
     "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)",
-    "ttsNoneOption": "Nijedan"
+    "ttsNoneOption": "Nijedan",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default bs;

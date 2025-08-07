@@ -405,6 +405,7 @@ const de = {
         "high": "Hoch"
     },
     "footer_githubLinkTitle": "GitHub Repository (wird in einem neuen Tab geöffnet)",
-    "ttsNoneOption": "Keiner"
+    "ttsNoneOption": "Keiner",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default de;

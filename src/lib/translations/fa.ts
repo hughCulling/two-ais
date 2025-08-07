@@ -405,6 +405,7 @@ const fa = {
         "high": "بالا"
     },
     "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)",
-    "ttsNoneOption": "هیچکدام"
+    "ttsNoneOption": "هیچکدام",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default fa;

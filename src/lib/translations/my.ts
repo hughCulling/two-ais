@@ -405,6 +405,7 @@ const my = {
         "high": "မြင့်သည်။"
     },
     "footer_githubLinkTitle": "GitHub repository (တက်ဘ်အသစ်တစ်ခုတွင်ဖွင့်သည်)",
-    "ttsNoneOption": "တစ်ခုမှ"
+    "ttsNoneOption": "တစ်ခုမှ",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default my;

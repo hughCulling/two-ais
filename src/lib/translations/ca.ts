@@ -405,6 +405,7 @@ const ca = {
         "high": "Alt"
     },
     "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)",
-    "ttsNoneOption": "Cap"
+    "ttsNoneOption": "Cap",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ca;

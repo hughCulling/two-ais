@@ -405,6 +405,7 @@ const so = {
         "high": "Sare"
     },
     "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)",
-    "ttsNoneOption": "Midna"
+    "ttsNoneOption": "Midna",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default so;

@@ -405,6 +405,7 @@ const pt = {
         "high": "Alto"
     },
     "footer_githubLinkTitle": "GitHub repositório (abre em uma nova aba)",
-    "ttsNoneOption": "Nenhum"
+    "ttsNoneOption": "Nenhum",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default pt;

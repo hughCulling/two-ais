@@ -405,6 +405,7 @@ const el = {
         "high": "Ψηλά"
     },
     "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)",
-    "ttsNoneOption": "Κανένας"
+    "ttsNoneOption": "Κανένας",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default el;

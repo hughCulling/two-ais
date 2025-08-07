@@ -405,6 +405,7 @@ const cs = {
         "high": "Vysoký"
     },
     "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)",
-    "ttsNoneOption": "Žádný"
+    "ttsNoneOption": "Žádný",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default cs;

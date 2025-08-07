@@ -405,6 +405,7 @@ const nl = {
         "high": "Hoog"
     },
     "footer_githubLinkTitle": "GitHub repository (opent in een nieuw tabblad)",
-    "ttsNoneOption": "Geen"
+    "ttsNoneOption": "Geen",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default nl;

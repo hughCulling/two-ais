@@ -405,6 +405,7 @@ const th = {
         "high": "สูง"
     },
     "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)",
-    "ttsNoneOption": "ไม่มี"
+    "ttsNoneOption": "ไม่มี",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default th;

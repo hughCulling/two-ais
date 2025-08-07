@@ -405,6 +405,7 @@ const sw = {
         "high": "Juu"
     },
     "footer_githubLinkTitle": "GitHub hazina (hufungua kwenye kichupo kipya)",
-    "ttsNoneOption": "Hakuna"
+    "ttsNoneOption": "Hakuna",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sw;

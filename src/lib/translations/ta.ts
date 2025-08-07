@@ -405,6 +405,7 @@ const ta = {
         "high": "உயர்"
     },
     "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)",
-    "ttsNoneOption": "யாரும் இல்லை"
+    "ttsNoneOption": "யாரும் இல்லை",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ta;

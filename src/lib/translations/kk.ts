@@ -405,6 +405,7 @@ const kk = {
         "high": "Жоғары"
     },
     "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)",
-    "ttsNoneOption": "Жоқ"
+    "ttsNoneOption": "Жоқ",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default kk;

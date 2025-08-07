@@ -233,6 +233,7 @@ const en = {
     apiKeyFoundSubtext: "An API key is configured for this provider.",
 
     // Model Categories (src/app/page.tsx)
+    modelCategory_Frontier: "Frontier models",
     modelCategory_FlagshipChat: "Flagship chat models",
     modelCategory_Reasoning: "Reasoning models",
     modelCategory_CostOptimized: "Cost-optimized models",

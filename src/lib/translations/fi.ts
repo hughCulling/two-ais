@@ -405,6 +405,7 @@ const fi = {
         "high": "Korkea"
     },
     "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)",
-    "ttsNoneOption": "Ei mitään"
+    "ttsNoneOption": "Ei mitään",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default fi;

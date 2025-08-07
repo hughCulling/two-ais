@@ -32,6 +32,96 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
 
     // === OpenAI ===
     {
+        id: 'gpt-5',
+        name: 'GPT-5',
+        provider: 'OpenAI',
+        contextWindow: 400000,
+        pricing: { 
+            input: 1.25, 
+            output: 10.00,
+            // note: (t) => `$${1.25} / 1M input tokens, $${10.00} / 1M output tokens`
+        },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        // requiresOrgVerification: true,
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_Frontier',
+        knowledgeCutoff: '2024-10-01',
+    },
+    // {
+    //     id: 'gpt-5-chat-latest',
+    //     name: 'GPT-5 Chat',
+    //     provider: 'OpenAI',
+    //     contextWindow: 400000,
+    //     pricing: { 
+    //         input: 1.25, 
+    //         output: 10.00,
+    //         // note: (t) => `$${1.25} / 1M input tokens, $${10.00} / 1M output tokens`
+    //     },
+    //     apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+    //     apiKeySecretName: 'openai',
+    //     status: 'stable',
+    //     // requiresOrgVerification: true,
+    //     usesReasoningTokens: true,
+    //     categoryKey: 'modelCategory_Frontier',
+    //     knowledgeCutoff: '2024-09-30',
+    // },
+    {
+        id: 'gpt-5-mini',
+        name: 'GPT-5 mini',
+        provider: 'OpenAI',
+        contextWindow: 400000,
+        pricing: { 
+            input: 0.25, 
+            output: 2.00,
+            // note: (t) => `$${0.25} / 1M input tokens, $${2.00} / 1M output tokens`
+        },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        // requiresOrgVerification: true,
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_Frontier',
+        knowledgeCutoff: '2024-05-31',
+    },
+    {
+        id: 'gpt-5-nano',
+        name: 'GPT-5 nano',
+        provider: 'OpenAI',
+        contextWindow: 400000,
+        pricing: { 
+            input: 0.05, 
+            output: 0.40,
+            // note: (t) => `$${0.05} / 1M input tokens, $${0.40} / 1M output tokens`
+        },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        // requiresOrgVerification: true,
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_Frontier',
+        knowledgeCutoff: '2024-05-31',
+    },
+    {
+        id: 'gpt-5-chat-latest',
+        name: 'GPT-5 Chat',
+        provider: 'OpenAI',
+        contextWindow: 400000,
+        pricing: { 
+            input: 1.25, 
+            output: 10.00,
+            // note: (t) => `$${1.25} / 1M input tokens, $${10.00} / 1M output tokens`
+        },
+        apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
+        apiKeySecretName: 'openai',
+        status: 'stable',
+        // requiresOrgVerification: true,
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_Frontier',
+        knowledgeCutoff: '2024-09-30',
+    },
+    {
         id: 'chatgpt-4o-latest',
         name: 'ChatGPT-4o',
         provider: 'OpenAI',
@@ -739,6 +829,7 @@ export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
 // Helper function to group models by category within a provider
 export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { orderedCategories: string[], byCategory: Record<string, LLMInfo[]> } => {
     const openAICategoryOrder = [
+        t.modelCategory_Frontier,
         t.modelCategory_Reasoning,
         t.modelCategory_FlagshipChat,
         t.modelCategory_CostOptimized,

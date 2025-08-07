@@ -405,6 +405,7 @@ const hr = {
         "high": "Visoko"
     },
     "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)",
-    "ttsNoneOption": "Ništa"
+    "ttsNoneOption": "Ništa",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default hr;

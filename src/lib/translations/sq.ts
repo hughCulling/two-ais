@@ -405,6 +405,7 @@ const sq = {
         "high": "I lartë"
     },
     "footer_githubLinkTitle": "GitHub depo (hapet në një skedë të re)",
-    "ttsNoneOption": "Asnjë"
+    "ttsNoneOption": "Asnjë",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sq;

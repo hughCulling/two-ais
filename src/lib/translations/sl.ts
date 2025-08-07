@@ -405,6 +405,7 @@ const sl = {
         "high": "Visoka"
     },
     "footer_githubLinkTitle": "GitHub skladišče (odpre se v novem zavihku)",
-    "ttsNoneOption": "Nobena"
+    "ttsNoneOption": "Nobena",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sl;

@@ -405,6 +405,7 @@ const ro = {
         "high": "Ridicat"
     },
     "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)",
-    "ttsNoneOption": "Nici unul"
+    "ttsNoneOption": "Nici unul",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ro;

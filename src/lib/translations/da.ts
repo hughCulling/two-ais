@@ -405,6 +405,7 @@ const da = {
         "high": "Høj"
     },
     "footer_githubLinkTitle": "GitHub arkiv (åbner i en ny fane)",
-    "ttsNoneOption": "Ingen"
+    "ttsNoneOption": "Ingen",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default da;

@@ -405,6 +405,7 @@ const no = {
         "high": "Høy"
     },
     "footer_githubLinkTitle": "GitHub arkiv (åpnes i en ny fane)",
-    "ttsNoneOption": "Ingen"
+    "ttsNoneOption": "Ingen",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default no;

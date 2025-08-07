@@ -405,6 +405,7 @@ const mk = {
         "high": "Висок"
     },
     "footer_githubLinkTitle": "GitHub репозиториум (се отвора во нов таб)",
-    "ttsNoneOption": "Ништо"
+    "ttsNoneOption": "Ништо",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default mk;

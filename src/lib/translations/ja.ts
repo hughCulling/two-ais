@@ -405,6 +405,7 @@ const ja = {
         "high": "高い"
     },
     "footer_githubLinkTitle": "GitHub リポジトリ（新しいタブで開きます）",
-    "ttsNoneOption": "なし"
+    "ttsNoneOption": "なし",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ja;

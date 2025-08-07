@@ -405,6 +405,7 @@ const tr = {
         "high": "Yüksek"
     },
     "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)",
-    "ttsNoneOption": "Hiçbiri"
+    "ttsNoneOption": "Hiçbiri",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default tr;

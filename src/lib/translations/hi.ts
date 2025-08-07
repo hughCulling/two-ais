@@ -405,6 +405,7 @@ const hi = {
         "high": "उच्च"
     },
     "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)",
-    "ttsNoneOption": "कोई नहीं"
+    "ttsNoneOption": "कोई नहीं",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default hi;

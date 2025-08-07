@@ -405,6 +405,7 @@ const pa = {
         "high": "ਉੱਚ"
     },
     "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)",
-    "ttsNoneOption": "ਕੋਈ ਨਹੀਂ"
+    "ttsNoneOption": "ਕੋਈ ਨਹੀਂ",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default pa;

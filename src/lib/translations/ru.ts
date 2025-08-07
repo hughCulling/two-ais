@@ -405,6 +405,7 @@ const ru = {
         "high": "Высокий"
     },
     "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)",
-    "ttsNoneOption": "Никто"
+    "ttsNoneOption": "Никто",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default ru;

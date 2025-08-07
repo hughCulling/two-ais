@@ -405,6 +405,7 @@ const iw = {
         "high": "גָבוֹהַ"
     },
     "footer_githubLinkTitle": "GitHub מאגר (נפתח בכרטיסייה חדשה)",
-    "ttsNoneOption": "אַף לֹא אֶחָד"
+    "ttsNoneOption": "אַף לֹא אֶחָד",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default iw;

@@ -405,6 +405,7 @@ const vi = {
         "high": "Cao"
     },
     "footer_githubLinkTitle": "GitHub kho lưu trữ (mở trong tab mới)",
-    "ttsNoneOption": "Không có"
+    "ttsNoneOption": "Không có",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default vi;

@@ -405,6 +405,7 @@ const gu = {
         "high": "ઉચ્ચ"
     },
     "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)",
-    "ttsNoneOption": "કોઈ નહીં"
+    "ttsNoneOption": "કોઈ નહીં",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default gu;

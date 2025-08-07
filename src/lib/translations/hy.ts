@@ -405,6 +405,7 @@ const hy = {
         "high": "Բարձր"
     },
     "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)",
-    "ttsNoneOption": "Ոչ մեկը"
+    "ttsNoneOption": "Ոչ մեկը",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default hy;

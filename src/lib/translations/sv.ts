@@ -405,6 +405,7 @@ const sv = {
         "high": "Hög"
     },
     "footer_githubLinkTitle": "GitHub arkiv (öppnas i en ny flik)",
-    "ttsNoneOption": "Ingen"
+    "ttsNoneOption": "Ingen",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default sv;

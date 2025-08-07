@@ -405,6 +405,7 @@ const et = {
         "high": "Kõrge"
     },
     "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)",
-    "ttsNoneOption": "Puudub"
+    "ttsNoneOption": "Puudub",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default et;

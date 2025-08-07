@@ -405,6 +405,7 @@ const mt = {
         "high": "Għoli"
     },
     "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)",
-    "ttsNoneOption": "Xejn"
+    "ttsNoneOption": "Xejn",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default mt;

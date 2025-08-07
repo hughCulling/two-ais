@@ -405,6 +405,7 @@ const pl = {
         "high": "Wysoki"
     },
     "footer_githubLinkTitle": "GitHub repozytorium (otwiera się w nowej karcie)",
-    "ttsNoneOption": "Nic"
+    "ttsNoneOption": "Nic",
+    "modelCategory_Frontier": "Frontier models"
 };
 export default pl;
