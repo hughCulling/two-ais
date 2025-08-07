@@ -330,7 +330,8 @@ const iw = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "התמחור משתנה בהתאם לגודל הקלט. קיימת שכבה חינמית.",
         "gemini25FlashNote": "התמחור משתנה בהתאם לסוג המדיה. קיימת אפשרות לגרסה חינמית.",
-        "gemini25FlashLiteNote": "האפשרות המשתלמת ביותר. קיימת אפשרות חינמית."
+        "gemini25FlashLiteNote": "האפשרות המשתלמת ביותר. קיימת אפשרות חינמית.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "טופס הגדרת מפגש",

@@ -330,7 +330,8 @@ const ka = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ფასები განსხვავდება შეყვანის ზომის მიხედვით. ხელმისაწვდომია უფასო დონე.",
         "gemini25FlashNote": "ფასები მედიის ტიპის მიხედვით განსხვავდება. ხელმისაწვდომია უფასო დონე.",
-        "gemini25FlashLiteNote": "ყველაზე ეკონომიური ვარიანტი. ხელმისაწვდომია უფასო დონე."
+        "gemini25FlashLiteNote": "ყველაზე ეკონომიური ვარიანტი. ხელმისაწვდომია უფასო დონე.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "სესიის დაყენების ფორმა",

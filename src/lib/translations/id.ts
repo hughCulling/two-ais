@@ -330,7 +330,8 @@ const id = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Harga bervariasi berdasarkan ukuran input. Tersedia paket gratis.",
         "gemini25FlashNote": "Harga bervariasi berdasarkan jenis media. Tersedia paket gratis.",
-        "gemini25FlashLiteNote": "Pilihan paling hemat biaya. Tersedia paket gratis."
+        "gemini25FlashLiteNote": "Pilihan paling hemat biaya. Tersedia paket gratis.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Formulir Pengaturan Sesi",

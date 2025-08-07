@@ -330,7 +330,8 @@ const lv = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Cena mainās atkarībā no ievades lieluma. Pieejams bezmaksas līmenis.",
         "gemini25FlashNote": "Cenas atšķiras atkarībā no multivides veida. Pieejams bezmaksas līmenis.",
-        "gemini25FlashLiteNote": "Visizdevīgākais variants. Pieejams bezmaksas līmenis."
+        "gemini25FlashLiteNote": "Visizdevīgākais variants. Pieejams bezmaksas līmenis.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Sesijas iestatīšanas veidlapa",

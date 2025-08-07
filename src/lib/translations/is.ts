@@ -330,7 +330,8 @@ const is = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Verðlagning er mismunandi eftir stærð inntaks. Ókeypis útgáfa í boði.",
         "gemini25FlashNote": "Verðlagning er mismunandi eftir miðlunartegund. Ókeypis útgáfa í boði.",
-        "gemini25FlashLiteNote": "Hagkvæmasti kosturinn. Ókeypis útgáfa í boði."
+        "gemini25FlashLiteNote": "Hagkvæmasti kosturinn. Ókeypis útgáfa í boði.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Uppsetningarform fyrir lotur",

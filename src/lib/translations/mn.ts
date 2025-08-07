@@ -330,7 +330,8 @@ const mn = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Үнэ нь оролтын хэмжээнээс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
         "gemini25FlashNote": "Үнэ нь хэвлэл мэдээллийн төрлөөс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
-        "gemini25FlashLiteNote": "Хамгийн хэмнэлттэй сонголт. Үнэгүй шатлал авах боломжтой."
+        "gemini25FlashLiteNote": "Хамгийн хэмнэлттэй сонголт. Үнэгүй шатлал авах боломжтой.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Сеанс тохируулах маягт",

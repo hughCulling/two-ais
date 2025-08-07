@@ -330,7 +330,8 @@ const so = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Qiimuhu wuxuu ku kala duwan yahay cabbirka gelinta. Heerarka bilaashka ah waa la heli karaa.",
         "gemini25FlashNote": "Qiimuhu waa ku kala duwan yahay nooca warbaahinta. Heerarka bilaashka ah waa la heli karaa.",
-        "gemini25FlashLiteNote": "Doorashada ugu badan ee kharash-ku-ool ah. Heerarka bilaashka ah waa la heli karaa."
+        "gemini25FlashLiteNote": "Doorashada ugu badan ee kharash-ku-ool ah. Heerarka bilaashka ah waa la heli karaa.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Foomka Dejinta Kulanka",

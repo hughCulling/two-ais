@@ -330,7 +330,8 @@ const tl = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Nag-iiba ang pagpepresyo ayon sa laki ng input. Available ang libreng tier.",
         "gemini25FlashNote": "Nag-iiba ang pagpepresyo ayon sa uri ng media. Available ang libreng tier.",
-        "gemini25FlashLiteNote": "Karamihan sa cost-effective na opsyon. Available ang libreng tier."
+        "gemini25FlashLiteNote": "Karamihan sa cost-effective na opsyon. Available ang libreng tier.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Form ng Pag-setup ng Session",

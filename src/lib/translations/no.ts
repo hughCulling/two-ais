@@ -330,7 +330,8 @@ const no = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Prisen varierer etter inndatastørrelse. Gratisnivå tilgjengelig.",
         "gemini25FlashNote": "Prisen varierer etter medietype. Gratisnivå tilgjengelig.",
-        "gemini25FlashLiteNote": "Det mest kostnadseffektive alternativet. Gratisnivå tilgjengelig."
+        "gemini25FlashLiteNote": "Det mest kostnadseffektive alternativet. Gratisnivå tilgjengelig.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Skjema for oppsett av økt",

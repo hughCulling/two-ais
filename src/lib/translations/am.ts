@@ -330,7 +330,8 @@ const am = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "የዋጋ አሰጣጥ እንደ ግቤት መጠን ይለያያል። ነፃ ደረጃ ይገኛል።",
         "gemini25FlashNote": "የዋጋ አሰጣጥ እንደ ሚዲያ አይነት ይለያያል። ነፃ ደረጃ ይገኛል።",
-        "gemini25FlashLiteNote": "በጣም ወጪ ቆጣቢ አማራጭ. ነፃ ደረጃ ይገኛል።"
+        "gemini25FlashLiteNote": "በጣም ወጪ ቆጣቢ አማራጭ. ነፃ ደረጃ ይገኛል።",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "የክፍለ ጊዜ ማዋቀር ቅጽ",

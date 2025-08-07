@@ -330,7 +330,8 @@ const sw = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Bei inatofautiana kwa ukubwa wa pembejeo. Kiwango cha bure kinapatikana.",
         "gemini25FlashNote": "Bei inatofautiana kulingana na aina ya media. Kiwango cha bure kinapatikana.",
-        "gemini25FlashLiteNote": "Chaguo la gharama nafuu zaidi. Kiwango cha bure kinapatikana."
+        "gemini25FlashLiteNote": "Chaguo la gharama nafuu zaidi. Kiwango cha bure kinapatikana.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Fomu ya Kuweka Kikao",

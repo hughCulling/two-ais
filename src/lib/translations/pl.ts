@@ -330,7 +330,8 @@ const pl = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Ceny zależą od rozmiaru danych wejściowych. Dostępny jest bezpłatny pakiet.",
         "gemini25FlashNote": "Ceny różnią się w zależności od rodzaju nośnika. Dostępny jest bezpłatny plan.",
-        "gemini25FlashLiteNote": "Najbardziej opłacalna opcja. Dostępna wersja bezpłatna."
+        "gemini25FlashLiteNote": "Najbardziej opłacalna opcja. Dostępna wersja bezpłatna.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Formularz konfiguracji sesji",

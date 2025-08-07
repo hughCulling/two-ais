@@ -330,7 +330,8 @@ const my = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ထည့်သွင်းအရွယ်အစားအလိုက် ဈေးနှုန်းကွာခြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
         "gemini25FlashNote": "စျေးနှုန်းသည် မီဒီယာအမျိုးအစားအလိုက် ကွဲပြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
-        "gemini25FlashLiteNote": "ကုန်ကျစရိတ်အသက်သာဆုံး ရွေးချယ်မှု။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။"
+        "gemini25FlashLiteNote": "ကုန်ကျစရိတ်အသက်သာဆုံး ရွေးချယ်မှု။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Session Setup Form",

@@ -330,7 +330,8 @@ const ml = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ഇൻപുട്ട് വലുപ്പത്തിനനുസരിച്ച് വില വ്യത്യാസപ്പെടുന്നു. സൗജന്യ ടയർ ലഭ്യമാണ്.",
         "gemini25FlashNote": "മീഡിയ തരം അനുസരിച്ച് വില വ്യത്യാസപ്പെടുന്നു. സൗജന്യ ടയർ ലഭ്യമാണ്.",
-        "gemini25FlashLiteNote": "ഏറ്റവും ചെലവ് കുറഞ്ഞ ഓപ്ഷൻ. സൗജന്യ ടയർ ലഭ്യമാണ്."
+        "gemini25FlashLiteNote": "ഏറ്റവും ചെലവ് കുറഞ്ഞ ഓപ്ഷൻ. സൗജന്യ ടയർ ലഭ്യമാണ്.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "സെഷൻ സജ്ജീകരണ ഫോം",

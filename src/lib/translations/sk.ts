@@ -330,7 +330,8 @@ const sk = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Cena sa líši v závislosti od veľkosti vstupu. K dispozícii je bezplatná úroveň.",
         "gemini25FlashNote": "Cena sa líši v závislosti od typu média. K dispozícii je bezplatná úroveň.",
-        "gemini25FlashLiteNote": "Najnákladovo najvýhodnejšia možnosť. K dispozícii je bezplatná úroveň."
+        "gemini25FlashLiteNote": "Najnákladovo najvýhodnejšia možnosť. K dispozícii je bezplatná úroveň.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Formulár na nastavenie relácie",
