@@ -365,7 +365,7 @@ const en = {
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',
-        description: 'Here you can select the LLM and optional TTS settings for each agent.',
+        description: 'Here you can select the LLM and optional TTS and image generation settings for each agent.',
         agentAModel: 'Agent A Model',
         agentBModel: 'Agent B Model',
         selectLLMForAgentA: 'Select LLM for Agent A',
