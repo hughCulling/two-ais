@@ -326,7 +326,11 @@ const ca = {
                 "chirpHD": "No s'ha pogut verificar",
                 "chirp3HD": "{price} per 1 milió de caràcters"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "El preu varia segons la mida d'entrada. Nivell gratuït disponible.",
+        "gemini25FlashNote": "El preu varia segons el tipus de suport. Nivell gratuït disponible.",
+        "gemini25FlashLiteNote": "L'opció més rendible. Nivell gratuït disponible."
     },
     "sessionSetupForm": {
         "title": "Formulari de configuració de sessió",

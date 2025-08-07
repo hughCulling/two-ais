@@ -326,7 +326,11 @@ const ar = {
                 "chirpHD": "لم أستطع التحقق",
                 "chirp3HD": "{price} لكل مليون حرف"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "يختلف السعر حسب حجم الإدخال. تتوفر نسخة مجانية.",
+        "gemini25FlashNote": "تختلف الأسعار باختلاف نوع الوسائط. تتوفر نسخة مجانية.",
+        "gemini25FlashLiteNote": "الخيار الأكثر فعالية من حيث التكلفة. تتوفر نسخة مجانية."
     },
     "sessionSetupForm": {
         "title": "نموذج إعداد الجلسة",

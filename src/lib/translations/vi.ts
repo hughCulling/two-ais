@@ -326,7 +326,11 @@ const vi = {
                 "chirpHD": "Không thể xác minh",
                 "chirp3HD": "{price} trên 1 triệu ký tự"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Giá cả thay đổi tùy theo kích thước đầu vào. Có gói miễn phí.",
+        "gemini25FlashNote": "Giá cả thay đổi tùy theo loại phương tiện. Có gói miễn phí.",
+        "gemini25FlashLiteNote": "Lựa chọn tiết kiệm chi phí nhất. Có gói miễn phí."
     },
     "sessionSetupForm": {
         "title": "Biểu mẫu thiết lập phiên",

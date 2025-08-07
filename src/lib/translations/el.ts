@@ -326,7 +326,11 @@ const el = {
                 "chirpHD": "Δεν ήταν δυνατή η επαλήθευση",
                 "chirp3HD": "{price} ανά 1 εκατομμύριο χαρακτήρες"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Η τιμολόγηση ποικίλλει ανάλογα με το μέγεθος εισόδου. Διατίθεται δωρεάν βαθμίδα.",
+        "gemini25FlashNote": "Η τιμολόγηση ποικίλλει ανάλογα με τον τύπο μέσου. Διατίθεται δωρεάν έκδοση.",
+        "gemini25FlashLiteNote": "Η πιο οικονομική επιλογή. Διατίθεται δωρεάν βαθμίδα."
     },
     "sessionSetupForm": {
         "title": "Φόρμα Ρύθμισης Συνεδρίας",

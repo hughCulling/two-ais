@@ -326,7 +326,11 @@ const ja = {
                 "chirpHD": "確認できませんでした",
                 "chirp3HD": "{price} 100万文字あたり"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "価格は入力サイズによって異なります。無料プランもご利用いただけます。",
+        "gemini25FlashNote": "価格はメディアの種類によって異なります。無料プランもご利用いただけます。",
+        "gemini25FlashLiteNote": "最も費用対効果の高いオプション。無料プランもご利用いただけます。"
     },
     "sessionSetupForm": {
         "title": "セッション設定フォーム",

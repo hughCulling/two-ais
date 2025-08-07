@@ -326,7 +326,11 @@ const no = {
                 "chirpHD": "Kunne ikke bekrefte",
                 "chirp3HD": "{price} per 1 million tegn"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Prisen varierer etter inndatastørrelse. Gratisnivå tilgjengelig.",
+        "gemini25FlashNote": "Prisen varierer etter medietype. Gratisnivå tilgjengelig.",
+        "gemini25FlashLiteNote": "Det mest kostnadseffektive alternativet. Gratisnivå tilgjengelig."
     },
     "sessionSetupForm": {
         "title": "Skjema for oppsett av økt",

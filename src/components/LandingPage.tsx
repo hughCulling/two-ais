@@ -18,6 +18,7 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
 import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
 import type { ImageModelInfo } from '@/lib/image_models';
+import { FreeTierBadge } from './ui/free-tier-badge';
 
    // Replace these with your actual base64 strings!
    const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -320,6 +321,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     {llm.status === 'preview' && <Badge variant="preview" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgePreview}</Badge>}
                                     {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
                                     {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                    {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
                                     {llm.pricing.note ? (
                                       <TruncatableNote noteText={llm.pricing.note} />
                                     ) : (
@@ -393,6 +395,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         </TooltipContent>
                                       </Tooltip>
                                     )}
+                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
                                     {llm.knowledgeCutoff && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
@@ -408,6 +411,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         </TooltipContent>
                                       </Tooltip>
                                     )}
+                                    {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+
                                   </li>
                                 ))}
                               </ul>

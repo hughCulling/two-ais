@@ -326,7 +326,11 @@ const sq = {
                 "chirpHD": "Nuk mund të verifikohej",
                 "chirp3HD": "{price} për 1 milion karaktere"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Çmimi ndryshon në varësi të madhësisë së inputit. Ka nivel falas në dispozicion.",
+        "gemini25FlashNote": "Çmimi ndryshon në varësi të llojit të medias. Ka një nivel falas në dispozicion.",
+        "gemini25FlashLiteNote": "Opsioni më ekonomik. Kati falas në dispozicion."
     },
     "sessionSetupForm": {
         "title": "Formulari i Konfigurimit të Sesionit",

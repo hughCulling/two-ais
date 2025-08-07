@@ -326,7 +326,11 @@ const hy = {
                 "chirpHD": "Հնարավոր չէ ստուգել",
                 "chirp3HD": "{price} 1 միլիոն նիշերի համար"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Գինը տարբերվում է մուտքագրման չափից կախված։ Հասանելի է անվճար մակարդակ։",
+        "gemini25FlashNote": "Գները տարբերվում են՝ կախված մեդիայի տեսակից։ Հասանելի է անվճար տարբերակ։",
+        "gemini25FlashLiteNote": "Առավել մատչելի տարբերակ։ Հասանելի է անվճար տարբերակ։"
     },
     "sessionSetupForm": {
         "title": "Սեսիայի կարգավորման ձև",

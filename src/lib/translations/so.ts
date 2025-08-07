@@ -326,7 +326,11 @@ const so = {
                 "chirpHD": "Waa la xaqiijin kari waayay",
                 "chirp3HD": "{price} 1 Milyan oo xaraf"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Qiimuhu wuxuu ku kala duwan yahay cabbirka gelinta. Heerarka bilaashka ah waa la heli karaa.",
+        "gemini25FlashNote": "Qiimuhu waa ku kala duwan yahay nooca warbaahinta. Heerarka bilaashka ah waa la heli karaa.",
+        "gemini25FlashLiteNote": "Doorashada ugu badan ee kharash-ku-ool ah. Heerarka bilaashka ah waa la heli karaa."
     },
     "sessionSetupForm": {
         "title": "Foomka Dejinta Kulanka",

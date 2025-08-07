@@ -326,7 +326,11 @@ const ka = {
                 "chirpHD": "ვერიფიცირება ვერ მოხერხდა",
                 "chirp3HD": "{price} 1 მილიონ სიმბოლოზე"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ფასები განსხვავდება შეყვანის ზომის მიხედვით. ხელმისაწვდომია უფასო დონე.",
+        "gemini25FlashNote": "ფასები მედიის ტიპის მიხედვით განსხვავდება. ხელმისაწვდომია უფასო დონე.",
+        "gemini25FlashLiteNote": "ყველაზე ეკონომიური ვარიანტი. ხელმისაწვდომია უფასო დონე."
     },
     "sessionSetupForm": {
         "title": "სესიის დაყენების ფორმა",

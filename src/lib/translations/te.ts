@@ -326,7 +326,11 @@ const te = {
                 "chirpHD": "ధృవీకరించలేకపోయింది",
                 "chirp3HD": "{price} 1 మిలియన్ అక్షరాలకు"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ధర ఇన్‌పుట్ సైజును బట్టి మారుతుంది. ఉచిత టైర్ అందుబాటులో ఉంది.",
+        "gemini25FlashNote": "మీడియా రకాన్ని బట్టి ధర మారుతుంది. ఉచిత టైర్ అందుబాటులో ఉంది.",
+        "gemini25FlashLiteNote": "అత్యంత ఖర్చుతో కూడుకున్న ఎంపిక. ఉచిత టైర్ అందుబాటులో ఉంది."
     },
     "sessionSetupForm": {
         "title": "సెషన్ సెటప్ ఫారమ్",

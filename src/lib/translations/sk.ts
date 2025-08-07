@@ -326,7 +326,11 @@ const sk = {
                 "chirpHD": "Nepodarilo sa overiť",
                 "chirp3HD": "{price} na 1 milión znakov"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Cena sa líši v závislosti od veľkosti vstupu. K dispozícii je bezplatná úroveň.",
+        "gemini25FlashNote": "Cena sa líši v závislosti od typu média. K dispozícii je bezplatná úroveň.",
+        "gemini25FlashLiteNote": "Najnákladovo najvýhodnejšia možnosť. K dispozícii je bezplatná úroveň."
     },
     "sessionSetupForm": {
         "title": "Formulár na nastavenie relácie",

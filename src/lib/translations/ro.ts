@@ -326,7 +326,11 @@ const ro = {
                 "chirpHD": "Nu s-a putut verifica",
                 "chirp3HD": "{price} per 1 milion de caractere"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Prețurile variază în funcție de dimensiunea intrării. Nivel gratuit disponibil.",
+        "gemini25FlashNote": "Prețurile variază în funcție de tipul de media. Nivel gratuit disponibil.",
+        "gemini25FlashLiteNote": "Cea mai rentabilă opțiune. Nivel gratuit disponibil."
     },
     "sessionSetupForm": {
         "title": "Formular de configurare a sesiunii",

@@ -326,7 +326,11 @@ const id = {
                 "chirpHD": "Tidak dapat memverifikasi",
                 "chirp3HD": "{price} per 1 Juta karakter"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Harga bervariasi berdasarkan ukuran input. Tersedia paket gratis.",
+        "gemini25FlashNote": "Harga bervariasi berdasarkan jenis media. Tersedia paket gratis.",
+        "gemini25FlashLiteNote": "Pilihan paling hemat biaya. Tersedia paket gratis."
     },
     "sessionSetupForm": {
         "title": "Formulir Pengaturan Sesi",

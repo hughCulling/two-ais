@@ -326,7 +326,11 @@ const tl = {
                 "chirpHD": "Hindi ma-verify",
                 "chirp3HD": "{price} bawat 1 Milyong character"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Nag-iiba ang pagpepresyo ayon sa laki ng input. Available ang libreng tier.",
+        "gemini25FlashNote": "Nag-iiba ang pagpepresyo ayon sa uri ng media. Available ang libreng tier.",
+        "gemini25FlashLiteNote": "Karamihan sa cost-effective na opsyon. Available ang libreng tier."
     },
     "sessionSetupForm": {
         "title": "Form ng Pag-setup ng Session",

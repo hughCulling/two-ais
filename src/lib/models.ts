@@ -12,6 +12,10 @@ export interface LLMInfo {
         input: number; // Price per 1 million input tokens (in USD)
         output: number; // Price per 1 million output tokens (in USD)
         note?: string | ((t: TranslationKeys) => string); // Optional note for complex pricing (can be a string or a function that returns a string)
+        freeTier?: {
+            available: boolean; // Whether a free tier is available
+            note?: string | ((t: TranslationKeys) => string); // Details about free tier limitations
+        };
     };
     apiKeyInstructionsUrl: string; // Link to get API keys page for the provider
     apiKeySecretName: string; // The Secret Manager secret *key ID*
@@ -204,23 +208,31 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 10.00, 
-            note: (t: TranslationKeys) => `$1.25 (≤200k ${t.pricing.tokens}), $2.50 (>200k ${t.pricing.tokens}) / $10.00 (≤200k ${t.pricing.tokens}), $15.00 (>200k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
+            note: (t: TranslationKeys) => `$1.25 (≤200k ${t.pricing.tokens}), $2.50 (>200k ${t.pricing.tokens}) / $10.00 (≤200k ${t.pricing.tokens}), $15.00 (>200k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
-        usesReasoningTokens: true, 
+        usesReasoningTokens: true,
         categoryKey: 'modelCategory_Gemini2_5',
         knowledgeCutoff: '2025-01',
     },
     {
-        id: 'gemini-2.5-flash', 
+        id: 'gemini-2.5-flash',
         name: 'Gemini 2.5 Flash',
         provider: 'Google',
         contextWindow: 2000000,
         pricing: { 
             input: 0.30, 
-            output: 2.50, 
+            output: 2.50,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -234,7 +246,11 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 2.0 Flash',
         provider: 'Google',
         contextWindow: 0, 
-        pricing: { input: 0.10, output: 0.40 },
+        pricing: { input: 0.10, output: 0.40,          
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            } },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -246,7 +262,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Gemini 2.0 Flash-Lite',
         provider: 'Google',
         contextWindow: 0, 
-        pricing: { input: 0.075, output: 0.30 },
+        pricing: { 
+            input: 0.075, 
+            output: 0.30,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
         status: 'stable',
@@ -261,7 +284,11 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 1.25, 
             output: 5.00, 
-            note: (t: TranslationKeys) => `$1.25 (≤128k ${t.pricing.tokens}), $2.50 (>128k ${t.pricing.tokens}) / $5.00 (≤128k ${t.pricing.tokens}), $10.00 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
+            note: (t: TranslationKeys) => `$1.25 (≤128k ${t.pricing.tokens}), $2.50 (>128k ${t.pricing.tokens}) / $5.00 (≤128k ${t.pricing.tokens}), $10.00 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -276,7 +303,11 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.075, 
             output: 0.30, 
-            note: (t: TranslationKeys) => `$0.075 (≤128k ${t.pricing.tokens}), $0.15 (>128k ${t.pricing.tokens}) / $0.30 (≤128k ${t.pricing.tokens}), $0.60 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
+            note: (t: TranslationKeys) => `$0.075 (≤128k ${t.pricing.tokens}), $0.15 (>128k ${t.pricing.tokens}) / $0.30 (≤128k ${t.pricing.tokens}), $0.60 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -291,7 +322,11 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.0375, 
             output: 0.15,  
-            note: (t: TranslationKeys) => `$0.0375 (≤128k ${t.pricing.tokens}), $0.075 (>128k ${t.pricing.tokens}) / $0.15 (≤128k ${t.pricing.tokens}), $0.30 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`
+            note: (t: TranslationKeys) => `$0.0375 (≤128k ${t.pricing.tokens}), $0.075 (>128k ${t.pricing.tokens}) / $0.15 (≤128k ${t.pricing.tokens}), $0.30 (>128k ${t.pricing.tokens}) ${t.pricing.perMillionTokens}`,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',
@@ -306,6 +341,10 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: {
             input: 0.10,
             output: 0.40,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.geminiFreeTierNote
+            }
         },
         apiKeyInstructionsUrl: 'https://aistudio.google.com/app/apikey',
         apiKeySecretName: 'google_ai',

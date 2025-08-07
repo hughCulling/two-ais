@@ -326,7 +326,11 @@ const iw = {
                 "chirpHD": "לא ניתן היה לאמת",
                 "chirp3HD": "{price} לכל מיליון תווים"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "התמחור משתנה בהתאם לגודל הקלט. קיימת שכבה חינמית.",
+        "gemini25FlashNote": "התמחור משתנה בהתאם לסוג המדיה. קיימת אפשרות לגרסה חינמית.",
+        "gemini25FlashLiteNote": "האפשרות המשתלמת ביותר. קיימת אפשרות חינמית."
     },
     "sessionSetupForm": {
         "title": "טופס הגדרת מפגש",

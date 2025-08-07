@@ -326,7 +326,11 @@ const is = {
                 "chirpHD": "Gat ekki staðfest",
                 "chirp3HD": "{price} á hverja 1 milljón stafi"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Verðlagning er mismunandi eftir stærð inntaks. Ókeypis útgáfa í boði.",
+        "gemini25FlashNote": "Verðlagning er mismunandi eftir miðlunartegund. Ókeypis útgáfa í boði.",
+        "gemini25FlashLiteNote": "Hagkvæmasti kosturinn. Ókeypis útgáfa í boði."
     },
     "sessionSetupForm": {
         "title": "Uppsetningarform fyrir lotur",

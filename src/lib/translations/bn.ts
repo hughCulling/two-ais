@@ -326,7 +326,11 @@ const bn = {
                 "chirpHD": "যাচাই করা যায়নি",
                 "chirp3HD": "{price} প্রতি ১০ লক্ষ অক্ষরে"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ইনপুট আকার অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
+        "gemini25FlashNote": "মিডিয়ার ধরণ অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
+        "gemini25FlashLiteNote": "সবচেয়ে সাশ্রয়ী বিকল্প। বিনামূল্যে স্তর উপলব্ধ।"
     },
     "sessionSetupForm": {
         "title": "সেশন সেটআপ ফর্ম",

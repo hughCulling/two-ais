@@ -326,7 +326,11 @@ const fa = {
                 "chirpHD": "تأیید نشد",
                 "chirp3HD": "{price} به ازای هر ۱ میلیون کاراکتر"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "قیمت‌گذاری بر اساس اندازه ورودی متفاوت است. ردیف رایگان موجود است.",
+        "gemini25FlashNote": "قیمت‌گذاری بر اساس نوع رسانه متفاوت است. سطح رایگان موجود است.",
+        "gemini25FlashLiteNote": "مقرون به صرفه‌ترین گزینه. سطح رایگان موجود است."
     },
     "sessionSetupForm": {
         "title": "فرم تنظیم جلسه",

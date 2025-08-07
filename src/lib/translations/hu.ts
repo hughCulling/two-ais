@@ -326,7 +326,11 @@ const hu = {
                 "chirpHD": "Nem sikerült ellenőrizni",
                 "chirp3HD": "{price} 1 millió karakterenként"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Az ár a bemeneti mérettől függ. Ingyenes szint elérhető.",
+        "gemini25FlashNote": "Az árak médiatípusonként változnak. Ingyenes csomag is elérhető.",
+        "gemini25FlashLiteNote": "A legköltséghatékonyabb megoldás. Ingyenes szint elérhető."
     },
     "sessionSetupForm": {
         "title": "Munkamenet-beállítási űrlap",

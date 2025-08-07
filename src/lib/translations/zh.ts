@@ -326,7 +326,11 @@ const zh = {
                 "chirpHD": "无法验证",
                 "chirp3HD": "{price} 每百万字符"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "定价因输入大小而异。提供免费套餐。",
+        "gemini25FlashNote": "价格因媒体类型而异。提供免费套餐。",
+        "gemini25FlashLiteNote": "最具成本效益的选择。提供免费套餐。"
     },
     "sessionSetupForm": {
         "title": "会话设置表",

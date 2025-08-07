@@ -326,7 +326,11 @@ const fi = {
                 "chirpHD": "Vahvistus epäonnistui",
                 "chirp3HD": "{price} miljoonaa merkkiä kohden"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Hinta vaihtelee syötteen koon mukaan. Ilmainen taso saatavilla.",
+        "gemini25FlashNote": "Hinnoittelu vaihtelee mediatyypin mukaan. Saatavilla ilmainen taso.",
+        "gemini25FlashLiteNote": "Kustannustehokkain vaihtoehto. Ilmainen taso saatavilla."
     },
     "sessionSetupForm": {
         "title": "Istunnon määrityslomake",
