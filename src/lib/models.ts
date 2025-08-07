@@ -659,7 +659,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Medium 3',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.40, output: 2.00 }, //
+        pricing: { 
+            input: 0.40, 
+            output: 2.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -682,7 +689,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Large',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 2.00, output: 6.00 }, //
+        pricing: { 
+            input: 2.00, 
+            output: 6.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -693,7 +707,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 8B 24.10',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.10, output: 1.00 }, //
+        pricing: { 
+            input: 0.10, 
+            output: 1.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -704,7 +725,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 3B 24.10',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.04, output: 0.04 }, //
+        pricing: { 
+            input: 0.04, 
+            output: 0.04,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -728,7 +756,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Small 3.2',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { input: 0.10, output: 0.30 }, //
+        pricing: { 
+            input: 0.10, 
+            output: 0.30,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
@@ -736,75 +771,75 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     // === Together.ai ===
     // Removing Llama models not available on the Llama API, even though still using Together.ai.
-    {
-        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
-        name: 'Llama 4 Scout Instruct (17Bx16E)',
-        provider: 'TogetherAI',
-        contextWindow: 1048576, 
-        pricing: { input: 0.18, output: 0.59 },
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable', 
-        categoryKey: 'modelCategory_Llama4',
-        knowledgeCutoff: '2024-08',
-    },
-    {
-        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
-        name: 'Llama 4 Maverick Instruct (17Bx128E)',
-        provider: 'TogetherAI',
-        contextWindow: 1048576, 
-        pricing: { input: 0.27, output: 0.85 },
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable',
-        categoryKey: 'modelCategory_Llama4',
-        knowledgeCutoff: '2024-08',
-    },
-    {
-        id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-        name: 'Meta Llama 3.3 70B Instruct Turbo',
-        provider: 'TogetherAI',
-        contextWindow: 131072, 
-        pricing: { input: 0.88, output: 0.88 }, 
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable',
-        categoryKey: 'modelCategory_Llama3_3',
-    },
-    { 
-        id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
-        name: 'Meta Llama 3.3 70B Instruct Turbo Free',
-        provider: 'TogetherAI',
-        contextWindow: 131072, 
-        pricing: { input: 0.00, output: 0.00, note: (t: TranslationKeys) => t.pricing.free }, 
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable',
-        categoryKey: 'modelCategory_Llama3_3',
-    },
-    // Google Gemma Models via TogetherAI
-    {
-        id: 'google/gemma-2-27b-it',
-        name: 'Gemma-2 Instruct (27B)',
-        provider: 'TogetherAI',
-        contextWindow: 8192,
-        pricing: { input: 0.80, output: 0.80 }, 
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable', 
-        categoryKey: 'modelCategory_Gemma2',
-    },
-    {
-        id: 'google/gemma-3n-E4B-it',
-        name: 'Gemma 3N E4B Instruct',
-        provider: 'TogetherAI',
-        contextWindow: 32000, // 32K tokens, per documentation
-        pricing: { input: 0.02, output: 0.04 },
-        apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-        apiKeySecretName: 'together_ai',
-        status: 'stable',
-        categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
-    },
+    // {
+    //     id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+    //     name: 'Llama 4 Scout Instruct (17Bx16E)',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 1048576, 
+    //     pricing: { input: 0.18, output: 0.59 },
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable', 
+    //     categoryKey: 'modelCategory_Llama4',
+    //     knowledgeCutoff: '2024-08',
+    // },
+    // {
+    //     id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+    //     name: 'Llama 4 Maverick Instruct (17Bx128E)',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 1048576, 
+    //     pricing: { input: 0.27, output: 0.85 },
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Llama4',
+    //     knowledgeCutoff: '2024-08',
+    // },
+    // {
+    //     id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+    //     name: 'Meta Llama 3.3 70B Instruct Turbo',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 131072, 
+    //     pricing: { input: 0.88, output: 0.88 }, 
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Llama3_3',
+    // },
+    // { 
+    //     id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
+    //     name: 'Meta Llama 3.3 70B Instruct Turbo Free',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 131072, 
+    //     pricing: { input: 0.00, output: 0.00, note: (t: TranslationKeys) => t.pricing.free }, 
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Llama3_3',
+    // },
+    // // Google Gemma Models via TogetherAI
+    // {
+    //     id: 'google/gemma-2-27b-it',
+    //     name: 'Gemma-2 Instruct (27B)',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 8192,
+    //     pricing: { input: 0.80, output: 0.80 }, 
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable', 
+    //     categoryKey: 'modelCategory_Gemma2',
+    // },
+    // {
+    //     id: 'google/gemma-3n-E4B-it',
+    //     name: 'Gemma 3N E4B Instruct',
+    //     provider: 'TogetherAI',
+    //     contextWindow: 32000, // 32K tokens, per documentation
+    //     pricing: { input: 0.02, output: 0.04 },
+    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
+    //     apiKeySecretName: 'together_ai',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
+    // },
 ];
 
 // --- Helper Functions ---
