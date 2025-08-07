@@ -399,6 +399,7 @@ const mk = {
         "low": "Ниско",
         "medium": "Средно",
         "high": "Висок"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозиториум (се отвора во нов таб)"
 };
 export default mk;

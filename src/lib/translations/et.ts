@@ -399,6 +399,7 @@ const et = {
         "low": "Madal",
         "medium": "Keskmine",
         "high": "Kõrge"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)"
 };
 export default et;

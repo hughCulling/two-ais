@@ -399,6 +399,7 @@ const tl = {
         "low": "Mababa",
         "medium": "Katamtaman",
         "high": "Mataas"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)"
 };
 export default tl;

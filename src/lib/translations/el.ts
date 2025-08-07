@@ -399,6 +399,7 @@ const el = {
         "low": "Χαμηλός",
         "medium": "Μέσον",
         "high": "Ψηλά"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)"
 };
 export default el;

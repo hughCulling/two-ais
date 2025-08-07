@@ -399,6 +399,7 @@ const mn = {
         "low": "Бага",
         "medium": "Дунд зэрэг",
         "high": "Өндөр"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)"
 };
 export default mn;

@@ -399,6 +399,7 @@ const hy = {
         "low": "Ցածր",
         "medium": "Միջին",
         "high": "Բարձր"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)"
 };
 export default hy;

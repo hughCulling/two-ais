@@ -399,6 +399,7 @@ const sr = {
         "low": "Ниско",
         "medium": "Средњи",
         "high": "Високо"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозиторијум (отвара се у новој картици)"
 };
 export default sr;

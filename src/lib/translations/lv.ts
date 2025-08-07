@@ -399,6 +399,7 @@ const lv = {
         "low": "Zems",
         "medium": "Vidējs",
         "high": "Augsts"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)"
 };
 export default lv;

@@ -399,6 +399,7 @@ const fi = {
         "low": "Matala",
         "medium": "Keskikokoinen",
         "high": "Korkea"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)"
 };
 export default fi;

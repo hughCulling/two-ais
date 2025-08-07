@@ -399,6 +399,7 @@ const ko = {
         "low": "낮은",
         "medium": "중간",
         "high": "높은"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)"
 };
 export default ko;

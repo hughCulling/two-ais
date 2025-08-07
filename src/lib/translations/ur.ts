@@ -399,6 +399,7 @@ const ur = {
         "low": "کم",
         "medium": "درمیانہ",
         "high": "اعلی"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)"
 };
 export default ur;

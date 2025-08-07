@@ -399,6 +399,7 @@ const te = {
         "low": "తక్కువ",
         "medium": "మీడియం",
         "high": "అధిక"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub రిపోజిటరీ (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)"
 };
 export default te;

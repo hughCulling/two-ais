@@ -399,6 +399,7 @@ const pl = {
         "low": "Niski",
         "medium": "Średni",
         "high": "Wysoki"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repozytorium (otwiera się w nowej karcie)"
 };
 export default pl;

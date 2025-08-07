@@ -399,6 +399,7 @@ const uk = {
         "low": "Низький",
         "medium": "Середній",
         "high": "Високий"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub репозиторій (відкриється в новій вкладці)"
 };
 export default uk;

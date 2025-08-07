@@ -399,6 +399,7 @@ const cs = {
         "low": "Nízký",
         "medium": "Střední",
         "high": "Vysoký"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)"
 };
 export default cs;

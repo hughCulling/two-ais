@@ -399,6 +399,7 @@ const ro = {
         "low": "Scăzut",
         "medium": "Mediu",
         "high": "Ridicat"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)"
 };
 export default ro;

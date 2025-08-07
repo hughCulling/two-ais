@@ -399,6 +399,7 @@ const gu = {
         "low": "નીચું",
         "medium": "મધ્યમ",
         "high": "ઉચ્ચ"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)"
 };
 export default gu;

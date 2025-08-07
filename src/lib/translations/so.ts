@@ -399,6 +399,7 @@ const so = {
         "low": "Hoose",
         "medium": "Dhexdhexaad",
         "high": "Sare"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)"
 };
 export default so;

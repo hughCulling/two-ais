@@ -399,6 +399,7 @@ const ms = {
         "low": "rendah",
         "medium": "Sederhana",
         "high": "tinggi"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repositori (dibuka dalam tab baharu)"
 };
 export default ms;

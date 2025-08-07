@@ -399,6 +399,7 @@ const vi = {
         "low": "Thấp",
         "medium": "Trung bình",
         "high": "Cao"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub kho lưu trữ (mở trong tab mới)"
 };
 export default vi;

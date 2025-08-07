@@ -399,6 +399,7 @@ const no = {
         "low": "Lav",
         "medium": "Medium",
         "high": "Høy"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub arkiv (åpnes i en ny fane)"
 };
 export default no;

@@ -399,6 +399,7 @@ const ca = {
         "low": "Baix",
         "medium": "Mitjà",
         "high": "Alt"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)"
 };
 export default ca;

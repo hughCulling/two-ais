@@ -399,6 +399,7 @@ const hu = {
         "low": "Alacsony",
         "medium": "Közepes",
         "high": "Magas"
-    }
+    },
+    "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)"
 };
 export default hu;

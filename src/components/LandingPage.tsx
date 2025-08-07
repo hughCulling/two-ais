@@ -557,7 +557,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 </Tooltip>
                               )}
                               {model.status && (
-                                <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">{model.status}</Badge>
+                                <Badge variant={model.status} className="ml-2 text-xs px-1.5 py-0.5 flex-shrink-0">
+                                  {(() => {
+                                    if (!t) return model.status;
+                                    const translationKey = `page_Badge${model.status.charAt(0).toUpperCase() + model.status.slice(1)}`;
+                                    const translation = t[translationKey as keyof typeof t];
+                                    return typeof translation === 'string' ? translation : model.status;
+                                  })()}
+                                </Badge>
                               )}
                             </div>
                             <div className="overflow-x-auto">

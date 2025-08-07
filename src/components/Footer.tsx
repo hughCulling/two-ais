@@ -13,7 +13,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="You can visit my GitHub repository (opens in new tab)"
-            title="Visit GitHub repository (opens in new tab)"
+            title="GitHub repository (opens in new tab)"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
           >
             <svg
