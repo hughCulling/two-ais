@@ -446,6 +446,23 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
 
     // === Anthropic ===
     {
+        id: 'claude-opus-4-1-20250805',
+        name: 'Claude Opus 4.1',
+        provider: 'Anthropic',
+        contextWindow: 200000,
+        pricing: { 
+            input: 15.00, 
+            output: 75.00,
+            // note: (t: TranslationKeys) => `$${15.00} / 1M input tokens, $${75.00} / 1M output tokens`
+        },
+        apiKeyInstructionsUrl: 'https://console.anthropic.com/settings/keys',
+        apiKeySecretName: 'anthropic',
+        status: 'stable',
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_Claude4',
+        knowledgeCutoff: '2025-03',
+    },
+    {
         id: 'claude-opus-4-20250514',
         name: 'Claude Opus 4',
         provider: 'Anthropic',
@@ -972,18 +989,32 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     if (idxB !== -1) return 1;
                     return a.name.localeCompare(b.name);
                 });
-            } else if (byCategory[cat][0]?.provider === 'Anthropic' && byCategory[cat][0]?.provider === 'Anthropic') {
-                const anthropicOrder = ['Opus', 'Sonnet', 'Haiku'];
-                const getAnthropicTier = (name: string) => {
-                    for (let i = 0; i < anthropicOrder.length; i++) {
-                        if (name.includes(anthropicOrder[i])) return i;
-                    }
-                    return anthropicOrder.length;
-                };
+            } else if (byCategory[cat][0]?.provider === 'Anthropic') {
                 byCategory[cat].sort((a, b) => {
+                    // First handle Claude 4 models specifically
+                    const claude4Ids = ['claude-opus-4-1-20250805', 'claude-opus-4-20250514'];
+                    const aIndex = claude4Ids.indexOf(a.id);
+                    const bIndex = claude4Ids.indexOf(b.id);
+                    
+                    // If both are Claude 4 models, sort by our defined order
+                    if (aIndex !== -1 && bIndex !== -1) {
+                        return aIndex - bIndex;
+                    }
+                    
+                    // For other Anthropic models, sort by tier (Opus > Sonnet > Haiku)
+                    const anthropicOrder = ['Opus', 'Sonnet', 'Haiku'];
+                    const getAnthropicTier = (name: string) => {
+                        for (let i = 0; i < anthropicOrder.length; i++) {
+                            if (name.includes(anthropicOrder[i])) return i;
+                        }
+                        return anthropicOrder.length;
+                    };
+                    
                     const tierA = getAnthropicTier(a.name);
                     const tierB = getAnthropicTier(b.name);
                     if (tierA !== tierB) return tierA - tierB;
+                    
+                    // If same tier, sort by name
                     return a.name.localeCompare(b.name);
                 });
             } else {
