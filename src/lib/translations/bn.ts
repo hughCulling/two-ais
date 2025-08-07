@@ -330,7 +330,8 @@ const bn = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ইনপুট আকার অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
         "gemini25FlashNote": "মিডিয়ার ধরণ অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
-        "gemini25FlashLiteNote": "সবচেয়ে সাশ্রয়ী বিকল্প। বিনামূল্যে স্তর উপলব্ধ।"
+        "gemini25FlashLiteNote": "সবচেয়ে সাশ্রয়ী বিকল্প। বিনামূল্যে স্তর উপলব্ধ।",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "সেশন সেটআপ ফর্ম",

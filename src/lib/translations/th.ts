@@ -330,7 +330,8 @@ const th = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ราคาแตกต่างกันไปตามขนาดของอินพุต มีระดับฟรีให้เลือก",
         "gemini25FlashNote": "ราคาแตกต่างกันไปตามประเภทสื่อ มีแบบฟรีให้เลือก",
-        "gemini25FlashLiteNote": "ตัวเลือกที่คุ้มค่าที่สุด มีระดับการใช้งานฟรีให้เลือก"
+        "gemini25FlashLiteNote": "ตัวเลือกที่คุ้มค่าที่สุด มีระดับการใช้งานฟรีให้เลือก",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "แบบฟอร์มการตั้งค่าเซสชัน",

@@ -330,7 +330,8 @@ const ta = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "உள்ளீட்டு அளவைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
         "gemini25FlashNote": "மீடியா வகையைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
-        "gemini25FlashLiteNote": "மிகவும் செலவு குறைந்த விருப்பம். இலவச அடுக்கு கிடைக்கிறது."
+        "gemini25FlashLiteNote": "மிகவும் செலவு குறைந்த விருப்பம். இலவச அடுக்கு கிடைக்கிறது.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "அமர்வு அமைவு படிவம்",

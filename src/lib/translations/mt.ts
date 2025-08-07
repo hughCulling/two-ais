@@ -330,7 +330,8 @@ const mt = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Il-prezzijiet ivarjaw skont id-daqs tal-input. Livell bla ħlas disponibbli.",
         "gemini25FlashNote": "Il-prezzijiet ivarjaw skont it-tip ta' midja. Livell bla ħlas disponibbli.",
-        "gemini25FlashLiteNote": "L-aktar għażla kosteffettiva. Livell bla ħlas disponibbli."
+        "gemini25FlashLiteNote": "L-aktar għażla kosteffettiva. Livell bla ħlas disponibbli.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Formola ta' Twaqqif tas-Sessjoni",

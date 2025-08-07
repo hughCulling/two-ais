@@ -330,7 +330,8 @@ const sl = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Cena se razlikuje glede na velikost vnosa. Na voljo je brezplačna raven.",
         "gemini25FlashNote": "Cena se razlikuje glede na vrsto medija. Na voljo je brezplačna različica.",
-        "gemini25FlashLiteNote": "Najbolj stroškovno učinkovita možnost. Na voljo je brezplačna raven."
+        "gemini25FlashLiteNote": "Najbolj stroškovno učinkovita možnost. Na voljo je brezplačna raven.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Obrazec za nastavitev seje",

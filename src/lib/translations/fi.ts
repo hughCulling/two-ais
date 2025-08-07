@@ -330,7 +330,8 @@ const fi = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Hinta vaihtelee syötteen koon mukaan. Ilmainen taso saatavilla.",
         "gemini25FlashNote": "Hinnoittelu vaihtelee mediatyypin mukaan. Saatavilla ilmainen taso.",
-        "gemini25FlashLiteNote": "Kustannustehokkain vaihtoehto. Ilmainen taso saatavilla."
+        "gemini25FlashLiteNote": "Kustannustehokkain vaihtoehto. Ilmainen taso saatavilla.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Istunnon määrityslomake",

@@ -330,7 +330,8 @@ const ko = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "가격은 입력 크기에 따라 다릅니다. 무료 티어 이용 가능.",
         "gemini25FlashNote": "가격은 미디어 유형에 따라 다릅니다. 무료 이용이 가능합니다.",
-        "gemini25FlashLiteNote": "가장 비용 효율적인 옵션입니다. 무료 티어 이용 가능."
+        "gemini25FlashLiteNote": "가장 비용 효율적인 옵션입니다. 무료 티어 이용 가능.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "세션 설정 양식",

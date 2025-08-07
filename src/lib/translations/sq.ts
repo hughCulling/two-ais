@@ -330,7 +330,8 @@ const sq = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Çmimi ndryshon në varësi të madhësisë së inputit. Ka nivel falas në dispozicion.",
         "gemini25FlashNote": "Çmimi ndryshon në varësi të llojit të medias. Ka një nivel falas në dispozicion.",
-        "gemini25FlashLiteNote": "Opsioni më ekonomik. Kati falas në dispozicion."
+        "gemini25FlashLiteNote": "Opsioni më ekonomik. Kati falas në dispozicion.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Formulari i Konfigurimit të Sesionit",

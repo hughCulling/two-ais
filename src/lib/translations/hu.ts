@@ -330,7 +330,8 @@ const hu = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Az ár a bemeneti mérettől függ. Ingyenes szint elérhető.",
         "gemini25FlashNote": "Az árak médiatípusonként változnak. Ingyenes csomag is elérhető.",
-        "gemini25FlashLiteNote": "A legköltséghatékonyabb megoldás. Ingyenes szint elérhető."
+        "gemini25FlashLiteNote": "A legköltséghatékonyabb megoldás. Ingyenes szint elérhető.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Munkamenet-beállítási űrlap",

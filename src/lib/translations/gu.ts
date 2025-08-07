@@ -330,7 +330,8 @@ const gu = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "ઇનપુટ કદ પ્રમાણે કિંમત બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
         "gemini25FlashNote": "કિંમત મીડિયા પ્રકાર પ્રમાણે બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
-        "gemini25FlashLiteNote": "સૌથી વધુ ખર્ચ-અસરકારક વિકલ્પ. મફત ટાયર ઉપલબ્ધ."
+        "gemini25FlashLiteNote": "સૌથી વધુ ખર્ચ-અસરકારક વિકલ્પ. મફત ટાયર ઉપલબ્ધ.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "સત્ર સેટઅપ ફોર્મ",

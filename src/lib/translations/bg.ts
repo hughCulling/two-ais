@@ -330,7 +330,8 @@ const bg = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Ценообразуването варира в зависимост от размера на входните данни. Предлага се безплатно ниво.",
         "gemini25FlashNote": "Цените варират в зависимост от вида на медийното съдържание. Предлага се безплатен пакет.",
-        "gemini25FlashLiteNote": "Най-рентабилният вариант. Предлага се безплатно ниво."
+        "gemini25FlashLiteNote": "Най-рентабилният вариант. Предлага се безплатно ниво.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Формуляр за настройка на сесията",

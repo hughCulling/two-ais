@@ -330,7 +330,8 @@ const tr = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Fiyatlandırma giriş boyutuna göre değişir. Ücretsiz katman mevcuttur.",
         "gemini25FlashNote": "Fiyatlandırma medya türüne göre değişir. Ücretsiz katman mevcuttur.",
-        "gemini25FlashLiteNote": "En uygun maliyetli seçenek. Ücretsiz katman mevcuttur."
+        "gemini25FlashLiteNote": "En uygun maliyetli seçenek. Ücretsiz katman mevcuttur.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Oturum Kurulum Formu",

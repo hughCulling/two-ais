@@ -330,7 +330,8 @@ const lt = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Kaina priklauso nuo įvesties dydžio. Yra nemokamas lygis.",
         "gemini25FlashNote": "Kainos skiriasi priklausomai nuo medijos tipo. Yra nemokamas paketas.",
-        "gemini25FlashLiteNote": "Ekonomiškiausias variantas. Yra nemokamas lygis."
+        "gemini25FlashLiteNote": "Ekonomiškiausias variantas. Yra nemokamas lygis.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Sesijos nustatymo forma",

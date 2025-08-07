@@ -330,7 +330,8 @@ const kk = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Баға енгізу көлеміне қарай өзгереді. Тегін деңгей қол жетімді.",
         "gemini25FlashNote": "Баға медиа түріне байланысты өзгереді. Тегін деңгей қол жетімді.",
-        "gemini25FlashLiteNote": "Ең үнемді нұсқа. Тегін деңгей қол жетімді."
+        "gemini25FlashLiteNote": "Ең үнемді нұсқа. Тегін деңгей қол жетімді.",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Сеансты орнату пішімі",

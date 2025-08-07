@@ -330,7 +330,8 @@ const hy = {
         "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
         "gemini25ProNote": "Գինը տարբերվում է մուտքագրման չափից կախված։ Հասանելի է անվճար մակարդակ։",
         "gemini25FlashNote": "Գները տարբերվում են՝ կախված մեդիայի տեսակից։ Հասանելի է անվճար տարբերակ։",
-        "gemini25FlashLiteNote": "Առավել մատչելի տարբերակ։ Հասանելի է անվճար տարբերակ։"
+        "gemini25FlashLiteNote": "Առավել մատչելի տարբերակ։ Հասանելի է անվճար տարբերակ։",
+        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
     },
     "sessionSetupForm": {
         "title": "Սեսիայի կարգավորման ձև",
