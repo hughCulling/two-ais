@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
-import type { TranslationKeys } from '@/lib/translations';
 import { Button } from "@/components/ui/button";
 import {
     Select,
