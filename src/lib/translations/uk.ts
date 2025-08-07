@@ -326,7 +326,11 @@ const uk = {
                 "chirpHD": "Не вдалося перевірити",
                 "chirp3HD": "{price} на 1 мільйон символів"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Ціна залежить від розміру вхідних даних. Доступний безкоштовний рівень.",
+        "gemini25FlashNote": "Ціни залежать від типу медіа. Доступний безкоштовний рівень.",
+        "gemini25FlashLiteNote": "Найекономічніший варіант. Доступний безкоштовний рівень."
     },
     "sessionSetupForm": {
         "title": "Форма налаштування сеансу",

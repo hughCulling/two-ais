@@ -326,7 +326,11 @@ const mk = {
                 "chirpHD": "Не можеше да се потврди",
                 "chirp3HD": "{price} на 1 милион знаци"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Цените варираат во зависност од големината на влезот. Достапно е бесплатно ниво.",
+        "gemini25FlashNote": "Цените варираат во зависност од типот на медиум. Достапно е бесплатно ниво.",
+        "gemini25FlashLiteNote": "Најисплатлива опција. Достапно е бесплатно ниво."
     },
     "sessionSetupForm": {
         "title": "Формулар за поставување сесија",

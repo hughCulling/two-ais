@@ -326,7 +326,11 @@ const gu = {
                 "chirpHD": "ચકાસી શકાયું નથી",
                 "chirp3HD": "{price} પ્રતિ ૧૦ લાખ અક્ષરો"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ઇનપુટ કદ પ્રમાણે કિંમત બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
+        "gemini25FlashNote": "કિંમત મીડિયા પ્રકાર પ્રમાણે બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
+        "gemini25FlashLiteNote": "સૌથી વધુ ખર્ચ-અસરકારક વિકલ્પ. મફત ટાયર ઉપલબ્ધ."
     },
     "sessionSetupForm": {
         "title": "સત્ર સેટઅપ ફોર્મ",

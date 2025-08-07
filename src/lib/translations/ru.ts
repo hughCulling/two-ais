@@ -326,7 +326,11 @@ const ru = {
                 "chirpHD": "Не удалось проверить",
                 "chirp3HD": "{price} на 1 миллион символов"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Цена зависит от размера входных данных. Доступен бесплатный тариф.",
+        "gemini25FlashNote": "Цена зависит от типа носителя. Доступен бесплатный тариф.",
+        "gemini25FlashLiteNote": "Самый экономичный вариант. Доступен бесплатный тариф."
     },
     "sessionSetupForm": {
         "title": "Форма настройки сеанса",

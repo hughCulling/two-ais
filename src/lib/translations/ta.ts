@@ -326,7 +326,11 @@ const ta = {
                 "chirpHD": "சரிபார்க்க முடியவில்லை",
                 "chirp3HD": "{price} 1 மில்லியன் எழுத்துகளுக்கு"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "உள்ளீட்டு அளவைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
+        "gemini25FlashNote": "மீடியா வகையைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
+        "gemini25FlashLiteNote": "மிகவும் செலவு குறைந்த விருப்பம். இலவச அடுக்கு கிடைக்கிறது."
     },
     "sessionSetupForm": {
         "title": "அமர்வு அமைவு படிவம்",

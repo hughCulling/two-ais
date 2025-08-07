@@ -326,7 +326,11 @@ const et = {
                 "chirpHD": "Ei õnnestunud kinnitada",
                 "chirp3HD": "{price} miljoni tähemärgi kohta"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Hind oleneb sisendi suurusest. Saadaval on tasuta aste.",
+        "gemini25FlashNote": "Hind oleneb meediatüübist. Saadaval on tasuta aste.",
+        "gemini25FlashLiteNote": "Kõige kuluefektiivsem variant. Saadaval on tasuta aste."
     },
     "sessionSetupForm": {
         "title": "Seansi seadistamise vorm",

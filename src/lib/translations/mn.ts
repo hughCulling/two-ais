@@ -326,7 +326,11 @@ const mn = {
                 "chirpHD": "Баталгаажуулж чадсангүй",
                 "chirp3HD": "{price} 1 сая тэмдэгт тутамд"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Үнэ нь оролтын хэмжээнээс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
+        "gemini25FlashNote": "Үнэ нь хэвлэл мэдээллийн төрлөөс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
+        "gemini25FlashLiteNote": "Хамгийн хэмнэлттэй сонголт. Үнэгүй шатлал авах боломжтой."
     },
     "sessionSetupForm": {
         "title": "Сеанс тохируулах маягт",

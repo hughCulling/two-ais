@@ -326,7 +326,11 @@ const am = {
                 "chirpHD": "ማረጋገጥ አልተቻለም",
                 "chirp3HD": "{price} በ 1 ሚሊዮን ቁምፊዎች"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "የዋጋ አሰጣጥ እንደ ግቤት መጠን ይለያያል። ነፃ ደረጃ ይገኛል።",
+        "gemini25FlashNote": "የዋጋ አሰጣጥ እንደ ሚዲያ አይነት ይለያያል። ነፃ ደረጃ ይገኛል።",
+        "gemini25FlashLiteNote": "በጣም ወጪ ቆጣቢ አማራጭ. ነፃ ደረጃ ይገኛል።"
     },
     "sessionSetupForm": {
         "title": "የክፍለ ጊዜ ማዋቀር ቅጽ",

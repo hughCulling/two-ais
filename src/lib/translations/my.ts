@@ -326,7 +326,11 @@ const my = {
                 "chirpHD": "အတည်မပြုနိုင်ပါ။",
                 "chirp3HD": "{price} စာလုံးရေ ၁ သန်းလျှင်"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ထည့်သွင်းအရွယ်အစားအလိုက် ဈေးနှုန်းကွာခြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
+        "gemini25FlashNote": "စျေးနှုန်းသည် မီဒီယာအမျိုးအစားအလိုက် ကွဲပြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
+        "gemini25FlashLiteNote": "ကုန်ကျစရိတ်အသက်သာဆုံး ရွေးချယ်မှု။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။"
     },
     "sessionSetupForm": {
         "title": "Session Setup Form",

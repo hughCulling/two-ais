@@ -326,7 +326,11 @@ const kk = {
                 "chirpHD": "Растау мүмкін болмады",
                 "chirp3HD": "{price} 1 миллион таңбаға"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Баға енгізу көлеміне қарай өзгереді. Тегін деңгей қол жетімді.",
+        "gemini25FlashNote": "Баға медиа түріне байланысты өзгереді. Тегін деңгей қол жетімді.",
+        "gemini25FlashLiteNote": "Ең үнемді нұсқа. Тегін деңгей қол жетімді."
     },
     "sessionSetupForm": {
         "title": "Сеансты орнату пішімі",

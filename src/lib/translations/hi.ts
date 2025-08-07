@@ -326,7 +326,11 @@ const hi = {
                 "chirpHD": "सत्यापित नहीं किया जा सका",
                 "chirp3HD": "{price} प्रति 1 मिलियन अक्षर"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "मूल्य निर्धारण इनपुट आकार के अनुसार भिन्न होता है। निःशुल्क स्तर उपलब्ध है।",
+        "gemini25FlashNote": "मूल्य निर्धारण मीडिया प्रकार के अनुसार भिन्न होता है। निःशुल्क स्तर उपलब्ध है।",
+        "gemini25FlashLiteNote": "सबसे किफ़ायती विकल्प। निःशुल्क टियर उपलब्ध।"
     },
     "sessionSetupForm": {
         "title": "सत्र सेटअप फ़ॉर्म",

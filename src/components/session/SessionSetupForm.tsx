@@ -17,8 +17,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
 import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
@@ -29,7 +31,6 @@ import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslation } from '@/hooks/useTranslation';
 import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Define TTS Types ---
@@ -264,6 +265,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                                     <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
                                                                     {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">({t?.page_BadgePreview || 'Preview'})</span>}
                                                                     {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
+                                                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-1" />}
                                                                 </span>
                                                                 <span className="flex items-center space-x-2 min-w-0 max-w-[14rem]">
                                                                     {llm.pricing.note ? (

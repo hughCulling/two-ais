@@ -326,7 +326,11 @@ const lt = {
                 "chirpHD": "Nepavyko patvirtinti",
                 "chirp3HD": "{price} už 1 milijoną simbolių"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Kaina priklauso nuo įvesties dydžio. Yra nemokamas lygis.",
+        "gemini25FlashNote": "Kainos skiriasi priklausomai nuo medijos tipo. Yra nemokamas paketas.",
+        "gemini25FlashLiteNote": "Ekonomiškiausias variantas. Yra nemokamas lygis."
     },
     "sessionSetupForm": {
         "title": "Sesijos nustatymo forma",

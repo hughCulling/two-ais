@@ -326,7 +326,11 @@ const sw = {
                 "chirpHD": "Haikuweza kuthibitisha",
                 "chirp3HD": "{price} kwa kila herufi Milioni 1"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Bei inatofautiana kwa ukubwa wa pembejeo. Kiwango cha bure kinapatikana.",
+        "gemini25FlashNote": "Bei inatofautiana kulingana na aina ya media. Kiwango cha bure kinapatikana.",
+        "gemini25FlashLiteNote": "Chaguo la gharama nafuu zaidi. Kiwango cha bure kinapatikana."
     },
     "sessionSetupForm": {
         "title": "Fomu ya Kuweka Kikao",

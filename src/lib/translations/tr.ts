@@ -326,7 +326,11 @@ const tr = {
                 "chirpHD": "Doğrulanamadı",
                 "chirp3HD": "{price} 1 Milyon karakter başına"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Fiyatlandırma giriş boyutuna göre değişir. Ücretsiz katman mevcuttur.",
+        "gemini25FlashNote": "Fiyatlandırma medya türüne göre değişir. Ücretsiz katman mevcuttur.",
+        "gemini25FlashLiteNote": "En uygun maliyetli seçenek. Ücretsiz katman mevcuttur."
     },
     "sessionSetupForm": {
         "title": "Oturum Kurulum Formu",

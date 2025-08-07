@@ -326,7 +326,11 @@ const lv = {
                 "chirpHD": "Nevarēja verificēt",
                 "chirp3HD": "{price} uz 1 miljonu rakstzīmju"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Cena mainās atkarībā no ievades lieluma. Pieejams bezmaksas līmenis.",
+        "gemini25FlashNote": "Cenas atšķiras atkarībā no multivides veida. Pieejams bezmaksas līmenis.",
+        "gemini25FlashLiteNote": "Visizdevīgākais variants. Pieejams bezmaksas līmenis."
     },
     "sessionSetupForm": {
         "title": "Sesijas iestatīšanas veidlapa",

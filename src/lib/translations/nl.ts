@@ -326,7 +326,11 @@ const nl = {
                 "chirpHD": "Kon niet verifiëren",
                 "chirp3HD": "{price} per 1 miljoen tekens"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "Prijzen variëren afhankelijk van de invoergrootte. Gratis versie beschikbaar.",
+        "gemini25FlashNote": "Prijzen variëren per mediatype. Gratis abonnement beschikbaar.",
+        "gemini25FlashLiteNote": "Meest kosteneffectieve optie. Gratis versie beschikbaar."
     },
     "sessionSetupForm": {
         "title": "Sessie-instellingsformulier",

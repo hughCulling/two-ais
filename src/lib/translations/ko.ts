@@ -326,7 +326,11 @@ const ko = {
                 "chirpHD": "확인할 수 없습니다",
                 "chirp3HD": "{price} 100만 자당"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "가격은 입력 크기에 따라 다릅니다. 무료 티어 이용 가능.",
+        "gemini25FlashNote": "가격은 미디어 유형에 따라 다릅니다. 무료 이용이 가능합니다.",
+        "gemini25FlashLiteNote": "가장 비용 효율적인 옵션입니다. 무료 티어 이용 가능."
     },
     "sessionSetupForm": {
         "title": "세션 설정 양식",

@@ -326,7 +326,11 @@ const pa = {
                 "chirpHD": "ਪੁਸ਼ਟੀ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ",
                 "chirp3HD": "{price} ਪ੍ਰਤੀ 1 ਮਿਲੀਅਨ ਅੱਖਰਾਂ ਲਈ"
             }
-        }
+        },
+        "geminiFreeTierNote": "Free tier available for testing with rate limits. Requires a Google AI account without billing enabled.",
+        "gemini25ProNote": "ਕੀਮਤ ਇਨਪੁਟ ਆਕਾਰ ਅਨੁਸਾਰ ਬਦਲਦੀ ਹੈ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।",
+        "gemini25FlashNote": "ਕੀਮਤ ਮੀਡੀਆ ਕਿਸਮ ਅਨੁਸਾਰ ਵੱਖ-ਵੱਖ ਹੁੰਦੀ ਹੈ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।",
+        "gemini25FlashLiteNote": "ਸਭ ਤੋਂ ਵੱਧ ਲਾਗਤ-ਪ੍ਰਭਾਵਸ਼ਾਲੀ ਵਿਕਲਪ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।"
     },
     "sessionSetupForm": {
         "title": "ਸੈਸ਼ਨ ਸੈੱਟਅੱਪ ਫਾਰਮ",
