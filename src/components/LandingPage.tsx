@@ -592,7 +592,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                               <table className="min-w-full text-xs border-collapse">
                                 <thead>
                                   <tr>
-                                    <th className="px-2 py-1 border-b text-left">{t.imageModel_Quality}</th>
+                                    {model.qualities.some(q => q.quality) && (
+                                      <th className="px-2 py-1 border-b text-left">{t.imageModel_Quality}</th>
+                                    )}
                                     <th className="px-2 py-1 border-b text-left">{t.imageModel_Size}</th>
                                     <th className="px-2 py-1 border-b text-left">{t.imageModel_PriceUSD}</th>
                                   </tr>
@@ -600,11 +602,15 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 <tbody>
                                   {model.qualities.map((q) => (
                                     q.sizes.map((s) => (
-                                      <tr key={q.quality + s.size}>
-                                        <td className="px-2 py-1">
-                                          {t?.imageQuality?.[q.quality as keyof typeof t.imageQuality] || 
-                                           q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}
-                                        </td>
+                                      <tr key={`${q.quality || 'standard'}-${s.size}`}>
+                                        {model.qualities.some(q => q.quality) && (
+                                          <td className="px-2 py-1">
+                                            {q.quality && (
+                                              t?.imageQuality?.[q.quality as keyof typeof t.imageQuality] || 
+                                              q.quality.charAt(0).toUpperCase() + q.quality.slice(1)
+                                            )}
+                                          </td>
+                                        )}
                                         <td className="px-2 py-1">{s.size}</td>
                                         <td className="px-2 py-1">${s.price.toFixed(3)}</td>
                                       </tr>
