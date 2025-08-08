@@ -173,7 +173,7 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     description: 'Latest image generation model from xAI that can generate vivid, realistic images based on text prompts. Excels at generating images for marketing, social media, and entertainment. Generates standard quality images at 1024x1024 resolution.',
     qualities: [
       {
-        quality: 'standard',
+        // quality: 'standard',
         sizes: [
           { size: '1024x1024', price: 0.07 }
         ],
