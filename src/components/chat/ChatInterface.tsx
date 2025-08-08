@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
-import { httpsCallable } from 'firebase/functions';
+// import { httpsCallable } from 'firebase/functions';
 import {
     collection,
     doc,
@@ -103,14 +103,14 @@ try {
 }
 
 
-const requestNextTurn = async (convId: string) => {
-    try {
-        const requestNextTurnFunction = httpsCallable(clientFunctions, 'requestNextTurn');
-        await requestNextTurnFunction({ conversationId: convId });
-    } catch (error) {
-        logger.error('Error calling requestNextTurn:', error);
-    }
-};
+// const requestNextTurn = async (convId: string) => {
+//     try {
+//         const requestNextTurnFunction = httpsCallable(clientFunctions, 'requestNextTurn');
+//         await requestNextTurnFunction({ conversationId: convId });
+//     } catch (error) {
+//         logger.error('Error calling requestNextTurn:', error);
+//     }
+// };
 
 export function ChatInterface({
     conversationId,
@@ -130,7 +130,7 @@ export function ChatInterface({
     const [hasUserInteracted, setHasUserInteracted] = useState(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [isAudioPaused, setIsAudioPaused] = useState(false);
-    const [isBrowserTTSActive, setIsBrowserTTSActive] = useState(false);
+    const [, setIsBrowserTTSActive] = useState(false);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
     const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
