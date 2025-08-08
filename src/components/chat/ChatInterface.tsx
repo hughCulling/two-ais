@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
-// import { httpsCallable } from 'firebase/functions'; // Import httpsCallable
+import { httpsCallable } from 'firebase/functions';
 import {
     collection,
     doc,
@@ -27,6 +27,7 @@ import {
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
 import { useTranslation } from '@/hooks/useTranslation';
+import { getVoiceById } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -102,6 +103,15 @@ try {
 }
 
 
+const requestNextTurn = async (convId: string) => {
+    try {
+        const requestNextTurnFunction = httpsCallable(clientFunctions, 'requestNextTurn');
+        await requestNextTurnFunction({ conversationId: convId });
+    } catch (error) {
+        logger.error('Error calling requestNextTurn:', error);
+    }
+};
+
 export function ChatInterface({
     conversationId,
     onConversationStopped
@@ -116,81 +126,82 @@ export function ChatInterface({
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
     const [ttsError, setTtsError] = useState<string | null>(null);
-
-    // --- Audio Playback State ---
-    const audioPlayerRef = useRef<HTMLAudioElement>(null);
+    const [conversationData, setConversationData] = useState<ConversationData | null>(null);
+    const [hasUserInteracted, setHasUserInteracted] = useState(false);
+    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+    const [isAudioPaused, setIsAudioPaused] = useState(false);
+    const [isBrowserTTSActive, setIsBrowserTTSActive] = useState(false);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
-    const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-    const [isAudioPaused, setIsAudioPaused] = useState<boolean>(false);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
-    const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false);
-    
-    // --- Audio Control Handlers ---
-    const handlePauseAudio = useCallback(() => {
-        if (audioPlayerRef.current && isAudioPlaying) {
-            audioPlayerRef.current.pause();
-            setIsAudioPlaying(false);
-            setIsAudioPaused(true);
-        }
-    }, [isAudioPlaying]);
+    const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
 
-    // --- Refactored: Audio End Handler (no param, uses state) ---
+    const audioPlayerRef = useRef<HTMLAudioElement>(null);
+    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const { t } = useTranslation();
+    const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
+
+    // --- Audio Control Handlers ---
     const handleAudioEnd = useCallback(() => {
         if (!currentlyPlayingMsgId) return;
-        logger.info(`Audio ended or failed for message ${currentlyPlayingMsgId}.`);
-        setIsAudioPlaying(false);
-        setPlayedMessageIds(prev => {
-            const newSet = new Set(prev).add(currentlyPlayingMsgId);
-            logger.info(`[AUDIO END/ERROR] Marking message as played: ${currentlyPlayingMsgId}. playedMessageIds now:`, Array.from(newSet));
-            return newSet;
-        });
-        setCurrentlyPlayingMsgId(null);
 
-        // --- NEW: Update Firestore with last played agent message ID ---
-        const playedMsg = messages.find(m => m.id === currentlyPlayingMsgId);
+        if (utteranceRef.current) {
+            utteranceRef.current.onend = null;
+            utteranceRef.current = null;
+        }
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+
+        const playedMsgId = currentlyPlayingMsgId;
+
+        setIsAudioPlaying(false);
+        setIsAudioPaused(false);
+        setCurrentlyPlayingMsgId(null);
+        setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
+
+        const playedMsg = messages.find(m => m.id === playedMsgId);
         if (playedMsg && (playedMsg.role === 'agentA' || playedMsg.role === 'agentB')) {
             try {
                 const conversationRef = doc(db, "conversations", conversationId);
                 updateDoc(conversationRef, {
-                    lastPlayedAgentMessageId: currentlyPlayingMsgId,
+                    lastPlayedAgentMessageId: playedMsgId,
                     lastActivity: serverTimestamp(),
                 });
+                logger.info(`Updated lastPlayedAgentMessageId to ${playedMsgId}`);
             } catch (err) {
                 logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
             }
         }
     }, [currentlyPlayingMsgId, conversationId, messages]);
 
+    const handlePauseAudio = useCallback(() => {
+        if (isAudioPlaying) {
+            if (utteranceRef.current) {
+                window.speechSynthesis.pause();
+                setIsAudioPaused(true);
+            } else if (audioPlayerRef.current) {
+                audioPlayerRef.current.pause();
+                setIsAudioPaused(true);
+            }
+        }
+    }, [isAudioPlaying]);
+
     const handleResumeAudio = useCallback(() => {
-        if (audioPlayerRef.current && isAudioPaused) {
-            audioPlayerRef.current.play()
-                .then(() => {
-                    setIsAudioPlaying(true);
-                    setIsAudioPaused(false);
-                })
-                .catch(err => {
-                    console.error('Error resuming audio:', err);
-                    setIsAudioPlaying(false);
-                    setIsAudioPaused(false);
-                    handleAudioEnd();
-                });
+        if (!isAudioPaused) return;
+
+        if (utteranceRef.current) {
+            window.speechSynthesis.resume();
+        } else if (audioPlayerRef.current) {
+            audioPlayerRef.current.play().catch(err => {
+                logger.error("Audio resume failed:", err);
+                handleAudioEnd();
+            });
         }
-    }, [isAudioPaused, handleAudioEnd]);
-
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    // Use optimized scroll hook
-    const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
-
-    const { t } = useTranslation();
-
-    // --- Handler: User Interaction Detection ---
-    const handleUserInteraction = useCallback(() => {
-        if (!hasUserInteracted) {
-            logger.info("User interaction detected - enabling audio playback");
-            setHasUserInteracted(true);
-        }
-    }, [hasUserInteracted]);
+        setIsAudioPlaying(true);
+        setIsAudioPaused(false);
+        }, [isAudioPaused, handleAudioEnd]);
 
     // --- Effect 1: Listen for Messages ---
     useEffect(() => {
@@ -278,104 +289,71 @@ export function ChatInterface({
         };
     }, [conversationId]); // Only depends on conversationId
 
-
-    // --- Effect 2: Listen for Conversation Status Changes ---
+    // --- Effect 2: Listen for Conversation Data Changes ---
     useEffect(() => {
-        logger.debug(`ChatInterface: Status listener effect running. conversationId prop: ${conversationId}`);
+        logger.debug(`ChatInterface: Conversation data listener effect running. conversationId prop: ${conversationId}`);
         if (!conversationId) {
-             logger.warn("ChatInterface: Status listener effect skipped - no conversationId prop.");
+             logger.warn("ChatInterface: Conversation data listener effect skipped - no conversationId prop.");
             return;
         }
 
-        logger.info(`ChatInterface: Setting up status listener for conversation: ${conversationId}`);
+        logger.info(`ChatInterface: Setting up conversation data listener for conversation: ${conversationId}`);
         const conversationDocRef = doc(db, "conversations", conversationId);
 
-        const unsubscribeStatus = onSnapshot(conversationDocRef,
+                const unsubscribe = onSnapshot(conversationDocRef,
             (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data() as ConversationData;
-                    logger.debug(`ChatInterface: Status snapshot received for ${conversationId}. Status: ${data.status}, Waiting: ${data.waitingForTTSEndSignal}`);
-                    const newStatus = data.status;
-                    const newWaitingState = data.waitingForTTSEndSignal ?? false;
+                    setConversationData(data);
+                    setConversationStatus(data.status);
+                    setIsWaitingForSignal(data.waitingForTTSEndSignal ?? false);
 
-                    setConversationStatus(newStatus);
-                    setIsWaitingForSignal(newWaitingState); // Update local waiting state from Firestore
-
-                    if (newStatus === "error") {
-                        const fullErrorContext = data.errorContext || "An unknown error occurred in the conversation.";
-                        const errorPrefix = "Conversation Error: ";
-                        const technicalSeparator = ". Error: ";
-                        let userFriendlyError = fullErrorContext;
-                        let techDetails: string | null = null;
-                        if (fullErrorContext.startsWith(errorPrefix)) userFriendlyError = fullErrorContext.substring(errorPrefix.length);
-                        const techIndex = userFriendlyError.indexOf(technicalSeparator);
-                        if (techIndex !== -1) {
-                            techDetails = userFriendlyError.substring(techIndex + technicalSeparator.length);
-                            userFriendlyError = userFriendlyError.substring(0, techIndex + 1);
-                        } else techDetails = null;
-                        setError(errorPrefix + userFriendlyError);
-                        setTechnicalErrorDetails(techDetails);
-                        setShowErrorDetails(false);
+                    if (data.status === 'stopped' || data.status === 'error') {
                         setIsStopped(true);
-                        logger.warn(`Conversation ${conversationId} entered error state: ${userFriendlyError}`);
-                    } else if (newStatus === "stopped") {
-                        setIsStopped(true);
-                        if (error && conversationStatus !== 'error') {
-                             setError(null); setTechnicalErrorDetails(null);
-                        }
-                        logger.info(`Conversation ${conversationId} status changed to 'stopped'.`);
-                        if (audioPlayerRef.current) audioPlayerRef.current.pause();
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                    } else if (newStatus === "running") {
-                         if (error || isStopped) {
-                             setError(null); setTechnicalErrorDetails(null); setIsStopped(false);
-                         }
-                         logger.info(`Conversation ${conversationId} status changed to 'running'.`);
-                    }
-                    if (data) {
-                        // setConversationData(data); // Removed as per edit hint
-                        // Check for TTS-related errors in errorContext
-                        if (data.errorContext &&
-                            (data.errorContext.toLowerCase().includes('tts') ||
-                             data.errorContext.toLowerCase().includes('quota'))) {
-                            setTtsError(data.errorContext);
+                        if (data.status === 'error') {
+                            setError("Conversation ended with an error.");
+                            setTechnicalErrorDetails(data.errorContext || 'No details provided.');
                         } else {
-                            setTtsError(null);
+                            onConversationStopped();
                         }
                     }
                 } else {
-                    logger.warn(`Conversation document ${conversationId} does not exist in status listener.`);
-                    setError("Conversation data not found. It might have been deleted.");
-                    setTechnicalErrorDetails(null);
-                    setIsStopped(true);
+                    logger.error(`Conversation document ${conversationId} not found.`);
+                    setError("Conversation not found.");
+                    setTechnicalErrorDetails(`ID: ${conversationId}`);
                 }
             },
             (err: FirestoreError) => {
-                logger.error(`Error listening to conversation status for ${conversationId}:`, err);
-                setError(`Failed to get conversation status: ${err.message}`);
+                logger.error(`Error listening to conversation ${conversationId}:`, err);
+                setError(`Failed to load conversation status: ${err.message}`);
                 setTechnicalErrorDetails(null);
-                setIsStopped(true);
             }
         );
-        return () => {
+
+                return () => {
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
-            unsubscribeStatus();
+            unsubscribe();
         };
     }, [conversationId, error, isStopped, conversationStatus]); // Keep dependencies
 
-
     // --- Effect 3: Auto-scroll ---
-    useEffect(() => {
+        useEffect(() => {
         if (conversationStatus === "running" && !isStopped) {
             scrollToBottom(messagesEndRef.current);
         }
     }, [messages, conversationStatus, isStopped, scrollToBottom]); // Keep dependencies
 
+    // --- Handler: User Interaction Detection ---
+    const handleUserInteraction = useCallback(() => {
+        if (!hasUserInteracted) {
+            logger.info("User interaction detected - enabling audio playback");
+            setHasUserInteracted(true);
+        }
+    }, [hasUserInteracted]);
 
-    // --- Effect 5: User Interaction Detection ---
+    // --- Effect 4: User Interaction Detection ---
     useEffect(() => {
-        const handleInteraction = () => handleUserInteraction();
+                const handleInteraction = () => handleUserInteraction();
         
         // Listen for various user interaction events
         document.addEventListener('click', handleInteraction, { once: true });
@@ -388,7 +366,6 @@ export function ChatInterface({
             document.removeEventListener('touchstart', handleInteraction);
         };
     }, [handleUserInteraction]);
-
 
     // --- Handler 4: Stop Conversation Button ---
     const handleStopConversation = useCallback(async () => {
@@ -425,7 +402,6 @@ export function ChatInterface({
         }
     }, [conversationId, isStopping, isStopped, onConversationStopped]); // Keep dependencies
 
-
     // --- RTDB Streaming Message Listener ---
     useEffect(() => {
         if (!conversationId) return;
@@ -456,7 +432,6 @@ export function ChatInterface({
             off(messagesRef, 'value', handleValue);
         };
     }, [conversationId]);
-
 
     // --- Merge streaming message with Firestore messages for display ---
     const mergedMessages = React.useMemo(() => {
@@ -495,25 +470,30 @@ export function ChatInterface({
 
     // --- Only show up to the latest message whose audio has been played (or has no audio) ---
     const visibleMessages = React.useMemo(() => {
-        if (!mergedMessages.length) return mergedMessages;
-        // Find the index of the first message with unplayed audio
-        let cutoffIdx = mergedMessages.length - 1;
-        for (let i = 0; i < mergedMessages.length; i++) {
-            const msg = mergedMessages[i];
-            if (msg.audioUrl && !playedMessageIds.has(msg.id)) {
-                // Only show up to and including this message
-                cutoffIdx = i;
-                break;
-            }
-        }
-        // If all audio messages have been played, show all
-        // If there is an unplayed audio message, do not show any messages after it (including streaming)
-        return mergedMessages.slice(0, cutoffIdx + 1);
-    }, [mergedMessages, playedMessageIds]);
+        if (!mergedMessages.length) return [];
+
+        let cutoffIdx = mergedMessages.length;
+
+        const firstUnplayedAudioIndex = mergedMessages.findIndex(msg =>
+            (msg.audioUrl || (conversationData?.ttsSettings?.[msg.role as 'agentA' | 'agentB']?.provider === 'browser' && (msg.role === 'agentA' || msg.role === 'agentB'))) &&
+            !playedMessageIds.has(msg.id)
+        );
+
+        if (isAudioPlaying && currentlyPlayingMsgId) {
+            // If audio is playing, show up to and including the currently playing message.
+            const currentlyPlayingIndex = mergedMessages.findIndex(msg => msg.id === currentlyPlayingMsgId);
+            cutoffIdx = currentlyPlayingIndex !== -1 ? currentlyPlayingIndex + 1 : mergedMessages.length;
+        } else if (firstUnplayedAudioIndex !== -1) {
+            // If not playing, show up to and including the first unplayed audio message, so it can be picked up for playback.
+            cutoffIdx = firstUnplayedAudioIndex + 1;
+        } 
+        // If all audio is played or no audio messages exist, cutoffIdx remains mergedMessages.length, showing all.
+
+        return mergedMessages.slice(0, cutoffIdx);
+    }, [mergedMessages, playedMessageIds, isAudioPlaying, currentlyPlayingMsgId, conversationData]);
 
     // --- Image Modal State ---
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
-    const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
 
     // --- Auto-update fullscreen image modal when new image arrives ---
     useEffect(() => {
@@ -530,40 +510,69 @@ export function ChatInterface({
         }
     }, [visibleMessages, fullScreenImageMsgId]);
 
-    // --- Consolidated Audio Playback Effect ---
+    // --- Effect 5: Audio Playback ---
     useEffect(() => {
-        if (!hasUserInteracted || isAudioPlaying || isAudioPaused) return;
-        // Find the first visible message with unplayed audio
-        const nextAudioMsg = visibleMessages.find(
-            (msg) => {
-                if (!msg.audioUrl || playedMessageIds.has(msg.id)) return false;
-                // If imageUrl is present, only play audio after image is loaded or errored
-                if (msg.imageUrl && imageLoadStatus[msg.id] !== 'loaded' && imageLoadStatus[msg.id] !== 'error') return false;
-                return true;
+        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled) return;
+
+        const nextMsg = visibleMessages.find(msg => {
+            if (playedMessageIds.has(msg.id)) return false;
+            if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
+            if (msg.imageUrl && imageLoadStatus[msg.id] !== 'loaded' && imageLoadStatus[msg.id] !== 'error') return false;
+            return true;
+        });
+
+        if (!nextMsg) return;
+
+        const agentRole = nextMsg.role as 'agentA' | 'agentB';
+        const ttsConfig = conversationData.ttsSettings?.[agentRole];
+
+        if (ttsConfig?.provider === 'browser') {
+                                    const voiceInfo = getVoiceById(ttsConfig.provider, ttsConfig.voice || '');
+            const voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceInfo?.providerVoiceId);
+            if (!voice) {
+                logger.warn(`Browser voice not found for ID: ${ttsConfig.voice}`);
+                handleAudioEnd(); // Skip playback if voice is missing
+                return;
             }
-        );
-        if (nextAudioMsg && audioPlayerRef.current) {
-            audioPlayerRef.current.src = nextAudioMsg.audioUrl!;
+
+            const utterance = new SpeechSynthesisUtterance(nextMsg.content);
+            utterance.voice = voice;
+            utterance.onstart = () => {
+                // This is the source of truth for playback starting
+                setCurrentlyPlayingMsgId(nextMsg.id);
+                setIsAudioPlaying(true);
+                setIsBrowserTTSActive(true);
+            };
+            utterance.onend = () => {
+                setIsBrowserTTSActive(false);
+                handleAudioEnd();
+            };
+            utterance.onerror = (event) => {
+                logger.error('Speech synthesis error:', event.error);
+                setTtsError(`Speech synthesis failed: ${event.error}`);
+                setIsBrowserTTSActive(false);
+                handleAudioEnd();
+            };
+
+            utteranceRef.current = utterance;
+            // We are only requesting speech, not guaranteeing it starts immediately.
+            // isAudioPlaying will be set in onstart.
+            speechSynthesis.speak(utterance);
+
+        } else if (nextMsg.audioUrl && audioPlayerRef.current) {
+            audioPlayerRef.current.src = nextMsg.audioUrl;
             audioPlayerRef.current.play()
                 .then(() => {
-                    setCurrentlyPlayingMsgId(nextAudioMsg.id);
+                    setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
                 })
-                .catch((err) => {
-                    if (err && err.name === "AbortError") {
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                        handleAudioEnd();
-                    } else {
-                        logger.error(`Error auto-playing audio for message ${nextAudioMsg.id}:`, err);
-                        setIsAudioPlaying(false);
-                        setCurrentlyPlayingMsgId(null);
-                        handleAudioEnd();
-                    }
+                .catch(err => {
+                    logger.error("Audio playback failed:", err);
+                    handleAudioEnd(); // Ensure state is cleaned up on error
                 });
         }
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPlaying, isAudioPaused, handleAudioEnd, imageLoadStatus]);
 
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, conversationData, handleAudioEnd, imageLoadStatus]);
 
     // --- Render Logic ---
 
@@ -865,22 +874,9 @@ export function ChatInterface({
                 ref={audioPlayerRef}
                 style={{ display: 'none' }}
                 aria-hidden="true"
-                onEnded={async () => {
-                  setIsAudioPaused(false);
-                  // Find the last played agent message
-                  const lastAgentMsg = [...messages].reverse().find(
-                    m => (m.role === 'agentA' || m.role === 'agentB') && m.audioUrl
-                  );
-                  if (lastAgentMsg && lastAgentMsg.id) {
-                    try {
-                      await updateDoc(doc(db, "conversations", conversationId), {
-                        lastPlayedAgentMessageId: lastAgentMsg.id
-                      });
-                    } catch (err) {
-                      logger.error('Failed to update lastPlayedAgentMessageId:', err);
-                    }
-                  }
-                  handleAudioEnd();
+                onEnded={() => {
+                    // This now only handles audio file endings. Speech synthesis endings are handled by utterance.onend
+                    handleAudioEnd();
                 }}
             />
         </div>

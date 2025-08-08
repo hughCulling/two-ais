@@ -1007,8 +1007,14 @@ async function _triggerAgentResponse(
         // --- END TTS LOGIC ---
 
         // --- Run TTS and image generation in parallel ---
+        const agentTtsSettings = agentToRespond === "agentA" ? conversationData.ttsSettings?.agentA : conversationData.ttsSettings?.agentB;
+
+        const ttsPromise = (agentTtsSettings?.provider === "browser")
+            ? Promise.resolve({ audioUrl: null, ttsWasSplit: false }) // Skip backend TTS for browser provider
+            : runTTS();
+
         const [ttsResult, imageResult] = await Promise.all([
-            runTTS(),
+            ttsPromise,
             runImageGen()
         ]);
         // --- END PARALLEL ---

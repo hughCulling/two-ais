@@ -79,6 +79,7 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 // --- TTS Voice Interface ---
 export interface TTSVoice {
     id: string;   // Provider-specific voice ID (e.g., for OpenAI: 'alloy'; for Google: 'en-US-Wavenet-A')
+    providerVoiceId?: string; // The actual voiceURI from the speech synthesis engine
     name: string; // User-friendly display name (e.g., "Alloy", "US WaveNet A (F) [WaveNet]")
     gender?: 'Male' | 'Female' | 'Neutral'; // Optional gender information
     languageCodes?: string[]; // Optional BCP-47 language codes supported (e.g., ['en-US'])
