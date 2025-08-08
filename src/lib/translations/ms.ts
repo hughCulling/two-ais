@@ -392,7 +392,9 @@ const ms = {
         "agentBTTS": "Ejen B TTS",
         "provider": "Pembekal",
         "model": "Model",
-        "voice": "Suara"
+        "voice": "Suara",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",

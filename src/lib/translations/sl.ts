@@ -392,7 +392,9 @@ const sl = {
         "agentBTTS": "Agent B TTS",
         "provider": "Ponudnik",
         "model": "Model",
-        "voice": "Glas"
+        "voice": "Glas",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kakovost",
     "imageModel_Size": "Velikost",

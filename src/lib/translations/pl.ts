@@ -392,7 +392,9 @@ const pl = {
         "agentBTTS": "Agent B TTS",
         "provider": "Dostawca",
         "model": "Model",
-        "voice": "Głos"
+        "voice": "Głos",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Jakość",
     "imageModel_Size": "Rozmiar",

@@ -413,6 +413,8 @@ const en = {
         conversationHistory: 'Conversation History',
         chatWith: 'Chat with {agentA} & {agentB}',
         conversationDescription: 'Started on {date} - Language: {language}',
+        imageGenerationEnabled: 'Image Generation',
+        imageGenerationSettings: 'Image Generation Settings',
         viewConversation: 'View Conversation',
         backToPreviousChats: 'Back to Previous Chats',
         resumeConversation: 'Resume Conversation',

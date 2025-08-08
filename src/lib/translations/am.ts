@@ -392,7 +392,9 @@ const am = {
         "agentBTTS": "ወኪል ቢ TTS",
         "provider": "አቅራቢ",
         "model": "ሞዴል",
-        "voice": "ድምፅ"
+        "voice": "ድምፅ",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",

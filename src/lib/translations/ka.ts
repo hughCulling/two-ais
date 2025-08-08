@@ -392,7 +392,9 @@ const ka = {
         "agentBTTS": "აგენტი B TTS",
         "provider": "პროვაიდერი",
         "model": "მოდელი",
-        "voice": "ხმა"
+        "voice": "ხმა",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",

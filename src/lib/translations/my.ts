@@ -392,7 +392,9 @@ const my = {
         "agentBTTS": "အေးဂျင့် B TTS",
         "provider": "ပံ့ပိုးပေးသူ",
         "model": "မော်ဒယ်",
-        "voice": "စကားသံ"
+        "voice": "စကားသံ",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",

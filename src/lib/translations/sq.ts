@@ -392,7 +392,9 @@ const sq = {
         "agentBTTS": "Agjenti B TTS",
         "provider": "Ofruesi",
         "model": "Model",
-        "voice": "Zëri"
+        "voice": "Zëri",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",

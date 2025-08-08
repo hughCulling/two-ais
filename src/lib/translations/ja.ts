@@ -392,7 +392,9 @@ const ja = {
         "agentBTTS": "エージェントB TTS",
         "provider": "プロバイダー",
         "model": "モデル",
-        "voice": "声"
+        "voice": "声",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",

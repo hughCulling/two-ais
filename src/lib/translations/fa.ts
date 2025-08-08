@@ -392,7 +392,9 @@ const fa = {
         "agentBTTS": "مامور ب TTS",
         "provider": "ارائه دهنده",
         "model": "مدل",
-        "voice": "صدا"
+        "voice": "صدا",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",

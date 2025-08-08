@@ -392,7 +392,9 @@ const gu = {
         "agentBTTS": "એજન્ટ બી TTS",
         "provider": "પ્રદાતા",
         "model": "મોડેલ",
-        "voice": "અવાજ"
+        "voice": "અવાજ",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ગુણવત્તા",
     "imageModel_Size": "કદ",

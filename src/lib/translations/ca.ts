@@ -392,7 +392,9 @@ const ca = {
         "agentBTTS": "Agent B TTS",
         "provider": "Proveïdor",
         "model": "Model",
-        "voice": "Veu"
+        "voice": "Veu",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",

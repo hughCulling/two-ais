@@ -392,7 +392,9 @@ const el = {
         "agentBTTS": "Πράκτορας Β TTS",
         "provider": "Προμηθευτής",
         "model": "Μοντέλο",
-        "voice": "Φωνή"
+        "voice": "Φωνή",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",

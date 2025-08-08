@@ -392,7 +392,9 @@ const hr = {
         "agentBTTS": "Agent B TTS",
         "provider": "Pružatelj usluga",
         "model": "Model",
-        "voice": "Glas"
+        "voice": "Glas",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kvaliteta",
     "imageModel_Size": "Veličina",

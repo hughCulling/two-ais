@@ -392,7 +392,9 @@ const ar = {
         "agentBTTS": "العميل ب TTS",
         "provider": "مزود",
         "model": "نموذج",
-        "voice": "صوت"
+        "voice": "صوت",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",

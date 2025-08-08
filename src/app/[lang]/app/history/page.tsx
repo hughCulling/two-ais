@@ -8,7 +8,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox } from 'lucide-react';
+import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox, Image as ImageIcon } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import { getLLMInfoById } from '@/lib/models';
@@ -22,12 +22,23 @@ function getLocale(languageCode: string) {
     return localeMap[languageCode] || enUS; // Fallback to English if locale not found
 }
 
+interface ImageGenSettings {
+    enabled: boolean;
+    provider: string;
+    model: string;
+    quality: string;
+    size: string;
+    promptLlm: string;
+    promptSystemMessage: string;
+}
+
 interface ConversationSummary {
     conversationId: string;
     createdAt: string; // ISO string
     agentA_llm: string;
     agentB_llm: string;
     language: string;
+    imageGenSettings?: ImageGenSettings;
 }
 
 // Helper to generate smart pagination with ellipses
@@ -190,11 +201,19 @@ export default function HistoryPage() {
                                                         .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
                                                     }
                                                 </CardTitle>
-                                                <CardDescription>
-                                                    {t.history.conversationDescription
-                                                        .replace('{date}', formattedDate)
-                                                        .replace('{language}', convo.language.toUpperCase())
-                                                    }
+                                                <CardDescription className="flex flex-col space-y-1">
+                                                    <span>
+                                                        {t.history.conversationDescription
+                                                            .replace('{date}', formattedDate)
+                                                            .replace('{language}', convo.language.toUpperCase())
+                                                        }
+                                                    </span>
+                                                    {convo.imageGenSettings?.enabled && (
+                                                        <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                            <ImageIcon className="h-3 w-3 mr-1" />
+                                                            {t.history.imageGenerationEnabled || 'Image generation enabled'}
+                                                        </span>
+                                                    )}
                                                 </CardDescription>
                                             </CardHeader>
                                         </Card>

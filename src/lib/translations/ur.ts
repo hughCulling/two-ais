@@ -392,7 +392,9 @@ const ur = {
         "agentBTTS": "ایجنٹ بی TTS",
         "provider": "فراہم کرنے والا",
         "model": "ماڈل",
-        "voice": "آواز"
+        "voice": "آواز",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",

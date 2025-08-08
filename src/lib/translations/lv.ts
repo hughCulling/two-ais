@@ -392,7 +392,9 @@ const lv = {
         "agentBTTS": "Aģents B TTS",
         "provider": "Pakalpojumu sniedzējs",
         "model": "Modelis",
-        "voice": "Balss"
+        "voice": "Balss",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",

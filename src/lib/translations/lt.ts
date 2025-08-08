@@ -392,7 +392,9 @@ const lt = {
         "agentBTTS": "Agentas B TTS",
         "provider": "Teikėjas",
         "model": "Modelis",
-        "voice": "Balsas"
+        "voice": "Balsas",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",

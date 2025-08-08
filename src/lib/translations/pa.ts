@@ -392,7 +392,9 @@ const pa = {
         "agentBTTS": "ਏਜੰਟ ਬੀ TTS",
         "provider": "ਪ੍ਰਦਾਤਾ",
         "model": "ਮਾਡਲ",
-        "voice": "ਆਵਾਜ਼"
+        "voice": "ਆਵਾਜ਼",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",

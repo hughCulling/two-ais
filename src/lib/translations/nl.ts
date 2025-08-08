@@ -392,7 +392,9 @@ const nl = {
         "agentBTTS": "Agent B TTS",
         "provider": "Aanbieder",
         "model": "Model",
-        "voice": "Stem"
+        "voice": "Stem",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",

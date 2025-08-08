@@ -392,7 +392,9 @@ const ml = {
         "agentBTTS": "ഏജന്റ് ബി TTS",
         "provider": "ദാതാവ്",
         "model": "മോഡൽ",
-        "voice": "ശബ്ദം"
+        "voice": "ശബ്ദം",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",

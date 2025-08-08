@@ -392,7 +392,9 @@ const et = {
         "agentBTTS": "Agent B TTS",
         "provider": "Pakkuja",
         "model": "Mudel",
-        "voice": "Hääl"
+        "voice": "Hääl",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",

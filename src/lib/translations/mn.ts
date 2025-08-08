@@ -392,7 +392,9 @@ const mn = {
         "agentBTTS": "Агент Б TTS",
         "provider": "Үйлчилгээ үзүүлэгч",
         "model": "Загвар",
-        "voice": "Дуу хоолой"
+        "voice": "Дуу хоолой",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",

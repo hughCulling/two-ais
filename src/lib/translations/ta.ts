@@ -392,7 +392,9 @@ const ta = {
         "agentBTTS": "முகவர் பி TTS",
         "provider": "வழங்குநர்",
         "model": "மாதிரி",
-        "voice": "குரல்"
+        "voice": "குரல்",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",

@@ -392,7 +392,9 @@ const te = {
         "agentBTTS": "ఏజెంట్ బి TTS",
         "provider": "ప్రొవైడర్",
         "model": "మోడల్",
-        "voice": "వాయిస్"
+        "voice": "వాయిస్",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",

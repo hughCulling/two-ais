@@ -7,15 +7,16 @@ import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Bot, Loader2, AlertTriangle, Languages, MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from '@/components/ui/separator';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Image from 'next/image';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -31,6 +32,11 @@ interface Message {
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
     content: string;
     timestamp: string; // ISO string
+    imageUrl?: string | null;
+    imageGenError?: string | null;
+    isStreaming?: boolean;
+    audioUrl?: string;
+    ttsWasSplit?: boolean;
 }
 
 interface TTSConfig {
@@ -38,10 +44,21 @@ interface TTSConfig {
     voice?: string | null;
     selectedTtsModelId?: string;
 }
+
 interface AgentTTSSettings {
     enabled: boolean;
     agentA: TTSConfig;
     agentB: TTSConfig;
+}
+
+interface ImageGenSettings {
+    enabled: boolean;
+    provider: string;
+    model: string;
+    quality: string;
+    size: string;
+    promptLlm: string;
+    promptSystemMessage: string;
 }
 
 interface ConversationDetails {
@@ -51,8 +68,9 @@ interface ConversationDetails {
     agentB_llm: string;
     language: string;
     ttsSettings?: AgentTTSSettings;
+    imageGenSettings?: ImageGenSettings;
     messages: Message[];
-    status: 'running' | 'completed' | 'failed'; // Added status for resume logic
+    status: 'running' | 'completed' | 'failed';
 }
 
 export default function ChatHistoryViewerPage() {
@@ -191,14 +209,18 @@ export default function ChatHistoryViewerPage() {
         agentALLMInfo?: { name?: string } | null;
         agentBLLMInfo?: { name?: string } | null;
     }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
+        const [fullScreenImageUrl, setFullScreenImageUrl] = useState<string | null>(null);
+        const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
+        
         const isAgentA = msg.role === 'agentA';
         const isAgentB = msg.role === 'agentB';
         const isUser = msg.role === 'user' || msg.role === 'human';
         const isSystem = msg.role === 'system';
-        // Use same colors/labels as ChatInterface
+        
         let bubbleClass = '';
         let label = '';
         let alignClass = '';
+        
         if (isAgentA) {
             bubbleClass = 'bg-muted text-foreground';
             label = agentALLMInfo?.name ? `Agent A (${agentALLMInfo.name})` : 'Agent A';
@@ -216,22 +238,102 @@ export default function ChatHistoryViewerPage() {
             label = 'System';
             alignClass = 'justify-center';
         }
+
+        // Handle full screen image close
+        useEffect(() => {
+            const handleEscape = (e: KeyboardEvent) => {
+                if (e.key === 'Escape') {
+                    setFullScreenImageUrl(null);
+                }
+            };
+            window.addEventListener('keydown', handleEscape);
+            return () => window.removeEventListener('keydown', handleEscape);
+        }, []);
+
         return (
             <div className={`flex ${alignClass}`}>
-                <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`}
-                    style={{ marginBottom: '0.5rem' }}>
+                <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`} style={{ marginBottom: '0.5rem' }}>
+                    {/* Role label */}
+                    {(isAgentA || isAgentB || isUser) && (
+                        <p className="text-xs font-bold mb-1">{label}</p>
+                    )}
+
+                    {/* Image display for agent messages */}
                     {(isAgentA || isAgentB) && (
-                        <p className="text-xs font-bold mb-1">{label}</p>
+                        <>
+                            {msg.imageUrl && !msg.imageGenError && (
+                                <div className="mb-2 flex flex-col items-center">
+                                    <Image
+                                        src={msg.imageUrl}
+                                        alt="Generated image for this turn"
+                                        className="rounded-md max-w-full max-h-[40vh] cursor-pointer border border-muted-foreground/20 shadow"
+                                        style={{ objectFit: 'contain' }}
+                                        onClick={() => setFullScreenImageUrl(msg.imageUrl || null)}
+                                        onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
+                                        onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
+                                        tabIndex={0}
+                                        width={800}
+                                        height={600}
+                                        unoptimized={msg.imageUrl?.includes('storage.googleapis.com') || msg.imageUrl?.includes('googleapis.com/storage')}
+                                        aria-label="Show image in full screen"
+                                    />
+                                    {imageLoadStatus[msg.id] === 'loading' && (
+                                        <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
+                                    )}
+                                    {imageLoadStatus[msg.id] === 'error' && (
+                                        <div className="text-xs text-destructive mt-1">Image failed to load.</div>
+                                    )}
+                                </div>
+                            )}
+                            {msg.imageGenError && (
+                                <div className="mb-2 text-xs text-destructive">
+                                    Image could not be generated: {msg.imageGenError}
+                                </div>
+                            )}
+                        </>
                     )}
-                    {isUser && (
-                        <p className="text-xs font-bold mb-1">{label}</p>
-                    )}
+
+                    {/* Message content */}
                     <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {msg.content}
-                      </ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {msg.content}
+                        </ReactMarkdown>
                     </div>
+
+                    {/* Streaming indicator */}
+                    {msg.isStreaming && (
+                        <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
+                    )}
                 </div>
+
+                {/* Full screen image modal */}
+                {fullScreenImageUrl && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+                        onClick={() => setFullScreenImageUrl(null)}
+                        tabIndex={0}
+                        aria-modal="true"
+                        role="dialog"
+                    >
+                        <Image
+                            src={fullScreenImageUrl}
+                            alt="Generated image for this turn (full screen)"
+                            className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                            style={{ objectFit: 'contain' }}
+                            width={1920}
+                            height={1080}
+                            unoptimized={fullScreenImageUrl.includes('storage.googleapis.com') || fullScreenImageUrl.includes('googleapis.com/storage')}
+                            onError={() => setFullScreenImageUrl(null)}
+                        />
+                        <button
+                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                            onClick={e => { e.stopPropagation(); setFullScreenImageUrl(null); }}
+                            aria-label="Close full screen image"
+                        >
+                            Close
+                        </button>
+                    </div>
+                )}
             </div>
         );
     };
@@ -320,33 +422,66 @@ export default function ChatHistoryViewerPage() {
                             <strong>{t.history.language}:</strong>
                             <span className="ml-2">{details.language.toUpperCase()}</span>
                         </div>
-                        {details.ttsSettings && (
-                            <>
-                                <Separator className="my-3" />
-                                <h4 className="font-semibold text-md mb-1">{t.history.ttsSettings}</h4>
-                                {details.ttsSettings.enabled ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                                        <div>
-                                            <p><strong>{t.history.agentATTS}:</strong></p>
-                                            <p>{t.history.provider}: {details.ttsSettings.agentA.provider}</p>
-                                            {details.ttsSettings.agentA.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentA.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentA.voice && <p>{t.history.voice}: {details.ttsSettings.agentA.voice}</p>}
+                        <div className="space-y-4">
+                        <Separator className="my-3" />
+
+                            {details.ttsSettings?.enabled && (
+                                <div className="mt-4">
+                                    <h3 className="text-sm font-medium mb-2">{t.history.ttsSettings}</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2 p-3 bg-muted/20 rounded-md">
+                                            <p className="font-medium">{t.history.agentATTS}:</p>
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentA.provider}</p>
+                                            {details.ttsSettings.agentA.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentA.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentA.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentA.voice}</p>}
                                         </div>
-                                        <div>
-                                            <p><strong>{t.history.agentBTTS}:</strong></p>
-                                            <p>{t.history.provider}: {details.ttsSettings.agentB.provider}</p>
-                                            {details.ttsSettings.agentB.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentB.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentB.voice && <p>{t.history.voice}: {details.ttsSettings.agentB.voice}</p>}
+                                        <div className="space-y-2 p-3 bg-muted/20 rounded-md">
+                                            <p className="font-medium">{t.history.agentBTTS}:</p>
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentB.provider}</p>
+                                            {details.ttsSettings.agentB.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentB.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentB.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentB.voice}</p>}
                                         </div>
                                     </div>
-                                ) : (
-                                    <p className="text-muted-foreground text-xs">TTS was not enabled for this session.</p>
-                                )}
-                            </>
-                        )}
+                                </div>
+                            )}
+                            {!details.ttsSettings?.enabled && details.ttsSettings && (
+                                <p className="text-muted-foreground text-xs">TTS was not enabled for this session.</p>
+                            )}
+                            {details.imageGenSettings?.enabled && (
+                                <div className="mt-4 pt-4 border-t">
+                                    <h3 className="text-sm font-medium mb-2 flex items-center">
+                                        {t.history.imageGenerationSettings}
+                                    </h3>
+                                    <div className="space-y-2">
+                                        <div>
+                                            <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.imageModel}</h4>
+                                            <p className="text-sm">
+                                                {details.imageGenSettings.provider} - {details.imageGenSettings.model}
+                                            </p>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.quality}</h4>
+                                                <p className="text-sm">{details.imageGenSettings.quality}</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.size}</h4>
+                                                <p className="text-sm">{details.imageGenSettings.size}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.promptLLM}</h4>
+                                            <p className="text-sm">
+                                                {getLLMInfoById(details.imageGenSettings.promptLlm)?.name || details.imageGenSettings.promptLlm}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
-
+                
                 <Card>
                     <CardHeader>
                         <CardTitle>{t.history.transcript}</CardTitle>
