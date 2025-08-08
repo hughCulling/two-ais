@@ -13,6 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause } from 'lucide-react';
 import { format, Locale } from 'date-fns';
+import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -209,7 +210,7 @@ export default function ChatHistoryViewerPage() {
         agentALLMInfo?: { name?: string } | null;
         agentBLLMInfo?: { name?: string } | null;
     }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
-        const [fullScreenImageUrl, setFullScreenImageUrl] = useState<string | null>(null);
+        const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         const [isPlaying, setIsPlaying] = useState(false);
         const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -274,11 +275,11 @@ export default function ChatHistoryViewerPage() {
             alignClass = 'justify-center';
         }
 
-        // Handle full screen image close
+        // Handle full screen image close with escape key
         useEffect(() => {
             const handleEscape = (e: KeyboardEvent) => {
                 if (e.key === 'Escape') {
-                    setFullScreenImageUrl(null);
+                    setFullScreenImageMsgId(null);
                 }
             };
             window.addEventListener('keydown', handleEscape);
@@ -298,26 +299,31 @@ export default function ChatHistoryViewerPage() {
                         <>
                             {msg.imageUrl && !msg.imageGenError && (
                                 <div className="mb-2 flex flex-col items-center">
-                                    <Image
-                                        src={msg.imageUrl}
-                                        alt="Generated image for this turn"
-                                        className="rounded-md max-w-full max-h-[40vh] cursor-pointer border border-muted-foreground/20 shadow"
-                                        style={{ objectFit: 'contain' }}
-                                        onClick={() => setFullScreenImageUrl(msg.imageUrl || null)}
-                                        onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
-                                        onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
-                                        tabIndex={0}
-                                        width={800}
-                                        height={600}
-                                        unoptimized={msg.imageUrl?.includes('storage.googleapis.com') || msg.imageUrl?.includes('googleapis.com/storage')}
-                                        aria-label="Show image in full screen"
-                                    />
-                                    {imageLoadStatus[msg.id] === 'loading' && (
-                                        <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
-                                    )}
-                                    {imageLoadStatus[msg.id] === 'error' && (
-                                        <div className="text-xs text-destructive mt-1">Image failed to load.</div>
-                                    )}
+                                    <div className="relative">
+                                        <Image
+                                            src={msg.imageUrl}
+                                            alt="Generated image for this turn"
+                                            className="rounded-md max-w-full max-h-[40vh] cursor-pointer border border-muted-foreground/20 shadow"
+                                            style={{ objectFit: 'contain' }}
+                                            onClick={() => setFullScreenImageMsgId(msg.id)}
+                                            onLoad={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'loaded' }))}
+                                            onError={() => setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }))}
+                                            tabIndex={0}
+                                            width={800}
+                                            height={600}
+                                            unoptimized={msg.imageUrl?.includes('storage.googleapis.com') || msg.imageUrl?.includes('googleapis.com/storage')}
+                                            aria-label="Show image in full screen"
+                                        />
+                                        {imageLoadStatus[msg.id] === 'loading' && (
+                                            <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
+                                        )}
+                                        {imageLoadStatus[msg.id] === 'error' && (
+                                            <div className="text-xs text-destructive mt-1">Image failed to load.</div>
+                                        )}
+                                        {!imageLoadStatus[msg.id] && (
+                                            <div className="text-xs text-muted-foreground mt-1">Loading image...</div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                             {msg.imageGenError && (
@@ -362,33 +368,45 @@ export default function ChatHistoryViewerPage() {
                 </div>
 
                 {/* Full screen image modal */}
-                {fullScreenImageUrl && (
-                    <div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-                        onClick={() => setFullScreenImageUrl(null)}
-                        tabIndex={0}
-                        aria-modal="true"
-                        role="dialog"
-                    >
-                        <Image
-                            src={fullScreenImageUrl}
-                            alt="Generated image for this turn (full screen)"
-                            className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
-                            style={{ objectFit: 'contain' }}
-                            width={1920}
-                            height={1080}
-                            unoptimized={fullScreenImageUrl.includes('storage.googleapis.com') || fullScreenImageUrl.includes('googleapis.com/storage')}
-                            onError={() => setFullScreenImageUrl(null)}
-                        />
-                        <button
-                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
-                            onClick={e => { e.stopPropagation(); setFullScreenImageUrl(null); }}
-                            aria-label="Close full screen image"
+                {fullScreenImageMsgId === msg.id && msg.imageUrl &&
+                    ReactDOM.createPortal(
+                        <div
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+                            onClick={() => setFullScreenImageMsgId(null)}
+                            tabIndex={0}
+                            aria-modal="true"
+                            role="dialog"
                         >
-                            Close
-                        </button>
-                    </div>
-                )}
+                            <div className="relative w-full h-full flex items-center justify-center">
+                                <Image
+                                    src={msg.imageUrl}
+                                    alt="Generated image for this turn (full screen)"
+                                    className="max-w-full max-h-full object-contain"
+                                    width={1920}
+                                    height={1080}
+                                    unoptimized={msg.imageUrl.includes('storage.googleapis.com') || msg.imageUrl.includes('googleapis.com/storage')}
+                                    onError={(e) => {
+                                        console.error('Fullscreen image load error:', e);
+                                        setFullScreenImageMsgId(null);
+                                        setImageLoadStatus(s => ({ ...s, [msg.id]: 'error' }));
+                                    }}
+                                    priority
+                                />
+                                <button
+                                    className="absolute top-4 right-4 bg-white/90 hover:bg-white text-black rounded-full p-2 shadow-lg transition-colors"
+                                    onClick={e => { e.stopPropagation(); setFullScreenImageMsgId(null); }}
+                                    aria-label="Close full screen image"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>,
+                        document.body
+                    )
+                }
             </div>
         );
     };
