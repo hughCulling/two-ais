@@ -138,29 +138,29 @@ export function ChatInterface({
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const currentlyPlayingMsgIdRef = useRef<string | null>(null);
+    currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
 
     const { t } = useTranslation();
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
     // --- Audio Control Handlers ---
     const handleAudioEnd = useCallback(() => {
-        if (!currentlyPlayingMsgId) return;
+        const playedMsgId = currentlyPlayingMsgIdRef.current;
+        if (!playedMsgId) return;
 
         if (utteranceRef.current) {
-            utteranceRef.current.onend = null;
+            utteranceRef.current.onend = null; // Clean up listener
             utteranceRef.current = null;
         }
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-        }
 
-        const playedMsgId = currentlyPlayingMsgId;
-
+        // Reset audio-related states
         setIsAudioPlaying(false);
         setIsAudioPaused(false);
         setCurrentlyPlayingMsgId(null);
         setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
 
+        // Notify backend that the message has been played
         const playedMsg = messages.find(m => m.id === playedMsgId);
         if (playedMsg && (playedMsg.role === 'agentA' || playedMsg.role === 'agentB')) {
             try {
@@ -174,7 +174,7 @@ export function ChatInterface({
                 logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
             }
         }
-    }, [currentlyPlayingMsgId, conversationId, messages]);
+    }, [conversationId, messages]);
 
     const handlePauseAudio = useCallback(() => {
         if (isAudioPlaying) {
