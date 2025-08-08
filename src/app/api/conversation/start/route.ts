@@ -352,17 +352,19 @@ export async function POST(request: NextRequest) {
             const newConversationRef = dbAdmin.collection("conversations").doc();
             const conversationId = newConversationRef.id;
 
+            // When TTS is disabled, store minimal TTS settings
             const finalAgentATts = {
-                provider: agentA_tts.provider,
-                voice: agentA_tts.voice,
-                selectedTtsModelId: agentA_tts.selectedTtsModelId,
-                ttsApiModelId: agentA_tts.ttsApiModelId,
+                provider: ttsEnabled ? agentA_tts.provider : 'none',
+                voice: ttsEnabled ? agentA_tts.voice : null,
+                ...(ttsEnabled && agentA_tts.selectedTtsModelId ? { selectedTtsModelId: agentA_tts.selectedTtsModelId } : {}),
+                ...(ttsEnabled && agentA_tts.ttsApiModelId ? { ttsApiModelId: agentA_tts.ttsApiModelId } : {})
             };
+            
             const finalAgentBTts = {
-                provider: agentB_tts.provider,
-                voice: agentB_tts.voice,
-                selectedTtsModelId: agentB_tts.selectedTtsModelId,
-                ttsApiModelId: agentB_tts.ttsApiModelId,
+                provider: ttsEnabled ? agentB_tts.provider : 'none',
+                voice: ttsEnabled ? agentB_tts.voice : null,
+                ...(ttsEnabled && agentB_tts.selectedTtsModelId ? { selectedTtsModelId: agentB_tts.selectedTtsModelId } : {}),
+                ...(ttsEnabled && agentB_tts.ttsApiModelId ? { ttsApiModelId: agentB_tts.ttsApiModelId } : {})
             };
 
             const conversationData: ConversationData = {
