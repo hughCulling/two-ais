@@ -2,6 +2,80 @@
 // Centralized definition for available Text-to-Speech providers and voices
 import { TranslationKeys } from '@/lib/translations';
 
+// Browser TTS voice interface (extends base TTSVoice with browser-specific properties)
+export interface BrowserTTSVoice extends TTSVoice {
+  lang: string; // BCP-47 language tag (e.g., 'en-US', 'es-ES')
+  localService?: boolean; // Whether the voice is a local system voice
+  default?: boolean; // Whether this is the default voice for its language
+}
+
+// Browser TTS voices will be populated at runtime from the Web Speech API
+export const BROWSER_TTS_VOICES: TTSVoice[] = [];
+
+// Function to populate browser voices
+export function populateBrowserVoices(): TTSVoice[] {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+        return [];
+    }
+
+    const voices = window.speechSynthesis.getVoices();
+    const voiceMap = new Map<string, number>();
+    
+    return voices
+        .filter(voice => voice.lang) // Filter out voices without a language
+        .map(voice => {
+            // Create a base ID from the voice URI or name
+            const baseId = `browser-${voice.voiceURI || voice.name.replace(/\s+/g, '-').toLowerCase()}`;
+            
+            // Track how many times we've seen this voice ID
+            const count = (voiceMap.get(baseId) || 0) + 1;
+            voiceMap.set(baseId, count);
+            
+            // Append a number if we've seen this ID before
+            const uniqueId = count > 1 ? `${baseId}-${count}` : baseId;
+            
+            // Create a friendly display name
+            const displayName = `${voice.name} (${voice.lang}${voice.localService ? ', Local' : ''}${voice.default ? ', Default' : ''})`;
+            
+            // Map gender to match TTSVoice type
+            const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 
+                         voice.name.toLowerCase().includes('male') ? 'Male' : 'Neutral';
+            
+            return {
+                id: uniqueId,
+                name: displayName,
+                gender,
+                languageCodes: [voice.lang],
+                provider: 'browser',
+                providerVoiceId: voice.voiceURI,
+                voiceType: 'Browser',
+                status: 'GA',
+                lang: voice.lang,
+                localService: voice.localService,
+                default: voice.default
+            } as TTSVoice;
+        });
+}
+
+// Initialize browser voices when the page loads
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    // Populate voices when they are loaded
+    const handleVoicesChanged = () => {
+        const voices = populateBrowserVoices();
+        BROWSER_TTS_VOICES.length = 0;
+        BROWSER_TTS_VOICES.push(...voices);
+    };
+    
+    // Some browsers fire the voiceschanged event when voices are loaded
+    window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+    
+    // Also try to populate voices immediately in case they're already loaded
+    handleVoicesChanged();
+    
+    // Set up a fallback in case voiceschanged doesn't fire
+    setTimeout(handleVoicesChanged, 1000);
+}
+
 // --- TTS Voice Interface ---
 export interface TTSVoice {
     id: string;   // Provider-specific voice ID (e.g., for OpenAI: 'alloy'; for Google: 'en-US-Wavenet-A')
@@ -764,7 +838,7 @@ export interface TTSModelDetail {
 
 // --- TTS Provider Interface ---
 export interface TTSProviderInfo {
-    id: 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini';
+    id: 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser';
     name: string;
     requiresOwnKey: boolean;
     apiKeyId?: string;
@@ -865,6 +939,25 @@ export function isTTSModelLanguageSupported(
 
 // --- AVAILABLE TTS PROVIDERS & VOICES --- (MOVED TO THE END)
 export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
+    // Browser TTS provider - client-side only, no API key required
+    {
+        id: 'browser',
+        name: 'Browser TTS',
+        requiresOwnKey: false,
+        models: [
+            {
+                id: 'browser-tts',
+                apiModelId: 'browser-tts',
+                name: 'Web Speech API',
+                description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
+                pricingText: () => 'Free (built-in)',
+                supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
+                inputLimitType: 'characters',
+                inputLimitValue: 4000, // Reasonable limit for browser TTS
+            }
+        ],
+        availableVoices: BROWSER_TTS_VOICES,
+    },
     {
         id: 'openai',
         name: 'OpenAI',
