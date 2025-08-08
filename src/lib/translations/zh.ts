@@ -392,7 +392,9 @@ const zh = {
         "agentBTTS": "特工B TTS",
         "provider": "提供者",
         "model": "模型",
-        "voice": "嗓音"
+        "voice": "嗓音",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",

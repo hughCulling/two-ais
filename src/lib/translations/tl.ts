@@ -392,7 +392,9 @@ const tl = {
         "agentBTTS": "Ahente B TTS",
         "provider": "Provider",
         "model": "Modelo",
-        "voice": "Boses"
+        "voice": "Boses",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",

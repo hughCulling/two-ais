@@ -392,7 +392,9 @@ const sw = {
         "agentBTTS": "Wakala B TTS",
         "provider": "Mtoa huduma",
         "model": "Mfano",
-        "voice": "Sauti"
+        "voice": "Sauti",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",

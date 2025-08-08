@@ -392,7 +392,9 @@ const kn = {
         "agentBTTS": "ಏಜೆಂಟ್ ಬಿ TTS",
         "provider": "ಒದಗಿಸುವವರು",
         "model": "ಮಾದರಿ",
-        "voice": "ಧ್ವನಿ"
+        "voice": "ಧ್ವನಿ",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",

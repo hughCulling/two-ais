@@ -392,7 +392,9 @@ const hi = {
         "agentBTTS": "एजेंट बी TTS",
         "provider": "प्रदाता",
         "model": "नमूना",
-        "voice": "आवाज़"
+        "voice": "आवाज़",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",

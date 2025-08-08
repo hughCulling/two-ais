@@ -392,7 +392,9 @@ const bn = {
         "agentBTTS": "এজেন্ট বি TTS",
         "provider": "সরবরাহকারী",
         "model": "মডেল",
-        "voice": "কণ্ঠস্বর"
+        "voice": "কণ্ঠস্বর",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",

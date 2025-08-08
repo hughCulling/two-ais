@@ -392,7 +392,9 @@ const da = {
         "agentBTTS": "Agent B TTS",
         "provider": "Udbyder",
         "model": "Model",
-        "voice": "Stemme"
+        "voice": "Stemme",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",

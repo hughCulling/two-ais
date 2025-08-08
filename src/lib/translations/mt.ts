@@ -392,7 +392,9 @@ const mt = {
         "agentBTTS": "Aġent B TTS",
         "provider": "Fornitur",
         "model": "Mudell",
-        "voice": "Vuċi"
+        "voice": "Vuċi",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",

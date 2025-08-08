@@ -392,7 +392,9 @@ const mr = {
         "agentBTTS": "एजंट बी TTS",
         "provider": "पुरवठादार",
         "model": "मॉडेल",
-        "voice": "आवाज"
+        "voice": "आवाज",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",

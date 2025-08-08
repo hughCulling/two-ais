@@ -392,7 +392,9 @@ const iw = {
         "agentBTTS": "סוכן ב' TTS",
         "provider": "ספק",
         "model": "דֶגֶם",
-        "voice": "קוֹל"
+        "voice": "קוֹל",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",

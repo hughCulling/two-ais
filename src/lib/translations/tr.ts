@@ -392,7 +392,9 @@ const tr = {
         "agentBTTS": "Ajan B TTS",
         "provider": "Sağlayıcı",
         "model": "Model",
-        "voice": "Ses"
+        "voice": "Ses",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",

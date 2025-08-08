@@ -392,7 +392,9 @@ const cs = {
         "agentBTTS": "Agent B. TTS",
         "provider": "Poskytovatel",
         "model": "Model",
-        "voice": "Hlas"
+        "voice": "Hlas",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",

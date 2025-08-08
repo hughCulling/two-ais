@@ -392,7 +392,9 @@ const hy = {
         "agentBTTS": "Գործակալ Բ TTS",
         "provider": "մատակարար",
         "model": "Մոդել",
-        "voice": "Ձայն"
+        "voice": "Ձայն",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",

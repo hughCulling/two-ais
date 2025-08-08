@@ -392,7 +392,9 @@ const uk = {
         "agentBTTS": "Агент Б TTS",
         "provider": "Постачальник",
         "model": "Модель",
-        "voice": "Голос"
+        "voice": "Голос",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",

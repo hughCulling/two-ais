@@ -392,7 +392,9 @@ const is = {
         "agentBTTS": "Umboðsmaður B TTS",
         "provider": "Veitandi",
         "model": "Fyrirmynd",
-        "voice": "Rödd"
+        "voice": "Rödd",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",

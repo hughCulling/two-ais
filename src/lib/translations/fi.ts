@@ -392,7 +392,9 @@ const fi = {
         "agentBTTS": "Agentti B TTS",
         "provider": "Palveluntarjoaja",
         "model": "Malli",
-        "voice": "Ääni"
+        "voice": "Ääni",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",

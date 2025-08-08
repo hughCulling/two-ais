@@ -38,10 +38,21 @@ interface TTSConfig {
     voice?: string | null;
     selectedTtsModelId?: string;
 }
+
 interface AgentTTSSettings {
     enabled: boolean;
     agentA: TTSConfig;
     agentB: TTSConfig;
+}
+
+interface ImageGenSettings {
+    enabled: boolean;
+    provider: string;
+    model: string;
+    quality: string;
+    size: string;
+    promptLlm: string;
+    promptSystemMessage: string;
 }
 
 interface ConversationDetails {
@@ -51,8 +62,9 @@ interface ConversationDetails {
     agentB_llm: string;
     language: string;
     ttsSettings?: AgentTTSSettings;
+    imageGenSettings?: ImageGenSettings;
     messages: Message[];
-    status: 'running' | 'completed' | 'failed'; // Added status for resume logic
+    status: 'running' | 'completed' | 'failed';
 }
 
 export default function ChatHistoryViewerPage() {
@@ -320,33 +332,66 @@ export default function ChatHistoryViewerPage() {
                             <strong>{t.history.language}:</strong>
                             <span className="ml-2">{details.language.toUpperCase()}</span>
                         </div>
-                        {details.ttsSettings && (
-                            <>
-                                <Separator className="my-3" />
-                                <h4 className="font-semibold text-md mb-1">{t.history.ttsSettings}</h4>
-                                {details.ttsSettings.enabled ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                                        <div>
-                                            <p><strong>{t.history.agentATTS}:</strong></p>
-                                            <p>{t.history.provider}: {details.ttsSettings.agentA.provider}</p>
-                                            {details.ttsSettings.agentA.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentA.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentA.voice && <p>{t.history.voice}: {details.ttsSettings.agentA.voice}</p>}
+                        <div className="space-y-4">
+                        <Separator className="my-3" />
+
+                            {details.ttsSettings?.enabled && (
+                                <div className="mt-4">
+                                    <h3 className="text-sm font-medium mb-2">{t.history.ttsSettings}</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2 p-3 bg-muted/20 rounded-md">
+                                            <p className="font-medium">{t.history.agentATTS}:</p>
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentA.provider}</p>
+                                            {details.ttsSettings.agentA.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentA.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentA.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentA.voice}</p>}
                                         </div>
-                                        <div>
-                                            <p><strong>{t.history.agentBTTS}:</strong></p>
-                                            <p>{t.history.provider}: {details.ttsSettings.agentB.provider}</p>
-                                            {details.ttsSettings.agentB.selectedTtsModelId && <p>{t.history.model}: {details.ttsSettings.agentB.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentB.voice && <p>{t.history.voice}: {details.ttsSettings.agentB.voice}</p>}
+                                        <div className="space-y-2 p-3 bg-muted/20 rounded-md">
+                                            <p className="font-medium">{t.history.agentBTTS}:</p>
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentB.provider}</p>
+                                            {details.ttsSettings.agentB.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentB.selectedTtsModelId}</p>}
+                                            {details.ttsSettings.agentB.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentB.voice}</p>}
                                         </div>
                                     </div>
-                                ) : (
-                                    <p className="text-muted-foreground text-xs">TTS was not enabled for this session.</p>
-                                )}
-                            </>
-                        )}
+                                </div>
+                            )}
+                            {!details.ttsSettings?.enabled && details.ttsSettings && (
+                                <p className="text-muted-foreground text-xs">TTS was not enabled for this session.</p>
+                            )}
+                            {details.imageGenSettings?.enabled && (
+                                <div className="mt-4 pt-4 border-t">
+                                    <h3 className="text-sm font-medium mb-2 flex items-center">
+                                        {t.history.imageGenerationSettings}
+                                    </h3>
+                                    <div className="space-y-2">
+                                        <div>
+                                            <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.imageModel}</h4>
+                                            <p className="text-sm">
+                                                {details.imageGenSettings.provider} - {details.imageGenSettings.model}
+                                            </p>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.quality}</h4>
+                                                <p className="text-sm">{details.imageGenSettings.quality}</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.size}</h4>
+                                                <p className="text-sm">{details.imageGenSettings.size}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.promptLLM}</h4>
+                                            <p className="text-sm">
+                                                {getLLMInfoById(details.imageGenSettings.promptLlm)?.name || details.imageGenSettings.promptLlm}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
-
+                
                 <Card>
                     <CardHeader>
                         <CardTitle>{t.history.transcript}</CardTitle>

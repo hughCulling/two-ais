@@ -392,7 +392,9 @@ const id = {
         "agentBTTS": "Agen B TTS",
         "provider": "Penyedia",
         "model": "Model",
-        "voice": "Suara"
+        "voice": "Suara",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",

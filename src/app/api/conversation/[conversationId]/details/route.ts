@@ -62,16 +62,26 @@ interface ConversationTTSSettings {
     agentB: TTSAgentConfig;
 }
 
+interface ImageGenSettings {
+    enabled: boolean;
+    provider: string;
+    model: string;
+    quality: string;
+    size: string;
+    promptLlm: string;
+    promptSystemMessage: string;
+}
+
 interface ConversationDetails {
     conversationId: string;
     createdAt: string; // ISO string
     agentA_llm: string;
     agentB_llm: string;
     language: string;
-    ttsSettings?: ConversationTTSSettings; // Use the more specific type
+    ttsSettings?: ConversationTTSSettings;
+    imageGenSettings?: ImageGenSettings;
     messages: Message[];
-    status: string; // <-- Added status field
-    // other config fields like apiSecretVersions might not be needed for display
+    status: string;
 }
 
 export async function GET(
@@ -148,17 +158,16 @@ export async function GET(
             });
         });
         
-        const createdAtTimestamp = conversationData.createdAt as Timestamp | undefined;
-
         const details: ConversationDetails = {
-            conversationId: conversationDoc.id,
-            createdAt: createdAtTimestamp ? createdAtTimestamp.toDate().toISOString() : new Date(0).toISOString(),
-            agentA_llm: conversationData.agentA_llm || 'Unknown',
-            agentB_llm: conversationData.agentB_llm || 'Unknown',
-            language: conversationData.language || 'en',
-            ttsSettings: conversationData.ttsSettings, // Pass along TTS settings
-            messages: messages,
-            status: conversationData.status || 'unknown', // <-- Add status to response
+            conversationId,
+            createdAt: (conversationDoc.data()?.createdAt as Timestamp)?.toDate().toISOString() || new Date().toISOString(),
+            agentA_llm: conversationDoc.data()?.agentA_llm || 'Unknown',
+            agentB_llm: conversationDoc.data()?.agentB_llm || 'Unknown',
+            language: conversationDoc.data()?.language || 'en',
+            ttsSettings: conversationDoc.data()?.ttsSettings,
+            imageGenSettings: conversationDoc.data()?.imageGenSettings,
+            messages,
+            status: conversationDoc.data()?.status || 'unknown',
         };
 
         console.log(`Conversation details API: status=${conversationData?.status}, data=`, conversationData);

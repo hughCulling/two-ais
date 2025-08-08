@@ -49,12 +49,23 @@ try {
 }
 
 
+interface ImageGenSettings {
+    enabled: boolean;
+    provider: string;
+    model: string;
+    quality: string;
+    size: string;
+    promptLlm: string;
+    promptSystemMessage: string;
+}
+
 interface ConversationSummary {
     conversationId: string;
     createdAt: string; // ISO string
     agentA_llm: string;
     agentB_llm: string;
     language: string;
+    imageGenSettings?: ImageGenSettings;
     // We could add a snippet of the last message or a title in the future
 }
 
@@ -127,19 +138,22 @@ export async function GET(request: NextRequest) {
 
         const querySnapshot = await query.get();
 
-        const conversations: ConversationSummary[] = [];
-        querySnapshot.forEach(doc => {
+        const conversations = querySnapshot.docs.map(doc => {
             const data = doc.data();
-            const createdAtTimestamp = data.createdAt as Timestamp | undefined;
-
-            conversations.push({
+            const summary: ConversationSummary = {
                 conversationId: doc.id,
-                // Ensure createdAt is converted to ISO string. Handle potential undefined or missing field.
-                createdAt: createdAtTimestamp ? createdAtTimestamp.toDate().toISOString() : new Date(0).toISOString(),
-                agentA_llm: data.agentA_llm || 'Unknown',
-                agentB_llm: data.agentB_llm || 'Unknown',
-                language: data.language || 'en', // Default to 'en' if not present
-            });
+                createdAt: (data.createdAt as Timestamp).toDate().toISOString(),
+                agentA_llm: data.agentA_llm,
+                agentB_llm: data.agentB_llm,
+                language: data.language || 'en',
+            };
+            
+            // Include image generation settings if they exist
+            if (data.imageGenSettings) {
+                summary.imageGenSettings = data.imageGenSettings as ImageGenSettings;
+            }
+            
+            return summary;
         });
 
         return NextResponse.json({ conversations, totalCount }, { status: 200 });

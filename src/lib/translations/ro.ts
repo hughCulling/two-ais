@@ -392,7 +392,9 @@ const ro = {
         "agentBTTS": "Agentul B TTS",
         "provider": "Furnizor",
         "model": "Model",
-        "voice": "Voce"
+        "voice": "Voce",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",

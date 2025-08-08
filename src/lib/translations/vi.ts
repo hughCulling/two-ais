@@ -392,7 +392,9 @@ const vi = {
         "agentBTTS": "Đặc vụ B TTS",
         "provider": "Nhà cung cấp",
         "model": "Người mẫu",
-        "voice": "Tiếng nói"
+        "voice": "Tiếng nói",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",

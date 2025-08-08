@@ -392,7 +392,9 @@ const th = {
         "agentBTTS": "เอเจนท์ บี TTS",
         "provider": "ผู้ให้บริการ",
         "model": "แบบอย่าง",
-        "voice": "เสียง"
+        "voice": "เสียง",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",

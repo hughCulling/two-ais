@@ -392,7 +392,9 @@ const hu = {
         "agentBTTS": "B. ügynök TTS",
         "provider": "Szolgáltató",
         "model": "Modell",
-        "voice": "Hang"
+        "voice": "Hang",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",

@@ -392,7 +392,9 @@ const so = {
         "agentBTTS": "Wakiilka B TTS",
         "provider": "Bixiye",
         "model": "Qaabka",
-        "voice": "Codka"
+        "voice": "Codka",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",

@@ -392,7 +392,9 @@ const ko = {
         "agentBTTS": "에이전트 B TTS",
         "provider": "공급자",
         "model": "모델",
-        "voice": "목소리"
+        "voice": "목소리",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",

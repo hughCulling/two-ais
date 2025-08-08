@@ -392,7 +392,9 @@ const kk = {
         "agentBTTS": "Агент Б TTS",
         "provider": "Провайдер",
         "model": "Үлгі",
-        "voice": "Дауыс"
+        "voice": "Дауыс",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",

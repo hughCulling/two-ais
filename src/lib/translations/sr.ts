@@ -392,7 +392,9 @@ const sr = {
         "agentBTTS": "Агент Б TTS",
         "provider": "Провајдер",
         "model": "Модел",
-        "voice": "Глас"
+        "voice": "Глас",
+        "imageGenerationEnabled": "Image Generation",
+        "imageGenerationSettings": "Image Generation Settings"
     },
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Величина",
