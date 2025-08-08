@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
@@ -211,6 +211,41 @@ export default function ChatHistoryViewerPage() {
     }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
         const [fullScreenImageUrl, setFullScreenImageUrl] = useState<string | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
+        const [isPlaying, setIsPlaying] = useState(false);
+        const audioRef = useRef<HTMLAudioElement | null>(null);
+
+        // Handle audio playback
+        const togglePlayPause = useCallback(() => {
+            if (!msg.audioUrl) return;
+            
+            if (!audioRef.current) {
+                audioRef.current = new Audio(msg.audioUrl);
+                audioRef.current.onended = () => setIsPlaying(false);
+                audioRef.current.onpause = () => setIsPlaying(false);
+            }
+            
+            if (isPlaying) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                audioRef.current.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                    setIsPlaying(false);
+                });
+            }
+        }, [msg.audioUrl, isPlaying]);
+
+        // Clean up audio element on unmount
+        useEffect(() => {
+            return () => {
+                if (audioRef.current) {
+                    audioRef.current.pause();
+                    audioRef.current = null;
+                }
+            };
+        }, []);
         
         const isAgentA = msg.role === 'agentA';
         const isAgentB = msg.role === 'agentB';
@@ -299,6 +334,26 @@ export default function ChatHistoryViewerPage() {
                             {msg.content}
                         </ReactMarkdown>
                     </div>
+
+                    {/* TTS Playback Button */}
+                    {msg.audioUrl && (isAgentA || isAgentB) && (
+                        <div className="mt-2 flex items-center">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    togglePlayPause();
+                                }}
+                                className={`flex items-center justify-center w-8 h-8 rounded-full ${isAgentA ? 'bg-muted-foreground/20 hover:bg-muted-foreground/30' : 'bg-primary/20 hover:bg-primary/30'} transition-colors`}
+                                aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+                            >
+                                {isPlaying ? (
+                                    <Pause className="h-4 w-4" />
+                                ) : (
+                                    <Play className="h-4 w-4" />
+                                )}
+                            </button>
+                        </div>
+                    )}
 
                     {/* Streaming indicator */}
                     {msg.isStreaming && (
