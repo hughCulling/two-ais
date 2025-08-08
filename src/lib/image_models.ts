@@ -10,7 +10,7 @@ export interface ImageModelInfo {
   provider: string;
   description: string;
   qualities: Array<{
-    quality: ImageModelQuality;
+    quality?: ImageModelQuality;
     sizes: Array<{
       size: ImageModelSize | ImageAspectRatio;
       price: number; // USD per image
@@ -110,7 +110,6 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     description: 'Latest image generation model with significantly better text rendering and overall image quality.',
     qualities: [
       {
-        quality: 'standard',
         sizes: [
           { size: '1:1', price: 0.04 },
           { size: '3:4', price: 0.04 },
@@ -132,7 +131,6 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     description: 'Highest quality version of Imagen 4 with enhanced capabilities. Produces a single high-quality image per request.',
     qualities: [
       {
-        quality: 'high',
         sizes: [
           { size: '1:1', price: 0.06 },
           { size: '3:4', price: 0.06 },
@@ -154,7 +152,6 @@ export const AVAILABLE_IMAGE_MODELS: ImageModelInfo[] = [
     description: 'State-of-the-art text-to-image model that generates high-quality images with excellent detail, rich lighting, and minimal artifacts. Supports generating up to 4 images per request.',
     qualities: [
       {
-        quality: 'standard',
         sizes: [
           { size: '1:1', price: 0.03 },
           { size: '3:4', price: 0.03 },

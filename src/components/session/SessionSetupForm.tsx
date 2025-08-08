@@ -370,11 +370,32 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     // Update size when quality changes
     useEffect(() => {
-        if (!selectedImageModelId || !selectedImageQuality) return;
+        if (!selectedImageModelId) return;
+        
         const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-        const qualityObj = model?.qualities.find(q => q.quality === selectedImageQuality);
-        if (qualityObj && qualityObj.sizes.length > 0) {
+        if (!model) return;
+        
+        // If no quality is selected, use the first available quality or proceed without one
+        if (!selectedImageQuality) {
+            // Find first defined quality or use the first quality object if all qualities are undefined
+            const firstQuality = model.qualities.find(q => q.quality)?.quality || 
+                               (model.qualities[0]?.sizes[0] ? 'standard' : undefined);
+            
+            if (firstQuality) {
+                setSelectedImageQuality(firstQuality);
+            }
+            return;
+        }
+        
+        // Find the quality object that matches the selected quality
+        const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
+        
+        // If we found a matching quality with sizes, update the size
+        if (qualityObj?.sizes && qualityObj.sizes.length > 0) {
             setSelectedImageSize(qualityObj.sizes[0].size);
+        } else if (model.qualities.length > 0 && model.qualities[0]?.sizes?.length > 0) {
+            // Fallback to first available size if the selected quality has no sizes
+            setSelectedImageSize(model.qualities[0].sizes[0].size);
         }
     }, [selectedImageModelId, selectedImageQuality]);
 
@@ -597,27 +618,39 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 alert('Please select an image model.');
                 return;
             }
-            if (!selectedImageQuality) {
+            
+            // Check if the model has any quality settings
+            const hasQualitySettings = model.qualities.some(q => q.quality);
+            
+            // Only require quality if the model has quality settings
+            if (hasQualitySettings && !selectedImageQuality) {
                 alert('Please select an image quality.');
                 return;
             }
+            
             if (!selectedImageSize) {
                 alert('Please select an image size.');
                 return;
             }
+            
             if (!selectedPromptLlm) {
                 alert('Please select a prompt LLM for image generation.');
                 return;
             }
+            
             if (!imagePromptSystemMessage) {
                 alert('Please provide a system prompt for the image prompt LLM.');
                 return;
             }
+            
+            // Use 'standard' as default quality if the model doesn't have quality settings
+            const qualityToUse = hasQualitySettings ? selectedImageQuality : 'standard';
+            
             imageGenSettings = {
                 enabled: true,
                 provider: model.provider,
                 model: model.id,
-                quality: selectedImageQuality,
+                quality: qualityToUse as ImageModelQuality, // Safe to cast since we provide a default
                 size: selectedImageSize,
                 promptLlm: selectedPromptLlm,
                 promptSystemMessage: imagePromptSystemMessage,
@@ -991,9 +1024,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     <SelectContent>
                                         {(() => {
                                             const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-                                            return model ? model.qualities.map(q => (
-                                                <SelectItem key={q.quality} value={q.quality}>{q.quality.charAt(0).toUpperCase() + q.quality.slice(1)}</SelectItem>
-                                            )) : null;
+                                            if (!model) return null;
+                                            
+                                            // Only include qualities that are defined
+                                            const qualities = model.qualities
+                                                .filter(q => q.quality) // Filter out undefined qualities
+                                                .map(q => q.quality as string); // Cast to string since we filtered out undefined
+                                            
+                                            // If no qualities, return a default option
+                                            if (qualities.length === 0) {
+                                                return <SelectItem value="standard">Standard</SelectItem>;
+                                            }
+                                            
+                                            return qualities.map(quality => (
+                                                <SelectItem 
+                                                    key={quality} 
+                                                    value={quality}
+                                                >
+                                                    {quality.charAt(0).toUpperCase() + quality.slice(1)}
+                                                </SelectItem>
+                                            ));
                                         })()}
                                     </SelectContent>
                                 </Select>
@@ -1004,7 +1054,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 <Select
                                     value={selectedImageSize}
                                     onValueChange={v => setSelectedImageSize(v as ImageModelSize)}
-                                    disabled={!selectedImageModelId || !selectedImageQuality}
+                                    disabled={!selectedImageModelId || (() => {
+                                        const currentModel = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+                                        return currentModel?.qualities.some((q: { quality?: string }) => q.quality) && !selectedImageQuality;
+                                    })()}
                                 >
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select size" />
@@ -1012,10 +1065,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     <SelectContent>
                                         {(() => {
                                             const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-                                            const qualityObj = model?.qualities.find(q => q.quality === selectedImageQuality);
-                                            return qualityObj ? qualityObj.sizes.map(s => (
+                                            if (!model) return null;
+                                            
+                                            // For models without quality settings, use the first quality object
+                                            if (model.qualities.length > 0 && !model.qualities.some(q => q.quality)) {
+                                                return model.qualities[0].sizes.map(s => (
+                                                    <SelectItem key={s.size} value={s.size}>{s.size}</SelectItem>
+                                                ));
+                                            }
+                                            
+                                            // For models with quality settings, find the selected quality
+                                            const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
+                                            return qualityObj?.sizes.map(s => (
                                                 <SelectItem key={s.size} value={s.size}>{s.size}</SelectItem>
-                                            )) : null;
+                                            )) || null;
                                         })()}
                                     </SelectContent>
                                 </Select>
