@@ -42,10 +42,14 @@ try {
 
 interface Message {
     id: string;
-    role: 'user' | 'assistant' | 'system' | 'human' | 'ai'; // Extended roles based on common usage
+    role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
     content: string;
     timestamp: string; // ISO string
-    // Add other potential message fields if necessary, e.g., name, agentId
+    imageUrl?: string | null;
+    imageGenError?: string | null;
+    isStreaming?: boolean;
+    audioUrl?: string;
+    ttsWasSplit?: boolean;
 }
 
 // Define a more specific type for TTS settings based on its likely structure
@@ -155,6 +159,11 @@ export async function GET(
                 role: data.role || 'unknown', // Provide a fallback for role
                 content: data.content || '',
                 timestamp: isoTimestamp,
+                imageUrl: data.imageUrl || null,
+                imageGenError: data.imageGenError || null,
+                isStreaming: data.isStreaming || false,
+                audioUrl: data.audioUrl,
+                ttsWasSplit: data.ttsWasSplit
             });
         });
         
