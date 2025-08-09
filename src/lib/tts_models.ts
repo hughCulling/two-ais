@@ -941,24 +941,24 @@ export function isTTSModelLanguageSupported(
 // --- AVAILABLE TTS PROVIDERS & VOICES --- (MOVED TO THE END)
 export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
     // Browser TTS provider - client-side only, no API key required
-    {
-        id: 'browser',
-        name: 'Browser TTS',
-        requiresOwnKey: false,
-        models: [
-            {
-                id: 'browser-tts',
-                apiModelId: 'browser-tts',
-                name: 'Web Speech API',
-                description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
-                pricingText: () => 'Free (built-in)',
-                supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
-                inputLimitType: 'characters',
-                inputLimitValue: 4000, // Reasonable limit for browser TTS
-            }
-        ],
-        availableVoices: BROWSER_TTS_VOICES,
-    },
+    // {
+    //     id: 'browser',
+    //     name: 'Browser TTS',
+    //     requiresOwnKey: false,
+    //     models: [
+    //         {
+    //             id: 'browser-tts',
+    //             apiModelId: 'browser-tts',
+    //             name: 'Web Speech API',
+    //             description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
+    //             pricingText: () => 'Free (built-in)',
+    //             supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
+    //             inputLimitType: 'characters',
+    //             inputLimitValue: 4000, // Reasonable limit for browser TTS
+    //         }
+    //     ],
+    //     availableVoices: BROWSER_TTS_VOICES,
+    // },
     {
         id: 'openai',
         name: 'OpenAI',
@@ -1188,5 +1188,23 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
             },
         ],
         availableVoices: GEMINI_TTS_VOICES,
-    }
+    },
+    {
+        id: 'browser',
+        name: 'Browser TTS',
+        requiresOwnKey: false,
+        models: [
+            {
+                id: 'browser-tts',
+                apiModelId: 'browser-tts',
+                name: 'Web Speech API',
+                description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
+                pricingText: () => 'Free (built-in)',
+                supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
+                inputLimitType: 'characters',
+                inputLimitValue: 4000, // Reasonable limit for browser TTS
+            }
+        ],
+        availableVoices: BROWSER_TTS_VOICES,
+    },
 ];
