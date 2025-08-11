@@ -331,7 +331,8 @@ const lv = {
         "gemini25ProNote": "Cena mainās atkarībā no ievades lieluma. Pieejams bezmaksas līmenis.",
         "gemini25FlashNote": "Cenas atšķiras atkarībā no multivides veida. Pieejams bezmaksas līmenis.",
         "gemini25FlashLiteNote": "Visizdevīgākais variants. Pieejams bezmaksas līmenis.",
-        "mistralFreeTierNote": "Bezmaksas līmenis pieejams ar ātruma ierobežojumiem. Nepieciešams Mistral AI konts. API pieprasījumus var izmantot apmācībai Mistralmodeļi."
+        "mistralFreeTierNote": "Bezmaksas līmenis pieejams ar ātruma ierobežojumiem. Nepieciešams Mistral AI konts. API pieprasījumus var izmantot apmācībai Mistralmodeļi.",
+        "freeBuiltIn": "Bezmaksas (iebūvēts)"
     },
     "sessionSetupForm": {
         "title": "Sesijas iestatīšanas veidlapa",

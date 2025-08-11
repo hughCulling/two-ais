@@ -1117,7 +1117,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
                 apiModelId: 'browser-tts',
                 name: 'Web Speech API',
                 description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
-                pricingText: () => 'Free (built-in)',
+                pricingText: (t: TranslationKeys) => t.pricing.freeBuiltIn,
                 supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
                 inputLimitType: 'characters',
                 inputLimitValue: 4000, // Reasonable limit for browser TTS

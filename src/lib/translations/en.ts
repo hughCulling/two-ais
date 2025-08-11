@@ -323,6 +323,7 @@ const en = {
         perMillionTokens: "per 1 Million tokens",
         tokens: "tokens",
         free: "Free",
+        freeBuiltIn: "Free (built-in)",
         geminiFreeTierNote: "Free tier available with rate limits. Requires a Google Cloud project without billing enabled.",
         gemini25ProNote: "Pricing varies by input size. Free tier available.",
         gemini25FlashNote: "Pricing varies by media type. Free tier available.",

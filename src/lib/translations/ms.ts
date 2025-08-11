@@ -331,7 +331,8 @@ const ms = {
         "gemini25ProNote": "Harga berbeza mengikut saiz input. Peringkat percuma tersedia.",
         "gemini25FlashNote": "Harga berbeza mengikut jenis media. Peringkat percuma tersedia.",
         "gemini25FlashLiteNote": "Pilihan paling kos efektif. Peringkat percuma tersedia.",
-        "mistralFreeTierNote": "Peringkat percuma tersedia dengan had kadar. Memerlukan a Mistral AI akaun. API permintaan boleh digunakan untuk melatih Mistralmodel-model."
+        "mistralFreeTierNote": "Peringkat percuma tersedia dengan had kadar. Memerlukan a Mistral AI akaun. API permintaan boleh digunakan untuk melatih Mistralmodel-model.",
+        "freeBuiltIn": "Percuma (terbina dalam)"
     },
     "sessionSetupForm": {
         "title": "Borang Persediaan Sesi",

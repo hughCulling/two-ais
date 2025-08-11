@@ -331,7 +331,8 @@ const tl = {
         "gemini25ProNote": "Nag-iiba ang pagpepresyo ayon sa laki ng input. Available ang libreng tier.",
         "gemini25FlashNote": "Nag-iiba ang pagpepresyo ayon sa uri ng media. Available ang libreng tier.",
         "gemini25FlashLiteNote": "Karamihan sa cost-effective na opsyon. Available ang libreng tier.",
-        "mistralFreeTierNote": "Available ang libreng tier na may mga limitasyon sa rate. Nangangailangan ng a Mistral AI account. API maaaring gamitin ang mga kahilingan sa pagsasanay Mistralng mga modelo."
+        "mistralFreeTierNote": "Available ang libreng tier na may mga limitasyon sa rate. Nangangailangan ng a Mistral AI account. API maaaring gamitin ang mga kahilingan sa pagsasanay Mistralng mga modelo.",
+        "freeBuiltIn": "Libre (built-in)"
     },
     "sessionSetupForm": {
         "title": "Form ng Pag-setup ng Session",

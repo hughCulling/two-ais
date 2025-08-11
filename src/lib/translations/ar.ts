@@ -331,7 +331,8 @@ const ar = {
         "gemini25ProNote": "يختلف السعر حسب حجم الإدخال. تتوفر نسخة مجانية.",
         "gemini25FlashNote": "تختلف الأسعار باختلاف نوع الوسائط. تتوفر نسخة مجانية.",
         "gemini25FlashLiteNote": "الخيار الأكثر فعالية من حيث التكلفة. تتوفر نسخة مجانية.",
-        "mistralFreeTierNote": "تتوفر فئة مجانية بحدود سعرية. يتطلب Mistral AI حساب. API يمكن استخدام الطلبات للتدريب Mistralنماذج ."
+        "mistralFreeTierNote": "تتوفر فئة مجانية بحدود سعرية. يتطلب Mistral AI حساب. API يمكن استخدام الطلبات للتدريب Mistralنماذج .",
+        "freeBuiltIn": "مجاني (مدمج)"
     },
     "sessionSetupForm": {
         "title": "نموذج إعداد الجلسة",

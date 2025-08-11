@@ -331,7 +331,8 @@ const ro = {
         "gemini25ProNote": "Prețurile variază în funcție de dimensiunea intrării. Nivel gratuit disponibil.",
         "gemini25FlashNote": "Prețurile variază în funcție de tipul de media. Nivel gratuit disponibil.",
         "gemini25FlashLiteNote": "Cea mai rentabilă opțiune. Nivel gratuit disponibil.",
-        "mistralFreeTierNote": "Nivel gratuit disponibil cu limite de tarif. Necesită un Mistral AI cont. API cererile pot fi folosite pentru instruire MistralModelele lui."
+        "mistralFreeTierNote": "Nivel gratuit disponibil cu limite de tarif. Necesită un Mistral AI cont. API cererile pot fi folosite pentru instruire MistralModelele lui.",
+        "freeBuiltIn": "Gratuit (încorporat)"
     },
     "sessionSetupForm": {
         "title": "Formular de configurare a sesiunii",

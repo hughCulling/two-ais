@@ -331,7 +331,8 @@ const sq = {
         "gemini25ProNote": "Çmimi ndryshon në varësi të madhësisë së inputit. Ka nivel falas në dispozicion.",
         "gemini25FlashNote": "Çmimi ndryshon në varësi të llojit të medias. Ka një nivel falas në dispozicion.",
         "gemini25FlashLiteNote": "Opsioni më ekonomik. Kati falas në dispozicion.",
-        "mistralFreeTierNote": "Niveli falas i disponueshëm me kufizime çmimesh. Kërkon një Mistral AI llogari. API kërkesat mund të përdoren për të trajnuar Mistralmodelet e 's."
+        "mistralFreeTierNote": "Niveli falas i disponueshëm me kufizime çmimesh. Kërkon një Mistral AI llogari. API kërkesat mund të përdoren për të trajnuar Mistralmodelet e 's.",
+        "freeBuiltIn": "Falas (i integruar)"
     },
     "sessionSetupForm": {
         "title": "Formulari i Konfigurimit të Sesionit",

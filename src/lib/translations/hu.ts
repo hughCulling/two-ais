@@ -331,7 +331,8 @@ const hu = {
         "gemini25ProNote": "Az ár a bemeneti mérettől függ. Ingyenes szint elérhető.",
         "gemini25FlashNote": "Az árak médiatípusonként változnak. Ingyenes csomag is elérhető.",
         "gemini25FlashLiteNote": "A legköltséghatékonyabb megoldás. Ingyenes szint elérhető.",
-        "mistralFreeTierNote": "Ingyenes csomag elérhető díjkorlátokkal. Szükséges hozzá a következő: Mistral AI fiók. API kérések felhasználhatók a képzéshez Mistralmodelljei."
+        "mistralFreeTierNote": "Ingyenes csomag elérhető díjkorlátokkal. Szükséges hozzá a következő: Mistral AI fiók. API kérések felhasználhatók a képzéshez Mistralmodelljei.",
+        "freeBuiltIn": "Ingyenes (beépített)"
     },
     "sessionSetupForm": {
         "title": "Munkamenet-beállítási űrlap",

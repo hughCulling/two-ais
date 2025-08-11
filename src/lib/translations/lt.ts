@@ -331,7 +331,8 @@ const lt = {
         "gemini25ProNote": "Kaina priklauso nuo įvesties dydžio. Yra nemokamas lygis.",
         "gemini25FlashNote": "Kainos skiriasi priklausomai nuo medijos tipo. Yra nemokamas paketas.",
         "gemini25FlashLiteNote": "Ekonomiškiausias variantas. Yra nemokamas lygis.",
-        "mistralFreeTierNote": "Nemokamas paketas su greičio apribojimais. Reikalingas Mistral AI sąskaita. API prašymai gali būti naudojami mokymui Mistralmodeliai."
+        "mistralFreeTierNote": "Nemokamas paketas su greičio apribojimais. Reikalingas Mistral AI sąskaita. API prašymai gali būti naudojami mokymui Mistralmodeliai.",
+        "freeBuiltIn": "Nemokama (įmontuota)"
     },
     "sessionSetupForm": {
         "title": "Sesijos nustatymo forma",

@@ -331,7 +331,8 @@ const nl = {
         "gemini25ProNote": "Prijzen variëren afhankelijk van de invoergrootte. Gratis versie beschikbaar.",
         "gemini25FlashNote": "Prijzen variëren per mediatype. Gratis abonnement beschikbaar.",
         "gemini25FlashLiteNote": "Meest kosteneffectieve optie. Gratis versie beschikbaar.",
-        "mistralFreeTierNote": "Gratis versie beschikbaar met tarieflimieten. Vereist een Mistral AI rekening. API verzoeken kunnen worden gebruikt om te trainen Mistral's modellen."
+        "mistralFreeTierNote": "Gratis versie beschikbaar met tarieflimieten. Vereist een Mistral AI rekening. API verzoeken kunnen worden gebruikt om te trainen Mistral's modellen.",
+        "freeBuiltIn": "Gratis (ingebouwd)"
     },
     "sessionSetupForm": {
         "title": "Sessie-instellingsformulier",

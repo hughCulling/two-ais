@@ -331,7 +331,8 @@ const cs = {
         "gemini25ProNote": "Cena se liší podle velikosti vstupu. K dispozici je bezplatná úroveň.",
         "gemini25FlashNote": "Cena se liší podle typu média. K dispozici je bezplatná úroveň.",
         "gemini25FlashLiteNote": "Cenově nejvýhodnější varianta. K dispozici je bezplatná úroveň.",
-        "mistralFreeTierNote": "Bezplatná úroveň je k dispozici s omezeními rychlosti. Vyžaduje Mistral AI účet. API požadavky lze použít k proškolení Mistralmodely."
+        "mistralFreeTierNote": "Bezplatná úroveň je k dispozici s omezeními rychlosti. Vyžaduje Mistral AI účet. API požadavky lze použít k proškolení Mistralmodely.",
+        "freeBuiltIn": "Zdarma (vestavěné)"
     },
     "sessionSetupForm": {
         "title": "Formulář pro nastavení relace",

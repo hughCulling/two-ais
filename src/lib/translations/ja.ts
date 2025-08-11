@@ -331,7 +331,8 @@ const ja = {
         "gemini25ProNote": "価格は入力サイズによって異なります。無料プランもご利用いただけます。",
         "gemini25FlashNote": "価格はメディアの種類によって異なります。無料プランもご利用いただけます。",
         "gemini25FlashLiteNote": "最も費用対効果の高いオプション。無料プランもご利用いただけます。",
-        "mistralFreeTierNote": "無料枠はレート制限付きでご利用いただけます。 Mistral AI アカウント。 API リクエストはトレーニングに使用できます Mistralのモデル。"
+        "mistralFreeTierNote": "無料枠はレート制限付きでご利用いただけます。 Mistral AI アカウント。 API リクエストはトレーニングに使用できます Mistralのモデル。",
+        "freeBuiltIn": "無料（組み込み）"
     },
     "sessionSetupForm": {
         "title": "セッション設定フォーム",
