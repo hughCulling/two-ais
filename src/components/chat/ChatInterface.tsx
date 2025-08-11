@@ -335,7 +335,7 @@ export function ChatInterface({
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribe();
         };
-    }, [conversationId, error, isStopped, conversationStatus]); // Keep dependencies
+    }, [conversationId, error, isStopped, conversationStatus, onConversationStopped]); // Added onConversationStopped
 
     // --- Effect 3: Auto-scroll ---
         useEffect(() => {
@@ -574,7 +574,7 @@ export function ChatInterface({
                 });
         }
 
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, conversationData, handleAudioEnd, imageLoadStatus]);
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, conversationData, handleAudioEnd, imageLoadStatus]); // Added isAudioPlaying
 
     // --- Render Logic ---
 
