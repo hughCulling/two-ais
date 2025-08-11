@@ -214,9 +214,45 @@ export default function ChatHistoryViewerPage() {
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         const [isPlaying, setIsPlaying] = useState(false);
         const audioRef = useRef<HTMLAudioElement | null>(null);
+        const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-        // Handle audio playback
+        // Handle audio playback for both pre-recorded and browser TTS
         const togglePlayPause = useCallback(() => {
+            // Handle browser TTS
+            if (!msg.audioUrl && (msg.role === 'agentA' || msg.role === 'agentB')) {
+                const agentRole = msg.role as 'agentA' | 'agentB';
+                const ttsConfig = details?.ttsSettings?.[agentRole];
+                
+                if (ttsConfig?.provider === 'browser') {
+                    if (isPlaying) {
+                        // Stop current playback
+                        window.speechSynthesis.cancel();
+                        setIsPlaying(false);
+                    } else {
+                        // Start new TTS playback
+                        const utterance = new SpeechSynthesisUtterance(msg.content);
+                        utterance.onend = () => setIsPlaying(false);
+                        utterance.onerror = (e) => {
+                            console.error('Speech synthesis error:', e);
+                            setIsPlaying(false);
+                        };
+                        
+                        // Try to find the voice if specified
+                        if (ttsConfig.voice) {
+                            const voices = window.speechSynthesis.getVoices();
+                            const voice = voices.find(v => v.voiceURI === ttsConfig.voice);
+                            if (voice) utterance.voice = voice;
+                        }
+                        
+                        utteranceRef.current = utterance;
+                        window.speechSynthesis.speak(utterance);
+                        setIsPlaying(true);
+                    }
+                    return;
+                }
+            }
+            
+            // Handle pre-recorded audio
             if (!msg.audioUrl) return;
             
             if (!audioRef.current) {
@@ -236,7 +272,17 @@ export default function ChatHistoryViewerPage() {
                     setIsPlaying(false);
                 });
             }
-        }, [msg.audioUrl, isPlaying]);
+        }, [msg.audioUrl, msg.content, msg.role, details?.ttsSettings, isPlaying]);
+        
+        // Clean up TTS on unmount
+        useEffect(() => {
+            return () => {
+                if (utteranceRef.current) {
+                    window.speechSynthesis.cancel();
+                    utteranceRef.current = null;
+                }
+            };
+        }, []);
 
         // Clean up audio element on unmount
         useEffect(() => {
@@ -341,8 +387,8 @@ export default function ChatHistoryViewerPage() {
                         </ReactMarkdown>
                     </div>
 
-                    {/* TTS Playback Button */}
-                    {msg.audioUrl && (isAgentA || isAgentB) && (
+                    {/* TTS Playback Button - Show for both pre-recorded and browser TTS */}
+                    {(msg.audioUrl || (details?.ttsSettings?.[msg.role as 'agentA' | 'agentB']?.provider === 'browser' && (isAgentA || isAgentB))) && (
                         <div className="mt-2 flex items-center">
                             <button
                                 onClick={(e) => {
