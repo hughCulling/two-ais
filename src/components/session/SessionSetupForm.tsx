@@ -403,9 +403,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
     const elevenLabsProviderInfo = getTTSProviderInfoById('elevenlabs');
 
-    const getDefaultOpenAITTSModel = () => openAIProviderInfo?.models[0];
+    // const getDefaultOpenAITTSModel = () => openAIProviderInfo?.models[0];
     const getDefaultOpenAIVoices = () => openAIProviderInfo?.availableVoices || [];
-    const getDefaultOpenAIDefaultVoiceId = () => getDefaultOpenAIVoices()[0]?.id ?? null;
+    // const getDefaultOpenAIDefaultVoiceId = () => getDefaultOpenAIVoices()[0]?.id ?? null;
 
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
         provider: 'browser',
@@ -496,6 +496,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     voice.languageCodes?.some(code => code.split('-')[0] === simpleUserLangCode)
                 );
             }
+        } else if (providerId === 'browser') {
+            // For browser TTS, filter voices by the user's selected language
+            voices = (providerInfo.availableVoices || []).filter(voice => {
+                return voice.languageCodes?.some(code => 
+                    code.startsWith(simpleUserLangCode) || 
+                    code.split('-')[0] === simpleUserLangCode
+                );
+            });
         } else {
             voices = providerInfo.availableVoices || [];
         }
