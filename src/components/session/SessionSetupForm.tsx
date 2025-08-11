@@ -408,16 +408,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const getDefaultOpenAIDefaultVoiceId = () => getDefaultOpenAIVoices()[0]?.id ?? null;
 
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
-        provider: 'openai',
-        voice: getDefaultOpenAIDefaultVoiceId(),
-        selectedTtsModelId: getDefaultOpenAITTSModel()?.id,
-        ttsApiModelId: getDefaultOpenAITTSModel()?.apiModelId,
+        provider: 'browser',
+        voice: 'default',
+        selectedTtsModelId: 'browser-default',
+        ttsApiModelId: 'browser-default',
     });
     const [agentBTTSSettings, setAgentBTTSSettings] = useState<AgentTTSSettings>({
-        provider: 'openai',
-        voice: getDefaultOpenAIDefaultVoiceId(),
-        selectedTtsModelId: getDefaultOpenAITTSModel()?.id,
-        ttsApiModelId: getDefaultOpenAITTSModel()?.apiModelId,
+        provider: 'browser',
+        voice: 'default',
+        selectedTtsModelId: 'browser-default',
+        ttsApiModelId: 'browser-default',
     });
 
     const [currentVoicesA, setCurrentVoicesA] = useState<TTSVoice[]>(getDefaultOpenAIVoices());
