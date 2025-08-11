@@ -31,6 +31,7 @@ import { getVoiceById } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import removeMarkdown from 'remove-markdown';
 
 // --- Interfaces ---
 interface Message {
@@ -334,7 +335,7 @@ export function ChatInterface({
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribe();
         };
-    }, [conversationId, error, isStopped, conversationStatus]); // Keep dependencies
+    }, [conversationId, error, isStopped, conversationStatus, onConversationStopped]); // Added onConversationStopped
 
     // --- Effect 3: Auto-scroll ---
         useEffect(() => {
@@ -535,7 +536,8 @@ export function ChatInterface({
                 return;
             }
 
-            const utterance = new SpeechSynthesisUtterance(nextMsg.content);
+            const cleanedContent = removeMarkdown(nextMsg.content);
+            const utterance = new SpeechSynthesisUtterance(cleanedContent);
             utterance.voice = voice;
             utterance.onstart = () => {
                 // This is the source of truth for playback starting
@@ -572,7 +574,7 @@ export function ChatInterface({
                 });
         }
 
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, conversationData, handleAudioEnd, imageLoadStatus]);
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, conversationData, handleAudioEnd, imageLoadStatus]); // Added isAudioPlaying
 
     // --- Render Logic ---
 
