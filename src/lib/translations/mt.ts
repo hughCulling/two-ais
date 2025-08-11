@@ -331,7 +331,8 @@ const mt = {
         "gemini25ProNote": "Il-prezzijiet ivarjaw skont id-daqs tal-input. Livell bla ħlas disponibbli.",
         "gemini25FlashNote": "Il-prezzijiet ivarjaw skont it-tip ta' midja. Livell bla ħlas disponibbli.",
         "gemini25FlashLiteNote": "L-aktar għażla kosteffettiva. Livell bla ħlas disponibbli.",
-        "mistralFreeTierNote": "Livell bla ħlas disponibbli b'limiti tar-rata. Jeħtieġ Mistral AI kont. API it-talbiet jistgħu jintużaw biex iħarrġu MistralIl-mudelli ta'."
+        "mistralFreeTierNote": "Livell bla ħlas disponibbli b'limiti tar-rata. Jeħtieġ Mistral AI kont. API it-talbiet jistgħu jintużaw biex iħarrġu MistralIl-mudelli ta'.",
+        "freeBuiltIn": "B'xejn (integrat)"
     },
     "sessionSetupForm": {
         "title": "Formola ta' Twaqqif tas-Sessjoni",

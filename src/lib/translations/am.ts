@@ -331,7 +331,8 @@ const am = {
         "gemini25ProNote": "የዋጋ አሰጣጥ እንደ ግቤት መጠን ይለያያል። ነፃ ደረጃ ይገኛል።",
         "gemini25FlashNote": "የዋጋ አሰጣጥ እንደ ሚዲያ አይነት ይለያያል። ነፃ ደረጃ ይገኛል።",
         "gemini25FlashLiteNote": "በጣም ወጪ ቆጣቢ አማራጭ. ነፃ ደረጃ ይገኛል።",
-        "mistralFreeTierNote": "ነፃ ደረጃ ከዋጋ ገደቦች ጋር ይገኛል። ያስፈልገዋል ሀ Mistral AI መለያ API ጥያቄዎችን ለማሰልጠን ሊያገለግል ይችላል። Mistralሞዴሎች."
+        "mistralFreeTierNote": "ነፃ ደረጃ ከዋጋ ገደቦች ጋር ይገኛል። ያስፈልገዋል ሀ Mistral AI መለያ API ጥያቄዎችን ለማሰልጠን ሊያገለግል ይችላል። Mistralሞዴሎች.",
+        "freeBuiltIn": "ነጻ (አብሮ የተሰራ)"
     },
     "sessionSetupForm": {
         "title": "የክፍለ ጊዜ ማዋቀር ቅጽ",

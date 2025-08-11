@@ -331,7 +331,8 @@ const so = {
         "gemini25ProNote": "Qiimuhu wuxuu ku kala duwan yahay cabbirka gelinta. Heerarka bilaashka ah waa la heli karaa.",
         "gemini25FlashNote": "Qiimuhu waa ku kala duwan yahay nooca warbaahinta. Heerarka bilaashka ah waa la heli karaa.",
         "gemini25FlashLiteNote": "Doorashada ugu badan ee kharash-ku-ool ah. Heerarka bilaashka ah waa la heli karaa.",
-        "mistralFreeTierNote": "Heerarka bilaashka ah ee la heli karo oo leh xaddidaad qiimaheedu. Waxay u baahan tahay a Mistral AI xisaabta. API codsiyada waxaa loo isticmaali karaa in lagu tababaro Mistralmoodooyinka."
+        "mistralFreeTierNote": "Heerarka bilaashka ah ee la heli karo oo leh xaddidaad qiimaheedu. Waxay u baahan tahay a Mistral AI xisaabta. API codsiyada waxaa loo isticmaali karaa in lagu tababaro Mistralmoodooyinka.",
+        "freeBuiltIn": "Bilaash (lagu dhisay)"
     },
     "sessionSetupForm": {
         "title": "Foomka Dejinta Kulanka",

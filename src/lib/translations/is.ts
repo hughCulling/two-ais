@@ -331,7 +331,8 @@ const is = {
         "gemini25ProNote": "Verðlagning er mismunandi eftir stærð inntaks. Ókeypis útgáfa í boði.",
         "gemini25FlashNote": "Verðlagning er mismunandi eftir miðlunartegund. Ókeypis útgáfa í boði.",
         "gemini25FlashLiteNote": "Hagkvæmasti kosturinn. Ókeypis útgáfa í boði.",
-        "mistralFreeTierNote": "Ókeypis útgáfa í boði með hraðatakmörkunum. Krefst a Mistral AI reikningur. API beiðnir má nota til að þjálfa Mistralfyrirmyndir."
+        "mistralFreeTierNote": "Ókeypis útgáfa í boði með hraðatakmörkunum. Krefst a Mistral AI reikningur. API beiðnir má nota til að þjálfa Mistralfyrirmyndir.",
+        "freeBuiltIn": "Ókeypis (innbyggt)"
     },
     "sessionSetupForm": {
         "title": "Uppsetningarform fyrir lotur",

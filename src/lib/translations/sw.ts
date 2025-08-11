@@ -331,7 +331,8 @@ const sw = {
         "gemini25ProNote": "Bei inatofautiana kwa ukubwa wa pembejeo. Kiwango cha bure kinapatikana.",
         "gemini25FlashNote": "Bei inatofautiana kulingana na aina ya media. Kiwango cha bure kinapatikana.",
         "gemini25FlashLiteNote": "Chaguo la gharama nafuu zaidi. Kiwango cha bure kinapatikana.",
-        "mistralFreeTierNote": "Kiwango cha bure kinapatikana na kikomo cha viwango. Inahitaji a Mistral AI akaunti. API maombi yanaweza kutumika kutoa mafunzo Mistralmifano ya."
+        "mistralFreeTierNote": "Kiwango cha bure kinapatikana na kikomo cha viwango. Inahitaji a Mistral AI akaunti. API maombi yanaweza kutumika kutoa mafunzo Mistralmifano ya.",
+        "freeBuiltIn": "Bure (iliyojengwa ndani)"
     },
     "sessionSetupForm": {
         "title": "Fomu ya Kuweka Kikao",

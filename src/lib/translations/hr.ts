@@ -331,7 +331,8 @@ const hr = {
         "gemini25ProNote": "Cijena varira ovisno o veličini ulaza. Dostupna je besplatna razina.",
         "gemini25FlashNote": "Cijena varira ovisno o vrsti medija. Dostupna je besplatna razina.",
         "gemini25FlashLiteNote": "Najisplativija opcija. Dostupna je besplatna razina.",
-        "mistralFreeTierNote": "Besplatna razina dostupna je s ograničenjima stope. Zahtijeva Mistral AI račun. API zahtjevi se mogu koristiti za obuku Mistral-ovi modeli."
+        "mistralFreeTierNote": "Besplatna razina dostupna je s ograničenjima stope. Zahtijeva Mistral AI račun. API zahtjevi se mogu koristiti za obuku Mistral-ovi modeli.",
+        "freeBuiltIn": "Besplatno (ugrađeno)"
     },
     "sessionSetupForm": {
         "title": "Obrazac za postavljanje sesije",

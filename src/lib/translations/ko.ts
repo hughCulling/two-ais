@@ -331,7 +331,8 @@ const ko = {
         "gemini25ProNote": "가격은 입력 크기에 따라 다릅니다. 무료 티어 이용 가능.",
         "gemini25FlashNote": "가격은 미디어 유형에 따라 다릅니다. 무료 이용이 가능합니다.",
         "gemini25FlashLiteNote": "가장 비용 효율적인 옵션입니다. 무료 티어 이용 가능.",
-        "mistralFreeTierNote": "요금 제한이 있는 무료 계층이 제공됩니다. Mistral AI 계정. API 요청은 훈련에 사용될 수 있습니다 Mistral의 모델입니다."
+        "mistralFreeTierNote": "요금 제한이 있는 무료 계층이 제공됩니다. Mistral AI 계정. API 요청은 훈련에 사용될 수 있습니다 Mistral의 모델입니다.",
+        "freeBuiltIn": "무료(내장)"
     },
     "sessionSetupForm": {
         "title": "세션 설정 양식",

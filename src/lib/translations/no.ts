@@ -331,7 +331,8 @@ const no = {
         "gemini25ProNote": "Prisen varierer etter inndatastørrelse. Gratisnivå tilgjengelig.",
         "gemini25FlashNote": "Prisen varierer etter medietype. Gratisnivå tilgjengelig.",
         "gemini25FlashLiteNote": "Det mest kostnadseffektive alternativet. Gratisnivå tilgjengelig.",
-        "mistralFreeTierNote": "Gratisnivå tilgjengelig med prisgrenser. Krever en Mistral AI konto. API forespørsler kan brukes til å trene Mistrals modeller."
+        "mistralFreeTierNote": "Gratisnivå tilgjengelig med prisgrenser. Krever en Mistral AI konto. API forespørsler kan brukes til å trene Mistrals modeller.",
+        "freeBuiltIn": "Gratis (innebygd)"
     },
     "sessionSetupForm": {
         "title": "Skjema for oppsett av økt",

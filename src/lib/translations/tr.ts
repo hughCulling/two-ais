@@ -331,7 +331,8 @@ const tr = {
         "gemini25ProNote": "Fiyatlandırma giriş boyutuna göre değişir. Ücretsiz katman mevcuttur.",
         "gemini25FlashNote": "Fiyatlandırma medya türüne göre değişir. Ücretsiz katman mevcuttur.",
         "gemini25FlashLiteNote": "En uygun maliyetli seçenek. Ücretsiz katman mevcuttur.",
-        "mistralFreeTierNote": "Ücretsiz katman, oran sınırlamalarıyla mevcuttur. Gereklidir Mistral AI hesap. API istekler eğitmek için kullanılabilir Mistral'nin modelleri."
+        "mistralFreeTierNote": "Ücretsiz katman, oran sınırlamalarıyla mevcuttur. Gereklidir Mistral AI hesap. API istekler eğitmek için kullanılabilir Mistral'nin modelleri.",
+        "freeBuiltIn": "Ücretsiz (yerleşik)"
     },
     "sessionSetupForm": {
         "title": "Oturum Kurulum Formu",

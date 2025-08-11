@@ -331,7 +331,8 @@ const fi = {
         "gemini25ProNote": "Hinta vaihtelee syötteen koon mukaan. Ilmainen taso saatavilla.",
         "gemini25FlashNote": "Hinnoittelu vaihtelee mediatyypin mukaan. Saatavilla ilmainen taso.",
         "gemini25FlashLiteNote": "Kustannustehokkain vaihtoehto. Ilmainen taso saatavilla.",
-        "mistralFreeTierNote": "Ilmainen taso saatavilla nopeusrajoituksilla. Vaatii Mistral AI tili. API pyyntöjä voidaan käyttää koulutukseen Mistraln mallit."
+        "mistralFreeTierNote": "Ilmainen taso saatavilla nopeusrajoituksilla. Vaatii Mistral AI tili. API pyyntöjä voidaan käyttää koulutukseen Mistraln mallit.",
+        "freeBuiltIn": "Ilmainen (sisäänrakennettu)"
     },
     "sessionSetupForm": {
         "title": "Istunnon määrityslomake",

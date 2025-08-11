@@ -331,7 +331,8 @@ const pt = {
         "gemini25ProNote": "O preço varia de acordo com o tamanho da entrada. Nível gratuito disponível.",
         "gemini25FlashNote": "O preço varia de acordo com o tipo de mídia. Versão gratuita disponível.",
         "gemini25FlashLiteNote": "A opção mais econômica. Versão gratuita disponível.",
-        "mistralFreeTierNote": "Nível gratuito disponível com limites de taxa. Requer um Mistral AI conta. API solicitações podem ser usadas para treinar Mistralmodelos de 's."
+        "mistralFreeTierNote": "Nível gratuito disponível com limites de taxa. Requer um Mistral AI conta. API solicitações podem ser usadas para treinar Mistralmodelos de 's.",
+        "freeBuiltIn": "Grátis (integrado)"
     },
     "sessionSetupForm": {
         "title": "Formulário de configuração de sessão",

@@ -331,7 +331,8 @@ const et = {
         "gemini25ProNote": "Hind oleneb sisendi suurusest. Saadaval on tasuta aste.",
         "gemini25FlashNote": "Hind oleneb meediatüübist. Saadaval on tasuta aste.",
         "gemini25FlashLiteNote": "Kõige kuluefektiivsem variant. Saadaval on tasuta aste.",
-        "mistralFreeTierNote": "Tasuta aste on saadaval kiirusepiirangutega. Nõuab Mistral AI konto. API taotlusi saab kasutada koolitamiseks Mistralmudelid."
+        "mistralFreeTierNote": "Tasuta aste on saadaval kiirusepiirangutega. Nõuab Mistral AI konto. API taotlusi saab kasutada koolitamiseks Mistralmudelid.",
+        "freeBuiltIn": "Tasuta (sisseehitatud)"
     },
     "sessionSetupForm": {
         "title": "Seansi seadistamise vorm",

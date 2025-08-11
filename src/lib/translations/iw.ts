@@ -331,7 +331,8 @@ const iw = {
         "gemini25ProNote": "התמחור משתנה בהתאם לגודל הקלט. קיימת שכבה חינמית.",
         "gemini25FlashNote": "התמחור משתנה בהתאם לסוג המדיה. קיימת אפשרות לגרסה חינמית.",
         "gemini25FlashLiteNote": "האפשרות המשתלמת ביותר. קיימת אפשרות חינמית.",
-        "mistralFreeTierNote": "רמה חינמית זמינה עם מגבלות תעריף. דורש Mistral AI חֶשְׁבּוֹן. API ניתן להשתמש בבקשות לאימון Mistralהמודלים של."
+        "mistralFreeTierNote": "רמה חינמית זמינה עם מגבלות תעריף. דורש Mistral AI חֶשְׁבּוֹן. API ניתן להשתמש בבקשות לאימון Mistralהמודלים של.",
+        "freeBuiltIn": "חינם (מובנה)"
     },
     "sessionSetupForm": {
         "title": "טופס הגדרת מפגש",

@@ -331,7 +331,8 @@ const vi = {
         "gemini25ProNote": "Giá cả thay đổi tùy theo kích thước đầu vào. Có gói miễn phí.",
         "gemini25FlashNote": "Giá cả thay đổi tùy theo loại phương tiện. Có gói miễn phí.",
         "gemini25FlashLiteNote": "Lựa chọn tiết kiệm chi phí nhất. Có gói miễn phí.",
-        "mistralFreeTierNote": "Gói miễn phí có sẵn với giới hạn tốc độ. Yêu cầu Mistral AI tài khoản. API yêu cầu có thể được sử dụng để đào tạo Mistralmô hình của 's."
+        "mistralFreeTierNote": "Gói miễn phí có sẵn với giới hạn tốc độ. Yêu cầu Mistral AI tài khoản. API yêu cầu có thể được sử dụng để đào tạo Mistralmô hình của 's.",
+        "freeBuiltIn": "Miễn phí (tích hợp sẵn)"
     },
     "sessionSetupForm": {
         "title": "Biểu mẫu thiết lập phiên",
