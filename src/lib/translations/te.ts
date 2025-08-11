@@ -331,7 +331,7 @@ const te = {
         "gemini25ProNote": "ధర ఇన్‌పుట్ సైజును బట్టి మారుతుంది. ఉచిత టైర్ అందుబాటులో ఉంది.",
         "gemini25FlashNote": "మీడియా రకాన్ని బట్టి ధర మారుతుంది. ఉచిత టైర్ అందుబాటులో ఉంది.",
         "gemini25FlashLiteNote": "అత్యంత ఖర్చుతో కూడుకున్న ఎంపిక. ఉచిత టైర్ అందుబాటులో ఉంది.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "రేటు పరిమితులతో ఉచిత టైర్ అందుబాటులో ఉంది. అవసరం Mistral AI ఖాతా. API శిక్షణ కోసం అభ్యర్థనలను ఉపయోగించవచ్చు Mistralయొక్క నమూనాలు."
     },
     "sessionSetupForm": {
         "title": "సెషన్ సెటప్ ఫారమ్",
@@ -393,8 +393,8 @@ const te = {
         "provider": "ప్రొవైడర్",
         "model": "మోడల్",
         "voice": "వాయిస్",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ఇమేజ్ జనరేషన్",
+        "imageGenerationSettings": "ఇమేజ్ జనరేషన్ సెట్టింగ్‌లు"
     },
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",
@@ -409,6 +409,6 @@ const te = {
     },
     "footer_githubLinkTitle": "GitHub రిపోజిటరీ (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",
     "ttsNoneOption": "ఏదీ లేదు",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ఫ్రాంటియర్ మోడల్స్"
 };
 export default te;

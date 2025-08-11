@@ -331,7 +331,7 @@ const gu = {
         "gemini25ProNote": "ઇનપુટ કદ પ્રમાણે કિંમત બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
         "gemini25FlashNote": "કિંમત મીડિયા પ્રકાર પ્રમાણે બદલાય છે. મફત ટાયર ઉપલબ્ધ છે.",
         "gemini25FlashLiteNote": "સૌથી વધુ ખર્ચ-અસરકારક વિકલ્પ. મફત ટાયર ઉપલબ્ધ.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "દર મર્યાદા સાથે મફત સ્તર ઉપલબ્ધ છે. જરૂરી છે કે Mistral AI ખાતું. API તાલીમ આપવા માટે વિનંતીઓનો ઉપયોગ કરી શકાય છે Mistralના મોડેલો."
     },
     "sessionSetupForm": {
         "title": "સત્ર સેટઅપ ફોર્મ",
@@ -393,8 +393,8 @@ const gu = {
         "provider": "પ્રદાતા",
         "model": "મોડેલ",
         "voice": "અવાજ",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "છબી નિર્માણ",
+        "imageGenerationSettings": "છબી જનરેશન સેટિંગ્સ"
     },
     "imageModel_Quality": "ગુણવત્તા",
     "imageModel_Size": "કદ",
@@ -409,6 +409,6 @@ const gu = {
     },
     "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)",
     "ttsNoneOption": "કોઈ નહીં",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ફ્રન્ટિયર મોડેલ્સ"
 };
 export default gu;

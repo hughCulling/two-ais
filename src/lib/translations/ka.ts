@@ -331,7 +331,7 @@ const ka = {
         "gemini25ProNote": "ფასები განსხვავდება შეყვანის ზომის მიხედვით. ხელმისაწვდომია უფასო დონე.",
         "gemini25FlashNote": "ფასები მედიის ტიპის მიხედვით განსხვავდება. ხელმისაწვდომია უფასო დონე.",
         "gemini25FlashLiteNote": "ყველაზე ეკონომიური ვარიანტი. ხელმისაწვდომია უფასო დონე.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "უფასო დონე ხელმისაწვდომია ტარიფების ლიმიტებით. საჭიროა Mistral AI ანგარიში. API მოთხოვნები შეიძლება გამოყენებულ იქნას ტრენინგისთვის Mistral-ის მოდელები."
     },
     "sessionSetupForm": {
         "title": "სესიის დაყენების ფორმა",
@@ -393,8 +393,8 @@ const ka = {
         "provider": "პროვაიდერი",
         "model": "მოდელი",
         "voice": "ხმა",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "სურათების გენერირება",
+        "imageGenerationSettings": "სურათის გენერირების პარამეტრები"
     },
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",
@@ -409,6 +409,6 @@ const ka = {
     },
     "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)",
     "ttsNoneOption": "არცერთი",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Frontier მოდელები"
 };
 export default ka;

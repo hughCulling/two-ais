@@ -331,7 +331,7 @@ const uk = {
         "gemini25ProNote": "Ціна залежить від розміру вхідних даних. Доступний безкоштовний рівень.",
         "gemini25FlashNote": "Ціни залежать від типу медіа. Доступний безкоштовний рівень.",
         "gemini25FlashLiteNote": "Найекономічніший варіант. Доступний безкоштовний рівень.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Безкоштовний рівень доступний з обмеженнями швидкості. Потрібен Mistral AI обліковий запис. API запити можуть бути використані для навчання Mistralмоделі."
     },
     "sessionSetupForm": {
         "title": "Форма налаштування сеансу",
@@ -393,8 +393,8 @@ const uk = {
         "provider": "Постачальник",
         "model": "Модель",
         "voice": "Голос",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Генерація зображень",
+        "imageGenerationSettings": "Налаштування створення зображень"
     },
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",
@@ -409,6 +409,6 @@ const uk = {
     },
     "footer_githubLinkTitle": "GitHub репозиторій (відкриється в новій вкладці)",
     "ttsNoneOption": "Жоден",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Моделі Frontier"
 };
 export default uk;

@@ -331,7 +331,7 @@ const et = {
         "gemini25ProNote": "Hind oleneb sisendi suurusest. Saadaval on tasuta aste.",
         "gemini25FlashNote": "Hind oleneb meediatüübist. Saadaval on tasuta aste.",
         "gemini25FlashLiteNote": "Kõige kuluefektiivsem variant. Saadaval on tasuta aste.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Tasuta aste on saadaval kiirusepiirangutega. Nõuab Mistral AI konto. API taotlusi saab kasutada koolitamiseks Mistralmudelid."
     },
     "sessionSetupForm": {
         "title": "Seansi seadistamise vorm",
@@ -393,8 +393,8 @@ const et = {
         "provider": "Pakkuja",
         "model": "Mudel",
         "voice": "Hääl",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Kujutise genereerimine",
+        "imageGenerationSettings": "Pildi genereerimise seaded"
     },
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
@@ -409,6 +409,6 @@ const et = {
     },
     "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)",
     "ttsNoneOption": "Puudub",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Piirimudelid"
 };
 export default et;

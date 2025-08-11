@@ -331,7 +331,7 @@ const mn = {
         "gemini25ProNote": "Үнэ нь оролтын хэмжээнээс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
         "gemini25FlashNote": "Үнэ нь хэвлэл мэдээллийн төрлөөс хамаарч өөр өөр байдаг. Үнэгүй давхар боломжтой.",
         "gemini25FlashLiteNote": "Хамгийн хэмнэлттэй сонголт. Үнэгүй шатлал авах боломжтой.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Үнийн хязгаарлалттай үнэ төлбөргүй шатлалыг авах боломжтой. Шаардлагатай a Mistral AI данс. API хүсэлтийг сургахад ашиглаж болно Mistral-ийн загварууд."
     },
     "sessionSetupForm": {
         "title": "Сеанс тохируулах маягт",
@@ -393,8 +393,8 @@ const mn = {
         "provider": "Үйлчилгээ үзүүлэгч",
         "model": "Загвар",
         "voice": "Дуу хоолой",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Зураг үүсгэх",
+        "imageGenerationSettings": "Зураг үүсгэх тохиргоо"
     },
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",
@@ -409,6 +409,6 @@ const mn = {
     },
     "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)",
     "ttsNoneOption": "Байхгүй",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Хилийн загварууд"
 };
 export default mn;

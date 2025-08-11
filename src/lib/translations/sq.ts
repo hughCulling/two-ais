@@ -331,7 +331,7 @@ const sq = {
         "gemini25ProNote": "Çmimi ndryshon në varësi të madhësisë së inputit. Ka nivel falas në dispozicion.",
         "gemini25FlashNote": "Çmimi ndryshon në varësi të llojit të medias. Ka një nivel falas në dispozicion.",
         "gemini25FlashLiteNote": "Opsioni më ekonomik. Kati falas në dispozicion.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Niveli falas i disponueshëm me kufizime çmimesh. Kërkon një Mistral AI llogari. API kërkesat mund të përdoren për të trajnuar Mistralmodelet e 's."
     },
     "sessionSetupForm": {
         "title": "Formulari i Konfigurimit të Sesionit",
@@ -393,8 +393,8 @@ const sq = {
         "provider": "Ofruesi",
         "model": "Model",
         "voice": "Zëri",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Gjenerimi i Imazhit",
+        "imageGenerationSettings": "Cilësimet e Gjenerimit të Imazhit"
     },
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",
@@ -409,6 +409,6 @@ const sq = {
     },
     "footer_githubLinkTitle": "GitHub depo (hapet në një skedë të re)",
     "ttsNoneOption": "Asnjë",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Modelet Frontier"
 };
 export default sq;

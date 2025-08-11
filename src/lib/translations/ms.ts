@@ -331,7 +331,7 @@ const ms = {
         "gemini25ProNote": "Harga berbeza mengikut saiz input. Peringkat percuma tersedia.",
         "gemini25FlashNote": "Harga berbeza mengikut jenis media. Peringkat percuma tersedia.",
         "gemini25FlashLiteNote": "Pilihan paling kos efektif. Peringkat percuma tersedia.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Peringkat percuma tersedia dengan had kadar. Memerlukan a Mistral AI akaun. API permintaan boleh digunakan untuk melatih Mistralmodel-model."
     },
     "sessionSetupForm": {
         "title": "Borang Persediaan Sesi",
@@ -393,8 +393,8 @@ const ms = {
         "provider": "Pembekal",
         "model": "Model",
         "voice": "Suara",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Penjanaan Imej",
+        "imageGenerationSettings": "Tetapan Penjanaan Imej"
     },
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",
@@ -409,6 +409,6 @@ const ms = {
     },
     "footer_githubLinkTitle": "GitHub repositori (dibuka dalam tab baharu)",
     "ttsNoneOption": "tiada",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Model sempadan"
 };
 export default ms;

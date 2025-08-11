@@ -331,7 +331,7 @@ const fi = {
         "gemini25ProNote": "Hinta vaihtelee syötteen koon mukaan. Ilmainen taso saatavilla.",
         "gemini25FlashNote": "Hinnoittelu vaihtelee mediatyypin mukaan. Saatavilla ilmainen taso.",
         "gemini25FlashLiteNote": "Kustannustehokkain vaihtoehto. Ilmainen taso saatavilla.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Ilmainen taso saatavilla nopeusrajoituksilla. Vaatii Mistral AI tili. API pyyntöjä voidaan käyttää koulutukseen Mistraln mallit."
     },
     "sessionSetupForm": {
         "title": "Istunnon määrityslomake",
@@ -393,8 +393,8 @@ const fi = {
         "provider": "Palveluntarjoaja",
         "model": "Malli",
         "voice": "Ääni",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Kuvan luominen",
+        "imageGenerationSettings": "Kuvan luontiasetukset"
     },
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",
@@ -409,6 +409,6 @@ const fi = {
     },
     "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)",
     "ttsNoneOption": "Ei mitään",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Rajamallit"
 };
 export default fi;

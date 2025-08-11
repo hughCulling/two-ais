@@ -331,7 +331,7 @@ const tl = {
         "gemini25ProNote": "Nag-iiba ang pagpepresyo ayon sa laki ng input. Available ang libreng tier.",
         "gemini25FlashNote": "Nag-iiba ang pagpepresyo ayon sa uri ng media. Available ang libreng tier.",
         "gemini25FlashLiteNote": "Karamihan sa cost-effective na opsyon. Available ang libreng tier.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Available ang libreng tier na may mga limitasyon sa rate. Nangangailangan ng a Mistral AI account. API maaaring gamitin ang mga kahilingan sa pagsasanay Mistralng mga modelo."
     },
     "sessionSetupForm": {
         "title": "Form ng Pag-setup ng Session",
@@ -393,8 +393,8 @@ const tl = {
         "provider": "Provider",
         "model": "Modelo",
         "voice": "Boses",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Pagbuo ng Larawan",
+        "imageGenerationSettings": "Mga Setting ng Pagbuo ng Larawan"
     },
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",
@@ -409,6 +409,6 @@ const tl = {
     },
     "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)",
     "ttsNoneOption": "wala",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Mga modelo ng hangganan"
 };
 export default tl;

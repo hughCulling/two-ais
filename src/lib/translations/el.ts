@@ -331,7 +331,7 @@ const el = {
         "gemini25ProNote": "Η τιμολόγηση ποικίλλει ανάλογα με το μέγεθος εισόδου. Διατίθεται δωρεάν βαθμίδα.",
         "gemini25FlashNote": "Η τιμολόγηση ποικίλλει ανάλογα με τον τύπο μέσου. Διατίθεται δωρεάν έκδοση.",
         "gemini25FlashLiteNote": "Η πιο οικονομική επιλογή. Διατίθεται δωρεάν βαθμίδα.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Διατίθεται δωρεάν βαθμίδα με όρια τιμών. Απαιτείται Mistral AI λογαριασμός. API τα αιτήματα μπορούν να χρησιμοποιηθούν για την εκπαίδευση Mistralμοντέλα του."
     },
     "sessionSetupForm": {
         "title": "Φόρμα Ρύθμισης Συνεδρίας",
@@ -393,8 +393,8 @@ const el = {
         "provider": "Προμηθευτής",
         "model": "Μοντέλο",
         "voice": "Φωνή",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Δημιουργία εικόνας",
+        "imageGenerationSettings": "Ρυθμίσεις δημιουργίας εικόνας"
     },
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",
@@ -409,6 +409,6 @@ const el = {
     },
     "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)",
     "ttsNoneOption": "Κανένας",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Μοντέλα Frontier"
 };
 export default el;

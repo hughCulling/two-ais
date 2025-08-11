@@ -331,7 +331,7 @@ const hi = {
         "gemini25ProNote": "मूल्य निर्धारण इनपुट आकार के अनुसार भिन्न होता है। निःशुल्क स्तर उपलब्ध है।",
         "gemini25FlashNote": "मूल्य निर्धारण मीडिया प्रकार के अनुसार भिन्न होता है। निःशुल्क स्तर उपलब्ध है।",
         "gemini25FlashLiteNote": "सबसे किफ़ायती विकल्प। निःशुल्क टियर उपलब्ध।",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "दर सीमाओं के साथ निःशुल्क स्तर उपलब्ध है। Mistral AI खाता। API अनुरोधों का उपयोग प्रशिक्षण के लिए किया जा सकता है Mistralके मॉडल."
     },
     "sessionSetupForm": {
         "title": "सत्र सेटअप फ़ॉर्म",
@@ -393,8 +393,8 @@ const hi = {
         "provider": "प्रदाता",
         "model": "नमूना",
         "voice": "आवाज़",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "छवि निर्माण",
+        "imageGenerationSettings": "छवि निर्माण सेटिंग्स"
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",
@@ -409,6 +409,6 @@ const hi = {
     },
     "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)",
     "ttsNoneOption": "कोई नहीं",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "सीमांत मॉडल"
 };
 export default hi;

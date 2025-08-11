@@ -331,7 +331,7 @@ const pa = {
         "gemini25ProNote": "ਕੀਮਤ ਇਨਪੁਟ ਆਕਾਰ ਅਨੁਸਾਰ ਬਦਲਦੀ ਹੈ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।",
         "gemini25FlashNote": "ਕੀਮਤ ਮੀਡੀਆ ਕਿਸਮ ਅਨੁਸਾਰ ਵੱਖ-ਵੱਖ ਹੁੰਦੀ ਹੈ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।",
         "gemini25FlashLiteNote": "ਸਭ ਤੋਂ ਵੱਧ ਲਾਗਤ-ਪ੍ਰਭਾਵਸ਼ਾਲੀ ਵਿਕਲਪ। ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ।",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "ਦਰ ਸੀਮਾਵਾਂ ਦੇ ਨਾਲ ਮੁਫ਼ਤ ਟੀਅਰ ਉਪਲਬਧ ਹੈ। ਲੋੜ ਹੈ ਇੱਕ Mistral AI ਖਾਤਾ। API ਬੇਨਤੀਆਂ ਨੂੰ ਸਿਖਲਾਈ ਦੇਣ ਲਈ ਵਰਤਿਆ ਜਾ ਸਕਦਾ ਹੈ Mistralਦੇ ਮਾਡਲ।"
     },
     "sessionSetupForm": {
         "title": "ਸੈਸ਼ਨ ਸੈੱਟਅੱਪ ਫਾਰਮ",
@@ -393,8 +393,8 @@ const pa = {
         "provider": "ਪ੍ਰਦਾਤਾ",
         "model": "ਮਾਡਲ",
         "voice": "ਆਵਾਜ਼",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ਚਿੱਤਰ ਉਤਪਤੀ",
+        "imageGenerationSettings": "ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਸੈਟਿੰਗਾਂ"
     },
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",
@@ -409,6 +409,6 @@ const pa = {
     },
     "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)",
     "ttsNoneOption": "ਕੋਈ ਨਹੀਂ",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ਫਰੰਟੀਅਰ ਮਾਡਲ"
 };
 export default pa;

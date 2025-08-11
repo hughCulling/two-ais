@@ -331,7 +331,7 @@ const ru = {
         "gemini25ProNote": "Цена зависит от размера входных данных. Доступен бесплатный тариф.",
         "gemini25FlashNote": "Цена зависит от типа носителя. Доступен бесплатный тариф.",
         "gemini25FlashLiteNote": "Самый экономичный вариант. Доступен бесплатный тариф.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Доступен бесплатный тариф с ограничениями по скорости. Требуется Mistral AI счет. API запросы могут быть использованы для обучения Mistralмодели."
     },
     "sessionSetupForm": {
         "title": "Форма настройки сеанса",
@@ -393,8 +393,8 @@ const ru = {
         "provider": "Поставщик",
         "model": "Модель",
         "voice": "Голос",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Генерация изображений",
+        "imageGenerationSettings": "Настройки генерации изображения"
     },
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",
@@ -409,6 +409,6 @@ const ru = {
     },
     "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)",
     "ttsNoneOption": "Никто",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Пограничные модели"
 };
 export default ru;

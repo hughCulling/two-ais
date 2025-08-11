@@ -331,7 +331,7 @@ const ca = {
         "gemini25ProNote": "El preu varia segons la mida d'entrada. Nivell gratuït disponible.",
         "gemini25FlashNote": "El preu varia segons el tipus de suport. Nivell gratuït disponible.",
         "gemini25FlashLiteNote": "L'opció més rendible. Nivell gratuït disponible.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Nivell gratuït disponible amb límits de tarifa. Requereix un Mistral AI compte. API les sol·licituds es poden utilitzar per entrenar MistralEls models de."
     },
     "sessionSetupForm": {
         "title": "Formulari de configuració de sessió",
@@ -393,8 +393,8 @@ const ca = {
         "provider": "Proveïdor",
         "model": "Model",
         "voice": "Veu",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Generació d'imatges",
+        "imageGenerationSettings": "Configuració de generació d'imatges"
     },
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",
@@ -409,6 +409,6 @@ const ca = {
     },
     "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)",
     "ttsNoneOption": "Cap",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Models Frontier"
 };
 export default ca;

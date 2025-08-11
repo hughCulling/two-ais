@@ -331,7 +331,7 @@ const ko = {
         "gemini25ProNote": "가격은 입력 크기에 따라 다릅니다. 무료 티어 이용 가능.",
         "gemini25FlashNote": "가격은 미디어 유형에 따라 다릅니다. 무료 이용이 가능합니다.",
         "gemini25FlashLiteNote": "가장 비용 효율적인 옵션입니다. 무료 티어 이용 가능.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "요금 제한이 있는 무료 계층이 제공됩니다. Mistral AI 계정. API 요청은 훈련에 사용될 수 있습니다 Mistral의 모델입니다."
     },
     "sessionSetupForm": {
         "title": "세션 설정 양식",
@@ -393,8 +393,8 @@ const ko = {
         "provider": "공급자",
         "model": "모델",
         "voice": "목소리",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "이미지 생성",
+        "imageGenerationSettings": "이미지 생성 설정"
     },
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",
@@ -409,6 +409,6 @@ const ko = {
     },
     "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)",
     "ttsNoneOption": "없음",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "프론티어 모델"
 };
 export default ko;

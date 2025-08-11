@@ -331,7 +331,7 @@ const ja = {
         "gemini25ProNote": "価格は入力サイズによって異なります。無料プランもご利用いただけます。",
         "gemini25FlashNote": "価格はメディアの種類によって異なります。無料プランもご利用いただけます。",
         "gemini25FlashLiteNote": "最も費用対効果の高いオプション。無料プランもご利用いただけます。",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "無料枠はレート制限付きでご利用いただけます。 Mistral AI アカウント。 API リクエストはトレーニングに使用できます Mistralのモデル。"
     },
     "sessionSetupForm": {
         "title": "セッション設定フォーム",
@@ -393,8 +393,8 @@ const ja = {
         "provider": "プロバイダー",
         "model": "モデル",
         "voice": "声",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "画像生成",
+        "imageGenerationSettings": "画像生成設定"
     },
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",
@@ -409,6 +409,6 @@ const ja = {
     },
     "footer_githubLinkTitle": "GitHub リポジトリ（新しいタブで開きます）",
     "ttsNoneOption": "なし",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "フロンティアモデル"
 };
 export default ja;

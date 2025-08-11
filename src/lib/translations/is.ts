@@ -331,7 +331,7 @@ const is = {
         "gemini25ProNote": "Verðlagning er mismunandi eftir stærð inntaks. Ókeypis útgáfa í boði.",
         "gemini25FlashNote": "Verðlagning er mismunandi eftir miðlunartegund. Ókeypis útgáfa í boði.",
         "gemini25FlashLiteNote": "Hagkvæmasti kosturinn. Ókeypis útgáfa í boði.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Ókeypis útgáfa í boði með hraðatakmörkunum. Krefst a Mistral AI reikningur. API beiðnir má nota til að þjálfa Mistralfyrirmyndir."
     },
     "sessionSetupForm": {
         "title": "Uppsetningarform fyrir lotur",
@@ -393,8 +393,8 @@ const is = {
         "provider": "Veitandi",
         "model": "Fyrirmynd",
         "voice": "Rödd",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Myndagerð",
+        "imageGenerationSettings": "Stillingar fyrir myndagerð"
     },
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",
@@ -409,6 +409,6 @@ const is = {
     },
     "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)",
     "ttsNoneOption": "Enginn",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Frontier líkön"
 };
 export default is;

@@ -331,7 +331,7 @@ const sk = {
         "gemini25ProNote": "Cena sa líši v závislosti od veľkosti vstupu. K dispozícii je bezplatná úroveň.",
         "gemini25FlashNote": "Cena sa líši v závislosti od typu média. K dispozícii je bezplatná úroveň.",
         "gemini25FlashLiteNote": "Najnákladovo najvýhodnejšia možnosť. K dispozícii je bezplatná úroveň.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Bezplatná úroveň je k dispozícii s obmedzeniami rýchlosti. Vyžaduje sa Mistral AI účet. API žiadosti sa môžu použiť na školenie Mistralmodely."
     },
     "sessionSetupForm": {
         "title": "Formulár na nastavenie relácie",
@@ -393,8 +393,8 @@ const sk = {
         "provider": "Poskytovateľ",
         "model": "Model",
         "voice": "Hlas",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Generovanie obrázkov",
+        "imageGenerationSettings": "Nastavenia generovania obrázkov"
     },
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",
@@ -409,6 +409,6 @@ const sk = {
     },
     "footer_githubLinkTitle": "GitHub úložisko (otvorí sa v novej karte)",
     "ttsNoneOption": "Žiadne",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Hraničné modely"
 };
 export default sk;

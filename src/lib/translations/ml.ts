@@ -331,7 +331,7 @@ const ml = {
         "gemini25ProNote": "ഇൻപുട്ട് വലുപ്പത്തിനനുസരിച്ച് വില വ്യത്യാസപ്പെടുന്നു. സൗജന്യ ടയർ ലഭ്യമാണ്.",
         "gemini25FlashNote": "മീഡിയ തരം അനുസരിച്ച് വില വ്യത്യാസപ്പെടുന്നു. സൗജന്യ ടയർ ലഭ്യമാണ്.",
         "gemini25FlashLiteNote": "ഏറ്റവും ചെലവ് കുറഞ്ഞ ഓപ്ഷൻ. സൗജന്യ ടയർ ലഭ്യമാണ്.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "നിരക്ക് പരിധികളോടെ സൗജന്യ ടയർ ലഭ്യമാണ്. ആവശ്യമാണ് Mistral AI അക്കൗണ്ട്. API പരിശീലനത്തിനായി അഭ്യർത്ഥനകൾ ഉപയോഗിക്കാം Mistralയുടെ മോഡലുകൾ."
     },
     "sessionSetupForm": {
         "title": "സെഷൻ സജ്ജീകരണ ഫോം",
@@ -393,8 +393,8 @@ const ml = {
         "provider": "ദാതാവ്",
         "model": "മോഡൽ",
         "voice": "ശബ്ദം",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ഇമേജ് ജനറേഷൻ",
+        "imageGenerationSettings": "ഇമേജ് ജനറേഷൻ ക്രമീകരണങ്ങൾ"
     },
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",
@@ -409,6 +409,6 @@ const ml = {
     },
     "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)",
     "ttsNoneOption": "ഒന്നുമില്ല",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ഫ്രോണ്ടിയർ മോഡലുകൾ"
 };
 export default ml;

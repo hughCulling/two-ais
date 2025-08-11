@@ -4,7 +4,7 @@ const path = require('path');
 const JSON5 = require('json5');
 const {Translate} = require('@google-cloud/translate').v2;
 
-const TRANSLATIONS_DIR = path.join(__dirname, 'src', 'lib', 'translations');
+const TRANSLATIONS_DIR = path.join(__dirname, '..', 'src', 'lib', 'translations');
 const EN_FILE = path.join(TRANSLATIONS_DIR, 'en.ts');
 const SKIP_FILES = ['index.ts', 'en.ts'];
 

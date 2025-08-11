@@ -331,7 +331,7 @@ const ta = {
         "gemini25ProNote": "உள்ளீட்டு அளவைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
         "gemini25FlashNote": "மீடியா வகையைப் பொறுத்து விலை மாறுபடும். இலவச அடுக்கு கிடைக்கிறது.",
         "gemini25FlashLiteNote": "மிகவும் செலவு குறைந்த விருப்பம். இலவச அடுக்கு கிடைக்கிறது.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "கட்டண வரம்புகளுடன் இலவச அடுக்கு கிடைக்கிறது. தேவை Mistral AI கணக்கு. API பயிற்சி பெற கோரிக்கைகளைப் பயன்படுத்தலாம். Mistralஇன் மாதிரிகள்."
     },
     "sessionSetupForm": {
         "title": "அமர்வு அமைவு படிவம்",
@@ -393,8 +393,8 @@ const ta = {
         "provider": "வழங்குநர்",
         "model": "மாதிரி",
         "voice": "குரல்",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "பட உருவாக்கம்",
+        "imageGenerationSettings": "பட உருவாக்க அமைப்புகள்"
     },
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",
@@ -409,6 +409,6 @@ const ta = {
     },
     "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)",
     "ttsNoneOption": "யாரும் இல்லை",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "எல்லைப்புற மாதிரிகள்"
 };
 export default ta;

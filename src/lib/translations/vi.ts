@@ -331,7 +331,7 @@ const vi = {
         "gemini25ProNote": "Giá cả thay đổi tùy theo kích thước đầu vào. Có gói miễn phí.",
         "gemini25FlashNote": "Giá cả thay đổi tùy theo loại phương tiện. Có gói miễn phí.",
         "gemini25FlashLiteNote": "Lựa chọn tiết kiệm chi phí nhất. Có gói miễn phí.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Gói miễn phí có sẵn với giới hạn tốc độ. Yêu cầu Mistral AI tài khoản. API yêu cầu có thể được sử dụng để đào tạo Mistralmô hình của 's."
     },
     "sessionSetupForm": {
         "title": "Biểu mẫu thiết lập phiên",
@@ -393,8 +393,8 @@ const vi = {
         "provider": "Nhà cung cấp",
         "model": "Người mẫu",
         "voice": "Tiếng nói",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Tạo hình ảnh",
+        "imageGenerationSettings": "Cài đặt tạo hình ảnh"
     },
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",
@@ -409,6 +409,6 @@ const vi = {
     },
     "footer_githubLinkTitle": "GitHub kho lưu trữ (mở trong tab mới)",
     "ttsNoneOption": "Không có",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Các mô hình biên giới"
 };
 export default vi;

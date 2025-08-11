@@ -331,7 +331,7 @@ const zh = {
         "gemini25ProNote": "定价因输入大小而异。提供免费套餐。",
         "gemini25FlashNote": "价格因媒体类型而异。提供免费套餐。",
         "gemini25FlashLiteNote": "最具成本效益的选择。提供免费套餐。",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "免费套餐有速率限制。需要 Mistral AI 帐户。 API 请求可用于训练 Mistral的模型。"
     },
     "sessionSetupForm": {
         "title": "会话设置表",
@@ -393,8 +393,8 @@ const zh = {
         "provider": "提供者",
         "model": "模型",
         "voice": "嗓音",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "图像生成",
+        "imageGenerationSettings": "图像生成设置"
     },
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",
@@ -409,6 +409,6 @@ const zh = {
     },
     "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）",
     "ttsNoneOption": "没有任何",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "前沿模型"
 };
 export default zh;

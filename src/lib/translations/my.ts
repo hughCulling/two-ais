@@ -331,7 +331,7 @@ const my = {
         "gemini25ProNote": "ထည့်သွင်းအရွယ်အစားအလိုက် ဈေးနှုန်းကွာခြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
         "gemini25FlashNote": "စျေးနှုန်းသည် မီဒီယာအမျိုးအစားအလိုက် ကွဲပြားသည်။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
         "gemini25FlashLiteNote": "ကုန်ကျစရိတ်အသက်သာဆုံး ရွေးချယ်မှု။ တန်းခွဲ အခမဲ့ ရနိုင်သည်။",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "နှုန်းထားကန့်သတ်ချက်များဖြင့် အခမဲ့အဆင့်ကို ရနိုင်ပါသည်။ လိုအပ်ပါသည်။ Mistral AI အကောင့်။ API တောင်းဆိုမှုများကို လေ့ကျင့်ရန် အသုံးပြုနိုင်သည်။ Mistralမော်ဒယ်များ။"
     },
     "sessionSetupForm": {
         "title": "Session Setup Form",
@@ -393,8 +393,8 @@ const my = {
         "provider": "ပံ့ပိုးပေးသူ",
         "model": "မော်ဒယ်",
         "voice": "စကားသံ",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ရုပ်ပုံမျိုးဆက်",
+        "imageGenerationSettings": "ရုပ်ပုံ မျိုးဆက် ဆက်တင်များ"
     },
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",
@@ -409,6 +409,6 @@ const my = {
     },
     "footer_githubLinkTitle": "GitHub repository (တက်ဘ်အသစ်တစ်ခုတွင်ဖွင့်သည်)",
     "ttsNoneOption": "တစ်ခုမှ",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "တောင်တန်းမော်ဒယ်များ"
 };
 export default my;

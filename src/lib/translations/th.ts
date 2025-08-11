@@ -331,7 +331,7 @@ const th = {
         "gemini25ProNote": "ราคาแตกต่างกันไปตามขนาดของอินพุต มีระดับฟรีให้เลือก",
         "gemini25FlashNote": "ราคาแตกต่างกันไปตามประเภทสื่อ มีแบบฟรีให้เลือก",
         "gemini25FlashLiteNote": "ตัวเลือกที่คุ้มค่าที่สุด มีระดับการใช้งานฟรีให้เลือก",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "มีระดับฟรีพร้อมการจำกัดอัตรา จำเป็นต้องมี Mistral AI บัญชี. API คำขออาจนำมาใช้ในการฝึกอบรม Mistralแบบจำลองของ"
     },
     "sessionSetupForm": {
         "title": "แบบฟอร์มการตั้งค่าเซสชัน",
@@ -393,8 +393,8 @@ const th = {
         "provider": "ผู้ให้บริการ",
         "model": "แบบอย่าง",
         "voice": "เสียง",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "การสร้างภาพ",
+        "imageGenerationSettings": "การตั้งค่าการสร้างภาพ"
     },
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",
@@ -409,6 +409,6 @@ const th = {
     },
     "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)",
     "ttsNoneOption": "ไม่มี",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "แบบจำลองชายแดน"
 };
 export default th;
