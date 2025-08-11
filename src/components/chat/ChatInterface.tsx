@@ -679,7 +679,9 @@ export function ChatInterface({
             {!hasUserInteracted && conversationStatus === "running" && (
                 (() => {
                     const hasUnplayedAudio = messages.some(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
-                    return hasUnplayedAudio || isWaitingForSignal;
+                    const isUsingBrowserTTS = conversationData?.ttsSettings?.agentA?.provider === 'browser' || 
+                                           conversationData?.ttsSettings?.agentB?.provider === 'browser';
+                    return hasUnplayedAudio || isWaitingForSignal || isUsingBrowserTTS;
                 })() && (
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mx-4 mt-4 rounded-md">
                     <div className="flex">
