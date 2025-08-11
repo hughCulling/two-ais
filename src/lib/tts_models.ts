@@ -795,27 +795,6 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     } as TTSVoice)),
 ];
 
-// --- Eleven Labs Voices ---
-// export const ELEVENLABS_TTS_VOICES: TTSVoice[] = [
-//     // Premium Voices
-//     { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Professional, versatile female voice with American accent.' },
-//     { id: 'AZnzlk1XvdvUeBnXmlld', name: 'Domi', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Energetic, confident female voice.' },
-//     { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Soft, expressive female voice.' },
-//     { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Friendly, confident male voice with rich tone.' },
-//     { id: 'MF3mGyEYCl7XYWbV9V6O', name: 'Elli', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Mature, authoritative female voice.' },
-//     { id: 'TxGEqnHWrfWFTfGW9XjX', name: 'Josh', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Young adult male voice with neutral American accent.' },
-//     { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Deep, strong male voice with unique character.' },
-//     { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Clear, professional male voice.' },
-//     { id: 'yoZ06aMxZJJ28mfd3POQ', name: 'Sam', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Premium', status: 'GA', notes: 'Conversational, relaxed male voice.' },
-    
-//     // Instant Voices
-//     { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Friendly, engaging male voice for quick projects.' },
-//     { id: 'XB0fDUnXU5powFXDhCwa', name: 'Dorothy', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Clear, mature female voice.' },
-//     { id: 'bVMeCyTHy58xNoL34h3p', name: 'Matilda', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Youthful, gentle female voice.' },
-//     { id: 'flq6f7yk4E4fJM5XTYuZ', name: 'Gregory', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Deep, authoritative male voice.' },
-//     { id: 'jsCqWAovK2LkecY7zXl4', name: 'Daniel', gender: 'Male', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Professional, versatile male voice.' },
-//     { id: 't0jbNlBVZ17f02VDIeMI', name: 'Serena', gender: 'Female', languageCodes: ['en-US'], voiceType: 'Instant', status: 'GA', notes: 'Smooth, articulate female voice.' },
-// ];
 
 // --- Interface for free tier information ---
 interface FreeTierInfo {
@@ -940,25 +919,6 @@ export function isTTSModelLanguageSupported(
 
 // --- AVAILABLE TTS PROVIDERS & VOICES --- (MOVED TO THE END)
 export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
-    // Browser TTS provider - client-side only, no API key required
-    // {
-    //     id: 'browser',
-    //     name: 'Browser TTS',
-    //     requiresOwnKey: false,
-    //     models: [
-    //         {
-    //             id: 'browser-tts',
-    //             apiModelId: 'browser-tts',
-    //             name: 'Web Speech API',
-    //             description: 'Built-in browser text-to-speech using the Web Speech API. No API key required, but quality and available voices depend on the browser and operating system.',
-    //             pricingText: () => 'Free (built-in)',
-    //             supportedLanguages: Array.from(new Set(BROWSER_TTS_VOICES.flatMap(v => v.languageCodes || []))),
-    //             inputLimitType: 'characters',
-    //             inputLimitValue: 4000, // Reasonable limit for browser TTS
-    //         }
-    //     ],
-    //     availableVoices: BROWSER_TTS_VOICES,
-    // },
     {
         id: 'openai',
         name: 'OpenAI',
@@ -1106,48 +1066,6 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         ],
         availableVoices: GOOGLE_TTS_VOICES,
     },
-    // {
-    //     id: 'elevenlabs',
-    //     name: 'Eleven Labs',
-    //     requiresOwnKey: true,
-    //     apiKeyId: 'elevenlabs',
-    //     models: [
-    //         {
-    //             id: 'elevenlabs-multilingual-v2',
-    //             apiModelId: 'eleven_multilingual_v2',
-    //             name: 'Multilingual V2',
-    //             description: 'Our most lifelike model with rich emotional expression. (10,000 character limit)',
-    //             pricingText: '$300.00 per 1M characters',
-    //             voiceFilterCriteria: () => true,
-    //             supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru'],
-    //             inputLimitType: 'characters',
-    //             inputLimitValue: 10000,
-    //         },
-    //         {
-    //             id: 'elevenlabs-flash-v2-5',
-    //             apiModelId: 'eleven_flash_v2_5',
-    //             name: 'Flash V2.5',
-    //             description: 'Ultra-fast model optimized for real-time use (~75ms latency). (40,000 character limit)',
-    //             pricingText: '$150.00 per 1M characters',
-    //             voiceFilterCriteria: () => true,
-    //             supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi'],
-    //             inputLimitType: 'characters',
-    //             inputLimitValue: 40000,
-    //         },
-    //         {
-    //             id: 'elevenlabs-turbo-v2-5',
-    //             apiModelId: 'eleven_turbo_v2_5',
-    //             name: 'Turbo V2.5',
-    //             description: 'High quality, low-latency model with a good balance of quality and speed (~250ms-300ms). (40,000 character limit)',
-    //             pricingText: 'Couldn\'t verify',
-    //             voiceFilterCriteria: () => true,
-    //             supportedLanguages: ['en', 'ja', 'zh', 'de', 'hi', 'fr', 'ko', 'pt', 'it', 'es', 'id', 'nl', 'tr', 'fil', 'pl', 'sv', 'bg', 'ro', 'ar', 'cs', 'el', 'fi', 'hr', 'ms', 'sk', 'da', 'ta', 'uk', 'ru', 'hu', 'no', 'vi'],
-    //             inputLimitType: 'characters',
-    //             inputLimitValue: 40000,
-    //         },
-    //     ],
-    //     availableVoices: ELEVENLABS_TTS_VOICES,
-    // },
     {
         id: 'google-gemini',
         name: 'Google Gemini TTS',

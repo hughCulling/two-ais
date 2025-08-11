@@ -49,24 +49,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_Frontier',
         knowledgeCutoff: '2024-10-01',
     },
-    // {
-    //     id: 'gpt-5-chat-latest',
-    //     name: 'GPT-5 Chat',
-    //     provider: 'OpenAI',
-    //     contextWindow: 400000,
-    //     pricing: { 
-    //         input: 1.25, 
-    //         output: 10.00,
-    //         // note: (t) => `$${1.25} / 1M input tokens, $${10.00} / 1M output tokens`
-    //     },
-    //     apiKeyInstructionsUrl: 'https://platform.openai.com/api-keys',
-    //     apiKeySecretName: 'openai',
-    //     status: 'stable',
-    //     // requiresOrgVerification: true,
-    //     usesReasoningTokens: true,
-    //     categoryKey: 'modelCategory_Frontier',
-    //     knowledgeCutoff: '2024-09-30',
-    // },
     {
         id: 'gpt-5-mini',
         name: 'GPT-5 mini',
@@ -564,19 +546,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         usesReasoningTokens: false, 
         knowledgeCutoff: '2024-11',
     },
-    // {
-    //     id: 'grok-3-fast-latest',
-    //     name: 'Grok 3 Fast',
-    //     provider: 'xAI', 
-    //     contextWindow: 131072,
-    //     pricing: { input: 5.00, output: 25.00 },
-    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
-    //     apiKeySecretName: 'xai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Grok3', 
-    //     usesReasoningTokens: false, 
-    //     knowledgeCutoff: '2024-11',
-    // },
     {
         id: 'grok-3-mini-latest',
         name: 'Grok 3 Mini',
@@ -590,19 +559,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         usesReasoningTokens: true, 
         knowledgeCutoff: '2024-11',
     },
-    // {
-    //     id: 'grok-3-mini-fast-latest',
-    //     name: 'Grok 3 Mini Fast',
-    //     provider: 'xAI', 
-    //     contextWindow: 131072,
-    //     pricing: { input: 0.60, output: 4.00 },
-    //     apiKeyInstructionsUrl: 'https://docs.x.ai/',
-    //     apiKeySecretName: 'xai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Grok3Mini', 
-    //     usesReasoningTokens: true, 
-    //     knowledgeCutoff: '2024-11',
-    // },
     {
         id: 'grok-4-latest',
         name: 'Grok 4',
@@ -672,18 +628,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
-    // Temporarily disabled due to streaming response issues
-    // {
-    //     id: 'magistral-medium-latest',
-    //     name: 'Magistral Medium',
-    //     provider: 'Mistral AI',
-    //     contextWindow: 40000,
-    //     pricing: { input: 2.00, output: 5.00 },
-    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
-    //     apiKeySecretName: 'mistral',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_MistralAIPremierModels',
-    // },
     {
         id: 'mistral-large-latest',
         name: 'Mistral Large',
@@ -738,19 +682,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
-    // Open Models
-    // Temporarily disabled due to streaming response issues
-    // {
-    //     id: 'magistral-small-latest',
-    //     name: 'Magistral Small',
-    //     provider: 'Mistral AI',
-    //     contextWindow: 40000,
-    //     pricing: { input: 0.50, output: 1.50 },
-    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
-    //     apiKeySecretName: 'mistral',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_MistralAIOpenModels',
-    // },
     {
         id: 'mistral-small-latest',
         name: 'Mistral Small 3.2',
@@ -769,77 +700,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_MistralAIOpenModels',
     },
-    // === Together.ai ===
-    // Removing Llama models not available on the Llama API, even though still using Together.ai.
-    // {
-    //     id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
-    //     name: 'Llama 4 Scout Instruct (17Bx16E)',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 1048576, 
-    //     pricing: { input: 0.18, output: 0.59 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_Llama4',
-    //     knowledgeCutoff: '2024-08',
-    // },
-    // {
-    //     id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
-    //     name: 'Llama 4 Maverick Instruct (17Bx128E)',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 1048576, 
-    //     pricing: { input: 0.27, output: 0.85 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Llama4',
-    //     knowledgeCutoff: '2024-08',
-    // },
-    // {
-    //     id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-    //     name: 'Meta Llama 3.3 70B Instruct Turbo',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 0.88, output: 0.88 }, 
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Llama3_3',
-    // },
-    // { 
-    //     id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
-    //     name: 'Meta Llama 3.3 70B Instruct Turbo Free',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 131072, 
-    //     pricing: { input: 0.00, output: 0.00, note: (t: TranslationKeys) => t.pricing.free }, 
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Llama3_3',
-    // },
-    // // Google Gemma Models via TogetherAI
-    // {
-    //     id: 'google/gemma-2-27b-it',
-    //     name: 'Gemma-2 Instruct (27B)',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 8192,
-    //     pricing: { input: 0.80, output: 0.80 }, 
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable', 
-    //     categoryKey: 'modelCategory_Gemma2',
-    // },
-    // {
-    //     id: 'google/gemma-3n-E4B-it',
-    //     name: 'Gemma 3N E4B Instruct',
-    //     provider: 'TogetherAI',
-    //     contextWindow: 32000, // 32K tokens, per documentation
-    //     pricing: { input: 0.02, output: 0.04 },
-    //     apiKeyInstructionsUrl: 'https://api.together.ai/settings/api-keys',
-    //     apiKeySecretName: 'together_ai',
-    //     status: 'stable',
-    //     categoryKey: 'modelCategory_Gemma3n', // New category for Gemma 3N models
-    // },
 ];
 
 // --- Helper Functions ---
@@ -946,10 +806,6 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
         let translatedCategory: string;
         if (categoryKey === 'claude4_temp') {
             translatedCategory = "Claude 4 models";
-        // } else if (categoryKey === 'modelCategory_Grok4') {
-        //     translatedCategory = "Grok 4 models";
-        // } else if (categoryKey === 'modelCategory_Gemma3n') {
-        //     translatedCategory = "Gemma 3n model";
         } else {
             const maybeTranslation = (categoryKey in t)
                 ? t[categoryKey as keyof TranslationKeys]
