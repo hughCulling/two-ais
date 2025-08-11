@@ -31,6 +31,7 @@ import { getVoiceById } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import removeMarkdown from 'remove-markdown';
 
 // --- Interfaces ---
 interface Message {
@@ -535,7 +536,8 @@ export function ChatInterface({
                 return;
             }
 
-            const utterance = new SpeechSynthesisUtterance(nextMsg.content);
+            const cleanedContent = removeMarkdown(nextMsg.content);
+            const utterance = new SpeechSynthesisUtterance(cleanedContent);
             utterance.voice = voice;
             utterance.onstart = () => {
                 // This is the source of truth for playback starting
