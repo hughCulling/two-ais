@@ -331,7 +331,7 @@ const ar = {
         "gemini25ProNote": "يختلف السعر حسب حجم الإدخال. تتوفر نسخة مجانية.",
         "gemini25FlashNote": "تختلف الأسعار باختلاف نوع الوسائط. تتوفر نسخة مجانية.",
         "gemini25FlashLiteNote": "الخيار الأكثر فعالية من حيث التكلفة. تتوفر نسخة مجانية.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "تتوفر فئة مجانية بحدود سعرية. يتطلب Mistral AI حساب. API يمكن استخدام الطلبات للتدريب Mistralنماذج ."
     },
     "sessionSetupForm": {
         "title": "نموذج إعداد الجلسة",
@@ -393,8 +393,8 @@ const ar = {
         "provider": "مزود",
         "model": "نموذج",
         "voice": "صوت",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "توليد الصور",
+        "imageGenerationSettings": "إعدادات إنشاء الصورة"
     },
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",
@@ -409,6 +409,6 @@ const ar = {
     },
     "footer_githubLinkTitle": "GitHub المستودع (يفتح في علامة تبويب جديدة)",
     "ttsNoneOption": "لا أحد",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "نماذج الحدود"
 };
 export default ar;

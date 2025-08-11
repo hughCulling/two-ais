@@ -331,7 +331,7 @@ const fa = {
         "gemini25ProNote": "قیمت‌گذاری بر اساس اندازه ورودی متفاوت است. ردیف رایگان موجود است.",
         "gemini25FlashNote": "قیمت‌گذاری بر اساس نوع رسانه متفاوت است. سطح رایگان موجود است.",
         "gemini25FlashLiteNote": "مقرون به صرفه‌ترین گزینه. سطح رایگان موجود است.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "سطح رایگان با محدودیت نرخ موجود است. نیاز به Mistral AI حساب. API درخواست‌ها ممکن است برای آموزش استفاده شوند Mistralمدل‌های."
     },
     "sessionSetupForm": {
         "title": "فرم تنظیم جلسه",
@@ -393,8 +393,8 @@ const fa = {
         "provider": "ارائه دهنده",
         "model": "مدل",
         "voice": "صدا",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "تولید تصویر",
+        "imageGenerationSettings": "تنظیمات تولید تصویر"
     },
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",
@@ -409,6 +409,6 @@ const fa = {
     },
     "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)",
     "ttsNoneOption": "هیچکدام",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "مدل‌های مرزی"
 };
 export default fa;

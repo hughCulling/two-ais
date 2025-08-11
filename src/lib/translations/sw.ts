@@ -331,7 +331,7 @@ const sw = {
         "gemini25ProNote": "Bei inatofautiana kwa ukubwa wa pembejeo. Kiwango cha bure kinapatikana.",
         "gemini25FlashNote": "Bei inatofautiana kulingana na aina ya media. Kiwango cha bure kinapatikana.",
         "gemini25FlashLiteNote": "Chaguo la gharama nafuu zaidi. Kiwango cha bure kinapatikana.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Kiwango cha bure kinapatikana na kikomo cha viwango. Inahitaji a Mistral AI akaunti. API maombi yanaweza kutumika kutoa mafunzo Mistralmifano ya."
     },
     "sessionSetupForm": {
         "title": "Fomu ya Kuweka Kikao",
@@ -393,8 +393,8 @@ const sw = {
         "provider": "Mtoa huduma",
         "model": "Mfano",
         "voice": "Sauti",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Kizazi cha Picha",
+        "imageGenerationSettings": "Mipangilio ya Kizazi cha Picha"
     },
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",
@@ -409,6 +409,6 @@ const sw = {
     },
     "footer_githubLinkTitle": "GitHub hazina (hufungua kwenye kichupo kipya)",
     "ttsNoneOption": "Hakuna",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Mifano ya Frontier"
 };
 export default sw;

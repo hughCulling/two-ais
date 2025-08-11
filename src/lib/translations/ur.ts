@@ -331,7 +331,7 @@ const ur = {
         "gemini25ProNote": "قیمت ان پٹ سائز کے لحاظ سے مختلف ہوتی ہے۔ مفت درجے دستیاب ہے۔",
         "gemini25FlashNote": "میڈیا کی قسم کے لحاظ سے قیمتیں مختلف ہوتی ہیں۔ مفت درجے دستیاب ہے۔",
         "gemini25FlashLiteNote": "سب سے زیادہ سرمایہ کاری مؤثر اختیار. مفت درجے دستیاب ہے۔",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "مفت درجے کی شرح کی حد کے ساتھ دستیاب ہے۔ ضرورت ہے a Mistral AI اکاؤنٹ API درخواستیں تربیت کے لیے استعمال کی جا سکتی ہیں۔ Mistralکے ماڈلز"
     },
     "sessionSetupForm": {
         "title": "سیشن سیٹ اپ فارم",
@@ -393,8 +393,8 @@ const ur = {
         "provider": "فراہم کرنے والا",
         "model": "ماڈل",
         "voice": "آواز",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "امیج جنریشن",
+        "imageGenerationSettings": "امیج جنریشن سیٹنگز"
     },
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",
@@ -409,6 +409,6 @@ const ur = {
     },
     "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)",
     "ttsNoneOption": "کوئی نہیں۔",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "فرنٹیئر ماڈلز"
 };
 export default ur;

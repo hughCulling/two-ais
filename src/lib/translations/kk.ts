@@ -331,7 +331,7 @@ const kk = {
         "gemini25ProNote": "Баға енгізу көлеміне қарай өзгереді. Тегін деңгей қол жетімді.",
         "gemini25FlashNote": "Баға медиа түріне байланысты өзгереді. Тегін деңгей қол жетімді.",
         "gemini25FlashLiteNote": "Ең үнемді нұсқа. Тегін деңгей қол жетімді.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Тегін деңгей тарифтік шектеулермен қол жетімді. А талап етеді Mistral AI есептік жазба. API сұраныстар оқыту үшін пайдаланылуы мүмкін Mistralүлгілері."
     },
     "sessionSetupForm": {
         "title": "Сеансты орнату пішімі",
@@ -393,8 +393,8 @@ const kk = {
         "provider": "Провайдер",
         "model": "Үлгі",
         "voice": "Дауыс",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Кескінді құру",
+        "imageGenerationSettings": "Кескінді жасау параметрлері"
     },
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
@@ -409,6 +409,6 @@ const kk = {
     },
     "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)",
     "ttsNoneOption": "Жоқ",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Шекаралық модельдер"
 };
 export default kk;

@@ -331,7 +331,7 @@ const tr = {
         "gemini25ProNote": "Fiyatlandırma giriş boyutuna göre değişir. Ücretsiz katman mevcuttur.",
         "gemini25FlashNote": "Fiyatlandırma medya türüne göre değişir. Ücretsiz katman mevcuttur.",
         "gemini25FlashLiteNote": "En uygun maliyetli seçenek. Ücretsiz katman mevcuttur.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Ücretsiz katman, oran sınırlamalarıyla mevcuttur. Gereklidir Mistral AI hesap. API istekler eğitmek için kullanılabilir Mistral'nin modelleri."
     },
     "sessionSetupForm": {
         "title": "Oturum Kurulum Formu",
@@ -393,8 +393,8 @@ const tr = {
         "provider": "Sağlayıcı",
         "model": "Model",
         "voice": "Ses",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Görüntü Oluşturma",
+        "imageGenerationSettings": "Görüntü Oluşturma Ayarları"
     },
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",
@@ -409,6 +409,6 @@ const tr = {
     },
     "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)",
     "ttsNoneOption": "Hiçbiri",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Sınır modelleri"
 };
 export default tr;

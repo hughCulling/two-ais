@@ -331,7 +331,7 @@ const mt = {
         "gemini25ProNote": "Il-prezzijiet ivarjaw skont id-daqs tal-input. Livell bla ħlas disponibbli.",
         "gemini25FlashNote": "Il-prezzijiet ivarjaw skont it-tip ta' midja. Livell bla ħlas disponibbli.",
         "gemini25FlashLiteNote": "L-aktar għażla kosteffettiva. Livell bla ħlas disponibbli.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Livell bla ħlas disponibbli b'limiti tar-rata. Jeħtieġ Mistral AI kont. API it-talbiet jistgħu jintużaw biex iħarrġu MistralIl-mudelli ta'."
     },
     "sessionSetupForm": {
         "title": "Formola ta' Twaqqif tas-Sessjoni",
@@ -393,8 +393,8 @@ const mt = {
         "provider": "Fornitur",
         "model": "Mudell",
         "voice": "Vuċi",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Ġenerazzjoni tal-Immaġni",
+        "imageGenerationSettings": "Issettjar tal-Ġenerazzjoni tal-Immaġni"
     },
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",
@@ -409,6 +409,6 @@ const mt = {
     },
     "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)",
     "ttsNoneOption": "Xejn",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Mudelli Frontier"
 };
 export default mt;

@@ -331,7 +331,7 @@ const iw = {
         "gemini25ProNote": "התמחור משתנה בהתאם לגודל הקלט. קיימת שכבה חינמית.",
         "gemini25FlashNote": "התמחור משתנה בהתאם לסוג המדיה. קיימת אפשרות לגרסה חינמית.",
         "gemini25FlashLiteNote": "האפשרות המשתלמת ביותר. קיימת אפשרות חינמית.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "רמה חינמית זמינה עם מגבלות תעריף. דורש Mistral AI חֶשְׁבּוֹן. API ניתן להשתמש בבקשות לאימון Mistralהמודלים של."
     },
     "sessionSetupForm": {
         "title": "טופס הגדרת מפגש",
@@ -393,8 +393,8 @@ const iw = {
         "provider": "ספק",
         "model": "דֶגֶם",
         "voice": "קוֹל",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "יצירת תמונה",
+        "imageGenerationSettings": "הגדרות יצירת תמונה"
     },
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",
@@ -409,6 +409,6 @@ const iw = {
     },
     "footer_githubLinkTitle": "GitHub מאגר (נפתח בכרטיסייה חדשה)",
     "ttsNoneOption": "אַף לֹא אֶחָד",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "דגמי Frontier"
 };
 export default iw;

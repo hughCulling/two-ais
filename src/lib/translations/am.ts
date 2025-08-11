@@ -331,7 +331,7 @@ const am = {
         "gemini25ProNote": "የዋጋ አሰጣጥ እንደ ግቤት መጠን ይለያያል። ነፃ ደረጃ ይገኛል።",
         "gemini25FlashNote": "የዋጋ አሰጣጥ እንደ ሚዲያ አይነት ይለያያል። ነፃ ደረጃ ይገኛል።",
         "gemini25FlashLiteNote": "በጣም ወጪ ቆጣቢ አማራጭ. ነፃ ደረጃ ይገኛል።",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "ነፃ ደረጃ ከዋጋ ገደቦች ጋር ይገኛል። ያስፈልገዋል ሀ Mistral AI መለያ API ጥያቄዎችን ለማሰልጠን ሊያገለግል ይችላል። Mistralሞዴሎች."
     },
     "sessionSetupForm": {
         "title": "የክፍለ ጊዜ ማዋቀር ቅጽ",
@@ -393,8 +393,8 @@ const am = {
         "provider": "አቅራቢ",
         "model": "ሞዴል",
         "voice": "ድምፅ",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ምስል ማመንጨት",
+        "imageGenerationSettings": "የምስል ማመንጨት ቅንብሮች"
     },
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",
@@ -409,6 +409,6 @@ const am = {
     },
     "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)",
     "ttsNoneOption": "ምንም",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "የድንበር ሞዴሎች"
 };
 export default am;

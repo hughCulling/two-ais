@@ -65,7 +65,7 @@ const cs = {
         "sq": "Albánec",
         "ta": "Tamilština",
         "te": "Telugština",
-        "tl": "Tagalog",
+        "tl": "Tagalogština",
         "ur": "Urdu",
         "am": "Amharština",
         "mn": "mongolský"
@@ -331,7 +331,7 @@ const cs = {
         "gemini25ProNote": "Cena se liší podle velikosti vstupu. K dispozici je bezplatná úroveň.",
         "gemini25FlashNote": "Cena se liší podle typu média. K dispozici je bezplatná úroveň.",
         "gemini25FlashLiteNote": "Cenově nejvýhodnější varianta. K dispozici je bezplatná úroveň.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Bezplatná úroveň je k dispozici s omezeními rychlosti. Vyžaduje Mistral AI účet. API požadavky lze použít k proškolení Mistralmodely."
     },
     "sessionSetupForm": {
         "title": "Formulář pro nastavení relace",
@@ -393,8 +393,8 @@ const cs = {
         "provider": "Poskytovatel",
         "model": "Model",
         "voice": "Hlas",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Generování obrázků",
+        "imageGenerationSettings": "Nastavení generování obrázků"
     },
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",
@@ -409,6 +409,6 @@ const cs = {
     },
     "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)",
     "ttsNoneOption": "Žádný",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Hraniční modely"
 };
 export default cs;

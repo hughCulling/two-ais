@@ -331,7 +331,7 @@ const lt = {
         "gemini25ProNote": "Kaina priklauso nuo įvesties dydžio. Yra nemokamas lygis.",
         "gemini25FlashNote": "Kainos skiriasi priklausomai nuo medijos tipo. Yra nemokamas paketas.",
         "gemini25FlashLiteNote": "Ekonomiškiausias variantas. Yra nemokamas lygis.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Nemokamas paketas su greičio apribojimais. Reikalingas Mistral AI sąskaita. API prašymai gali būti naudojami mokymui Mistralmodeliai."
     },
     "sessionSetupForm": {
         "title": "Sesijos nustatymo forma",
@@ -393,8 +393,8 @@ const lt = {
         "provider": "Teikėjas",
         "model": "Modelis",
         "voice": "Balsas",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Vaizdo generavimas",
+        "imageGenerationSettings": "Vaizdo generavimo nustatymai"
     },
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",
@@ -409,6 +409,6 @@ const lt = {
     },
     "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)",
     "ttsNoneOption": "Nėra",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Pasienio modeliai"
 };
 export default lt;

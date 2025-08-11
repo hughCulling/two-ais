@@ -331,7 +331,7 @@ const bn = {
         "gemini25ProNote": "ইনপুট আকার অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
         "gemini25FlashNote": "মিডিয়ার ধরণ অনুসারে দাম পরিবর্তিত হয়। বিনামূল্যে স্তর উপলব্ধ।",
         "gemini25FlashLiteNote": "সবচেয়ে সাশ্রয়ী বিকল্প। বিনামূল্যে স্তর উপলব্ধ।",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "রেট সীমা সহ বিনামূল্যে স্তর উপলব্ধ। প্রয়োজন একটি Mistral AI অ্যাকাউন্ট। API প্রশিক্ষণের জন্য অনুরোধগুলি ব্যবহার করা যেতে পারে Mistralএর মডেলগুলি।"
     },
     "sessionSetupForm": {
         "title": "সেশন সেটআপ ফর্ম",
@@ -393,8 +393,8 @@ const bn = {
         "provider": "সরবরাহকারী",
         "model": "মডেল",
         "voice": "কণ্ঠস্বর",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "চিত্র তৈরি",
+        "imageGenerationSettings": "ছবি তৈরির সেটিংস"
     },
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",
@@ -409,6 +409,6 @@ const bn = {
     },
     "footer_githubLinkTitle": "GitHub সংগ্রহস্থল (একটি নতুন ট্যাবে খোলে)",
     "ttsNoneOption": "কোনটিই নয়",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ফ্রন্টিয়ার মডেল"
 };
 export default bn;

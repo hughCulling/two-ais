@@ -331,7 +331,7 @@ const ro = {
         "gemini25ProNote": "Prețurile variază în funcție de dimensiunea intrării. Nivel gratuit disponibil.",
         "gemini25FlashNote": "Prețurile variază în funcție de tipul de media. Nivel gratuit disponibil.",
         "gemini25FlashLiteNote": "Cea mai rentabilă opțiune. Nivel gratuit disponibil.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Nivel gratuit disponibil cu limite de tarif. Necesită un Mistral AI cont. API cererile pot fi folosite pentru instruire MistralModelele lui."
     },
     "sessionSetupForm": {
         "title": "Formular de configurare a sesiunii",
@@ -393,8 +393,8 @@ const ro = {
         "provider": "Furnizor",
         "model": "Model",
         "voice": "Voce",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Generarea de imagini",
+        "imageGenerationSettings": "Setări de generare a imaginilor"
     },
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",
@@ -409,6 +409,6 @@ const ro = {
     },
     "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)",
     "ttsNoneOption": "Nici unul",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Modele Frontier"
 };
 export default ro;

@@ -331,7 +331,7 @@ const kn = {
         "gemini25ProNote": "ಇನ್‌ಪುಟ್ ಗಾತ್ರವನ್ನು ಅವಲಂಬಿಸಿ ಬೆಲೆ ಬದಲಾಗುತ್ತದೆ. ಉಚಿತ ಶ್ರೇಣಿ ಲಭ್ಯವಿದೆ.",
         "gemini25FlashNote": "ಮಾಧ್ಯಮ ಪ್ರಕಾರವನ್ನು ಅವಲಂಬಿಸಿ ಬೆಲೆ ಬದಲಾಗುತ್ತದೆ. ಉಚಿತ ಶ್ರೇಣಿ ಲಭ್ಯವಿದೆ.",
         "gemini25FlashLiteNote": "ಅತ್ಯಂತ ವೆಚ್ಚ-ಪರಿಣಾಮಕಾರಿ ಆಯ್ಕೆ. ಉಚಿತ ಶ್ರೇಣಿ ಲಭ್ಯವಿದೆ.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "ದರ ಮಿತಿಗಳೊಂದಿಗೆ ಉಚಿತ ಶ್ರೇಣಿ ಲಭ್ಯವಿದೆ. ಅಗತ್ಯವಿದೆ Mistral AI ಖಾತೆ. API ತರಬೇತಿ ನೀಡಲು ವಿನಂತಿಗಳನ್ನು ಬಳಸಬಹುದು. Mistralನ ಮಾದರಿಗಳು."
     },
     "sessionSetupForm": {
         "title": "ಸೆಷನ್ ಸೆಟಪ್ ಫಾರ್ಮ್",
@@ -393,8 +393,8 @@ const kn = {
         "provider": "ಒದಗಿಸುವವರು",
         "model": "ಮಾದರಿ",
         "voice": "ಧ್ವನಿ",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "ಚಿತ್ರ ರಚನೆ",
+        "imageGenerationSettings": "ಚಿತ್ರ ರಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
     },
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",
@@ -409,6 +409,6 @@ const kn = {
     },
     "footer_githubLinkTitle": "GitHub ರೆಪೊಸಿಟರಿ (ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",
     "ttsNoneOption": "ಯಾವುದೂ ಇಲ್ಲ",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "ಫ್ರಾಂಟಿಯರ್ ಮಾದರಿಗಳು"
 };
 export default kn;

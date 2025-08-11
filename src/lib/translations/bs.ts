@@ -331,7 +331,7 @@ const bs = {
         "gemini25ProNote": "Cijena varira ovisno o veličini ulaza. Dostupan je besplatni nivo.",
         "gemini25FlashNote": "Cijena varira ovisno o vrsti medija. Dostupan je besplatni nivo.",
         "gemini25FlashLiteNote": "Najisplativija opcija. Dostupan je besplatni nivo.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Besplatni nivo dostupan s ograničenjima brzine. Zahtijeva Mistral AI račun. API zahtjevi se mogu koristiti za obuku Mistral-ovi modeli."
     },
     "sessionSetupForm": {
         "title": "Obrazac za podešavanje sesije",
@@ -393,8 +393,8 @@ const bs = {
         "provider": "Pružatelj usluga",
         "model": "Model",
         "voice": "Glas",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Generiranje slika",
+        "imageGenerationSettings": "Postavke generiranja slike"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Veličina",
@@ -409,6 +409,6 @@ const bs = {
     },
     "footer_githubLinkTitle": "GitHub repozitorij (otvara se u novoj kartici)",
     "ttsNoneOption": "Nijedan",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Granični modeli"
 };
 export default bs;

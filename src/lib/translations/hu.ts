@@ -331,7 +331,7 @@ const hu = {
         "gemini25ProNote": "Az ár a bemeneti mérettől függ. Ingyenes szint elérhető.",
         "gemini25FlashNote": "Az árak médiatípusonként változnak. Ingyenes csomag is elérhető.",
         "gemini25FlashLiteNote": "A legköltséghatékonyabb megoldás. Ingyenes szint elérhető.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Ingyenes csomag elérhető díjkorlátokkal. Szükséges hozzá a következő: Mistral AI fiók. API kérések felhasználhatók a képzéshez Mistralmodelljei."
     },
     "sessionSetupForm": {
         "title": "Munkamenet-beállítási űrlap",
@@ -393,8 +393,8 @@ const hu = {
         "provider": "Szolgáltató",
         "model": "Modell",
         "voice": "Hang",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Képgenerálás",
+        "imageGenerationSettings": "Képgenerálási beállítások"
     },
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",
@@ -409,6 +409,6 @@ const hu = {
     },
     "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)",
     "ttsNoneOption": "Egyik sem",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Határmodellek"
 };
 export default hu;

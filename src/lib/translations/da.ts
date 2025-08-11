@@ -331,7 +331,7 @@ const da = {
         "gemini25ProNote": "Prisen varierer afhængigt af inputstørrelsen. Gratis niveau tilgængeligt.",
         "gemini25FlashNote": "Prisen varierer efter medietype. Gratis niveau tilgængeligt.",
         "gemini25FlashLiteNote": "Den mest omkostningseffektive løsning. Gratis niveau tilgængeligt.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Gratis niveau tilgængeligt med hastighedsgrænser. Kræver en Mistral AI konto. API anmodninger kan bruges til at træne Mistral's modeller."
     },
     "sessionSetupForm": {
         "title": "Formular til opsætning af session",
@@ -393,8 +393,8 @@ const da = {
         "provider": "Udbyder",
         "model": "Model",
         "voice": "Stemme",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Billedgenerering",
+        "imageGenerationSettings": "Indstillinger for billedgenerering"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",
@@ -409,6 +409,6 @@ const da = {
     },
     "footer_githubLinkTitle": "GitHub arkiv (åbner i en ny fane)",
     "ttsNoneOption": "Ingen",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Frontier-modeller"
 };
 export default da;

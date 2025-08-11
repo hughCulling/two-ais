@@ -331,7 +331,7 @@ const hy = {
         "gemini25ProNote": "Գինը տարբերվում է մուտքագրման չափից կախված։ Հասանելի է անվճար մակարդակ։",
         "gemini25FlashNote": "Գները տարբերվում են՝ կախված մեդիայի տեսակից։ Հասանելի է անվճար տարբերակ։",
         "gemini25FlashLiteNote": "Առավել մատչելի տարբերակ։ Հասանելի է անվճար տարբերակ։",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Անվճար մակարդակ հասանելի է գնային սահմանափակումներով։ Պահանջվում է Mistral AI հաշիվ API հարցումները կարող են օգտագործվել մարզելու համար Mistral-ի մոդելները։"
     },
     "sessionSetupForm": {
         "title": "Սեսիայի կարգավորման ձև",
@@ -393,8 +393,8 @@ const hy = {
         "provider": "մատակարար",
         "model": "Մոդել",
         "voice": "Ձայն",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Պատկերի ստեղծում",
+        "imageGenerationSettings": "Պատկերի ստեղծման կարգավորումներ"
     },
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",
@@ -409,6 +409,6 @@ const hy = {
     },
     "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)",
     "ttsNoneOption": "Ոչ մեկը",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Սահմանային մոդելներ"
 };
 export default hy;

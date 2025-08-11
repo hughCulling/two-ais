@@ -331,7 +331,7 @@ const so = {
         "gemini25ProNote": "Qiimuhu wuxuu ku kala duwan yahay cabbirka gelinta. Heerarka bilaashka ah waa la heli karaa.",
         "gemini25FlashNote": "Qiimuhu waa ku kala duwan yahay nooca warbaahinta. Heerarka bilaashka ah waa la heli karaa.",
         "gemini25FlashLiteNote": "Doorashada ugu badan ee kharash-ku-ool ah. Heerarka bilaashka ah waa la heli karaa.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Heerarka bilaashka ah ee la heli karo oo leh xaddidaad qiimaheedu. Waxay u baahan tahay a Mistral AI xisaabta. API codsiyada waxaa loo isticmaali karaa in lagu tababaro Mistralmoodooyinka."
     },
     "sessionSetupForm": {
         "title": "Foomka Dejinta Kulanka",
@@ -393,8 +393,8 @@ const so = {
         "provider": "Bixiye",
         "model": "Qaabka",
         "voice": "Codka",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Jiilka Sawirka",
+        "imageGenerationSettings": "Dejinta Jiilka Sawirka"
     },
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",
@@ -409,6 +409,6 @@ const so = {
     },
     "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)",
     "ttsNoneOption": "Midna",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Moodooyinka xuduudaha"
 };
 export default so;

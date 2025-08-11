@@ -331,7 +331,7 @@ const lv = {
         "gemini25ProNote": "Cena mainās atkarībā no ievades lieluma. Pieejams bezmaksas līmenis.",
         "gemini25FlashNote": "Cenas atšķiras atkarībā no multivides veida. Pieejams bezmaksas līmenis.",
         "gemini25FlashLiteNote": "Visizdevīgākais variants. Pieejams bezmaksas līmenis.",
-        "mistralFreeTierNote": "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models."
+        "mistralFreeTierNote": "Bezmaksas līmenis pieejams ar ātruma ierobežojumiem. Nepieciešams Mistral AI konts. API pieprasījumus var izmantot apmācībai Mistralmodeļi."
     },
     "sessionSetupForm": {
         "title": "Sesijas iestatīšanas veidlapa",
@@ -393,8 +393,8 @@ const lv = {
         "provider": "Pakalpojumu sniedzējs",
         "model": "Modelis",
         "voice": "Balss",
-        "imageGenerationEnabled": "Image Generation",
-        "imageGenerationSettings": "Image Generation Settings"
+        "imageGenerationEnabled": "Attēlu ģenerēšana",
+        "imageGenerationSettings": "Attēlu ģenerēšanas iestatījumi"
     },
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",
@@ -409,6 +409,6 @@ const lv = {
     },
     "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)",
     "ttsNoneOption": "Neviens",
-    "modelCategory_Frontier": "Frontier models"
+    "modelCategory_Frontier": "Robežmodeļi"
 };
 export default lv;
