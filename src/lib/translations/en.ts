@@ -101,7 +101,7 @@ const en = {
         },
         apiKeys: {
             title: 'API Keys',
-            description: 'Manage your API keys for different AI services.',
+            description: 'API key manager for different AI services.',
             setKey: 'Set',
             updateKey: 'Update',
             saveUpdateKeys: 'Save / Update Keys',
