@@ -49,60 +49,53 @@ interface SaveApiKeyErrorResponse {
 
 // Define initial structure for API key inputs outside the component
 const initialApiKeys: ApiKeyInput[] = [
-    {
-        id: 'openai',
-        label: 'OpenAI API Key',
-        value: '',
-        tooltip: 'Used for OpenAI models (GPT series, TTS, etc.). Requires an OpenAI account. Usage will incur costs. Find keys at platform.openai.com/api-keys.',
-        learnMoreLink: 'https://platform.openai.com/api-keys'
-    },
-    {
-        id: 'google_ai', // This ID is used by SessionSetupForm (via tts_models.ts if apiKeyId is 'google_ai')
-        label: 'Google Cloud API Key', // Updated label
-        value: '',
-        tooltip: "Your general Google Cloud API Key. Used for AI Studio (Gemini models) and other Google Cloud services like Text-to-Speech. Ensure relevant APIs (e.g., 'Vertex AI API' for Gemini, 'Cloud Text-to-Speech API' for TTS) are enabled in your Google Cloud Console project. Create keys in AI Studio or Google Cloud Console.",
-        learnMoreLink: 'https://console.cloud.google.com/apis/library'
-    },
     // {
-    //     id: 'elevenlabs',
-    //     label: 'Eleven Labs API Key',
+    //     id: 'openai',
+    //     label: 'OpenAI API Key',
     //     value: '',
-    //     tooltip: 'Used for Eleven Labs Text-to-Speech voices. Create a free account at elevenlabs.io to get started or upgrade for more features. Generate your API key from your Eleven Labs dashboard.',
-    //     learnMoreLink: 'https://elevenlabs.io/app/settings/api-keys'
+    //     tooltip: 'Used for OpenAI models (GPT series, TTS, etc.). Requires an OpenAI account. Usage will incur costs. Find keys at platform.openai.com/api-keys.',
+    //     learnMoreLink: 'https://platform.openai.com/api-keys'
     // },
-    {
-        id: 'anthropic',
-        label: 'Anthropic API Key',
-        value: '',
-        tooltip: 'Used for Anthropic Claude models. Requires an Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys.',
-        learnMoreLink: 'https://console.anthropic.com/settings/keys'
-    },
-    {
-        id: 'xai',
-        label: 'xAI API Key',
-        value: '',
-        tooltip: 'Used for Grok models from xAI. Requires an xAI account. Find keys at console.x.ai (or similar). Costs may apply.',
-        learnMoreLink: 'https://console.x.ai' // Placeholder, actual link might differ
-    },
+    // {
+    //     id: 'google_ai', // This ID is used by SessionSetupForm (via tts_models.ts if apiKeyId is 'google_ai')
+    //     label: 'Google Cloud API Key', // Updated label
+    //     value: '',
+    //     tooltip: "Your general Google Cloud API Key. Used for AI Studio (Gemini models) and other Google Cloud services like Text-to-Speech. Ensure relevant APIs (e.g., 'Vertex AI API' for Gemini, 'Cloud Text-to-Speech API' for TTS) are enabled in your Google Cloud Console project. Create keys in AI Studio or Google Cloud Console.",
+    //     learnMoreLink: 'https://console.cloud.google.com/apis/library'
+    // },
+    // {
+    //     id: 'anthropic',
+    //     label: 'Anthropic API Key',
+    //     value: '',
+    //     tooltip: 'Used for Anthropic Claude models. Requires an Anthropic account. Usage typically incurs costs. Manage keys at console.anthropic.com/settings/keys.',
+    //     learnMoreLink: 'https://console.anthropic.com/settings/keys'
+    // },
+    // {
+    //     id: 'xai',
+    //     label: 'xAI API Key',
+    //     value: '',
+    //     tooltip: 'Used for Grok models from xAI. Requires an xAI account. Find keys at console.x.ai (or similar). Costs may apply.',
+    //     learnMoreLink: 'https://console.x.ai' // Placeholder, actual link might differ
+    // },
     {
         id: 'together_ai',
         label: 'TogetherAI API Key',
         value: '',
-        tooltip: 'Used for various open-source models hosted by TogetherAI. Find keys at api.together.ai/settings/api-keys.',
+        tooltip: 'together.ai account required. You can find keys at ',
         learnMoreLink: 'https://api.together.ai/settings/api-keys'
     },
-    {
-        id: 'deepseek',
-        label: 'DeepSeek API Key',
-        value: '',
-        tooltip: 'Used for DeepSeek models. Create an account and get your API key at platform.deepseek.com/api-keys. The API key is only visible once at creation, so save it securely.',
-        learnMoreLink: 'https://platform.deepseek.com/api-keys'
-    },
+    // {
+    //     id: 'deepseek',
+    //     label: 'DeepSeek API Key',
+    //     value: '',
+    //     tooltip: 'Used for DeepSeek models. Create an account and get your API key at platform.deepseek.com/api-keys. The API key is only visible once at creation, so save it securely.',
+    //     learnMoreLink: 'https://platform.deepseek.com/api-keys'
+    // },
     {
         id: 'mistral',
         label: 'Mistral AI API Key',
         value: '',
-        tooltip: 'Used for Mistral AI models (Mistral, Magistral, Ministral). Create an account and get your API key at console.mistral.ai/api-keys. The API key is only shown once at creation, so save it securely.',
+        tooltip: 'Mistral AI account required and you must choose a plan. You can find keys at ',
         learnMoreLink: 'https://console.mistral.ai/api-keys'
     },
 ];
@@ -295,7 +288,7 @@ export default function ApiKeyManager() {
                                                         className="text-xs text-blue-500 hover:text-blue-600 underline mt-1 flex items-center"
                                                         aria-label={`Learn more about ${serviceName} API key (opens in new tab)`}
                                                     >
-                                                        Learn more <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
+                                                        {learnMoreLink} <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
                                                     </a>
                                                 )}
                                             </TooltipContent>
@@ -309,7 +302,7 @@ export default function ApiKeyManager() {
                                         type="password"
                                         value={currentKeyValue}
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(id, e.target.value)}
-                                        placeholder={showSavedPlaceholder ? '•••••••• Key Saved (Enter new key to replace)' : `Enter your ${initialLabel}`}
+                                        placeholder={showSavedPlaceholder ? '•••••••• Key Saved (You can enter a new key to replace)' : `Enter your ${initialLabel}`}
                                         disabled={isSaving || authLoading || isLoadingStatus}
                                         className="transition-colors duration-200 focus:border-primary focus:ring-primary flex-grow"
                                         aria-describedby={`${id}-description ${id}-status`}
