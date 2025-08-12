@@ -410,6 +410,20 @@ const mn = {
     },
     "footer_githubLinkTitle": "GitHub репозитор (шинэ таб дээр нээгдэнэ)",
     "ttsNoneOption": "Байхгүй",
-    "modelCategory_Frontier": "Хилийн загварууд"
+    "modelCategory_Frontier": "Хилийн загварууд",
+    "chatControls": {
+        "stopConversation": "Харилцаагаа зогсоох",
+        "stopping": "Зогсож байна...",
+        "stopped": "Зогссон",
+        "audioStatus": {
+            "ready": {
+                "title": "Аудио бэлэн",
+                "description": "Аудио тоглуулахыг идэвхжүүлэхийн тулд хаана ч товших эсвэл дурын товчлуурыг дарна уу",
+                "browserNote": "Хөтөч нь аудиог автоматаар тоглуулахын өмнө хэрэглэгчийн харилцан үйлчлэлийг шаарддаг."
+            },
+            "playing": "Аудио тоглуулж байна...",
+            "paused": "Аудио түр зогсоосон"
+        }
+    }
 };
 export default mn;

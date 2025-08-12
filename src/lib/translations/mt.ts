@@ -410,6 +410,20 @@ const mt = {
     },
     "footer_githubLinkTitle": "GitHub repożitorju (jiftaħ f'tab ġdida)",
     "ttsNoneOption": "Xejn",
-    "modelCategory_Frontier": "Mudelli Frontier"
+    "modelCategory_Frontier": "Mudelli Frontier",
+    "chatControls": {
+        "stopConversation": "Waqqaf il-Konversazzjoni",
+        "stopping": "Waqfien...",
+        "stopped": "Waqaf",
+        "audioStatus": {
+            "ready": {
+                "title": "Lest għall-Awdjo",
+                "description": "Ikklikkja kullimkien jew agħfas kwalunkwe ċavetta biex tippermetti d-daqq tal-awdjo",
+                "browserNote": "Il-brawżer jeħtieġ interazzjoni mill-utent qabel ma jdoqq l-awdjo awtomatikament."
+            },
+            "playing": "Qed jindaqq l-awdjo...",
+            "paused": "Awdjo Pawżat"
+        }
+    }
 };
 export default mt;

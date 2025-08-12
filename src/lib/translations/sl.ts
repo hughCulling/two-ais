@@ -410,6 +410,20 @@ const sl = {
     },
     "footer_githubLinkTitle": "GitHub skladišče (odpre se v novem zavihku)",
     "ttsNoneOption": "Nobena",
-    "modelCategory_Frontier": "Mejni modeli"
+    "modelCategory_Frontier": "Mejni modeli",
+    "chatControls": {
+        "stopConversation": "Ustavi pogovor",
+        "stopping": "Ustavljanje ...",
+        "stopped": "Ustavljeno",
+        "audioStatus": {
+            "ready": {
+                "title": "Zvok pripravljen",
+                "description": "Kliknite kjer koli ali pritisnite katero koli tipko, da omogočite predvajanje zvoka",
+                "browserNote": "Brskalnik zahteva interakcijo uporabnika, preden samodejno predvaja zvok."
+            },
+            "playing": "Predvajanje zvoka ...",
+            "paused": "Zvok zaustavljen"
+        }
+    }
 };
 export default sl;

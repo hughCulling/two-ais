@@ -410,6 +410,20 @@ const hi = {
     },
     "footer_githubLinkTitle": "GitHub रिपॉजिटरी (नए टैब में खुलता है)",
     "ttsNoneOption": "कोई नहीं",
-    "modelCategory_Frontier": "सीमांत मॉडल"
+    "modelCategory_Frontier": "सीमांत मॉडल",
+    "chatControls": {
+        "stopConversation": "बातचीत बंद करें",
+        "stopping": "रुकना...",
+        "stopped": "रुका हुआ",
+        "audioStatus": {
+            "ready": {
+                "title": "ऑडियो तैयार",
+                "description": "ऑडियो प्लेबैक सक्षम करने के लिए कहीं भी क्लिक करें या कोई भी कुंजी दबाएँ",
+                "browserNote": "ऑडियो को स्वचालित रूप से चलाने से पहले ब्राउज़र को उपयोगकर्ता की सहभागिता की आवश्यकता होती है।"
+            },
+            "playing": "ऑडियो चलाया जा रहा है...",
+            "paused": "ऑडियो रोका गया"
+        }
+    }
 };
 export default hi;

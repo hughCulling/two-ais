@@ -410,6 +410,20 @@ const zh = {
     },
     "footer_githubLinkTitle": "GitHub 存储库（在新选项卡中打开）",
     "ttsNoneOption": "没有任何",
-    "modelCategory_Frontier": "前沿模型"
+    "modelCategory_Frontier": "前沿模型",
+    "chatControls": {
+        "stopConversation": "停止对话",
+        "stopping": "正在停止...",
+        "stopped": "已停止",
+        "audioStatus": {
+            "ready": {
+                "title": "音频就绪",
+                "description": "单击任意位置或按任意键即可启用音频播放",
+                "browserNote": "浏览器在自动播放音频之前需要用户交互。"
+            },
+            "playing": "正在播放音频...",
+            "paused": "音频暂停"
+        }
+    }
 };
 export default zh;

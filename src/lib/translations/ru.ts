@@ -410,6 +410,20 @@ const ru = {
     },
     "footer_githubLinkTitle": "GitHub репозиторий (откроется в новой вкладке)",
     "ttsNoneOption": "Никто",
-    "modelCategory_Frontier": "Пограничные модели"
+    "modelCategory_Frontier": "Пограничные модели",
+    "chatControls": {
+        "stopConversation": "Остановить разговор",
+        "stopping": "Остановка...",
+        "stopped": "Остановлено",
+        "audioStatus": {
+            "ready": {
+                "title": "Готово к аудио",
+                "description": "Щелкните в любом месте или нажмите любую клавишу, чтобы включить воспроизведение звука.",
+                "browserNote": "Браузеру требуется взаимодействие с пользователем перед автоматическим воспроизведением звука."
+            },
+            "playing": "Воспроизведение аудио...",
+            "paused": "Звук приостановлен"
+        }
+    }
 };
 export default ru;

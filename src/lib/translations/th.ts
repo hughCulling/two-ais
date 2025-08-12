@@ -410,6 +410,20 @@ const th = {
     },
     "footer_githubLinkTitle": "GitHub ที่เก็บข้อมูล (เปิดในแท็บใหม่)",
     "ttsNoneOption": "ไม่มี",
-    "modelCategory_Frontier": "แบบจำลองชายแดน"
+    "modelCategory_Frontier": "แบบจำลองชายแดน",
+    "chatControls": {
+        "stopConversation": "หยุดการสนทนา",
+        "stopping": "กำลังหยุด...",
+        "stopped": "หยุดแล้ว",
+        "audioStatus": {
+            "ready": {
+                "title": "พร้อมเสียงแล้ว",
+                "description": "คลิกที่ใดก็ได้หรือกดปุ่มใดก็ได้เพื่อเปิดใช้งานการเล่นเสียง",
+                "browserNote": "เบราว์เซอร์ต้องให้ผู้ใช้โต้ตอบก่อนจึงจะเล่นเสียงโดยอัตโนมัติ"
+            },
+            "playing": "กำลังเล่นเสียง...",
+            "paused": "เสียงหยุดชั่วคราว"
+        }
+    }
 };
 export default th;

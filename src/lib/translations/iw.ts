@@ -410,6 +410,20 @@ const iw = {
     },
     "footer_githubLinkTitle": "GitHub מאגר (נפתח בכרטיסייה חדשה)",
     "ttsNoneOption": "אַף לֹא אֶחָד",
-    "modelCategory_Frontier": "דגמי Frontier"
+    "modelCategory_Frontier": "דגמי Frontier",
+    "chatControls": {
+        "stopConversation": "הפסקת השיחה",
+        "stopping": "סְתִימָה...",
+        "stopped": "נֶעצָר",
+        "audioStatus": {
+            "ready": {
+                "title": "מוכן לאודיו",
+                "description": "לחץ במקום כלשהו או לחץ על מקש כלשהו כדי להפעיל השמעת אודיו",
+                "browserNote": "הדפדפן דורש התערבות של המשתמש לפני השמעת אודיו אוטומטית."
+            },
+            "playing": "השמעת אודיו...",
+            "paused": "אודיו הושהה"
+        }
+    }
 };
 export default iw;

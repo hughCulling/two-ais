@@ -410,6 +410,20 @@ const ca = {
     },
     "footer_githubLinkTitle": "GitHub repositori (s'obre en una pestanya nova)",
     "ttsNoneOption": "Cap",
-    "modelCategory_Frontier": "Models Frontier"
+    "modelCategory_Frontier": "Models Frontier",
+    "chatControls": {
+        "stopConversation": "Atura la conversa",
+        "stopping": "Aturant-se...",
+        "stopped": "Aturat",
+        "audioStatus": {
+            "ready": {
+                "title": "Àudio preparat",
+                "description": "Feu clic a qualsevol lloc o premeu qualsevol tecla per activar la reproducció d'àudio",
+                "browserNote": "El navegador requereix la interacció de l'usuari abans de reproduir l'àudio automàticament."
+            },
+            "playing": "Reproduint àudio...",
+            "paused": "Àudio en pausa"
+        }
+    }
 };
 export default ca;

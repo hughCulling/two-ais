@@ -410,6 +410,20 @@ const ur = {
     },
     "footer_githubLinkTitle": "GitHub ذخیرہ (ایک نئے ٹیب میں کھلتا ہے)",
     "ttsNoneOption": "کوئی نہیں۔",
-    "modelCategory_Frontier": "فرنٹیئر ماڈلز"
+    "modelCategory_Frontier": "فرنٹیئر ماڈلز",
+    "chatControls": {
+        "stopConversation": "بات چیت بند کرو",
+        "stopping": "روک رہا ہے...",
+        "stopped": "رک گیا۔",
+        "audioStatus": {
+            "ready": {
+                "title": "آڈیو تیار ہے۔",
+                "description": "آڈیو پلے بیک کو فعال کرنے کے لیے کہیں بھی کلک کریں یا کوئی بھی کلید دبائیں۔",
+                "browserNote": "براؤزر کو خود بخود آڈیو چلانے سے پہلے صارف کی بات چیت کی ضرورت ہوتی ہے۔"
+            },
+            "playing": "آڈیو چل رہا ہے...",
+            "paused": "آڈیو روک دیا گیا۔"
+        }
+    }
 };
 export default ur;

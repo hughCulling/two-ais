@@ -410,6 +410,20 @@ const cs = {
     },
     "footer_githubLinkTitle": "GitHub repozitář (otevře se v nové záložce)",
     "ttsNoneOption": "Žádný",
-    "modelCategory_Frontier": "Hraniční modely"
+    "modelCategory_Frontier": "Hraniční modely",
+    "chatControls": {
+        "stopConversation": "Zastavit konverzaci",
+        "stopping": "Zastavení...",
+        "stopped": "Zastaveno",
+        "audioStatus": {
+            "ready": {
+                "title": "Připraveno pro zvuk",
+                "description": "Klikněte kamkoli nebo stiskněte libovolnou klávesu pro aktivaci přehrávání zvuku",
+                "browserNote": "Prohlížeč vyžaduje interakci s uživatelem, než automaticky přehraje zvuk."
+            },
+            "playing": "Přehrávání zvuku...",
+            "paused": "Zvuk pozastaven"
+        }
+    }
 };
 export default cs;

@@ -410,6 +410,20 @@ const el = {
     },
     "footer_githubLinkTitle": "GitHub αποθετήριο (ανοίγει σε νέα καρτέλα)",
     "ttsNoneOption": "Κανένας",
-    "modelCategory_Frontier": "Μοντέλα Frontier"
+    "modelCategory_Frontier": "Μοντέλα Frontier",
+    "chatControls": {
+        "stopConversation": "Διακοπή συνομιλίας",
+        "stopping": "Στάθμευση...",
+        "stopped": "Σταμάτησε",
+        "audioStatus": {
+            "ready": {
+                "title": "Έτοιμο για ήχο",
+                "description": "Κάντε κλικ οπουδήποτε ή πατήστε οποιοδήποτε πλήκτρο για να ενεργοποιήσετε την αναπαραγωγή ήχου",
+                "browserNote": "Το πρόγραμμα περιήγησης απαιτεί την αλληλεπίδραση του χρήστη πριν από την αυτόματη αναπαραγωγή ήχου."
+            },
+            "playing": "Αναπαραγωγή ήχου...",
+            "paused": "Ο ήχος τέθηκε σε παύση"
+        }
+    }
 };
 export default el;

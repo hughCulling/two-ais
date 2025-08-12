@@ -410,6 +410,20 @@ const uk = {
     },
     "footer_githubLinkTitle": "GitHub репозиторій (відкриється в новій вкладці)",
     "ttsNoneOption": "Жоден",
-    "modelCategory_Frontier": "Моделі Frontier"
+    "modelCategory_Frontier": "Моделі Frontier",
+    "chatControls": {
+        "stopConversation": "Зупинити розмову",
+        "stopping": "Зупинка...",
+        "stopped": "Зупинено",
+        "audioStatus": {
+            "ready": {
+                "title": "Аудіо готове",
+                "description": "Клацніть будь-де або натисніть будь-яку клавішу, щоб увімкнути відтворення аудіо",
+                "browserNote": "Браузер вимагає взаємодії з користувачем, перш ніж автоматично відтворювати аудіо."
+            },
+            "playing": "Відтворення аудіо...",
+            "paused": "Аудіо призупинено"
+        }
+    }
 };
 export default uk;

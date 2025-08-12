@@ -410,6 +410,20 @@ const kn = {
     },
     "footer_githubLinkTitle": "GitHub ರೆಪೊಸಿಟರಿ (ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",
     "ttsNoneOption": "ಯಾವುದೂ ಇಲ್ಲ",
-    "modelCategory_Frontier": "ಫ್ರಾಂಟಿಯರ್ ಮಾದರಿಗಳು"
+    "modelCategory_Frontier": "ಫ್ರಾಂಟಿಯರ್ ಮಾದರಿಗಳು",
+    "chatControls": {
+        "stopConversation": "ಸಂಭಾಷಣೆಯನ್ನು ನಿಲ್ಲಿಸಿ",
+        "stopping": "ನಿಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+        "stopped": "ನಿಲ್ಲಿಸಲಾಗಿದೆ",
+        "audioStatus": {
+            "ready": {
+                "title": "ಆಡಿಯೋ ಸಿದ್ಧವಾಗಿದೆ",
+                "description": "ಆಡಿಯೋ ಪ್ಲೇಬ್ಯಾಕ್ ಸಕ್ರಿಯಗೊಳಿಸಲು ಎಲ್ಲಿಯಾದರೂ ಕ್ಲಿಕ್ ಮಾಡಿ ಅಥವಾ ಯಾವುದೇ ಕೀಲಿಯನ್ನು ಒತ್ತಿರಿ.",
+                "browserNote": "ಆಡಿಯೋ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಪ್ಲೇ ಮಾಡುವ ಮೊದಲು ಬ್ರೌಸರ್ ಬಳಕೆದಾರರ ಸಂವಹನದ ಅಗತ್ಯವಿದೆ."
+            },
+            "playing": "ಆಡಿಯೋ ಪ್ಲೇ ಆಗುತ್ತಿದೆ...",
+            "paused": "ಆಡಿಯೋ ವಿರಾಮಗೊಳಿಸಲಾಗಿದೆ"
+        }
+    }
 };
 export default kn;

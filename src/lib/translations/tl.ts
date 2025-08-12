@@ -410,6 +410,20 @@ const tl = {
     },
     "footer_githubLinkTitle": "GitHub repository (bubukas sa isang bagong tab)",
     "ttsNoneOption": "wala",
-    "modelCategory_Frontier": "Mga modelo ng hangganan"
+    "modelCategory_Frontier": "Mga modelo ng hangganan",
+    "chatControls": {
+        "stopConversation": "Itigil ang Pag-uusap",
+        "stopping": "Huminto...",
+        "stopped": "Huminto",
+        "audioStatus": {
+            "ready": {
+                "title": "Handa na ang Audio",
+                "description": "Mag-click kahit saan o pindutin ang anumang key upang paganahin ang audio playback",
+                "browserNote": "Nangangailangan ang browser ng pakikipag-ugnayan ng user bago awtomatikong mag-play ng audio."
+            },
+            "playing": "Nagpe-play ng Audio...",
+            "paused": "Naka-pause ang Audio"
+        }
+    }
 };
 export default tl;

@@ -410,6 +410,20 @@ const am = {
     },
     "footer_githubLinkTitle": "GitHub ማከማቻ (በአዲስ ትር ውስጥ ይከፈታል)",
     "ttsNoneOption": "ምንም",
-    "modelCategory_Frontier": "የድንበር ሞዴሎች"
+    "modelCategory_Frontier": "የድንበር ሞዴሎች",
+    "chatControls": {
+        "stopConversation": "ውይይት አቁም",
+        "stopping": "በማቆም ላይ...",
+        "stopped": "ቆሟል",
+        "audioStatus": {
+            "ready": {
+                "title": "ኦዲዮ ዝግጁ",
+                "description": "የድምጽ መልሶ ማጫወትን ለማንቃት የትኛውም ቦታ ላይ ጠቅ ያድርጉ ወይም ማንኛውንም ቁልፍ ይጫኑ",
+                "browserNote": "ብሮውዘር ኦዲዮን በራስ-ሰር ከማጫወትዎ በፊት የተጠቃሚ መስተጋብርን ይፈልጋል።"
+            },
+            "playing": "ኦዲዮን በማጫወት ላይ...",
+            "paused": "ኦዲዮ ባለበት ቆሟል"
+        }
+    }
 };
 export default am;

@@ -272,7 +272,7 @@ export default function ChatHistoryViewerPage() {
                     setIsPlaying(false);
                 });
             }
-        }, [msg.audioUrl, msg.content, msg.role, details?.ttsSettings, isPlaying]);
+        }, [msg.audioUrl, msg.content, msg.role, isPlaying]);
         
         // Clean up TTS on unmount
         useEffect(() => {

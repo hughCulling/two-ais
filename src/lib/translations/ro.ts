@@ -410,6 +410,20 @@ const ro = {
     },
     "footer_githubLinkTitle": "GitHub depozit (se deschide într-o filă nouă)",
     "ttsNoneOption": "Nici unul",
-    "modelCategory_Frontier": "Modele Frontier"
+    "modelCategory_Frontier": "Modele Frontier",
+    "chatControls": {
+        "stopConversation": "Opriți conversația",
+        "stopping": "Oprire...",
+        "stopped": "Oprit",
+        "audioStatus": {
+            "ready": {
+                "title": "Pregătit pentru sunet",
+                "description": "Faceți clic oriunde sau apăsați orice tastă pentru a activa redarea audio",
+                "browserNote": "Browserul necesită interacțiunea utilizatorului înainte de redarea automată a sunetului."
+            },
+            "playing": "Se redă sunetul...",
+            "paused": "Sunet întrerupt"
+        }
+    }
 };
 export default ro;

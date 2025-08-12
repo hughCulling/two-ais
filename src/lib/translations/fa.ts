@@ -410,6 +410,20 @@ const fa = {
     },
     "footer_githubLinkTitle": "GitHub مخزن (در یک برگه جدید باز می‌شود)",
     "ttsNoneOption": "هیچکدام",
-    "modelCategory_Frontier": "مدل‌های مرزی"
+    "modelCategory_Frontier": "مدل‌های مرزی",
+    "chatControls": {
+        "stopConversation": "مکالمه را متوقف کنید",
+        "stopping": "متوقف کردن...",
+        "stopped": "متوقف شد",
+        "audioStatus": {
+            "ready": {
+                "title": "آماده برای صدا",
+                "description": "برای فعال کردن پخش صدا، روی هر قسمتی کلیک کنید یا هر کلیدی را فشار دهید",
+                "browserNote": "مرورگر قبل از پخش خودکار صدا، به تعامل کاربر نیاز دارد."
+            },
+            "playing": "پخش صدا ...",
+            "paused": "صدا متوقف شد"
+        }
+    }
 };
 export default fa;

@@ -410,6 +410,20 @@ const bg = {
     },
     "footer_githubLinkTitle": "GitHub хранилище (отваря се в нов раздел)",
     "ttsNoneOption": "Няма",
-    "modelCategory_Frontier": "Гранични модели"
+    "modelCategory_Frontier": "Гранични модели",
+    "chatControls": {
+        "stopConversation": "Спиране на разговора",
+        "stopping": "Спиране...",
+        "stopped": "Спряно",
+        "audioStatus": {
+            "ready": {
+                "title": "Готов за аудио",
+                "description": "Щракнете някъде или натиснете произволен клавиш, за да активирате възпроизвеждането на аудио",
+                "browserNote": "Браузърът изисква взаимодействие с потребителя, преди да възпроизведе аудио автоматично."
+            },
+            "playing": "Възпроизвеждане на аудио...",
+            "paused": "Аудиото е на пауза"
+        }
+    }
 };
 export default bg;

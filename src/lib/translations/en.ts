@@ -439,6 +439,22 @@ const en = {
     imageModel_Quality: "Quality",
     imageModel_Size: "Size",
     imageModel_PriceUSD: "Price (USD)",
+    // Chat Controls
+    chatControls: {
+        stopConversation: 'Stop Conversation',
+        stopping: 'Stopping...',
+        stopped: 'Stopped',
+        audioStatus: {
+            ready: {
+                title: 'Audio Ready',
+                description: 'Click anywhere or press any key to enable audio playback',
+                browserNote: 'Browser requires user interaction before playing audio automatically.'
+            },
+            playing: 'Playing Audio...',
+            paused: 'Audio Paused'
+        }
+    },
+    
     // --------------- END OF FILE --------------- 
 };
 export default en; 

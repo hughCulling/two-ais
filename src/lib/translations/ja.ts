@@ -410,6 +410,20 @@ const ja = {
     },
     "footer_githubLinkTitle": "GitHub リポジトリ（新しいタブで開きます）",
     "ttsNoneOption": "なし",
-    "modelCategory_Frontier": "フロンティアモデル"
+    "modelCategory_Frontier": "フロンティアモデル",
+    "chatControls": {
+        "stopConversation": "会話を停止",
+        "stopping": "停止中...",
+        "stopped": "停止",
+        "audioStatus": {
+            "ready": {
+                "title": "オーディオ対応",
+                "description": "任意の場所をクリックするか、任意のキーを押してオーディオ再生を有効にします",
+                "browserNote": "ブラウザでは、オーディオを自動的に再生する前にユーザーの操作が必要です。"
+            },
+            "playing": "オーディオを再生しています...",
+            "paused": "音声を一時停止"
+        }
+    }
 };
 export default ja;

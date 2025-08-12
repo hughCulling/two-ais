@@ -239,7 +239,6 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
     {
         provider: 'Mistral AI',
         defaultSupportedLanguages: ['en'],
-        notes: 'Just a guess atm, need to update.',
         modelOverrides: [
             {
                 modelId: 'mistral-large-latest',

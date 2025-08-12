@@ -410,6 +410,20 @@ const gu = {
     },
     "footer_githubLinkTitle": "GitHub ભંડાર (નવા ટેબમાં ખુલે છે)",
     "ttsNoneOption": "કોઈ નહીં",
-    "modelCategory_Frontier": "ફ્રન્ટિયર મોડેલ્સ"
+    "modelCategory_Frontier": "ફ્રન્ટિયર મોડેલ્સ",
+    "chatControls": {
+        "stopConversation": "વાતચીત બંધ કરો",
+        "stopping": "રોકી રહ્યું છે...",
+        "stopped": "બંધ થઈ ગયું",
+        "audioStatus": {
+            "ready": {
+                "title": "ઑડિઓ તૈયાર છે",
+                "description": "ઑડિઓ પ્લેબેક સક્ષમ કરવા માટે ગમે ત્યાં ક્લિક કરો અથવા કોઈપણ કી દબાવો",
+                "browserNote": "ઑડિઓ આપમેળે વગાડતા પહેલા બ્રાઉઝરને વપરાશકર્તાની ક્રિયાપ્રતિક્રિયાની જરૂર પડે છે."
+            },
+            "playing": "ઑડિઓ ચલાવી રહ્યું છે...",
+            "paused": "ઑડિઓ થોભાવ્યો"
+        }
+    }
 };
 export default gu;

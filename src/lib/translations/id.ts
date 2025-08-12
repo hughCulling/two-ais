@@ -410,6 +410,20 @@ const id = {
     },
     "footer_githubLinkTitle": "GitHub repositori (dibuka di tab baru)",
     "ttsNoneOption": "Tidak ada",
-    "modelCategory_Frontier": "Model perbatasan"
+    "modelCategory_Frontier": "Model perbatasan",
+    "chatControls": {
+        "stopConversation": "Hentikan Percakapan",
+        "stopping": "Henti...",
+        "stopped": "Berhenti",
+        "audioStatus": {
+            "ready": {
+                "title": "Siap Audio",
+                "description": "Klik di mana saja atau tekan tombol apa saja untuk mengaktifkan pemutaran audio",
+                "browserNote": "Peramban memerlukan interaksi pengguna sebelum memutar audio secara otomatis."
+            },
+            "playing": "Memutar Audio...",
+            "paused": "Audio Dijeda"
+        }
+    }
 };
 export default id;

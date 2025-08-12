@@ -410,6 +410,20 @@ const vi = {
     },
     "footer_githubLinkTitle": "GitHub kho lưu trữ (mở trong tab mới)",
     "ttsNoneOption": "Không có",
-    "modelCategory_Frontier": "Các mô hình biên giới"
+    "modelCategory_Frontier": "Các mô hình biên giới",
+    "chatControls": {
+        "stopConversation": "Dừng cuộc trò chuyện",
+        "stopping": "Đang dừng lại...",
+        "stopped": "Đã dừng lại",
+        "audioStatus": {
+            "ready": {
+                "title": "Âm thanh đã sẵn sàng",
+                "description": "Nhấp vào bất kỳ đâu hoặc nhấn bất kỳ phím nào để bật phát lại âm thanh",
+                "browserNote": "Trình duyệt yêu cầu người dùng tương tác trước khi tự động phát âm thanh."
+            },
+            "playing": "Đang phát âm thanh...",
+            "paused": "Âm thanh tạm dừng"
+        }
+    }
 };
 export default vi;

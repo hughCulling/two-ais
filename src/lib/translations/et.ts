@@ -410,6 +410,20 @@ const et = {
     },
     "footer_githubLinkTitle": "GitHub hoidla (avaneb uuel vahelehel)",
     "ttsNoneOption": "Puudub",
-    "modelCategory_Frontier": "Piirimudelid"
+    "modelCategory_Frontier": "Piirimudelid",
+    "chatControls": {
+        "stopConversation": "Peata vestlus",
+        "stopping": "Peatumine...",
+        "stopped": "Peatatud",
+        "audioStatus": {
+            "ready": {
+                "title": "Helivalmidus",
+                "description": "Heli taasesituse lubamiseks klõpsake suvalises kohas või vajutage suvalist klahvi",
+                "browserNote": "Enne heli automaatset esitamist nõuab brauser kasutaja sekkumist."
+            },
+            "playing": "Heli esitamine...",
+            "paused": "Heli on peatatud"
+        }
+    }
 };
 export default et;

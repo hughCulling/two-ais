@@ -410,6 +410,20 @@ const de = {
     },
     "footer_githubLinkTitle": "GitHub Repository (wird in einem neuen Tab geöffnet)",
     "ttsNoneOption": "Keiner",
-    "modelCategory_Frontier": "Frontier-Modelle"
+    "modelCategory_Frontier": "Frontier-Modelle",
+    "chatControls": {
+        "stopConversation": "Gespräch beenden",
+        "stopping": "Anhalten...",
+        "stopped": "Gestoppt",
+        "audioStatus": {
+            "ready": {
+                "title": "Audiobereit",
+                "description": "Klicken Sie irgendwo hin oder drücken Sie eine beliebige Taste, um die Audiowiedergabe zu aktivieren",
+                "browserNote": "Der Browser erfordert eine Benutzerinteraktion, bevor Audio automatisch wiedergegeben wird."
+            },
+            "playing": "Audio wird abgespielt...",
+            "paused": "Audio pausiert"
+        }
+    }
 };
 export default de;

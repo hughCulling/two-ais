@@ -410,6 +410,20 @@ const is = {
     },
     "footer_githubLinkTitle": "GitHub geymsla (opnast í nýjum flipa)",
     "ttsNoneOption": "Enginn",
-    "modelCategory_Frontier": "Frontier líkön"
+    "modelCategory_Frontier": "Frontier líkön",
+    "chatControls": {
+        "stopConversation": "Stöðva samtal",
+        "stopping": "Að hætta...",
+        "stopped": "Stöðvað",
+        "audioStatus": {
+            "ready": {
+                "title": "Tilbúið fyrir hljóð",
+                "description": "Smelltu hvar sem er eða ýttu á hvaða takka sem er til að virkja hljóðspilun",
+                "browserNote": "Vafrinn krefst aðgerða notanda áður en hljóð er spilað sjálfkrafa."
+            },
+            "playing": "Spilar hljóð...",
+            "paused": "Hljóð gert hlé"
+        }
+    }
 };
 export default is;

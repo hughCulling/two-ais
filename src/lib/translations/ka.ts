@@ -410,6 +410,20 @@ const ka = {
     },
     "footer_githubLinkTitle": "GitHub საცავი (იხსნება ახალ ჩანართში)",
     "ttsNoneOption": "არცერთი",
-    "modelCategory_Frontier": "Frontier მოდელები"
+    "modelCategory_Frontier": "Frontier მოდელები",
+    "chatControls": {
+        "stopConversation": "საუბრის შეწყვეტა",
+        "stopping": "გაჩერება...",
+        "stopped": "შეჩერებულია",
+        "audioStatus": {
+            "ready": {
+                "title": "აუდიო მზადაა",
+                "description": "აუდიოს დაკვრის ჩასართავად დააწკაპუნეთ ნებისმიერ ადგილას ან დააჭირეთ ნებისმიერ ღილაკს",
+                "browserNote": "ბრაუზერს აუდიოს ავტომატურად დაკვრამდე მომხმარებლის ინტერაქცია სჭირდება."
+            },
+            "playing": "აუდიოს დაკვრა...",
+            "paused": "აუდიო დაპაუზებულია"
+        }
+    }
 };
 export default ka;

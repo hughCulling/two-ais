@@ -410,6 +410,20 @@ const sw = {
     },
     "footer_githubLinkTitle": "GitHub hazina (hufungua kwenye kichupo kipya)",
     "ttsNoneOption": "Hakuna",
-    "modelCategory_Frontier": "Mifano ya Frontier"
+    "modelCategory_Frontier": "Mifano ya Frontier",
+    "chatControls": {
+        "stopConversation": "Acha Mazungumzo",
+        "stopping": "Inasimamisha...",
+        "stopped": "Imesimamishwa",
+        "audioStatus": {
+            "ready": {
+                "title": "Sauti Tayari",
+                "description": "Bofya popote au bonyeza kitufe chochote ili kuwezesha uchezaji wa sauti",
+                "browserNote": "Kivinjari kinahitaji mwingiliano wa mtumiaji kabla ya kucheza sauti kiotomatiki."
+            },
+            "playing": "Inacheza Sauti...",
+            "paused": "Sauti Imesitishwa"
+        }
+    }
 };
 export default sw;

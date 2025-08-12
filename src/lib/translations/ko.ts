@@ -410,6 +410,20 @@ const ko = {
     },
     "footer_githubLinkTitle": "GitHub 저장소(새 탭에서 열림)",
     "ttsNoneOption": "없음",
-    "modelCategory_Frontier": "프론티어 모델"
+    "modelCategory_Frontier": "프론티어 모델",
+    "chatControls": {
+        "stopConversation": "대화 중단",
+        "stopping": "멎는...",
+        "stopped": "멈췄다",
+        "audioStatus": {
+            "ready": {
+                "title": "오디오 준비 완료",
+                "description": "오디오 재생을 활성화하려면 아무 곳이나 클릭하거나 아무 키나 누르세요.",
+                "browserNote": "브라우저는 오디오를 자동으로 재생하기 전에 사용자 상호 작용이 필요합니다."
+            },
+            "playing": "오디오 재생 중...",
+            "paused": "오디오 일시 정지됨"
+        }
+    }
 };
 export default ko;
