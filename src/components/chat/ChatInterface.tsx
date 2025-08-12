@@ -150,16 +150,35 @@ export function ChatInterface({
         const playedMsgId = currentlyPlayingMsgIdRef.current;
         if (!playedMsgId) return;
 
+        // Clean up any existing utterance
         if (utteranceRef.current) {
-            utteranceRef.current.onend = null; // Clean up listener
-            utteranceRef.current = null;
+            try {
+                utteranceRef.current.onend = null;
+                utteranceRef.current.onerror = null;
+                utteranceRef.current = null;
+            } catch (err) {
+                logger.error("Error cleaning up utterance:", err);
+            }
         }
 
-        // Reset audio-related states
-        setIsAudioPlaying(false);
-        setIsAudioPaused(false);
-        setCurrentlyPlayingMsgId(null);
-        setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
+        // Reset all audio-related states
+        const resetAudioState = () => {
+            setIsAudioPlaying(false);
+            setIsAudioPaused(false);
+            setCurrentlyPlayingMsgId(null);
+            setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
+        };
+
+        // For browser TTS, ensure speech synthesis is properly cancelled
+        if (window.speechSynthesis) {
+            try {
+                window.speechSynthesis.cancel();
+            } catch (err) {
+                logger.error("Error cancelling speech synthesis:", err);
+            }
+        }
+
+        resetAudioState();
 
         // Notify backend that the message has been played
         const playedMsg = messages.find(m => m.id === playedMsgId);
@@ -178,31 +197,46 @@ export function ChatInterface({
     }, [conversationId, messages]);
 
     const handlePauseAudio = useCallback(() => {
-        if (isAudioPlaying) {
-            if (utteranceRef.current) {
+        if (!isAudioPlaying) return;
+        
+        if (utteranceRef.current) {
+            try {
                 window.speechSynthesis.pause();
                 setIsAudioPaused(true);
-            } else if (audioPlayerRef.current) {
-                audioPlayerRef.current.pause();
-                setIsAudioPaused(true);
+                setIsAudioPlaying(false); // Ensure playing state is updated
+            } catch (err) {
+                logger.error("TTS pause failed:", err);
+                handleAudioEnd();
             }
+        } else if (audioPlayerRef.current) {
+            audioPlayerRef.current.pause();
+            setIsAudioPaused(true);
+            setIsAudioPlaying(false);
         }
-    }, [isAudioPlaying]);
+    }, [isAudioPlaying, handleAudioEnd]);
 
     const handleResumeAudio = useCallback(() => {
         if (!isAudioPaused) return;
 
         if (utteranceRef.current) {
-            window.speechSynthesis.resume();
+            try {
+                window.speechSynthesis.resume();
+                setIsAudioPaused(false); // Update state to reflect playback has resumed
+                setIsAudioPlaying(true); // Ensure playing state is set
+            } catch (err) {
+                logger.error("TTS resume failed:", err);
+                handleAudioEnd();
+            }
         } else if (audioPlayerRef.current) {
-            audioPlayerRef.current.play().catch(err => {
+            audioPlayerRef.current.play().then(() => {
+                setIsAudioPaused(false); // Update state to reflect playback has resumed
+                setIsAudioPlaying(true);
+            }).catch(err => {
                 logger.error("Audio resume failed:", err);
                 handleAudioEnd();
             });
         }
-        setIsAudioPlaying(true);
-        setIsAudioPaused(false);
-        }, [isAudioPaused, handleAudioEnd]);
+    }, [isAudioPaused, handleAudioEnd]);
 
     // --- Effect 1: Listen for Messages ---
     useEffect(() => {
