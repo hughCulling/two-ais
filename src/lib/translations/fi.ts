@@ -410,6 +410,20 @@ const fi = {
     },
     "footer_githubLinkTitle": "GitHub arkisto (avautuu uuteen välilehteen)",
     "ttsNoneOption": "Ei mitään",
-    "modelCategory_Frontier": "Rajamallit"
+    "modelCategory_Frontier": "Rajamallit",
+    "chatControls": {
+        "stopConversation": "Lopeta keskustelu",
+        "stopping": "Pysähdytään...",
+        "stopped": "Pysähtynyt",
+        "audioStatus": {
+            "ready": {
+                "title": "Äänivalmius",
+                "description": "Ota äänen toisto käyttöön napsauttamalla missä tahansa tai painamalla mitä tahansa näppäintä",
+                "browserNote": "Selain vaatii käyttäjän toimia ennen äänen automaattista toistamista."
+            },
+            "playing": "Ääntä toistetaan...",
+            "paused": "Ääni keskeytetty"
+        }
+    }
 };
 export default fi;

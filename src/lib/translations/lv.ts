@@ -410,6 +410,20 @@ const lv = {
     },
     "footer_githubLinkTitle": "GitHub repozitorijs (atveras jaunā cilnē)",
     "ttsNoneOption": "Neviens",
-    "modelCategory_Frontier": "Robežmodeļi"
+    "modelCategory_Frontier": "Robežmodeļi",
+    "chatControls": {
+        "stopConversation": "Pārtraukt sarunu",
+        "stopping": "Apstājas...",
+        "stopped": "Apturēts",
+        "audioStatus": {
+            "ready": {
+                "title": "Audio gatavs",
+                "description": "Noklikšķiniet jebkur vai nospiediet jebkuru taustiņu, lai iespējotu audio atskaņošanu",
+                "browserNote": "Pirms audio automātiskas atskaņošanas pārlūkprogrammā ir nepieciešama lietotāja iejaukšanās."
+            },
+            "playing": "Atskaņo audio...",
+            "paused": "Audio pauzēts"
+        }
+    }
 };
 export default lv;

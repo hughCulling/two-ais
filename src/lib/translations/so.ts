@@ -410,6 +410,20 @@ const so = {
     },
     "footer_githubLinkTitle": "GitHub kaydka (wuxuu ku furmay tab cusub)",
     "ttsNoneOption": "Midna",
-    "modelCategory_Frontier": "Moodooyinka xuduudaha"
+    "modelCategory_Frontier": "Moodooyinka xuduudaha",
+    "chatControls": {
+        "stopConversation": "Jooji Wadahadalka",
+        "stopping": "Joojinta...",
+        "stopped": "Joogsaday",
+        "audioStatus": {
+            "ready": {
+                "title": "Maqal Diyaar",
+                "description": "Guji meel kasta ama taabo fure kasta si aad awood ugu yeelato dib-u-ciyaarista maqalka",
+                "browserNote": "Browser wuxuu u baahan yahay is dhexgalka isticmaalaha ka hor inta uusan si toos ah u ciyaarin codka."
+            },
+            "playing": "Daaraya Maqalka...",
+            "paused": "Maqalka waa la hakiyay"
+        }
+    }
 };
 export default so;

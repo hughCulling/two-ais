@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
+import { useTranslation } from '@/hooks/useTranslation';
 // import { httpsCallable } from 'firebase/functions';
 import {
     collection,
@@ -26,7 +27,6 @@ import {
 } from "@/components/ui/alert";
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
-import { useTranslation } from '@/hooks/useTranslation';
 import { getVoiceById } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
@@ -123,6 +123,7 @@ export function ChatInterface({
     const [showErrorDetails, setShowErrorDetails] = useState(false);
     const [isStopping, setIsStopping] = useState(false);
     const [isStopped, setIsStopped] = useState(false);
+    const { t } = useTranslation();
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
@@ -142,7 +143,6 @@ export function ChatInterface({
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
 
-    const { t } = useTranslation();
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
     // --- Audio Control Handlers ---
@@ -636,7 +636,7 @@ export function ChatInterface({
                 {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
                         <Volume2 className={`h-4 w-4 ${isAudioPlaying ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} aria-hidden="true"/>
-                        <span>{isAudioPaused ? 'Audio Paused' : 'Playing Audio...'}</span>
+                        <span>{isAudioPaused ? t?.chatControls.audioStatus.paused : t?.chatControls.audioStatus.playing}</span>
                     </div>
                 )}
                 <Button 
@@ -647,7 +647,7 @@ export function ChatInterface({
                     aria-label={isStopped ? "Conversation already stopped" : (isStopping ? "Stopping conversation..." : "Stop the current conversation")}
                     aria-describedby="stop-conversation-description"
                 >
-                    {isStopped ? "Stopped" : (isStopping ? "Stopping..." : "Stop Conversation")}
+                    {isStopped ? t?.chatControls.stopped : (isStopping ? t?.chatControls.stopping : t?.chatControls.stopConversation)}
                 </Button>
                 <div id="stop-conversation-description" className="sr-only">
                     Click to stop the current AI conversation. This will prevent further messages from being generated.
@@ -692,10 +692,10 @@ export function ChatInterface({
                         </div>
                         <div className="ml-3">
                             <p className="text-sm text-blue-700">
-                                <strong>Audio Ready:</strong> Click anywhere or press any key to enable audio playback
+                                <strong>{t?.chatControls.audioStatus.ready.title}:</strong> {t?.chatControls.audioStatus.ready.description}
                             </p>
                             <p className="text-xs text-blue-800 dark:text-blue-200 mt-1">
-                                Browser requires user interaction before playing audio automatically.
+                                {t?.chatControls.audioStatus.ready.browserNote}
                             </p>
                         </div>
                     </div>

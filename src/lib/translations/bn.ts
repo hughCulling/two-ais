@@ -410,6 +410,20 @@ const bn = {
     },
     "footer_githubLinkTitle": "GitHub সংগ্রহস্থল (একটি নতুন ট্যাবে খোলে)",
     "ttsNoneOption": "কোনটিই নয়",
-    "modelCategory_Frontier": "ফ্রন্টিয়ার মডেল"
+    "modelCategory_Frontier": "ফ্রন্টিয়ার মডেল",
+    "chatControls": {
+        "stopConversation": "কথোপকথন বন্ধ করুন",
+        "stopping": "থামছে...",
+        "stopped": "থামলো",
+        "audioStatus": {
+            "ready": {
+                "title": "অডিও রেডি",
+                "description": "অডিও প্লেব্যাক সক্ষম করতে যেকোনো জায়গায় ক্লিক করুন অথবা যেকোনো কী টিপুন",
+                "browserNote": "স্বয়ংক্রিয়ভাবে অডিও চালানোর আগে ব্রাউজারটির ব্যবহারকারীর সাথে যোগাযোগ প্রয়োজন।"
+            },
+            "playing": "অডিও বাজানো হচ্ছে...",
+            "paused": "অডিও পজ করা হয়েছে"
+        }
+    }
 };
 export default bn;

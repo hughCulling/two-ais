@@ -410,6 +410,20 @@ const mr = {
     },
     "footer_githubLinkTitle": "GitHub रिपॉझिटरी (नवीन टॅबमध्ये उघडेल)",
     "ttsNoneOption": "काहीही नाही",
-    "modelCategory_Frontier": "फ्रंटियर मॉडेल्स"
+    "modelCategory_Frontier": "फ्रंटियर मॉडेल्स",
+    "chatControls": {
+        "stopConversation": "संभाषण थांबवा",
+        "stopping": "थांबत आहे...",
+        "stopped": "थांबले",
+        "audioStatus": {
+            "ready": {
+                "title": "ऑडिओ तयार",
+                "description": "ऑडिओ प्लेबॅक सक्षम करण्यासाठी कुठेही क्लिक करा किंवा कोणतीही की दाबा.",
+                "browserNote": "ऑडिओ स्वयंचलितपणे प्ले करण्यापूर्वी ब्राउझरला वापरकर्त्याच्या संवादाची आवश्यकता असते."
+            },
+            "playing": "ऑडिओ प्ले करत आहे...",
+            "paused": "ऑडिओ थांबवला"
+        }
+    }
 };
 export default mr;

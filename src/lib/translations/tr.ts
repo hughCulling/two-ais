@@ -410,6 +410,20 @@ const tr = {
     },
     "footer_githubLinkTitle": "GitHub depo (yeni bir sekmede açılır)",
     "ttsNoneOption": "Hiçbiri",
-    "modelCategory_Frontier": "Sınır modelleri"
+    "modelCategory_Frontier": "Sınır modelleri",
+    "chatControls": {
+        "stopConversation": "Konuşmayı Durdur",
+        "stopping": "Durduruluyor...",
+        "stopped": "Durduruldu",
+        "audioStatus": {
+            "ready": {
+                "title": "Ses Hazır",
+                "description": "Ses oynatmayı etkinleştirmek için herhangi bir yere tıklayın veya herhangi bir tuşa basın",
+                "browserNote": "Tarayıcının sesi otomatik olarak oynatmadan önce kullanıcı etkileşimi gerektirmesi."
+            },
+            "playing": "Ses Çalınıyor...",
+            "paused": "Ses Duraklatıldı"
+        }
+    }
 };
 export default tr;

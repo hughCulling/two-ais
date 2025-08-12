@@ -410,6 +410,20 @@ const hy = {
     },
     "footer_githubLinkTitle": "GitHub պահոց (բացվում է նոր ներդիրում)",
     "ttsNoneOption": "Ոչ մեկը",
-    "modelCategory_Frontier": "Սահմանային մոդելներ"
+    "modelCategory_Frontier": "Սահմանային մոդելներ",
+    "chatControls": {
+        "stopConversation": "Դադարեցնել զրույցը",
+        "stopping": "Կանգ է առնում...",
+        "stopped": "Կանգ առավ",
+        "audioStatus": {
+            "ready": {
+                "title": "Աուդիո պատրաստ է",
+                "description": "Սեղմեք ցանկացած տեղ կամ սեղմեք ցանկացած ստեղն՝ աուդիո նվագարկումը միացնելու համար",
+                "browserNote": "Զննարկիչը պահանջում է օգտատիրոջ միջամտություն՝ աուդիոն ավտոմատ կերպով նվագարկելուց առաջ։"
+            },
+            "playing": "Աուդիոն նվագարկվում է...",
+            "paused": "Աուդիոն դադարեցված է"
+        }
+    }
 };
 export default hy;

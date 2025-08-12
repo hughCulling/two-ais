@@ -410,6 +410,20 @@ const pa = {
     },
     "footer_githubLinkTitle": "GitHub ਰਿਪੋਜ਼ਟਰੀ (ਇੱਕ ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਖੁੱਲ੍ਹਦੀ ਹੈ)",
     "ttsNoneOption": "ਕੋਈ ਨਹੀਂ",
-    "modelCategory_Frontier": "ਫਰੰਟੀਅਰ ਮਾਡਲ"
+    "modelCategory_Frontier": "ਫਰੰਟੀਅਰ ਮਾਡਲ",
+    "chatControls": {
+        "stopConversation": "ਗੱਲਬਾਤ ਬੰਦ ਕਰੋ",
+        "stopping": "ਰੋਕ ਰਿਹਾ ਹੈ...",
+        "stopped": "ਰੁਕ ਗਿਆ",
+        "audioStatus": {
+            "ready": {
+                "title": "ਆਡੀਓ ਤਿਆਰ ਹੈ",
+                "description": "ਆਡੀਓ ਪਲੇਬੈਕ ਨੂੰ ਸਮਰੱਥ ਬਣਾਉਣ ਲਈ ਕਿਤੇ ਵੀ ਕਲਿੱਕ ਕਰੋ ਜਾਂ ਕੋਈ ਵੀ ਕੁੰਜੀ ਦਬਾਓ।",
+                "browserNote": "ਬ੍ਰਾਊਜ਼ਰ ਨੂੰ ਆਡੀਓ ਆਪਣੇ ਆਪ ਚਲਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਉਪਭੋਗਤਾ ਨਾਲ ਗੱਲਬਾਤ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ।"
+            },
+            "playing": "ਆਡੀਓ ਚੱਲ ਰਿਹਾ ਹੈ...",
+            "paused": "ਆਡੀਓ ਰੋਕਿਆ ਗਿਆ"
+        }
+    }
 };
 export default pa;

@@ -410,6 +410,20 @@ const ta = {
     },
     "footer_githubLinkTitle": "GitHub களஞ்சியம் (புதிய தாவலில் திறக்கும்)",
     "ttsNoneOption": "யாரும் இல்லை",
-    "modelCategory_Frontier": "எல்லைப்புற மாதிரிகள்"
+    "modelCategory_Frontier": "எல்லைப்புற மாதிரிகள்",
+    "chatControls": {
+        "stopConversation": "உரையாடலை நிறுத்து",
+        "stopping": "நிறுத்துகிறது...",
+        "stopped": "நிறுத்தப்பட்டது",
+        "audioStatus": {
+            "ready": {
+                "title": "ஆடியோ தயார்",
+                "description": "ஆடியோ பிளேபேக்கை இயக்க எங்கும் கிளிக் செய்யவும் அல்லது எந்த விசையையும் அழுத்தவும்.",
+                "browserNote": "உலாவி தானாகவே ஆடியோவை இயக்குவதற்கு முன்பு பயனர் தொடர்பு தேவை."
+            },
+            "playing": "ஆடியோவை இயக்குகிறது...",
+            "paused": "ஆடியோ இடைநிறுத்தப்பட்டது"
+        }
+    }
 };
 export default ta;

@@ -410,6 +410,20 @@ const kk = {
     },
     "footer_githubLinkTitle": "GitHub репозиторий (жаңа қойындыда ашылады)",
     "ttsNoneOption": "Жоқ",
-    "modelCategory_Frontier": "Шекаралық модельдер"
+    "modelCategory_Frontier": "Шекаралық модельдер",
+    "chatControls": {
+        "stopConversation": "Сөйлесуді тоқтату",
+        "stopping": "Тоқталуда...",
+        "stopped": "Тоқтады",
+        "audioStatus": {
+            "ready": {
+                "title": "Аудио дайын",
+                "description": "Аудио ойнатуды қосу үшін кез келген жерді басыңыз немесе кез келген пернені басыңыз",
+                "browserNote": "Браузер дыбысты автоматты түрде ойнатпас бұрын пайдаланушының әрекеттесуін талап етеді."
+            },
+            "playing": "Аудио ойнатылуда...",
+            "paused": "Аудио кідіртілді"
+        }
+    }
 };
 export default kk;

@@ -410,6 +410,20 @@ const sq = {
     },
     "footer_githubLinkTitle": "GitHub depo (hapet në një skedë të re)",
     "ttsNoneOption": "Asnjë",
-    "modelCategory_Frontier": "Modelet Frontier"
+    "modelCategory_Frontier": "Modelet Frontier",
+    "chatControls": {
+        "stopConversation": "Ndalo bisedën",
+        "stopping": "Duke ndaluar...",
+        "stopped": "U ndal",
+        "audioStatus": {
+            "ready": {
+                "title": "Audio Gati",
+                "description": "Klikoni kudo ose shtypni çdo tast për të aktivizuar riprodhimin e audios",
+                "browserNote": "Shfletuesi kërkon ndërveprimin e përdoruesit përpara se të luajë automatikisht audion."
+            },
+            "playing": "Duke luajtur audio...",
+            "paused": "Audio u ndërpre"
+        }
+    }
 };
 export default sq;

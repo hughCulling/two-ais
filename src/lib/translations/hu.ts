@@ -410,6 +410,20 @@ const hu = {
     },
     "footer_githubLinkTitle": "GitHub adattár (új lapon nyílik meg)",
     "ttsNoneOption": "Egyik sem",
-    "modelCategory_Frontier": "Határmodellek"
+    "modelCategory_Frontier": "Határmodellek",
+    "chatControls": {
+        "stopConversation": "Beszélgetés leállítása",
+        "stopping": "Megállás...",
+        "stopped": "Leállítva",
+        "audioStatus": {
+            "ready": {
+                "title": "Hanggal előkészítve",
+                "description": "Kattintson bárhová, vagy nyomjon meg egy billentyűt a hanglejátszás engedélyezéséhez",
+                "browserNote": "A böngésző felhasználói beavatkozást igényel a hang automatikus lejátszása előtt."
+            },
+            "playing": "Hang lejátszása...",
+            "paused": "Hang szüneteltetve"
+        }
+    }
 };
 export default hu;

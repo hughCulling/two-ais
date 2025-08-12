@@ -410,6 +410,20 @@ const sr = {
     },
     "footer_githubLinkTitle": "GitHub репозиторијум (отвара се у новој картици)",
     "ttsNoneOption": "Ниједан",
-    "modelCategory_Frontier": "Гранични модели"
+    "modelCategory_Frontier": "Гранични модели",
+    "chatControls": {
+        "stopConversation": "Заустави разговор",
+        "stopping": "Заустављање...",
+        "stopped": "Заустављено",
+        "audioStatus": {
+            "ready": {
+                "title": "Спремно за звук",
+                "description": "Кликните било где или притисните било који тастер да бисте омогућили репродукцију звука",
+                "browserNote": "Прегледач захтева интеракцију корисника пре него што аутоматски репродукује звук."
+            },
+            "playing": "Пуштање звука...",
+            "paused": "Аудио паузиран"
+        }
+    }
 };
 export default sr;

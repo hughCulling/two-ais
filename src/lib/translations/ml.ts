@@ -410,6 +410,20 @@ const ml = {
     },
     "footer_githubLinkTitle": "GitHub റിപ്പോസിറ്ററി (ഒരു പുതിയ ടാബിൽ തുറക്കുന്നു)",
     "ttsNoneOption": "ഒന്നുമില്ല",
-    "modelCategory_Frontier": "ഫ്രോണ്ടിയർ മോഡലുകൾ"
+    "modelCategory_Frontier": "ഫ്രോണ്ടിയർ മോഡലുകൾ",
+    "chatControls": {
+        "stopConversation": "സംഭാഷണം നിർത്തുക",
+        "stopping": "നിർത്തുന്നു...",
+        "stopped": "നിർത്തി",
+        "audioStatus": {
+            "ready": {
+                "title": "ഓഡിയോ റെഡി",
+                "description": "ഓഡിയോ പ്ലേബാക്ക് പ്രാപ്തമാക്കാൻ എവിടെയെങ്കിലും ക്ലിക്കുചെയ്യുക അല്ലെങ്കിൽ ഏതെങ്കിലും കീ അമർത്തുക.",
+                "browserNote": "ഓഡിയോ സ്വയമേവ പ്ലേ ചെയ്യുന്നതിന് മുമ്പ് ബ്രൗസറിന് ഉപയോക്തൃ ഇടപെടൽ ആവശ്യമാണ്."
+            },
+            "playing": "ഓഡിയോ പ്ലേ ചെയ്യുന്നു...",
+            "paused": "ഓഡിയോ താൽക്കാലികമായി നിർത്തി"
+        }
+    }
 };
 export default ml;

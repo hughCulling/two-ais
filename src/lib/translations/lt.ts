@@ -410,6 +410,20 @@ const lt = {
     },
     "footer_githubLinkTitle": "GitHub saugykla (atsidaro naujame skirtuke)",
     "ttsNoneOption": "Nėra",
-    "modelCategory_Frontier": "Pasienio modeliai"
+    "modelCategory_Frontier": "Pasienio modeliai",
+    "chatControls": {
+        "stopConversation": "Sustabdyti pokalbį",
+        "stopping": "Stabdoma...",
+        "stopped": "Sustabdyta",
+        "audioStatus": {
+            "ready": {
+                "title": "Garso įrašymas paruoštas",
+                "description": "Spustelėkite bet kur arba paspauskite bet kurį klavišą, kad įjungtumėte garso atkūrimą",
+                "browserNote": "Prieš automatiškai paleidžiant garsą, naršyklė reikalauja naudotojo įsikišimo."
+            },
+            "playing": "Grojamas garsas...",
+            "paused": "Garsas pristabdytas"
+        }
+    }
 };
 export default lt;

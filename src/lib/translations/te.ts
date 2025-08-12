@@ -410,6 +410,20 @@ const te = {
     },
     "footer_githubLinkTitle": "GitHub రిపోజిటరీ (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",
     "ttsNoneOption": "ఏదీ లేదు",
-    "modelCategory_Frontier": "ఫ్రాంటియర్ మోడల్స్"
+    "modelCategory_Frontier": "ఫ్రాంటియర్ మోడల్స్",
+    "chatControls": {
+        "stopConversation": "సంభాషణను ఆపివేయండి",
+        "stopping": "ఆపివేస్తోంది...",
+        "stopped": "ఆగిపోయింది",
+        "audioStatus": {
+            "ready": {
+                "title": "ఆడియో సిద్ధంగా ఉంది",
+                "description": "ఆడియో ప్లేబ్యాక్‌ను ప్రారంభించడానికి ఎక్కడైనా క్లిక్ చేయండి లేదా ఏదైనా కీని నొక్కండి.",
+                "browserNote": "ఆడియోను స్వయంచాలకంగా ప్లే చేయడానికి ముందు బ్రౌజర్‌కు వినియోగదారు పరస్పర చర్య అవసరం."
+            },
+            "playing": "ఆడియో ప్లే అవుతోంది...",
+            "paused": "ఆడియో పాజ్ చేయబడింది"
+        }
+    }
 };
 export default te;

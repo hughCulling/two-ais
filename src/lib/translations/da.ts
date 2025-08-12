@@ -410,6 +410,20 @@ const da = {
     },
     "footer_githubLinkTitle": "GitHub arkiv (åbner i en ny fane)",
     "ttsNoneOption": "Ingen",
-    "modelCategory_Frontier": "Frontier-modeller"
+    "modelCategory_Frontier": "Frontier-modeller",
+    "chatControls": {
+        "stopConversation": "Stop samtalen",
+        "stopping": "Stopper...",
+        "stopped": "Stoppet",
+        "audioStatus": {
+            "ready": {
+                "title": "Lydklar",
+                "description": "Klik et vilkårligt sted eller tryk på en vilkårlig tast for at aktivere lydafspilning",
+                "browserNote": "Browseren kræver brugerinteraktion, før lyden afspilles automatisk."
+            },
+            "playing": "Afspiller lyd...",
+            "paused": "Lyd sat på pause"
+        }
+    }
 };
 export default da;

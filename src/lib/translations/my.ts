@@ -410,6 +410,20 @@ const my = {
     },
     "footer_githubLinkTitle": "GitHub repository (တက်ဘ်အသစ်တစ်ခုတွင်ဖွင့်သည်)",
     "ttsNoneOption": "တစ်ခုမှ",
-    "modelCategory_Frontier": "တောင်တန်းမော်ဒယ်များ"
+    "modelCategory_Frontier": "တောင်တန်းမော်ဒယ်များ",
+    "chatControls": {
+        "stopConversation": "စကားဝိုင်းကို ရပ်လိုက်ပါ။",
+        "stopping": "ရပ်နေသည်...",
+        "stopped": "ရပ်သွားတယ်။",
+        "audioStatus": {
+            "ready": {
+                "title": "အသံအဆင်သင့်ဖြစ်ပါပြီ။",
+                "description": "အသံပြန်ဖွင့်ရန် မည်သည့်နေရာတွင်မဆို နှိပ်ပါ သို့မဟုတ် ခလုတ်တစ်ခုခုကို နှိပ်ပါ။",
+                "browserNote": "အသံကို အလိုအလျောက်မဖွင့်မီ ဘရောင်ဇာသည် အသုံးပြုသူ အပြန်အလှန်တုံ့ပြန်မှု လိုအပ်သည်။"
+            },
+            "playing": "အသံဖွင့်နေသည်...",
+            "paused": "အသံကို ခေတ္တရပ်ထားသည်။"
+        }
+    }
 };
 export default my;
