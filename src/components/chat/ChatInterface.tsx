@@ -136,6 +136,8 @@ export function ChatInterface({
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
     const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
+    const [pendingTtsMessage, setPendingTtsMessage] = useState<Message | null>(null);
+    const [isAudioReady, setIsAudioReady] = useState(false);
 
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -547,7 +549,9 @@ export function ChatInterface({
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
-        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled) return;
+        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled) {
+            return;
+        }
 
         const nextMsg = visibleMessages.find(msg => {
             if (playedMessageIds.has(msg.id)) return false;
@@ -558,15 +562,32 @@ export function ChatInterface({
 
         if (!nextMsg) return;
 
+        // If message is still streaming, store it for later playback
+        if (nextMsg.isStreaming) {
+            setPendingTtsMessage(nextMsg);
+            setIsAudioReady(false);
+            return;
+        }
+
+        // If we have a pending message but it's not the current one, clear it
+        if (pendingTtsMessage && pendingTtsMessage.id !== nextMsg.id) {
+            setPendingTtsMessage(null);
+        }
+
+        // Mark audio as ready when we have a complete message
+        if (!isAudioReady) {
+            setIsAudioReady(true);
+        }
+
         const agentRole = nextMsg.role as 'agentA' | 'agentB';
         const ttsConfig = conversationData.ttsSettings?.[agentRole];
 
         if (ttsConfig?.provider === 'browser') {
-                                    const voiceInfo = getVoiceById(ttsConfig.provider, ttsConfig.voice || '');
+            const voiceInfo = getVoiceById(ttsConfig.provider, ttsConfig.voice || '');
             const voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceInfo?.providerVoiceId);
             if (!voice) {
                 logger.warn(`Browser voice not found for ID: ${ttsConfig.voice}`);
-                handleAudioEnd(); // Skip playback if voice is missing
+                handleAudioEnd();
                 return;
             }
 
@@ -574,26 +595,45 @@ export function ChatInterface({
             const utterance = new SpeechSynthesisUtterance(cleanedContent);
             utterance.voice = voice;
             utterance.onstart = () => {
-                // This is the source of truth for playback starting
                 setCurrentlyPlayingMsgId(nextMsg.id);
                 setIsAudioPlaying(true);
                 setIsBrowserTTSActive(true);
+                setPendingTtsMessage(null); // Clear pending message when playback starts
             };
             utterance.onend = () => {
                 setIsBrowserTTSActive(false);
                 handleAudioEnd();
             };
             utterance.onerror = (event) => {
-                logger.error('Speech synthesis error:', event.error);
-                setTtsError(`Speech synthesis failed: ${event.error}`);
+                // Ignore 'canceled' errors as they're expected during normal operation
+                if (event.error !== 'canceled') {
+                    logger.error('Speech synthesis error:', event.error);
+                    setTtsError(`Speech synthesis failed: ${event.error}`);
+                } else {
+                    logger.debug('Speech synthesis canceled (expected)');
+                }
                 setIsBrowserTTSActive(false);
                 handleAudioEnd();
             };
 
+            // Store the current utterance reference before speaking
             utteranceRef.current = utterance;
-            // We are only requesting speech, not guaranteeing it starts immediately.
-            // isAudioPlaying will be set in onstart.
-            speechSynthesis.speak(utterance);
+            try {
+                // Cancel any pending speech
+                window.speechSynthesis.cancel();
+                // Small delay to allow cancellation to complete
+                setTimeout(() => {
+                    try {
+                        window.speechSynthesis.speak(utterance);
+                    } catch (speakErr) {
+                        logger.error('Error speaking utterance:', speakErr);
+                        handleAudioEnd();
+                    }
+                }, 50);
+            } catch (err) {
+                logger.error('Error in speech synthesis setup:', err);
+                handleAudioEnd();
+            }
 
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
             audioPlayerRef.current.src = nextMsg.audioUrl;
@@ -601,14 +641,27 @@ export function ChatInterface({
                 .then(() => {
                     setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
+                    setPendingTtsMessage(null); // Clear pending message when playback starts
                 })
                 .catch(err => {
                     logger.error("Audio playback failed:", err);
-                    handleAudioEnd(); // Ensure state is cleaned up on error
+                    handleAudioEnd();
                 });
         }
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, 
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady]);
 
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, conversationData, handleAudioEnd, imageLoadStatus]); // Added isAudioPlaying
+    // Add effect to handle pending messages when they become ready
+    useEffect(() => {
+        if (pendingTtsMessage && !pendingTtsMessage.isStreaming && isAudioReady) {
+            // Small delay to ensure any previous TTS is fully cancelled
+            const timer = setTimeout(() => {
+                setHasUserInteracted(false);
+                setTimeout(() => setHasUserInteracted(true), 50);
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [pendingTtsMessage, pendingTtsMessage?.isStreaming, isAudioReady]);
 
     // --- Render Logic ---
 
@@ -662,15 +715,21 @@ export function ChatInterface({
     if (!conversationStatus && !error) return <div className="p-4 text-center text-muted-foreground">Loading conversation status...</div>;
 
 
+    const isWaitingForMessage = pendingTtsMessage?.isStreaming && !isAudioPlaying;
+
     return (
         <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden">
             {/* Header Section */}
             <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
                 <h2 className="text-lg font-semibold">{t?.main?.aiConversation}</h2>
-                {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
+                {(isAudioPlaying || isAudioPaused || isWaitingForMessage) && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
                         <Volume2 className={`h-4 w-4 ${isAudioPlaying ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} aria-hidden="true"/>
-                        <span>{isAudioPaused ? t?.chatControls.audioStatus.paused : t?.chatControls.audioStatus.playing}</span>
+                        <span>
+                            {isWaitingForMessage ? 'Waiting for message...' : 
+                             isAudioPaused ? t?.chatControls.audioStatus.paused : 
+                             t?.chatControls.audioStatus.playing}
+                        </span>
                     </div>
                 )}
                 <Button 
