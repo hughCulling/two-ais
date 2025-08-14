@@ -374,11 +374,29 @@ export function ChatInterface({
     }, [conversationId, error, isStopped, conversationStatus, onConversationStopped]); // Added onConversationStopped
 
     // --- Effect 3: Auto-scroll ---
-        useEffect(() => {
+    const prevMessagesLength = useRef(messages.length);
+    useEffect(() => {
+        // Only auto-scroll when:
+        // 1. Conversation is running and not stopped
+        // 2. A new message was added (not just updated)
+        // 3. We're not currently playing audio
         if (conversationStatus === "running" && !isStopped) {
-            scrollToBottom(messagesEndRef.current);
+            const isNewMessage = messages.length > prevMessagesLength.current;
+            const lastMessage = messages[messages.length - 1];
+            const isLastMessageFromAgent = lastMessage && (lastMessage.role === 'agentA' || lastMessage.role === 'agentB');
+            
+            // Scroll if:
+            // - It's a new message and we're not playing audio, OR
+            // - The last message is from the user, OR
+            // - The last agent message has finished playing
+            if ((isNewMessage && !isAudioPlaying) || 
+                !isLastMessageFromAgent || 
+                (isLastMessageFromAgent && playedMessageIds.has(lastMessage.id))) {
+                scrollToBottom(messagesEndRef.current);
+            }
         }
-    }, [messages, conversationStatus, isStopped, scrollToBottom]); // Keep dependencies
+        prevMessagesLength.current = messages.length;
+    }, [messages, conversationStatus, isStopped, isAudioPlaying, playedMessageIds, scrollToBottom]);
 
     // --- Handler: User Interaction Detection ---
     const handleUserInteraction = useCallback(() => {
