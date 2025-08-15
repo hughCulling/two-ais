@@ -653,7 +653,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         contextWindow: 128000,
         pricing: { 
             input: 0.10, 
-            output: 1.00,
+            output: 0.10,
             freeTier: {
                 available: true,
                 note: (t) => t.pricing.mistralFreeTierNote
