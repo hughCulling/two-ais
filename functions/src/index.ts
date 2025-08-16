@@ -104,7 +104,7 @@ interface GcpError extends Error { code?: number | string; details?: string; }
 //     type?: string;
 // }
 
-const LOOKAHEAD_LIMIT = 2; // How many agent messages ahead can be generated
+const LOOKAHEAD_LIMIT = 3; // How many agent messages ahead can be generated
 // --- ConversationData type for linter ---
 type ConversationData = {
   agentA_llm: string;
