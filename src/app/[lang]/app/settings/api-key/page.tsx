@@ -1,4 +1,4 @@
-// src/app/settings/api-keys/page.tsx
+// src/app/settings/api-key/page.tsx
 // Page specifically for managing API keys (Auth handled by layout)
 
 'use client'; // ApiKeyManager uses client hooks

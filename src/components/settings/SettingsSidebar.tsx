@@ -18,7 +18,7 @@ export default function SettingsSidebar() {
     const navigation = [
         { name: t.settings.sections.appearance, href: `/${language.code}/app/settings/appearance` },
         { name: t.settings.sections.language, href: `/${language.code}/app/settings/language` },
-        { name: t.settings.sections.apiKeys, href: `/${language.code}/app/settings/api-keys` },
+        { name: t.settings.sections.apiKeys, href: `/${language.code}/app/settings/api-key` },
         // Add more settings links here later (e.g., Profile, Billing)
         // { name: 'Profile', href: '/settings/profile' },
     ];
