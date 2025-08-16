@@ -220,7 +220,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             {mounted && (
               <iframe
                 className="w-full h-full"
-                src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : '52oUvRFdaXE'}?autoplay=0&rel=0&modestbranding=1`}
+                src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : '52oUvRFdaXE'}?autoplay=0&rel=0&modestbranding=1&enablejsapi=0&cc_load_policy=1&origin=${encodeURIComponent(window.location.origin)}`}
                 title={t.page_VideoTitle}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
