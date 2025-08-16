@@ -33,7 +33,7 @@ export async function GET() {
     .map(
       (url) => `  <url>
     <loc>${url}</loc>
-    <lastmod>2025-08-03</lastmod>
+    <lastmod>2025-08-16</lastmod>
     <priority>1.0</priority>
   </url>`
     )
