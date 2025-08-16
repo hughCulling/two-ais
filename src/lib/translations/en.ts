@@ -288,7 +288,7 @@ const en = {
     page_WelcomeTitle: "Welcome to Two AIs",
     page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS).",
     page_ApiKeysRequiredTitle: "API Key Required",
-    page_ApiKeysRequiredDescription: "To run conversations, you'll need to provide your own API key for the AI model you wish to use after signing in. Detailed instructions for Mistral AI can be found on the {settingsLink} page after signing in.",
+    page_ApiKeysRequiredDescription: "To run conversations, you'll need to provide your own Mistral AI API key after signing in. Detailed instructions can be found on the {settingsLink} page after signing in.",
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
     page_VideoTitle: "Two AIs Conversation Demo",
     page_AvailableLLMsTitle: "Currently Available LLMs",
