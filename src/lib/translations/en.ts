@@ -415,6 +415,7 @@ const en = {
         chatWith: 'Chat with {agentA} & {agentB}',
         conversationDescription: 'Started on {date} - Language: {language}',
         imageGenerationEnabled: 'Image Generation',
+        ttsEnabled: 'TTS',
         imageGenerationSettings: 'Image Generation Settings',
         viewConversation: 'View Conversation',
         backToPreviousChats: 'Back to Previous Chats',
