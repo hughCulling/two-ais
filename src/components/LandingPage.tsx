@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,17 +12,17 @@ import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/model
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Image as ImageIcon, Calendar } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar } from "lucide-react";
 import { cn } from '@/lib/utils';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
-import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
-import type { ImageModelInfo } from '@/lib/image_models';
+// import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
+// import type { ImageModelInfo } from '@/lib/image_models';
 import { FreeTierBadge } from './ui/free-tier-badge';
 
    // Replace these with your actual base64 strings!
-   const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
-   const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+  //  const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
+  //  const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
 
 // TruncatableNote component for pricing notes
 import type { TranslationKeys } from '@/lib/translations';
@@ -114,16 +114,16 @@ const formatPrice = (price: number) => {
 };
 
 // Helper to group image models by provider
-function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<string, ImageModelInfo[]> {
-  const grouped: Record<string, ImageModelInfo[]> = {};
-  imageModels.forEach((model: ImageModelInfo) => {
-    if (!grouped[model.provider]) grouped[model.provider] = [];
-    grouped[model.provider].push(model);
-  });
-  return grouped;
-}
+// function groupImageModelsByProvider(imageModels: ImageModelInfo[]): Record<string, ImageModelInfo[]> {
+//   const grouped: Record<string, ImageModelInfo[]> = {};
+//   imageModels.forEach((model: ImageModelInfo) => {
+//     if (!grouped[model.provider]) grouped[model.provider] = [];
+//     grouped[model.provider].push(model);
+//   });
+//   return grouped;
+// }
 
-const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
+// const YouTubeFacade = dynamic(() => import('./YouTubeFacade'), { ssr: false });
 
 interface LandingPageProps {
   nonce: string;
@@ -134,7 +134,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const { language } = useLanguage();
   const { t, loading } = useTranslation();
   const [mounted, setMounted] = useState(false); // <-- Add mounted state
-  const [isPlayerActive, setIsPlayerActive] = useState(false);
+  // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -155,12 +155,12 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
   if (loading || !t) return null;
-  const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = t?.gptImage1PricingTooltip
-    ? t.gptImage1PricingTooltip
-        .replace('{inputPrice}', '$10.00')
-        .replace('{cachedInputPrice}', '$2.50')
-        .replace('{outputPrice}', '$40.00')
-    : 'Token pricing for GPT Image 1:\nInput: $10.00 / 1 Million tokens\nCached input: $2.50 / 1 Million tokens\nOutput: $40.00 / 1 Million tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.';
+  // const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = t?.gptImage1PricingTooltip
+  //   ? t.gptImage1PricingTooltip
+  //       .replace('{inputPrice}', '$10.00')
+  //       .replace('{cachedInputPrice}', '$2.50')
+  //       .replace('{outputPrice}', '$40.00')
+  //   : 'Token pricing for GPT Image 1:\nInput: $10.00 / 1 Million tokens\nCached input: $2.50 / 1 Million tokens\nOutput: $40.00 / 1 Million tokens\nNote: Per-image prices above are for output image tokens only. Input text/image tokens are billed separately.';
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
       {/* Structured Data for SEO */}
