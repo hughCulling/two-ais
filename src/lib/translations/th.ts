@@ -395,7 +395,8 @@ const th = {
         "model": "แบบอย่าง",
         "voice": "เสียง",
         "imageGenerationEnabled": "การสร้างภาพ",
-        "imageGenerationSettings": "การตั้งค่าการสร้างภาพ"
+        "imageGenerationSettings": "การตั้งค่าการสร้างภาพ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "คุณภาพ",
     "imageModel_Size": "ขนาด",

@@ -395,7 +395,8 @@ const hy = {
         "model": "Մոդել",
         "voice": "Ձայն",
         "imageGenerationEnabled": "Պատկերի ստեղծում",
-        "imageGenerationSettings": "Պատկերի ստեղծման կարգավորումներ"
+        "imageGenerationSettings": "Պատկերի ստեղծման կարգավորումներ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Որակ",
     "imageModel_Size": "Չափս",

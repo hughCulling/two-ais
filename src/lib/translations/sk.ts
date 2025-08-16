@@ -395,7 +395,8 @@ const sk = {
         "model": "Model",
         "voice": "Hlas",
         "imageGenerationEnabled": "Generovanie obrázkov",
-        "imageGenerationSettings": "Nastavenia generovania obrázkov"
+        "imageGenerationSettings": "Nastavenia generovania obrázkov",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalita",
     "imageModel_Size": "Veľkosť",

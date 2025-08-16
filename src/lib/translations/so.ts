@@ -395,7 +395,8 @@ const so = {
         "model": "Qaabka",
         "voice": "Codka",
         "imageGenerationEnabled": "Jiilka Sawirka",
-        "imageGenerationSettings": "Dejinta Jiilka Sawirka"
+        "imageGenerationSettings": "Dejinta Jiilka Sawirka",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Tayada",
     "imageModel_Size": "Cabbirka",

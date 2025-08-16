@@ -395,7 +395,8 @@ const sq = {
         "model": "Model",
         "voice": "Zëri",
         "imageGenerationEnabled": "Gjenerimi i Imazhit",
-        "imageGenerationSettings": "Cilësimet e Gjenerimit të Imazhit"
+        "imageGenerationSettings": "Cilësimet e Gjenerimit të Imazhit",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Cilësia",
     "imageModel_Size": "Madhësia",

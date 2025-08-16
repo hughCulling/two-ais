@@ -395,7 +395,8 @@ const ka = {
         "model": "მოდელი",
         "voice": "ხმა",
         "imageGenerationEnabled": "სურათების გენერირება",
-        "imageGenerationSettings": "სურათის გენერირების პარამეტრები"
+        "imageGenerationSettings": "სურათის გენერირების პარამეტრები",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ხარისხი",
     "imageModel_Size": "ზომა",

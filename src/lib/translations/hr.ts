@@ -395,7 +395,8 @@ const hr = {
         "model": "Model",
         "voice": "Glas",
         "imageGenerationEnabled": "Generiranje slike",
-        "imageGenerationSettings": "Postavke generiranja slike"
+        "imageGenerationSettings": "Postavke generiranja slike",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvaliteta",
     "imageModel_Size": "Veličina",

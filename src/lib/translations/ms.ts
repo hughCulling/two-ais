@@ -395,7 +395,8 @@ const ms = {
         "model": "Model",
         "voice": "Suara",
         "imageGenerationEnabled": "Penjanaan Imej",
-        "imageGenerationSettings": "Tetapan Penjanaan Imej"
+        "imageGenerationSettings": "Tetapan Penjanaan Imej",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kualiti",
     "imageModel_Size": "Saiz",

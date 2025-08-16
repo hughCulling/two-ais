@@ -395,7 +395,8 @@ const bs = {
         "model": "Model",
         "voice": "Glas",
         "imageGenerationEnabled": "Generiranje slika",
-        "imageGenerationSettings": "Postavke generiranja slike"
+        "imageGenerationSettings": "Postavke generiranja slike",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Veličina",

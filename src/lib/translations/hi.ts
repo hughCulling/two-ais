@@ -395,7 +395,8 @@ const hi = {
         "model": "नमूना",
         "voice": "आवाज़",
         "imageGenerationEnabled": "छवि निर्माण",
-        "imageGenerationSettings": "छवि निर्माण सेटिंग्स"
+        "imageGenerationSettings": "छवि निर्माण सेटिंग्स",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",

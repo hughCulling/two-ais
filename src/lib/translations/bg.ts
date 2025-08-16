@@ -395,7 +395,8 @@ const bg = {
         "model": "Модел",
         "voice": "Глас",
         "imageGenerationEnabled": "Генериране на изображения",
-        "imageGenerationSettings": "Настройки за генериране на изображения"
+        "imageGenerationSettings": "Настройки за генериране на изображения",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",

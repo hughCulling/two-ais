@@ -395,7 +395,8 @@ const ml = {
         "model": "മോഡൽ",
         "voice": "ശബ്ദം",
         "imageGenerationEnabled": "ഇമേജ് ജനറേഷൻ",
-        "imageGenerationSettings": "ഇമേജ് ജനറേഷൻ ക്രമീകരണങ്ങൾ"
+        "imageGenerationSettings": "ഇമേജ് ജനറേഷൻ ക്രമീകരണങ്ങൾ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ഗുണമേന്മ",
     "imageModel_Size": "വലുപ്പം",

@@ -395,7 +395,8 @@ const ro = {
         "model": "Model",
         "voice": "Voce",
         "imageGenerationEnabled": "Generarea de imagini",
-        "imageGenerationSettings": "Setări de generare a imaginilor"
+        "imageGenerationSettings": "Setări de generare a imaginilor",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Calitate",
     "imageModel_Size": "Dimensiune",

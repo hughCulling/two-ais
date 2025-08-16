@@ -395,7 +395,8 @@ const sw = {
         "model": "Mfano",
         "voice": "Sauti",
         "imageGenerationEnabled": "Kizazi cha Picha",
-        "imageGenerationSettings": "Mipangilio ya Kizazi cha Picha"
+        "imageGenerationSettings": "Mipangilio ya Kizazi cha Picha",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Ubora",
     "imageModel_Size": "Ukubwa",

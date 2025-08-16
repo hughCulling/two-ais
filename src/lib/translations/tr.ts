@@ -395,7 +395,8 @@ const tr = {
         "model": "Model",
         "voice": "Ses",
         "imageGenerationEnabled": "Görüntü Oluşturma",
-        "imageGenerationSettings": "Görüntü Oluşturma Ayarları"
+        "imageGenerationSettings": "Görüntü Oluşturma Ayarları",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kalite",
     "imageModel_Size": "Boyut",

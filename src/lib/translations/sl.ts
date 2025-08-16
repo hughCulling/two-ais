@@ -395,7 +395,8 @@ const sl = {
         "model": "Model",
         "voice": "Glas",
         "imageGenerationEnabled": "Generiranje slik",
-        "imageGenerationSettings": "Nastavitve ustvarjanja slik"
+        "imageGenerationSettings": "Nastavitve ustvarjanja slik",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kakovost",
     "imageModel_Size": "Velikost",

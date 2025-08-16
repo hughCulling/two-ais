@@ -395,7 +395,8 @@ const my = {
         "model": "မော်ဒယ်",
         "voice": "စကားသံ",
         "imageGenerationEnabled": "ရုပ်ပုံမျိုးဆက်",
-        "imageGenerationSettings": "ရုပ်ပုံ မျိုးဆက် ဆက်တင်များ"
+        "imageGenerationSettings": "ရုပ်ပုံ မျိုးဆက် ဆက်တင်များ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "အရည်အသွေး",
     "imageModel_Size": "အရွယ်အစား",

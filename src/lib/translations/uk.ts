@@ -395,7 +395,8 @@ const uk = {
         "model": "Модель",
         "voice": "Голос",
         "imageGenerationEnabled": "Генерація зображень",
-        "imageGenerationSettings": "Налаштування створення зображень"
+        "imageGenerationSettings": "Налаштування створення зображень",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Якість",
     "imageModel_Size": "Розмір",

@@ -395,7 +395,8 @@ const lv = {
         "model": "Modelis",
         "voice": "Balss",
         "imageGenerationEnabled": "Attēlu ģenerēšana",
-        "imageGenerationSettings": "Attēlu ģenerēšanas iestatījumi"
+        "imageGenerationSettings": "Attēlu ģenerēšanas iestatījumi",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitāte",
     "imageModel_Size": "Izmērs",

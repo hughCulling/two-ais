@@ -395,7 +395,8 @@ const sv = {
         "model": "Modell",
         "voice": "Röst",
         "imageGenerationEnabled": "Bildgenerering",
-        "imageGenerationSettings": "Inställningar för bildgenerering"
+        "imageGenerationSettings": "Inställningar för bildgenerering",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Storlek",

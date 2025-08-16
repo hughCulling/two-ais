@@ -395,7 +395,8 @@ const fa = {
         "model": "مدل",
         "voice": "صدا",
         "imageGenerationEnabled": "تولید تصویر",
-        "imageGenerationSettings": "تنظیمات تولید تصویر"
+        "imageGenerationSettings": "تنظیمات تولید تصویر",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "کیفیت",
     "imageModel_Size": "اندازه",

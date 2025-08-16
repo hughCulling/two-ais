@@ -395,7 +395,8 @@ const ta = {
         "model": "மாதிரி",
         "voice": "குரல்",
         "imageGenerationEnabled": "பட உருவாக்கம்",
-        "imageGenerationSettings": "பட உருவாக்க அமைப்புகள்"
+        "imageGenerationSettings": "பட உருவாக்க அமைப்புகள்",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "தரம்",
     "imageModel_Size": "அளவு",

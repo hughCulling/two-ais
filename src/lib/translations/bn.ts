@@ -395,7 +395,8 @@ const bn = {
         "model": "মডেল",
         "voice": "কণ্ঠস্বর",
         "imageGenerationEnabled": "চিত্র তৈরি",
-        "imageGenerationSettings": "ছবি তৈরির সেটিংস"
+        "imageGenerationSettings": "ছবি তৈরির সেটিংস",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "গুণমান",
     "imageModel_Size": "আকার",

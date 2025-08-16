@@ -395,7 +395,8 @@ const mk = {
         "model": "Модел",
         "voice": "Глас",
         "imageGenerationEnabled": "Генерирање на слики",
-        "imageGenerationSettings": "Поставки за генерирање слики"
+        "imageGenerationSettings": "Поставки за генерирање слики",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Големина",

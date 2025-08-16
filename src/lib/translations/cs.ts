@@ -395,7 +395,8 @@ const cs = {
         "model": "Model",
         "voice": "Hlas",
         "imageGenerationEnabled": "Generování obrázků",
-        "imageGenerationSettings": "Nastavení generování obrázků"
+        "imageGenerationSettings": "Nastavení generování obrázků",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitní",
     "imageModel_Size": "Velikost",

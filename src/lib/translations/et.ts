@@ -395,7 +395,8 @@ const et = {
         "model": "Mudel",
         "voice": "Hääl",
         "imageGenerationEnabled": "Kujutise genereerimine",
-        "imageGenerationSettings": "Pildi genereerimise seaded"
+        "imageGenerationSettings": "Pildi genereerimise seaded",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvaliteet",
     "imageModel_Size": "Suurus",
