@@ -979,8 +979,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     )}
                 </div>
                 {/* IMAGE GENERATION CONFIGURATION SECTION */}
-                {/* <hr className="my-6" />
-                <div className="space-y-4">
+                <hr className="my-6" />
+                {/* <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                         <Checkbox 
                             id="image-gen-enabled-checkbox" 
