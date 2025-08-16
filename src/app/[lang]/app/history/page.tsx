@@ -52,6 +52,7 @@ interface ConversationSummary {
     language: string;
     imageGenSettings?: ImageGenSettings;
     ttsSettings?: TTSSettings;
+    initialSystemPrompt?: string;
 }
 
 // Helper to generate smart pagination with ellipses
@@ -245,6 +246,16 @@ export default function HistoryPage() {
                                                             </span>
                                                         )}
                                                     </div>
+                                                    {convo.initialSystemPrompt && (
+                                                        <div className="mt-2">
+                                                            <div className="flex items-start gap-2">
+                                                                <span className="text-xs font-medium text-muted-foreground">Initial prompt:</span>
+                                                                <span className="text-xs text-muted-foreground line-clamp-2">
+                                                                    {convo.initialSystemPrompt}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </CardDescription>
                                             </CardHeader>
                                         </Card>

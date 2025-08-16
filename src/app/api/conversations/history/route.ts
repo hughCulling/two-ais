@@ -77,6 +77,7 @@ interface ConversationSummary {
     agentA_llm: string;
     agentB_llm: string;
     language: string;
+    initialSystemPrompt?: string;
     imageGenSettings?: ImageGenSettings;
     ttsSettings?: TTSSettings;
     // We could add a snippet of the last message or a title in the future
@@ -159,6 +160,7 @@ export async function GET(request: NextRequest) {
                 agentA_llm: data.agentA_llm,
                 agentB_llm: data.agentB_llm,
                 language: data.language || 'en',
+                initialSystemPrompt: data.initialSystemPrompt || undefined,
             };
             
             // Include image generation settings if they exist
