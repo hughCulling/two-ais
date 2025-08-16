@@ -77,13 +77,13 @@ const initialApiKeys: ApiKeyInput[] = [
     //     tooltip: 'Used for Grok models from xAI. Requires an xAI account. Find keys at console.x.ai (or similar). Costs may apply.',
     //     learnMoreLink: 'https://console.x.ai' // Placeholder, actual link might differ
     // },
-    {
-        id: 'together_ai',
-        label: 'TogetherAI API Key',
-        value: '',
-        tooltip: 'together.ai account required. You can find keys at ',
-        learnMoreLink: 'https://api.together.ai/settings/api-keys'
-    },
+    // {
+    //     id: 'together_ai',
+    //     label: 'TogetherAI API Key',
+    //     value: '',
+    //     tooltip: 'together.ai account required. You can find keys at ',
+    //     learnMoreLink: 'https://api.together.ai/settings/api-keys'
+    // },
     // {
     //     id: 'deepseek',
     //     label: 'DeepSeek API Key',
