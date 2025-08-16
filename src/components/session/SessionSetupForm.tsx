@@ -979,7 +979,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     )}
                 </div>
                 {/* IMAGE GENERATION CONFIGURATION SECTION */}
-                <hr className="my-6" />
+                {/* <hr className="my-6" />
                 <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                         <Checkbox 
@@ -1000,9 +1000,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     </div>
                     {imageGenEnabled && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="image-gen-settings-label">
-                            <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
+                            <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div> */}
                             {/* Image Model Selection */}
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="image-model-select">{t?.sessionSetupForm?.imageModel}</Label>
                                 <Select
                                     value={selectedImageModelId}
@@ -1017,9 +1017,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         ))}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </div> */}
                             {/* Quality Selection */}
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="image-quality-select">{t?.sessionSetupForm?.quality}</Label>
                                 <Select
                                     value={selectedImageQuality}
@@ -1055,9 +1055,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         })()}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </div> */}
                             {/* Size Selection */}
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="image-size-select">{t?.sessionSetupForm?.size}</Label>
                                 <Select
                                     value={selectedImageSize}
@@ -1090,9 +1090,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         })()}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </div> */}
                             {/* Prompt LLM Selection */}
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM}</Label>
                                 <Select
                                     value={selectedPromptLlm}
@@ -1107,9 +1107,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         ))}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </div> */}
                             {/* System Prompt for Image Prompt LLM */}
-                            <div className="space-y-2 col-span-1 md:col-span-2">
+                            {/* <div className="space-y-2 col-span-1 md:col-span-2">
                                 <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage}</Label>
                                 <textarea
                                     id="image-prompt-system-message"
@@ -1124,7 +1124,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
                 {/* Move initial prompt section here */}
                 <div className="mt-4">
                     <label htmlFor="initial-system-prompt" className="block font-medium mb-1">{t?.sessionSetupForm?.initialSystemPrompt}</label>
