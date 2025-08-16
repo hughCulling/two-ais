@@ -395,7 +395,8 @@ const kn = {
         "model": "ಮಾದರಿ",
         "voice": "ಧ್ವನಿ",
         "imageGenerationEnabled": "ಚಿತ್ರ ರಚನೆ",
-        "imageGenerationSettings": "ಚಿತ್ರ ರಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
+        "imageGenerationSettings": "ಚಿತ್ರ ರಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ಗುಣಮಟ್ಟ",
     "imageModel_Size": "ಗಾತ್ರ",

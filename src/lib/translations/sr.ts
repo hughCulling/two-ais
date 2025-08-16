@@ -395,7 +395,8 @@ const sr = {
         "model": "Модел",
         "voice": "Глас",
         "imageGenerationEnabled": "Генерисање слика",
-        "imageGenerationSettings": "Подешавања генерисања слика"
+        "imageGenerationSettings": "Подешавања генерисања слика",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Квалитет",
     "imageModel_Size": "Величина",

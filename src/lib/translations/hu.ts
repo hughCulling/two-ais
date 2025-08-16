@@ -395,7 +395,8 @@ const hu = {
         "model": "Modell",
         "voice": "Hang",
         "imageGenerationEnabled": "Képgenerálás",
-        "imageGenerationSettings": "Képgenerálási beállítások"
+        "imageGenerationSettings": "Képgenerálási beállítások",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Minőség",
     "imageModel_Size": "Méret",

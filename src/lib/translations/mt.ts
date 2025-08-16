@@ -395,7 +395,8 @@ const mt = {
         "model": "Mudell",
         "voice": "Vuċi",
         "imageGenerationEnabled": "Ġenerazzjoni tal-Immaġni",
-        "imageGenerationSettings": "Issettjar tal-Ġenerazzjoni tal-Immaġni"
+        "imageGenerationSettings": "Issettjar tal-Ġenerazzjoni tal-Immaġni",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kwalità",
     "imageModel_Size": "Daqs",

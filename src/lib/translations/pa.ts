@@ -395,7 +395,8 @@ const pa = {
         "model": "ਮਾਡਲ",
         "voice": "ਆਵਾਜ਼",
         "imageGenerationEnabled": "ਚਿੱਤਰ ਉਤਪਤੀ",
-        "imageGenerationSettings": "ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਸੈਟਿੰਗਾਂ"
+        "imageGenerationSettings": "ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਸੈਟਿੰਗਾਂ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ਗੁਣਵੱਤਾ",
     "imageModel_Size": "ਆਕਾਰ",

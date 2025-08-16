@@ -395,7 +395,8 @@ const ur = {
         "model": "ماڈل",
         "voice": "آواز",
         "imageGenerationEnabled": "امیج جنریشن",
-        "imageGenerationSettings": "امیج جنریشن سیٹنگز"
+        "imageGenerationSettings": "امیج جنریشن سیٹنگز",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "معیار",
     "imageModel_Size": "سائز",

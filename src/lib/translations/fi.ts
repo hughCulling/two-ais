@@ -395,7 +395,8 @@ const fi = {
         "model": "Malli",
         "voice": "Ääni",
         "imageGenerationEnabled": "Kuvan luominen",
-        "imageGenerationSettings": "Kuvan luontiasetukset"
+        "imageGenerationSettings": "Kuvan luontiasetukset",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Laatu",
     "imageModel_Size": "Koko",

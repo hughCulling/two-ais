@@ -395,7 +395,8 @@ const id = {
         "model": "Model",
         "voice": "Suara",
         "imageGenerationEnabled": "Pembuatan Gambar",
-        "imageGenerationSettings": "Pengaturan Pembuatan Gambar"
+        "imageGenerationSettings": "Pengaturan Pembuatan Gambar",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kualitas",
     "imageModel_Size": "Ukuran",

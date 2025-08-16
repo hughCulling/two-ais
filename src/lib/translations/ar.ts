@@ -395,7 +395,8 @@ const ar = {
         "model": "نموذج",
         "voice": "صوت",
         "imageGenerationEnabled": "توليد الصور",
-        "imageGenerationSettings": "إعدادات إنشاء الصورة"
+        "imageGenerationSettings": "إعدادات إنشاء الصورة",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "جودة",
     "imageModel_Size": "مقاس",

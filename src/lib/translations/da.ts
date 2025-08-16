@@ -395,7 +395,8 @@ const da = {
         "model": "Model",
         "voice": "Stemme",
         "imageGenerationEnabled": "Billedgenerering",
-        "imageGenerationSettings": "Indstillinger for billedgenerering"
+        "imageGenerationSettings": "Indstillinger for billedgenerering",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",

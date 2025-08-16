@@ -395,7 +395,8 @@ const ko = {
         "model": "모델",
         "voice": "목소리",
         "imageGenerationEnabled": "이미지 생성",
-        "imageGenerationSettings": "이미지 생성 설정"
+        "imageGenerationSettings": "이미지 생성 설정",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "품질",
     "imageModel_Size": "크기",

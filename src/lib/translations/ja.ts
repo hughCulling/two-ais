@@ -395,7 +395,8 @@ const ja = {
         "model": "モデル",
         "voice": "声",
         "imageGenerationEnabled": "画像生成",
-        "imageGenerationSettings": "画像生成設定"
+        "imageGenerationSettings": "画像生成設定",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "品質",
     "imageModel_Size": "サイズ",

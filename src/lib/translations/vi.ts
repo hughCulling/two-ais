@@ -395,7 +395,8 @@ const vi = {
         "model": "Người mẫu",
         "voice": "Tiếng nói",
         "imageGenerationEnabled": "Tạo hình ảnh",
-        "imageGenerationSettings": "Cài đặt tạo hình ảnh"
+        "imageGenerationSettings": "Cài đặt tạo hình ảnh",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Chất lượng",
     "imageModel_Size": "Kích cỡ",

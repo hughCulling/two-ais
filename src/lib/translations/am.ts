@@ -395,7 +395,8 @@ const am = {
         "model": "ሞዴል",
         "voice": "ድምፅ",
         "imageGenerationEnabled": "ምስል ማመንጨት",
-        "imageGenerationSettings": "የምስል ማመንጨት ቅንብሮች"
+        "imageGenerationSettings": "የምስል ማመንጨት ቅንብሮች",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ጥራት",
     "imageModel_Size": "መጠን",

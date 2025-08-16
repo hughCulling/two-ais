@@ -395,7 +395,8 @@ const nl = {
         "model": "Model",
         "voice": "Stem",
         "imageGenerationEnabled": "Beeldgeneratie",
-        "imageGenerationSettings": "Instellingen voor het genereren van afbeeldingen"
+        "imageGenerationSettings": "Instellingen voor het genereren van afbeeldingen",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kwaliteit",
     "imageModel_Size": "Maat",

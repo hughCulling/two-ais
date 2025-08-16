@@ -395,7 +395,8 @@ const no = {
         "model": "Modell",
         "voice": "Stemme",
         "imageGenerationEnabled": "Bildegenerering",
-        "imageGenerationSettings": "Innstillinger for bildegenerering"
+        "imageGenerationSettings": "Innstillinger for bildegenerering",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kvalitet",
     "imageModel_Size": "Størrelse",

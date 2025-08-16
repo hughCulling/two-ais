@@ -395,7 +395,8 @@ const ru = {
         "model": "Модель",
         "voice": "Голос",
         "imageGenerationEnabled": "Генерация изображений",
-        "imageGenerationSettings": "Настройки генерации изображения"
+        "imageGenerationSettings": "Настройки генерации изображения",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Качество",
     "imageModel_Size": "Размер",

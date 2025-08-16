@@ -395,7 +395,8 @@ const is = {
         "model": "Fyrirmynd",
         "voice": "Rödd",
         "imageGenerationEnabled": "Myndagerð",
-        "imageGenerationSettings": "Stillingar fyrir myndagerð"
+        "imageGenerationSettings": "Stillingar fyrir myndagerð",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Gæði",
     "imageModel_Size": "Stærð",

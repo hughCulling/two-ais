@@ -395,7 +395,8 @@ const zh = {
         "model": "模型",
         "voice": "嗓音",
         "imageGenerationEnabled": "图像生成",
-        "imageGenerationSettings": "图像生成设置"
+        "imageGenerationSettings": "图像生成设置",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "质量",
     "imageModel_Size": "尺寸",

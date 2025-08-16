@@ -395,7 +395,8 @@ const ca = {
         "model": "Model",
         "voice": "Veu",
         "imageGenerationEnabled": "Generació d'imatges",
-        "imageGenerationSettings": "Configuració de generació d'imatges"
+        "imageGenerationSettings": "Configuració de generació d'imatges",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Qualitat",
     "imageModel_Size": "Mida",

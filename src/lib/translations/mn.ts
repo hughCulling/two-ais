@@ -395,7 +395,8 @@ const mn = {
         "model": "Загвар",
         "voice": "Дуу хоолой",
         "imageGenerationEnabled": "Зураг үүсгэх",
-        "imageGenerationSettings": "Зураг үүсгэх тохиргоо"
+        "imageGenerationSettings": "Зураг үүсгэх тохиргоо",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Чанартай",
     "imageModel_Size": "Хэмжээ",

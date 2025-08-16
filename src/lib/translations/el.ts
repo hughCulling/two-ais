@@ -395,7 +395,8 @@ const el = {
         "model": "Μοντέλο",
         "voice": "Φωνή",
         "imageGenerationEnabled": "Δημιουργία εικόνας",
-        "imageGenerationSettings": "Ρυθμίσεις δημιουργίας εικόνας"
+        "imageGenerationSettings": "Ρυθμίσεις δημιουργίας εικόνας",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Ποιότητα",
     "imageModel_Size": "Μέγεθος",

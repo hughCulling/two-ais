@@ -8,7 +8,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox, Image as ImageIcon, Volume2 } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import { getLLMInfoById } from '@/lib/models';
@@ -20,6 +20,18 @@ function getLocale(languageCode: string) {
         fr, de, es, it, pt, ru, ja, ko, zh: zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms
     };
     return localeMap[languageCode] || enUS; // Fallback to English if locale not found
+}
+
+interface TTSSettings {
+    enabled: boolean;
+    agentA: {
+        provider: string;
+        voice: string;
+    };
+    agentB: {
+        provider: string;
+        voice: string;
+    };
 }
 
 interface ImageGenSettings {
@@ -39,6 +51,8 @@ interface ConversationSummary {
     agentB_llm: string;
     language: string;
     imageGenSettings?: ImageGenSettings;
+    ttsSettings?: TTSSettings;
+    initialSystemPrompt?: string;
 }
 
 // Helper to generate smart pagination with ellipses
@@ -208,11 +222,39 @@ export default function HistoryPage() {
                                                             .replace('{language}', convo.language.toUpperCase())
                                                         }
                                                     </span>
-                                                    {convo.imageGenSettings?.enabled && (
-                                                        <span className="inline-flex items-center text-xs text-muted-foreground">
-                                                            <ImageIcon className="h-3 w-3 mr-1" />
-                                                            {t.history.imageGenerationEnabled || 'Image generation enabled'}
-                                                        </span>
+                                                    <div className="flex flex-wrap gap-2 mt-1">
+                                                        {convo.ttsSettings?.enabled && (
+                                                            <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                                <Volume2 className="h-3 w-3 mr-1" />
+                                                                {t.history.ttsEnabled || 'TTS'}
+                                                                {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
+                                                                    <span className="ml-1">
+                                                                        ({convo.ttsSettings.agentA.voice} / {convo.ttsSettings.agentB.voice})
+                                                                    </span>
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                        {convo.imageGenSettings?.enabled && (
+                                                            <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                                <ImageIcon className="h-3 w-3 mr-1" />
+                                                                {t.history.imageGenerationEnabled || 'Image generation'}
+                                                                {convo.imageGenSettings?.model && (
+                                                                    <span className="ml-1">
+                                                                        ({convo.imageGenSettings.model})
+                                                                    </span>
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {convo.initialSystemPrompt && (
+                                                        <div className="mt-2">
+                                                            <div className="flex items-start gap-2">
+                                                                <span className="text-xs font-medium text-muted-foreground">Initial prompt:</span>
+                                                                <span className="text-xs text-muted-foreground line-clamp-2">
+                                                                    {convo.initialSystemPrompt}
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     )}
                                                 </CardDescription>
                                             </CardHeader>

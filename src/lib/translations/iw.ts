@@ -395,7 +395,8 @@ const iw = {
         "model": "דֶגֶם",
         "voice": "קוֹל",
         "imageGenerationEnabled": "יצירת תמונה",
-        "imageGenerationSettings": "הגדרות יצירת תמונה"
+        "imageGenerationSettings": "הגדרות יצירת תמונה",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "אֵיכוּת",
     "imageModel_Size": "גוֹדֶל",

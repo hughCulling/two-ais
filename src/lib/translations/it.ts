@@ -395,7 +395,8 @@ const it = {
         "model": "Modello",
         "voice": "Voce",
         "imageGenerationEnabled": "Generazione di immagini",
-        "imageGenerationSettings": "Impostazioni di generazione delle immagini"
+        "imageGenerationSettings": "Impostazioni di generazione delle immagini",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Qualità",
     "imageModel_Size": "Misurare",

@@ -49,6 +49,18 @@ try {
 }
 
 
+interface TTSSettings {
+    enabled: boolean;
+    agentA_tts: {
+        provider: string;
+        voice: string;
+    };
+    agentB_tts: {
+        provider: string;
+        voice: string;
+    };
+}
+
 interface ImageGenSettings {
     enabled: boolean;
     provider: string;
@@ -65,7 +77,9 @@ interface ConversationSummary {
     agentA_llm: string;
     agentB_llm: string;
     language: string;
+    initialSystemPrompt?: string;
     imageGenSettings?: ImageGenSettings;
+    ttsSettings?: TTSSettings;
     // We could add a snippet of the last message or a title in the future
 }
 
@@ -146,11 +160,17 @@ export async function GET(request: NextRequest) {
                 agentA_llm: data.agentA_llm,
                 agentB_llm: data.agentB_llm,
                 language: data.language || 'en',
+                initialSystemPrompt: data.initialSystemPrompt || undefined,
             };
             
             // Include image generation settings if they exist
             if (data.imageGenSettings) {
                 summary.imageGenSettings = data.imageGenSettings as ImageGenSettings;
+            }
+            
+            // Include TTS settings if they exist
+            if (data.ttsSettings) {
+                summary.ttsSettings = data.ttsSettings as TTSSettings;
             }
             
             return summary;

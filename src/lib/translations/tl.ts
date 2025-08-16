@@ -395,7 +395,8 @@ const tl = {
         "model": "Modelo",
         "voice": "Boses",
         "imageGenerationEnabled": "Pagbuo ng Larawan",
-        "imageGenerationSettings": "Mga Setting ng Pagbuo ng Larawan"
+        "imageGenerationSettings": "Mga Setting ng Pagbuo ng Larawan",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kalidad",
     "imageModel_Size": "Sukat",

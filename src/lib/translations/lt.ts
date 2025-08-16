@@ -395,7 +395,8 @@ const lt = {
         "model": "Modelis",
         "voice": "Balsas",
         "imageGenerationEnabled": "Vaizdo generavimas",
-        "imageGenerationSettings": "Vaizdo generavimo nustatymai"
+        "imageGenerationSettings": "Vaizdo generavimo nustatymai",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Kokybė",
     "imageModel_Size": "Dydis",

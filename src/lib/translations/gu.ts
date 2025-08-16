@@ -395,7 +395,8 @@ const gu = {
         "model": "મોડેલ",
         "voice": "અવાજ",
         "imageGenerationEnabled": "છબી નિર્માણ",
-        "imageGenerationSettings": "છબી જનરેશન સેટિંગ્સ"
+        "imageGenerationSettings": "છબી જનરેશન સેટિંગ્સ",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "ગુણવત્તા",
     "imageModel_Size": "કદ",

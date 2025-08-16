@@ -395,7 +395,8 @@ const mr = {
         "model": "मॉडेल",
         "voice": "आवाज",
         "imageGenerationEnabled": "प्रतिमा निर्मिती",
-        "imageGenerationSettings": "प्रतिमा निर्मिती सेटिंग्ज"
+        "imageGenerationSettings": "प्रतिमा निर्मिती सेटिंग्ज",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "गुणवत्ता",
     "imageModel_Size": "आकार",

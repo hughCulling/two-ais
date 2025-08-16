@@ -395,7 +395,8 @@ const te = {
         "model": "మోడల్",
         "voice": "వాయిస్",
         "imageGenerationEnabled": "ఇమేజ్ జనరేషన్",
-        "imageGenerationSettings": "ఇమేజ్ జనరేషన్ సెట్టింగ్‌లు"
+        "imageGenerationSettings": "ఇమేజ్ జనరేషన్ సెట్టింగ్‌లు",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "నాణ్యత",
     "imageModel_Size": "పరిమాణం",

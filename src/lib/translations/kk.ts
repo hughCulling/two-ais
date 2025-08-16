@@ -395,7 +395,8 @@ const kk = {
         "model": "Үлгі",
         "voice": "Дауыс",
         "imageGenerationEnabled": "Кескінді құру",
-        "imageGenerationSettings": "Кескінді жасау параметрлері"
+        "imageGenerationSettings": "Кескінді жасау параметрлері",
+        "ttsEnabled": "TTS"
     },
     "imageModel_Quality": "Сапасы",
     "imageModel_Size": "Өлшем",
