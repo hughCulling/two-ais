@@ -247,15 +247,29 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 let lastDisplayedBrand: string | null = null;
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                    <CollapsibleTrigger 
-                      className="flex items-center justify-between w-full text-xl font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
-                      aria-expanded={isProviderOpen}
-                      aria-controls={`${providerCollapsibleId}-content`}
-                      aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
-                    >
-                      <span>{providerName}</span>
-                      {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
-                    </CollapsibleTrigger>
+                    <div className="flex items-center justify-between w-full mb-2">
+                      <CollapsibleTrigger 
+                        className="flex items-center justify-between w-full text-xl font-semibold border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        aria-expanded={isProviderOpen}
+                        aria-controls={`${providerCollapsibleId}-content`}
+                        aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span>{providerName}</span>
+                          {providerName === 'Mistral AI' && (
+                            <FreeTierBadge 
+                              freeTier={{
+                                available: true,
+                                note: (t) => t.pricing.mistralFreeTierNote
+                              }} 
+                              t={t} 
+                              className="ml-1" 
+                            />
+                          )}
+                        </div>
+                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                      </CollapsibleTrigger>
+                    </div>
                     <CollapsibleContent 
                       id={`${providerCollapsibleId}-content`}
                       className="space-y-3 pl-2 pt-1"
@@ -380,7 +394,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         </TooltipContent>
                                       </Tooltip>
                                     )}
-                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
+                                    {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
                                     {llm.knowledgeCutoff && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>

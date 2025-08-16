@@ -25,14 +25,14 @@ export function FreeTierBadge({ freeTier, t, className }: FreeTierBadgeProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <Badge 
-            variant="outline" 
+            variant="default" 
             className={cn(
-              "text-xs font-normal gap-1.5 text-muted-foreground hover:text-foreground transition-colors",
+              "bg-transparent border-0 text-muted-foreground hover:text-foreground transition-colors",
+              "px-1 h-5 w-5 p-0 flex items-center justify-center",
               className
             )}
           >
-            {/* <span>{t.pricing.free}</span> */}
-            <Info className="h-3 w-3" />
+            <Info className="h-3.5 w-3.5" />
           </Badge>
         </TooltipTrigger>
         <TooltipContent className="max-w-xs">

@@ -305,7 +305,7 @@ const en = {
     page_BadgePreview: "Preview",
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Currently Available TTS Models",
+    page_AvailableTTSTitle: "Currently Available TTS Model",
     page_AvailableImageModelsTitle: "Currently Available Image Models", // Added for image models section
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
