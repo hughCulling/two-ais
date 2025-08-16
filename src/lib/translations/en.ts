@@ -164,15 +164,15 @@ const en = {
     // Auth pages
     auth: {
         login: {
-            title: 'Sign in to Two AIs',
+            title: 'Sign in form for Two AIs',
             emailPlaceholder: 'Email',
             passwordPlaceholder: 'Password',
             signIn: 'Sign In',
-            signInWithGoogle: 'Sign in with Google',
-            noAccount: "Don't have an account?",
+            signInWithGoogle: 'Google',
+            noAccount: "Don't have an account? You can",
             signUp: 'Sign up',
             forgotPassword: 'Forgot password?',
-            orContinueWith: "Or continue with",
+            orContinueWith: "Or you can continue with",
             signingIn: "Signing In..."
         },
         signup: {
@@ -181,7 +181,7 @@ const en = {
             passwordPlaceholder: 'Password (at least 6 characters)',
             signUp: 'Sign Up',
             signUpWithGoogle: 'Sign up with Google',
-            hasAccount: 'Already have an account?',
+            hasAccount: 'Already have an account? You can',
             signIn: 'Sign in',
             emailLabel: "Email address",
             confirmPasswordPlaceholder: "Confirm Password",
