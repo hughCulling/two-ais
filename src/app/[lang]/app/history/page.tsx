@@ -247,14 +247,12 @@ export default function HistoryPage() {
                                                         )}
                                                     </div>
                                                     {convo.initialSystemPrompt && (
-                                                        <div className="mt-2">
-                                                            <div className="flex items-start gap-2">
-                                                                <span className="text-xs font-medium text-muted-foreground">Initial prompt:</span>
-                                                                <span className="text-xs text-muted-foreground line-clamp-2">
-                                                                    {convo.initialSystemPrompt}
-                                                                </span>
-                                                            </div>
-                                                        </div>
+                                                        <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                            <span className="mr-1">Initial prompt</span>
+                                                            <span className="line-clamp-2">
+                                                                ({convo.initialSystemPrompt})
+                                                            </span>
+                                                        </span>
                                                     )}
                                                 </CardDescription>
                                             </CardHeader>
