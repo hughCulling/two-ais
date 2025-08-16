@@ -31,7 +31,7 @@ import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
+// import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
@@ -52,15 +52,15 @@ interface SessionConfig {
     agentB_tts: AgentTTSSettings;
     language?: string;
     initialSystemPrompt: string;
-    imageGenSettings?: {
-        enabled: boolean;
-        provider: string;
-        model: string;
-        quality: ImageModelQuality;
-        size: ImageModelSize | ImageAspectRatio;
-        promptLlm: string;
-        promptSystemMessage: string;
-    };
+    // imageGenSettings?: {
+    //     enabled: boolean;
+    //     provider: string;
+    //     model: string;
+    //     quality: ImageModelQuality;
+    //     size: ImageModelSize | ImageAspectRatio;
+    //     promptLlm: string;
+    //     promptSystemMessage: string;
+    // };
 }
 
 interface SessionSetupFormProps {
@@ -348,56 +348,56 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
     // --- Image Generation State ---
-    const [imageGenEnabled, setImageGenEnabled] = useState(false);
-    const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
-    const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
-    const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize | ImageAspectRatio>('1024x1024');
-    const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
-    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
+    // const [imageGenEnabled, setImageGenEnabled] = useState(false);
+    // const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
+    // const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
+    // const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize | ImageAspectRatio>('1024x1024');
+    // const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
+    // const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
 
     // Update quality/size when model changes
-    useEffect(() => {
-        if (!selectedImageModelId) return;
-        const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-        if (model) {
-            // Default to first quality/size if not set
-            const firstQuality = model.qualities[0]?.quality || 'medium';
-            setSelectedImageQuality(firstQuality);
-            const firstSize = model.qualities[0]?.sizes[0]?.size || '1024x1024';
-            setSelectedImageSize(firstSize);
-        }
-    }, [selectedImageModelId]);
+    // useEffect(() => {
+    //     if (!selectedImageModelId) return;
+    //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+    //     if (model) {
+    //         // Default to first quality/size if not set
+    //         const firstQuality = model.qualities[0]?.quality || 'medium';
+    //         setSelectedImageQuality(firstQuality);
+    //         const firstSize = model.qualities[0]?.sizes[0]?.size || '1024x1024';
+    //         setSelectedImageSize(firstSize);
+    //     }
+    // }, [selectedImageModelId]);
 
     // Update size when quality changes
-    useEffect(() => {
-        if (!selectedImageModelId) return;
+    // useEffect(() => {
+    //     if (!selectedImageModelId) return;
         
-        const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-        if (!model) return;
+    //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+    //     if (!model) return;
         
-        // If no quality is selected, use the first available quality or proceed without one
-        if (!selectedImageQuality) {
-            // Find first defined quality or use the first quality object if all qualities are undefined
-            const firstQuality = model.qualities.find(q => q.quality)?.quality || 
-                               (model.qualities[0]?.sizes[0] ? 'standard' : undefined);
+    //     // If no quality is selected, use the first available quality or proceed without one
+    //     if (!selectedImageQuality) {
+    //         // Find first defined quality or use the first quality object if all qualities are undefined
+    //         const firstQuality = model.qualities.find(q => q.quality)?.quality || 
+    //                            (model.qualities[0]?.sizes[0] ? 'standard' : undefined);
             
-            if (firstQuality) {
-                setSelectedImageQuality(firstQuality);
-            }
-            return;
-        }
+    //         if (firstQuality) {
+    //             setSelectedImageQuality(firstQuality);
+    //         }
+    //         return;
+    //     }
         
-        // Find the quality object that matches the selected quality
-        const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
+    //     // Find the quality object that matches the selected quality
+    //     const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
         
-        // If we found a matching quality with sizes, update the size
-        if (qualityObj?.sizes && qualityObj.sizes.length > 0) {
-            setSelectedImageSize(qualityObj.sizes[0].size);
-        } else if (model.qualities.length > 0 && model.qualities[0]?.sizes?.length > 0) {
-            // Fallback to first available size if the selected quality has no sizes
-            setSelectedImageSize(model.qualities[0].sizes[0].size);
-        }
-    }, [selectedImageModelId, selectedImageQuality]);
+    //     // If we found a matching quality with sizes, update the size
+    //     if (qualityObj?.sizes && qualityObj.sizes.length > 0) {
+    //         setSelectedImageSize(qualityObj.sizes[0].size);
+    //     } else if (model.qualities.length > 0 && model.qualities[0]?.sizes?.length > 0) {
+    //         // Fallback to first available size if the selected quality has no sizes
+    //         setSelectedImageSize(model.qualities[0].sizes[0].size);
+    //     }
+    // }, [selectedImageModelId, selectedImageQuality]);
 
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
@@ -619,51 +619,51 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
 
         // Image generation validation
-        let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
-        if (imageGenEnabled) {
-            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-            if (!model) {
-                alert('Please select an image model.');
-                return;
-            }
+        // let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
+        // if (imageGenEnabled) {
+        //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
+        //     if (!model) {
+        //         alert('Please select an image model.');
+        //         return;
+        //     }
             
-            // Check if the model has any quality settings
-            const hasQualitySettings = model.qualities.some(q => q.quality);
+        //     // Check if the model has any quality settings
+        //     const hasQualitySettings = model.qualities.some(q => q.quality);
             
-            // Only require quality if the model has quality settings
-            if (hasQualitySettings && !selectedImageQuality) {
-                alert('Please select an image quality.');
-                return;
-            }
+        //     // Only require quality if the model has quality settings
+        //     if (hasQualitySettings && !selectedImageQuality) {
+        //         alert('Please select an image quality.');
+        //         return;
+        //     }
             
-            if (!selectedImageSize) {
-                alert('Please select an image size.');
-                return;
-            }
+        //     if (!selectedImageSize) {
+        //         alert('Please select an image size.');
+        //         return;
+        //     }
             
-            if (!selectedPromptLlm) {
-                alert('Please select a prompt LLM for image generation.');
-                return;
-            }
+        //     if (!selectedPromptLlm) {
+        //         alert('Please select a prompt LLM for image generation.');
+        //         return;
+        //     }
             
-            if (!imagePromptSystemMessage) {
-                alert('Please provide a system prompt for the image prompt LLM.');
-                return;
-            }
+        //     if (!imagePromptSystemMessage) {
+        //         alert('Please provide a system prompt for the image prompt LLM.');
+        //         return;
+        //     }
             
-            // Use 'standard' as default quality if the model doesn't have quality settings
-            const qualityToUse = hasQualitySettings ? selectedImageQuality : 'standard';
+        //     // Use 'standard' as default quality if the model doesn't have quality settings
+        //     const qualityToUse = hasQualitySettings ? selectedImageQuality : 'standard';
             
-            imageGenSettings = {
-                enabled: true,
-                provider: model.provider,
-                model: model.id,
-                quality: qualityToUse as ImageModelQuality, // Safe to cast since we provide a default
-                size: selectedImageSize,
-                promptLlm: selectedPromptLlm,
-                promptSystemMessage: imagePromptSystemMessage,
-            };
-        }
+        //     imageGenSettings = {
+        //         enabled: true,
+        //         provider: model.provider,
+        //         model: model.id,
+        //         quality: qualityToUse as ImageModelQuality, // Safe to cast since we provide a default
+        //         size: selectedImageSize,
+        //         promptLlm: selectedPromptLlm,
+        //         promptSystemMessage: imagePromptSystemMessage,
+        //     };
+        // }
 
         // ***FIX: Define a type-safe constant for the disabled state***
         const disabledTtsSettings: AgentTTSSettings = { provider: 'none', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined };
@@ -689,7 +689,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             agentA_tts: sessionAgentATTSSettings,
             agentB_tts: sessionAgentBTTSSettings,
             initialSystemPrompt,
-            imageGenSettings,
+            // imageGenSettings,
         });
     };
 
