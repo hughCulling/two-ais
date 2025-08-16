@@ -164,7 +164,7 @@ const en = {
     // Auth pages
     auth: {
         login: {
-            title: 'Sign in form for Two AIs',
+            title: 'Sign In Form',
             emailPlaceholder: 'Email',
             passwordPlaceholder: 'Password',
             signIn: 'Sign In',
@@ -176,7 +176,7 @@ const en = {
             signingIn: "Signing In..."
         },
         signup: {
-            title: 'Create an account',
+            title: 'Account Creation Form',
             emailPlaceholder: 'Email',
             passwordPlaceholder: 'Password (at least 6 characters)',
             signUp: 'Sign Up',
@@ -373,7 +373,7 @@ const en = {
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',
-        description: 'Here you can select the LLM and optional TTS settings for each agent as well as image generation settings.',
+        description: 'Here you can select the LLM and optional TTS settings for each agent.',
         agentAModel: 'Agent A Model',
         agentBModel: 'Agent B Model',
         selectLLMForAgentA: 'Select LLM for Agent A',
