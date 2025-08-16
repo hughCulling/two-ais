@@ -286,7 +286,7 @@ const en = {
     page_LoadingUserData: "Loading user data...",
     page_ErrorAlertTitle: "Error",
     page_WelcomeTitle: "Welcome to Two AIs",
-    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) and generate an image for each turn.",
+    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS).",
     page_ApiKeysRequiredTitle: "API Keys Required",
     page_ApiKeysRequiredDescription: "To run conversations, you'll need to provide your own API keys for the AI models you wish to use after signing in. Detailed instructions for each provider can be found on the Settings / API Keys page after signing in.",
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
@@ -305,7 +305,7 @@ const en = {
     page_BadgePreview: "Preview",
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Currently Available Text-to-Speech (TTS)",
+    page_AvailableTTSTitle: "Currently Available TTS",
     page_AvailableImageModelsTitle: "Currently Available Image Models", // Added for image models section
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",

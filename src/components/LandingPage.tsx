@@ -202,46 +202,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">
-            {!isPlayerActive && (
-              <>
-                <Image
-                  src="/landing-dark.webp"
-                  alt={t.page_VideoTitle}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  priority
-                  fetchPriority="high"
-                  placeholder="blur"
-                  blurDataURL={BLUR_DATA_URL_DARK}
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-                  draggable={false}
-                  style={{ zIndex: 0 }}
-                />
-                <Image
-                  src="/landing-light.webp"
-                  alt={t.page_VideoTitle}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  priority
-                  fetchPriority="high"
-                  placeholder="blur"
-                  blurDataURL={BLUR_DATA_URL_LIGHT}
-                  className={cn(
-                    "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-                    mounted && resolvedTheme === 'light' ? "opacity-100" : "opacity-0"
-                  )}
-                  draggable={false}
-                  style={{ zIndex: 1 }}
-                />
-              </>
-            )}
             {mounted && (
-              <YouTubeFacade
-                mode={resolvedTheme === 'dark' ? 'dark' : 'light'}
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : '52oUvRFdaXE'}?autoplay=0&rel=0&modestbranding=1`}
                 title={t.page_VideoTitle}
-                isPlayerActive={isPlayerActive}
-                onActivatePlayer={() => setIsPlayerActive(true)}
-              />
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+              ></iframe>
             )}
           </div>
           <Card className="w-full">
@@ -512,7 +482,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           </Card>
 
           {/* IMAGE MODELS SECTION */}
-          <Card className="w-full">
+          {/* <Card className="w-full">
             <CardHeader>
               <h2 className="flex items-center justify-center text-xl font-semibold">
                 <ImageIcon className="mr-2 h-5 w-5" />
@@ -629,7 +599,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 <p className="text-center text-muted-foreground text-sm">{'No image models available.'}</p>
               )}
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </TooltipProvider>
     </main>
