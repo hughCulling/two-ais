@@ -1,3 +1,7 @@
+## Pre-requisites
+
+On Mac: Command Line Developer Tools
+
 ## Getting Started
 
 First, clone the repository into your local environment:
