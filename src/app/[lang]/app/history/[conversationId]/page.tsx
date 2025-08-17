@@ -11,9 +11,9 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+// import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause, Volume2 } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
@@ -117,21 +117,21 @@ interface AudioState {
     isPaused: boolean;
 }
 
-const audioControlStyles = {
-    position: 'fixed' as const,
-    bottom: '20px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: 'hsl(var(--background))',
-    padding: '8px 16px',
-    borderRadius: '9999px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    zIndex: 100,
-    border: '1px solid hsl(var(--border))',
-};
+// const audioControlStyles = {
+//     position: 'fixed' as const,
+//     bottom: '20px',
+//     left: '50%',
+//     transform: 'translateX(-50%)',
+//     backgroundColor: 'hsl(var(--background))',
+//     padding: '8px 16px',
+//     borderRadius: '9999px',
+//     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+//     display: 'flex',
+//     alignItems: 'center',
+//     gap: '8px',
+//     zIndex: 100,
+//     border: '1px solid hsl(var(--border))',
+// };
 
 export default function ChatHistoryViewerPage() {
     const { user, loading: authLoading } = useAuth();
