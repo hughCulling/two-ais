@@ -214,6 +214,7 @@ export default function ChatHistoryViewerPage() {
         const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         const [isPlaying, setIsPlaying] = useState(false);
+        const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
         const audioRef = useRef<HTMLAudioElement | null>(null);
         const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -225,47 +226,76 @@ export default function ChatHistoryViewerPage() {
                 const ttsConfig = details?.ttsSettings?.[agentRole];
                 
                 if (ttsConfig?.provider === 'browser') {
-                    if (isPlaying) {
-                        // Stop current playback
+                    // If this is the currently playing message and it's paused, resume it
+                    if (currentlyPlayingMsgId === msg.id && window.speechSynthesis.paused) {
+                        window.speechSynthesis.resume();
+                        setIsPlaying(true);
+                        return;
+                    }
+                    
+                    // If this is a different message than the one currently playing, stop any current speech first
+                    if (currentlyPlayingMsgId !== msg.id) {
                         window.speechSynthesis.cancel();
+                        setCurrentlyPlayingMsgId(null);
+                    }
+
+                    // If this message is already playing, pause it
+                    if (isPlaying) {
+                        window.speechSynthesis.pause();
                         setIsPlaying(false);
-                    } else {
-                        // Start new TTS playback
-                        const utterance = new SpeechSynthesisUtterance(msg.content);
-                        utterance.onend = () => setIsPlaying(false);
-                        utterance.onerror = (e) => {
-                            console.error('Speech synthesis error:', e);
+                        return;
+                    }
+
+                    // Start new TTS playback
+                            const utterance = new SpeechSynthesisUtterance(msg.content);
+                    utteranceRef.current = utterance;
+                    
+                    utterance.onend = () => {
+                        if (utteranceRef.current === utterance) {
                             setIsPlaying(false);
-                        };
-                        
-                        // Set the voice using getVoiceById
-                        if (ttsConfig.voice) {
-                            const voiceInfo = getVoiceById('browser', ttsConfig.voice);
-                            if (voiceInfo) {
-                                const voices = window.speechSynthesis.getVoices();
-                                const voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
-                                if (voice) {
-                                    utterance.voice = voice;
-                                } else {
-                                    console.warn(`Voice not found: ${voiceInfo.providerVoiceId}`);
-                                }
+                            utteranceRef.current = null;
+                            setCurrentlyPlayingMsgId(null);
+                        }
+                    };
+                    
+                    utterance.onerror = (e) => {
+                        console.error('Speech synthesis error:', e);
+                        if (utteranceRef.current === utterance) {
+                            setIsPlaying(false);
+                            utteranceRef.current = null;
+                            setCurrentlyPlayingMsgId(null);
+                        }
+                    };
+                    
+                    // Set the voice using getVoiceById
+                    if (ttsConfig.voice) {
+                        const voiceInfo = getVoiceById('browser', ttsConfig.voice);
+                        if (voiceInfo) {
+                            const voices = window.speechSynthesis.getVoices();
+                            const voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                            if (voice) {
+                                utterance.voice = voice;
+                            } else {
+                                console.warn(`Voice not found: ${voiceInfo.providerVoiceId}`);
                             }
                         }
-                        
-                        // Cancel any ongoing speech before starting new one
-                        window.speechSynthesis.cancel();
-                        
-                        // Small delay to ensure cancellation is processed
-                        setTimeout(() => {
-                            try {
-                                window.speechSynthesis.speak(utterance);
-                                setIsPlaying(true);
-                            } catch (err) {
-                                console.error('Error starting speech synthesis:', err);
-                                setIsPlaying(false);
-                            }
-                        }, 50);
                     }
+                    
+                    // Set this as the currently playing message
+                    setCurrentlyPlayingMsgId(msg.id);
+                    
+                    // Small delay to ensure any previous speech is properly cancelled
+                    setTimeout(() => {
+                        try {
+                            window.speechSynthesis.speak(utterance);
+                            setIsPlaying(true);
+                        } catch (err) {
+                            console.error('Error starting speech synthesis:', err);
+                            setIsPlaying(false);
+                            utteranceRef.current = null;
+                            setCurrentlyPlayingMsgId(null);
+                        }
+                    }, 50);
                     return;
                 }
             }
