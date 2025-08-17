@@ -104,7 +104,7 @@ const en = {
             description: 'API key manager for different AI services.',
             setKey: 'Set',
             updateKey: 'Update',
-            saveUpdateKeys: 'Save / Update Keys',
+            saveUpdateKeys: 'Save / Update Key',
             saving: 'Saving...',
             noNewKeys: 'No new keys to save.',
             keyStoredSecurely: 'Your API key will be stored securely and encrypted.',
@@ -411,7 +411,7 @@ const en = {
 
     history: {
         backToMain: 'Back to Main',
-        conversationHistory: 'Conversation History',
+        conversationHistory: 'Previous Chats',
         chatWith: 'Chat with {agentA} & {agentB}',
         conversationDescription: 'Started on {date} - Language: {language}',
         imageGenerationEnabled: 'Image Generation',
