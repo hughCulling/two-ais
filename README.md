@@ -2,6 +2,10 @@
 
 On Mac: Command Line Developer Tools
 NVM
+Google Account
+Firebase project
+Register a Firebase web app
+IDE (Windsurf, Cursor, VSCode, etc.)
 
 ## Getting Started
 
@@ -36,6 +40,7 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
+# Get all the above from Firebase/Project Settings.
 NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY=
 FIREBASE_SERVICE_ACCOUNT_KEY=
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=
