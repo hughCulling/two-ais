@@ -1,10 +1,10 @@
 ## Pre-requisites
 
-On Mac: Command Line Developer Tools
-NVM
-Google Account
-Firebase project
-Register a Firebase web app
+On Mac: Command Line Developer Tools,
+NVM,
+Google Account,
+Firebase project,
+Register a Firebase web app,
 IDE (Windsurf, Cursor, VSCode, etc.)
 
 ## Getting Started
