@@ -1,6 +1,7 @@
 ## Pre-requisites
 
 On Mac: Command Line Developer Tools
+NVM
 
 ## Getting Started
 
@@ -10,7 +11,13 @@ First, clone the repository into your local environment:
 git clone https://github.com/hughCulling/two-ais.git
 ```
 
-Second, run npm install in the root folder and in the functions folder:
+Then, cd into the directory;
+
+```bash
+cd two-ais
+```
+
+Then, run npm install in the root folder and in the functions folder:
 
 ```bash
 npm install
@@ -19,7 +26,7 @@ npm install
 cd ..
 ```
 
-Third, create your .env.local file with the following fields and populate them with your own values: 
+Then, create your .env.local file with the following fields and populate them with your own values: 
 
 ```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=
@@ -30,8 +37,12 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY=
-NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN=true
 FIREBASE_SERVICE_ACCOUNT_KEY=
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=
+NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN=
+GOOGLE_PROJECT_ID=
+GOOGLE_KEY_FILENAME=
+GOOGLE_APPLICATION_CREDENTIALS=
 ```
 
 Finally, run the local server to test at localhost:3000:
