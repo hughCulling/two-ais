@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
+import { getVoiceById } from '@/lib/tts_models'; // Import getVoiceById from the correct path
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
@@ -237,16 +238,33 @@ export default function ChatHistoryViewerPage() {
                             setIsPlaying(false);
                         };
                         
-                        // Try to find the voice if specified
+                        // Set the voice using getVoiceById
                         if (ttsConfig.voice) {
-                            const voices = window.speechSynthesis.getVoices();
-                            const voice = voices.find(v => v.voiceURI === ttsConfig.voice);
-                            if (voice) utterance.voice = voice;
+                            const voiceInfo = getVoiceById('browser', ttsConfig.voice);
+                            if (voiceInfo) {
+                                const voices = window.speechSynthesis.getVoices();
+                                const voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                                if (voice) {
+                                    utterance.voice = voice;
+                                } else {
+                                    console.warn(`Voice not found: ${voiceInfo.providerVoiceId}`);
+                                }
+                            }
                         }
                         
-                        utteranceRef.current = utterance;
-                        window.speechSynthesis.speak(utterance);
-                        setIsPlaying(true);
+                        // Cancel any ongoing speech before starting new one
+                        window.speechSynthesis.cancel();
+                        
+                        // Small delay to ensure cancellation is processed
+                        setTimeout(() => {
+                            try {
+                                window.speechSynthesis.speak(utterance);
+                                setIsPlaying(true);
+                            } catch (err) {
+                                console.error('Error starting speech synthesis:', err);
+                                setIsPlaying(false);
+                            }
+                        }, 50);
                     }
                     return;
                 }
@@ -272,7 +290,7 @@ export default function ChatHistoryViewerPage() {
                     setIsPlaying(false);
                 });
             }
-        }, [msg.audioUrl, msg.content, msg.role, isPlaying]);
+        }, [msg.audioUrl, msg.content, msg.role, isPlaying, details?.ttsSettings]);
         
         // Clean up TTS on unmount
         useEffect(() => {
