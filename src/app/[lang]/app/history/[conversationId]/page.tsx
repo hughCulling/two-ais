@@ -117,22 +117,6 @@ interface AudioState {
     isPaused: boolean;
 }
 
-// const audioControlStyles = {
-//     position: 'fixed' as const,
-//     bottom: '20px',
-//     left: '50%',
-//     transform: 'translateX(-50%)',
-//     backgroundColor: 'hsl(var(--background))',
-//     padding: '8px 16px',
-//     borderRadius: '9999px',
-//     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-//     display: 'flex',
-//     alignItems: 'center',
-//     gap: '8px',
-//     zIndex: 100,
-//     border: '1px solid hsl(var(--border))',
-// };
-
 export default function ChatHistoryViewerPage() {
     const { user, loading: authLoading } = useAuth();
     const params = useParams();
@@ -548,26 +532,9 @@ export default function ChatHistoryViewerPage() {
     const AudioControl = () => {
         if (!audioState.isPlaying && !audioState.isPaused) return null;
         
-        // Get the currently playing message to determine the agent
-        const currentMessage = details?.messages.find(msg => msg.id === currentlyPlayingMsgId);
-        const isAgentA = currentMessage?.role === 'agentA';
-        const isAgentB = currentMessage?.role === 'agentB';
-        
-        // Get agent name based on role
-        let agentName = '';
-        if (isAgentA) {
-            agentName = agentALLMInfo?.name || 'Agent A';
-        } else if (isAgentB) {
-            agentName = agentBLLMInfo?.name || 'Agent B';
-        }
-        
         return (
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full shadow-lg z-50 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-3 px-4 py-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {agentName} • {audioState.isPaused ? 'Paused' : 'Playing'}
-                    </span>
-                    <div className="h-6 w-px bg-gray-200 dark:bg-gray-600"></div>
+            <div className="sticky bottom-0 left-0 right-0 bg-background border-t pt-2 mt-4 z-50">
+                <div className="flex items-center justify-center pb-2">
                     <button
                         onClick={() => {
                             if (audioState.isPaused) {
@@ -586,33 +553,14 @@ export default function ChatHistoryViewerPage() {
                                 setAudioState(prev => ({ ...prev, isPaused: true }));
                             }
                         }}
-                        className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                         aria-label={audioState.isPaused ? 'Resume' : 'Pause'}
                     >
                         {audioState.isPaused ? (
-                            <Play className="h-5 w-5 text-gray-900 dark:text-gray-100" />
+                            <Play className="h-6 w-6" />
                         ) : (
-                            <Pause className="h-5 w-5 text-gray-900 dark:text-gray-100" />
+                            <Pause className="h-6 w-6" />
                         )}
-                    </button>
-                    <button
-                        onClick={() => {
-                            if (audioRef.current) {
-                                audioRef.current.pause();
-                                audioRef.current.currentTime = 0;
-                            }
-                            if (utteranceRef.current) {
-                                window.speechSynthesis.cancel();
-                            }
-                            setAudioState({ isPlaying: false, isPaused: false });
-                            setCurrentlyPlayingMsgId(null);
-                        }}
-                        className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        aria-label="Stop"
-                    >
-                        <svg className="h-5 w-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
                     </button>
                 </div>
             </div>
@@ -781,9 +729,8 @@ export default function ChatHistoryViewerPage() {
                                         <p className="text-center text-muted-foreground py-8">It looks like this conversation has no messages.</p>
                                     )}
                                 </div>
-                                <div className="h-16"></div> {/* Spacer for the audio control */}
+                                <AudioControl />
                             </div>
-                            <AudioControl />
                         </CardContent>
                     </Card>
                 </div>
