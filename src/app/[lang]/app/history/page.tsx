@@ -222,13 +222,13 @@ export default function HistoryPage() {
                                                             .replace('{language}', convo.language.toUpperCase())
                                                         }
                                                     </span>
-                                                    <div className="flex flex-wrap gap-2 mt-1">
+                                                    <div className="flex flex-col gap-1 mt-1">
                                                         {convo.ttsSettings?.enabled && (
                                                             <span className="inline-flex items-center text-xs text-muted-foreground">
-                                                                <Volume2 className="h-3 w-3 mr-1" />
+                                                                <Volume2 className="h-3 w-3 mr-1 flex-shrink-0" />
                                                                 {t.history.ttsEnabled || 'TTS'}
                                                                 {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
-                                                                    <span className="ml-1">
+                                                                    <span className="ml-1 truncate">
                                                                         ({convo.ttsSettings.agentA.voice} / {convo.ttsSettings.agentB.voice})
                                                                     </span>
                                                                 )}
@@ -236,10 +236,10 @@ export default function HistoryPage() {
                                                         )}
                                                         {convo.imageGenSettings?.enabled && (
                                                             <span className="inline-flex items-center text-xs text-muted-foreground">
-                                                                <ImageIcon className="h-3 w-3 mr-1" />
+                                                                <ImageIcon className="h-3 w-3 mr-1 flex-shrink-0" />
                                                                 {t.history.imageGenerationEnabled || 'Image generation'}
                                                                 {convo.imageGenSettings?.model && (
-                                                                    <span className="ml-1">
+                                                                    <span className="ml-1 truncate">
                                                                         ({convo.imageGenSettings.model})
                                                                     </span>
                                                                 )}
