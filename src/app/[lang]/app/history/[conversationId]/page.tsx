@@ -5,7 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
-import { getVoiceById } from '@/lib/tts_models'; // Import getVoiceById from the correct path
+import { getVoiceById, type TTSProviderInfo } from '@/lib/tts_models'; // Import getVoiceById from the correct path
+import { getImageModelById } from '@/lib/image_models';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,42 @@ function getLocale(languageCode: string) {
         fr, de, es, it, pt, ru, ja, ko, zh: zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms
     };
     return localeMap[languageCode] || enUS; // Fallback to English if locale not found
+}
+
+// Helper function to safely get voice display name
+function getVoiceDisplayName(provider: string, voiceId: string | null | undefined): string {
+    if (!voiceId) return 'Default';
+    
+    // Define valid TTS provider IDs based on TTSProviderInfo type
+    const validProviders: TTSProviderInfo['id'][] = ['openai', 'google-cloud', 'elevenlabs', 'google-gemini', 'browser'];
+    
+    // Cast to valid provider type or default to 'google-cloud' if invalid
+    const safeProvider = validProviders.includes(provider as TTSProviderInfo['id']) 
+        ? provider as TTSProviderInfo['id']
+        : 'google-cloud';
+        
+    const voice = getVoiceById(safeProvider, voiceId);
+    return voice?.name || voiceId;
+}
+
+// Helper function to get model display name
+function getModelDisplayName(modelId: string | null | undefined): string {
+    if (!modelId) return 'Default';
+    if (modelId === 'browser-tts') return 'Web Speech API';
+    const model = getImageModelById(modelId);
+    return model?.name || modelId;
+}
+
+// Helper function to get provider display name
+function getProviderDisplayName(provider: string): string {
+    const providerMap: Record<string, string> = {
+        'openai': 'OpenAI',
+        'google-cloud': 'Google Cloud',
+        'elevenlabs': 'ElevenLabs',
+        'google-gemini': 'Google Gemini',
+        'browser': 'Browser TTS'  // Reverted back to original
+    };
+    return providerMap[provider] || provider;
 }
 
 interface Message {
@@ -598,15 +635,15 @@ export default function ChatHistoryViewerPage() {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-2 p-3 bg-muted/20 rounded-md">
                                             <p className="font-medium">{t.history.agentATTS}:</p>
-                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentA.provider}</p>
-                                            {details.ttsSettings.agentA.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentA.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentA.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentA.voice}</p>}
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {getProviderDisplayName(details.ttsSettings.agentA.provider)}</p>
+                                            {details.ttsSettings.agentA.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {getModelDisplayName(details.ttsSettings.agentA.selectedTtsModelId)}</p>}
+                                            {details.ttsSettings.agentA.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {getVoiceDisplayName(details.ttsSettings.agentA.provider, details.ttsSettings.agentA.voice)}</p>}
                                         </div>
                                         <div className="space-y-2 p-3 bg-muted/20 rounded-md">
                                             <p className="font-medium">{t.history.agentBTTS}:</p>
-                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {details.ttsSettings.agentB.provider}</p>
-                                            {details.ttsSettings.agentB.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {details.ttsSettings.agentB.selectedTtsModelId}</p>}
-                                            {details.ttsSettings.agentB.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {details.ttsSettings.agentB.voice}</p>}
+                                            <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {getProviderDisplayName(details.ttsSettings.agentB.provider)}</p>
+                                            {details.ttsSettings.agentB.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {getModelDisplayName(details.ttsSettings.agentB.selectedTtsModelId)}</p>}
+                                            {details.ttsSettings.agentB.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {getVoiceDisplayName(details.ttsSettings.agentB.provider, details.ttsSettings.agentB.voice)}</p>}
                                         </div>
                                     </div>
                                 </div>
@@ -623,7 +660,7 @@ export default function ChatHistoryViewerPage() {
                                         <div>
                                             <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.imageModel}</h4>
                                             <p className="text-sm">
-                                                {details.imageGenSettings.provider} - {details.imageGenSettings.model}
+                                                {getProviderDisplayName(details.imageGenSettings.provider)} - {getModelDisplayName(details.imageGenSettings.model)}
                                             </p>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">

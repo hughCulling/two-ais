@@ -12,6 +12,8 @@ import { ArrowLeft, MessageSquareText, Loader2, AlertTriangle, Inbox, Image as I
 import { format, Locale } from 'date-fns';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import { getLLMInfoById } from '@/lib/models';
+import { getVoiceById, type TTSProviderInfo } from '@/lib/tts_models';
+import { getImageModelById } from '@/lib/image_models';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -20,6 +22,20 @@ function getLocale(languageCode: string) {
         fr, de, es, it, pt, ru, ja, ko, zh: zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms
     };
     return localeMap[languageCode] || enUS; // Fallback to English if locale not found
+}
+
+// Helper function to safely get voice name
+function getVoiceName(provider: string, voiceId: string): string {
+    const validProviders: TTSProviderInfo['id'][] = ['openai', 'google-cloud', 'elevenlabs', 'google-gemini', 'browser'];
+    const safeProvider = validProviders.includes(provider as TTSProviderInfo['id']) 
+        ? provider as TTSProviderInfo['id'] 
+        : 'google-cloud'; // Default to google-cloud if provider is invalid
+    return getVoiceById(safeProvider, voiceId)?.name || voiceId;
+}
+
+// Helper function to get image model name
+function getImageModelName(modelId: string): string {
+    return getImageModelById(modelId)?.name || modelId;
 }
 
 interface TTSSettings {
@@ -229,7 +245,7 @@ export default function HistoryPage() {
                                                                 {t.history.ttsEnabled || 'TTS'}
                                                                 {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
                                                                     <span className="ml-1 truncate">
-                                                                        ({convo.ttsSettings.agentA.voice} / {convo.ttsSettings.agentB.voice})
+                                                                        ({getVoiceName(convo.ttsSettings.agentA.provider, convo.ttsSettings.agentA.voice)} / {getVoiceName(convo.ttsSettings.agentB.provider, convo.ttsSettings.agentB.voice)})
                                                                     </span>
                                                                 )}
                                                             </span>
@@ -240,7 +256,7 @@ export default function HistoryPage() {
                                                                 {t.history.imageGenerationEnabled || 'Image generation'}
                                                                 {convo.imageGenSettings?.model && (
                                                                     <span className="ml-1 truncate">
-                                                                        ({convo.imageGenSettings.model})
+                                                                        ({getImageModelName(convo.imageGenSettings.model)})
                                                                     </span>
                                                                 )}
                                                             </span>
