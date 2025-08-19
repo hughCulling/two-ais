@@ -19,6 +19,7 @@ import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import removeMarkdown from 'remove-markdown';
 import Image from 'next/image';
 
 // Function to get the appropriate date-fns locale based on language code
@@ -326,7 +327,9 @@ export default function ChatHistoryViewerPage() {
                 const ttsConfig = details?.ttsSettings?.[agentRole];
                 
                 if (ttsConfig?.provider === 'browser') {
-                    const utterance = new SpeechSynthesisUtterance(msg.content);
+                    // Use the same markdown removal as in ChatInterface
+                    const cleanedContent = removeMarkdown(msg.content);
+                    const utterance = new SpeechSynthesisUtterance(cleanedContent);
                     utteranceRef.current = utterance;
                     
                     utterance.onend = handleAudioEnd;
