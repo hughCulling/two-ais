@@ -168,6 +168,9 @@ export function ChatInterface({
             setIsAudioPlaying(false);
             setIsAudioPaused(false);
             setCurrentlyPlayingMsgId(null);
+            setIsBrowserTTSActive(false);
+            setTtsError(null);
+            setPendingTtsMessage(null);
             setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
         };
 
@@ -431,12 +434,43 @@ export function ChatInterface({
         }
         setIsStopping(true);
         logger.info(`Attempting to stop conversation via button: ${conversationId}`);
+        
+        // Clean up HTML5 audio player
         if (audioPlayerRef.current) {
              audioPlayerRef.current.pause();
              setIsAudioPlaying(false);
              setIsAudioPaused(false);
              setCurrentlyPlayingMsgId(null);
         }
+        
+        // Clean up browser TTS completely
+        if (window.speechSynthesis) {
+            try {
+                window.speechSynthesis.cancel();
+                // Small delay to ensure cancellation is complete
+                setTimeout(() => {
+                    if (window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                    }
+                }, 50);
+            } catch (err) {
+                logger.error("Error cancelling speech synthesis:", err);
+            }
+        }
+        
+        // Clear TTS utterance reference
+        utteranceRef.current = null;
+        
+        // Reset all TTS-related state
+        setIsAudioPlaying(false);
+        setIsAudioPaused(false);
+        setCurrentlyPlayingMsgId(null);
+        setIsBrowserTTSActive(false);
+        setTtsError(null);
+        setPendingTtsMessage(null);
+        setHasUserInteracted(false);
+        setIsAudioReady(false);
+        
         try {
             const conversationRef = doc(db, "conversations", conversationId);
             await updateDoc(conversationRef, {
@@ -567,7 +601,7 @@ export function ChatInterface({
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
-        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled) {
+        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled || isStopped || conversationStatus === 'stopped') {
             return;
         }
 
@@ -667,7 +701,7 @@ export function ChatInterface({
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, 
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -680,6 +714,38 @@ export function ChatInterface({
             return () => clearTimeout(timer);
         }
     }, [pendingTtsMessage, pendingTtsMessage?.isStreaming, isAudioReady]);
+
+    // --- Effect 6: Component Cleanup ---
+    useEffect(() => {
+        return () => {
+            // Cleanup function that runs when component unmounts
+            logger.info('ChatInterface: Component unmounting, cleaning up TTS and audio');
+            
+            // Stop HTML5 audio
+            if (audioPlayerRef.current) {
+                audioPlayerRef.current.pause();
+                audioPlayerRef.current.currentTime = 0;
+            }
+            
+            // Stop browser TTS completely
+            if (window.speechSynthesis) {
+                try {
+                    window.speechSynthesis.cancel();
+                    // Force stop any remaining speech by canceling again
+                    setTimeout(() => {
+                        if (window.speechSynthesis) {
+                            window.speechSynthesis.cancel();
+                        }
+                    }, 50);
+                } catch (err) {
+                    logger.error("Error during TTS cleanup on unmount:", err);
+                }
+            }
+            
+            // Clear utterance reference
+            utteranceRef.current = null;
+        };
+    }, []); // Empty dependency array - runs only on unmount
 
     // --- Render Logic ---
 
