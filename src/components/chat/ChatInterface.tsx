@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/alert";
 import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
-import { getVoiceById } from '@/lib/tts_models';
+import { getVoiceById, findFallbackBrowserVoice } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -50,6 +50,7 @@ interface ConversationData {
     userId: string;
     agentA_llm: string;
     agentB_llm: string;
+    language?: string; // Add language property
     turn: "agentA" | "agentB";
     status: "running" | "stopped" | "error";
     createdAt: Timestamp;
@@ -636,16 +637,41 @@ export function ChatInterface({
 
         if (ttsConfig?.provider === 'browser') {
             const voiceInfo = getVoiceById(ttsConfig.provider, ttsConfig.voice || '');
-            const voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceInfo?.providerVoiceId);
+            let voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceInfo?.providerVoiceId);
+            
+            // If the selected voice is not found or not compatible, try to find a fallback
             if (!voice) {
-                logger.warn(`Browser voice not found for ID: ${ttsConfig.voice}`);
-                handleAudioEnd();
-                return;
+                logger.warn(`Browser voice not found for ID: ${ttsConfig.voice}, trying fallback`);
+                // Try to find a fallback voice based on the conversation language
+                const fallbackVoice = findFallbackBrowserVoice(conversationData.language || 'en');
+                if (fallbackVoice) {
+                    voice = fallbackVoice;
+                    logger.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                } else {
+                    logger.error('No compatible browser voice found');
+                    handleAudioEnd();
+                    return;
+                }
             }
 
             const cleanedContent = removeMarkdown(nextMsg.content);
             const utterance = new SpeechSynthesisUtterance(cleanedContent);
-            utterance.voice = voice;
+            
+            // Try to assign the voice, with fallback if it fails
+            try {
+                utterance.voice = voice;
+            } catch (error) {
+                logger.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
+                const fallbackVoice = findFallbackBrowserVoice(conversationData.language || 'en');
+                if (fallbackVoice) {
+                    utterance.voice = fallbackVoice;
+                    logger.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                } else {
+                    logger.error('No compatible fallback voice found');
+                    handleAudioEnd();
+                    return;
+                }
+            }
             utterance.onstart = () => {
                 setCurrentlyPlayingMsgId(nextMsg.id);
                 setIsAudioPlaying(true);

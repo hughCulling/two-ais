@@ -12,7 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
-import { isTTSModelLanguageSupported } from '@/lib/tts_models';
+import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
@@ -140,6 +140,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Listen for voice loading events to update UI (force re-render when voices load)
+    onVoicesLoaded(() => {
+      // Force a re-render to update language support indicators
+      console.log('Browser voices loaded, updating UI');
+      // Trigger a custom event that components can listen to
+      window.dispatchEvent(new CustomEvent('voices-loaded'));
+    });
   }, []); // <-- Set mounted after mount
   const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
     () => {
