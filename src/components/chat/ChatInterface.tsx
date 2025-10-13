@@ -92,6 +92,31 @@ const logger = {
     debug: console.debug,
 };
 
+// Utility function to detect if browser TTS is likely to fail on mobile
+function isMobileBrowserTTSUnsupported(): boolean {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return false;
+    }
+    
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /iphone|ipad|ipod|android|mobile/i.test(userAgent);
+    
+    if (!isMobile) {
+        return false; // Desktop browsers are fine
+    }
+    
+    // Only Firefox on mobile works reliably
+    const isFirefox = /firefox|fxios/i.test(userAgent);
+    
+    if (isFirefox) {
+        return false; // Firefox works on mobile
+    }
+    
+    // All other mobile browsers (Safari, Chrome, Edge, Opera, etc.) have TTS issues
+    // Return true to show warning for any mobile browser that isn't Firefox
+    return true;
+}
+
 // --- Define the callable function ---
 // let requestNextTurnFunction: ReturnType<typeof httpsCallable> | null = null;
 try {
@@ -139,6 +164,7 @@ export function ChatInterface({
     const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
     const [pendingTtsMessage, setPendingTtsMessage] = useState<Message | null>(null);
     const [isAudioReady, setIsAudioReady] = useState(false);
+    const [showMobileTTSWarning, setShowMobileTTSWarning] = useState(false);
 
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -376,6 +402,26 @@ export function ChatInterface({
             unsubscribe();
         };
     }, [conversationId, error, isStopped, conversationStatus, onConversationStopped]); // Added onConversationStopped
+
+    // --- Effect 2.5: Check for mobile TTS compatibility ---
+    useEffect(() => {
+        if (!conversationData?.ttsSettings?.enabled) {
+            setShowMobileTTSWarning(false);
+            return;
+        }
+        
+        // Check if browser TTS is being used
+        const isUsingBrowserTTS = 
+            conversationData.ttsSettings.agentA?.provider === 'browser' || 
+            conversationData.ttsSettings.agentB?.provider === 'browser';
+        
+        if (isUsingBrowserTTS && isMobileBrowserTTSUnsupported()) {
+            setShowMobileTTSWarning(true);
+            logger.warn('Browser TTS may not work on this mobile browser. Safari and Firefox are recommended.');
+        } else {
+            setShowMobileTTSWarning(false);
+        }
+    }, [conversationData]);
 
     // --- Effect 3: Auto-scroll ---
     const prevMessagesLength = useRef(messages.length);
@@ -856,6 +902,27 @@ export function ChatInterface({
                     Click to stop the current AI conversation. This will prevent further messages from being generated.
                 </div>
             </div>
+
+            {/* Mobile TTS Warning Banner */}
+            {showMobileTTSWarning && (
+                <div className="bg-orange-50 border-l-4 border-orange-400 p-4 mx-4 mt-4 rounded-md">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-orange-700">
+                                <strong>Browser TTS Not Supported:</strong> Text-to-speech does not work on this mobile browser.
+                            </p>
+                            <p className="text-xs text-orange-800 dark:text-orange-200 mt-1">
+                                For audio playback on mobile, please use <strong>Firefox</strong>. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* TTS Error Banner */}
             {ttsError && (
