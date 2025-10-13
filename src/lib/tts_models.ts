@@ -12,6 +12,45 @@ export interface BrowserTTSVoice extends TTSVoice {
 // Browser TTS voices will be populated at runtime from the Web Speech API
 export const BROWSER_TTS_VOICES: TTSVoice[] = [];
 
+// Function to test if a voice is actually usable with SpeechSynthesisUtterance
+function testVoiceCompatibility(voice: SpeechSynthesisVoice): boolean {
+    try {
+        // Filter out known problematic voices
+        const problematicVoices = [
+            'Google UK English Male',
+            'Google UK English Female', 
+            'Google US English Male',
+            'Google US English Female',
+            'Google Australian English Male',
+            'Google Australian English Female',
+            'Google Canadian English Male',
+            'Google Canadian English Female',
+            'Google Indian English Male',
+            'Google Indian English Female'
+        ];
+        
+        // Check if this is a known problematic voice
+        if (problematicVoices.some(problematic => voice.name.includes(problematic))) {
+            console.warn(`Filtering out problematic voice: ${voice.name}`);
+            return false;
+        }
+        
+        // Also filter out any voice with "Google" in the name that's not a standard system voice
+        if (voice.name.includes('Google') && !voice.localService) {
+            console.warn(`Filtering out Google cloud voice (not local): ${voice.name}`);
+            return false;
+        }
+        
+        // Create a test utterance to see if the voice can be assigned
+        const testUtterance = new SpeechSynthesisUtterance('test');
+        testUtterance.voice = voice;
+        // If we can assign the voice without error, it's compatible
+        return testUtterance.voice === voice;
+    } catch {
+        return false;
+    }
+}
+
 // Function to populate browser voices
 export function populateBrowserVoices(): TTSVoice[] {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
@@ -23,6 +62,7 @@ export function populateBrowserVoices(): TTSVoice[] {
     
     return voices
         .filter(voice => voice.lang) // Filter out voices without a language
+        .filter(voice => testVoiceCompatibility(voice)) // Filter out incompatible voices
         .map(voice => {
             // Create a base ID from the voice URI or name
             const baseId = `browser-${voice.voiceURI || voice.name.replace(/\s+/g, '-').toLowerCase()}`;
@@ -57,6 +97,19 @@ export function populateBrowserVoices(): TTSVoice[] {
         });
 }
 
+// Callbacks to notify when voices are loaded
+const voicesLoadedCallbacks: (() => void)[] = [];
+
+// Function to register a callback for when voices are loaded
+export function onVoicesLoaded(callback: () => void) {
+    voicesLoadedCallbacks.push(callback);
+}
+
+// Function to notify all callbacks that voices have been loaded
+function notifyVoicesLoaded() {
+    voicesLoadedCallbacks.forEach(callback => callback());
+}
+
 // Initialize browser voices when the page loads
 if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     // Populate voices when they are loaded
@@ -64,6 +117,9 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         const voices = populateBrowserVoices();
         BROWSER_TTS_VOICES.length = 0;
         BROWSER_TTS_VOICES.push(...voices);
+        
+        // Notify callbacks that voices have been loaded
+        notifyVoicesLoaded();
     };
     
     // Some browsers fire the voiceschanged event when voices are loaded
@@ -72,8 +128,11 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     // Also try to populate voices immediately in case they're already loaded
     handleVoicesChanged();
     
-    // Set up a fallback in case voiceschanged doesn't fire
+    // Set up multiple fallbacks in case voiceschanged doesn't fire
+    setTimeout(handleVoicesChanged, 100);
+    setTimeout(handleVoicesChanged, 500);
     setTimeout(handleVoicesChanged, 1000);
+    setTimeout(handleVoicesChanged, 2000);
 }
 
 // --- TTS Voice Interface ---
@@ -838,6 +897,47 @@ export function getVoiceById(providerId: TTSProviderInfo['id'], voiceId: string)
     const voices = getVoicesForProvider(providerId);
     return voices.find(v => v.id === voiceId);
 }
+
+// Function to find a fallback voice for browser TTS when the selected voice is not compatible
+export function findFallbackBrowserVoice(languageCode: string): SpeechSynthesisVoice | null {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+        return null;
+    }
+
+    const voices = window.speechSynthesis.getVoices();
+    const simpleLanguageCode = languageCode.split('-')[0];
+    
+    // First, try to find a voice that matches the exact language code and is local
+    let fallbackVoice = voices.find(voice => 
+        voice.lang === languageCode && 
+        voice.localService === true && // Only local voices
+        testVoiceCompatibility(voice)
+    );
+    
+    // If not found, try to find a voice that matches the simple language code and is local
+    if (!fallbackVoice) {
+        fallbackVoice = voices.find(voice => 
+            voice.lang.startsWith(`${simpleLanguageCode}-`) && 
+            voice.localService === true &&
+            testVoiceCompatibility(voice)
+        );
+    }
+    
+    // If still not found, try any voice with the simple language code
+    if (!fallbackVoice) {
+        fallbackVoice = voices.find(voice => 
+            voice.lang === simpleLanguageCode && 
+            testVoiceCompatibility(voice)
+        );
+    }
+    
+    // If still not found, try any compatible voice
+    if (!fallbackVoice) {
+        fallbackVoice = voices.find(voice => testVoiceCompatibility(voice));
+    }
+    
+    return fallbackVoice || null;
+}
 export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): TTSVoice | null {
     const provider = getTTSProviderInfoById(providerId);
     if (!provider) return null;
@@ -892,8 +992,38 @@ export function isTTSModelLanguageSupported(
     languageCode: string // BCP-47 or a simple 2-letter code like 'en'
 ): boolean {
     const ttsModelInfo = getTTSModelDetailByAppId(appModelId);
-    if (!ttsModelInfo || !ttsModelInfo.model.supportedLanguages) {
-        // If supportedLanguages is not defined for a model, assume it's not supported for the specific language check.
+    if (!ttsModelInfo) {
+        return false;
+    }
+
+    // Special handling for browser TTS - check actual available voices dynamically
+    if (appModelId === 'browser-tts') {
+        // Handle cases where languageCode is just the 2-letter part (e.g., 'en')
+        const simpleLanguageCode = languageCode.split('-')[0];
+        
+        // Check if any browser voices support this language
+        return BROWSER_TTS_VOICES.some(voice => {
+            const voiceLangCodes = voice.languageCodes || [];
+            return voiceLangCodes.some(voiceLang => {
+                // Direct match (e.g., 'en-US' === 'en-US' or 'fr' === 'fr')
+                if (voiceLang === languageCode) return true;
+                
+                // Match the simple part of the language code (e.g., 'en-US'.startsWith('en-'))
+                if (voiceLang.startsWith(`${simpleLanguageCode}-`)) return true;
+
+                // In case the supported language is simple ('en') and the code is specific ('en-US')
+                if (languageCode.startsWith(`${voiceLang}-`)) return true;
+
+                // Match simple codes to each other
+                if (voiceLang === simpleLanguageCode) return true;
+
+                return false;
+            });
+        });
+    }
+
+    // For non-browser TTS models, use the static supportedLanguages array
+    if (!ttsModelInfo.model.supportedLanguages) {
         return false;
     }
     

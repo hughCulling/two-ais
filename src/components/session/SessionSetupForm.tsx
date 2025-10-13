@@ -25,7 +25,8 @@ import {
     AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
     TTSVoice,
-    getTTSProviderInfoById
+    getTTSProviderInfoById,
+    onVoicesLoaded
 } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
@@ -525,6 +526,21 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     useEffect(() => {
         updateTTSConfigForProvider(setAgentBTTSSettings, setCurrentVoicesB, agentBTTSSettings.provider);
     }, [agentBTTSSettings.provider, updateTTSConfigForProvider]);
+
+    // Listen for voice loading events and update TTS config when voices are loaded
+    useEffect(() => {
+        const handleVoicesLoaded = () => {
+            // Update TTS config for both agents if they're using browser TTS
+            if (agentATTSSettings.provider === 'browser') {
+                updateTTSConfigForProvider(setAgentATTSSettings, setCurrentVoicesA, 'browser');
+            }
+            if (agentBTTSSettings.provider === 'browser') {
+                updateTTSConfigForProvider(setAgentBTTSSettings, setCurrentVoicesB, 'browser');
+            }
+        };
+
+        onVoicesLoaded(handleVoicesLoaded);
+    }, [agentATTSSettings.provider, agentBTTSSettings.provider, updateTTSConfigForProvider]);
 
     const updateVoicesForGoogleModel = useCallback((
         agentSettingsSetter: React.Dispatch<React.SetStateAction<AgentTTSSettings>>,

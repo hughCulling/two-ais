@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getLLMInfoById } from '@/lib/models'; // LLMInfo was unused, but getLLMInfoById is used
-import { getVoiceById, type TTSProviderInfo } from '@/lib/tts_models'; // Import getVoiceById from the correct path
+import { getVoiceById, findFallbackBrowserVoice, type TTSProviderInfo } from '@/lib/tts_models'; // Import getVoiceById from the correct path
 import { getImageModelById } from '@/lib/image_models';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -338,14 +338,36 @@ export default function ChatHistoryViewerPage() {
                         handleAudioEnd();
                     };
                     
-                    // Set the voice using getVoiceById
+                    // Set the voice using getVoiceById with fallback
                     if (ttsConfig.voice) {
                         const voiceInfo = getVoiceById('browser', ttsConfig.voice);
+                        let voice = null;
+                        
                         if (voiceInfo) {
                             const voices = window.speechSynthesis.getVoices();
-                            const voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                            voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                        }
+                        
+                        // If voice not found, try fallback
+                        if (!voice) {
+                            console.warn(`Voice not found for ID: ${ttsConfig.voice}, trying fallback`);
+                            voice = findFallbackBrowserVoice(details?.language || 'en');
                             if (voice) {
+                                console.info(`Using fallback voice: ${voice.name} (${voice.lang})`);
+                            }
+                        }
+                        
+                        // Try to assign the voice with error handling
+                        if (voice) {
+                            try {
                                 utterance.voice = voice;
+                            } catch (error) {
+                                console.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
+                                const fallbackVoice = findFallbackBrowserVoice(details?.language || 'en');
+                                if (fallbackVoice) {
+                                    utterance.voice = fallbackVoice;
+                                    console.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                                }
                             }
                         }
                     }
