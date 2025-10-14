@@ -34,6 +34,16 @@ import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft }
 import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
+// --- Utility Functions ---
+function isSafariBrowser(): boolean {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return false;
+    }
+    const userAgent = navigator.userAgent.toLowerCase();
+    // Safari detection: has 'safari' but not 'chrome' or 'chromium'
+    return userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('chromium');
+}
+
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
 
@@ -346,6 +356,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
+    const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
     // --- Image Generation State ---
@@ -610,6 +621,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     }, [agentBTTSSettings, updateVoicesForElevenLabsModel]);
 
+    // Check if Safari is being used with browser TTS
+    useEffect(() => {
+        const isBrowserTTSSelected = agentATTSSettings.provider === 'browser' || agentBTTSSettings.provider === 'browser';
+        const isSafari = isSafariBrowser();
+        setShowSafariWarning(isBrowserTTSSelected && isSafari);
+    }, [agentATTSSettings.provider, agentBTTSSettings.provider]);
+
     const handleStartClick = () => {
         const agentAOption = getLLMInfoById(agentA_llm);
         const agentBOption = getLLMInfoById(agentB_llm);
@@ -873,9 +891,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
                                         {currentAgentVoices.map(v => {
-                                            // Only show gender letter if provider is not Google Cloud or Google Gemini
+                                            // Don't show gender for browser voices (redundant) or Google providers
                                             const providerId = currentAgentTTSSettings.provider;
-                                            const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini';
+                                            const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                             return (
                                                 <SelectItem key={v.id} value={v.id}>
                                                     {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
@@ -986,6 +1004,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <div id="tts-checkbox-description" className="sr-only">
                         Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
                     </div>
+                    
+                    {/* Safari Browser Warning */}
+                    {ttsEnabled && showSafariWarning && (
+                        <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <AlertTriangle className="h-5 w-5 text-orange-400" />
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                                        Limited Voice Selection in Safari
+                                    </p>
+                                    <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+                                        Safari shows fewer voices than other browsers. 
+                                        For the best voice selection with Browser TTS, please use Chrome, Firefox, Edge, or Opera.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
                     {ttsEnabled && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="tts-settings-label">
                             <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
