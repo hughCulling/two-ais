@@ -74,8 +74,8 @@ export function populateBrowserVoices(): TTSVoice[] {
             // Append a number if we've seen this ID before
             const uniqueId = count > 1 ? `${baseId}-${count}` : baseId;
             
-            // Create a friendly display name
-            const displayName = `${voice.name} (${voice.lang}${voice.localService ? ', Local' : ''}${voice.default ? ', Default' : ''})`;
+            // Create a cleaner display name: just name and language/dialect
+            const displayName = `${voice.name} (${voice.lang})`;
             
             // Map gender to match TTSVoice type
             const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 
@@ -94,7 +94,8 @@ export function populateBrowserVoices(): TTSVoice[] {
                 localService: voice.localService,
                 default: voice.default
             } as TTSVoice;
-        });
+        })
+        .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by display name
 }
 
 // Callbacks to notify when voices are loaded
