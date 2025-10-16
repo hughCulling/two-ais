@@ -63,7 +63,7 @@ export default function Header() {
                             <>
                                 <div className="flex items-center space-x-2" role="group" aria-label="User information">
                                     <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'}>
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
