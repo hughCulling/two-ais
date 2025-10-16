@@ -158,7 +158,7 @@ export function ChatInterface({
     const [hasUserInteracted, setHasUserInteracted] = useState(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [isAudioPaused, setIsAudioPaused] = useState(false);
-    const [, setIsBrowserTTSActive] = useState(false);
+    const [isBrowserTTSActive, setIsBrowserTTSActive] = useState(false);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
     const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
@@ -652,6 +652,11 @@ export function ChatInterface({
             return;
         }
 
+        // Additional guard: Don't start new playback if browser TTS is already active
+        if (isBrowserTTSActive || (typeof window !== 'undefined' && window.speechSynthesis?.speaking)) {
+            return;
+        }
+
         const nextMsg = visibleMessages.find(msg => {
             if (playedMessageIds.has(msg.id)) return false;
             if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
@@ -729,12 +734,17 @@ export function ChatInterface({
                 handleAudioEnd();
             };
             utterance.onerror = (event) => {
-                // Ignore 'canceled' errors as they're expected during normal operation
-                if (event.error !== 'canceled') {
+                // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
+                // Also ignore 'synthesis-failed' if it follows an interruption (common in Edge)
+                if (event.error === 'canceled' || event.error === 'interrupted') {
+                    logger.debug(`Speech synthesis ${event.error} (expected)`);
+                } else if (event.error === 'synthesis-failed') {
+                    // Only show error if this is a genuine failure, not a cascade from interruption
+                    logger.warn('Speech synthesis failed - this may be due to rapid playback attempts');
+                    // Don't set TTS error for synthesis-failed as it's often a transient issue
+                } else {
                     logger.error('Speech synthesis error:', event.error);
                     setTtsError(`Speech synthesis failed: ${event.error}`);
-                } else {
-                    logger.debug('Speech synthesis canceled (expected)');
                 }
                 setIsBrowserTTSActive(false);
                 handleAudioEnd();
@@ -743,17 +753,40 @@ export function ChatInterface({
             // Store the current utterance reference before speaking
             utteranceRef.current = utterance;
             try {
+                // Guard: Don't start new speech if already speaking
+                if (window.speechSynthesis.speaking) {
+                    logger.debug('Speech synthesis already speaking, cancelling first');
+                    window.speechSynthesis.cancel();
+                }
+                
                 // Cancel any pending speech
                 window.speechSynthesis.cancel();
-                // Small delay to allow cancellation to complete
+                
+                // Longer delay for Edge browser to properly clean up
+                // Edge needs more time to process cancel before starting new speech
                 setTimeout(() => {
-                    try {
-                        window.speechSynthesis.speak(utterance);
-                    } catch (speakErr) {
-                        logger.error('Error speaking utterance:', speakErr);
-                        handleAudioEnd();
+                    // Double-check we're not already speaking before starting
+                    if (window.speechSynthesis.speaking) {
+                        logger.warn('Speech synthesis still speaking after cancel, forcing cancel');
+                        window.speechSynthesis.cancel();
+                        // Add another small delay after forced cancel
+                        setTimeout(() => {
+                            try {
+                                window.speechSynthesis.speak(utterance);
+                            } catch (speakErr) {
+                                logger.error('Error speaking utterance after forced cancel:', speakErr);
+                                handleAudioEnd();
+                            }
+                        }, 100);
+                    } else {
+                        try {
+                            window.speechSynthesis.speak(utterance);
+                        } catch (speakErr) {
+                            logger.error('Error speaking utterance:', speakErr);
+                            handleAudioEnd();
+                        }
                     }
-                }, 50);
+                }, 150); // Increased from 50ms to 150ms for Edge compatibility
             } catch (err) {
                 logger.error('Error in speech synthesis setup:', err);
                 handleAudioEnd();

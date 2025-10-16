@@ -334,7 +334,14 @@ export default function ChatHistoryViewerPage() {
                     
                     utterance.onend = handleAudioEnd;
                     utterance.onerror = (event) => {
-                        console.error('Speech synthesis error:', event);
+                        // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
+                        if (event.error === 'canceled' || event.error === 'interrupted') {
+                            console.debug(`Speech synthesis ${event.error} (expected)`);
+                        } else if (event.error === 'synthesis-failed') {
+                            console.warn('Speech synthesis failed - this may be due to rapid playback attempts');
+                        } else {
+                            console.error('Speech synthesis error:', event.error);
+                        }
                         handleAudioEnd();
                     };
                     
@@ -374,7 +381,39 @@ export default function ChatHistoryViewerPage() {
                     
                     setAudioState({ isPlaying: true, isPaused: false });
                     setCurrentlyPlayingMsgId(msg.id);
-                    window.speechSynthesis.speak(utterance);
+                    
+                    // Guard: Don't start new speech if already speaking
+                    if (window.speechSynthesis.speaking) {
+                        console.debug('Speech synthesis already speaking, cancelling first');
+                        window.speechSynthesis.cancel();
+                    }
+                    
+                    // Cancel any pending speech
+                    window.speechSynthesis.cancel();
+                    
+                    // Longer delay for Edge browser to properly clean up
+                    setTimeout(() => {
+                        // Double-check we're not already speaking before starting
+                        if (window.speechSynthesis.speaking) {
+                            console.warn('Speech synthesis still speaking after cancel, forcing cancel');
+                            window.speechSynthesis.cancel();
+                            setTimeout(() => {
+                                try {
+                                    window.speechSynthesis.speak(utterance);
+                                } catch (speakErr) {
+                                    console.error('Error speaking utterance after forced cancel:', speakErr);
+                                    handleAudioEnd();
+                                }
+                            }, 100);
+                        } else {
+                            try {
+                                window.speechSynthesis.speak(utterance);
+                            } catch (speakErr) {
+                                console.error('Error speaking utterance:', speakErr);
+                                handleAudioEnd();
+                            }
+                        }
+                    }, 150); // Increased delay for Edge compatibility
                     return;
                 }
             }
