@@ -1,7 +1,7 @@
 // src/components/session/SessionSetupForm.tsx
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import {
@@ -14,12 +14,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+// import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+// import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+import { AVAILABLE_LLMS, getLLMInfoById } from '@/lib/models';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
     AVAILABLE_TTS_PROVIDERS,
@@ -30,8 +31,9 @@ import {
 } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
+// import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
+import { AlertTriangle, Info, Check, X } from "lucide-react";
+// import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Utility Functions ---
@@ -868,6 +870,58 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             currentAgentTTSSettings.selectedTtsModelId &&
             isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
 
+        // Simplified version - only show voice selector since we only have browser TTS with one model
+        return (
+            <div className="space-y-3 p-4 border rounded-md bg-background/50">
+                <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
+                {shouldShowVoiceDropdown && (
+                    <div className="space-y-2">
+                        <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>{t?.sessionSetupForm?.voice}</Label>
+                        <Select
+                            value={currentAgentTTSSettings.voice || ''}
+                            onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
+                            disabled={!user || currentAgentVoices.length === 0}
+                        >
+                            <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
+                                <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-60">
+                                {currentAgentVoices.map(v => {
+                                    const providerId = currentAgentTTSSettings.provider;
+                                    const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
+                                    return (
+                                        <SelectItem key={v.id} value={v.id}>
+                                            {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                            {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
+                                            {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    /* COMMENTED OUT: Full TTS configuration with provider and model selection
+     * Uncomment this section to restore provider and model selection dropdowns
+     * 
+    const renderTTSConfigForAgentFull = (
+        agentIdentifier: 'A' | 'B',
+        currentAgentTTSSettings: AgentTTSSettings,
+        currentAgentVoices: TTSVoice[]
+    ) => {
+        const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
+        const selectedProviderInfo = getTTSProviderInfoById(currentAgentTTSSettings.provider as TTSProviderInfo['id']);
+
+        const shouldShowVoiceDropdown =
+            selectedProviderInfo &&
+            currentAgentTTSSettings.provider !== 'none' &&
+            currentAgentTTSSettings.selectedTtsModelId &&
+            isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
+
         return (
             <div className="space-y-3 p-4 border rounded-md bg-background/50">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
@@ -954,7 +1008,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
                                         {currentAgentVoices.map(v => {
-                                            // Don't show gender for browser voices (redundant) or Google providers
                                             const providerId = currentAgentTTSSettings.provider;
                                             const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                             return (
@@ -974,6 +1027,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             </div>
         );
     };
+    */
 
     return (
         <Card className="w-full max-w-2xl">
