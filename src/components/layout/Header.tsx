@@ -31,8 +31,8 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50" role="banner">
-            <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+            <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
@@ -63,7 +63,7 @@ export default function Header() {
                             <>
                                 <div className="flex items-center space-x-2" role="group" aria-label="User information">
                                     <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'}>
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
