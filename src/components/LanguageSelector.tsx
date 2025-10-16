@@ -42,7 +42,7 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
     }
 
     return (
-        <div className={`flex items-center ${className}`} role="group" aria-labelledby={labelId}>
+        <div className={`flex items-center ${className}`}>
             {showIcon && (
                 <Globe 
                     className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" 
@@ -78,9 +78,6 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                     ))}
                 </SelectContent>
             </Select>
-            <div id={descriptionId} className="sr-only">
-                Language selector. Choose your preferred language for the interface. The current language is {language.nativeName}.
-            </div>
         </div>
     );
 } 

@@ -47,10 +47,10 @@ export function ThemeSwitcher({ id }: ThemeSwitcherProps) {
         <Button 
             variant="outline" 
             size="icon"
-            aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
+            // aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
             aria-haspopup="menu"
             aria-expanded={false}
-            aria-describedby={uniqueId}
+            // aria-describedby={uniqueId}
         >
             {/* Sun icon shown in light mode, Moon icon in dark mode */}
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" aria-hidden="true" />
