@@ -32,7 +32,7 @@ export default function Header() {
 
     return (
         <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-            <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+            <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
@@ -103,7 +103,7 @@ export default function Header() {
             </nav>
 
             {/* --- Mobile Menu Panel --- */}
-            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" role="navigation" aria-label="Mobile navigation menu">
+            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" aria-label="Mobile navigation menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     {authLoading ? (
                         <div className="block px-3 py-2" role="status" aria-live="polite">
