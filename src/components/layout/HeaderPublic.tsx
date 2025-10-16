@@ -23,7 +23,7 @@ export default function HeaderPublic() {
     };
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50" role="banner">
+        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}

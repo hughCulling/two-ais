@@ -31,7 +31,7 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50" role="banner">
+        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
@@ -52,7 +52,7 @@ export default function Header() {
                     <div className="hidden md:flex items-center space-x-2 sm:space-x-4" role="group" aria-label="User controls">
                         {/* Language Selector */}
                         <LanguageSelector showIcon={true} className="flex" />
-                        
+
                         {/* Theme Switcher */}
                         <ThemeSwitcher id="desktop" />
 
@@ -138,7 +138,7 @@ export default function Header() {
                         <span id="mobile-language-label-app" className="mr-2">Language:</span> {/* Hardcoded Label */}
                         <LanguageSelector showIcon={false} />
                     </div>
-                    
+
                     {/* Theme Switcher for Mobile */}
                     <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label-app">
                         <span id="mobile-theme-label-app">Theme</span> {/* Hardcoded Label */}
@@ -147,7 +147,7 @@ export default function Header() {
 
                     {user && !authLoading && (
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                             <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
+                            <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
                         </div>
                     )}
                 </div>
