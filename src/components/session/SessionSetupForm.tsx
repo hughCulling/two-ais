@@ -23,7 +23,7 @@ import { db } from '@/lib/firebase/clientApp';
 import { AVAILABLE_LLMS, getLLMInfoById } from '@/lib/models';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
-    AVAILABLE_TTS_PROVIDERS,
+    // AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
     TTSVoice,
     getTTSProviderInfoById,
@@ -796,49 +796,49 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setTtsEnabled(Boolean(checked));
     };
 
-    const handleTTSProviderChange = (agent: 'A' | 'B', newProviderId: TTSProviderOptionId) => {
-        const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
-        const providerInfo = getTTSProviderInfoById(newProviderId as TTSProviderInfo['id']);
-        const defaultModelForProvider = providerInfo?.models[0];
+    // const handleTTSProviderChange = (agent: 'A' | 'B', newProviderId: TTSProviderOptionId) => {
+    //     const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
+    //     const providerInfo = getTTSProviderInfoById(newProviderId as TTSProviderInfo['id']);
+    //     const defaultModelForProvider = providerInfo?.models[0];
 
-        setter(prev => ({
-            ...prev,
-            provider: newProviderId,
-            selectedTtsModelId: defaultModelForProvider?.id,
-            ttsApiModelId: defaultModelForProvider?.apiModelId,
-            voice: null,
-        }));
-    };
+    //     setter(prev => ({
+    //         ...prev,
+    //         provider: newProviderId,
+    //         selectedTtsModelId: defaultModelForProvider?.id,
+    //         ttsApiModelId: defaultModelForProvider?.apiModelId,
+    //         voice: null,
+    //     }));
+    // };
 
-    const handleTTSModelChange = (agent: 'A' | 'B', appTtsModelId: string) => {
-        const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
-        const currentProviderId = agent === 'A' ? agentATTSSettings.provider : agentBTTSSettings.provider;
-        const providerInfo = getTTSProviderInfoById(currentProviderId as TTSProviderInfo['id']);
-        const selectedModelDetail = providerInfo?.models.find(m => m.id === appTtsModelId);
+    // const handleTTSModelChange = (agent: 'A' | 'B', appTtsModelId: string) => {
+    //     const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
+    //     const currentProviderId = agent === 'A' ? agentATTSSettings.provider : agentBTTSSettings.provider;
+    //     const providerInfo = getTTSProviderInfoById(currentProviderId as TTSProviderInfo['id']);
+    //     const selectedModelDetail = providerInfo?.models.find(m => m.id === appTtsModelId);
 
-        setter(prev => ({
-            ...prev,
-            selectedTtsModelId: appTtsModelId,
-            ttsApiModelId: selectedModelDetail?.apiModelId,
-            voice: null,
-        }));
-    };
+    //     setter(prev => ({
+    //         ...prev,
+    //         selectedTtsModelId: appTtsModelId,
+    //         ttsApiModelId: selectedModelDetail?.apiModelId,
+    //         voice: null,
+    //     }));
+    // };
 
     const handleExternalVoiceChange = (agent: 'A' | 'B', voiceId: string) => {
         const setter = agent === 'A' ? setAgentATTSSettings : setAgentBTTSSettings;
         setter(prev => ({ ...prev, voice: voiceId }));
     };
 
-    const isTTSProviderDisabled = (providerId: TTSProviderInfo['id']): boolean => {
-        const providerInfo = getTTSProviderInfoById(providerId);
-        if (providerInfo?.requiresOwnKey && providerInfo.apiKeyId) {
-            return isLoadingStatus || !savedKeyStatus[providerInfo.apiKeyId];
-        }
-        if (providerId === 'openai') {
-            return isLoadingStatus || !savedKeyStatus['openai'];
-        }
-        return false;
-    };
+    // const isTTSProviderDisabled = (providerId: TTSProviderInfo['id']): boolean => {
+    //     const providerInfo = getTTSProviderInfoById(providerId);
+    //     if (providerInfo?.requiresOwnKey && providerInfo.apiKeyId) {
+    //         return isLoadingStatus || !savedKeyStatus[providerInfo.apiKeyId];
+    //     }
+    //     if (providerId === 'openai') {
+    //         return isLoadingStatus || !savedKeyStatus['openai'];
+    //     }
+    //     return false;
+    // };
 
     let isStartDisabled = isLoading || isLoadingStatus || !agentA_llm || !agentB_llm || !user;
 
