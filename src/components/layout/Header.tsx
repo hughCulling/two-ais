@@ -31,8 +31,8 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50" role="banner">
-            <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+            <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo/Home Link */}
                     <div className="flex items-center space-x-4 flex-shrink-0">
@@ -52,7 +52,7 @@ export default function Header() {
                     <div className="hidden md:flex items-center space-x-2 sm:space-x-4" role="group" aria-label="User controls">
                         {/* Language Selector */}
                         <LanguageSelector showIcon={true} className="flex" />
-                        
+
                         {/* Theme Switcher */}
                         <ThemeSwitcher id="desktop" />
 
@@ -63,7 +63,7 @@ export default function Header() {
                             <>
                                 <div className="flex items-center space-x-2" role="group" aria-label="User information">
                                     <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                    <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'}>
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
@@ -103,7 +103,7 @@ export default function Header() {
             </nav>
 
             {/* --- Mobile Menu Panel --- */}
-            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" role="navigation" aria-label="Mobile navigation menu">
+            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu" aria-label="Mobile navigation menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     {authLoading ? (
                         <div className="block px-3 py-2" role="status" aria-live="polite">
@@ -138,7 +138,7 @@ export default function Header() {
                         <span id="mobile-language-label-app" className="mr-2">Language:</span> {/* Hardcoded Label */}
                         <LanguageSelector showIcon={false} />
                     </div>
-                    
+
                     {/* Theme Switcher for Mobile */}
                     <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label-app">
                         <span id="mobile-theme-label-app">Theme</span> {/* Hardcoded Label */}
@@ -147,7 +147,7 @@ export default function Header() {
 
                     {user && !authLoading && (
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                             <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
+                            <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
                         </div>
                     )}
                 </div>

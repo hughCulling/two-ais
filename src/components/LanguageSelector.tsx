@@ -24,7 +24,6 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
     const { t, loading } = useTranslation();
     const generatedId = useId();
     const labelId = id || `language-selector-label-${generatedId}`;
-    const descriptionId = `language-selector-description-${generatedId}`;
 
     const handleLanguageChange = (languageCode: string) => {
         const selectedLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === languageCode);
@@ -47,7 +46,6 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                 <Globe 
                     className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" 
                     aria-hidden="true"
-                    aria-describedby={descriptionId}
                 />
             )}
             <div id={labelId} className="sr-only">Language Selection</div>
@@ -55,7 +53,6 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                 <SelectTrigger 
                     className="w-[180px]" 
                     aria-label={`Current language: ${language.nativeName}. Click to change language.`}
-                    aria-describedby={descriptionId}
                 >
                     <SelectValue />
                 </SelectTrigger>
@@ -78,9 +75,6 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                     ))}
                 </SelectContent>
             </Select>
-            <div id={descriptionId} className="sr-only">
-                Language selector. Choose your preferred language for the interface. The current language is {language.nativeName}.
-            </div>
         </div>
     );
 } 

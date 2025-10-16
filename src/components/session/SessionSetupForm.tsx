@@ -1,7 +1,7 @@
 // src/components/session/SessionSetupForm.tsx
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import {
@@ -14,12 +14,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+// import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+// import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+import { AVAILABLE_LLMS, getLLMInfoById } from '@/lib/models';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
     AVAILABLE_TTS_PROVIDERS,
@@ -30,8 +31,9 @@ import {
 } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
+// import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
+import { AlertTriangle, Info, Check, X } from "lucide-react";
+// import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Utility Functions ---
@@ -96,6 +98,8 @@ const formatPrice = (price: number) => {
 };
 
 // --- Custom LLM Selector Dropdown ---
+// Simplified version similar to TTS selector - shows all models in a single dropdown
+// The complex two-step provider selection is commented out below for future use
 interface LLMSelectorProps {
     value: string;
     onChange: (id: string) => void;
@@ -104,7 +108,67 @@ interface LLMSelectorProps {
     placeholder?: string;
 }
 
+// Simplified LLM Selector - similar to TTS selector
 const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, label, placeholder }) => {
+    const { language } = useLanguage();
+    const { t, loading } = useTranslation();
+
+    if (loading || !t) {
+        return (
+            <div className="space-y-2">
+                <Label>{label}</Label>
+                <div className="w-full px-3 py-2 border rounded-md bg-muted text-muted-foreground text-sm">Loading...</div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-2">
+            <Label htmlFor={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`}>{label}</Label>
+            <Select value={value} onValueChange={onChange} disabled={disabled}>
+                <SelectTrigger id={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="w-full">
+                    <SelectValue placeholder={placeholder || 'Select LLM'} />
+                </SelectTrigger>
+                <SelectContent className="max-h-96">
+                    {AVAILABLE_LLMS.map((llm) => {
+                        const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                        return (
+                            <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2">
+                                <div className="flex justify-between items-center w-full text-sm min-w-0">
+                                    <div className="flex items-center space-x-1.5 mr-2 min-w-0 flex-1">
+                                        {supportsLanguage ? (
+                                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                        ) : (
+                                            <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                        )}
+                                        <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
+                                        {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">({t?.page_BadgePreview || 'Preview'})</span>}
+                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
+                                        {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-1" />}
+                                        {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0">(No {language.nativeName})</span>}
+                                    </div>
+                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0 truncate max-w-[8rem]" title={
+                                        llm.pricing.note ?
+                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                    }>
+                                        ({llm.pricing.note ?
+                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                        })
+                                    </span>
+                                </div>
+                            </SelectItem>
+                        );
+                    })}
+                </SelectContent>
+            </Select>
+        </div>
+    );
+};
+
+/* COMMENTED OUT: Complex two-step LLM selector - uncomment to restore original functionality
+const LLMSelectorComplex: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, label, placeholder }) => {
     const { language } = useLanguage();
     const { t, loading } = useTranslation();
     const [open, setOpen] = useState(false);
@@ -345,6 +409,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         </div>
     );
 };
+*/
 
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
     const { user, loading: authLoading } = useAuth();
@@ -383,25 +448,25 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     // Update size when quality changes
     // useEffect(() => {
     //     if (!selectedImageModelId) return;
-        
+
     //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
     //     if (!model) return;
-        
+
     //     // If no quality is selected, use the first available quality or proceed without one
     //     if (!selectedImageQuality) {
     //         // Find first defined quality or use the first quality object if all qualities are undefined
     //         const firstQuality = model.qualities.find(q => q.quality)?.quality || 
     //                            (model.qualities[0]?.sizes[0] ? 'standard' : undefined);
-            
+
     //         if (firstQuality) {
     //             setSelectedImageQuality(firstQuality);
     //         }
     //         return;
     //     }
-        
+
     //     // Find the quality object that matches the selected quality
     //     const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
-        
+
     //     // If we found a matching quality with sizes, update the size
     //     if (qualityObj?.sizes && qualityObj.sizes.length > 0) {
     //         setSelectedImageSize(qualityObj.sizes[0].size);
@@ -500,26 +565,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         if (providerId === 'google-cloud' && googleCloudProviderInfo) {
             if (defaultModel?.voiceFilterCriteria && googleCloudProviderInfo.availableVoices) {
                 const modelTypeVoices = googleCloudProviderInfo.availableVoices.filter(defaultModel.voiceFilterCriteria);
-                voices = modelTypeVoices.filter(voice => 
+                voices = modelTypeVoices.filter(voice =>
                     voice.languageCodes?.some(code => code.split('-')[0] === simpleUserLangCode)
                 );
             } else {
-                voices = googleCloudProviderInfo.availableVoices.filter(voice => 
+                voices = googleCloudProviderInfo.availableVoices.filter(voice =>
                     voice.languageCodes?.some(code => code.split('-')[0] === simpleUserLangCode)
                 );
             }
         } else if (providerId === 'browser') {
             // For browser TTS, filter voices by the user's selected language
             voices = (providerInfo.availableVoices || []).filter(voice => {
-                return voice.languageCodes?.some(code => 
-                    code.startsWith(simpleUserLangCode) || 
+                return voice.languageCodes?.some(code =>
+                    code.startsWith(simpleUserLangCode) ||
                     code.split('-')[0] === simpleUserLangCode
                 );
             });
         } else {
             voices = providerInfo.availableVoices || [];
         }
-        
+
         agentSettingsSetter(prev => ({
             ...prev,
             provider: providerId,
@@ -564,7 +629,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             if (conceptualModel?.voiceFilterCriteria && googleCloudProviderInfo.availableVoices) {
                 const modelTypeVoices = googleCloudProviderInfo.availableVoices.filter(conceptualModel.voiceFilterCriteria);
                 const simpleUserLangCode = language.code.split('-')[0];
-                voices = modelTypeVoices.filter(voice => 
+                voices = modelTypeVoices.filter(voice =>
                     voice.languageCodes?.some(code => code.split('-')[0] === simpleUserLangCode)
                 );
             }
@@ -660,34 +725,34 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         //         alert('Please select an image model.');
         //         return;
         //     }
-            
+
         //     // Check if the model has any quality settings
         //     const hasQualitySettings = model.qualities.some(q => q.quality);
-            
+
         //     // Only require quality if the model has quality settings
         //     if (hasQualitySettings && !selectedImageQuality) {
         //         alert('Please select an image quality.');
         //         return;
         //     }
-            
+
         //     if (!selectedImageSize) {
         //         alert('Please select an image size.');
         //         return;
         //     }
-            
+
         //     if (!selectedPromptLlm) {
         //         alert('Please select a prompt LLM for image generation.');
         //         return;
         //     }
-            
+
         //     if (!imagePromptSystemMessage) {
         //         alert('Please provide a system prompt for the image prompt LLM.');
         //         return;
         //     }
-            
+
         //     // Use 'standard' as default quality if the model doesn't have quality settings
         //     const qualityToUse = hasQualitySettings ? selectedImageQuality : 'standard';
-            
+
         //     imageGenSettings = {
         //         enabled: true,
         //         provider: model.provider,
@@ -706,16 +771,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         const sessionAgentBTTSSettings = ttsEnabled ? agentBTTSSettings : disabledTtsSettings;
 
         if (ttsEnabled) {
-             if (sessionAgentATTSSettings.provider !== 'none' && !sessionAgentATTSSettings.voice) {
+            if (sessionAgentATTSSettings.provider !== 'none' && !sessionAgentATTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent A or disable TTS.`);
                 return;
-             }
-             if (sessionAgentBTTSSettings.provider !== 'none' && !sessionAgentBTTSSettings.voice) {
+            }
+            if (sessionAgentBTTSSettings.provider !== 'none' && !sessionAgentBTTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent B or disable TTS.`);
                 return;
-             }
+            }
         }
-        
+
         onStartSession({
             agentA_llm,
             agentB_llm,
@@ -799,7 +864,59 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
         const selectedProviderInfo = getTTSProviderInfoById(currentAgentTTSSettings.provider as TTSProviderInfo['id']);
 
-        const shouldShowVoiceDropdown = 
+        const shouldShowVoiceDropdown =
+            selectedProviderInfo &&
+            currentAgentTTSSettings.provider !== 'none' &&
+            currentAgentTTSSettings.selectedTtsModelId &&
+            isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
+
+        // Simplified version - only show voice selector since we only have browser TTS with one model
+        return (
+            <div className="space-y-3 p-4 border rounded-md bg-background/50">
+                <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
+                {shouldShowVoiceDropdown && (
+                    <div className="space-y-2">
+                        <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>{t?.sessionSetupForm?.voice}</Label>
+                        <Select
+                            value={currentAgentTTSSettings.voice || ''}
+                            onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
+                            disabled={!user || currentAgentVoices.length === 0}
+                        >
+                            <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
+                                <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-60">
+                                {currentAgentVoices.map(v => {
+                                    const providerId = currentAgentTTSSettings.provider;
+                                    const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
+                                    return (
+                                        <SelectItem key={v.id} value={v.id}>
+                                            {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                            {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
+                                            {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    /* COMMENTED OUT: Full TTS configuration with provider and model selection
+     * Uncomment this section to restore provider and model selection dropdowns
+     * 
+    const renderTTSConfigForAgentFull = (
+        agentIdentifier: 'A' | 'B',
+        currentAgentTTSSettings: AgentTTSSettings,
+        currentAgentVoices: TTSVoice[]
+    ) => {
+        const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
+        const selectedProviderInfo = getTTSProviderInfoById(currentAgentTTSSettings.provider as TTSProviderInfo['id']);
+
+        const shouldShowVoiceDropdown =
             selectedProviderInfo &&
             currentAgentTTSSettings.provider !== 'none' &&
             currentAgentTTSSettings.selectedTtsModelId &&
@@ -852,9 +969,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         const supportsLanguage = isTTSModelLanguageSupported(m.id, language.code);
                                         const isDisabled = !supportsLanguage;
                                         return (
-                                            <SelectItem 
-                                                key={m.id} 
-                                                value={m.id} 
+                                            <SelectItem
+                                                key={m.id}
+                                                value={m.id}
                                                 disabled={isDisabled}
                                                 className="pr-2 py-2"
                                             >
@@ -891,7 +1008,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
                                         {currentAgentVoices.map(v => {
-                                            // Don't show gender for browser voices (redundant) or Google providers
                                             const providerId = currentAgentTTSSettings.provider;
                                             const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                             return (
@@ -911,6 +1027,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             </div>
         );
     };
+    */
 
     return (
         <Card className="w-full max-w-2xl">
@@ -954,30 +1071,30 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     {/* Explanation Notes */}
                     {t && (
                         <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0"/>
-                            <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0"/>
+                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0" />
+                            <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0" />
                             {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
                         </p>
                     )}
                     {ANY_MODEL_USES_REASONING && (
-                         <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
+                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                            <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
                             {t && t.sessionSetupForm.reasoningNote}
                         </p>
                     )}
                     {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
                         <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
+                            <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0" />
                             {t && t.sessionSetupForm.openaiOrgVerificationNote}
                             {t && (
-                              <a
-                                  href="https://platform.openai.com/settings/organization/general"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                              >
-                                  {t.common_verifyHere}
-                              </a>
+                                <a
+                                    href="https://platform.openai.com/settings/organization/general"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                >
+                                    {t.common_verifyHere}
+                                </a>
                             )}
                         </p>
                     )}
@@ -987,15 +1104,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 <hr className="my-6" />
                 <div className="space-y-4">
                     <div className="flex items-center space-x-2">
-                        <Checkbox 
-                            id="tts-enabled-checkbox" 
-                            checked={ttsEnabled} 
-                            onCheckedChange={handleTtsToggle} 
+                        <Checkbox
+                            id="tts-enabled-checkbox"
+                            checked={ttsEnabled}
+                            onCheckedChange={handleTtsToggle}
                             disabled={!user}
                             aria-describedby="tts-checkbox-description"
                         />
-                        <Label 
-                            htmlFor="tts-enabled-checkbox" 
+                        <Label
+                            htmlFor="tts-enabled-checkbox"
                             className="text-base font-medium"
                         >
                             {t?.sessionSetupForm?.enableTTS}
@@ -1004,7 +1121,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <div id="tts-checkbox-description" className="sr-only">
                         Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
                     </div>
-                    
+
                     {/* Safari Browser Warning */}
                     {ttsEnabled && showSafariWarning && (
                         <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md">
@@ -1017,14 +1134,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         Limited Voice Selection in Safari
                                     </p>
                                     <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                                        Safari shows fewer voices than other browsers. 
+                                        Safari shows fewer voices than other browsers.
                                         For the best voice selection with Browser TTS, please use Chrome, Firefox, Edge, or Opera.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     )}
-                    
+
                     {ttsEnabled && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="tts-settings-label">
                             <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
@@ -1056,8 +1173,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     {imageGenEnabled && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="image-gen-settings-label">
                             <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div> */}
-                            {/* Image Model Selection */}
-                            {/* <div className="space-y-2">
+                {/* Image Model Selection */}
+                {/* <div className="space-y-2">
                                 <Label htmlFor="image-model-select">{t?.sessionSetupForm?.imageModel}</Label>
                                 <Select
                                     value={selectedImageModelId}
@@ -1073,8 +1190,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            {/* Quality Selection */}
-                            {/* <div className="space-y-2">
+                {/* Quality Selection */}
+                {/* <div className="space-y-2">
                                 <Label htmlFor="image-quality-select">{t?.sessionSetupForm?.quality}</Label>
                                 <Select
                                     value={selectedImageQuality}
@@ -1111,8 +1228,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            {/* Size Selection */}
-                            {/* <div className="space-y-2">
+                {/* Size Selection */}
+                {/* <div className="space-y-2">
                                 <Label htmlFor="image-size-select">{t?.sessionSetupForm?.size}</Label>
                                 <Select
                                     value={selectedImageSize}
@@ -1146,8 +1263,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            {/* Prompt LLM Selection */}
-                            {/* <div className="space-y-2">
+                {/* Prompt LLM Selection */}
+                {/* <div className="space-y-2">
                                 <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM}</Label>
                                 <Select
                                     value={selectedPromptLlm}
@@ -1163,8 +1280,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            {/* System Prompt for Image Prompt LLM */}
-                            {/* <div className="space-y-2 col-span-1 md:col-span-2">
+                {/* System Prompt for Image Prompt LLM */}
+                {/* <div className="space-y-2 col-span-1 md:col-span-2">
                                 <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage}</Label>
                                 <textarea
                                     id="image-prompt-system-message"
@@ -1198,9 +1315,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 </div>
             </CardContent>
             <CardFooter>
-                <Button 
-                    onClick={handleStartClick} 
-                    disabled={isStartDisabled} 
+                <Button
+                    onClick={handleStartClick}
+                    disabled={isStartDisabled}
                     className="w-full"
                     aria-label={isStartDisabled ? "Cannot start session - please select models for both agents" : "Start a new conversation with the selected settings"}
                     aria-describedby="start-button-description"
