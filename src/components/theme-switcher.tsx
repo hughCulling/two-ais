@@ -47,7 +47,7 @@ export function ThemeSwitcher({ id }: ThemeSwitcherProps) {
         <Button 
             variant="outline" 
             size="icon"
-            // aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
+            aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
             aria-haspopup="menu"
             aria-expanded={false}
             // aria-describedby={uniqueId}
