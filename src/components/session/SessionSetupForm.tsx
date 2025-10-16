@@ -4,22 +4,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Label } from "@/components/ui/label";
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
+import { getLLMInfoById } from '@/lib/models';
+import { ModelSelector } from './ModelSelector';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
     AVAILABLE_TTS_PROVIDERS,
@@ -30,8 +24,9 @@ import {
 } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
-import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
+import { AlertTriangle, Check, X, Info, ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
 // --- Utility Functions ---
@@ -79,271 +74,17 @@ interface SessionSetupFormProps {
     isLoading: boolean;
 }
 
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral'];
+const ALL_REQUIRED_KEY_IDS = ['mistral']; // Only need Mistral API key now
 
-const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
-    llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
-);
-const ANY_MODEL_USES_REASONING = AVAILABLE_LLMS.some(
-    llm => llm.usesReasoningTokens
-);
+// These are no longer needed as we're only using Mistral AI
+// const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = false;
+// const ANY_MODEL_USES_REASONING = false;
 
-const formatPrice = (price: number) => {
+const formatPrice = (price: number): string => {
     return price.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 3,
     });
-};
-
-// --- Custom LLM Selector Dropdown ---
-interface LLMSelectorProps {
-    value: string;
-    onChange: (id: string) => void;
-    disabled?: boolean;
-    label: string;
-    placeholder?: string;
-}
-
-const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, label, placeholder }) => {
-    const { language } = useLanguage();
-    const { t, loading } = useTranslation();
-    const [open, setOpen] = useState(false);
-    const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
-    const listboxRef = useRef<HTMLDivElement>(null);
-    const groupedLLMs = groupLLMsByProvider();
-
-    // Generate unique IDs for ARIA relationships
-    const listboxId = `llm-selector-${label.toLowerCase().replace(/\s+/g, '-')}-listbox`;
-    const buttonId = `llm-selector-${label.toLowerCase().replace(/\s+/g, '-')}-button`;
-
-    // All hooks above; now check for loading/t
-
-    useEffect(() => {
-        if (!open) return;
-        const handleClick = (e: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                setOpen(false);
-                setSelectedProvider(null);
-            }
-        };
-        document.addEventListener('mousedown', handleClick);
-        return () => document.removeEventListener('mousedown', handleClick);
-    }, [open]);
-
-    useEffect(() => {
-        if (!open) return;
-        const handleKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                setOpen(false);
-                setSelectedProvider(null);
-                buttonRef.current?.focus();
-            }
-        };
-        document.addEventListener('keydown', handleKey);
-        return () => document.removeEventListener('keydown', handleKey);
-    }, [open]);
-
-    // Instead of returning null, render a placeholder UI if loading or t is missing
-    if (loading || !t) {
-        return (
-            <div className="w-full" ref={dropdownRef}>
-                <label className="block mb-1 font-medium text-sm">{label}</label>
-                <div className="w-full px-3 py-2 border rounded-md bg-muted text-muted-foreground text-sm" role="status" aria-live="polite">Loading...</div>
-            </div>
-        );
-    }
-
-    // Find selected LLM info
-    const selectedLLM = value ? getLLMInfoById(value) : undefined;
-
-    // Group models by category for a provider
-    const getModelsByCategory = (provider: string) => {
-        const models = groupedLLMs[provider] || [];
-        // Use the same grouping as landing page
-        // Use groupModelsByCategory from main page
-        // We'll import it at the top
-        const { orderedCategories, byCategory } = groupModelsByCategory(models, t);
-        return { orderedCategories, byCategory };
-    };
-
-    return (
-        <div className="w-full" ref={dropdownRef} role="combobox" aria-expanded={open} aria-haspopup="listbox" aria-controls={listboxId}>
-            <label className="block mb-1 font-medium text-sm" htmlFor={buttonId}>{label}</label>
-            <button
-                ref={buttonRef}
-                id={buttonId}
-                type="button"
-                className={cn(
-                    "w-full flex items-center justify-between border rounded-md px-3 py-2 bg-background text-sm shadow-xs transition-colors",
-                    disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent',
-                    open && 'ring-2 ring-primary'
-                )}
-                onClick={() => !disabled && setOpen((v) => !v)}
-                disabled={disabled}
-                aria-haspopup="listbox"
-                aria-expanded={open}
-                aria-describedby={listboxId}
-                aria-label={`${label}: ${selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}`}
-                aria-controls={listboxId}
-            >
-                <span className="truncate">
-                    {selectedLLM ? `${selectedLLM.name} (${selectedLLM.provider})` : (placeholder || 'Select LLM')}
-                </span>
-                <ChevronDown className="ml-2 h-4 w-4 opacity-60" aria-hidden="true" />
-            </button>
-            {open && (
-                <div 
-                    ref={listboxRef}
-                    id={listboxId}
-                    className="absolute z-50 mt-2 w-full max-w-md bg-popover border rounded-md shadow-lg overflow-auto max-h-96 animate-in fade-in-0" 
-                    role="listbox"
-                    aria-labelledby={`${buttonId}-label`}
-                    aria-activedescendant={selectedLLM ? `option-${selectedLLM.id}` : undefined}
-                >
-                    {!selectedProvider ? (
-                        // Provider selection view
-                        <div>
-                            <div className="p-2 border-b font-semibold text-base" role="heading" aria-level={2}>Select Provider</div>
-                            <ul role="group" aria-label="AI Providers">
-                                {Object.keys(groupedLLMs).map((provider) => (
-                                    <li key={provider} role="none">
-                                        <button
-                                            className="w-full text-left px-4 py-3 hover:bg-accent focus:bg-accent transition-colors flex items-center justify-between"
-                                            onClick={() => setSelectedProvider(provider)}
-                                            tabIndex={0}
-                                            role="option"
-                                            aria-selected={false}
-                                            aria-label={`Select ${provider} provider`}
-                                            aria-describedby={`provider-${provider}-description`}
-                                        >
-                                            <span className="font-medium">{provider}</span>
-                                            <ChevronRight className="h-4 w-4 opacity-60" aria-hidden="true" />
-                                        </button>
-                                        <div id={`provider-${provider}-description`} className="sr-only">
-                                            Click to view models from {provider}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ) : (
-                        // Category/model selection view
-                        <div>
-                            <div className="flex items-center border-b p-2">
-                                <button
-                                    className="mr-2 p-1 rounded hover:bg-accent"
-                                    onClick={() => setSelectedProvider(null)}
-                                    aria-label="Back to providers"
-                                    aria-describedby="back-button-description"
-                                >
-                                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                                </button>
-                                <span className="font-semibold text-base" role="heading" aria-level={2}>{selectedProvider}</span>
-                                <div id="back-button-description" className="sr-only">
-                                    Click to go back to provider selection
-                                </div>
-                            </div>
-                            <div className="overflow-y-auto max-h-80" role="group" aria-label={`${selectedProvider} models`}>
-                                {(() => {
-                                    const { orderedCategories, byCategory } = getModelsByCategory(selectedProvider);
-                                    return orderedCategories.map((cat: string) => (
-                                        <div key={cat} className="pt-2 pb-1 px-4" role="group" aria-labelledby={`category-${cat}-label`}>
-                                            <div id={`category-${cat}-label`} className="text-xs font-semibold text-muted-foreground mb-1" role="heading" aria-level={3}>{cat}</div>
-                                            <ul role="group" aria-label={`${cat} models`}>
-                                                {byCategory[cat].map((llm: LLMInfo) => {
-                                                    const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
-                                                    const isSelected = llm.id === value;
-                                                    return (
-                                                        <li key={llm.id} role="none">
-                                                            <button
-                                                                id={`option-${llm.id}`}
-                                                                className={cn(
-                                                                    "w-full text-left px-2 py-2 rounded flex items-center justify-between",
-                                                                    isSelected ? 'bg-primary/10 font-bold' : 'hover:bg-accent',
-                                                                    !supportsLanguage && 'opacity-50 cursor-not-allowed'
-                                                                )}
-                                                                onClick={() => supportsLanguage && onChange(llm.id)}
-                                                                disabled={!supportsLanguage}
-                                                                tabIndex={0}
-                                                                role="option"
-                                                                aria-selected={isSelected}
-                                                                aria-label={`${llm.name} (${llm.provider})${!supportsLanguage ? ' - Not supported for current language' : ''}`}
-                                                                aria-describedby={`model-${llm.id}-description`}
-                                                            >
-                                                                <span className="flex-shrink-0 flex items-center min-w-0">
-                                                                    <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
-                                                                    {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">({t?.page_BadgePreview || 'Preview'})</span>}
-                                                                    {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
-                                                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-1" />}
-                                                                </span>
-                                                                <span className="flex items-center space-x-2 min-w-0 max-w-[14rem]">
-                                                                    {llm.pricing.note ? (
-                                                                        <Tooltip>
-                                                                            <TooltipTrigger asChild>
-                                                                                <span 
-                                                                                    className="text-xs text-muted-foreground truncate max-w-[10rem] block" 
-                                                                                    title={llm.pricing.note ? 
-                                                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
-                                                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}>
-                                                                                    {llm.pricing.note ? (
-                                                                                        <span>({typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note})</span>
-                                                                                    ) : (
-                                                                                        <span>(${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'})</span>
-                                                                                    )}
-                                                                                </span>
-                                                                            </TooltipTrigger>
-                                                                            <TooltipContent side="top">
-                                                                                <span className="text-xs">
-                                                                                    {llm.pricing.note ? 
-                                                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
-                                                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}
-                                                                                </span>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    ) : (
-                                                                        <Tooltip>
-                                                                            <TooltipTrigger asChild>
-                                                                                <span className="text-xs text-muted-foreground truncate max-w-[10rem] block" title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}>
-                                                                                    (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'})
-                                                                                </span>
-                                                                            </TooltipTrigger>
-                                                                            <TooltipContent side="top">
-                                                                                <span className="text-xs">${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t?.page_PricingPerTokens || 'per 1 Million Tokens'}</span>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    )}
-                                                                    {isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300" aria-hidden="true" />
-                                                                    ) : (
-                                                                        <X className="h-3 w-3 text-red-700 dark:text-red-300" aria-hidden="true" />
-                                                                    )}
-                                                                </span>
-                                                            </button>
-                                                            <div id={`model-${llm.id}-description`} className="sr-only">
-                                                                {llm.name} from {llm.provider}. 
-                                                                {supportsLanguage ? 'Supports current language.' : 'Does not support current language.'}
-                                                                {llm.status === 'preview' ? ` ${t?.page_BadgePreview || 'Preview'} model.` : ''}
-                                                                {llm.status === 'beta' ? ' Beta model.' : ''}
-                                                                Pricing: {llm.pricing.note ? 
-                                                                    (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) : 
-                                                                    `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1 Million Tokens'}`}.
-                                                            </div>
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        </div>
-                                    ));
-                                })()}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
-    );
 };
 
 function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) {
@@ -359,65 +100,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
-    // --- Image Generation State ---
-    // const [imageGenEnabled, setImageGenEnabled] = useState(false);
-    // const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
-    // const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
-    // const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize | ImageAspectRatio>('1024x1024');
-    // const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
-    // const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
-
-    // Update quality/size when model changes
-    // useEffect(() => {
-    //     if (!selectedImageModelId) return;
-    //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-    //     if (model) {
-    //         // Default to first quality/size if not set
-    //         const firstQuality = model.qualities[0]?.quality || 'medium';
-    //         setSelectedImageQuality(firstQuality);
-    //         const firstSize = model.qualities[0]?.sizes[0]?.size || '1024x1024';
-    //         setSelectedImageSize(firstSize);
-    //     }
-    // }, [selectedImageModelId]);
-
-    // Update size when quality changes
-    // useEffect(() => {
-    //     if (!selectedImageModelId) return;
-        
-    //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-    //     if (!model) return;
-        
-    //     // If no quality is selected, use the first available quality or proceed without one
-    //     if (!selectedImageQuality) {
-    //         // Find first defined quality or use the first quality object if all qualities are undefined
-    //         const firstQuality = model.qualities.find(q => q.quality)?.quality || 
-    //                            (model.qualities[0]?.sizes[0] ? 'standard' : undefined);
-            
-    //         if (firstQuality) {
-    //             setSelectedImageQuality(firstQuality);
-    //         }
-    //         return;
-    //     }
-        
-    //     // Find the quality object that matches the selected quality
-    //     const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
-        
-    //     // If we found a matching quality with sizes, update the size
-    //     if (qualityObj?.sizes && qualityObj.sizes.length > 0) {
-    //         setSelectedImageSize(qualityObj.sizes[0].size);
-    //     } else if (model.qualities.length > 0 && model.qualities[0]?.sizes?.length > 0) {
-    //         // Fallback to first available size if the selected quality has no sizes
-    //         setSelectedImageSize(model.qualities[0].sizes[0].size);
-    //     }
-    // }, [selectedImageModelId, selectedImageQuality]);
-
     const openAIProviderInfo = getTTSProviderInfoById('openai');
     const googleCloudProviderInfo = getTTSProviderInfoById('google-cloud');
     const elevenLabsProviderInfo = getTTSProviderInfoById('elevenlabs');
-
-    // const getDefaultOpenAITTSModel = () => openAIProviderInfo?.models[0];
-    const getDefaultOpenAIVoices = () => openAIProviderInfo?.availableVoices || [];
-    // const getDefaultOpenAIDefaultVoiceId = () => getDefaultOpenAIVoices()[0]?.id ?? null;
 
     const [agentATTSSettings, setAgentATTSSettings] = useState<AgentTTSSettings>({
         provider: 'browser',
@@ -432,8 +117,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         ttsApiModelId: 'browser-default',
     });
 
-    const [currentVoicesA, setCurrentVoicesA] = useState<TTSVoice[]>(getDefaultOpenAIVoices());
-    const [currentVoicesB, setCurrentVoicesB] = useState<TTSVoice[]>(getDefaultOpenAIVoices());
+    const [currentVoicesA, setCurrentVoicesA] = useState<TTSVoice[]>([]);
+    const [currentVoicesB, setCurrentVoicesB] = useState<TTSVoice[]>([]);
 
     useEffect(() => {
         const fetchKeyStatus = async () => {
@@ -930,24 +615,24 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 {/* LLM Selection Section */}
                 <div className="space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Agent A LLM Selector */}
+                        {/* Agent A Model Selector */}
                         <div className="space-y-2">
-                            <LLMSelector
+                            <ModelSelector
                                 value={agentA_llm}
                                 onChange={setAgentA_llm}
                                 disabled={isLoading || isLoadingStatus || !user}
-                                label={t?.sessionSetupForm?.agentAModel || ''}
-                                placeholder={t?.sessionSetupForm?.selectLLMForAgentA || ''}
+                                label={t?.sessionSetupForm?.agentAModel || 'Agent A Model'}
+                                placeholder={t?.sessionSetupForm?.selectLLMForAgentA || 'Select a model for Agent A'}
                             />
                         </div>
-                        {/* Agent B LLM Selector */}
+                        {/* Agent B Model Selector */}
                         <div className="space-y-2">
-                            <LLMSelector
+                            <ModelSelector
                                 value={agentB_llm}
                                 onChange={setAgentB_llm}
                                 disabled={isLoading || isLoadingStatus || !user}
-                                label={t?.sessionSetupForm?.agentBModel || ''}
-                                placeholder={t?.sessionSetupForm?.selectLLMForAgentB || ''}
+                                label={t?.sessionSetupForm?.agentBModel || 'Agent B Model'}
+                                placeholder={t?.sessionSetupForm?.selectLLMForAgentB || 'Select a model for Agent B'}
                             />
                         </div>
                     </div>
@@ -959,13 +644,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
                         </p>
                     )}
-                    {ANY_MODEL_USES_REASONING && (
+                    {/* {ANY_MODEL_USES_REASONING && (
                          <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                             <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0"/>
                             {t && t.sessionSetupForm.reasoningNote}
                         </p>
-                    )}
-                    {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
+                    )} */}
+                    {/* {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
                         <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
                             <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0"/>
                             {t && t.sessionSetupForm.openaiOrgVerificationNote}
@@ -980,7 +665,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                               </a>
                             )}
                         </p>
-                    )}
+                    )} */}
                 </div>
 
                 {/* TTS Configuration Section */}
