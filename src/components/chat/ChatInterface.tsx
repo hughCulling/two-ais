@@ -170,14 +170,81 @@ export function ChatInterface({
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
+    const ttsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const ttsChunkQueueRef = useRef<string[]>([]);
+    const currentChunkIndexRef = useRef<number>(0);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
+    // --- Helper: Split text into TTS-safe chunks ---
+    const splitIntoTTSChunks = useCallback((text: string, maxLength: number = 4000): string[] => {
+        if (text.length <= maxLength) {
+            return [text];
+        }
+
+        const chunks: string[] = [];
+        // Split by sentences (periods, exclamation marks, question marks followed by space or end)
+        const sentences = text.match(/[^.!?]+[.!?]+[\s]?|[^.!?]+$/g) || [text];
+        
+        let currentChunk = '';
+        
+        for (const sentence of sentences) {
+            // If adding this sentence would exceed the limit
+            if (currentChunk.length + sentence.length > maxLength) {
+                // If current chunk has content, save it
+                if (currentChunk.length > 0) {
+                    chunks.push(currentChunk.trim());
+                    currentChunk = '';
+                }
+                
+                // If the sentence itself is too long, split it by words
+                if (sentence.length > maxLength) {
+                    const words = sentence.split(/\s+/);
+                    for (const word of words) {
+                        if (currentChunk.length + word.length + 1 > maxLength) {
+                            if (currentChunk.length > 0) {
+                                chunks.push(currentChunk.trim());
+                                currentChunk = '';
+                            }
+                        }
+                        currentChunk += (currentChunk.length > 0 ? ' ' : '') + word;
+                    }
+                } else {
+                    currentChunk = sentence;
+                }
+            } else {
+                currentChunk += sentence;
+            }
+        }
+        
+        // Add any remaining content
+        if (currentChunk.trim().length > 0) {
+            chunks.push(currentChunk.trim());
+        }
+        
+        return chunks.length > 0 ? chunks : [text.substring(0, maxLength)];
+    }, []);
+
     // --- Audio Control Handlers ---
     const handleAudioEnd = useCallback(() => {
         const playedMsgId = currentlyPlayingMsgIdRef.current;
-        if (!playedMsgId) return;
+        if (!playedMsgId) {
+            logger.debug("[TTS] handleAudioEnd called but no message was playing");
+            return;
+        }
+
+        logger.info(`[TTS] Handling audio end for message ${playedMsgId.substring(0, 8)}...`);
+
+        // Clear any TTS timeout
+        if (ttsTimeoutRef.current) {
+            clearTimeout(ttsTimeoutRef.current);
+            ttsTimeoutRef.current = null;
+        }
+
+        // Clear chunk queue
+        ttsChunkQueueRef.current = [];
+        currentChunkIndexRef.current = 0;
 
         // Clean up any existing utterance
         if (utteranceRef.current) {
@@ -548,7 +615,14 @@ export function ChatInterface({
         const handleValue = (snapshot: { val: () => Record<string, Omit<StreamingMessage, 'id'>> | null }) => {
             if (unsubscribed) return;
             const data = snapshot.val();
-            console.log("RTDB streaming message update:", data);
+            // Only log when there's a meaningful change (new message or status change)
+            if (data) {
+                const messagesArr: StreamingMessage[] = Object.entries(data).map(([id, val]) => ({ id, ...(val as Omit<StreamingMessage, 'id'>) }));
+                const latest = messagesArr.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))[0];
+                if (latest && (latest.status === 'complete' || !streamingMessage || streamingMessage.id !== latest.id)) {
+                    logger.debug("RTDB streaming message:", { id: latest.id, status: latest.status, contentLength: latest.content?.length });
+                }
+            }
             if (!data) {
                 setStreamingMessage(null);
                 return;
@@ -567,7 +641,7 @@ export function ChatInterface({
             unsubscribed = true;
             off(messagesRef, 'value', handleValue);
         };
-    }, [conversationId]);
+    }, [conversationId, streamingMessage]);
 
     // --- Merge streaming message with Firestore messages for display ---
     const mergedMessages = React.useMemo(() => {
@@ -648,12 +722,22 @@ export function ChatInterface({
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
-        if (!hasUserInteracted || isAudioPlaying || isAudioPaused || !conversationData?.ttsSettings?.enabled || isStopped || conversationStatus === 'stopped') {
+        logger.debug('[TTS] Audio playback effect triggered');
+        
+        // Early return if audio is already playing - CRITICAL to prevent interruptions
+        if (isAudioPlaying || isAudioPaused || isBrowserTTSActive) {
+            logger.debug('[TTS] Effect skipped - audio already playing or paused');
             return;
         }
 
-        // Additional guard: Don't start new playback if browser TTS is already active
-        if (isBrowserTTSActive || (typeof window !== 'undefined' && window.speechSynthesis?.speaking)) {
+        if (!hasUserInteracted || !conversationData?.ttsSettings?.enabled || isStopped || conversationStatus === 'stopped') {
+            logger.debug('[TTS] Effect skipped - preconditions not met');
+            return;
+        }
+
+        // Additional guard: Don't start new playback if browser TTS is already speaking
+        if (typeof window !== 'undefined' && window.speechSynthesis?.speaking) {
+            logger.debug('[TTS] Effect skipped - speechSynthesis already speaking');
             return;
         }
 
@@ -665,6 +749,8 @@ export function ChatInterface({
         });
 
         if (!nextMsg) return;
+
+        logger.debug(`[TTS] Found next message to play: ${nextMsg.id.substring(0, 8)}..., streaming: ${nextMsg.isStreaming}, role: ${nextMsg.role}`);
 
         // If message is still streaming, store it for later playback
         if (nextMsg.isStreaming) {
@@ -706,7 +792,22 @@ export function ChatInterface({
             }
 
             const cleanedContent = removeMarkdown(nextMsg.content);
-            const utterance = new SpeechSynthesisUtterance(cleanedContent);
+            
+            // Browser TTS has character limits (typically 4000-5000 chars)
+            // Split into chunks if needed
+            const MAX_TTS_LENGTH = 4000;
+            const chunks = splitIntoTTSChunks(cleanedContent, MAX_TTS_LENGTH);
+            
+            if (chunks.length > 1) {
+                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... is ${cleanedContent.length} chars, split into ${chunks.length} chunks for browser TTS`);
+            }
+            
+            // Store chunks in queue
+            ttsChunkQueueRef.current = chunks;
+            currentChunkIndexRef.current = 0;
+            
+            // Create utterance for first chunk
+            const utterance = new SpeechSynthesisUtterance(chunks[0]);
             
             // Try to assign the voice, with fallback if it fails
             try {
@@ -724,26 +825,90 @@ export function ChatInterface({
                 }
             }
             utterance.onstart = () => {
-                setCurrentlyPlayingMsgId(nextMsg.id);
-                setIsAudioPlaying(true);
-                setIsBrowserTTSActive(true);
-                setPendingTtsMessage(null); // Clear pending message when playback starts
+                const chunkNum = currentChunkIndexRef.current + 1;
+                const totalChunks = ttsChunkQueueRef.current.length;
+                const currentChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
+                logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk.length} chars)`);
+                
+                if (chunkNum === 1) {
+                    // Only set these on the first chunk
+                    setCurrentlyPlayingMsgId(nextMsg.id);
+                    setIsAudioPlaying(true);
+                    setIsBrowserTTSActive(true);
+                    setPendingTtsMessage(null);
+                }
+                
+                // Set a safety timeout for this chunk
+                const estimatedDuration = (currentChunk.length / 15) * 1000 + 30000;
+                logger.debug(`[TTS] Setting timeout for ${Math.round(estimatedDuration / 1000)}s (${currentChunk.length} chars)`);
+                ttsTimeoutRef.current = setTimeout(() => {
+                    logger.warn(`[TTS] Timeout reached for chunk ${chunkNum}/${totalChunks} - forcing end`);
+                    if (window.speechSynthesis.speaking) {
+                        window.speechSynthesis.cancel();
+                    }
+                    setIsBrowserTTSActive(false);
+                    handleAudioEnd();
+                }, estimatedDuration);
             };
             utterance.onend = () => {
-                setIsBrowserTTSActive(false);
-                handleAudioEnd();
+                // Clear the safety timeout
+                if (ttsTimeoutRef.current) {
+                    clearTimeout(ttsTimeoutRef.current);
+                    ttsTimeoutRef.current = null;
+                }
+                
+                currentChunkIndexRef.current++;
+                const hasMoreChunks = currentChunkIndexRef.current < ttsChunkQueueRef.current.length;
+                
+                if (hasMoreChunks) {
+                    // Play next chunk
+                    const nextChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
+                    logger.info(`[TTS] Playing next chunk ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
+                    
+                    const nextUtterance = new SpeechSynthesisUtterance(nextChunk);
+                    nextUtterance.voice = voice;
+                    nextUtterance.onstart = utterance.onstart;
+                    nextUtterance.onend = utterance.onend;
+                    nextUtterance.onerror = utterance.onerror;
+                    
+                    utteranceRef.current = nextUtterance;
+                    
+                    // Small delay between chunks for smoother transition
+                    setTimeout(() => {
+                        try {
+                            window.speechSynthesis.speak(nextUtterance);
+                        } catch (err) {
+                            logger.error('[TTS] Error speaking next chunk:', err);
+                            setIsBrowserTTSActive(false);
+                            handleAudioEnd();
+                        }
+                    }, 100);
+                } else {
+                    // All chunks complete
+                    logger.info(`[TTS] Finished playing all ${ttsChunkQueueRef.current.length} chunks for message ${nextMsg.id.substring(0, 8)}...`);
+                    ttsChunkQueueRef.current = [];
+                    currentChunkIndexRef.current = 0;
+                    setIsBrowserTTSActive(false);
+                    handleAudioEnd();
+                }
             };
             utterance.onerror = (event) => {
+                // Clear the safety timeout
+                if (ttsTimeoutRef.current) {
+                    clearTimeout(ttsTimeoutRef.current);
+                    ttsTimeoutRef.current = null;
+                }
+                
                 // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
                 // Also ignore 'synthesis-failed' if it follows an interruption (common in Edge)
                 if (event.error === 'canceled' || event.error === 'interrupted') {
-                    logger.debug(`Speech synthesis ${event.error} (expected)`);
+                    logger.debug(`[TTS] Speech synthesis ${event.error} for message ${nextMsg.id.substring(0, 8)}... (expected)`);
                 } else if (event.error === 'synthesis-failed') {
                     // Only show error if this is a genuine failure, not a cascade from interruption
-                    logger.warn('Speech synthesis failed - this may be due to rapid playback attempts');
+                    logger.warn(`[TTS] Speech synthesis failed for message ${nextMsg.id.substring(0, 8)}... - may be due to rapid playback attempts`);
                     // Don't set TTS error for synthesis-failed as it's often a transient issue
                 } else {
-                    logger.error('Speech synthesis error:', event.error);
+                    logger.error(`[TTS] Speech synthesis error for message ${nextMsg.id.substring(0, 8)}...:`, event.error);
                     setTtsError(`Speech synthesis failed: ${event.error}`);
                 }
                 setIsBrowserTTSActive(false);
@@ -752,61 +917,39 @@ export function ChatInterface({
 
             // Store the current utterance reference before speaking
             utteranceRef.current = utterance;
+            
+            // Final safety check before starting speech
+            if (window.speechSynthesis.speaking) {
+                logger.warn('[TTS] speechSynthesis.speaking is true despite guards - this should not happen');
+                // Don't cancel here - let the guards prevent this situation
+                return;
+            }
+            
             try {
-                // Guard: Don't start new speech if already speaking
-                if (window.speechSynthesis.speaking) {
-                    logger.debug('Speech synthesis already speaking, cancelling first');
-                    window.speechSynthesis.cancel();
-                }
-                
-                // Cancel any pending speech
-                window.speechSynthesis.cancel();
-                
-                // Longer delay for Edge browser to properly clean up
-                // Edge needs more time to process cancel before starting new speech
-                setTimeout(() => {
-                    // Double-check we're not already speaking before starting
-                    if (window.speechSynthesis.speaking) {
-                        logger.warn('Speech synthesis still speaking after cancel, forcing cancel');
-                        window.speechSynthesis.cancel();
-                        // Add another small delay after forced cancel
-                        setTimeout(() => {
-                            try {
-                                window.speechSynthesis.speak(utterance);
-                            } catch (speakErr) {
-                                logger.error('Error speaking utterance after forced cancel:', speakErr);
-                                handleAudioEnd();
-                            }
-                        }, 100);
-                    } else {
-                        try {
-                            window.speechSynthesis.speak(utterance);
-                        } catch (speakErr) {
-                            logger.error('Error speaking utterance:', speakErr);
-                            handleAudioEnd();
-                        }
-                    }
-                }, 150); // Increased from 50ms to 150ms for Edge compatibility
+                logger.debug(`[TTS] Calling speechSynthesis.speak() for message ${nextMsg.id.substring(0, 8)}...`);
+                window.speechSynthesis.speak(utterance);
             } catch (err) {
-                logger.error('Error in speech synthesis setup:', err);
+                logger.error('[TTS] Error in speechSynthesis.speak():', err);
                 handleAudioEnd();
             }
 
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
+            logger.info(`[Audio] Starting playback for message ${nextMsg.id.substring(0, 8)}...`);
             audioPlayerRef.current.src = nextMsg.audioUrl;
             audioPlayerRef.current.play()
                 .then(() => {
+                    logger.info(`[Audio] Successfully started playing message ${nextMsg.id.substring(0, 8)}...`);
                     setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
                     setPendingTtsMessage(null); // Clear pending message when playback starts
                 })
                 .catch(err => {
-                    logger.error("Audio playback failed:", err);
+                    logger.error(`[Audio] Playback failed for message ${nextMsg.id.substring(0, 8)}...:`, err);
                     handleAudioEnd();
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, 
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -825,6 +968,16 @@ export function ChatInterface({
         return () => {
             // Cleanup function that runs when component unmounts
             logger.info('ChatInterface: Component unmounting, cleaning up TTS and audio');
+            
+            // Clear any TTS timeout
+            if (ttsTimeoutRef.current) {
+                clearTimeout(ttsTimeoutRef.current);
+                ttsTimeoutRef.current = null;
+            }
+            
+            // Clear chunk queue
+            ttsChunkQueueRef.current = [];
+            currentChunkIndexRef.current = 0;
             
             // Stop HTML5 audio
             if (audioPlayerRef.current) {
