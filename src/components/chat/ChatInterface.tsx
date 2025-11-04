@@ -1012,8 +1012,8 @@ export function ChatInterface({
              <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
-              <AlertDescription className="text-sm break-words whitespace-pre-wrap">{error}</AlertDescription>
-              <div className="mt-4 flex flex-col items-start space-y-3">
+              <AlertDescription className="text-sm break-words whitespace-pre-wrap w-full min-w-0">{error}</AlertDescription>
+              <div className="mt-4 flex flex-col items-start space-y-3 w-full col-span-full">
                   {technicalErrorDetails && (
                       <div className="w-full">
                           <Button 
@@ -1030,7 +1030,7 @@ export function ChatInterface({
                           <div id="error-details-description" className="sr-only">
                               Click to {showErrorDetails ? "hide" : "show"} detailed technical information about the error that occurred.
                           </div>
-                          {showErrorDetails && <pre className="mt-1 text-xs whitespace-pre-wrap break-words overflow-auto max-h-32 rounded-md border bg-muted p-2 font-mono w-full min-w-0">{technicalErrorDetails}</pre>}
+                          {showErrorDetails && <pre className="mt-1 text-xs whitespace-pre-wrap break-words overflow-auto max-h-32 rounded-md border bg-muted p-2 font-mono w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{technicalErrorDetails}</pre>}
                       </div>
                   )}
                   {isStopped && onConversationStopped && (
