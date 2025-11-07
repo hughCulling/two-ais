@@ -170,7 +170,6 @@ export function ChatInterface({
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
-    const ttsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const ttsChunkQueueRef = useRef<string[]>([]);
     const currentChunkIndexRef = useRef<number>(0);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
@@ -235,12 +234,6 @@ export function ChatInterface({
         }
 
         logger.info(`[TTS] Handling audio end for message ${playedMsgId.substring(0, 8)}...`);
-
-        // Clear any TTS timeout
-        if (ttsTimeoutRef.current) {
-            clearTimeout(ttsTimeoutRef.current);
-            ttsTimeoutRef.current = null;
-        }
 
         // Clear chunk queue
         ttsChunkQueueRef.current = [];
@@ -837,26 +830,8 @@ export function ChatInterface({
                     setIsBrowserTTSActive(true);
                     setPendingTtsMessage(null);
                 }
-                
-                // Set a safety timeout for this chunk
-                const estimatedDuration = (currentChunk.length / 15) * 1000 + 30000;
-                logger.debug(`[TTS] Setting timeout for ${Math.round(estimatedDuration / 1000)}s (${currentChunk.length} chars)`);
-                ttsTimeoutRef.current = setTimeout(() => {
-                    logger.warn(`[TTS] Timeout reached for chunk ${chunkNum}/${totalChunks} - forcing end`);
-                    if (window.speechSynthesis.speaking) {
-                        window.speechSynthesis.cancel();
-                    }
-                    setIsBrowserTTSActive(false);
-                    handleAudioEnd();
-                }, estimatedDuration);
             };
             utterance.onend = () => {
-                // Clear the safety timeout
-                if (ttsTimeoutRef.current) {
-                    clearTimeout(ttsTimeoutRef.current);
-                    ttsTimeoutRef.current = null;
-                }
-                
                 currentChunkIndexRef.current++;
                 const hasMoreChunks = currentChunkIndexRef.current < ttsChunkQueueRef.current.length;
                 
@@ -893,12 +868,6 @@ export function ChatInterface({
                 }
             };
             utterance.onerror = (event) => {
-                // Clear the safety timeout
-                if (ttsTimeoutRef.current) {
-                    clearTimeout(ttsTimeoutRef.current);
-                    ttsTimeoutRef.current = null;
-                }
-                
                 // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
                 // Also ignore 'synthesis-failed' if it follows an interruption (common in Edge)
                 if (event.error === 'canceled' || event.error === 'interrupted') {
@@ -968,12 +937,6 @@ export function ChatInterface({
         return () => {
             // Cleanup function that runs when component unmounts
             logger.info('ChatInterface: Component unmounting, cleaning up TTS and audio');
-            
-            // Clear any TTS timeout
-            if (ttsTimeoutRef.current) {
-                clearTimeout(ttsTimeoutRef.current);
-                ttsTimeoutRef.current = null;
-            }
             
             // Clear chunk queue
             ttsChunkQueueRef.current = [];
