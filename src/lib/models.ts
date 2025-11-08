@@ -610,9 +610,10 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     // },
     // === Mistral AI === // I only included models which appeared both on the models page and the pricing page therefore only include the latest versions.
     // Premier Models
+
     {
         id: 'mistral-medium-latest',
-        name: 'Mistral Medium 3',
+        name: 'Mistral Medium 3.1',
         provider: 'Mistral AI',
         contextWindow: 128000,
         pricing: { 
@@ -629,8 +630,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
     {
-        id: 'mistral-large-latest',
-        name: 'Mistral Large',
+        id: 'mistral-large-2411',
+        name: 'Mistral Large 2.1',
         provider: 'Mistral AI',
         contextWindow: 128000,
         pricing: { 
@@ -648,7 +649,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'ministral-8b-latest',
-        name: 'Ministral 8B 24.10',
+        name: 'Ministral 8B',
         provider: 'Mistral AI',
         contextWindow: 128000,
         pricing: { 
@@ -666,7 +667,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'ministral-3b-latest',
-        name: 'Ministral 3B 24.10',
+        name: 'Ministral 3B',
         provider: 'Mistral AI',
         contextWindow: 128000,
         pricing: { 
@@ -993,7 +994,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                 const mistralPremierOrder = [
                     'mistral-medium-latest',
                     'magistral-medium-latest',
-                    'mistral-large-latest',
+                    'mistral-large-2411',
                     'ministral-8b-latest',
                     'ministral-3b-latest'
                 ];
