@@ -25,7 +25,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
-import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database';
+import { getDatabase, ref as rtdbRef, off, onChildAdded, onChildChanged, onChildRemoved } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
 import { getVoiceById, findFallbackBrowserVoice } from '@/lib/tts_models';
 import ReactDOM from 'react-dom';
@@ -605,36 +605,51 @@ export function ChatInterface({
         const messagesPath = `/streamingMessages/${conversationId}`;
         const messagesRef = rtdbRef(rtdb, messagesPath);
         let unsubscribed = false;
-        const handleValue = (snapshot: { val: () => Record<string, Omit<StreamingMessage, 'id'>> | null }) => {
+        
+        // Use onChildAdded and onChildChanged instead of onValue to reduce bandwidth
+        const handleChildAdded = (snapshot: { key: string | null; val: () => Omit<StreamingMessage, 'id'> | null }) => {
             if (unsubscribed) return;
+            const id = snapshot.key;
             const data = snapshot.val();
-            // Only log when there's a meaningful change (new message or status change)
-            if (data) {
-                const messagesArr: StreamingMessage[] = Object.entries(data).map(([id, val]) => ({ id, ...(val as Omit<StreamingMessage, 'id'>) }));
-                const latest = messagesArr.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))[0];
-                if (latest && (latest.status === 'complete' || !streamingMessage || streamingMessage.id !== latest.id)) {
-                    logger.debug("RTDB streaming message:", { id: latest.id, status: latest.status, contentLength: latest.content?.length });
-                }
-            }
-            if (!data) {
-                setStreamingMessage(null);
-                return;
-            }
-            const messagesArr: StreamingMessage[] = Object.entries(data).map(([id, val]) => ({ id, ...(val as Omit<StreamingMessage, 'id'>) }));
-            if (messagesArr.length === 0) {
-                setStreamingMessage(null);
-                return;
-            }
-            messagesArr.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-            const latest = messagesArr.reverse().find(m => m.status === 'streaming' || m.status === 'complete') || null;
-            setStreamingMessage(latest);
+            if (!id || !data) return;
+            
+            const message: StreamingMessage = { id, ...data };
+            logger.debug("RTDB streaming message added:", { id: message.id, status: message.status, contentLength: message.content?.length });
+            setStreamingMessage(message);
         };
-        onValue(messagesRef, handleValue);
+        
+        const handleChildChanged = (snapshot: { key: string | null; val: () => Omit<StreamingMessage, 'id'> | null }) => {
+            if (unsubscribed) return;
+            const id = snapshot.key;
+            const data = snapshot.val();
+            if (!id || !data) return;
+            
+            const message: StreamingMessage = { id, ...data };
+            // Only update if this is the current streaming message or it's complete
+            setStreamingMessage(prev => {
+                if (!prev || prev.id === message.id || message.status === 'complete') {
+                    return message;
+                }
+                return prev;
+            });
+        };
+        
+        const handleChildRemoved = () => {
+            if (unsubscribed) return;
+            setStreamingMessage(null);
+        };
+        
+        onChildAdded(messagesRef, handleChildAdded);
+        onChildChanged(messagesRef, handleChildChanged);
+        onChildRemoved(messagesRef, handleChildRemoved);
+        
         return () => {
             unsubscribed = true;
-            off(messagesRef, 'value', handleValue);
+            off(messagesRef, 'child_added', handleChildAdded);
+            off(messagesRef, 'child_changed', handleChildChanged);
+            off(messagesRef, 'child_removed', handleChildRemoved);
         };
-    }, [conversationId, streamingMessage]);
+    }, [conversationId]);
 
     // --- Merge streaming message with Firestore messages for display ---
     const mergedMessages = React.useMemo(() => {
