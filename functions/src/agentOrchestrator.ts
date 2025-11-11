@@ -194,6 +194,9 @@ export async function triggerAgentResponse(
         const messageId = admin.firestore().collection("dummy").doc().id;
         const rtdbRef = rtdb.ref(`/streamingMessages/${conversationId}/${messageId}`);
         let responseContent = "";
+        let updateCounter = 0;
+        const UPDATE_INTERVAL = 10; // Only update RTDB every 10 tokens to reduce bandwidth
+        
         try {
             await rtdbRef.set({
                 role: agentToRespond,
@@ -209,9 +212,16 @@ export async function triggerAgentResponse(
                 else if (chunk && Array.isArray(chunk.content)) token = chunk.content.map(x => (typeof x === "string" ? x : JSON.stringify(x))).join("");
                 else token = String(chunk);
                 responseContent += token;
-                await rtdbRef.update({ content: responseContent });
+                updateCounter++;
+                
+                // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
+                if (updateCounter >= UPDATE_INTERVAL) {
+                    await rtdbRef.update({ content: responseContent });
+                    updateCounter = 0;
+                }
             }
-            await rtdbRef.update({ status: "complete" });
+            // Final update with complete content
+            await rtdbRef.update({ content: responseContent, status: "complete" });
         } catch (error) {
             logger.error(`LLM streaming failed for ${agentToRespond} (${agentModelId}):`, error);
             await rtdbRef.update({ status: "error", error: error instanceof Error ? error.message : String(error) });
