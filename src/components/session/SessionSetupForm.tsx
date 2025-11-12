@@ -166,21 +166,13 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                     {AVAILABLE_LLMS.map((llm) => {
                         const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
                         return (
-                            <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2">
-                                <div className="flex justify-between items-center w-full text-sm min-w-0">
-                                    <div className="flex items-center space-x-1.5 mr-2 min-w-0 flex-1">
-                                        {supportsLanguage ? (
-                                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                        ) : (
-                                            <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                        )}
-                                        <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{llm.name}</span>
-                                        {llm.status === 'preview' && <span className="ml-1 text-xs text-orange-500">({t?.page_BadgePreview || 'Preview'})</span>}
-                                        {llm.status === 'beta' && <span className="ml-1 text-xs text-blue-500">(Beta)</span>}
-                                        {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-1" />}
-                                        {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0">(No {language.nativeName})</span>}
-                                    </div>
-                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0 truncate max-w-[8rem]" title={
+                            <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
+                                <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
+                                    <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
+                                    {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
+                                    {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
+                                    {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
+                                    <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
                                         llm.pricing.note ?
                                             (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
                                             `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
@@ -190,6 +182,19 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                             `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                         })
                                     </span>
+                                    {supportsLanguage ? (
+                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                    ) : (
+                                        <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                    )}
+                                    {llm.usesReasoningTokens && (
+                                        <Info className="h-3 w-3 text-blue-500 flex-shrink-0" />
+                                    )}
+                                    {llm.requiresOrgVerification && (
+                                        <AlertTriangle className="h-3 w-3 text-yellow-500 flex-shrink-0" />
+                                    )}
+                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
+                                    {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
                                 </div>
                             </SelectItem>
                         );
