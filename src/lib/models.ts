@@ -610,7 +610,25 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     // },
     // === Mistral AI === // I only included models which appeared both on the models page and the pricing page therefore only include the latest versions.
     // Premier Models
-
+    {
+        id: 'magistral-medium-latest',
+        name: 'Magistral Medium 1.2',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { 
+            input: 2.00, 
+            output: 5.00,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
     {
         id: 'mistral-medium-latest',
         name: 'Mistral Medium 3.1',
@@ -648,24 +666,6 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
     {
-        id: 'ministral-8b-latest',
-        name: 'Ministral 8B',
-        provider: 'Mistral AI',
-        contextWindow: 128000,
-        pricing: { 
-            input: 0.10, 
-            output: 0.10,
-            freeTier: {
-                available: true,
-                note: (t) => t.pricing.mistralFreeTierNote
-            }
-        },
-        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
-        apiKeySecretName: 'mistral',
-        status: 'stable',
-        categoryKey: 'modelCategory_MistralAIPremierModels',
-    },
-    {
         id: 'ministral-3b-latest',
         name: 'Ministral 3B',
         provider: 'Mistral AI',
@@ -684,6 +684,43 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         categoryKey: 'modelCategory_MistralAIPremierModels',
     },
     {
+        id: 'ministral-8b-latest',
+        name: 'Ministral 8B',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { 
+            input: 0.10, 
+            output: 0.10,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
+    },
+    {
+        id: 'magistral-small-latest',
+        name: 'Magistral Small 1.2',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { 
+            input: 0.50, 
+            output: 1.50,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        usesReasoningTokens: true,
+        categoryKey: 'modelCategory_MistralAIOpenModels',
+    },
+    {
         id: 'mistral-small-latest',
         name: 'Mistral Small 3.2',
         provider: 'Mistral AI',
@@ -691,6 +728,24 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         pricing: { 
             input: 0.10, 
             output: 0.30,
+            freeTier: {
+                available: true,
+                note: (t) => t.pricing.mistralFreeTierNote
+            }
+        },
+        apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+        apiKeySecretName: 'mistral',
+        status: 'stable',
+        categoryKey: 'modelCategory_MistralAIOpenModels',
+    },
+    {
+        id: 'open-mistral-nemo',
+        name: 'Mistral Nemo 12B',
+        provider: 'Mistral AI',
+        contextWindow: 128000,
+        pricing: { 
+            input: 0.15, 
+            output: 0.15,
             freeTier: {
                 available: true,
                 note: (t) => t.pricing.mistralFreeTierNote
@@ -992,11 +1047,11 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             // Custom sorting for Mistral AI Premier models, follows order in Pricing documentation
             if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIPremierModels) {
                 const mistralPremierOrder = [
-                    'mistral-medium-latest',
                     'magistral-medium-latest',
+                    'mistral-medium-latest',
                     'mistral-large-2411',
+                    'ministral-3b-latest',
                     'ministral-8b-latest',
-                    'ministral-3b-latest'
                 ];
                 byCategory[cat].sort((a, b) => {
                     const idxA = mistralPremierOrder.indexOf(a.id);
@@ -1011,8 +1066,9 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             // Custom sorting for Mistral AI Open models
             if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIOpenModels) {
                 const mistralOpenOrder = [
+                    'magistral-small-latest',
                     'mistral-small-latest',
-                    'magistral-small-latest'
+                    'open-mistral-nemo'
                 ];
                 byCategory[cat].sort((a, b) => {
                     const idxA = mistralOpenOrder.indexOf(a.id);
