@@ -328,7 +328,7 @@ const en = {
         gemini25ProNote: "Pricing varies by input size. Free tier available.",
         gemini25FlashNote: "Pricing varies by media type. Free tier available.",
         gemini25FlashLiteNote: "Most cost-effective option. Free tier available.",
-        mistralFreeTierNote: "Free tier available with rate limits. Requires a Mistral AI account. API requests may be used to train Mistral's models.",
+        mistralFreeTierNote: "Access without paying with the Experiment plan. API requests may be used to train Mistral's models.",
         tts: {
             geminiFlash: {
                 textTokens: "{price} per 1 Million text tokens",
