@@ -369,7 +369,11 @@ const sk = {
         "defaultImagePromptSystemMessage": "Vytvorte výzvu, ktorú zadáte modelu generovania obrázkov na základe tohto otočenia: {turn}",
         "imagePromptSystemMessageHelp": "Táto správa bude odoslaná ako systémová výzva do LLM, ktorá generuje výzvu k obrázku. Použite <code>{'{turn}'}</code> ako zástupný symbol pre správu agenta.",
         "selectImageModel": "Vyberte model obrázka",
-        "selectPromptLLM": "Vyberte LLM pre obrázkovú výzvu"
+        "selectPromptLLM": "Vyberte LLM pre obrázkovú výzvu",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Späť na hlavný obsah",

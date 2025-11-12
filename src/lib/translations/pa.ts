@@ -369,7 +369,11 @@ const pa = {
         "defaultImagePromptSystemMessage": "ਇਸ ਮੋੜ ਦੇ ਆਧਾਰ 'ਤੇ ਚਿੱਤਰ ਜਨਰੇਸ਼ਨ ਮਾਡਲ ਨੂੰ ਦੇਣ ਲਈ ਇੱਕ ਪ੍ਰੋਂਪਟ ਬਣਾਓ: {turn}",
         "imagePromptSystemMessageHelp": "ਇਹ ਸੁਨੇਹਾ ਸਿਸਟਮ ਪ੍ਰੋਂਪਟ ਦੇ ਤੌਰ 'ਤੇ LLM ਨੂੰ ਭੇਜਿਆ ਜਾਵੇਗਾ ਜੋ ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਤਿਆਰ ਕਰਦਾ ਹੈ। ਵਰਤੋਂ <code>{'{turn}'}</code> ਏਜੰਟ ਦੇ ਸੁਨੇਹੇ ਲਈ ਪਲੇਸਹੋਲਡਰ ਵਜੋਂ।",
         "selectImageModel": "ਚਿੱਤਰ ਮਾਡਲ ਚੁਣੋ",
-        "selectPromptLLM": "ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਲਈ LLM ਚੁਣੋ।"
+        "selectPromptLLM": "ਚਿੱਤਰ ਪ੍ਰੋਂਪਟ ਲਈ LLM ਚੁਣੋ।",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "ਮੁੱਖ ਤੇ ਵਾਪਸ ਜਾਓ",

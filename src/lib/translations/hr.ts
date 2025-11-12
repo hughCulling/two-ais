@@ -369,7 +369,11 @@ const hr = {
         "defaultImagePromptSystemMessage": "Napravite prompt za model generiranja slike na temelju ovog zaokreta: {turn}",
         "imagePromptSystemMessageHelp": "Ova poruka bit će poslana kao sistemski upit LLM-u koji generira upit za sliku. Koristite <code>{'{turn}'}</code> kao rezervirano mjesto za poruku agenta.",
         "selectImageModel": "Odaberite model slike",
-        "selectPromptLLM": "Odaberite LLM za upit slike"
+        "selectPromptLLM": "Odaberite LLM za upit slike",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Natrag na glavni sadržaj",

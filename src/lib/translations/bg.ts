@@ -369,7 +369,11 @@ const bg = {
         "defaultImagePromptSystemMessage": "Създайте подкана, която да дадете на модела за генериране на изображения въз основа на този ход: {turn}",
         "imagePromptSystemMessageHelp": "Това съобщение ще бъде изпратено като системен подканен код към LLM, който генерира подканата за изображение. Използвайте <code>{'{turn}'}</code> като заместител за съобщението на агента.",
         "selectImageModel": "Изберете модел на изображението",
-        "selectPromptLLM": "Изберете LLM за подкана за изображение"
+        "selectPromptLLM": "Изберете LLM за подкана за изображение",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Обратно към основното",

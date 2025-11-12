@@ -369,7 +369,11 @@ const fi = {
         "defaultImagePromptSystemMessage": "Luo kuvan luontimallille annettava kehote tämän käännöksen perusteella: {turn}",
         "imagePromptSystemMessageHelp": "Tämä viesti lähetetään järjestelmäkehotteena LLM:lle, joka luo kuvakehotteen. <code>{'{turn}'}</code> agentin viestin paikkamerkkinä.",
         "selectImageModel": "Valitse kuvamalli",
-        "selectPromptLLM": "Valitse LLM kuvakehotteelle"
+        "selectPromptLLM": "Valitse LLM kuvakehotteelle",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Takaisin pääsivulle",

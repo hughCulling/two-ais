@@ -369,7 +369,11 @@ const bn = {
         "defaultImagePromptSystemMessage": "এই টার্নের উপর ভিত্তি করে ইমেজ জেনারেশন মডেলকে দেওয়ার জন্য একটি প্রম্পট তৈরি করুন: {turn}",
         "imagePromptSystemMessageHelp": "এই বার্তাটি সিস্টেম প্রম্পট হিসেবে LLM-এ পাঠানো হবে যা ইমেজ প্রম্পট তৈরি করে। ব্যবহার করুন <code>{'{turn}'}</code> এজেন্টের বার্তার স্থানধারক হিসেবে।",
         "selectImageModel": "ছবির মডেল নির্বাচন করুন",
-        "selectPromptLLM": "ইমেজ প্রম্পটের জন্য LLM নির্বাচন করুন"
+        "selectPromptLLM": "ইমেজ প্রম্পটের জন্য LLM নির্বাচন করুন",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "মূল বিভাগে ফিরে যান",

@@ -369,7 +369,11 @@ const am = {
         "defaultImagePromptSystemMessage": "በዚህ ተራ መሰረት ለምስል ማመንጨት ሞዴል ለመስጠት ጥያቄ ይፍጠሩ፡ {turn}",
         "imagePromptSystemMessageHelp": "ይህ መልእክት የምስል መጠየቂያውን ወደሚያመነጨው ኤልኤልኤም እንደ ሲስተም ጥያቄ ይላካል። ተጠቀም <code>{'{turn}'}</code> ለወኪሉ መልእክት እንደ ቦታ ያዥ።",
         "selectImageModel": "የምስል ሞዴል ምረጥ",
-        "selectPromptLLM": "ለምስል ጥያቄ LLM ን ይምረጡ"
+        "selectPromptLLM": "ለምስል ጥያቄ LLM ን ይምረጡ",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "ወደ ዋናው ተመለስ",

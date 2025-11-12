@@ -369,7 +369,11 @@ const hi = {
         "defaultImagePromptSystemMessage": "इस मोड़ के आधार पर छवि निर्माण मॉडल को देने के लिए एक संकेत बनाएं: {turn}",
         "imagePromptSystemMessageHelp": "यह संदेश सिस्टम प्रॉम्प्ट के रूप में उस LLM को भेजा जाएगा जो इमेज प्रॉम्प्ट जनरेट करता है। उपयोग करें <code>{'{turn}'}</code> एजेंट के संदेश के लिए प्लेसहोल्डर के रूप में।",
         "selectImageModel": "छवि मॉडल चुनें",
-        "selectPromptLLM": "छवि संकेत के लिए LLM का चयन करें"
+        "selectPromptLLM": "छवि संकेत के लिए LLM का चयन करें",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "मुख्य पर वापस जाएँ",

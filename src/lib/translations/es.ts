@@ -369,7 +369,11 @@ const es = {
         "defaultImagePromptSystemMessage": "Crea un mensaje para dárselo al modelo de generación de imágenes en función de este turno: {turn}",
         "imagePromptSystemMessageHelp": "Este mensaje se enviará como aviso del sistema al LLM que genera el aviso de imagen. Usar <code>{'{turn}'}</code> como marcador de posición para el mensaje del agente.",
         "selectImageModel": "Seleccionar modelo de imagen",
-        "selectPromptLLM": "Seleccione LLM para la solicitud de imagen"
+        "selectPromptLLM": "Seleccione LLM para la solicitud de imagen",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Volver a la página principal",

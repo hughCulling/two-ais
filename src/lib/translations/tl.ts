@@ -369,7 +369,11 @@ const tl = {
         "defaultImagePromptSystemMessage": "Gumawa ng prompt para ibigay sa modelo ng pagbuo ng imahe batay sa turn na ito: {turn}",
         "imagePromptSystemMessageHelp": "Ipapadala ang mensaheng ito bilang prompt ng system sa LLM na bubuo ng prompt ng imahe. Gamitin <code>{'{turn}'}</code> bilang isang placeholder para sa mensahe ng ahente.",
         "selectImageModel": "Pumili ng modelo ng larawan",
-        "selectPromptLLM": "Piliin ang LLM para sa prompt ng larawan"
+        "selectPromptLLM": "Piliin ang LLM para sa prompt ng larawan",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Bumalik sa Main",

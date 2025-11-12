@@ -369,7 +369,11 @@ const pl = {
         "defaultImagePromptSystemMessage": "Utwórz monit, który należy przekazać modelowi generowania obrazu na podstawie tego zwrotu: {turn}",
         "imagePromptSystemMessageHelp": "Ta wiadomość zostanie wysłana jako monit systemowy do LLM, który wygeneruje monit obrazu. Użyj <code>{'{turn}'}</code> jako symbol zastępczy wiadomości agenta.",
         "selectImageModel": "Wybierz model obrazu",
-        "selectPromptLLM": "Wybierz LLM dla monitu obrazu"
+        "selectPromptLLM": "Wybierz LLM dla monitu obrazu",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Powrót do strony głównej",

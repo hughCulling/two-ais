@@ -369,7 +369,11 @@ const ja = {
         "defaultImagePromptSystemMessage": "このターンに基づいて画像生成モデルに与えるプロンプトを作成します。 {turn}",
         "imagePromptSystemMessageHelp": "このメッセージは、イメージプロンプトを生成するLLMにシステムプロンプトとして送信されます。 <code>{'{turn}'}</code> エージェントのメッセージのプレースホルダーとして。",
         "selectImageModel": "画像モデルを選択",
-        "selectPromptLLM": "画像プロンプトでLLMを選択"
+        "selectPromptLLM": "画像プロンプトでLLMを選択",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "メインに戻る",

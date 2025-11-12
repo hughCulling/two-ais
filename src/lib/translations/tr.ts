@@ -369,7 +369,11 @@ const tr = {
         "defaultImagePromptSystemMessage": "Bu dönüşe dayanarak görüntü oluşturma modeline verilecek bir istem oluşturun: {turn}",
         "imagePromptSystemMessageHelp": "Bu mesaj, görüntü istemini oluşturan LLM'ye sistem istemi olarak gönderilecektir. <code>{'{turn}'}</code> Temsilcinin mesajı için bir yer tutucu olarak.",
         "selectImageModel": "Görüntü modelini seçin",
-        "selectPromptLLM": "Resim istemi için LLM'yi seçin"
+        "selectPromptLLM": "Resim istemi için LLM'yi seçin",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Ana Sayfaya Dön",

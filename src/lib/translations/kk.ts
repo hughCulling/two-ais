@@ -369,7 +369,11 @@ const kk = {
         "defaultImagePromptSystemMessage": "Осы бұрылысқа негізделген кескінді құру үлгісіне сұрауды жасаңыз: {turn}",
         "imagePromptSystemMessageHelp": "Бұл хабар кескін шақыруын жасайтын LLM-ге жүйелік шақыру ретінде жіберіледі. Қолдану <code>{'{turn}'}</code> агент хабарының толтырғышы ретінде.",
         "selectImageModel": "Кескін үлгісін таңдаңыз",
-        "selectPromptLLM": "Кескін сұрауы үшін LLM таңдаңыз"
+        "selectPromptLLM": "Кескін сұрауы үшін LLM таңдаңыз",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Бастыға оралу",

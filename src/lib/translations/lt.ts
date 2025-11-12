@@ -369,7 +369,11 @@ const lt = {
         "defaultImagePromptSystemMessage": "Sukurkite raginimą, kurį reikia pateikti vaizdų generavimo modeliui, remiantis šiuo posūkiu: {turn}",
         "imagePromptSystemMessageHelp": "Šis pranešimas bus išsiųstas kaip sistemos raginimas LLM, kuris generuoja vaizdo raginimą. <code>{'{turn}„}“</code> kaip agento pranešimo vietos žymeklis.",
         "selectImageModel": "Pasirinkite vaizdo modelį",
-        "selectPromptLLM": "Pasirinkite LLM vaizdo užklausai"
+        "selectPromptLLM": "Pasirinkite LLM vaizdo užklausai",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Grįžti į pagrindinį puslapį",

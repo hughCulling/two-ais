@@ -369,7 +369,11 @@ const mr = {
         "defaultImagePromptSystemMessage": "या वळणावर आधारित इमेज जनरेशन मॉडेलला देण्यासाठी एक प्रॉम्प्ट तयार करा: {turn}",
         "imagePromptSystemMessageHelp": "हा संदेश सिस्टम प्रॉम्प्ट म्हणून एलएलएमला पाठवला जाईल जो इमेज प्रॉम्प्ट जनरेट करतो. वापरा <code>{'{turn}'}</code> एजंटच्या संदेशासाठी प्लेसहोल्डर म्हणून.",
         "selectImageModel": "प्रतिमा मॉडेल निवडा",
-        "selectPromptLLM": "इमेज प्रॉम्प्टसाठी LLM निवडा."
+        "selectPromptLLM": "इमेज प्रॉम्प्टसाठी LLM निवडा.",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "मुख्य कडे परत",
