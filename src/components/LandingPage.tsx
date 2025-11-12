@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 // import Image from 'next/image';
@@ -131,7 +130,6 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ nonce }: LandingPageProps) {
-  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
   const { t, loading } = useTranslation();
