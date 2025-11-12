@@ -249,7 +249,7 @@ const en = {
     modelCategory_Grok3: "Grok 3 models",
     modelCategory_Grok3Mini: "Grok 3 Mini models",
     modelCategory_MistralAIPremierModels: "Frontier models",
-    modelCategory_MistralAIOpenModels: "Open model",
+    modelCategory_MistralAIOpenModels: "Open models",
     modelCategory_Llama4: "Llama 4 models",
     modelCategory_Llama3_3: "Llama 3.3 models",
     modelCategory_Llama3_2: "Llama 3.2 models",
