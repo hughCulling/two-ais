@@ -235,7 +235,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 {t.page_AvailableLLMsTitle}
               </h2>
               <p className="text-xs text-muted-foreground text-center mt-1">
-                {t.page_PricesLastVerifiedOn.replace('{date}', '2025-08-15')}
+                {t.page_PricesLastVerifiedOn.replace('{date}', '2025-11-12')}
               </p>
             </CardHeader>
             <CardContent className="space-y-6">

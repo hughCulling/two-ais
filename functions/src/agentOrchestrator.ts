@@ -2,13 +2,13 @@ import * as admin from "firebase-admin";
 import type { ConversationTTSSettingsBackend } from "./index";
 import { DocumentReference, CollectionReference, FieldValue } from "firebase-admin/firestore";
 import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
-import { ChatOpenAI } from "@langchain/openai";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatXAI } from "@langchain/xai";
-import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
+// import { ChatOpenAI } from "@langchain/openai";
+// import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+// import { ChatAnthropic } from "@langchain/anthropic";
+// import { ChatXAI } from "@langchain/xai";
+// import { ChatTogetherAI } from "@langchain/community/chat_models/togetherai";
 import Together from "together-ai";
-import { ChatDeepSeek } from "@langchain/deepseek";
+// import { ChatDeepSeek } from "@langchain/deepseek";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { getProviderFromId, getFirestoreKeyIdFromProvider, getApiKeyFromSecret, getTTSApiKeyId, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket } from "./index";
@@ -163,24 +163,24 @@ export async function triggerAgentResponse(
         let chatModel: BaseChatModel;
         try {
             const modelName = agentModelId;
-            if (llmProvider === "OpenAI") chatModel = new ChatOpenAI({ apiKey: llmApiKey, modelName: modelName });
-            else if (llmProvider === "Google") chatModel = new ChatGoogleGenerativeAI({ apiKey: llmApiKey, model: modelName });
-            else if (llmProvider === "Anthropic") chatModel = new ChatAnthropic({ apiKey: llmApiKey, modelName: modelName });
-            else if (llmProvider === "xAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName });
-            else if (llmProvider === "TogetherAI") {
-                 chatModel = new ChatTogetherAI({
-                     apiKey: llmApiKey,
-                     modelName: modelName,
-                 });
-            }
-            else if (llmProvider === "DeepSeek") {
-                chatModel = new ChatDeepSeek({
-                    apiKey: llmApiKey,
-                    modelName: modelName,
-                    temperature: 0.7, // Default temperature, can be adjusted
-                });
-            }
-            else if (llmProvider === "Mistral AI") {
+            // if (llmProvider === "OpenAI") chatModel = new ChatOpenAI({ apiKey: llmApiKey, modelName: modelName });
+            // else if (llmProvider === "Google") chatModel = new ChatGoogleGenerativeAI({ apiKey: llmApiKey, model: modelName });
+            // else if (llmProvider === "Anthropic") chatModel = new ChatAnthropic({ apiKey: llmApiKey, modelName: modelName });
+            // else if (llmProvider === "xAI") chatModel = new ChatXAI({ apiKey: llmApiKey, model: modelName });
+            // else if (llmProvider === "TogetherAI") {
+            //      chatModel = new ChatTogetherAI({
+            //          apiKey: llmApiKey,
+            //          modelName: modelName,
+            //      });
+            // }
+            // else if (llmProvider === "DeepSeek") {
+            //     chatModel = new ChatDeepSeek({
+            //         apiKey: llmApiKey,
+            //         modelName: modelName,
+            //         temperature: 0.7, // Default temperature, can be adjusted
+            //     });
+            // }
+            if (llmProvider === "Mistral AI") {
                 chatModel = new ChatMistralAI({
                     apiKey: llmApiKey,
                     modelName: modelName,
@@ -207,17 +207,30 @@ export async function triggerAgentResponse(
             const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
             for await (const chunk of stream) {
                 let token = "";
-                if (typeof chunk === "string") token = chunk;
-                else if (chunk && typeof chunk.content === "string") token = chunk.content;
-                else if (chunk && Array.isArray(chunk.content)) token = chunk.content.map(x => (typeof x === "string" ? x : JSON.stringify(x))).join("");
-                else token = String(chunk);
-                responseContent += token;
-                updateCounter++;
+                if (typeof chunk === "string") {
+                    token = chunk;
+                } else if (chunk && typeof chunk.content === "string") {
+                    token = chunk.content;
+                } else if (chunk && Array.isArray(chunk.content)) {
+                    // Filter out thinking chunks, only keep text chunks
+                    token = chunk.content
+                        .filter((x: unknown) => typeof x === "object" && x !== null && (x as {type?: string}).type !== "thinking")
+                        .map((x: unknown) => (typeof x === "string" ? x : ((x as {text?: string}).text || JSON.stringify(x))))
+                        .join("");
+                } else {
+                    token = String(chunk);
+                }
                 
-                // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
-                if (updateCounter >= UPDATE_INTERVAL) {
-                    await rtdbRef.update({ content: responseContent });
-                    updateCounter = 0;
+                // Only add non-empty tokens
+                if (token) {
+                    responseContent += token;
+                    updateCounter++;
+                    
+                    // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
+                    if (updateCounter >= UPDATE_INTERVAL) {
+                        await rtdbRef.update({ content: responseContent });
+                        updateCounter = 0;
+                    }
                 }
             }
             // Final update with complete content
@@ -465,13 +478,13 @@ export async function triggerAgentResponse(
                     const promptLlmApiKey = await getApiKeyFromSecret(promptLlmSecretVersionName);
                     if (!promptLlmApiKey) throw new Error(`getApiKeyFromSecret returned null for image prompt LLM version ${promptLlmSecretVersionName}`);
                     let promptLlmModel: BaseChatModel;
-                    if (promptLlmProvider === "OpenAI") promptLlmModel = new ChatOpenAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
-                    else if (promptLlmProvider === "Google") promptLlmModel = new ChatGoogleGenerativeAI({ apiKey: promptLlmApiKey, model: promptLlmId });
-                    else if (promptLlmProvider === "Anthropic") promptLlmModel = new ChatAnthropic({ apiKey: promptLlmApiKey, modelName: promptLlmId });
-                    else if (promptLlmProvider === "xAI") promptLlmModel = new ChatXAI({ apiKey: promptLlmApiKey, model: promptLlmId });
-                    else if (promptLlmProvider === "TogetherAI") promptLlmModel = new ChatTogetherAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
-                    else if (promptLlmProvider === "Mistral AI") promptLlmModel = new ChatMistralAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
-                    else if (promptLlmProvider === "DeepSeek") promptLlmModel = new ChatDeepSeek({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    // if (promptLlmProvider === "OpenAI") promptLlmModel = new ChatOpenAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    // else if (promptLlmProvider === "Google") promptLlmModel = new ChatGoogleGenerativeAI({ apiKey: promptLlmApiKey, model: promptLlmId });
+                    // else if (promptLlmProvider === "Anthropic") promptLlmModel = new ChatAnthropic({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    // else if (promptLlmProvider === "xAI") promptLlmModel = new ChatXAI({ apiKey: promptLlmApiKey, model: promptLlmId });
+                    // else if (promptLlmProvider === "TogetherAI") promptLlmModel = new ChatTogetherAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    if (promptLlmProvider === "Mistral AI") promptLlmModel = new ChatMistralAI({ apiKey: promptLlmApiKey, modelName: promptLlmId });
+                    // else if (promptLlmProvider === "DeepSeek") promptLlmModel = new ChatDeepSeek({ apiKey: promptLlmApiKey, modelName: promptLlmId });
                     else throw new Error(`Unsupported provider for image prompt LLM: ${promptLlmProvider}`);
                     // Compose system/user messages
                     const systemMsg = promptSystemMessage.replace("{turn}", responseContent);
