@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 // import Image from 'next/image';
@@ -131,7 +130,6 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ nonce }: LandingPageProps) {
-  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
   const { t, loading } = useTranslation();
@@ -208,16 +206,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               <AlertDescription>
                 <div className="inline">
                   {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[0]}
-                  <a 
-                    href={`/${language.code}/app/settings/api-key`}
-                    className="text-blue-600 hover:underline dark:text-blue-400 font-medium whitespace-nowrap"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(`/${language.code}/app/settings/api-key`);
-                    }}
-                  >
+                  <span className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap">
                     settings/api-key
-                  </a>
+                  </span>
                   {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[1]}
                 </div>
               </AlertDescription>
