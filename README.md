@@ -5,7 +5,7 @@ NVM,
 Google Account,
 Firebase project,
 Register a Firebase web app,
-IDE (Windsurf, Cursor, VSCode, etc.)
+IDE (Kiro, Windsurf, Cursor, VSCode, etc.)
 
 ## Getting Started
 
