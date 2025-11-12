@@ -46,6 +46,39 @@ function isSafariBrowser(): boolean {
     return userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('chromium');
 }
 
+// function isEdgeBrowser(): boolean {
+//     if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+//         return false;
+//     }
+//     const userAgent = navigator.userAgent.toLowerCase();
+//     return userAgent.includes('edg/') || userAgent.includes('edge/');
+// }
+
+function isChromeBrowser(): boolean {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return false;
+    }
+    const userAgent = navigator.userAgent.toLowerCase();
+    // Chrome detection: has 'chrome' but not 'edg' (Edge) and not 'opr' (Opera)
+    return userAgent.includes('chrome') && !userAgent.includes('edg') && !userAgent.includes('opr');
+}
+
+function isFirefoxBrowser(): boolean {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return false;
+    }
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes('firefox');
+}
+
+function isOperaBrowser(): boolean {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return false;
+    }
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes('opr/') || userAgent.includes('opera/');
+}
+
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';
 
@@ -422,6 +455,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [statusError, setStatusError] = useState<string | null>(null);
     const [ttsEnabled, setTtsEnabled] = useState<boolean>(true);
     const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
+    const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
 
     // --- Image Generation State ---
@@ -686,11 +720,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     }, [agentBTTSSettings, updateVoicesForElevenLabsModel]);
 
-    // Check if Safari is being used with browser TTS
+    // Check browser type and show appropriate warnings for browser TTS
     useEffect(() => {
         const isBrowserTTSSelected = agentATTSSettings.provider === 'browser' || agentBTTSSettings.provider === 'browser';
         const isSafari = isSafariBrowser();
+        // const isEdge = isEdgeBrowser();
+        const isChrome = isChromeBrowser();
+        const isFirefox = isFirefoxBrowser();
+        const isOpera = isOperaBrowser();
+        
+        // Show Safari warning if using Safari with browser TTS
         setShowSafariWarning(isBrowserTTSSelected && isSafari);
+        
+        // Show Edge recommendation if using Chrome/Firefox/Opera with browser TTS
+        setShowEdgeRecommendation(isBrowserTTSSelected && (isChrome || isFirefox || isOpera));
     }, [agentATTSSettings.provider, agentBTTSSettings.provider]);
 
     const handleStartClick = () => {
@@ -1131,11 +1174,29 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </div>
                                 <div className="ml-3">
                                     <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                                        Limited Voice Selection in Safari
+                                        {t?.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
                                     </p>
                                     <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                                        Safari shows fewer voices than other browsers.
-                                        For the best voice selection with Browser TTS, please use Chrome, Firefox, Edge, or Opera.
+                                        {t?.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Edge Recommendation for Chrome/Firefox/Opera */}
+                    {ttsEnabled && showEdgeRecommendation && (
+                        <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <Info className="h-5 w-5 text-blue-400" />
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                                        {t?.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
+                                    </p>
+                                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                                        {t?.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
                                     </p>
                                 </div>
                             </div>

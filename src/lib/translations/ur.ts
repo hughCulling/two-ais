@@ -369,7 +369,11 @@ const ur = {
         "defaultImagePromptSystemMessage": "اس موڑ کی بنیاد پر امیج جنریشن ماڈل کو دینے کے لیے ایک پرامپٹ بنائیں: {turn}",
         "imagePromptSystemMessageHelp": "یہ پیغام LLM کو سسٹم پرامپٹ کے طور پر بھیجا جائے گا جو امیج پرامپٹ تیار کرتا ہے۔ استعمال کریں۔ <code>{'{turn}'}</code> ایجنٹ کے پیغام کے پلیس ہولڈر کے طور پر۔",
         "selectImageModel": "تصویری ماڈل منتخب کریں۔",
-        "selectPromptLLM": "امیج پرامپٹ کے لیے ایل ایل ایم منتخب کریں۔"
+        "selectPromptLLM": "امیج پرامپٹ کے لیے ایل ایل ایم منتخب کریں۔",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "واپس مین پر",

@@ -369,7 +369,11 @@ const vi = {
         "defaultImagePromptSystemMessage": "Tạo lời nhắc để đưa cho mô hình tạo hình ảnh dựa trên lượt này: {turn}",
         "imagePromptSystemMessageHelp": "Thông báo này sẽ được gửi dưới dạng lời nhắc hệ thống đến LLM tạo lời nhắc hình ảnh. Sử dụng <code>{'{turn}'}</code> như một chỗ giữ chỗ cho tin nhắn của tác nhân.",
         "selectImageModel": "Chọn mô hình hình ảnh",
-        "selectPromptLLM": "Chọn LLM cho lời nhắc hình ảnh"
+        "selectPromptLLM": "Chọn LLM cho lời nhắc hình ảnh",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Quay lại trang chính",

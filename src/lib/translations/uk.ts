@@ -369,7 +369,11 @@ const uk = {
         "defaultImagePromptSystemMessage": "Створіть запит для моделі генерації зображень на основі цього повороту: {turn}",
         "imagePromptSystemMessageHelp": "Це повідомлення буде надіслано як системний запит до LLM, який генерує запит зображення. Використовуйте <code>{'{turn}'}</code> як заповнювач для повідомлення агента.",
         "selectImageModel": "Виберіть модель зображення",
-        "selectPromptLLM": "Виберіть LLM для підказки зображення"
+        "selectPromptLLM": "Виберіть LLM для підказки зображення",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Назад до головного",

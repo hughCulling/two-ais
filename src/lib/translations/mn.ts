@@ -369,7 +369,11 @@ const mn = {
         "defaultImagePromptSystemMessage": "Энэ эргэлт дээр үндэслэн зураг үүсгэх загварт өгөх сануулгыг үүсгэ: {turn}",
         "imagePromptSystemMessageHelp": "Энэ мессежийг зургийн сануулга үүсгэдэг LLM-д системийн сануулга болгон илгээх болно. Ашиглах <code>{'{turn}'}</code> төлөөлөгчийн мессежийн орлуулагч болгон.",
         "selectImageModel": "Зургийн загварыг сонгоно уу",
-        "selectPromptLLM": "Зургийн сануулга авахын тулд LLM сонгоно уу"
+        "selectPromptLLM": "Зургийн сануулга авахын тулд LLM сонгоно уу",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Үндсэн рүү буцах",

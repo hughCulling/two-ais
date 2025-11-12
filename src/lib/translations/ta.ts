@@ -369,7 +369,11 @@ const ta = {
         "defaultImagePromptSystemMessage": "இந்த திருப்பத்தின் அடிப்படையில் பட உருவாக்க மாதிரிக்கு வழங்க ஒரு தூண்டுதலை உருவாக்கவும்: {turn}",
         "imagePromptSystemMessageHelp": "இந்தச் செய்தி, பட வரியில் உருவாக்கும் LLM-க்கு கணினி வரியில் அனுப்பப்படும். பயன்படுத்தவும் <code>{'{turn}'}</code> முகவரின் செய்திக்கான ஒதுக்கிடமாக.",
         "selectImageModel": "பட மாதிரியைத் தேர்ந்தெடுக்கவும்",
-        "selectPromptLLM": "படக் குறிப்பிற்கு LLM ஐத் தேர்ந்தெடுக்கவும்."
+        "selectPromptLLM": "படக் குறிப்பிற்கு LLM ஐத் தேர்ந்தெடுக்கவும்.",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "முதன்மைக்குத் திரும்பு",

@@ -369,7 +369,11 @@ const th = {
         "defaultImagePromptSystemMessage": "สร้างคำเตือนเพื่อส่งไปยังโมเดลการสร้างภาพตามเทิร์นนี้: {turn}",
         "imagePromptSystemMessageHelp": "ข้อความนี้จะถูกส่งเป็นข้อความแจ้งเตือนของระบบไปยัง LLM ที่สร้างข้อความแจ้งเตือนภาพ ใช้ <code>-{turn}-</code> เป็นตัวแทนสำหรับข้อความของตัวแทน",
         "selectImageModel": "เลือกแบบจำลองภาพ",
-        "selectPromptLLM": "เลือก LLM สำหรับคำแนะนำภาพ"
+        "selectPromptLLM": "เลือก LLM สำหรับคำแนะนำภาพ",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "กลับสู่หน้าหลัก",

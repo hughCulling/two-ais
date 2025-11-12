@@ -369,7 +369,11 @@ const fa = {
         "defaultImagePromptSystemMessage": "بر اساس این نوبت، یک اعلان برای ارائه به مدل تولید تصویر ایجاد کنید: {turn}",
         "imagePromptSystemMessageHelp": "این پیام به عنوان پیام سیستم به LLM که پیام تصویر را تولید می‌کند، ارسال خواهد شد. استفاده کنید <code>{'{turn}'}</code> به عنوان یک نگهدارنده برای پیام عامل.",
         "selectImageModel": "مدل تصویر را انتخاب کنید",
-        "selectPromptLLM": "برای دریافت تصویر، LLM را انتخاب کنید"
+        "selectPromptLLM": "برای دریافت تصویر، LLM را انتخاب کنید",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "بازگشت به صفحه اصلی",

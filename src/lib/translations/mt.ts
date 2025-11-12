@@ -369,7 +369,11 @@ const mt = {
         "defaultImagePromptSystemMessage": "Oħloq prompt biex tagħtih lill-mudell tal-ġenerazzjoni tal-immaġni bbażat fuq din id-dawra: {turn}",
         "imagePromptSystemMessageHelp": "Dan il-messaġġ se jintbagħat bħala l-pront tas-sistema lill-LLM li jiġġenera l-pront tal-immaġni. Uża <code>{'{turn}'}</code> bħala placeholder għall-messaġġ tal-aġent.",
         "selectImageModel": "Agħżel mudell tal-immaġni",
-        "selectPromptLLM": "Agħżel LLM għall-prompt tal-immaġni"
+        "selectPromptLLM": "Agħżel LLM għall-prompt tal-immaġni",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Lura għall-Prinċipali",

@@ -369,7 +369,11 @@ const el = {
         "defaultImagePromptSystemMessage": "Δημιουργήστε μια προτροπή για να την δώσετε στο μοντέλο δημιουργίας εικόνων με βάση αυτόν τον γύρο: {turn}",
         "imagePromptSystemMessageHelp": "Αυτό το μήνυμα θα σταλεί ως προτροπή συστήματος στο LLM που δημιουργεί την προτροπή εικόνας. Χρησιμοποιήστε <code>{'{turn}'}</code> ως σύμβολο κράτησης θέσης για το μήνυμα του πράκτορα.",
         "selectImageModel": "Επιλογή μοντέλου εικόνας",
-        "selectPromptLLM": "Επιλέξτε LLM για προτροπή εικόνας"
+        "selectPromptLLM": "Επιλέξτε LLM για προτροπή εικόνας",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Επιστροφή στο κύριο μέρος",

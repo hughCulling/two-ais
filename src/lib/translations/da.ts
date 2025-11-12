@@ -369,7 +369,11 @@ const da = {
         "defaultImagePromptSystemMessage": "Opret en prompt, der skal gives til billedgenereringsmodellen baseret på denne tur: {turn}",
         "imagePromptSystemMessageHelp": "Denne besked sendes som systemprompt til den LLM, der genererer billedprompten. <code>{'{turn}'}</code> som en pladsholder for agentens besked.",
         "selectImageModel": "Vælg billedmodel",
-        "selectPromptLLM": "Vælg LLM til billedprompt"
+        "selectPromptLLM": "Vælg LLM til billedprompt",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Tilbage til hovedindholdet",

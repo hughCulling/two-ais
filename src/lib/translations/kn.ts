@@ -369,7 +369,11 @@ const kn = {
         "defaultImagePromptSystemMessage": "ಈ ತಿರುವಿನ ಆಧಾರದ ಮೇಲೆ ಚಿತ್ರ ರಚನೆ ಮಾದರಿಗೆ ನೀಡಲು ಪ್ರಾಂಪ್ಟ್ ರಚಿಸಿ: {turn}",
         "imagePromptSystemMessageHelp": "ಈ ಸಂದೇಶವನ್ನು ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ಉತ್ಪಾದಿಸುವ LLM ಗೆ ಸಿಸ್ಟಮ್ ಪ್ರಾಂಪ್ಟ್ ಆಗಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಬಳಸಿ <code>{'{turn}'}</code> ಏಜೆಂಟ್ ಸಂದೇಶಕ್ಕೆ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಆಗಿ.",
         "selectImageModel": "ಚಿತ್ರ ಮಾದರಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-        "selectPromptLLM": "ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್‌ಗಾಗಿ LLM ಆಯ್ಕೆಮಾಡಿ."
+        "selectPromptLLM": "ಇಮೇಜ್ ಪ್ರಾಂಪ್ಟ್‌ಗಾಗಿ LLM ಆಯ್ಕೆಮಾಡಿ.",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "ಮುಖ್ಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",

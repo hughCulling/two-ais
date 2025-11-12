@@ -369,7 +369,11 @@ const lv = {
         "defaultImagePromptSystemMessage": "Izveidojiet uzvedni, ko sniegt attēlu ģenerēšanas modelim, pamatojoties uz šo pagriezienu: {turn}",
         "imagePromptSystemMessageHelp": "Šis ziņojums tiks nosūtīts kā sistēmas uzvedne LLM, kas ģenerē attēla uzvedni. <code>{'{turn}}</code> kā aģenta ziņojuma aizvietotāju.",
         "selectImageModel": "Atlasiet attēla modeli",
-        "selectPromptLLM": "Attēla uzvednei atlasiet LLM"
+        "selectPromptLLM": "Attēla uzvednei atlasiet LLM",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Atpakaļ uz galveno",

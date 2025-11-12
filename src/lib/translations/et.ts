@@ -369,7 +369,11 @@ const et = {
         "defaultImagePromptSystemMessage": "Loo pildi genereerimise mudelile antud käsk selle pöörde põhjal: {turn}",
         "imagePromptSystemMessageHelp": "See teade saadetakse süsteemiviibana pildiviiba genereerivale LLM-ile. Kasutage <code>{'{turn}'}</code> agendi sõnumi kohatäitena.",
         "selectImageModel": "Valige pildimudel",
-        "selectPromptLLM": "Valige pildiviiba jaoks LLM"
+        "selectPromptLLM": "Valige pildiviiba jaoks LLM",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Tagasi põhisisu juurde",

@@ -369,7 +369,11 @@ const nl = {
         "defaultImagePromptSystemMessage": "Maak een prompt om aan het model voor het genereren van afbeeldingen te geven op basis van deze beurt: {turn}",
         "imagePromptSystemMessageHelp": "Dit bericht wordt verzonden als systeemprompt naar de LLM die de afbeeldingprompt genereert. Gebruik <code>{'{turn}'}</code> als tijdelijke aanduiding voor het bericht van de agent.",
         "selectImageModel": "Selecteer afbeeldingmodel",
-        "selectPromptLLM": "Selecteer LLM voor afbeeldingsprompt"
+        "selectPromptLLM": "Selecteer LLM voor afbeeldingsprompt",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Terug naar hoofdpagina",

@@ -369,7 +369,11 @@ const ru = {
         "defaultImagePromptSystemMessage": "Создайте подсказку для модели генерации изображения на основе этого хода: {turn}",
         "imagePromptSystemMessageHelp": "Это сообщение будет отправлено в качестве системного запроса LLM, который сгенерирует запрос на изображение. Используйте <code>{'{turn}'}</code> в качестве заполнителя для сообщения агента.",
         "selectImageModel": "Выберите модель изображения",
-        "selectPromptLLM": "Выберите LLM для запроса изображения"
+        "selectPromptLLM": "Выберите LLM для запроса изображения",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Вернуться на главную",

@@ -369,7 +369,11 @@ const iw = {
         "defaultImagePromptSystemMessage": "צור הנחיה שתוענק למודל יצירת התמונה בהתבסס על תור זה: {turn}",
         "imagePromptSystemMessageHelp": "הודעה זו תישלח כהנחיית מערכת ל-LLM שמייצר את הנחיית התמונה. <code>{'{turn}'}</code> כמציין מיקום עבור הודעת הסוכן.",
         "selectImageModel": "בחר מודל תמונה",
-        "selectPromptLLM": "בחר LLM עבור הנחיית תמונה"
+        "selectPromptLLM": "בחר LLM עבור הנחיית תמונה",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "חזרה לדף הראשי",

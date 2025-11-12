@@ -369,7 +369,11 @@ const te = {
         "defaultImagePromptSystemMessage": "ఈ మలుపు ఆధారంగా ఇమేజ్ జనరేషన్ మోడల్‌కు ఇవ్వడానికి ఒక ప్రాంప్ట్‌ను సృష్టించండి: {turn}",
         "imagePromptSystemMessageHelp": "ఈ సందేశం ఇమేజ్ ప్రాంప్ట్‌ను ఉత్పత్తి చేసే LLMకి సిస్టమ్ ప్రాంప్ట్‌గా పంపబడుతుంది. ఉపయోగించండి <code>{'{turn}'}</code> ఏజెంట్ సందేశానికి ప్లేస్‌హోల్డర్‌గా.",
         "selectImageModel": "ఇమేజ్ మోడల్‌ను ఎంచుకోండి",
-        "selectPromptLLM": "ఇమేజ్ ప్రాంప్ట్ కోసం LLM ని ఎంచుకోండి."
+        "selectPromptLLM": "ఇమేజ్ ప్రాంప్ట్ కోసం LLM ని ఎంచుకోండి.",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "ప్రధానానికి తిరిగి వెళ్ళు",

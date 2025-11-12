@@ -369,7 +369,11 @@ const no = {
         "defaultImagePromptSystemMessage": "Lag en ledetekst som skal gis til bildegenereringsmodellen basert på denne runden: {turn}",
         "imagePromptSystemMessageHelp": "Denne meldingen sendes som systemledetekst til LLM-en som genererer bildeledeteksten. <code>{'{turn}'}</code> som en plassholder for agentens melding.",
         "selectImageModel": "Velg bildemodell",
-        "selectPromptLLM": "Velg LLM for bildeprompt"
+        "selectPromptLLM": "Velg LLM for bildeprompt",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Tilbake til hovedinnholdet",

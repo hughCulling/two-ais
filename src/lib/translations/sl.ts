@@ -369,7 +369,11 @@ const sl = {
         "defaultImagePromptSystemMessage": "Na podlagi tega obrata ustvarite poziv, ki ga boste dali modelu za generiranje slik: {turn}",
         "imagePromptSystemMessageHelp": "To sporočilo bo poslano kot sistemski poziv LLM-ju, ki ustvari slikovni poziv. Uporabite <code>{'{turn}'}</code> kot nadomestno besedilo za sporočilo agenta.",
         "selectImageModel": "Izberite model slike",
-        "selectPromptLLM": "Izberite LLM za slikovni poziv"
+        "selectPromptLLM": "Izberite LLM za slikovni poziv",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Nazaj na glavno stran",

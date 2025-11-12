@@ -369,7 +369,11 @@ const so = {
         "defaultImagePromptSystemMessage": "Samee degdeg ah si aad u siiso qaabka jiilka sawirka oo ku salaysan leexashadan: {turn}",
         "imagePromptSystemMessageHelp": "Fariintan waxaa loo diri doonaa iyadoo nidaamku soo dedejin doono LLM kaas oo soo saara sawirka degdega ah. Isticmaal <code>{'{turn}'}</code> meel haye ahaan fariinta wakiilka.",
         "selectImageModel": "Dooro qaabka sawirka",
-        "selectPromptLLM": "Dooro LLM si aad sawir uga hesho"
+        "selectPromptLLM": "Dooro LLM si aad sawir uga hesho",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Ku laabo Main",

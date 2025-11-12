@@ -369,7 +369,11 @@ const zh = {
         "defaultImagePromptSystemMessage": "根据此回合创建一个提示给图像生成模型： {turn}",
         "imagePromptSystemMessageHelp": "此消息将作为系统提示符发送到生成图像提示符的 LLM。使用 <code>{'{turn}'}</code> 作为代理消息的占位符。",
         "selectImageModel": "选择图像模型",
-        "selectPromptLLM": "选择 LLM 作为图像提示"
+        "selectPromptLLM": "选择 LLM 作为图像提示",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "返回主页",

@@ -369,7 +369,11 @@ const ko = {
         "defaultImagePromptSystemMessage": "이 턴을 기반으로 이미지 생성 모델에 제공할 프롬프트를 만듭니다. {turn}",
         "imagePromptSystemMessageHelp": "이 메시지는 이미지 프롬프트를 생성하는 LLM에 시스템 프롬프트로 전송됩니다. 사용 <code>{'{turn}'}</code> 에이전트의 메시지를 위한 자리 표시자로 사용됨.",
         "selectImageModel": "이미지 모델 선택",
-        "selectPromptLLM": "이미지 프롬프트에 대해 LLM을 선택하세요"
+        "selectPromptLLM": "이미지 프롬프트에 대해 LLM을 선택하세요",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "메인으로 돌아가기",

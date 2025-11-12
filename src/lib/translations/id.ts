@@ -369,7 +369,11 @@ const id = {
         "defaultImagePromptSystemMessage": "Buat perintah untuk diberikan ke model pembangkitan gambar berdasarkan giliran ini: {turn}",
         "imagePromptSystemMessageHelp": "Pesan ini akan dikirim sebagai perintah sistem ke LLM yang menghasilkan perintah gambar. Gunakan <code>{'{turn}'}</code> sebagai tempat penampung pesan agen.",
         "selectImageModel": "Pilih model gambar",
-        "selectPromptLLM": "Pilih LLM untuk perintah gambar"
+        "selectPromptLLM": "Pilih LLM untuk perintah gambar",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Kembali ke Utama",

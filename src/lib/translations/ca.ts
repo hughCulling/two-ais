@@ -369,7 +369,11 @@ const ca = {
         "defaultImagePromptSystemMessage": "Crea una indicació per donar al model de generació d'imatges basada en aquest torn: {turn}",
         "imagePromptSystemMessageHelp": "Aquest missatge s'enviarà com a indicador del sistema a l'LLM que genera l'indicador d'imatge. Utilitzeu <code>{'{turn}'}</code> com a marcador de posició per al missatge de l'agent.",
         "selectImageModel": "Selecciona el model d'imatge",
-        "selectPromptLLM": "Seleccioneu LLM per a la sol·licitud d'imatge"
+        "selectPromptLLM": "Seleccioneu LLM per a la sol·licitud d'imatge",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Torna a la pàgina principal",

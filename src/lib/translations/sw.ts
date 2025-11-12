@@ -369,7 +369,11 @@ const sw = {
         "defaultImagePromptSystemMessage": "Unda kidokezo cha kutoa mfano wa kutengeneza picha kulingana na zamu hii: {turn}",
         "imagePromptSystemMessageHelp": "Ujumbe huu utatumwa kama kidokezo cha mfumo kwa LLM inayotoa kidokezo cha picha. Tumia <code>{'{turn}'}</code> kama kishikilia nafasi cha ujumbe wa wakala.",
         "selectImageModel": "Chagua mfano wa picha",
-        "selectPromptLLM": "Chagua LLM kwa haraka ya picha"
+        "selectPromptLLM": "Chagua LLM kwa haraka ya picha",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Rudi kwa Kuu",

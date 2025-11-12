@@ -231,35 +231,35 @@ export default function HistoryPage() {
                                                         .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
                                                     }
                                                 </CardTitle>
-                                                <CardDescription className="flex flex-col space-y-1">
+                                                <CardDescription className="flex flex-col space-y-1 overflow-hidden">
                                                     <span>
                                                         {t.history.conversationDescription
                                                             .replace('{date}', formattedDate)
                                                             .replace('{language}', convo.language.toUpperCase())
                                                         }
                                                     </span>
-                                                    <div className="flex flex-col gap-1 mt-1">
+                                                    <div className="flex flex-col gap-1 mt-1 overflow-hidden">
                                                         {convo.ttsSettings?.enabled && (
-                                                            <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                            <div className="flex items-center text-xs text-muted-foreground overflow-hidden">
                                                                 <Volume2 className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                {t.history.ttsEnabled || 'TTS'}
+                                                                <span className="flex-shrink-0">{t.history.ttsEnabled || 'TTS'}</span>
                                                                 {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
-                                                                    <span className="ml-1 truncate">
+                                                                    <span className="ml-1 truncate overflow-hidden">
                                                                         ({getVoiceName(convo.ttsSettings.agentA.provider, convo.ttsSettings.agentA.voice)} / {getVoiceName(convo.ttsSettings.agentB.provider, convo.ttsSettings.agentB.voice)})
                                                                     </span>
                                                                 )}
-                                                            </span>
+                                                            </div>
                                                         )}
                                                         {convo.imageGenSettings?.enabled && (
-                                                            <span className="inline-flex items-center text-xs text-muted-foreground">
+                                                            <div className="flex items-center text-xs text-muted-foreground overflow-hidden">
                                                                 <ImageIcon className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                {t.history.imageGenerationEnabled || 'Image generation'}
+                                                                <span className="flex-shrink-0">{t.history.imageGenerationEnabled || 'Image generation'}</span>
                                                                 {convo.imageGenSettings?.model && (
-                                                                    <span className="ml-1 truncate">
+                                                                    <span className="ml-1 truncate overflow-hidden">
                                                                         ({getImageModelName(convo.imageGenSettings.model)})
                                                                     </span>
                                                                 )}
-                                                            </span>
+                                                            </div>
                                                         )}
                                                     </div>
                                                     {convo.initialSystemPrompt && (

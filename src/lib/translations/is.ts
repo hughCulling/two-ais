@@ -369,7 +369,11 @@ const is = {
         "defaultImagePromptSystemMessage": "Búðu til fyrirmæli til að gefa myndagerðarlíkaninu byggt á þessari beygju: {turn}",
         "imagePromptSystemMessageHelp": "Þessi skilaboð verða send sem kerfisleiðbeining til LLM-kerfisins sem býr til myndleiðbeininguna. <code>{'{turn}'}</code> sem staðgengill fyrir skilaboð umboðsmannsins.",
         "selectImageModel": "Veldu myndlíkan",
-        "selectPromptLLM": "Veldu LLM fyrir myndafyrirmæli"
+        "selectPromptLLM": "Veldu LLM fyrir myndafyrirmæli",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "Til baka í aðalinnganginn",

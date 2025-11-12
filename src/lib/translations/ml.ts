@@ -369,7 +369,11 @@ const ml = {
         "defaultImagePromptSystemMessage": "ഈ ടേണിനെ അടിസ്ഥാനമാക്കി ഇമേജ് ജനറേഷൻ മോഡലിന് നൽകാൻ ഒരു പ്രോംപ്റ്റ് സൃഷ്ടിക്കുക: {turn}",
         "imagePromptSystemMessageHelp": "ഇമേജ് പ്രോംപ്റ്റ് സൃഷ്ടിക്കുന്ന LLM-ലേക്ക് സിസ്റ്റം പ്രോംപ്റ്റായി ഈ സന്ദേശം അയയ്ക്കപ്പെടും. ഉപയോഗിക്കുക <code>{'{turn}'}</code> ഏജന്റിന്റെ സന്ദേശത്തിനുള്ള ഒരു പ്ലെയ്‌സ്‌ഹോൾഡറായി.",
         "selectImageModel": "ഇമേജ് മോഡൽ തിരഞ്ഞെടുക്കുക",
-        "selectPromptLLM": "ഇമേജ് പ്രോംപ്റ്റിനായി LLM തിരഞ്ഞെടുക്കുക."
+        "selectPromptLLM": "ഇമേജ് പ്രോംപ്റ്റിനായി LLM തിരഞ്ഞെടുക്കുക.",
+        "safariWarningTitle": "Limited Voice Selection in Safari",
+        "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
+        "edgeRecommendationTitle": "Best Voice Selection Available",
+        "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices."
     },
     "history": {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",
