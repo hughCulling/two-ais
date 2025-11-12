@@ -5,7 +5,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2} from 'lucide-react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
