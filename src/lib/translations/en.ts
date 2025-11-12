@@ -92,9 +92,9 @@ const en = {
         },
         language: {
             title: 'Language',
-            description: 'Choose your preferred language for the interface',
+            description: 'Here, you can choose your preferred language for the interface',
             conversationLanguage: 'Conversation Language',
-            conversationLanguageDescription: 'The language used for AI conversations will match your interface language',
+            conversationLanguageDescription: 'The language used for AI conversations will match the language in your initial system prompt.',
             supportedLanguages: 'Supported Languages',
             languageSupportInformation: 'Language Support Information',
             aiAgentsLanguageDescription: 'The conversation between AI agents will be conducted in your selected language.',

@@ -49,18 +49,6 @@ export default function LanguageSettingsPage() {
                         <LanguageSelector showIcon={true} className="w-full" />
                     </div>
 
-                    <div className="rounded-lg bg-muted p-4">
-                        <div className="flex items-start space-x-2">
-                            <AlertCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div className="space-y-1 text-sm">
-                                <p className="font-medium">{t.settings.language.languageSupportInformation}</p>
-                                <p className="text-muted-foreground">
-                                    {t.settings.language.aiAgentsLanguageDescription}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div className="space-y-2">
                         <h3 className="text-sm font-medium">{t.settings.language.supportedLanguages}</h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
