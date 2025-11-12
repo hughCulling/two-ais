@@ -109,6 +109,10 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           href={`${baseUrl}/${lang}`} 
         />
         {alternates}
+        {/* Favicon declarations for better Bing compatibility */}
+        <link rel="icon" type="image/png" href="/icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon.png" />
         <meta name="description" content={description} />
         <script
           type="application/ld+json"
