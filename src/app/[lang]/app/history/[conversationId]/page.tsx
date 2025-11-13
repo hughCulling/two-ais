@@ -20,6 +20,7 @@ import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi,
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
+import { removeEmojis } from '@/lib/utils';
 import Image from 'next/image';
 
 // Function to get the appropriate date-fns locale based on language code
@@ -328,7 +329,7 @@ export default function ChatHistoryViewerPage() {
                 
                 if (ttsConfig?.provider === 'browser') {
                     // Use the same markdown removal as in ChatInterface
-                    const cleanedContent = removeMarkdown(msg.content);
+                    const cleanedContent = removeEmojis(removeMarkdown(msg.content));
                     const utterance = new SpeechSynthesisUtterance(cleanedContent);
                     utteranceRef.current = utterance;
                     
