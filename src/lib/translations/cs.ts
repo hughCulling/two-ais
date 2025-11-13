@@ -428,6 +428,12 @@ const cs = {
             },
             "playing": "Přehrávání zvuku...",
             "paused": "Zvuk pozastaven"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

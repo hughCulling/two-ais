@@ -428,6 +428,12 @@ const pa = {
             },
             "playing": "ਆਡੀਓ ਚੱਲ ਰਿਹਾ ਹੈ...",
             "paused": "ਆਡੀਓ ਰੋਕਿਆ ਗਿਆ"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

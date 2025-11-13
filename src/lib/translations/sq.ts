@@ -428,6 +428,12 @@ const sq = {
             },
             "playing": "Duke luajtur audio...",
             "paused": "Audio u ndërpre"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

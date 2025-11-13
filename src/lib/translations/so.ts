@@ -428,6 +428,12 @@ const so = {
             },
             "playing": "Daaraya Maqalka...",
             "paused": "Maqalka waa la hakiyay"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

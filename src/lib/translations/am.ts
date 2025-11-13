@@ -428,6 +428,12 @@ const am = {
             },
             "playing": "ኦዲዮን በማጫወት ላይ...",
             "paused": "ኦዲዮ ባለበት ቆሟል"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

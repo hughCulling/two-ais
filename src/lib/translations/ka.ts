@@ -428,6 +428,12 @@ const ka = {
             },
             "playing": "აუდიოს დაკვრა...",
             "paused": "აუდიო დაპაუზებულია"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

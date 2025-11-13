@@ -428,6 +428,12 @@ const hi = {
             },
             "playing": "ऑडियो चलाया जा रहा है...",
             "paused": "ऑडियो रोका गया"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

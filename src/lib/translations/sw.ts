@@ -428,6 +428,12 @@ const sw = {
             },
             "playing": "Inacheza Sauti...",
             "paused": "Sauti Imesitishwa"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

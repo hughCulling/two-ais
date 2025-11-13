@@ -428,6 +428,12 @@ const mt = {
             },
             "playing": "Qed jindaqq l-awdjo...",
             "paused": "Awdjo Pawżat"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

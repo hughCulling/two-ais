@@ -428,6 +428,12 @@ const et = {
             },
             "playing": "Heli esitamine...",
             "paused": "Heli on peatatud"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

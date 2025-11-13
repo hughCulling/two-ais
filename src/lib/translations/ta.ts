@@ -428,6 +428,12 @@ const ta = {
             },
             "playing": "ஆடியோவை இயக்குகிறது...",
             "paused": "ஆடியோ இடைநிறுத்தப்பட்டது"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

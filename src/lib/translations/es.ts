@@ -428,6 +428,12 @@ const es = {
             },
             "playing": "Reproduciendo audio...",
             "paused": "Audio en pausa"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

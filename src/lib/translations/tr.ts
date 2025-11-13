@@ -428,6 +428,12 @@ const tr = {
             },
             "playing": "Ses Çalınıyor...",
             "paused": "Ses Duraklatıldı"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

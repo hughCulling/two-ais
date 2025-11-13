@@ -428,6 +428,12 @@ const th = {
             },
             "playing": "กำลังเล่นเสียง...",
             "paused": "เสียงหยุดชั่วคราว"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

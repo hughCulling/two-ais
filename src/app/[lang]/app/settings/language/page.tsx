@@ -5,7 +5,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2} from 'lucide-react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -47,18 +47,6 @@ export default function LanguageSettingsPage() {
                             {t.settings.language.conversationLanguage}
                         </label>
                         <LanguageSelector showIcon={true} className="w-full" />
-                    </div>
-
-                    <div className="rounded-lg bg-muted p-4">
-                        <div className="flex items-start space-x-2">
-                            <AlertCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div className="space-y-1 text-sm">
-                                <p className="font-medium">{t.settings.language.languageSupportInformation}</p>
-                                <p className="text-muted-foreground">
-                                    {t.settings.language.aiAgentsLanguageDescription}
-                                </p>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="space-y-2">

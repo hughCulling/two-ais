@@ -428,6 +428,12 @@ const hu = {
             },
             "playing": "Hang lejátszása...",
             "paused": "Hang szüneteltetve"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

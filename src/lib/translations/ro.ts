@@ -428,6 +428,12 @@ const ro = {
             },
             "playing": "Se redă sunetul...",
             "paused": "Sunet întrerupt"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

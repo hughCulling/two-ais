@@ -428,6 +428,12 @@ const mn = {
             },
             "playing": "Аудио тоглуулж байна...",
             "paused": "Аудио түр зогсоосон"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

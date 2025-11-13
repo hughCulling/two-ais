@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -165,16 +165,30 @@ export function ChatInterface({
     const [pendingTtsMessage, setPendingTtsMessage] = useState<Message | null>(null);
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [showMobileTTSWarning, setShowMobileTTSWarning] = useState(false);
+    const [isTTSAutoScrollEnabled, setIsTTSAutoScrollEnabled] = useState(true);
 
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
+    const messageRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
+    const paragraphRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
+    const scrollViewportRef = useRef<HTMLDivElement>(null);
+    const currentParagraphIndexRef = useRef<number>(0);
     const ttsChunkQueueRef = useRef<string[]>([]);
     const currentChunkIndexRef = useRef<number>(0);
+    const paragraphIndicesRef = useRef<number[]>([]);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
+
+    // --- Helper: Split text into paragraphs for TTS ---
+    const splitIntoParagraphs = useCallback((text: string): string[] => {
+        // Split by ANY newlines (single or double) for fine-grained auto-scroll
+        // This creates more frequent scroll points so text doesn't go out of view
+        const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+        return paragraphs;
+    }, []);
 
     // --- Helper: Split text into TTS-safe chunks ---
     const splitIntoTTSChunks = useCallback((text: string, maxLength: number = 4000): string[] => {
@@ -329,6 +343,14 @@ export function ChatInterface({
             });
         }
     }, [isAudioPaused, handleAudioEnd]);
+
+    const toggleTTSAutoScroll = useCallback(() => {
+        setIsTTSAutoScrollEnabled(prev => {
+            const newValue = !prev;
+            logger.info(`[TTS Auto-Scroll] Toggled to: ${newValue}`);
+            return newValue;
+        });
+    }, []);
 
     // --- Effect 1: Listen for Messages ---
     useEffect(() => {
@@ -801,18 +823,31 @@ export function ChatInterface({
 
             const cleanedContent = removeMarkdown(nextMsg.content);
             
-            // Browser TTS has character limits (typically 4000-5000 chars)
-            // Split into chunks if needed
+            // Split into paragraphs first for better auto-scroll
+            const paragraphs = splitIntoParagraphs(cleanedContent);
+            
+            // Then split each paragraph into TTS-safe chunks if needed
             const MAX_TTS_LENGTH = 4000;
-            const chunks = splitIntoTTSChunks(cleanedContent, MAX_TTS_LENGTH);
+            const chunks: string[] = [];
+            const paragraphIndices: number[] = []; // Track which paragraph each chunk belongs to
+            
+            paragraphs.forEach((paragraph, paragraphIndex) => {
+                const paragraphChunks = splitIntoTTSChunks(paragraph, MAX_TTS_LENGTH);
+                paragraphChunks.forEach(chunk => {
+                    chunks.push(chunk);
+                    paragraphIndices.push(paragraphIndex);
+                });
+            });
             
             if (chunks.length > 1) {
-                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... is ${cleanedContent.length} chars, split into ${chunks.length} chunks for browser TTS`);
+                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${paragraphs.length} paragraphs, ${chunks.length} total chunks for browser TTS`);
             }
             
-            // Store chunks in queue
+            // Store chunks and paragraph info in queue
             ttsChunkQueueRef.current = chunks;
+            paragraphIndicesRef.current = paragraphIndices;
             currentChunkIndexRef.current = 0;
+            currentParagraphIndexRef.current = 0;
             
             // Create utterance for first chunk
             const utterance = new SpeechSynthesisUtterance(chunks[0]);
@@ -844,6 +879,62 @@ export function ChatInterface({
                     setIsAudioPlaying(true);
                     setIsBrowserTTSActive(true);
                     setPendingTtsMessage(null);
+                    
+                    // Reset paragraph index for new message
+                    currentParagraphIndexRef.current = -1;
+                }
+                
+                // Auto-scroll to paragraph when TTS starts (for every chunk)
+                if (isTTSAutoScrollEnabled) {
+                    const paragraphIndex = paragraphIndicesRef.current[currentChunkIndexRef.current] || 0;
+                    const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
+                    
+                    logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
+                    logger.info(`[TTS Auto-Scroll] Message ID: ${nextMsg.id.substring(0, 8)}..., Looking for key: ${paragraphKey}`);
+                    logger.debug(`[TTS Auto-Scroll] Available paragraph refs for this message:`, Array.from(paragraphRefsMap.current.keys()).filter(k => k.startsWith(nextMsg.id)));
+                    logger.debug(`[TTS Auto-Scroll] All paragraph refs:`, Array.from(paragraphRefsMap.current.keys()));
+                    
+                    // Check if this is a new paragraph (different from last one)
+                    const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
+                    logger.info(`[TTS Auto-Scroll] Is new paragraph? ${isNewParagraph}`);
+                    
+                    if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
+                        const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+                        
+                        if (paragraphElement && scrollContainer) {
+                            logger.info(`[TTS Auto-Scroll] ✓ Scrolling to paragraph ${paragraphIndex} of message ${nextMsg.id.substring(0, 8)}...`);
+                            
+                            // Get the position of the paragraph relative to the scroll container
+                            const containerRect = scrollContainer.getBoundingClientRect();
+                            const paragraphRect = paragraphElement.getBoundingClientRect();
+                            
+                            // Calculate how much to scroll to put the paragraph at the top
+                            // Use minimal padding (20px) for small screens
+                            const currentScroll = scrollContainer.scrollTop;
+                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
+                            
+                            logger.debug(`[TTS Auto-Scroll] Container height: ${containerRect.height}px, Current scroll: ${currentScroll}, Target: ${targetScroll}`);
+                            
+                            scrollContainer.scrollTo({
+                                top: Math.max(0, targetScroll),
+                                behavior: 'smooth'
+                            });
+                            
+                            currentParagraphIndexRef.current = paragraphIndex;
+                        } else {
+                            logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
+                            if (!paragraphElement) logger.warn(`  - Missing paragraph element`);
+                            if (!scrollContainer) logger.warn(`  - Missing scroll container`);
+                        }
+                    } else if (!isNewParagraph) {
+                        logger.debug(`[TTS Auto-Scroll] Still on same paragraph ${paragraphIndex}, not scrolling`);
+                    } else {
+                        logger.warn(`[TTS Auto-Scroll] No ref found for paragraph ${paragraphKey}`);
+                    }
+                } else {
+                    logger.debug(`[TTS Auto-Scroll] Auto-scroll is disabled`);
                 }
             };
             utterance.onend = () => {
@@ -1138,10 +1229,19 @@ export function ChatInterface({
 
             {/* Scrollable Message Area */}
             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4" style={{ contain: 'layout style paint' }}>
-               <div className="space-y-4">
+               <div className="space-y-4" ref={scrollViewportRef}>
                     {visibleMessages.map((msg) => (
                         <div
                             key={msg.id}
+                            ref={(el) => {
+                                if (el && (msg.role === 'agentA' || msg.role === 'agentB')) {
+                                    messageRefsMap.current.set(msg.id, el);
+                                    logger.debug(`[TTS Auto-Scroll] Set ref for message ${msg.id.substring(0, 8)}...`);
+                                } else if (!el && messageRefsMap.current.has(msg.id)) {
+                                    messageRefsMap.current.delete(msg.id);
+                                    logger.debug(`[TTS Auto-Scroll] Removed ref for message ${msg.id.substring(0, 8)}...`);
+                                }
+                            }}
                             className={`flex ${
                                 msg.role === 'agentA' ? 'justify-start' :
                                 msg.role === 'agentB' ? 'justify-end' :
@@ -1234,7 +1334,29 @@ export function ChatInterface({
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
     <>
       <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+      <div>
+        {msg.content.split(/\n+/).map((paragraph, index) => {
+          const paragraphKey = `${msg.id}-p${index}`;
+          return (
+            <div
+              key={paragraphKey}
+              ref={(el) => {
+                if (el) {
+                  paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
+                  logger.debug(`[TTS Auto-Scroll] Set ref for paragraph ${paragraphKey}`);
+                } else {
+                  paragraphRefsMap.current.delete(paragraphKey);
+                }
+              }}
+              className="mb-4"
+            >
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {paragraph}
+              </ReactMarkdown>
+            </div>
+          );
+        })}
+      </div>
     </>
   ) : (
     msg.content
@@ -1281,7 +1403,7 @@ export function ChatInterface({
             {/* Audio Controls in Footer */}
             {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
                 <div className="flex-shrink-0 pt-2 border-t mt-4">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center gap-2">
                         {isAudioPlaying ? (
                             <Button 
                                 variant="ghost" 
@@ -1303,6 +1425,16 @@ export function ChatInterface({
                                 <Play className="h-6 w-6" />
                             </Button>
                         ) : null}
+                        <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={toggleTTSAutoScroll}
+                            className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
+                            aria-label={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.disable : t?.chatControls?.autoScroll?.enable}
+                            title={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.enabled : t?.chatControls?.autoScroll?.disabled}
+                        >
+                            <ScrollText className="h-6 w-6" />
+                        </Button>
                     </div>
                 </div>
             )}
