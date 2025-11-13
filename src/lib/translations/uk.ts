@@ -434,6 +434,12 @@ const uk = {
             "disable": "Disable auto-scroll",
             "enabled": "Auto-scroll enabled",
             "disabled": "Auto-scroll disabled"
+        },
+        "fullscreen": {
+            "enter": "Enter fullscreen mode",
+            "exit": "Exit fullscreen mode",
+            "enterLabel": "Enter fullscreen",
+            "exitLabel": "Exit fullscreen"
         }
     }
 };
