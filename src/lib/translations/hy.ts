@@ -428,6 +428,12 @@ const hy = {
             },
             "playing": "Աուդիոն նվագարկվում է...",
             "paused": "Աուդիոն դադարեցված է"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

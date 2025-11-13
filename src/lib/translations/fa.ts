@@ -428,6 +428,12 @@ const fa = {
             },
             "playing": "پخش صدا ...",
             "paused": "صدا متوقف شد"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const tl = {
             },
             "playing": "Nagpe-play ng Audio...",
             "paused": "Naka-pause ang Audio"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

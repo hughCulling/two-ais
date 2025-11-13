@@ -428,6 +428,12 @@ const sl = {
             },
             "playing": "Predvajanje zvoka ...",
             "paused": "Zvok zaustavljen"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

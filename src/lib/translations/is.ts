@@ -428,6 +428,12 @@ const is = {
             },
             "playing": "Spilar hljóð...",
             "paused": "Hljóð gert hlé"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const gu = {
             },
             "playing": "ઑડિઓ ચલાવી રહ્યું છે...",
             "paused": "ઑડિઓ થોભાવ્યો"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const iw = {
             },
             "playing": "השמעת אודיו...",
             "paused": "אודיו הושהה"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

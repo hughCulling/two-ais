@@ -428,6 +428,12 @@ const bn = {
             },
             "playing": "অডিও বাজানো হচ্ছে...",
             "paused": "অডিও পজ করা হয়েছে"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

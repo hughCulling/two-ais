@@ -428,6 +428,12 @@ const sr = {
             },
             "playing": "Пуштање звука...",
             "paused": "Аудио паузиран"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

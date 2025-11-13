@@ -428,6 +428,12 @@ const ms = {
             },
             "playing": "Memainkan Audio...",
             "paused": "Audio Dijeda"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const fi = {
             },
             "playing": "Ääntä toistetaan...",
             "paused": "Ääni keskeytetty"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

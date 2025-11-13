@@ -428,6 +428,12 @@ const zh = {
             },
             "playing": "正在播放音频...",
             "paused": "音频暂停"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

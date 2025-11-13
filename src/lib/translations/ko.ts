@@ -428,6 +428,12 @@ const ko = {
             },
             "playing": "오디오 재생 중...",
             "paused": "오디오 일시 정지됨"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

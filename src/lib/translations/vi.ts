@@ -428,6 +428,12 @@ const vi = {
             },
             "playing": "Đang phát âm thanh...",
             "paused": "Âm thanh tạm dừng"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

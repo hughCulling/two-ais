@@ -428,6 +428,12 @@ const my = {
             },
             "playing": "အသံဖွင့်နေသည်...",
             "paused": "အသံကို ခေတ္တရပ်ထားသည်။"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const ml = {
             },
             "playing": "ഓഡിയോ പ്ലേ ചെയ്യുന്നു...",
             "paused": "ഓഡിയോ താൽക്കാലികമായി നിർത്തി"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

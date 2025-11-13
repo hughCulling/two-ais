@@ -428,6 +428,12 @@ const ar = {
             },
             "playing": "تشغيل الصوت...",
             "paused": "تم إيقاف الصوت مؤقتًا"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

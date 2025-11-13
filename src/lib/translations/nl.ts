@@ -428,6 +428,12 @@ const nl = {
             },
             "playing": "Audio afspelen...",
             "paused": "Audio gepauzeerd"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

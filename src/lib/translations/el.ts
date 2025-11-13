@@ -428,6 +428,12 @@ const el = {
             },
             "playing": "Αναπαραγωγή ήχου...",
             "paused": "Ο ήχος τέθηκε σε παύση"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

@@ -428,6 +428,12 @@ const no = {
             },
             "playing": "Spiller av lyd ...",
             "paused": "Lyd satt på pause"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };

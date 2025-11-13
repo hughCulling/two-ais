@@ -428,6 +428,12 @@ const ja = {
             },
             "playing": "オーディオを再生しています...",
             "paused": "音声を一時停止"
+        },
+        "autoScroll": {
+            "enable": "Enable auto-scroll",
+            "disable": "Disable auto-scroll",
+            "enabled": "Auto-scroll enabled",
+            "disabled": "Auto-scroll disabled"
         }
     }
 };
