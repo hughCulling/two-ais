@@ -137,12 +137,13 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const { t, loading } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false); // <-- Add mounted state
+  const [mounted, setMounted] = useState(false);
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   // Redirect authenticated users to the app
   useEffect(() => {
     if (!authLoading && user) {
+      console.log('LandingPage: User authenticated, redirecting to app...');
       router.push(`/${language.code}/app`);
     }
   }, [user, authLoading, router, language.code]);

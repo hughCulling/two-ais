@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import "../globals.css";
 import React from 'react';
 import { LanguageProvider } from "@/context/LanguageContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { headers } from 'next/headers';
 import PublicHeaderOnLanding from '@/components/PublicHeaderOnLanding';
 import Footer from '@/components/Footer';
@@ -179,9 +180,11 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
         <ThemeProvider nonce={nonce}>
           <div className="flex flex-col min-h-screen">
             <LanguageProvider lang={lang}>
-              <main className="flex-grow">
-                {children}
-              </main>
+              <AuthProvider>
+                <main className="flex-grow">
+                  {children}
+                </main>
+              </AuthProvider>
             </LanguageProvider>
             <Footer />
           </div>
