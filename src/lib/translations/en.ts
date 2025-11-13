@@ -457,6 +457,12 @@ const en = {
             },
             playing: 'Playing Audio...',
             paused: 'Audio Paused'
+        },
+        autoScroll: {
+            enable: 'Enable auto-scroll',
+            disable: 'Disable auto-scroll',
+            enabled: 'Auto-scroll enabled',
+            disabled: 'Auto-scroll disabled'
         }
     },
     
