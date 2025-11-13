@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 // import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -133,8 +135,17 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const { resolvedTheme } = useTheme();
   const { language } = useLanguage();
   const { t, loading } = useTranslation();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false); // <-- Add mounted state
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
+
+  // Redirect authenticated users to the app
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push(`/${language.code}/app`);
+    }
+  }, [user, authLoading, router, language.code]);
 
   useEffect(() => {
     setMounted(true);
@@ -162,7 +173,13 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const toggleCollapsible = (id: string) => {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
+  
+  // Show nothing while loading translations
   if (loading || !t) return null;
+  
+  // Don't render landing page if user is authenticated (redirect is in progress)
+  if (!authLoading && user) return null;
+  if (user) return null;
   // const GPT_IMAGE_1_TOKEN_PRICING_TOOLTIP = t?.gptImage1PricingTooltip
   //   ? t.gptImage1PricingTooltip
   //       .replace('{inputPrice}', '$10.00')
