@@ -1438,54 +1438,67 @@ export function ChatInterface({
                 </div>
             </ScrollArea>
 
-            {/* Audio Controls in Footer */}
-            {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
-                <div className={`flex-shrink-0 pt-2 border-t mt-4 ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4' : ''}`}>
-                    <div className="flex items-center gap-2 justify-center">
-                        {isAudioPlaying ? (
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                onClick={handlePauseAudio}
-                                className="h-12 w-12 rounded-full"
-                                aria-label="Pause audio"
-                            >
-                                <Pause className="h-6 w-6" />
-                            </Button>
-                        ) : isAudioPaused ? (
-                            <Button 
-                                variant="ghost" 
-                                size="icon"
-                                onClick={handleResumeAudio}
-                                className="h-12 w-12 rounded-full"
-                                aria-label="Resume audio"
-                            >
-                                <Play className="h-6 w-6" />
-                            </Button>
-                        ) : null}
+            {/* Controls Footer - Always Visible */}
+            <div className={`flex-shrink-0 pt-2 border-t mt-4 ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4' : ''}`}>
+                <div className="flex items-center gap-2 justify-center">
+                    {/* Pause/Resume Button - Only enabled when audio is playing */}
+                    {isAudioPlaying ? (
                         <Button 
                             variant="ghost" 
-                            size="icon"
-                            onClick={toggleTTSAutoScroll}
-                            className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
-                            aria-label={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.disable : t?.chatControls?.autoScroll?.enable}
-                            title={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.enabled : t?.chatControls?.autoScroll?.disabled}
-                        >
-                            <ScrollText className="h-6 w-6" />
-                        </Button>
-                        <Button 
-                            variant="ghost" 
-                            size="icon"
-                            onClick={toggleFullscreen}
+                            size="icon" 
+                            onClick={handlePauseAudio}
                             className="h-12 w-12 rounded-full"
-                            aria-label={isFullscreen ? t?.chatControls?.fullscreen?.exit : t?.chatControls?.fullscreen?.enter}
-                            title={isFullscreen ? t?.chatControls?.fullscreen?.exitLabel : t?.chatControls?.fullscreen?.enterLabel}
+                            aria-label="Pause audio"
                         >
-                            {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
+                            <Pause className="h-6 w-6" />
                         </Button>
-                    </div>
+                    ) : isAudioPaused ? (
+                        <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={handleResumeAudio}
+                            className="h-12 w-12 rounded-full"
+                            aria-label="Resume audio"
+                        >
+                            <Play className="h-6 w-6" />
+                        </Button>
+                    ) : (
+                        <Button 
+                            variant="ghost" 
+                            size="icon"
+                            disabled
+                            className="h-12 w-12 rounded-full opacity-50 cursor-not-allowed"
+                            aria-label="No audio playing"
+                        >
+                            <Play className="h-6 w-6" />
+                        </Button>
+                    )}
+                    
+                    {/* Auto-scroll Toggle - Always enabled */}
+                    <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={toggleTTSAutoScroll}
+                        className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
+                        aria-label={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.disable : t?.chatControls?.autoScroll?.enable}
+                        title={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.enabled : t?.chatControls?.autoScroll?.disabled}
+                    >
+                        <ScrollText className="h-6 w-6" />
+                    </Button>
+                    
+                    {/* Fullscreen Toggle - Always enabled */}
+                    <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={toggleFullscreen}
+                        className="h-12 w-12 rounded-full"
+                        aria-label={isFullscreen ? t?.chatControls?.fullscreen?.exit : t?.chatControls?.fullscreen?.enter}
+                        title={isFullscreen ? t?.chatControls?.fullscreen?.exitLabel : t?.chatControls?.fullscreen?.enterLabel}
+                    >
+                        {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
+                    </Button>
                 </div>
-            )}
+            </div>
 
             {/* Hidden Audio Player */}
             <audio
