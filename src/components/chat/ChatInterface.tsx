@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2 } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -166,6 +166,7 @@ export function ChatInterface({
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [showMobileTTSWarning, setShowMobileTTSWarning] = useState(false);
     const [isTTSAutoScrollEnabled, setIsTTSAutoScrollEnabled] = useState(true);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -348,6 +349,22 @@ export function ChatInterface({
         setIsTTSAutoScrollEnabled(prev => {
             const newValue = !prev;
             logger.info(`[TTS Auto-Scroll] Toggled to: ${newValue}`);
+            return newValue;
+        });
+    }, []);
+
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen(prev => {
+            const newValue = !prev;
+            logger.info(`[Fullscreen] Toggled to: ${newValue}`);
+            
+            // Update body class to hide header
+            if (newValue) {
+                document.body.classList.add('chat-fullscreen');
+            } else {
+                document.body.classList.remove('chat-fullscreen');
+            }
+            
             return newValue;
         });
     }, []);
@@ -1071,8 +1088,25 @@ export function ChatInterface({
             
             // Clear utterance reference
             utteranceRef.current = null;
+            
+            // Remove fullscreen class from body
+            document.body.classList.remove('chat-fullscreen');
         };
     }, []); // Empty dependency array - runs only on unmount
+
+    // --- Effect 7: Handle Escape key for fullscreen ---
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isFullscreen) {
+                setIsFullscreen(false);
+                document.body.classList.remove('chat-fullscreen');
+                logger.info('[Fullscreen] Exited via Escape key');
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [isFullscreen]);
 
     // --- Render Logic ---
 
@@ -1129,9 +1163,13 @@ export function ChatInterface({
     const isWaitingForMessage = pendingTtsMessage?.isStreaming && !isAudioPlaying;
 
     return (
-        <div className="flex flex-col h-[70vh] w-full max-w-3xl mx-auto p-4 bg-background rounded-lg shadow-md border overflow-hidden">
+        <div className={`flex flex-col w-full mx-auto bg-background overflow-hidden ${
+            isFullscreen 
+                ? 'fixed inset-0 z-50 rounded-none shadow-none border-0' 
+                : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
+        }`}>
             {/* Header Section */}
-            <div className="flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b">
+            <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
                 <h2 className="text-lg font-semibold">{t?.main?.aiConversation}</h2>
                 {(isAudioPlaying || isAudioPaused || isWaitingForMessage) && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
@@ -1160,7 +1198,7 @@ export function ChatInterface({
 
             {/* Mobile TTS Warning Banner */}
             {showMobileTTSWarning && (
-                <div className="bg-orange-50 border-l-4 border-orange-400 p-4 mx-4 mt-4 rounded-md">
+                <div className={`bg-orange-50 border-l-4 border-orange-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
                     <div className="flex">
                         <div className="flex-shrink-0">
                             <svg className="h-5 w-5 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
@@ -1181,7 +1219,7 @@ export function ChatInterface({
 
             {/* TTS Error Banner */}
             {ttsError && (
-                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-4 mt-4 rounded-md">
+                <div className={`bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
                     <div className="flex">
                         <div className="flex-shrink-0">
                             <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -1208,7 +1246,7 @@ export function ChatInterface({
                                            conversationData?.ttsSettings?.agentB?.provider === 'browser';
                     return hasUnplayedAudio || isWaitingForSignal || isUsingBrowserTTS;
                 })() && (
-                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mx-4 mt-4 rounded-md">
+                <div className={`bg-blue-50 border-l-4 border-blue-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
                     <div className="flex">
                         <div className="flex-shrink-0">
                             <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -1229,7 +1267,7 @@ export function ChatInterface({
 
             {/* Scrollable Message Area */}
             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4" style={{ contain: 'layout style paint' }}>
-               <div className="space-y-4" ref={scrollViewportRef}>
+               <div className={`space-y-4 ${isFullscreen ? 'max-w-3xl mx-auto px-4' : ''}`} ref={scrollViewportRef}>
                     {visibleMessages.map((msg) => (
                         <div
                             key={msg.id}
@@ -1402,8 +1440,8 @@ export function ChatInterface({
 
             {/* Audio Controls in Footer */}
             {(isAudioPlaying || isAudioPaused) && currentlyPlayingMsgId && (
-                <div className="flex-shrink-0 pt-2 border-t mt-4">
-                    <div className="flex items-center justify-center gap-2">
+                <div className={`flex-shrink-0 pt-2 border-t mt-4 ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4' : ''}`}>
+                    <div className="flex items-center gap-2 justify-center">
                         {isAudioPlaying ? (
                             <Button 
                                 variant="ghost" 
@@ -1434,6 +1472,16 @@ export function ChatInterface({
                             title={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.enabled : t?.chatControls?.autoScroll?.disabled}
                         >
                             <ScrollText className="h-6 w-6" />
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={toggleFullscreen}
+                            className="h-12 w-12 rounded-full"
+                            aria-label={isFullscreen ? t?.chatControls?.fullscreen?.exit : t?.chatControls?.fullscreen?.enter}
+                            title={isFullscreen ? t?.chatControls?.fullscreen?.exitLabel : t?.chatControls?.fullscreen?.enterLabel}
+                        >
+                            {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
                         </Button>
                     </div>
                 </div>
