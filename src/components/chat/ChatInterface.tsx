@@ -272,17 +272,6 @@ export function ChatInterface({
             }
         }
 
-        // Reset all audio-related states
-        const resetAudioState = () => {
-            setIsAudioPlaying(false);
-            setIsAudioPaused(false);
-            setCurrentlyPlayingMsgId(null);
-            setIsBrowserTTSActive(false);
-            setTtsError(null);
-            setPendingTtsMessage(null);
-            setPlayedMessageIds(prev => new Set(prev).add(playedMsgId));
-        };
-
         // For browser TTS, ensure speech synthesis is properly cancelled
         if (window.speechSynthesis) {
             try {
@@ -292,7 +281,21 @@ export function ChatInterface({
             }
         }
 
-        resetAudioState();
+        // Mark message as played FIRST, before resetting audio state
+        // This ensures the next message becomes visible before we try to play it
+        setPlayedMessageIds(prev => {
+            const newSet = new Set(prev);
+            newSet.add(playedMsgId);
+            return newSet;
+        });
+
+        // Reset all audio-related states
+        setIsAudioPlaying(false);
+        setIsAudioPaused(false);
+        setCurrentlyPlayingMsgId(null);
+        setIsBrowserTTSActive(false);
+        setTtsError(null);
+        setPendingTtsMessage(null);
 
         // Notify backend that the message has been played
         const playedMsg = messages.find(m => m.id === playedMsgId);
@@ -736,24 +739,38 @@ export function ChatInterface({
     const visibleMessages = React.useMemo(() => {
         if (!mergedMessages.length) return [];
 
-        let cutoffIdx = mergedMessages.length;
-
-        const firstUnplayedAudioIndex = mergedMessages.findIndex(msg =>
-            (msg.audioUrl || (conversationData?.ttsSettings?.[msg.role as 'agentA' | 'agentB']?.provider === 'browser' && (msg.role === 'agentA' || msg.role === 'agentB'))) &&
-            !playedMessageIds.has(msg.id)
-        );
-
+        // If audio is currently playing, show up to and including the currently playing message
         if (isAudioPlaying && currentlyPlayingMsgId) {
-            // If audio is playing, show up to and including the currently playing message.
             const currentlyPlayingIndex = mergedMessages.findIndex(msg => msg.id === currentlyPlayingMsgId);
-            cutoffIdx = currentlyPlayingIndex !== -1 ? currentlyPlayingIndex + 1 : mergedMessages.length;
-        } else if (firstUnplayedAudioIndex !== -1) {
-            // If not playing, show up to and including the first unplayed audio message, so it can be picked up for playback.
-            cutoffIdx = firstUnplayedAudioIndex + 1;
-        } 
-        // If all audio is played or no audio messages exist, cutoffIdx remains mergedMessages.length, showing all.
+            if (currentlyPlayingIndex !== -1) {
+                return mergedMessages.slice(0, currentlyPlayingIndex + 1);
+            }
+        }
 
-        return mergedMessages.slice(0, cutoffIdx);
+        // Find the first agent message that has TTS enabled but hasn't been played yet
+        const firstUnplayedTTSMessageIndex = mergedMessages.findIndex(msg => {
+            // Only consider agent messages
+            if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
+            
+            // Check if this message has already been played
+            if (playedMessageIds.has(msg.id)) return false;
+            
+            // Check if TTS is enabled for this agent
+            const agentTTSSettings = conversationData?.ttsSettings?.[msg.role];
+            const hasTTS = agentTTSSettings?.provider && agentTTSSettings.provider !== 'none';
+            
+            // This is an unplayed message with TTS
+            return hasTTS;
+        });
+
+        // If we found an unplayed TTS message, show up to and including it
+        // This allows the TTS system to pick it up for playback
+        if (firstUnplayedTTSMessageIndex !== -1) {
+            return mergedMessages.slice(0, firstUnplayedTTSMessageIndex + 1);
+        }
+
+        // If all TTS messages have been played (or no TTS messages exist), show all messages
+        return mergedMessages;
     }, [mergedMessages, playedMessageIds, isAudioPlaying, currentlyPlayingMsgId, conversationData]);
 
     // --- Image Modal State ---
@@ -909,54 +926,55 @@ export function ChatInterface({
                 }
                 
                 // Auto-scroll to paragraph when TTS starts (for every chunk)
+                // Use requestAnimationFrame to ensure DOM is ready
                 if (isTTSAutoScrollEnabled) {
-                    const paragraphIndex = paragraphIndicesRef.current[currentChunkIndexRef.current] || 0;
-                    const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
-                    
-                    logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
-                    logger.info(`[TTS Auto-Scroll] Message ID: ${nextMsg.id.substring(0, 8)}..., Looking for key: ${paragraphKey}`);
-                    logger.debug(`[TTS Auto-Scroll] Available paragraph refs for this message:`, Array.from(paragraphRefsMap.current.keys()).filter(k => k.startsWith(nextMsg.id)));
-                    logger.debug(`[TTS Auto-Scroll] All paragraph refs:`, Array.from(paragraphRefsMap.current.keys()));
-                    
-                    // Check if this is a new paragraph (different from last one)
-                    const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
-                    logger.info(`[TTS Auto-Scroll] Is new paragraph? ${isNewParagraph}`);
-                    
-                    if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
-                        const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
-                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+                    requestAnimationFrame(() => {
+                        const paragraphIndex = paragraphIndicesRef.current[currentChunkIndexRef.current] || 0;
+                        const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
                         
-                        if (paragraphElement && scrollContainer) {
-                            logger.info(`[TTS Auto-Scroll] ✓ Scrolling to paragraph ${paragraphIndex} of message ${nextMsg.id.substring(0, 8)}...`);
+                        logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
+                        logger.info(`[TTS Auto-Scroll] Message ID: ${nextMsg.id.substring(0, 8)}..., Looking for key: ${paragraphKey}`);
+                        
+                        // Check if this is a new paragraph (different from last one)
+                        const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
+                        logger.info(`[TTS Auto-Scroll] Is new paragraph? ${isNewParagraph}`);
+                        
+                        if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
+                            const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                            const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
                             
-                            // Get the position of the paragraph relative to the scroll container
-                            const containerRect = scrollContainer.getBoundingClientRect();
-                            const paragraphRect = paragraphElement.getBoundingClientRect();
-                            
-                            // Calculate how much to scroll to put the paragraph at the top
-                            // Use minimal padding (20px) for small screens
-                            const currentScroll = scrollContainer.scrollTop;
-                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
-                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
-                            
-                            logger.debug(`[TTS Auto-Scroll] Container height: ${containerRect.height}px, Current scroll: ${currentScroll}, Target: ${targetScroll}`);
-                            
-                            scrollContainer.scrollTo({
-                                top: Math.max(0, targetScroll),
-                                behavior: 'smooth'
-                            });
-                            
-                            currentParagraphIndexRef.current = paragraphIndex;
+                            if (paragraphElement && scrollContainer) {
+                                logger.info(`[TTS Auto-Scroll] ✓ Scrolling to paragraph ${paragraphIndex} of message ${nextMsg.id.substring(0, 8)}...`);
+                                
+                                // Get the position of the paragraph relative to the scroll container
+                                const containerRect = scrollContainer.getBoundingClientRect();
+                                const paragraphRect = paragraphElement.getBoundingClientRect();
+                                
+                                // Calculate how much to scroll to put the paragraph at the top
+                                // Use minimal padding (20px) for small screens
+                                const currentScroll = scrollContainer.scrollTop;
+                                const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                                const targetScroll = currentScroll + paragraphRelativeTop - 20;
+                                
+                                logger.debug(`[TTS Auto-Scroll] Container height: ${containerRect.height}px, Current scroll: ${currentScroll}, Target: ${targetScroll}`);
+                                
+                                scrollContainer.scrollTo({
+                                    top: Math.max(0, targetScroll),
+                                    behavior: 'smooth'
+                                });
+                                
+                                currentParagraphIndexRef.current = paragraphIndex;
+                            } else {
+                                logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
+                                if (!paragraphElement) logger.warn(`  - Missing paragraph element`);
+                                if (!scrollContainer) logger.warn(`  - Missing scroll container`);
+                            }
+                        } else if (!isNewParagraph) {
+                            logger.debug(`[TTS Auto-Scroll] Still on same paragraph ${paragraphIndex}, not scrolling`);
                         } else {
-                            logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
-                            if (!paragraphElement) logger.warn(`  - Missing paragraph element`);
-                            if (!scrollContainer) logger.warn(`  - Missing scroll container`);
+                            logger.warn(`[TTS Auto-Scroll] No ref found for paragraph ${paragraphKey}`);
                         }
-                    } else if (!isNewParagraph) {
-                        logger.debug(`[TTS Auto-Scroll] Still on same paragraph ${paragraphIndex}, not scrolling`);
-                    } else {
-                        logger.warn(`[TTS Auto-Scroll] No ref found for paragraph ${paragraphKey}`);
-                    }
+                    });
                 } else {
                     logger.debug(`[TTS Auto-Scroll] Auto-scroll is disabled`);
                 }

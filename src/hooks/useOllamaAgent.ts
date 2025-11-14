@@ -31,6 +31,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
       const shouldRespond = 
         data.status === 'running' &&
         !data.processingLock &&
+        !data.waitingForTTSEndSignal && // Don't respond if waiting for TTS to finish
         data.turn &&
         (data.agentA_llm?.startsWith('ollama:') || data.agentB_llm?.startsWith('ollama:'));
 
@@ -45,29 +46,65 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
       processingRef.current = true;
 
       try {
+        // Check lookahead limit (same as Firebase Function)
+        const LOOKAHEAD_LIMIT = 3;
+        const { getDocs, query: firestoreQuery, orderBy: firestoreOrderBy, limit: firestoreLimit } = await import('firebase/firestore');
+        const messagesQuery = firestoreQuery(
+          collection(db, 'conversations', conversationId, 'messages'),
+          firestoreOrderBy('timestamp', 'asc')
+        );
+        const allMessagesSnap = await getDocs(messagesQuery);
+        const allMessages = allMessagesSnap.docs.map(doc => ({
+          id: doc.id,
+          role: doc.data().role,
+        }));
+
+        // Find index of last played message
+        let lastPlayedIdx = -1;
+        if (data.lastPlayedAgentMessageId) {
+          lastPlayedIdx = allMessages.findIndex(m => m.id === data.lastPlayedAgentMessageId);
+        }
+
+        // Count agent messages ahead
+        let agentMessagesAhead = 0;
+        for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
+          if (allMessages[i].role === 'agentA' || allMessages[i].role === 'agentB') {
+            agentMessagesAhead++;
+          }
+        }
+
+        if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
+          console.log(`[Ollama Lookahead] ${agentMessagesAhead} messages ahead. Limit is ${LOOKAHEAD_LIMIT}. Skipping.`);
+          processingRef.current = false;
+          return;
+        }
+
         // Set processing lock
         await updateDoc(conversationRef, {
           processingLock: true,
           [`${agentToRespond}Processing`]: true,
         });
 
-        // Get conversation history
-        const messagesRef = collection(db, 'conversations', conversationId, 'messages');
-        const messagesSnapshot = await getDoc(doc(db, 'conversations', conversationId));
-        const historyQuery = collection(db, 'conversations', conversationId, 'messages');
-        
-        // Fetch recent messages for context
-        const { getDocs, query, orderBy, limit } = await import('firebase/firestore');
-        const historySnap = await getDocs(query(historyQuery, orderBy('timestamp', 'asc'), limit(20)));
+        // Fetch recent messages for context (reuse the imports from above)
+        const historyQuery = firestoreQuery(
+          collection(db, 'conversations', conversationId, 'messages'),
+          firestoreOrderBy('timestamp', 'asc'),
+          firestoreLimit(20)
+        );
+        const historySnap = await getDocs(historyQuery);
         
         const messages = historySnap.docs.map(doc => {
           const data = doc.data();
+          const mappedRole = data.role === agentToRespond ? 'assistant' : 
+                             data.role === 'system' ? 'system' : 'user';
           return {
-            role: data.role === agentToRespond ? 'assistant' : 
-                  data.role === 'system' ? 'system' : 'user',
+            role: mappedRole,
             content: data.content,
           };
         });
+
+        console.log(`[Ollama] Fetched ${messages.length} messages for ${agentToRespond} context:`, 
+          messages.map(m => ({ role: m.role, preview: m.content.substring(0, 50) + '...' })));
 
         // Extract model name (format: "ollama:modelname")
         const modelName = agentModelId.replace(/^ollama:/, '');
