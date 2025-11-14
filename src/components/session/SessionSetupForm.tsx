@@ -19,8 +19,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-// import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
-import { getAllAvailableLLMs, getLLMInfoById, groupLLMsByProvider } from '@/lib/models';
+import { getAllAvailableLLMs, getLLMInfoById } from '@/lib/models';
 import { useOllama } from '@/hooks/useOllama';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {

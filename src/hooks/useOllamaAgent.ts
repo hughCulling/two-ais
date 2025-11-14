@@ -3,15 +3,9 @@
 // This bypasses Firebase Functions for local Ollama models
 
 import { useEffect, useRef } from 'react';
-import { doc, collection, onSnapshot, updateDoc, addDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { doc, collection, onSnapshot, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, rtdb } from '@/lib/firebase/clientApp';
 import { ref, set, update } from 'firebase/database';
-
-interface Message {
-  role: string;
-  content: string;
-  timestamp: any;
-}
 
 export function useOllamaAgent(conversationId: string | null, userId: string | null) {
   const processingRef = useRef(false);
@@ -164,7 +158,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
                   } else if (parsed.error) {
                     throw new Error(parsed.error);
                   }
-                } catch (e) {
+                } catch {
                   // Ignore parse errors for incomplete chunks
                 }
               }

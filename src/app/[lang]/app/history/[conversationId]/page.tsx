@@ -433,7 +433,8 @@ export default function ChatHistoryViewerPage() {
                 
                 audio.play().catch(console.error);
             }
-        }, [msg, isAgentA, isAgentB, isCurrentPlaying, isCurrentPaused, details?.ttsSettings, handleAudioEnd]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [msg, isAgentA, isAgentB, isCurrentPlaying, isCurrentPaused, handleAudioEnd]);
 
         // Determine bubble styling and labels based on message role
         let bubbleClass = '';

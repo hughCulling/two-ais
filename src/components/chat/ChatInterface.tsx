@@ -1063,7 +1063,7 @@ export function ChatInterface({
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, 
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, splitIntoParagraphs]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -1079,6 +1079,9 @@ export function ChatInterface({
 
     // --- Effect 6: Component Cleanup ---
     useEffect(() => {
+        // Capture the current ref value in the effect scope
+        const currentAudioPlayer = audioPlayerRef.current;
+        
         return () => {
             // Cleanup function that runs when component unmounts
             logger.info('ChatInterface: Component unmounting, cleaning up TTS and audio');
@@ -1087,10 +1090,10 @@ export function ChatInterface({
             ttsChunkQueueRef.current = [];
             currentChunkIndexRef.current = 0;
             
-            // Stop HTML5 audio
-            if (audioPlayerRef.current) {
-                audioPlayerRef.current.pause();
-                audioPlayerRef.current.currentTime = 0;
+            // Stop HTML5 audio using the captured ref value
+            if (currentAudioPlayer) {
+                currentAudioPlayer.pause();
+                currentAudioPlayer.currentTime = 0;
             }
             
             // Stop browser TTS completely
