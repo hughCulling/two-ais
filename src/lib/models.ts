@@ -6,7 +6,7 @@ import { TranslationKeys } from './translations';
 export interface LLMInfo {
     id: string; // Unique identifier used in backend
     name: string; // User-friendly name
-    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI' | 'DeepSeek' | 'Mistral AI';
+    provider: 'OpenAI' | 'Google' | 'Anthropic' | 'xAI' | 'TogetherAI' | 'DeepSeek' | 'Mistral AI' | 'Ollama';
     contextWindow: number; // Context window size in tokens
     pricing: {
         input: number; // Price per 1 million input tokens (in USD)
@@ -24,6 +24,8 @@ export interface LLMInfo {
     usesReasoningTokens?: boolean; // Used for OpenAI reasoning, Google thinking, Anthropic/xAI extended thinking, Qwen/DeepSeek reasoning
     categoryKey?: string; // For categorizing models by purpose/capability/series
     knowledgeCutoff?: string; // Knowledge cutoff date for the model
+    isOllamaModel?: boolean; // Indicates if this is a dynamically loaded Ollama model
+    ollamaEndpoint?: string; // Custom Ollama endpoint (defaults to localhost:11434)
 }
 
 // --- AVAILABLE LARGE LANGUAGE MODELS ---
@@ -756,7 +758,14 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         status: 'stable',
         categoryKey: 'modelCategory_MistralAIOpenModels',
     },
+
+    // === Ollama ===
+    // Note: Ollama models are dynamically loaded from the user's local Ollama instance
+    // This is a placeholder entry to show Ollama as an available provider
 ];
+
+// Ollama-specific models will be added dynamically
+export const OLLAMA_MODELS: LLMInfo[] = [];
 
 // --- Helper Functions ---
 
@@ -764,21 +773,26 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
  * Finds LLM information by its unique backend ID.
  */
 export function getLLMInfoById(id: string): LLMInfo | undefined {
-    return AVAILABLE_LLMS.find(llm => llm.id === id);
+    // Search in both AVAILABLE_LLMS and OLLAMA_MODELS
+    const allLLMs = getAllAvailableLLMs();
+    return allLLMs.find(llm => llm.id === id);
 }
 
 /**
  * Finds LLM information by the Secret Manager secret *key ID* associated with its API key.
  */
 export function getLLMInfoBySecretName(secretName: string): LLMInfo | undefined {
-    return AVAILABLE_LLMS.find(llm => llm.apiKeySecretName === secretName);
+    // Search in both AVAILABLE_LLMS and OLLAMA_MODELS
+    const allLLMs = getAllAvailableLLMs();
+    return allLLMs.find(llm => llm.apiKeySecretName === secretName);
 }
 
 /**
  * Groups available LLMs by their provider.
  */
 export function groupLLMsByProvider(): Record<string, LLMInfo[]> {
-    const grouped = AVAILABLE_LLMS.reduce((acc, llm) => {
+    const allLLMs = getAllAvailableLLMs();
+    const grouped = allLLMs.reduce((acc, llm) => {
         const providerKey = llm.provider;
         if (!acc[providerKey]) {
             acc[providerKey] = [];
@@ -826,6 +840,9 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
     const mistralCategoryOrder = [
         t.modelCategory_MistralAIPremierModels,
         t.modelCategory_MistralAIOpenModels,
+    ];
+    const ollamaCategoryOrder = [
+        t.modelCategory_Ollama,
     ];
     const togetherAICategoryOrder = [
         t.modelCategory_Llama4,
@@ -893,6 +910,8 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
             currentProviderOrder = deepSeekCategoryOrder;
         } else if (providerName === 'Mistral AI') {
             currentProviderOrder = mistralCategoryOrder;
+        } else if (providerName === 'Ollama') {
+            currentProviderOrder = ollamaCategoryOrder;
         }
     }
 
@@ -1102,3 +1121,103 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
 
     return { orderedCategories, byCategory };
 };
+
+
+// --- Ollama Helper Functions ---
+
+export interface OllamaModel {
+    name: string;
+    model: string;
+    modified_at: string;
+    size: number;
+    digest: string;
+    details?: {
+        parent_model?: string;
+        format?: string;
+        family?: string;
+        families?: string[];
+        parameter_size?: string;
+        quantization_level?: string;
+    };
+}
+
+export interface OllamaListResponse {
+    models: OllamaModel[];
+}
+
+/**
+ * Check if Ollama is available on the local machine
+ */
+export async function isOllamaAvailable(endpoint: string = 'http://localhost:11434'): Promise<boolean> {
+    try {
+        const response = await fetch(`${endpoint}/api/tags`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(3000), // 3 second timeout
+        });
+        return response.ok;
+    } catch (error) {
+        console.debug('Ollama not available:', error);
+        return false;
+    }
+}
+
+/**
+ * Fetch available models from local Ollama instance
+ */
+export async function fetchOllamaModels(endpoint: string = 'http://localhost:11434'): Promise<LLMInfo[]> {
+    try {
+        const response = await fetch(`${endpoint}/api/tags`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(5000),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch Ollama models: ${response.statusText}`);
+        }
+        
+        const data: OllamaListResponse = await response.json();
+        
+        // Convert Ollama models to LLMInfo format
+        const ollamaModels: LLMInfo[] = data.models.map(model => ({
+            id: `ollama:${model.name}`,
+            name: model.name,
+            provider: 'Ollama' as const,
+            contextWindow: 0, // Ollama doesn't provide this info via API
+            pricing: {
+                input: 0,
+                output: 0,
+                freeTier: {
+                    available: true,
+                    note: 'Local models run on your machine with no API costs'
+                }
+            },
+            apiKeyInstructionsUrl: 'https://ollama.com/download',
+            apiKeySecretName: 'ollama', // Not used for local Ollama
+            status: 'stable' as const,
+            categoryKey: 'modelCategory_Ollama',
+            isOllamaModel: true,
+            ollamaEndpoint: endpoint,
+        }));
+        
+        return ollamaModels;
+    } catch (error) {
+        console.error('Error fetching Ollama models:', error);
+        return [];
+    }
+}
+
+/**
+ * Update the global OLLAMA_MODELS array with available models
+ */
+export async function updateOllamaModels(endpoint: string = 'http://localhost:11434'): Promise<void> {
+    const models = await fetchOllamaModels(endpoint);
+    OLLAMA_MODELS.length = 0; // Clear existing
+    OLLAMA_MODELS.push(...models);
+}
+
+/**
+ * Get all available LLMs including dynamically loaded Ollama models
+ */
+export function getAllAvailableLLMs(): LLMInfo[] {
+    return [...AVAILABLE_LLMS, ...OLLAMA_MODELS];
+}

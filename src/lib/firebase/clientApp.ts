@@ -5,6 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getAnalytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { getDatabase, connectDatabaseEmulator } from "firebase/database";
 
 // Your web app's Firebase configuration
 // It's recommended to use environment variables for sensitive data
@@ -33,6 +34,7 @@ if (!getApps().length) {
 const auth = getAuth(app);
 const db = getFirestore(app);
 const functions = getFunctions(app, 'us-central1'); // Specify the region
+const rtdb = getDatabase(app); // Initialize Realtime Database
 
 // Initialize client-side only services (App Check, Analytics)
 let analytics;
@@ -117,6 +119,12 @@ if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBA
         } catch (error) {
             console.error("Failed to connect Functions Emulator:", error);
         }
+        try {
+            connectDatabaseEmulator(rtdb, "127.0.0.1", 9000);
+            console.log("Realtime Database Emulator connected.");
+        } catch (error) {
+            console.error("Failed to connect Realtime Database Emulator:", error);
+        }
     }
 } else {
      console.log("Not using Firebase Emulators (NODE_ENV:", process.env.NODE_ENV, ", NEXT_PUBLIC_USE_FIREBASE_EMULATORS:", process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS, ")");
@@ -124,4 +132,4 @@ if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBA
 // --- End Emulator Connections ---
 
 
-export { app, auth, db, functions, analytics, appCheck };
+export { app, auth, db, functions, analytics, appCheck, rtdb };

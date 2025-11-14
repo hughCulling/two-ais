@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // Import client Functions instance
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAuth } from '@/context/AuthContext';
+import { useOllamaAgent } from '@/hooks/useOllamaAgent';
 // import { httpsCallable } from 'firebase/functions';
 import {
     collection,
@@ -144,6 +146,7 @@ export function ChatInterface({
     conversationId,
     onConversationStopped
 }: ChatInterfaceProps) {
+    const { user } = useAuth();
     const [messages, setMessages] = useState<Message[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [technicalErrorDetails, setTechnicalErrorDetails] = useState<string | null>(null);
@@ -151,6 +154,9 @@ export function ChatInterface({
     const [isStopping, setIsStopping] = useState(false);
     const [isStopped, setIsStopped] = useState(false);
     const { t } = useTranslation();
+    
+    // Enable local Ollama agent handling
+    useOllamaAgent(conversationId, user?.uid || null);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);

@@ -299,8 +299,37 @@ export async function POST(request: NextRequest) {
 
         console.log(`API Route: Received Full Config: AgentA=${agentA_llm}, AgentB=${agentB_llm}, TTS Enabled=${ttsEnabled}, AgentA TTS Prov=${agentA_tts.provider}, Model=${agentA_tts.selectedTtsModelId}, Voice=${agentA_tts.voice}, AgentB TTS Prov=${agentB_tts.provider}, Model=${agentB_tts.selectedTtsModelId}, Voice=${agentB_tts.voice}, Language=${language}`);
 
-        const agentALLMInfo = getLLMInfoById(agentA_llm);
-        const agentBLLMInfo = getLLMInfoById(agentB_llm);
+        // Get LLM info, handling Ollama models specially (they're loaded dynamically on client)
+        let agentALLMInfo = getLLMInfoById(agentA_llm);
+        let agentBLLMInfo = getLLMInfoById(agentB_llm);
+        
+        // If model ID starts with "ollama:", create a synthetic LLMInfo for it
+        if (!agentALLMInfo && agentA_llm.startsWith('ollama:')) {
+            agentALLMInfo = {
+                id: agentA_llm,
+                name: agentA_llm.replace('ollama:', ''),
+                provider: 'Ollama',
+                contextWindow: 0,
+                pricing: { input: 0, output: 0, freeTier: { available: true, note: 'Local model' } },
+                apiKeyInstructionsUrl: 'https://ollama.com',
+                apiKeySecretName: 'ollama',
+                status: 'stable',
+                isOllamaModel: true,
+            };
+        }
+        if (!agentBLLMInfo && agentB_llm.startsWith('ollama:')) {
+            agentBLLMInfo = {
+                id: agentB_llm,
+                name: agentB_llm.replace('ollama:', ''),
+                provider: 'Ollama',
+                contextWindow: 0,
+                pricing: { input: 0, output: 0, freeTier: { available: true, note: 'Local model' } },
+                apiKeyInstructionsUrl: 'https://ollama.com',
+                apiKeySecretName: 'ollama',
+                status: 'stable',
+                isOllamaModel: true,
+            };
+        }
 
         if (!agentALLMInfo || !agentBLLMInfo) {
             console.error(`API Route: Invalid model ID received: A=${agentA_llm}, B=${agentB_llm}. Could not find info in models.ts.`);
@@ -327,16 +356,26 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "User profile not found" }, { status: 404 });
             }
             userApiSecretVersions = userDocSnap.data()?.apiSecretVersions || {};
-            const agentASecretVersion = userApiSecretVersions[agentARequiredKey] || null;
-            const agentBSecretVersion = userApiSecretVersions[agentBRequiredKey] || null;
+            
+            // Skip API key validation for Ollama (doesn't need API keys)
+            const agentASecretVersion = agentALLMInfo.provider === 'Ollama' ? 'ollama-local' : (userApiSecretVersions[agentARequiredKey] || null);
+            const agentBSecretVersion = agentBLLMInfo.provider === 'Ollama' ? 'ollama-local' : (userApiSecretVersions[agentBRequiredKey] || null);
 
-            if (!agentASecretVersion) {
+            if (!agentASecretVersion && agentALLMInfo.provider !== 'Ollama') {
                 console.error(`API Route: Missing secret version name for key type '${agentARequiredKey}' (Provider: ${agentALLMInfo.provider}) for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentALLMInfo.provider} not found in settings.` }, { status: 404 });
             }
-             if (!agentBSecretVersion) {
+             if (!agentBSecretVersion && agentBLLMInfo.provider !== 'Ollama') {
                 console.error(`API Route: Missing secret version name for key type '${agentBRequiredKey}' (Provider: ${agentBLLMInfo.provider}) for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentBLLMInfo.provider} not found in settings.` }, { status: 404 });
+            }
+            
+            // Add Ollama placeholder to apiSecretVersions if needed
+            if (agentALLMInfo.provider === 'Ollama') {
+                userApiSecretVersions[agentARequiredKey] = 'ollama-local';
+            }
+            if (agentBLLMInfo.provider === 'Ollama') {
+                userApiSecretVersions[agentBRequiredKey] = 'ollama-local';
             }
         } catch (firestoreError) {
             console.error(`API Route: Firestore error fetching secret versions for user ${userId}:`, firestoreError);

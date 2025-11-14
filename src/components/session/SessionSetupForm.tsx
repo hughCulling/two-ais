@@ -20,7 +20,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
 // import { AVAILABLE_LLMS, LLMInfo, groupLLMsByProvider, getLLMInfoById, groupModelsByCategory } from '@/lib/models';
-import { AVAILABLE_LLMS, getLLMInfoById } from '@/lib/models';
+import { getAllAvailableLLMs, getLLMInfoById, groupLLMsByProvider } from '@/lib/models';
+import { useOllama } from '@/hooks/useOllama';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import {
     // AVAILABLE_TTS_PROVIDERS,
@@ -116,10 +117,10 @@ interface SessionSetupFormProps {
 
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral'];
 
-const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = AVAILABLE_LLMS.some(
+const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = getAllAvailableLLMs().some(
     llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
 );
-const ANY_MODEL_USES_REASONING = AVAILABLE_LLMS.some(
+const ANY_MODEL_USES_REASONING = getAllAvailableLLMs().some(
     llm => llm.usesReasoningTokens
 );
 
@@ -163,7 +164,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                     <SelectValue placeholder={placeholder || 'Select LLM'} />
                 </SelectTrigger>
                 <SelectContent className="max-h-96">
-                    {AVAILABLE_LLMS.map((llm) => {
+                    {getAllAvailableLLMs().map((llm) => {
                         const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
                         return (
                             <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
@@ -214,6 +215,7 @@ const LLMSelectorComplex: React.FC<LLMSelectorProps> = ({ value, onChange, disab
     const dropdownRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const listboxRef = useRef<HTMLDivElement>(null);
+    
     const groupedLLMs = groupLLMsByProvider();
 
     // Generate unique IDs for ARIA relationships
@@ -453,6 +455,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const { user, loading: authLoading } = useAuth();
     const { language } = useLanguage();
     const { t, loading: translationLoading } = useTranslation();
+    
+    // Detect Ollama and load models
+    const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
+    
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
@@ -750,10 +756,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             return;
         }
 
+        // Check API keys (skip for Ollama which doesn't need them)
         const agentARequiredLLMKey = agentAOption.apiKeySecretName;
         const agentBRequiredLLMKey = agentBOption.apiKeySecretName;
-        const isAgentALLMKeyMissing = !savedKeyStatus[agentARequiredLLMKey];
-        const isAgentBLLMKeyMissing = !savedKeyStatus[agentBRequiredLLMKey];
+        const isAgentALLMKeyMissing = agentAOption.provider !== 'Ollama' && !savedKeyStatus[agentARequiredLLMKey];
+        const isAgentBLLMKeyMissing = agentBOption.provider !== 'Ollama' && !savedKeyStatus[agentBRequiredLLMKey];
 
         if (isAgentALLMKeyMissing || isAgentBLLMKeyMissing) {
             let missingKeysMsg = "Missing required LLM API key in Settings for: ";
@@ -1088,6 +1095,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 {t?.sessionSetupForm && t.sessionSetupForm.description && (
                     <CardDescription>{t.sessionSetupForm.description}</CardDescription>
                 )}
+                
+                {/* Ollama Status Indicator */}
+                {ollamaLoading && (
+                    <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
+                )}
+                {!ollamaLoading && ollamaAvailable && (
+                    <p className="text-sm text-green-600 dark:text-green-400 pt-2">✓ Ollama detected - local models available</p>
+                )}
+                {!ollamaLoading && !ollamaAvailable && (
+                    <p className="text-sm text-muted-foreground pt-2">Ollama not detected. <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">Install Ollama</a> for free local models.</p>
+                )}
+                
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                 {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
             </CardHeader>
@@ -1340,7 +1359,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {AVAILABLE_LLMS.map(llm => (
+                                        {getAllAvailableLLMs().map(llm => (
                                             <SelectItem key={llm.id} value={llm.id}>{llm.name} ({llm.provider})</SelectItem>
                                         ))}
                                     </SelectContent>
