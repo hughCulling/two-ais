@@ -972,16 +972,13 @@ export function ChatInterface({
                     
                     utteranceRef.current = nextUtterance;
                     
-                    // Small delay between chunks for smoother transition
-                    setTimeout(() => {
-                        try {
-                            window.speechSynthesis.speak(nextUtterance);
-                        } catch (err) {
-                            logger.error('[TTS] Error speaking next chunk:', err);
-                            setIsBrowserTTSActive(false);
-                            handleAudioEnd();
-                        }
-                    }, 100);
+                    try {
+                        window.speechSynthesis.speak(nextUtterance);
+                    } catch (err) {
+                        logger.error('[TTS] Error speaking next chunk:', err);
+                        setIsBrowserTTSActive(false);
+                        handleAudioEnd();
+                    }
                 } else {
                     // All chunks complete
                     logger.info(`[TTS] Finished playing all ${ttsChunkQueueRef.current.length} chunks for message ${nextMsg.id.substring(0, 8)}...`);
@@ -1401,7 +1398,7 @@ export function ChatInterface({
     msg.content
   )}
                                 {msg.isStreaming && (
-                                  <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
+                                  <span className="ml-1 animate-pulse" aria-hidden="true">▍</span>
                                 )}
                                 {/* Removed manual audio play button logic */}
                                 {/* Audio played indicator */}
