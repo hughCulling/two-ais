@@ -91,7 +91,7 @@ export interface ConversationTTSSettingsBackend {
 }
 interface LLMInfo {
     id: string;
-    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI" | "DeepSeek" | "Mistral AI";
+    provider: "OpenAI" | "Google" | "Anthropic" | "xAI" | "TogetherAI" | "DeepSeek" | "Mistral AI" | "Ollama";
     apiKeySecretName: string;
 }
 interface GcpError extends Error { code?: number | string; details?: string; }
@@ -119,6 +119,7 @@ type ConversationData = {
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
   processingTurnFor?: "agentA" | "agentB" | null;
+  ollamaEndpoint?: string;
 };
 // --- End Interfaces ---
 
@@ -158,6 +159,12 @@ function createWavBuffer(pcmData: Buffer, channels = 1, sampleRate = 24000, bits
 }
 
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
+     // Check for Ollama models first (format: "ollama:modelname")
+     if (id.startsWith("ollama:")) {
+         logger.info(`Detected Ollama model: ${id}`);
+         return "Ollama";
+     }
+     // Check other providers
      if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
      if (id.startsWith("gemini-")) return "Google";
      if (id.startsWith("claude-")) return "Anthropic";
@@ -177,6 +184,7 @@ function getFirestoreKeyIdFromProvider(provider: LLMInfo["provider"] | null): st
     if (provider === "TogetherAI") return "together_ai";
     if (provider === "DeepSeek") return "deepseek";
     if (provider === "Mistral AI") return "mistral";
+    if (provider === "Ollama") return "ollama"; // Ollama doesn't need API key, but we need a placeholder
     logger.warn(`Could not map provider to Firestore key ID: ${provider}`);
     return null;
 }
@@ -456,8 +464,17 @@ async function _triggerAgentResponse(
 
         const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
         const llmProvider = getProviderFromId(agentModelId);
+        
+        // Skip Ollama models - they are handled client-side via browser hook
+        if (llmProvider === "Ollama") {
+            logger.info(`Skipping Ollama model ${agentModelId} - handled client-side`);
+            return;
+        }
+        
         const llmFirestoreKeyId = getFirestoreKeyIdFromProvider(llmProvider);
         if (!llmProvider || !llmFirestoreKeyId) { throw new Error(`Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.`); }
+        
+        // Get API key for cloud providers
         const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
         if (!llmSecretVersionName) { throw new Error(`API key reference missing for ${agentToRespond} (${llmProvider}). Check Firestore user data.`); }
         try {
@@ -495,7 +512,7 @@ async function _triggerAgentResponse(
             // }
             if (llmProvider === "Mistral AI") {
                 chatModel = new ChatMistralAI({
-                    apiKey: llmApiKey,
+                    apiKey: llmApiKey!,
                     modelName: modelName,
                     temperature: 0.7,
                 });
@@ -520,7 +537,8 @@ async function _triggerAgentResponse(
                 status: "streaming",
                 timestamp: Date.now(),
             });
-            // Use LangChain streaming API
+
+            // Use LangChain streaming API for cloud providers
             const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
             for await (const chunk of stream) {
                 let token = "";
@@ -550,6 +568,7 @@ async function _triggerAgentResponse(
                     }
                 }
             }
+            
             // Final update with complete content
             await rtdbRef.update({ content: responseContent, status: "complete" });
         } catch (error) {

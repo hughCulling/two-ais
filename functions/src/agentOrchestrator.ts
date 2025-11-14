@@ -10,6 +10,7 @@ import { BaseMessage, HumanMessage, AIMessage, SystemMessage } from "@langchain/
 import Together from "together-ai";
 // import { ChatDeepSeek } from "@langchain/deepseek";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { Ollama } from "ollama";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { getProviderFromId, getFirestoreKeyIdFromProvider, getApiKeyFromSecret, getTTSApiKeyId, getBackendTTSModelById, getTTSInputChunks, createWavBuffer, storageBucket } from "./index";
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base";
@@ -37,6 +38,7 @@ type ConversationData = {
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
+  ollamaEndpoint?: string;
   imageGenSettings?: {
     enabled: boolean;
     provider: string;
@@ -153,13 +155,19 @@ export async function triggerAgentResponse(
         const llmProvider = getProviderFromId(agentModelId);
         const llmFirestoreKeyId = getFirestoreKeyIdFromProvider(llmProvider);
         if (!llmProvider || !llmFirestoreKeyId) { throw new Error(`Invalid LLM configuration ID "${agentModelId}" for ${agentToRespond}.`); }
-        const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
-        if (!llmSecretVersionName) { throw new Error(`API key reference missing for ${agentToRespond} (${llmProvider}). Check Firestore user data.`); }
-        try {
-            llmApiKey = await getApiKeyFromSecret(llmSecretVersionName);
-            if (!llmApiKey) { throw new Error(`getApiKeyFromSecret returned null for LLM version ${llmSecretVersionName}`); }
-            logger.info(`Successfully retrieved API key for LLM provider ${llmProvider} in triggerAgentResponse.`);
-        } catch(error) { throw new Error(`Failed to retrieve API key for ${agentToRespond} (${llmProvider}): ${error}`); }
+        
+        // Ollama doesn't need an API key
+        if (llmProvider !== "Ollama") {
+            const llmSecretVersionName = conversationData.apiSecretVersions[llmFirestoreKeyId];
+            if (!llmSecretVersionName) { throw new Error(`API key reference missing for ${agentToRespond} (${llmProvider}). Check Firestore user data.`); }
+            try {
+                llmApiKey = await getApiKeyFromSecret(llmSecretVersionName);
+                if (!llmApiKey) { throw new Error(`getApiKeyFromSecret returned null for LLM version ${llmSecretVersionName}`); }
+                logger.info(`Successfully retrieved API key for LLM provider ${llmProvider} in triggerAgentResponse.`);
+            } catch(error) { throw new Error(`Failed to retrieve API key for ${agentToRespond} (${llmProvider}): ${error}`); }
+        } else {
+            logger.info(`Ollama provider selected for ${agentToRespond}, no API key needed.`);
+        }
         let chatModel: BaseChatModel;
         try {
             const modelName = agentModelId;
@@ -182,10 +190,14 @@ export async function triggerAgentResponse(
             // }
             if (llmProvider === "Mistral AI") {
                 chatModel = new ChatMistralAI({
-                    apiKey: llmApiKey,
+                    apiKey: llmApiKey!,
                     modelName: modelName,
                     temperature: 0.7, // Default temperature, can be adjusted
                 });
+            }
+            else if (llmProvider === "Ollama") {
+                // Ollama doesn't use LangChain, we'll handle it separately below
+                chatModel = null as unknown as BaseChatModel; // Placeholder
             }
             else throw new Error(`Unsupported provider configuration: ${llmProvider}`);
             logger.info(`Initialized ${llmProvider} model: ${modelName} for ${agentToRespond} in triggerAgentResponse`);
@@ -204,35 +216,81 @@ export async function triggerAgentResponse(
                 status: "streaming",
                 timestamp: Date.now(),
             });
-            const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
-            for await (const chunk of stream) {
-                let token = "";
-                if (typeof chunk === "string") {
-                    token = chunk;
-                } else if (chunk && typeof chunk.content === "string") {
-                    token = chunk.content;
-                } else if (chunk && Array.isArray(chunk.content)) {
-                    // Filter out thinking chunks, only keep text chunks
-                    token = chunk.content
-                        .filter((x: unknown) => typeof x === "object" && x !== null && (x as {type?: string}).type !== "thinking")
-                        .map((x: unknown) => (typeof x === "string" ? x : ((x as {text?: string}).text || JSON.stringify(x))))
-                        .join("");
-                } else {
-                    token = String(chunk);
-                }
+
+            // Handle Ollama separately (doesn't use LangChain)
+            if (llmProvider === "Ollama") {
+                // Extract model name from ID (format: "ollama:modelname")
+                const ollamaModelName = agentModelId.replace(/^ollama:/, "");
                 
-                // Only add non-empty tokens
-                if (token) {
-                    responseContent += token;
-                    updateCounter++;
+                // Get Ollama endpoint from conversation data or use default
+                const ollamaEndpoint = conversationData.ollamaEndpoint || "http://localhost:11434";
+                
+                const ollama = new Ollama({ host: ollamaEndpoint });
+                
+                // Convert LangChain messages to Ollama format
+                const ollamaMessages = historyMessages.map((msg: BaseMessage) => {
+                    if (msg instanceof HumanMessage) {
+                        return { role: "user" as const, content: msg.content as string };
+                    } else if (msg instanceof AIMessage) {
+                        return { role: "assistant" as const, content: msg.content as string };
+                    } else if (msg instanceof SystemMessage) {
+                        return { role: "system" as const, content: msg.content as string };
+                    }
+                    return { role: "user" as const, content: String(msg.content) };
+                });
+                
+                const stream = await ollama.chat({
+                    model: ollamaModelName,
+                    messages: ollamaMessages,
+                    stream: true,
+                });
+                
+                for await (const chunk of stream) {
+                    const token = chunk.message?.content || "";
                     
-                    // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
-                    if (updateCounter >= UPDATE_INTERVAL) {
-                        await rtdbRef.update({ content: responseContent });
-                        updateCounter = 0;
+                    if (token) {
+                        responseContent += token;
+                        updateCounter++;
+                        
+                        if (updateCounter >= UPDATE_INTERVAL) {
+                            await rtdbRef.update({ content: responseContent });
+                            updateCounter = 0;
+                        }
+                    }
+                }
+            } else {
+                // Standard LangChain streaming for other providers
+                const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
+                for await (const chunk of stream) {
+                    let token = "";
+                    if (typeof chunk === "string") {
+                        token = chunk;
+                    } else if (chunk && typeof chunk.content === "string") {
+                        token = chunk.content;
+                    } else if (chunk && Array.isArray(chunk.content)) {
+                        // Filter out thinking chunks, only keep text chunks
+                        token = chunk.content
+                            .filter((x: unknown) => typeof x === "object" && x !== null && (x as {type?: string}).type !== "thinking")
+                            .map((x: unknown) => (typeof x === "string" ? x : ((x as {text?: string}).text || JSON.stringify(x))))
+                            .join("");
+                    } else {
+                        token = String(chunk);
+                    }
+                    
+                    // Only add non-empty tokens
+                    if (token) {
+                        responseContent += token;
+                        updateCounter++;
+                        
+                        // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
+                        if (updateCounter >= UPDATE_INTERVAL) {
+                            await rtdbRef.update({ content: responseContent });
+                            updateCounter = 0;
+                        }
                     }
                 }
             }
+            
             // Final update with complete content
             await rtdbRef.update({ content: responseContent, status: "complete" });
         } catch (error) {

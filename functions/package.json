@@ -23,9 +23,11 @@
     "@google/generative-ai": "^0.18.0",
     "@langchain/core": "^1.0.4",
     "@langchain/mistralai": "^1.0.0",
+    "@opentelemetry/api": "^1.9.0",
     "axios": "^1.9.0",
     "firebase-admin": "^13.2.0",
     "firebase-functions": "^6.3.2",
+    "ollama": "^0.6.3",
     "openai": "^4.95.1",
     "remove-markdown": "^0.6.2",
     "together-ai": "^0.21.0"

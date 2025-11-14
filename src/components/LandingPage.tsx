@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
+import { useOllama } from '@/hooks/useOllama';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar } from "lucide-react";
@@ -138,6 +139,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   // Redirect authenticated users to the app
@@ -231,6 +233,41 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 </div>
               </AlertDescription>
             </Alert>
+            
+            {/* Ollama Status */}
+            {!ollamaLoading && ollamaAvailable && (
+              <Alert variant="default" className="text-left border-green-500/50 bg-green-50 dark:bg-green-950/20">
+                <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <AlertTitle className="font-semibold text-green-900 dark:text-green-100">{t.page_OllamaSetupTitle}</AlertTitle>
+                <AlertDescription className="text-green-800 dark:text-green-200">
+                  Ollama detected! You can use free local AI models with no API costs or rate limits.
+                </AlertDescription>
+              </Alert>
+            )}
+            {!ollamaLoading && !ollamaAvailable && (
+              <Alert variant="default" className="text-left border-blue-500/50">
+                <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                <AlertTitle className="font-semibold">{t.page_OllamaSetupTitle}</AlertTitle>
+                <AlertDescription>
+                  <div className="space-y-2">
+                    <p>
+                      {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
+                      <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
+                        {t.page_OllamaLearnMore}
+                      </a>
+                    </p>
+                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                      <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
+                      <p>{t.page_OllamaStep1}</p>
+                      <p>{t.page_OllamaStep2}</p>
+                      <p className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">{t.page_OllamaStep3}</p>
+                      <p>{t.page_OllamaStep4}</p>
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+            
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">

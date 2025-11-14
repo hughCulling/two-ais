@@ -245,6 +245,17 @@ export const MODEL_LANGUAGE_SUPPORT: LanguageSupport[] = [
                 supportedLanguages: ['en', 'fr', 'de', 'es', 'it', 'pt', 'ar', 'hi', 'ru', 'zh', 'ja', 'ko'],
             },
         ]
+    },
+    {
+        provider: 'Ollama',
+        // Most Ollama models support multiple languages, especially popular ones like Llama, Mistral, etc.
+        // Defaulting to broad language support since models vary
+        defaultSupportedLanguages: [
+            'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'ru', 'zh', 
+            'ja', 'ko', 'ar', 'hi', 'tr', 'vi', 'th', 'id', 'sv', 'no',
+            'da', 'fi', 'cs', 'ro', 'uk', 'bg', 'el', 'he', 'fa', 'bn'
+        ],
+        notes: 'Language support varies by model. Most popular models (Llama, Mistral, etc.) support multiple languages.'
     }
 ];
 
