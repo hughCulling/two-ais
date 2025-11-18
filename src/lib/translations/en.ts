@@ -296,7 +296,7 @@ const en = {
     page_OllamaSetupInstructions: "Setup Instructions",
     page_OllamaStep1: "1. Download and install Ollama from ollama.com/download",
     page_OllamaStep2: "2. Pull a model (e.g., 'ollama pull llama2')",
-    page_OllamaStep3: "3. Set CORS: OLLAMA_ORIGINS=https://two-ais.com ollama serve",
+    page_OllamaStep3: "3. Set CORS: OLLAMA_ORIGINS=https://www.two-ais.com ollama serve",
     page_OllamaStep4: "4. Sign in and select your Ollama model!",
     page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
     page_VideoTitle: "Two AIs Conversation Demo",
