@@ -320,6 +320,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                               className="ml-1" 
                             />
                           )}
+                          {providerName === 'Ollama' && (
+                            <FreeTierBadge 
+                              freeTier={{
+                                available: true,
+                                note: (t) => t.pricing.ollamaFreeTierNote
+                              }} 
+                              t={t} 
+                              className="ml-1" 
+                            />
+                          )}
                         </div>
                         {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
                       </CollapsibleTrigger>
@@ -375,7 +385,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
                                     {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
                                     {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
-                                    {llm.pricing.note ? (
+                                    {/* Don't show pricing for Ollama models - it's shown in the provider header */}
+                                    {llm.provider !== 'Ollama' && (llm.pricing.note ? (
                                       <TruncatableNote noteText={llm.pricing.note} />
                                     ) : (
                                       <span
@@ -384,7 +395,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                       >
                                         (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
                                       </span>
-                                    )}
+                                    ))}
                                     {isLanguageSupported(llm.provider, language.code, llm.id) ? (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
@@ -448,7 +459,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         </TooltipContent>
                                       </Tooltip>
                                     )}
-                                    {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
+                                    {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
                                     {llm.knowledgeCutoff && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>

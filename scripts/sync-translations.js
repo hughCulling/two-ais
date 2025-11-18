@@ -15,8 +15,31 @@ const PROTECTED_TERMS = [
 
 // Helper: Extract object literal from TypeScript file
 function extractObjectLiteral(content) {
-    // Remove comments
-    content = content.replace(/\/\/.*$/gm, '');
+    // Remove single-line comments but preserve strings
+    // This regex matches // comments that are not inside strings
+    const lines = content.split('\n');
+    const cleanedLines = lines.map(line => {
+        // Simple approach: if line has //, check if it's in a string
+        const commentIdx = line.indexOf('//');
+        if (commentIdx === -1) return line;
+        
+        // Count quotes before the comment
+        const beforeComment = line.substring(0, commentIdx);
+        const singleQuotes = (beforeComment.match(/'/g) || []).length;
+        const doubleQuotes = (beforeComment.match(/"/g) || []).length;
+        const backticks = (beforeComment.match(/`/g) || []).length;
+        
+        // If odd number of quotes, the // is likely inside a string
+        if (singleQuotes % 2 === 1 || doubleQuotes % 2 === 1 || backticks % 2 === 1) {
+            return line;
+        }
+        
+        // Otherwise, remove the comment
+        return line.substring(0, commentIdx);
+    });
+    
+    content = cleanedLines.join('\n');
+    
     // Find the first '=' after 'const'
     const eqIdx = content.indexOf('=');
     if (eqIdx === -1) throw new Error('No "=" found in file');
@@ -68,17 +91,28 @@ function writeTranslationObject(filePath, obj, varName) {
 }
 
 function main() {
-    const en = loadTranslationObject(EN_FILE);
+    console.log('Loading English translation file...');
+    let en;
+    try {
+        en = loadTranslationObject(EN_FILE);
+        console.log('✓ English translation loaded successfully');
+    } catch (e) {
+        console.error('✗ Failed to load en.ts:', e.message);
+        console.error('Full error:', e);
+        process.exit(1);
+    }
 
     fs.readdirSync(TRANSLATIONS_DIR).forEach(file => {
         if (SKIP_FILES.includes(file) || !file.endsWith('.ts')) return;
 
         const filePath = path.join(TRANSLATIONS_DIR, file);
+        console.log(`\nProcessing ${file}...`);
         let target;
         try {
             target = loadTranslationObject(filePath);
         } catch (e) {
-            console.error(`Failed to load ${file}:`, e);
+            console.error(`✗ Failed to load ${file}:`, e.message);
+            console.error('Full error:', e);
             return;
         }
 
@@ -87,8 +121,10 @@ function main() {
         // Use the variable name from the file (e.g., fr for fr.ts)
         const varName = path.basename(file, '.ts');
         writeTranslationObject(filePath, updated, varName);
-        console.log(`Synced: ${file}`);
+        console.log(`✓ Synced: ${file}`);
     });
+    
+    console.log('\n✓ All translations synced successfully!');
 }
 
 main();
