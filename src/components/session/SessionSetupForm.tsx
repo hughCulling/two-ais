@@ -173,6 +173,8 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                     {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
                                     {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
                                     <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
+                                    {/* Don't show pricing for Ollama models */}
+                                    {llm.provider !== 'Ollama' && (
                                         llm.pricing.note ?
                                             (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
                                             `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
@@ -182,6 +184,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                             `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                         })
                                     </span>
+                                    )}
                                     {supportsLanguage ? (
                                         <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
                                     ) : (

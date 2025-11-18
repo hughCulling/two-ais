@@ -240,7 +240,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                 <AlertTitle className="font-semibold text-green-900 dark:text-green-100">{t.page_OllamaSetupTitle}</AlertTitle>
                 <AlertDescription className="text-green-800 dark:text-green-200">
-                  Ollama detected! You can use free local AI models with no API costs or rate limits.
+                  You can use LLMs through Ollama.
                 </AlertDescription>
               </Alert>
             )}
@@ -299,6 +299,12 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                 let lastDisplayedBrand: string | null = null;
+                
+                // Check if all models in this provider support the current language
+                const allModelsSupport = providerModels.every(llm => 
+                  isLanguageSupported(llm.provider, language.code, llm.id)
+                );
+                
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
                     <div className="flex items-center justify-between w-full mb-2">
@@ -329,6 +335,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                               t={t} 
                               className="ml-1" 
                             />
+                          )}
+                          {allModelsSupport && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                              </TooltipTrigger>
+                              <TooltipContent side="top">
+                                <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                         </div>
                         {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
@@ -396,24 +412,27 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                         (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
                                       </span>
                                     ))}
-                                    {isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top">
-                                          <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    ) : (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top">
-                                          <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
+                                    {/* Only show language support icon on individual models if not all models support the language */}
+                                    {!allModelsSupport && (
+                                      isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top">
+                                            <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      ) : (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top">
+                                            <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      )
                                     )}
                                     {llm.usesReasoningTokens && (
                                       <Tooltip>
