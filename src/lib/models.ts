@@ -1116,6 +1116,20 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
+            // Custom sorting for Ollama models - prioritize cloud models
+            if (models.length > 0 && models[0].provider === 'Ollama') {
+                byCategory[cat].sort((a, b) => {
+                    const aIsCloud = a.name.toLowerCase().includes('cloud');
+                    const bIsCloud = b.name.toLowerCase().includes('cloud');
+                    
+                    // Cloud models come first
+                    if (aIsCloud && !bIsCloud) return -1;
+                    if (!aIsCloud && bIsCloud) return 1;
+                    
+                    // Within same group (both cloud or both non-cloud), sort alphabetically
+                    return a.name.localeCompare(b.name);
+                });
+            }
         }
     });
 
@@ -1186,9 +1200,10 @@ export async function fetchOllamaModels(endpoint: string = 'http://localhost:114
             pricing: {
                 input: 0,
                 output: 0,
+                // No note here - pricing info shown in provider header instead
                 freeTier: {
                     available: true,
-                    note: 'Local models run on your machine with no API costs'
+                    note: (t) => t.pricing.ollamaFreeTierNote
                 }
             },
             apiKeyInstructionsUrl: 'https://ollama.com/download',
