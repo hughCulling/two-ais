@@ -228,11 +228,11 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                 <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
                                                     llm.pricing.note ?
                                                         (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                                 }>
                                                     ({llm.pricing.note ?
                                                         (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                                     })
                                                 </span>
                                             )}
