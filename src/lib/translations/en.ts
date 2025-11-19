@@ -274,7 +274,7 @@ const en = {
     modelCategory_Qwen2: "Qwen2 model",
     modelCategory_Qwen2Vision: "Qwen2 Vision model",
     modelCategory_QwenModels: "Qwen Models",
-    modelCategory_Ollama: "Local models",
+    modelCategory_Ollama: "Models",
     modelCategory_OtherModels: "Other Models",
 
     // Page specific (src/app/page.tsx)
@@ -288,9 +288,9 @@ const en = {
     page_ErrorAlertTitle: "Error",
     page_WelcomeTitle: "Welcome to Two AIs",
     page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS).",
-    page_ApiKeysRequiredTitle: "API Key Required for Mistral AI API (alternatively, you can use Ollama)",
-    page_ApiKeysRequiredDescription: "To run conversations, you can either provide your own Mistral AI API key after signing in, or use Ollama for free local AI models. Detailed instructions can be found on the {settingsLink} page after signing in.",
-    page_OllamaSetupTitle: "Ollama (Free Alternative)",
+    page_ApiKeysRequiredTitle: "API Key or Ollama Required",
+    page_ApiKeysRequiredDescription: "To run conversations, you have to at minimum provide your own Mistral AI API key, or use Ollama. Detailed instructions for obtaining an API key can be found on the {settingsLink} page after signing in.",
+    page_OllamaSetupTitle: "Ollama Detected",
     page_OllamaSetupDescription: "Ollama lets you run AI models locally on your computer with no API costs or rate limits. {learnMoreLink}",
     page_OllamaLearnMore: "You can learn more about Ollama",
     page_OllamaSetupInstructions: "Setup Instructions",
@@ -337,8 +337,8 @@ const en = {
         gemini25ProNote: "Pricing varies by input size. Free tier available.",
         gemini25FlashNote: "Pricing varies by media type. Free tier available.",
         gemini25FlashLiteNote: "Most cost-effective option. Free tier available.",
-        mistralFreeTierNote: "You can access without paying with the Experiment plan. API requests may be used to train Mistral's models.",
-        ollamaFreeTierNote: "Free - runs locally on your machine with no API costs",
+        mistralFreeTierNote: "You can access without paying with the Experiment plan. API requests may be used to train Mistral's models and have rate limits.",
+        ollamaFreeTierNote: "Allows you to use models running locally on your machine and in the cloud with rate limits for free.",
         tts: {
             geminiFlash: {
                 textTokens: "{price} per 1 Million text tokens",
@@ -400,6 +400,7 @@ const en = {
         languageSupportNote: 'Language support indicators show model compatibility with {languageName}. Models without support are disabled.',
         reasoningNote: "Indicates a model uses 'thinking' or 'reasoning' tokens. This output is billed but is not visible in the chat.",
         openaiOrgVerificationNote: 'Indicates an OpenAI model requires a verified organization. You can',
+        freeTierNote: 'Indicates a model or provider has a free tier available.',
         voice: 'Voice',
         selectVoice: 'Select Voice',
         noVoicesFor: 'No voices for {languageName}',
