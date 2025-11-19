@@ -1,5 +1,5 @@
 // src/lib/firebase/sessionPreset.ts
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from './clientApp';
 
 export interface SessionPreset {

@@ -98,7 +98,7 @@ export default function SessionPresetPage() {
                     <CardContent className="pt-6">
                         <p className="text-muted-foreground">{t?.settings?.sessionPreset?.noPreset || 'No preset saved'}</p>
                         <p className="text-sm text-muted-foreground mt-2">
-                            You can save a preset from the session setup form by clicking the "Save Preset" button.
+                            You can save a preset from the session setup form by clicking the &quot;Save Preset&quot; button.
                         </p>
                     </CardContent>
                 </Card>
@@ -108,8 +108,12 @@ export default function SessionPresetPage() {
 
     const agentAModel = getLLMInfoById(preset.agentA_llm);
     const agentBModel = getLLMInfoById(preset.agentB_llm);
-    const agentAProvider = getTTSProviderInfoById(preset.agentA_tts.provider as any);
-    const agentBProvider = getTTSProviderInfoById(preset.agentB_tts.provider as any);
+    const agentAProvider = preset.agentA_tts.provider !== 'none' 
+        ? getTTSProviderInfoById(preset.agentA_tts.provider as 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser')
+        : null;
+    const agentBProvider = preset.agentB_tts.provider !== 'none'
+        ? getTTSProviderInfoById(preset.agentB_tts.provider as 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser')
+        : null;
 
     return (
         <>

@@ -76,7 +76,8 @@ const gu = {
         "sections": {
             "appearance": "દેખાવ",
             "apiKeys": "API ચાવીઓ",
-            "language": "ભાષા"
+            "language": "ભાષા",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "થીમ",
@@ -116,6 +117,20 @@ const gu = {
             "keyNotSet": "કી સ્ટેટસ: સેટ નથી",
             "keySet": "કી સ્ટેટસ: સેટ કરો",
             "saveButton": "સાચવો API ચાવી(ઓ)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const gu = {
         "cancel": "રદ કરો",
         "delete": "કાઢી નાખો",
         "confirm": "પુષ્ટિ કરો",
-        "or": "અથવા"
+        "or": "અથવા",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API ચાવી ખૂટે છે",
     "apiKeyMissingSubtext": "આ API આ પ્રદાતા માટે કી ખૂટે છે અથવા અમાન્ય છે. કૃપા કરીને તેને સેટિંગ્સમાં ઉમેરો.",
@@ -384,7 +400,15 @@ const gu = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "મુખ્ય પર પાછા જાઓ",

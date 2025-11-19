@@ -76,7 +76,8 @@ const vi = {
         "sections": {
             "appearance": "Vẻ bề ngoài",
             "apiKeys": "API Chìa khóa",
-            "language": "Ngôn ngữ"
+            "language": "Ngôn ngữ",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Chủ đề",
@@ -116,6 +117,20 @@ const vi = {
             "keyNotSet": "Trạng thái khóa: Chưa thiết lập",
             "keySet": "Trạng thái khóa: Đã đặt",
             "saveButton": "Cứu API Khóa(s)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const vi = {
         "cancel": "Hủy bỏ",
         "delete": "Xóa bỏ",
         "confirm": "Xác nhận",
-        "or": "hoặc"
+        "or": "hoặc",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Chìa khóa bị mất",
     "apiKeyMissingSubtext": "Các API Khóa cho nhà cung cấp này bị thiếu hoặc không hợp lệ. Vui lòng thêm khóa vào phần cài đặt.",
@@ -384,7 +400,15 @@ const vi = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Quay lại trang chính",

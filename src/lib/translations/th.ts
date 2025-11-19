@@ -76,7 +76,8 @@ const th = {
         "sections": {
             "appearance": "รูปร่าง",
             "apiKeys": "API กุญแจ",
-            "language": "ภาษา"
+            "language": "ภาษา",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "ธีม",
@@ -116,6 +117,20 @@ const th = {
             "keyNotSet": "สถานะคีย์: ไม่ได้ตั้งค่า",
             "keySet": "สถานะคีย์: ตั้งค่า",
             "saveButton": "บันทึก API คีย์"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const th = {
         "cancel": "ยกเลิก",
         "delete": "ลบ",
         "confirm": "ยืนยัน",
-        "or": "หรือ"
+        "or": "หรือ",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API กุญแจหายไป",
     "apiKeyMissingSubtext": "การ API รหัสสำหรับผู้ให้บริการนี้หายไปหรือไม่ถูกต้อง โปรดเพิ่มรหัสในการตั้งค่า",
@@ -384,7 +400,15 @@ const th = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "กลับสู่หน้าหลัก",

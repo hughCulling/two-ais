@@ -76,7 +76,8 @@ const sk = {
         "sections": {
             "appearance": "Vzhľad",
             "apiKeys": "API Kľúče",
-            "language": "Jazyk"
+            "language": "Jazyk",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Téma",
@@ -116,6 +117,20 @@ const sk = {
             "keyNotSet": "Stav kľúča: Nenastavené",
             "keySet": "Stav kľúča: Nastavený",
             "saveButton": "Uložiť API Kľúč(e)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const sk = {
         "cancel": "Zrušiť",
         "delete": "Odstrániť",
         "confirm": "Potvrdiť",
-        "or": "alebo"
+        "or": "alebo",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Chýbajúci kľúč",
     "apiKeyMissingSubtext": "Ten/Tá/To API Kľúč pre tohto poskytovateľa chýba alebo je neplatný. Pridajte ho v nastaveniach.",
@@ -384,7 +400,15 @@ const sk = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Späť na hlavný obsah",

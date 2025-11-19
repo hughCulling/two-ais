@@ -76,7 +76,8 @@ const el = {
         "sections": {
             "appearance": "Εμφάνιση",
             "apiKeys": "API Κλειδιά",
-            "language": "Γλώσσα"
+            "language": "Γλώσσα",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Θέμα",
@@ -116,6 +117,20 @@ const el = {
             "keyNotSet": "Κατάσταση κλειδιού: Δεν έχει οριστεί",
             "keySet": "Κατάσταση κλειδιού: Ορισμός",
             "saveButton": "Εκτός API Κλειδί(α)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const el = {
         "cancel": "Ματαίωση",
         "delete": "Διαγράφω",
         "confirm": "Επιβεβαιώνω",
-        "or": "ή"
+        "or": "ή",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Λείπει το κλειδί",
     "apiKeyMissingSubtext": "Ο API Το κλειδί για αυτόν τον πάροχο λείπει ή δεν είναι έγκυρο. Προσθέστε το στις ρυθμίσεις.",
@@ -384,7 +400,15 @@ const el = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Επιστροφή στο κύριο μέρος",

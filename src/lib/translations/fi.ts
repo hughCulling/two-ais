@@ -76,7 +76,8 @@ const fi = {
         "sections": {
             "appearance": "Ulkonäkö",
             "apiKeys": "API Avaimet",
-            "language": "Kieli"
+            "language": "Kieli",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Teema",
@@ -116,6 +117,20 @@ const fi = {
             "keyNotSet": "Avaimen tila: Ei asetettu",
             "keySet": "Avaimen tila: Aseta",
             "saveButton": "Tallentaa API Avaimet"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const fi = {
         "cancel": "Peruuttaa",
         "delete": "Poistaa",
         "confirm": "Vahvistaa",
-        "or": "tai"
+        "or": "tai",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Avain puuttuu",
     "apiKeyMissingSubtext": "The API Tämän palveluntarjoajan avain puuttuu tai on virheellinen. Lisää se asetuksista.",
@@ -384,7 +400,15 @@ const fi = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Takaisin pääsivulle",
