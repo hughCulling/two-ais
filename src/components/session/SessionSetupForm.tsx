@@ -7,14 +7,16 @@ import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -22,6 +24,7 @@ import { db } from '@/lib/firebase/clientApp';
 import { getAllAvailableLLMs, getLLMInfoById } from '@/lib/models';
 import { useOllama } from '@/hooks/useOllama';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
+import { IconTooltipBadge } from "@/components/ui/icon-tooltip-badge";
 import {
     // AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
@@ -122,6 +125,9 @@ const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = getAllAvailableLLMs().some(
 const ANY_MODEL_USES_REASONING = getAllAvailableLLMs().some(
     llm => llm.usesReasoningTokens
 );
+const ANY_MODEL_HAS_FREE_TIER = getAllAvailableLLMs().some(
+    llm => llm.pricing?.freeTier?.available
+);
 
 const formatPrice = (price: number) => {
     return price.toLocaleString('en-US', {
@@ -155,6 +161,24 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         );
     }
 
+    // Group models by provider
+    const allLLMs = getAllAvailableLLMs();
+    const groupedByProvider: Record<string, typeof allLLMs> = {};
+    
+    allLLMs.forEach((llm) => {
+        if (!groupedByProvider[llm.provider]) {
+            groupedByProvider[llm.provider] = [];
+        }
+        groupedByProvider[llm.provider].push(llm);
+    });
+
+    // Sort providers alphabetically, but put Ollama last if it exists
+    const sortedProviders = Object.keys(groupedByProvider).sort((a, b) => {
+        if (a === 'Ollama') return 1;
+        if (b === 'Ollama') return -1;
+        return a.localeCompare(b);
+    });
+
     return (
         <div className="space-y-2">
             <Label htmlFor={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`}>{label}</Label>
@@ -163,43 +187,104 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                     <SelectValue placeholder={placeholder || 'Select LLM'} />
                 </SelectTrigger>
                 <SelectContent className="max-h-96">
-                    {getAllAvailableLLMs().map((llm) => {
-                        const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                    {sortedProviders.map((provider) => {
+                        // Check if all models in this provider support the current language
+                        const allModelsSupport = groupedByProvider[provider].every(llm => 
+                            isLanguageSupported(llm.provider, language.code, llm.id)
+                        );
+                        
+                        // Check if all models in this provider have free tier
+                        const allHaveFreeTier = groupedByProvider[provider].every(llm => 
+                            llm.pricing?.freeTier?.available
+                        );
+                        
+                        // Get the free tier info from the first model (they should all be the same for the provider)
+                        const providerFreeTier = allHaveFreeTier ? groupedByProvider[provider][0]?.pricing?.freeTier : null;
+                        
                         return (
-                            <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
-                                <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
-                                    <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
-                                    {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
-                                    {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
-                                    {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
-                                    <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
-                                    {/* Don't show pricing for Ollama models */}
-                                    {llm.provider !== 'Ollama' && (
-                                        llm.pricing.note ?
-                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                    }>
-                                        ({llm.pricing.note ?
-                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                        })
-                                    </span>
+                            <SelectGroup key={provider}>
+                                <SelectLabel className="flex items-center gap-1.5">
+                                    {provider}
+                                    {allModelsSupport && (
+                                        <IconTooltipBadge
+                                            icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
+                                            tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                        />
                                     )}
-                                    {supportsLanguage ? (
-                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                    ) : (
-                                        <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                    {allHaveFreeTier && providerFreeTier && (
+                                        <FreeTierBadge freeTier={providerFreeTier} t={t} />
                                     )}
-                                    {llm.usesReasoningTokens && (
-                                        <Info className="h-3 w-3 text-blue-500 flex-shrink-0" />
-                                    )}
-                                    {llm.requiresOrgVerification && (
-                                        <AlertTriangle className="h-3 w-3 text-yellow-500 flex-shrink-0" />
-                                    )}
-                                    {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
-                                    {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
-                                </div>
-                            </SelectItem>
+                                </SelectLabel>
+                                {groupedByProvider[provider].map((llm) => {
+                                const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                                return (
+                                    <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
+                                        <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
+                                            <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
+                                            {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
+                                            {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
+                                            {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
+                                            {/* Don't show pricing for Ollama models */}
+                                            {llm.provider !== 'Ollama' && (
+                                                <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
+                                                    llm.pricing.note ?
+                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                }>
+                                                    ({llm.pricing.note ?
+                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                    })
+                                                </span>
+                                            )}
+                                            {/* Only show language support icon on individual models if not all models support the language */}
+                                            {!allModelsSupport && (
+                                                supportsLanguage ? (
+                                                    <IconTooltipBadge
+                                                        icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
+                                                        tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                                        className="flex-shrink-0"
+                                                    />
+                                                ) : (
+                                                    <IconTooltipBadge
+                                                        icon={<X className="h-3 w-3 text-red-700 dark:text-red-300" />}
+                                                        tooltip={t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}
+                                                        className="flex-shrink-0"
+                                                    />
+                                                )
+                                            )}
+                                            {llm.usesReasoningTokens && (
+                                                <IconTooltipBadge
+                                                    icon={<Info className="h-3 w-3 text-blue-500" />}
+                                                    tooltip={
+                                                        llm.provider === 'Anthropic'
+                                                            ? t.page_TooltipAnthropicExtendedThinking
+                                                            : llm.provider === 'xAI'
+                                                                ? t.page_TooltipXaiThinking
+                                                                : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                                    ? t.page_TooltipQwenReasoning
+                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                                        ? t.page_TooltipDeepSeekReasoning
+                                                                        : t.page_TooltipGenericReasoning
+                                                    }
+                                                    className="flex-shrink-0"
+                                                />
+                                            )}
+                                            {llm.requiresOrgVerification && (
+                                                <IconTooltipBadge
+                                                    icon={<AlertTriangle className="h-3 w-3 text-yellow-500" />}
+                                                    tooltip={t.page_TooltipRequiresVerification}
+                                                    className="flex-shrink-0"
+                                                />
+                                            )}
+                                            {/* Only show free tier badge on individual models if not all models in provider have it */}
+                                            {!allHaveFreeTier && llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
+                                            {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
+                                        </div>
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectGroup>
                         );
                     })}
                 </SelectContent>
@@ -1103,10 +1188,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
                 )}
                 {!ollamaLoading && ollamaAvailable && (
-                    <p className="text-sm text-green-600 dark:text-green-400 pt-2">✓ Ollama detected - local models available</p>
+                    <p className="text-sm text-green-600 dark:text-green-400 pt-2">✓ Ollama detected - their local and cloud models are available</p>
                 )}
                 {!ollamaLoading && !ollamaAvailable && (
-                    <p className="text-sm text-muted-foreground pt-2">Ollama not detected. <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">Install Ollama</a> for free local models.</p>
+                    <p className="text-sm text-muted-foreground pt-2">Ollama not detected. You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
                 )}
                 
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
@@ -1137,36 +1222,44 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             />
                         </div>
                     </div>
-                    {/* Explanation Notes */}
-                    {t && (
-                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0" />
-                            <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0" />
-                            {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
-                        </p>
-                    )}
-                    {ANY_MODEL_USES_REASONING && (
-                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
-                            {t && t.sessionSetupForm.reasoningNote}
-                        </p>
-                    )}
-                    {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
-                        <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                            <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0" />
-                            {t && t.sessionSetupForm.openaiOrgVerificationNote}
-                            {t && (
-                                <a
-                                    href="https://platform.openai.com/settings/organization/general"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                                >
-                                    {t.common_verifyHere}
-                                </a>
-                            )}
-                        </p>
-                    )}
+                    {/* Explanation Notes - Only visible on mobile/touch devices */}
+                    <div className="md:hidden space-y-1">
+                        {t && (
+                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0" />
+                                <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0" />
+                                {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
+                            </p>
+                        )}
+                        {ANY_MODEL_USES_REASONING && (
+                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
+                                {t && t.sessionSetupForm.reasoningNote}
+                            </p>
+                        )}
+                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
+                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0" />
+                                {t && t.sessionSetupForm.openaiOrgVerificationNote}
+                                {t && (
+                                    <a
+                                        href="https://platform.openai.com/settings/organization/general"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                    >
+                                        {t.common_verifyHere}
+                                    </a>
+                                )}
+                            </p>
+                        )}
+                        {ANY_MODEL_HAS_FREE_TIER && (
+                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                <Info className="h-3.5 w-3.5 text-muted-foreground mr-1 flex-shrink-0" />
+                                {t && t.sessionSetupForm.freeTierNote}
+                            </p>
+                        )}
+                    </div>
                 </div>
 
                 {/* TTS Configuration Section */}

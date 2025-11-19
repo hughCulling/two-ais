@@ -400,6 +400,7 @@ const en = {
         languageSupportNote: 'Language support indicators show model compatibility with {languageName}. Models without support are disabled.',
         reasoningNote: "Indicates a model uses 'thinking' or 'reasoning' tokens. This output is billed but is not visible in the chat.",
         openaiOrgVerificationNote: 'Indicates an OpenAI model requires a verified organization. You can',
+        freeTierNote: 'Indicates a model or provider has a free tier available.',
         voice: 'Voice',
         selectVoice: 'Select Voice',
         noVoicesFor: 'No voices for {languageName}',
