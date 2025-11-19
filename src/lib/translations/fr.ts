@@ -76,7 +76,8 @@ const fr = {
         "sections": {
             "appearance": "Apparence",
             "apiKeys": "API Clés",
-            "language": "Langue"
+            "language": "Langue",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Thème",
@@ -116,6 +117,20 @@ const fr = {
             "keyNotSet": "État de la clé : non défini",
             "keySet": "État de la clé : défini",
             "saveButton": "Sauvegarder API Clé(s)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const fr = {
         "cancel": "Annuler",
         "delete": "Supprimer",
         "confirm": "Confirmer",
-        "or": "ou"
+        "or": "ou",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Clé manquante",
     "apiKeyMissingSubtext": "Le API La clé de ce fournisseur est manquante ou invalide. Veuillez l'ajouter dans les paramètres.",
@@ -384,7 +400,15 @@ const fr = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Retour au menu principal",

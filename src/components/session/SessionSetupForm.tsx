@@ -34,7 +34,19 @@ import {
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { saveSessionPreset, loadSessionPreset, SessionPreset } from '@/lib/firebase/sessionPreset';
 // import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 
@@ -228,11 +240,11 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                                 <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
                                                     llm.pricing.note ?
                                                         (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                                 }>
                                                     ({llm.pricing.note ?
                                                         (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
                                                     })
                                                 </span>
                                             )}
@@ -554,6 +566,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
     const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
+    
+    // Preset management state
+    const [showOverwriteDialog, setShowOverwriteDialog] = useState<boolean>(false);
+    const [hasExistingPreset, setHasExistingPreset] = useState<boolean>(false);
+    const { toast } = useToast();
 
     // --- Image Generation State ---
     // const [imageGenEnabled, setImageGenEnabled] = useState(false);
@@ -970,6 +987,111 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setter(prev => ({ ...prev, voice: voiceId }));
     };
 
+    // Preset management functions
+    const handleSavePreset = async () => {
+        if (!user) {
+            toast({
+                title: "Error",
+                description: "You must be signed in to save a preset",
+            });
+            return;
+        }
+
+        // Check if preset already exists
+        if (hasExistingPreset) {
+            setShowOverwriteDialog(true);
+            return;
+        }
+
+        await savePresetToDatabase();
+    };
+
+    const savePresetToDatabase = async () => {
+        if (!user) return;
+
+        try {
+            const preset: SessionPreset = {
+                agentA_llm,
+                agentB_llm,
+                ttsEnabled,
+                agentA_tts: agentATTSSettings,
+                agentB_tts: agentBTTSSettings,
+                initialSystemPrompt,
+            };
+
+            await saveSessionPreset(user.uid, preset);
+            setHasExistingPreset(true);
+            setShowOverwriteDialog(false);
+            
+            toast({
+                title: t?.sessionSetupForm?.presetSaved || "Preset saved",
+                description: "Your session configuration has been saved",
+            });
+        } catch (error) {
+            console.error('Error saving preset:', error);
+            toast({
+                title: "Error",
+                description: "Failed to save preset",
+            });
+        }
+    };
+
+    const handleLoadPreset = async () => {
+        if (!user) {
+            toast({
+                title: "Error",
+                description: "You must be signed in to load a preset",
+            });
+            return;
+        }
+
+        try {
+            const preset = await loadSessionPreset(user.uid);
+            
+            if (!preset) {
+                toast({
+                    title: t?.sessionSetupForm?.noPresetFound || "No preset found",
+                    description: "You haven't saved a preset yet",
+                });
+                return;
+            }
+
+            // Load the preset values
+            setAgentA_llm(preset.agentA_llm);
+            setAgentB_llm(preset.agentB_llm);
+            setTtsEnabled(preset.ttsEnabled);
+            setAgentATTSSettings(preset.agentA_tts as AgentTTSSettings);
+            setAgentBTTSSettings(preset.agentB_tts as AgentTTSSettings);
+            setInitialSystemPrompt(preset.initialSystemPrompt);
+
+            toast({
+                title: t?.sessionSetupForm?.presetLoaded || "Preset loaded",
+                description: "Your saved configuration has been loaded",
+            });
+        } catch (error) {
+            console.error('Error loading preset:', error);
+            toast({
+                title: "Error",
+                description: t?.sessionSetupForm?.presetLoadFailed || "Failed to load preset",
+            });
+        }
+    };
+
+    // Check if user has an existing preset on mount
+    useEffect(() => {
+        const checkForPreset = async () => {
+            if (user) {
+                try {
+                    const preset = await loadSessionPreset(user.uid);
+                    setHasExistingPreset(preset !== null);
+                } catch (error) {
+                    console.error('Error checking for preset:', error);
+                }
+            }
+        };
+        checkForPreset();
+    }, [user]);
+
     // const isTTSProviderDisabled = (providerId: TTSProviderInfo['id']): boolean => {
     //     const providerInfo = getTTSProviderInfoById(providerId);
     //     if (providerInfo?.requiresOwnKey && providerInfo.apiKeyId) {
@@ -1171,6 +1293,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     */
 
     return (
+        <>
         <Card className="w-full max-w-2xl">
             <CardHeader>
                 {translationLoading || !t ? (
@@ -1195,6 +1318,34 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                 {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
+                
+                {/* Preset Management Buttons */}
+                {user && t && (
+                    <div className="flex gap-2 pt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleLoadPreset}
+                            disabled={isLoading}
+                            className="flex items-center gap-2"
+                        >
+                            <Download className="h-4 w-4" />
+                            {t.sessionSetupForm.loadPreset}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleSavePreset}
+                            disabled={isLoading}
+                            className="flex items-center gap-2"
+                        >
+                            <Save className="h-4 w-4" />
+                            {t.sessionSetupForm.savePreset}
+                        </Button>
+                    </div>
+                )}
             </CardHeader>
             <CardContent className="space-y-6">
                 {/* LLM Selection Section */}
@@ -1508,6 +1659,25 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 </div>
             </CardFooter>
         </Card>
+
+        {/* Overwrite Confirmation Dialog */}
+        <AlertDialog open={showOverwriteDialog} onOpenChange={setShowOverwriteDialog}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{t?.sessionSetupForm?.savePreset || "Save Preset"}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        {t?.sessionSetupForm?.confirmOverwritePreset || "This will replace your existing preset. Continue?"}
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>{t?.common?.cancel || "Cancel"}</AlertDialogCancel>
+                    <AlertDialogAction onClick={savePresetToDatabase}>
+                        {t?.common?.continue || "Continue"}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    </>
     );
 };
 

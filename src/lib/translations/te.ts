@@ -76,7 +76,8 @@ const te = {
         "sections": {
             "appearance": "స్వరూపం",
             "apiKeys": "API కీలు",
-            "language": "భాష"
+            "language": "భాష",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "థీమ్",
@@ -116,6 +117,20 @@ const te = {
             "keyNotSet": "కీ స్థితి: సెట్ చేయబడలేదు",
             "keySet": "కీ స్థితి: సెట్ చేయబడింది",
             "saveButton": "సేవ్ చేయండి API కీ(లు)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const te = {
         "cancel": "రద్దు చేయి",
         "delete": "తొలగించు",
         "confirm": "నిర్ధారించండి",
-        "or": "లేదా"
+        "or": "లేదా",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API కీ లేదు",
     "apiKeyMissingSubtext": "ది API ఈ ప్రొవైడర్ కీ లేదు లేదా చెల్లదు. దయచేసి దీన్ని సెట్టింగ్‌లలో జోడించండి.",
@@ -384,7 +400,15 @@ const te = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "ప్రధానానికి తిరిగి వెళ్ళు",

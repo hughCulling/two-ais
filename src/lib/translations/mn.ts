@@ -76,7 +76,8 @@ const mn = {
         "sections": {
             "appearance": "Гадаад төрх",
             "apiKeys": "API Түлхүүрүүд",
-            "language": "Хэл"
+            "language": "Хэл",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "Сэдэв",
@@ -116,6 +117,20 @@ const mn = {
             "keyNotSet": "Түлхүүр статус: тохируулаагүй",
             "keySet": "Түлхүүр статус: Тохируулах",
             "saveButton": "Хадгалах API Түлхүүр(үүд)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const mn = {
         "cancel": "Цуцлах",
         "delete": "Устгах",
         "confirm": "Баталгаажуулах",
-        "or": "эсвэл"
+        "or": "эсвэл",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API Түлхүүр дутуу",
     "apiKeyMissingSubtext": "The API Энэ үйлчилгээ үзүүлэгчийн түлхүүр байхгүй эсвэл хүчингүй байна. Үүнийг тохиргоонд нэмнэ үү.",
@@ -384,7 +400,15 @@ const mn = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Үндсэн рүү буцах",

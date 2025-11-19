@@ -76,7 +76,8 @@ const bn = {
         "sections": {
             "appearance": "চেহারা",
             "apiKeys": "API চাবি",
-            "language": "ভাষা"
+            "language": "ভাষা",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "থিম",
@@ -116,6 +117,20 @@ const bn = {
             "keyNotSet": "মূল স্থিতি: সেট করা নেই",
             "keySet": "মূল অবস্থা: সেট করুন",
             "saveButton": "সংরক্ষণ করুন API চাবি(গুলি)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const bn = {
         "cancel": "বাতিল করুন",
         "delete": "মুছে ফেলুন",
         "confirm": "নিশ্চিত করুন",
-        "or": "অথবা"
+        "or": "অথবা",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API চাবি অনুপস্থিত",
     "apiKeyMissingSubtext": "দ্য API এই প্রদানকারীর জন্য কী অনুপস্থিত অথবা অবৈধ। দয়া করে সেটিংসে এটি যোগ করুন।",
@@ -384,7 +400,15 @@ const bn = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "মূল বিভাগে ফিরে যান",

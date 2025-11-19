@@ -14,6 +14,7 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { getTranslationAsync } from '@/lib/translations';
+import { Toaster } from '@/components/ui/toaster';
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -188,6 +189,7 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
             </LanguageProvider>
             <Footer />
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

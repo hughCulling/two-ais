@@ -76,7 +76,8 @@ const ml = {
         "sections": {
             "appearance": "രൂപഭാവം",
             "apiKeys": "API കീകൾ",
-            "language": "ഭാഷ"
+            "language": "ഭാഷ",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "തീം",
@@ -116,6 +117,20 @@ const ml = {
             "keyNotSet": "കീ സ്റ്റാറ്റസ്: സജ്ജീകരിച്ചിട്ടില്ല",
             "keySet": "കീ സ്റ്റാറ്റസ്: സജ്ജമാക്കുക",
             "saveButton": "രക്ഷിക്കും API കീ(കൾ)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const ml = {
         "cancel": "റദ്ദാക്കുക",
         "delete": "ഇല്ലാതാക്കുക",
         "confirm": "സ്ഥിരീകരിക്കുക",
-        "or": "അല്ലെങ്കിൽ"
+        "or": "അല്ലെങ്കിൽ",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API കീ കാണുന്നില്ല",
     "apiKeyMissingSubtext": "ദി API ഈ ദാതാവിനുള്ള കീ കാണുന്നില്ല അല്ലെങ്കിൽ അസാധുവാണ്. ദയവായി അത് ക്രമീകരണങ്ങളിൽ ചേർക്കുക.",
@@ -384,7 +400,15 @@ const ml = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",

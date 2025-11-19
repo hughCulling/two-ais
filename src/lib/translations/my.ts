@@ -76,7 +76,8 @@ const my = {
         "sections": {
             "appearance": "အသွင်အပြင်",
             "apiKeys": "API သော့များ",
-            "language": "ဘာသာစကား"
+            "language": "ဘာသာစကား",
+            "sessionPreset": "Session Preset"
         },
         "appearance": {
             "theme": "အပြင်အဆင်",
@@ -116,6 +117,20 @@ const my = {
             "keyNotSet": "သော့အခြေအနေ- သတ်မှတ်မထားပါ။",
             "keySet": "သော့အခြေအနေ- သတ်မှတ်ရန်",
             "saveButton": "သိမ်းဆည်းပါ။ API သော့(များ)"
+        },
+        "sessionPreset": {
+            "title": "Session Preset",
+            "description": "Manage your saved session configuration preset.",
+            "noPreset": "No preset saved",
+            "savedAt": "Saved on",
+            "agentAModel": "Agent A Model",
+            "agentBModel": "Agent B Model",
+            "ttsEnabled": "TTS Enabled",
+            "agentATTS": "Agent A TTS",
+            "agentBTTS": "Agent B TTS",
+            "initialPrompt": "Initial System Prompt",
+            "deletePreset": "Delete Preset",
+            "confirmDelete": "Are you sure you want to delete your saved preset?"
         }
     },
     "main": {
@@ -209,7 +224,8 @@ const my = {
         "cancel": "မလုပ်တော့",
         "delete": "ဖျက်ပါ။",
         "confirm": "အတည်ပြုပါ။",
-        "or": "သို့မဟုတ်"
+        "or": "သို့မဟုတ်",
+        "continue": "Continue"
     },
     "apiKeyMissing": "API သော့ပျောက်နေသည်။",
     "apiKeyMissingSubtext": "ဟိ API ဤဝန်ဆောင်မှုပေးသူအတွက်သော့ ပျောက်ဆုံးနေသည် သို့မဟုတ် မမှန်ကန်ပါ။ ဆက်တင်များတွင် ကျေးဇူးပြု၍ ထည့်ပါ။",
@@ -384,7 +400,15 @@ const my = {
         "safariWarningMessage": "Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.",
         "edgeRecommendationTitle": "Best Voice Selection Available",
         "edgeRecommendationMessage": "For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.",
-        "freeTierNote": "Indicates a model or provider has a free tier available."
+        "freeTierNote": "Indicates a model or provider has a free tier available.",
+        "loadPreset": "Load Preset",
+        "savePreset": "Save Preset",
+        "presetSaved": "Preset saved successfully",
+        "presetLoaded": "Preset loaded successfully",
+        "presetLoadFailed": "Failed to load preset. Some models may not be available.",
+        "confirmOverwritePreset": "This will replace your existing preset. Continue?",
+        "noPresetFound": "No preset found",
+        "presetDeleted": "Preset deleted successfully"
     },
     "history": {
         "backToMain": "Main သို့ ပြန်သွားရန်",
