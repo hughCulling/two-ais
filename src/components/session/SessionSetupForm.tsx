@@ -34,7 +34,7 @@ import {
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X, Download, Save } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,
@@ -190,12 +190,17 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         return a.localeCompare(b);
     });
 
+    // Get the selected model info to display only its name in the trigger
+    const selectedLLM = value ? getLLMInfoById(value) : null;
+
     return (
         <div className="space-y-2">
-            <Label htmlFor={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`}>{label}</Label>
+            <Label htmlFor={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="block text-center">{label}</Label>
             <Select value={value} onValueChange={onChange} disabled={disabled}>
-                <SelectTrigger id={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="w-full">
-                    <SelectValue placeholder={placeholder || 'Select LLM'} />
+                <SelectTrigger id={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="w-full [&>span]:mx-auto [&>span]:text-center">
+                    <SelectValue placeholder={placeholder || 'Select LLM'}>
+                        {selectedLLM ? selectedLLM.name : placeholder || 'Select LLM'}
+                    </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="max-h-96">
                     {sortedProviders.map((provider) => {
@@ -571,6 +576,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showOverwriteDialog, setShowOverwriteDialog] = useState<boolean>(false);
     const [hasExistingPreset, setHasExistingPreset] = useState<boolean>(false);
     const { toast } = useToast();
+    
+    // Collapse states for helper text
+    const [collapseCardDescription, setCollapseCardDescription] = useState<boolean>(false);
+    const [collapseInitialPromptDescription, setCollapseInitialPromptDescription] = useState<boolean>(false);
+    const [collapseOllamaDetails, setCollapseOllamaDetails] = useState<boolean>(false);
 
     // --- Image Generation State ---
     // const [imageGenEnabled, setImageGenEnabled] = useState(false);
@@ -1017,6 +1027,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 agentA_tts: agentATTSSettings,
                 agentB_tts: agentBTTSSettings,
                 initialSystemPrompt,
+                collapseStates: {
+                    cardDescription: collapseCardDescription,
+                    initialPromptDescription: collapseInitialPromptDescription,
+                    ollamaDetails: collapseOllamaDetails,
+                },
             };
 
             await saveSessionPreset(user.uid, preset);
@@ -1063,6 +1078,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             setAgentATTSSettings(preset.agentA_tts as AgentTTSSettings);
             setAgentBTTSSettings(preset.agentB_tts as AgentTTSSettings);
             setInitialSystemPrompt(preset.initialSystemPrompt);
+            
+            // Load collapse states if they exist
+            if (preset.collapseStates) {
+                setCollapseCardDescription(preset.collapseStates.cardDescription ?? false);
+                setCollapseInitialPromptDescription(preset.collapseStates.initialPromptDescription ?? false);
+                setCollapseOllamaDetails(preset.collapseStates.ollamaDetails ?? false);
+            }
 
             toast({
                 title: t?.sessionSetupForm?.presetLoaded || "Preset loaded",
@@ -1139,13 +1161,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
                 {shouldShowVoiceDropdown && (
                     <div className="space-y-2">
-                        <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`}>{t?.sessionSetupForm?.voice}</Label>
+                        <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`} className="block text-center">{t?.sessionSetupForm?.voice}</Label>
                         <Select
                             value={currentAgentTTSSettings.voice || ''}
                             onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
                             disabled={!user || currentAgentVoices.length === 0}
                         >
-                            <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
+                            <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full [&>span]:mx-auto [&>span]:text-center">
                                 <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
                             </SelectTrigger>
                             <SelectContent className="max-h-60">
@@ -1295,14 +1317,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     return (
         <>
         <Card className="w-full max-w-2xl">
-            <CardHeader>
+            <CardHeader className="text-center">
                 {translationLoading || !t ? (
                     <CardTitle>...</CardTitle>
                 ) : (
                     <CardTitle>{t.sessionSetupForm.title}</CardTitle>
                 )}
                 {t?.sessionSetupForm && t.sessionSetupForm.description && (
-                    <CardDescription>{t.sessionSetupForm.description}</CardDescription>
+                    <div className="space-y-1 flex flex-col items-center">
+                        <button
+                            onClick={() => setCollapseCardDescription(!collapseCardDescription)}
+                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            aria-expanded={!collapseCardDescription}
+                        >
+                            {collapseCardDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                            <span className="text-xs">Help</span>
+                        </button>
+                        {!collapseCardDescription && (
+                            <CardDescription>{t.sessionSetupForm.description}</CardDescription>
+                        )}
+                    </div>
                 )}
                 
                 {/* Ollama Status Indicator */}
@@ -1310,7 +1344,22 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
                 )}
                 {!ollamaLoading && ollamaAvailable && (
-                    <p className="text-sm text-green-600 dark:text-green-400 pt-2">✓ Ollama detected - their local and cloud models are available</p>
+                    <div className="pt-2 space-y-1 flex flex-col items-center">
+                        <div className="flex items-center gap-2">
+                            <p className="text-sm text-green-600 dark:text-green-400">✓ Ollama detected</p>
+                            <button
+                                onClick={() => setCollapseOllamaDetails(!collapseOllamaDetails)}
+                                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                                aria-expanded={!collapseOllamaDetails}
+                                aria-label="Toggle Ollama details"
+                            >
+                                {collapseOllamaDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                            </button>
+                        </div>
+                        {!collapseOllamaDetails && (
+                            <p className="text-xs text-green-600 dark:text-green-400">Their local and cloud models are available</p>
+                        )}
+                    </div>
                 )}
                 {!ollamaLoading && !ollamaAvailable && (
                     <p className="text-sm text-muted-foreground pt-2">Ollama not detected. You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
@@ -1319,33 +1368,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                 {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
                 
-                {/* Preset Management Buttons */}
-                {user && t && (
-                    <div className="flex gap-2 pt-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleLoadPreset}
-                            disabled={isLoading}
-                            className="flex items-center gap-2"
-                        >
-                            <Download className="h-4 w-4" />
-                            {t.sessionSetupForm.loadPreset}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleSavePreset}
-                            disabled={isLoading}
-                            className="flex items-center gap-2"
-                        >
-                            <Save className="h-4 w-4" />
-                            {t.sessionSetupForm.savePreset}
-                        </Button>
-                    </div>
-                )}
             </CardHeader>
             <CardContent className="space-y-6">
                 {/* LLM Selection Section */}
@@ -1415,7 +1437,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 {/* TTS Configuration Section */}
                 <hr className="my-6" />
                 <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center justify-center space-x-2">
                         <Checkbox
                             id="tts-enabled-checkbox"
                             checked={ttsEnabled}
@@ -1629,22 +1651,59 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 </div> */}
                 {/* Move initial prompt section here */}
                 <div className="mt-4">
-                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1">{t?.sessionSetupForm?.initialSystemPrompt}</label>
+                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1 text-center">{t?.sessionSetupForm?.initialSystemPrompt}</label>
                     <textarea
                         id="initial-system-prompt"
-                        className="w-full border rounded-md p-2 text-sm min-h-[60px]"
+                        className="w-full border rounded-md p-2 text-sm min-h-[60px] text-center"
                         value={initialSystemPrompt}
                         onChange={e => setInitialSystemPrompt(e.target.value)}
                         placeholder={t?.sessionSetupForm?.startTheConversation || ''}
                         aria-describedby="initial-prompt-description"
                         aria-label="Initial system prompt for starting the conversation"
                     />
-                    <p id="initial-prompt-description" className="text-xs text-muted-foreground mt-1">
-                        {t?.sessionSetupForm?.initialPromptDescription}
-                    </p>
+                    <div className="mt-1 flex flex-col items-center">
+                        <button
+                            onClick={() => setCollapseInitialPromptDescription(!collapseInitialPromptDescription)}
+                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-1"
+                            aria-expanded={!collapseInitialPromptDescription}
+                        >
+                            {collapseInitialPromptDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                            <span>Help</span>
+                        </button>
+                        {!collapseInitialPromptDescription && (
+                            <p id="initial-prompt-description" className="text-xs text-muted-foreground text-center">
+                                {t?.sessionSetupForm?.initialPromptDescription}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex flex-col gap-2">
+                {/* Preset Management Buttons */}
+                {user && t && (
+                    <div className="flex gap-2 w-full">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleLoadPreset}
+                            disabled={isLoading}
+                            className="flex items-center gap-2 flex-1"
+                        >
+                            <Download className="h-4 w-4" />
+                            {t.sessionSetupForm.loadPreset}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleSavePreset}
+                            disabled={isLoading}
+                            className="flex items-center gap-2 flex-1"
+                        >
+                            <Save className="h-4 w-4" />
+                            {t.sessionSetupForm.savePreset}
+                        </Button>
+                    </div>
+                )}
                 <Button
                     onClick={handleStartClick}
                     disabled={isStartDisabled}

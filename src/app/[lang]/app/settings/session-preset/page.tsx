@@ -177,6 +177,17 @@ export default function SessionPresetPage() {
                             </div>
                         )}
 
+                        {preset.collapseStates && (
+                            <div>
+                                <h3 className="font-semibold text-sm mb-1">{t?.settings?.sessionPreset?.helperTextPreferences || 'Helper Text Preferences'}</h3>
+                                <div className="text-sm text-muted-foreground space-y-1">
+                                    <p>• Card description: {preset.collapseStates.cardDescription ? 'Hidden' : 'Visible'}</p>
+                                    <p>• Initial prompt help: {preset.collapseStates.initialPromptDescription ? 'Hidden' : 'Visible'}</p>
+                                    <p>• Ollama details: {preset.collapseStates.ollamaDetails ? 'Hidden' : 'Visible'}</p>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="pt-4">
                             <Button
                                 variant="destructive"

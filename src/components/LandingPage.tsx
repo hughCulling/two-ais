@@ -238,7 +238,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             {!ollamaLoading && ollamaAvailable && (
               <Alert variant="default" className="text-left border-green-500/50 bg-green-50 dark:bg-green-950/20">
                 <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                <AlertTitle className="font-semibold text-green-900 dark:text-green-100">{t.page_OllamaSetupTitle}</AlertTitle>
+                <AlertTitle className="font-semibold text-green-900 dark:text-green-100">{t.page_OllamaDetectedTitle}</AlertTitle>
                 <AlertDescription className="text-green-800 dark:text-green-200">
                   You can use LLMs through Ollama.
                 </AlertDescription>
@@ -258,9 +258,26 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </p>
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                       <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
-                      <p>{t.page_OllamaStep1}</p>
-                      <p>{t.page_OllamaStep2}</p>
-                      <p className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">{t.page_OllamaStep3}</p>
+                      <p>
+                        {t.page_OllamaStep1.split('ollama.com/download')[0]}
+                        <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
+                          ollama.com/download
+                        </a>
+                        {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                      </p>
+                      <p>
+                        {t.page_OllamaStep2.split("'ollama pull llama2'")[0]}
+                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">ollama pull llama2</span>
+                        {t.page_OllamaStep2.split("'ollama pull llama2'")[1]}
+                      </p>
+                      <p>
+                        <span>3. You can run this command to allow Two AIs to connect to your local Ollama instance:</span>
+                      </p>
+                      <p className="ml-4">
+                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                          {t.page_OllamaStep3.replace(/^3\.\s*/, '')}
+                        </span>
+                      </p>
                       <p>{t.page_OllamaStep4}</p>
                     </div>
                   </div>
@@ -437,7 +454,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     {llm.usesReasoningTokens && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Info className="h-4 w-4 text-blue-500 flex-shrink-0 cursor-help" />
+                                          <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
                                         </TooltipTrigger>
                                         <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
                                           <p className="text-xs">
@@ -460,7 +477,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                     {llm.requiresOrgVerification && (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 cursor-help" />
+                                          <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
                                         </TooltipTrigger>
                                         <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
                                           <p className="text-xs">

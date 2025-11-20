@@ -36,7 +36,7 @@ export function FreeTierBadge({ freeTier, t, className }: FreeTierBadgeProps) {
           </Badge>
         </TooltipTrigger>
         <TooltipContent className="max-w-xs">
-          <p className="text-sm">{note}</p>
+          <p className="text-xs">{note}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
