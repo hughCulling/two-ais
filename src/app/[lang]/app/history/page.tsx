@@ -227,51 +227,50 @@ export default function HistoryPage() {
                                     <a className="block hover:no-underline">
                                         <Card className="hover:shadow-md transition-shadow duration-200 cursor-pointer">
                                             <CardHeader className="text-center">
-                                                <CardTitle className="text-lg">
-                                                    {t.history.chatWith
-                                                        .replace('{agentA}', getLLMInfoById(convo.agentA_llm)?.name || convo.agentA_llm)
-                                                        .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
+                                                <CardTitle className="text-lg line-clamp-2">
+                                                    {convo.initialSystemPrompt 
+                                                        ? convo.initialSystemPrompt
+                                                        : t.history.chatWith
+                                                            .replace('{agentA}', getLLMInfoById(convo.agentA_llm)?.name || convo.agentA_llm)
+                                                            .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
                                                     }
                                                 </CardTitle>
-                                                <CardDescription className="flex flex-col space-y-1 overflow-hidden items-center">
-                                                    <span>
-                                                        {t.history.conversationDescription
-                                                            .replace('{date}', formattedDate)
-                                                            .replace('{language}', convo.language.toUpperCase())
-                                                        }
+                                                <CardDescription className="flex flex-col space-y-1.5 overflow-hidden items-center mt-2">
+                                                    {/* Models subtitle */}
+                                                    <span className="text-sm font-medium">
+                                                        {getLLMInfoById(convo.agentA_llm)?.name || convo.agentA_llm} • {getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm}
                                                     </span>
-                                                    <div className="flex flex-col gap-1 mt-1 w-full">
+                                                    
+                                                    {/* Date and Language */}
+                                                    <span className="text-xs">
+                                                        {formattedDate} • {convo.language.toUpperCase()}
+                                                    </span>
+                                                    
+                                                    {/* TTS and Image metadata */}
+                                                    <div className="flex flex-col gap-1 w-full">
                                                         {convo.ttsSettings?.enabled && (
-                                                            <div className="flex items-center text-xs text-muted-foreground min-w-0 w-full">
+                                                            <div className="flex items-center justify-center text-xs text-muted-foreground min-w-0 w-full">
                                                                 <Volume2 className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                <span className="flex-shrink-0 mr-1">{t.history.ttsEnabled || 'TTS'}</span>
+                                                                <span className="flex-shrink-0 mr-1">{t.history.ttsEnabled || 'TTS'}:</span>
                                                                 {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
                                                                     <span className="truncate min-w-0">
-                                                                        ({getVoiceName(convo.ttsSettings.agentA.provider, convo.ttsSettings.agentA.voice)} / {getVoiceName(convo.ttsSettings.agentB.provider, convo.ttsSettings.agentB.voice)})
+                                                                        {getVoiceName(convo.ttsSettings.agentA.provider, convo.ttsSettings.agentA.voice)} / {getVoiceName(convo.ttsSettings.agentB.provider, convo.ttsSettings.agentB.voice)}
                                                                     </span>
                                                                 )}
                                                             </div>
                                                         )}
                                                         {convo.imageGenSettings?.enabled && (
-                                                            <div className="flex items-center text-xs text-muted-foreground min-w-0 w-full">
+                                                            <div className="flex items-center justify-center text-xs text-muted-foreground min-w-0 w-full">
                                                                 <ImageIcon className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                <span className="flex-shrink-0 mr-1">{t.history.imageGenerationEnabled || 'Image generation'}</span>
+                                                                <span className="flex-shrink-0 mr-1">{t.history.imageGenerationEnabled || 'Image'}:</span>
                                                                 {convo.imageGenSettings?.model && (
                                                                     <span className="truncate min-w-0">
-                                                                        ({getImageModelName(convo.imageGenSettings.model)})
+                                                                        {getImageModelName(convo.imageGenSettings.model)}
                                                                     </span>
                                                                 )}
                                                             </div>
                                                         )}
                                                     </div>
-                                                    {convo.initialSystemPrompt && (
-                                                        <span className="inline-flex items-center text-xs text-muted-foreground">
-                                                            <span className="mr-1">Initial prompt</span>
-                                                            <span className="line-clamp-2">
-                                                                ({convo.initialSystemPrompt})
-                                                            </span>
-                                                        </span>
-                                                    )}
                                                 </CardDescription>
                                             </CardHeader>
                                         </Card>
