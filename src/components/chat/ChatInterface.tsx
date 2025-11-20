@@ -578,7 +578,7 @@ export function ChatInterface({
                 // Clean up
                 testAudio.pause();
                 testAudio.src = '';
-            } catch (error) {
+            } catch {
                 // Autoplay is blocked
                 logger.info("Audio autoplay is blocked - user interaction required");
                 setAudioAutoplayBlocked(true);
@@ -616,7 +616,7 @@ export function ChatInterface({
             document.removeEventListener('keydown', handleInteraction);
             document.removeEventListener('touchstart', handleInteraction);
         };
-    }, [handleUserInteraction]);
+    }, [handleUserInteraction, audioAutoplayBlocked]);
 
     // --- Handler 4: Stop Conversation Button ---
     const handleStopConversation = useCallback(async () => {
