@@ -220,35 +220,39 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
             <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
-            <Alert variant="default" className="text-left border-theme-primary/50">
-              <KeyRound className="h-4 w-4 text-theme-primary" />
-              <AlertTitle className="font-semibold">{t.page_ApiKeysRequiredTitle}</AlertTitle>
-              <AlertDescription>
-                <div className="inline">
-                  {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[0]}
-                  <span className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap">
-                    settings/api-key
-                  </span>
-                  {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[1]}
-                </div>
-              </AlertDescription>
-            </Alert>
+            <div className="border border-theme-primary/50 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <KeyRound className="h-4 w-4 text-theme-primary" />
+                <h3 className="font-semibold text-base">{t.page_ApiKeysRequiredTitle}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[0]}
+                <span className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap">
+                  settings/api-key
+                </span>
+                {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[1]}
+              </p>
+            </div>
             
             {/* Ollama Status */}
             {!ollamaLoading && ollamaAvailable && (
-              <Alert variant="default" className="text-left border-green-500/50 bg-green-50 dark:bg-green-950/20">
-                <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                <AlertTitle className="font-semibold text-green-900 dark:text-green-100">{t.page_OllamaDetectedTitle}</AlertTitle>
-                <AlertDescription className="text-green-800 dark:text-green-200">
+              <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <h3 className="font-semibold text-base text-green-900 dark:text-green-100">{t.page_OllamaDetectedTitle}</h3>
+                </div>
+                <p className="text-sm text-green-800 dark:text-green-200">
                   You can use LLMs through Ollama.
-                </AlertDescription>
-              </Alert>
+                </p>
+              </div>
             )}
             {!ollamaLoading && !ollamaAvailable && (
-              <Alert variant="default" className="text-left border-blue-500/50">
-                <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <AlertTitle className="font-semibold">{t.page_OllamaSetupTitle}</AlertTitle>
-                <AlertDescription>
+              <div className="border border-blue-500/50 rounded-lg p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <h3 className="font-semibold text-base">{t.page_OllamaSetupTitle}</h3>
+                </div>
+                <div>
                   <div className="space-y-2">
                     <p>
                       {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
@@ -281,8 +285,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <p>{t.page_OllamaStep4}</p>
                     </div>
                   </div>
-                </AlertDescription>
-              </Alert>
+                </div>
+              </div>
             )}
             
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
@@ -324,15 +328,15 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                    <div className="flex items-center justify-between w-full mb-2">
+                    <div className="flex items-center justify-center w-full mb-2">
                       <CollapsibleTrigger 
-                        className="flex items-center justify-between w-full text-xl font-semibold border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
                         aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
                       >
-                        <div className="flex items-center gap-2">
-                          <span>{providerName}</span>
+                        <span>{providerName}</span>
+                        <div className="absolute right-8 flex items-center gap-2">
                           {providerName === 'Mistral AI' && (
                             <FreeTierBadge 
                               freeTier={{
@@ -340,7 +344,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 note: (t) => t.pricing.mistralFreeTierNote
                               }} 
                               t={t} 
-                              className="ml-1" 
                             />
                           )}
                           {providerName === 'Ollama' && (
@@ -350,7 +353,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 note: (t) => t.pricing.ollamaFreeTierNote
                               }} 
                               t={t} 
-                              className="ml-1" 
                             />
                           )}
                           {allModelsSupport && (
@@ -364,7 +366,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             </Tooltip>
                           )}
                         </div>
-                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                        <div className="absolute right-2">
+                          {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                        </div>
                       </CollapsibleTrigger>
                     </div>
                     <CollapsibleContent 
@@ -398,7 +402,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           const currentBrandName = modelCategoryKey ? getTogetherAIBrandDisplay(modelCategoryKey) : null;
                           if (currentBrandName && currentBrandName !== lastDisplayedBrand) {
                             brandHeadingElement = (
-                              <div className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 ml-0">
+                              <div className="text-lg font-semibold text-primary mt-4 mb-2 border-b border-primary/30 pb-1 text-center">
                                 {currentBrandName}
                               </div>
                             );
@@ -408,15 +412,18 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         return (
                           <React.Fragment key={`${category}-${index}`}>
                             {brandHeadingElement}
-                            <div className={cn("ml-2", brandHeadingElement ? "mt-1" : "mt-0")}>
-                              <div className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5">{category}</div>
-                              <ul className="space-y-1 list-disc list-inside text-sm pl-2">
+                            <div className={cn("flex flex-col items-center", brandHeadingElement ? "mt-1" : "mt-0")}>
+                              <div className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5 text-center">{category}</div>
+                              <ul className="space-y-1 text-sm w-full max-w-2xl">
                                 {categoryModels.map((llm) => (
-                                  <li key={llm.id} className="ml-2 flex items-center space-x-2 py-0.5">
-                                    <span className="whitespace-nowrap">{llm.name}</span>
-                                    {llm.status === 'preview' && <Badge variant="preview" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgePreview}</Badge>}
-                                    {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
-                                    {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                  <li key={llm.id} className="flex flex-col items-center py-1">
+                                    <div className="flex items-center space-x-2 mb-1">
+                                      <span className="whitespace-nowrap font-medium">{llm.name}</span>
+                                      {llm.status === 'preview' && <Badge variant="preview" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgePreview}</Badge>}
+                                      {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
+                                      {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                    </div>
+                                    <div className="flex items-center space-x-2">
                                     {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
                                     {/* Don't show pricing for Ollama models - it's shown in the provider header */}
                                     {llm.provider !== 'Ollama' && (llm.pricing.note ? (
@@ -512,7 +519,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                       </Tooltip>
                                     )}
                                     {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
-
+                                    </div>
                                   </li>
                                 ))}
                               </ul>
@@ -541,25 +548,27 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   return (
                     <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
                       <CollapsibleTrigger 
-                        className="flex items-center justify-between w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
                         aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${provider.name} TTS models`}
                       >
                         <span>{provider.name}</span>
-                        {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                        <div className="absolute right-2">
+                          {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                        </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent 
                         id={`${providerCollapsibleId}-content`}
-                        className="space-y-2 pl-4"
+                        className="space-y-2 flex flex-col items-center"
                         role="region"
                         aria-labelledby={`${providerCollapsibleId}-trigger`}
                       >
-                        <ul className="space-y-1 list-disc list-inside text-sm">
+                        <ul className="space-y-1 text-sm w-full max-w-2xl">
                           {provider.models.map((model) => {
                             const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
                             return (
-                              <li key={model.id} className="ml-2 flex items-center space-x-2 py-0.5">
+                              <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
                                 <div className="flex items-center space-x-1">
                                   <span className="whitespace-nowrap">{model.name}</span>
                                   {/* {model.freeTier?.available && (
