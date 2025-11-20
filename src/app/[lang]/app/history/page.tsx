@@ -172,17 +172,19 @@ export default function HistoryPage() {
     return (
         <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
             <div className="w-full max-w-3xl space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="relative flex items-center justify-center">
                     <h1 className="text-3xl font-bold flex items-center">
                         <MessageSquareText className="mr-3 h-8 w-8 text-primary" />
                         {t.history.conversationHistory}
                     </h1>
-                    <Button variant="outline" asChild>
-                        <Link href={`/${language.code}/app`}>
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            {t.history.backToMain}
-                        </Link>
-                    </Button>
+                    <div className="absolute right-0">
+                        <Button variant="outline" asChild>
+                            <Link href={`/${language.code}/app`}>
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                {t.history.backToMain}
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 {error && (
@@ -224,38 +226,38 @@ export default function HistoryPage() {
                                 <Link key={convo.conversationId} href={`/${language.code}/app/history/${convo.conversationId}`} passHref legacyBehavior>
                                     <a className="block hover:no-underline">
                                         <Card className="hover:shadow-md transition-shadow duration-200 cursor-pointer">
-                                            <CardHeader>
+                                            <CardHeader className="text-center">
                                                 <CardTitle className="text-lg">
                                                     {t.history.chatWith
                                                         .replace('{agentA}', getLLMInfoById(convo.agentA_llm)?.name || convo.agentA_llm)
                                                         .replace('{agentB}', getLLMInfoById(convo.agentB_llm)?.name || convo.agentB_llm)
                                                     }
                                                 </CardTitle>
-                                                <CardDescription className="flex flex-col space-y-1 overflow-hidden">
+                                                <CardDescription className="flex flex-col space-y-1 overflow-hidden items-center">
                                                     <span>
                                                         {t.history.conversationDescription
                                                             .replace('{date}', formattedDate)
                                                             .replace('{language}', convo.language.toUpperCase())
                                                         }
                                                     </span>
-                                                    <div className="flex flex-col gap-1 mt-1 overflow-hidden">
+                                                    <div className="flex flex-col gap-1 mt-1 w-full">
                                                         {convo.ttsSettings?.enabled && (
-                                                            <div className="flex items-center text-xs text-muted-foreground overflow-hidden">
+                                                            <div className="flex items-center text-xs text-muted-foreground min-w-0 w-full">
                                                                 <Volume2 className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                <span className="flex-shrink-0">{t.history.ttsEnabled || 'TTS'}</span>
+                                                                <span className="flex-shrink-0 mr-1">{t.history.ttsEnabled || 'TTS'}</span>
                                                                 {convo.ttsSettings.agentA?.voice && convo.ttsSettings.agentB?.voice && (
-                                                                    <span className="ml-1 truncate overflow-hidden">
+                                                                    <span className="truncate min-w-0">
                                                                         ({getVoiceName(convo.ttsSettings.agentA.provider, convo.ttsSettings.agentA.voice)} / {getVoiceName(convo.ttsSettings.agentB.provider, convo.ttsSettings.agentB.voice)})
                                                                     </span>
                                                                 )}
                                                             </div>
                                                         )}
                                                         {convo.imageGenSettings?.enabled && (
-                                                            <div className="flex items-center text-xs text-muted-foreground overflow-hidden">
+                                                            <div className="flex items-center text-xs text-muted-foreground min-w-0 w-full">
                                                                 <ImageIcon className="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                <span className="flex-shrink-0">{t.history.imageGenerationEnabled || 'Image generation'}</span>
+                                                                <span className="flex-shrink-0 mr-1">{t.history.imageGenerationEnabled || 'Image generation'}</span>
                                                                 {convo.imageGenSettings?.model && (
-                                                                    <span className="ml-1 truncate overflow-hidden">
+                                                                    <span className="truncate min-w-0">
                                                                         ({getImageModelName(convo.imageGenSettings.model)})
                                                                     </span>
                                                                 )}
