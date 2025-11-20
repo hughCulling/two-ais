@@ -306,7 +306,7 @@ const en = {
     page_WelcomeTitle: "Welcome to Two AIs",
     page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS).",
     page_ApiKeysRequiredTitle: "API Key or Ollama Required",
-    page_ApiKeysRequiredDescription: "To run conversations, you have to at minimum provide your own Mistral AI API key, or use Ollama. Detailed instructions for obtaining an API key can be found on the {settingsLink} page after signing in.",
+    page_ApiKeysRequiredDescription: "To run conversations, you have to at minimum provide your own Mistral AI API key, or use Ollama. Instructions for obtaining an API key can be found on the {settingsLink} page after signing in.",
     page_OllamaSetupTitle: "Ollama",
     page_OllamaDetectedTitle: "Ollama Detected",
     page_OllamaSetupDescription: "Ollama lets you run AI models locally on your computer and in the cloud. {learnMoreLink}",
@@ -356,7 +356,7 @@ const en = {
         gemini25FlashNote: "Pricing varies by media type. Free tier available.",
         gemini25FlashLiteNote: "Most cost-effective option. Free tier available.",
         mistralFreeTierNote: "You can access without paying through the Experiment plan. API requests have rate limits and may be used to train Mistral's models.",
-        ollamaFreeTierNote: "Allows you to use models running locally on your machine (without rate limits) and in the cloud (with rate limits) for free.",
+        ollamaFreeTierNote: "Ollama allows you to freely use cloud models (with rate limits) and local models running on your machine (without rate limits).",
         tts: {
             geminiFlash: {
                 textTokens: "{price} per 1 Million text tokens",
