@@ -315,46 +315,117 @@ export function ChatInterface({
     }, [conversationId, messages]);
 
     const handlePauseAudio = useCallback(() => {
-        if (!isAudioPlaying) return;
+        logger.info(`[Audio Control] Pause requested. isAudioPlaying: ${isAudioPlaying}, isAudioPaused: ${isAudioPaused}`);
+        
+        if (!isAudioPlaying) {
+            logger.warn("[Audio Control] Cannot pause - audio is not playing");
+            return;
+        }
         
         if (utteranceRef.current) {
             try {
+                const isPaused = window.speechSynthesis.paused;
+                const isSpeaking = window.speechSynthesis.speaking;
+                logger.info(`[TTS Pause] SpeechSynthesis state - paused: ${isPaused}, speaking: ${isSpeaking}`);
+                logger.info(`[TTS Pause] Current chunk: ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
+                
                 window.speechSynthesis.pause();
                 setIsAudioPaused(true);
-                setIsAudioPlaying(false); // Ensure playing state is updated
+                setIsAudioPlaying(false);
+                logger.info("[TTS Pause] Successfully paused browser TTS");
             } catch (err) {
-                logger.error("TTS pause failed:", err);
+                logger.error("[TTS Pause] Failed:", err);
                 handleAudioEnd();
             }
         } else if (audioPlayerRef.current) {
+            logger.info(`[Audio Pause] Pausing HTML5 audio at ${audioPlayerRef.current.currentTime}s`);
             audioPlayerRef.current.pause();
             setIsAudioPaused(true);
             setIsAudioPlaying(false);
+            logger.info("[Audio Pause] Successfully paused HTML5 audio");
+        } else {
+            logger.warn("[Audio Control] No active audio source to pause");
         }
-    }, [isAudioPlaying, handleAudioEnd]);
+    }, [isAudioPlaying, isAudioPaused, handleAudioEnd]);
 
     const handleResumeAudio = useCallback(() => {
-        if (!isAudioPaused) return;
+        logger.info(`[Audio Control] Resume requested. isAudioPlaying: ${isAudioPlaying}, isAudioPaused: ${isAudioPaused}`);
+        
+        if (!isAudioPaused) {
+            logger.warn("[Audio Control] Cannot resume - audio is not paused");
+            return;
+        }
 
         if (utteranceRef.current) {
             try {
+                const isPaused = window.speechSynthesis.paused;
+                const isSpeaking = window.speechSynthesis.speaking;
+                logger.info(`[TTS Resume] SpeechSynthesis state before resume - paused: ${isPaused}, speaking: ${isSpeaking}`);
+                logger.info(`[TTS Resume] Current chunk: ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
+                
+                // Check if speechSynthesis is still valid
+                if (!isSpeaking && !isPaused) {
+                    logger.warn("[TTS Resume] SpeechSynthesis lost state - attempting to restart from current chunk");
+                    
+                    // If we have chunks remaining, restart from current position
+                    if (currentChunkIndexRef.current < ttsChunkQueueRef.current.length) {
+                        const currentChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
+                        logger.info(`[TTS Resume] Restarting chunk ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
+                        
+                        const newUtterance = new SpeechSynthesisUtterance(currentChunk);
+                        newUtterance.voice = utteranceRef.current.voice;
+                        newUtterance.rate = utteranceRef.current.rate;
+                        newUtterance.pitch = utteranceRef.current.pitch;
+                        
+                        // Copy event handlers from original utterance
+                        newUtterance.onend = utteranceRef.current.onend;
+                        newUtterance.onerror = utteranceRef.current.onerror;
+                        newUtterance.onstart = utteranceRef.current.onstart;
+                        
+                        utteranceRef.current = newUtterance;
+                        window.speechSynthesis.speak(newUtterance);
+                        
+                        setIsAudioPaused(false);
+                        setIsAudioPlaying(true);
+                        logger.info("[TTS Resume] Successfully restarted TTS from current chunk");
+                        return;
+                    } else {
+                        logger.error("[TTS Resume] No chunks available to resume");
+                        handleAudioEnd();
+                        return;
+                    }
+                }
+                
                 window.speechSynthesis.resume();
-                setIsAudioPaused(false); // Update state to reflect playback has resumed
-                setIsAudioPlaying(true); // Ensure playing state is set
+                setIsAudioPaused(false);
+                setIsAudioPlaying(true);
+                logger.info("[TTS Resume] Successfully resumed browser TTS");
             } catch (err) {
-                logger.error("TTS resume failed:", err);
+                logger.error("[TTS Resume] Failed:", err);
                 handleAudioEnd();
             }
         } else if (audioPlayerRef.current) {
+            logger.info(`[Audio Resume] Resuming HTML5 audio from ${audioPlayerRef.current.currentTime}s`);
             audioPlayerRef.current.play().then(() => {
-                setIsAudioPaused(false); // Update state to reflect playback has resumed
+                setIsAudioPaused(false);
                 setIsAudioPlaying(true);
+                logger.info("[Audio Resume] Successfully resumed HTML5 audio");
             }).catch(err => {
-                logger.error("Audio resume failed:", err);
+                logger.error("[Audio Resume] Failed:", err);
                 handleAudioEnd();
             });
+        } else {
+            logger.warn("[Audio Control] No audio source to resume");
+            // Try to restart playback from the beginning of the current message
+            if (currentlyPlayingMsgId) {
+                logger.info(`[Audio Control] Attempting to restart playback for message ${currentlyPlayingMsgId}`);
+                setIsAudioPaused(false);
+                // The effect that handles playback will pick this up
+            } else {
+                handleAudioEnd();
+            }
         }
-    }, [isAudioPaused, handleAudioEnd]);
+    }, [isAudioPlaying, isAudioPaused, currentlyPlayingMsgId, handleAudioEnd]);
 
     const toggleTTSAutoScroll = useCallback(() => {
         setIsTTSAutoScrollEnabled(prev => {

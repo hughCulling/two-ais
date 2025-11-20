@@ -465,7 +465,7 @@ const en = {
         sessionDetails: 'Session Details',
         language: 'Language',
         transcript: 'Transcript',
-        loadingHistory: 'Loading history...',
+        loadingHistory: 'Loading previous chats...',
         loadingConversation: 'Loading conversation...',
         chatStartedOn: 'Chat started on {date}',
         agentAModel: 'Agent A Model',
