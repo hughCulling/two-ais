@@ -178,6 +178,9 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           content: fullContent,
           timestamp: serverTimestamp(),
           streamingMessageId: messageId,
+          isStreaming: false,
+          audioUrl: null, // Will be populated by TTS if enabled
+          ttsWasSplit: false,
         });
 
         // Update conversation state
