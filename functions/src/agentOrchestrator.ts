@@ -258,6 +258,82 @@ export async function triggerAgentResponse(
                         }
                     }
                 }
+            } else if (llmProvider === "Mistral AI" && agentModelId.startsWith("magistral-")) {
+                // Special handling for Magistral models using raw HTTP streaming
+                const mistralMessages = historyMessages.map((msg: BaseMessage) => {
+                    if (msg instanceof SystemMessage) {
+                        return { role: "system", content: msg.content as string };
+                    } else if (msg instanceof HumanMessage) {
+                        return { role: "user", content: msg.content as string };
+                    } else {
+                        return { role: "assistant", content: msg.content as string };
+                    }
+                });
+
+                const response = await axios.post(
+                    "https://api.mistral.ai/v1/chat/completions",
+                    {
+                        model: agentModelId,
+                        messages: mistralMessages,
+                        stream: true,
+                    },
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${llmApiKey}`,
+                            "Content-Type": "application/json",
+                        },
+                        responseType: "stream",
+                    }
+                );
+
+                const stream = response.data;
+                let buffer = "";
+
+                stream.on("data", async (chunk: Buffer) => {
+                    buffer += chunk.toString();
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop() || "";
+
+                    for (const line of lines) {
+                        if (line.startsWith("data: ")) {
+                            const data = line.slice(6).trim();
+                            if (data === "[DONE]") continue;
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+                                const delta = parsed.choices?.[0]?.delta;
+                                if (!delta) continue;
+
+                                let token = "";
+                                if (typeof delta.content === "string") {
+                                    token = delta.content;
+                                } else if (Array.isArray(delta.content)) {
+                                    token = delta.content
+                                        .filter((x: {type?: string}) => x.type === "text")
+                                        .map((x: {text?: string}) => x.text || "")
+                                        .join("");
+                                }
+
+                                if (token) {
+                                    responseContent += token;
+                                    updateCounter++;
+                                    
+                                    if (updateCounter >= UPDATE_INTERVAL) {
+                                        await rtdbRef.update({ content: responseContent });
+                                        updateCounter = 0;
+                                    }
+                                }
+                            } catch (parseError) {
+                                logger.warn("Failed to parse SSE chunk:", parseError);
+                            }
+                        }
+                    }
+                });
+
+                await new Promise<void>((resolve, reject) => {
+                    stream.on("end", resolve);
+                    stream.on("error", reject);
+                });
             } else {
                 // Standard LangChain streaming for other providers
                 const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
