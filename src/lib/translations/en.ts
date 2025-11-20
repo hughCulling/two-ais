@@ -137,6 +137,7 @@ const en = {
             initialPrompt: 'Initial System Prompt',
             deletePreset: 'Delete Preset',
             confirmDelete: 'Are you sure you want to delete your saved preset?',
+            helperTextPreferences: 'Helper Text Preferences',
         },
     },
 
