@@ -482,12 +482,13 @@ export function ChatInterface({
                 const fetchedMessages: Message[] = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.role && data.content && data.timestamp) {
+                    // Allow timestamp to be null (serverTimestamp() is null initially)
+                    if (data.role && data.content !== undefined) {
                         fetchedMessages.push({
                             id: doc.id,
                             role: data.role,
                             content: data.content,
-                            timestamp: data.timestamp,
+                            timestamp: data.timestamp || null,
                             audioUrl: data.audioUrl,
                             ttsWasSplit: data.ttsWasSplit,
                             isStreaming: data.isStreaming,
@@ -495,7 +496,7 @@ export function ChatInterface({
                             imageGenError: data.imageGenError
                         } as Message);
                     } else {
-                        logger.warn(`Skipping message doc ${doc.id} due to missing fields.`);
+                        logger.warn(`Skipping message doc ${doc.id} due to missing fields. Role: ${data.role}, Content: ${data.content ? 'present' : 'missing'}`);
                     }
                 });
                 setMessages(fetchedMessages);
@@ -998,6 +999,13 @@ export function ChatInterface({
             currentChunkIndexRef.current = 0;
             currentParagraphIndexRef.current = 0;
             
+            // Safety check
+            if (chunks.length === 0) {
+                logger.warn('[TTS] No chunks to play, skipping');
+                handleAudioEnd();
+                return;
+            }
+            
             // Create utterance for first chunk
             const utterance = new SpeechSynthesisUtterance(chunks[0]);
             
@@ -1018,9 +1026,9 @@ export function ChatInterface({
             }
             utterance.onstart = () => {
                 const chunkNum = currentChunkIndexRef.current + 1;
-                const totalChunks = ttsChunkQueueRef.current.length;
-                const currentChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
-                logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk.length} chars)`);
+                const totalChunks = ttsChunkQueueRef.current?.length || 0;
+                const currentChunk = ttsChunkQueueRef.current?.[currentChunkIndexRef.current];
+                logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk?.length || 0} chars)`);
                 
                 if (chunkNum === 1) {
                     // Only set these on the first chunk
