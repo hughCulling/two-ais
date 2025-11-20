@@ -197,7 +197,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         <div className="space-y-2">
             <Label htmlFor={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="block text-center">{label}</Label>
             <Select value={value} onValueChange={onChange} disabled={disabled}>
-                <SelectTrigger id={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="w-full [&>span]:mx-auto [&>span]:text-center">
+                <SelectTrigger id={`llm-select-${label.toLowerCase().replace(/\s+/g, '-')}`} className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                     <SelectValue placeholder={placeholder || 'Select LLM'}>
                         {selectedLLM ? selectedLLM.name : placeholder || 'Select LLM'}
                     </SelectValue>
