@@ -163,6 +163,7 @@ export function ChatInterface({
     const [ttsError, setTtsError] = useState<string | null>(null);
     const [conversationData, setConversationData] = useState<ConversationData | null>(null);
     const [hasUserInteracted, setHasUserInteracted] = useState(false);
+    const [audioAutoplayBlocked, setAudioAutoplayBlocked] = useState<boolean | null>(null); // null = not tested yet
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [isAudioPaused, setIsAudioPaused] = useState(false);
     const [isBrowserTTSActive, setIsBrowserTTSActive] = useState(false);
@@ -557,17 +558,53 @@ export function ChatInterface({
         prevMessagesLength.current = messages.length;
     }, [messages, conversationStatus, isStopped, isAudioPlaying, playedMessageIds, scrollToBottom]);
 
+    // --- Effect: Test Audio Autoplay on Mount ---
+    useEffect(() => {
+        const testAutoplay = async () => {
+            try {
+                // Create a silent audio element to test autoplay
+                const testAudio = new Audio();
+                testAudio.volume = 0;
+                testAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+                
+                // Try to play it
+                await testAudio.play();
+                
+                // If we get here, autoplay is allowed
+                logger.info("Audio autoplay is allowed - no user interaction needed");
+                setAudioAutoplayBlocked(false);
+                setHasUserInteracted(true); // Mark as interacted since autoplay works
+                
+                // Clean up
+                testAudio.pause();
+                testAudio.src = '';
+            } catch (error) {
+                // Autoplay is blocked
+                logger.info("Audio autoplay is blocked - user interaction required");
+                setAudioAutoplayBlocked(true);
+            }
+        };
+
+        testAutoplay();
+    }, []);
+
     // --- Handler: User Interaction Detection ---
     const handleUserInteraction = useCallback(() => {
         if (!hasUserInteracted) {
             logger.info("User interaction detected - enabling audio playback");
             setHasUserInteracted(true);
+            setAudioAutoplayBlocked(false); // Once user interacts, autoplay is no longer blocked
         }
     }, [hasUserInteracted]);
 
     // --- Effect 4: User Interaction Detection ---
     useEffect(() => {
-                const handleInteraction = () => handleUserInteraction();
+        // Only set up listeners if autoplay is blocked
+        if (audioAutoplayBlocked === false) {
+            return; // No need for interaction listeners if autoplay works
+        }
+
+        const handleInteraction = () => handleUserInteraction();
         
         // Listen for various user interaction events
         document.addEventListener('click', handleInteraction, { once: true });
@@ -1263,8 +1300,8 @@ export function ChatInterface({
                 </div>
             )}
 
-            {/* User Interaction Prompt for Audio */}
-            {!hasUserInteracted && conversationStatus === "running" && (
+            {/* User Interaction Prompt for Audio - Only show if autoplay is actually blocked */}
+            {!hasUserInteracted && audioAutoplayBlocked === true && conversationStatus === "running" && (
                 (() => {
                     const hasUnplayedAudio = messages.some(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
                     const isUsingBrowserTTS = conversationData?.ttsSettings?.agentA?.provider === 'browser' || 
