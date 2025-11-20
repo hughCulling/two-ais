@@ -71,7 +71,7 @@ export default function SignInForm() {
                 </p>
             )}
             <div>
-                <label htmlFor="email-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="email-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
                     {t.auth.login.emailPlaceholder}
                 </label>
                 <input 
@@ -81,7 +81,7 @@ export default function SignInForm() {
                     onChange={(e) => setEmail(e.target.value)} 
                     required 
                     autoComplete="email" 
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 text-center"
                     aria-describedby="email-signin-description"
                     aria-invalid={error && error.includes('email') ? true : false}
                 />
@@ -90,7 +90,7 @@ export default function SignInForm() {
                 </div>
             </div>
             <div>
-                <label htmlFor="password-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="password-signin" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
                     {t.auth.login.passwordPlaceholder}
                 </label>
                 <input 
@@ -100,7 +100,7 @@ export default function SignInForm() {
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
                     autoComplete="current-password" 
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 text-center"
                     aria-describedby="password-signin-description"
                     aria-invalid={error && error.includes('password') ? true : false}
                 />

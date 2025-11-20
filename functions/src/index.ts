@@ -538,33 +538,120 @@ async function _triggerAgentResponse(
                 timestamp: Date.now(),
             });
 
-            // Use LangChain streaming API for cloud providers
-            const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
-            for await (const chunk of stream) {
-                let token = "";
-                if (typeof chunk === "string") {
-                    token = chunk;
-                } else if (chunk && typeof chunk.content === "string") {
-                    token = chunk.content;
-                } else if (chunk && Array.isArray(chunk.content)) {
-                    // Filter out thinking chunks, only keep text chunks
-                    token = chunk.content
-                        .filter((x: unknown) => typeof x === "object" && x !== null && (x as {type?: string}).type !== "thinking")
-                        .map((x: unknown) => (typeof x === "string" ? x : ((x as {text?: string}).text || JSON.stringify(x))))
-                        .join("");
-                } else {
-                    token = String(chunk);
-                }
-                
-                // Only add non-empty tokens
-                if (token) {
-                    responseContent += token;
-                    updateCounter++;
+            // Special handling for Magistral models (Mistral models with thinking tokens) to avoid Zod validation errors
+            // Only Magistral models use thinking tokens: magistral-medium-latest, magistral-small-latest
+            // We use raw HTTP streaming to bypass SDK's Zod validation
+            const isMagistralModel = llmProvider === "Mistral AI" && agentModelId.startsWith("magistral-");
+            
+            if (isMagistralModel) {
+                // Convert LangChain messages to Mistral format
+                const mistralMessages = historyMessages.map((msg) => {
+                    if (msg._getType() === "system") {
+                        return { role: "system", content: msg.content as string };
+                    } else if (msg._getType() === "human") {
+                        return { role: "user", content: msg.content as string };
+                    } else {
+                        return { role: "assistant", content: msg.content as string };
+                    }
+                });
+
+                // Use raw HTTP streaming to avoid SDK's Zod validation
+                const response = await axios.post(
+                    "https://api.mistral.ai/v1/chat/completions",
+                    {
+                        model: agentModelId,
+                        messages: mistralMessages,
+                        stream: true,
+                    },
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${llmApiKey}`,
+                            "Content-Type": "application/json",
+                        },
+                        responseType: "stream",
+                    }
+                );
+
+                // Parse SSE stream manually
+                const stream = response.data;
+                let buffer = "";
+
+                stream.on("data", async (chunk: Buffer) => {
+                    buffer += chunk.toString();
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop() || ""; // Keep incomplete line in buffer
+
+                    for (const line of lines) {
+                        if (line.startsWith("data: ")) {
+                            const data = line.slice(6).trim();
+                            if (data === "[DONE]") continue;
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+                                const delta = parsed.choices?.[0]?.delta;
+                                if (!delta) continue;
+
+                                let token = "";
+                                if (typeof delta.content === "string") {
+                                    token = delta.content;
+                                } else if (Array.isArray(delta.content)) {
+                                    // Filter out thinking chunks, only keep text chunks
+                                    token = delta.content
+                                        .filter((x: {type?: string}) => x.type === "text")
+                                        .map((x: {text?: string}) => x.text || "")
+                                        .join("");
+                                }
+
+                                if (token) {
+                                    responseContent += token;
+                                    updateCounter++;
+                                    
+                                    if (updateCounter >= UPDATE_INTERVAL) {
+                                        await rtdbRef.update({ content: responseContent });
+                                        updateCounter = 0;
+                                    }
+                                }
+                            } catch (parseError) {
+                                logger.warn("Failed to parse SSE chunk:", parseError);
+                            }
+                        }
+                    }
+                });
+
+                // Wait for stream to complete
+                await new Promise<void>((resolve, reject) => {
+                    stream.on("end", resolve);
+                    stream.on("error", reject);
+                });
+            } else {
+                // Use LangChain streaming API for other cloud providers
+                const stream = await chatModel.stream(historyMessages as BaseLanguageModelInput);
+                for await (const chunk of stream) {
+                    let token = "";
+                    if (typeof chunk === "string") {
+                        token = chunk;
+                    } else if (chunk && typeof chunk.content === "string") {
+                        token = chunk.content;
+                    } else if (chunk && Array.isArray(chunk.content)) {
+                        // Filter out thinking chunks, only keep text chunks
+                        token = chunk.content
+                            .filter((x: unknown) => typeof x === "object" && x !== null && (x as {type?: string}).type !== "thinking")
+                            .map((x: unknown) => (typeof x === "string" ? x : ((x as {text?: string}).text || JSON.stringify(x))))
+                            .join("");
+                    } else {
+                        token = String(chunk);
+                    }
                     
-                    // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
-                    if (updateCounter >= UPDATE_INTERVAL) {
-                        await rtdbRef.update({ content: responseContent });
-                        updateCounter = 0;
+                    // Only add non-empty tokens
+                    if (token) {
+                        responseContent += token;
+                        updateCounter++;
+                        
+                        // Only update RTDB every UPDATE_INTERVAL tokens to reduce bandwidth
+                        if (updateCounter >= UPDATE_INTERVAL) {
+                            await rtdbRef.update({ content: responseContent });
+                            updateCounter = 0;
+                        }
                     }
                 }
             }

@@ -51,13 +51,14 @@ export default function SignOutButton({ className, onSignOut }: SignOutButtonPro
     return (
         // The wrapper div might not be strictly necessary if className applies directly to the button
         // For now, keeping it to maintain structure, but it could be simplified.
-        <div className={className ? undefined : "flex flex-col items-center"}> 
+        <div className={className ? undefined : "flex flex-col items-center min-w-0"}> 
             <button
                 onClick={handleSignOut}
                 disabled={loading}
-                className={className || defaultButtonClasses}
+                className={`${className || defaultButtonClasses} truncate w-full`}
                 aria-label={loading ? "Signing out..." : "Sign out of your account"}
                 aria-busy={loading}
+                title={loading ? `${t.header.signOut}...` : t.header.signOut}
             >
                 {loading ? `${t.header.signOut}...` : t.header.signOut}
             </button>

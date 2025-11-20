@@ -49,28 +49,28 @@ export default function Header() {
                     </div>
 
                     {/* --- Desktop Navigation & Auth --- */}
-                    <div className="hidden md:flex items-center space-x-2 sm:space-x-4" role="group" aria-label="User controls">
+                    <div className="hidden md:flex items-center space-x-2 sm:space-x-4 min-w-0 flex-shrink" role="group" aria-label="User controls">
                         {/* Language Selector */}
-                        <LanguageSelector showIcon={true} className="flex" />
+                        <LanguageSelector showIcon={true} className="flex flex-shrink-0" />
 
                         {/* Theme Switcher */}
                         <ThemeSwitcher id="desktop" />
 
                         {/* --- Auth Status / Links (Desktop) --- */}
                         {authLoading ? (
-                            <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                            <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse flex-shrink-0"></div>
                         ) : user ? (
                             <>
-                                <div className="flex items-center space-x-2" role="group" aria-label="User information">
-                                    <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                                <div className="flex items-center space-x-2 min-w-0 flex-shrink" role="group" aria-label="User information">
+                                    <UserCircle className="h-5 w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" aria-hidden="true" />
                                     <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:inline truncate max-w-[100px] md:max-w-[150px]" title={user.email || 'User'}>
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
-                                <Link href={`/${language.code}/app/settings`} className={navItemClasses} aria-label="Go to settings">
+                                <Link href={`/${language.code}/app/settings`} className={`${navItemClasses} flex-shrink-0`} aria-label="Go to settings">
                                     {t.header.settings}
                                 </Link>
-                                <div className="px-1">
+                                <div className="flex-shrink min-w-0 max-w-[100px]">
                                     <SignOutButton />
                                 </div>
                             </>
