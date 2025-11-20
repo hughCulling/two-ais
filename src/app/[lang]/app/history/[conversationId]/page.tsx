@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -12,9 +12,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-// import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check, ScrollText, Maximize2, Minimize2 } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
@@ -23,6 +23,7 @@ import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
 import { removeEmojis } from '@/lib/utils';
 import Image from 'next/image';
+import {  prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -134,13 +135,18 @@ export default function ChatHistoryViewerPage() {
     const [resumeLoading, setResumeLoading] = useState(false);
     const [resumeError, setResumeError] = useState<string | null>(null);
 
-    const agentALLMInfo = useMemo(() => details ? getLLMInfoById(details.agentA_llm) : null, [details]);
-    const agentBLLMInfo = useMemo(() => details ? getLLMInfoById(details.agentB_llm) : null, [details]);
-
     const [audioState, setAudioState] = useState<AudioState>({ isPlaying: false, isPaused: false });
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
+    const [isTTSAutoScrollEnabled, setIsTTSAutoScrollEnabled] = useState(true);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const scrollViewportRef = useRef<HTMLDivElement | null>(null);
+    const paragraphRefsMap = useRef<Map<string, HTMLElement>>(new Map());
+    const ttsChunkQueueRef = useRef<string[]>([]);
+    const currentChunkIndexRef = useRef<number>(0);
+    const paragraphIndicesRef = useRef<number[]>([]);
+    const currentParagraphIndexRef = useRef<number>(-1);
 
     useEffect(() => {
         return () => {
@@ -158,8 +164,37 @@ export default function ChatHistoryViewerPage() {
     }, []);
 
     const handleAudioEnd = useCallback(() => {
-        setAudioState(prev => ({ ...prev, isPlaying: false, isPaused: false }));
+        setAudioState({ isPlaying: false, isPaused: false });
         setCurrentlyPlayingMsgId(null);
+        ttsChunkQueueRef.current = [];
+        currentChunkIndexRef.current = 0;
+        currentParagraphIndexRef.current = -1;
+    }, []);
+
+    const toggleTTSAutoScroll = useCallback(() => {
+        setIsTTSAutoScrollEnabled(prev => !prev);
+    }, []);
+
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen(prev => !prev);
+    }, []);
+
+    const handlePauseAudio = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        } else if (utteranceRef.current) {
+            window.speechSynthesis.pause();
+        }
+        setAudioState({ isPlaying: false, isPaused: true });
+    }, []);
+
+    const handleResumeAudio = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.play().catch(console.error);
+        } else if (utteranceRef.current) {
+            window.speechSynthesis.resume();
+        }
+        setAudioState({ isPlaying: true, isPaused: false });
     }, []);
 
     useEffect(() => {
@@ -276,9 +311,7 @@ export default function ChatHistoryViewerPage() {
 
     const TranscriptMessageBubble: React.FC<{
         msg: Message;
-        agentALLMInfo?: { name?: string } | null;
-        agentBLLMInfo?: { name?: string } | null;
-    }> = ({ msg, agentALLMInfo, agentBLLMInfo }) => {
+    }> = ({ msg }) => {
         const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         
@@ -298,7 +331,7 @@ export default function ChatHistoryViewerPage() {
                 } else if (utteranceRef.current) {
                     window.speechSynthesis.resume();
                 }
-                setAudioState(prev => ({ ...prev, isPaused: false }));
+                setAudioState({ isPlaying: true, isPaused: false });
                 return;
             }
 
@@ -309,7 +342,7 @@ export default function ChatHistoryViewerPage() {
                 } else if (utteranceRef.current) {
                     window.speechSynthesis.pause();
                 }
-                setAudioState(prev => ({ ...prev, isPaused: true }));
+                setAudioState({ isPlaying: false, isPaused: true });
                 return;
             }
 
@@ -329,93 +362,148 @@ export default function ChatHistoryViewerPage() {
                 const ttsConfig = details?.ttsSettings?.[agentRole];
                 
                 if (ttsConfig?.provider === 'browser') {
-                    // Use the same markdown removal as in ChatInterface
+                    // Use the same markdown removal and chunking as in ChatInterface
                     const cleanedContent = removeEmojis(removeMarkdown(msg.content));
-                    const utterance = new SpeechSynthesisUtterance(cleanedContent);
-                    utteranceRef.current = utterance;
                     
-                    utterance.onend = handleAudioEnd;
-                    utterance.onerror = (event) => {
-                        // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
-                        if (event.error === 'canceled' || event.error === 'interrupted') {
-                            console.debug(`Speech synthesis ${event.error} (expected)`);
-                        } else if (event.error === 'synthesis-failed') {
-                            console.warn('Speech synthesis failed - this may be due to rapid playback attempts');
-                        } else {
-                            console.error('Speech synthesis error:', event.error);
-                        }
-                        handleAudioEnd();
-                    };
+                    // Prepare TTS chunks with paragraph mapping for auto-scroll
+                    const { chunks, paragraphIndices } = prepareTTSChunksWithParagraphs(cleanedContent, 4000);
+                    ttsChunkQueueRef.current = chunks;
+                    paragraphIndicesRef.current = paragraphIndices;
+                    currentChunkIndexRef.current = 0;
+                    currentParagraphIndexRef.current = -1;
                     
-                    // Set the voice using getVoiceById with fallback
-                    if (ttsConfig.voice) {
-                        const voiceInfo = getVoiceById('browser', ttsConfig.voice);
-                        let voice = null;
-                        
-                        if (voiceInfo) {
-                            const voices = window.speechSynthesis.getVoices();
-                            voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                    // Function to play a specific chunk
+                    const playChunk = (chunkIndex: number) => {
+                        if (chunkIndex >= ttsChunkQueueRef.current.length) {
+                            handleAudioEnd();
+                            return;
                         }
+
+                        const chunk = ttsChunkQueueRef.current[chunkIndex];
+                        const utterance = new SpeechSynthesisUtterance(chunk);
+                        utteranceRef.current = utterance;
                         
-                        // If voice not found, try fallback
-                        if (!voice) {
-                            console.warn(`Voice not found for ID: ${ttsConfig.voice}, trying fallback`);
-                            voice = findFallbackBrowserVoice(details?.language || 'en');
-                            if (voice) {
-                                console.info(`Using fallback voice: ${voice.name} (${voice.lang})`);
+                        utterance.onstart = () => {
+                            // Auto-scroll to paragraph when TTS starts
+                            if (isTTSAutoScrollEnabled) {
+                                requestAnimationFrame(() => {
+                                    const paragraphIndex = paragraphIndicesRef.current[chunkIndex] || 0;
+                                    const paragraphKey = `${msg.id}-p${paragraphIndex}`;
+                                    
+                                    const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
+                                    
+                                    if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
+                                        const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+                                        
+                                        if (paragraphElement && scrollContainer) {
+                                            const containerRect = scrollContainer.getBoundingClientRect();
+                                            const paragraphRect = paragraphElement.getBoundingClientRect();
+                                            
+                                            const currentScroll = scrollContainer.scrollTop;
+                                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
+                                            
+                                            scrollContainer.scrollTo({
+                                                top: Math.max(0, targetScroll),
+                                                behavior: 'smooth'
+                                            });
+                                            
+                                            currentParagraphIndexRef.current = paragraphIndex;
+                                        }
+                                    }
+                                });
                             }
-                        }
+                        };
                         
-                        // Try to assign the voice with error handling
-                        if (voice) {
-                            try {
-                                utterance.voice = voice;
-                            } catch (error) {
-                                console.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
-                                const fallbackVoice = findFallbackBrowserVoice(details?.language || 'en');
-                                if (fallbackVoice) {
-                                    utterance.voice = fallbackVoice;
-                                    console.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                        utterance.onend = () => {
+                            currentChunkIndexRef.current++;
+                            if (currentChunkIndexRef.current < ttsChunkQueueRef.current.length) {
+                                playChunk(currentChunkIndexRef.current);
+                            } else {
+                                handleAudioEnd();
+                            }
+                        };
+                        
+                        utterance.onerror = (event) => {
+                            if (event.error === 'canceled' || event.error === 'interrupted') {
+                                console.debug(`Speech synthesis ${event.error} (expected)`);
+                            } else if (event.error === 'synthesis-failed') {
+                                console.warn('Speech synthesis failed - this may be due to rapid playback attempts');
+                            } else {
+                                console.error('Speech synthesis error:', event.error);
+                            }
+                            handleAudioEnd();
+                        };
+                        
+                        // Set the voice using getVoiceById with fallback
+                        if (ttsConfig.voice) {
+                            const voiceInfo = getVoiceById('browser', ttsConfig.voice);
+                            let voice = null;
+                            
+                            if (voiceInfo) {
+                                const voices = window.speechSynthesis.getVoices();
+                                voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                            }
+                            
+                            if (!voice) {
+                                console.warn(`Voice not found for ID: ${ttsConfig.voice}, trying fallback`);
+                                voice = findFallbackBrowserVoice(details?.language || 'en');
+                                if (voice) {
+                                    console.info(`Using fallback voice: ${voice.name} (${voice.lang})`);
+                                }
+                            }
+                            
+                            if (voice) {
+                                try {
+                                    utterance.voice = voice;
+                                } catch (error) {
+                                    console.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
+                                    const fallbackVoice = findFallbackBrowserVoice(details?.language || 'en');
+                                    if (fallbackVoice) {
+                                        utterance.voice = fallbackVoice;
+                                        console.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                                    }
                                 }
                             }
                         }
-                    }
+                        
+                        // Cancel any pending speech
+                        if (window.speechSynthesis.speaking) {
+                            console.debug('Speech synthesis already speaking, cancelling first');
+                            window.speechSynthesis.cancel();
+                        }
+                        
+                        window.speechSynthesis.cancel();
+                        
+                        setTimeout(() => {
+                            if (window.speechSynthesis.speaking) {
+                                console.warn('Speech synthesis still speaking after cancel, forcing cancel');
+                                window.speechSynthesis.cancel();
+                                setTimeout(() => {
+                                    try {
+                                        window.speechSynthesis.speak(utterance);
+                                    } catch (speakErr) {
+                                        console.error('Error speaking utterance after forced cancel:', speakErr);
+                                        handleAudioEnd();
+                                    }
+                                }, 100);
+                            } else {
+                                try {
+                                    window.speechSynthesis.speak(utterance);
+                                } catch (speakErr) {
+                                    console.error('Error speaking utterance:', speakErr);
+                                    handleAudioEnd();
+                                }
+                            }
+                        }, 150);
+                    };
                     
                     setAudioState({ isPlaying: true, isPaused: false });
                     setCurrentlyPlayingMsgId(msg.id);
                     
-                    // Guard: Don't start new speech if already speaking
-                    if (window.speechSynthesis.speaking) {
-                        console.debug('Speech synthesis already speaking, cancelling first');
-                        window.speechSynthesis.cancel();
-                    }
-                    
-                    // Cancel any pending speech
-                    window.speechSynthesis.cancel();
-                    
-                    // Longer delay for Edge browser to properly clean up
-                    setTimeout(() => {
-                        // Double-check we're not already speaking before starting
-                        if (window.speechSynthesis.speaking) {
-                            console.warn('Speech synthesis still speaking after cancel, forcing cancel');
-                            window.speechSynthesis.cancel();
-                            setTimeout(() => {
-                                try {
-                                    window.speechSynthesis.speak(utterance);
-                                } catch (speakErr) {
-                                    console.error('Error speaking utterance after forced cancel:', speakErr);
-                                    handleAudioEnd();
-                                }
-                            }, 100);
-                        } else {
-                            try {
-                                window.speechSynthesis.speak(utterance);
-                            } catch (speakErr) {
-                                console.error('Error speaking utterance:', speakErr);
-                                handleAudioEnd();
-                            }
-                        }
-                    }, 150); // Increased delay for Edge compatibility
+                    // Start playing the first chunk
+                    playChunk(0);
                     return;
                 }
             }
@@ -426,7 +514,7 @@ export default function ChatHistoryViewerPage() {
                 audioRef.current = audio;
                 
                 audio.onended = handleAudioEnd;
-                audio.onpause = () => setAudioState(prev => ({ ...prev, isPaused: true }));
+                audio.onpause = () => setAudioState({ isPlaying: false, isPaused: true });
                 audio.onplay = () => {
                     setAudioState({ isPlaying: true, isPaused: false });
                     setCurrentlyPlayingMsgId(msg.id);
@@ -437,26 +525,24 @@ export default function ChatHistoryViewerPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [msg, isAgentA, isAgentB, isCurrentPlaying, isCurrentPaused, handleAudioEnd]);
 
-        // Determine bubble styling and labels based on message role
+        // Determine bubble styling based on message role
         let bubbleClass = '';
-        let label = '';
         let alignClass = '';
+        let showPlayButton = false;
         
         if (isAgentA) {
             bubbleClass = 'bg-muted text-foreground';
-            label = agentALLMInfo?.name ? `Agent A (${agentALLMInfo.name})` : 'Agent A';
             alignClass = 'justify-start';
+            showPlayButton = !!(msg.audioUrl || details?.ttsSettings?.agentA?.provider === 'browser');
         } else if (isAgentB) {
             bubbleClass = 'bg-primary text-primary-foreground';
-            label = agentBLLMInfo?.name ? `Agent B (${agentBLLMInfo.name})` : 'Agent B';
             alignClass = 'justify-end';
+            showPlayButton = !!(msg.audioUrl || details?.ttsSettings?.agentB?.provider === 'browser');
         } else if (isUser) {
             bubbleClass = 'bg-secondary text-foreground';
-            label = 'You';
             alignClass = 'justify-end';
         } else if (isSystem) {
             bubbleClass = 'bg-muted/60 text-muted-foreground italic';
-            label = 'System';
             alignClass = 'justify-center';
         }
 
@@ -472,11 +558,33 @@ export default function ChatHistoryViewerPage() {
         }, []);
 
         return (
-            <div className={`flex ${alignClass}`}>
+            <div className={`flex ${alignClass} relative`}>
+                {/* Sticky Play Button - Left side for Agent B (right-aligned messages) */}
+                {showPlayButton && isAgentB && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            togglePlayPause();
+                        }}
+                        className="flex-shrink-0 mr-3 sticky top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 hover:bg-primary/30 transition-colors z-10"
+                        style={{ alignSelf: 'flex-start', marginTop: '2rem' }}
+                        aria-label={isCurrentPlaying ? 'Pause audio' : 'Play audio'}
+                    >
+                        {isCurrentPlaying ? (
+                            <Pause className="h-5 w-5 text-primary-foreground" />
+                        ) : (
+                            <Play className="h-5 w-5 text-primary-foreground" />
+                        )}
+                    </button>
+                )}
+                
                 <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`} style={{ marginBottom: '0.5rem' }}>
-                    {/* Role label */}
-                    {(isAgentA || isAgentB || isUser) && (
-                        <p className="text-xs font-bold mb-1">{label}</p>
+                    {/* Playing indicator */}
+                    {isCurrentPlaying && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                        </span>
                     )}
 
                     {/* Image display for agent messages */}
@@ -519,38 +627,57 @@ export default function ChatHistoryViewerPage() {
                         </>
                     )}
 
-                    {/* Message content */}
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {msg.content}
-                        </ReactMarkdown>
+                    {/* Message content - matching ChatInterface with paragraph refs for auto-scroll */}
+                    <div>
+                        {(isAgentA || isAgentB) ? (
+                            <>
+                                {msg.content.split(/\n+/).map((paragraph, index) => {
+                                    const paragraphKey = `${msg.id}-p${index}`;
+                                    return (
+                                        <div
+                                            key={paragraphKey}
+                                            ref={(el) => {
+                                                if (el) {
+                                                    paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
+                                                } else {
+                                                    paragraphRefsMap.current.delete(paragraphKey);
+                                                }
+                                            }}
+                                            className="mb-4"
+                                        >
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {paragraph}
+                                            </ReactMarkdown>
+                                        </div>
+                                    );
+                                })}
+                            </>
+                        ) : (
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                            </ReactMarkdown>
+                        )}
                     </div>
-
-                    {/* TTS Playback Button - Show for both pre-recorded and browser TTS */}
-                    {(msg.audioUrl || (details?.ttsSettings?.[msg.role as 'agentA' | 'agentB']?.provider === 'browser' && (isAgentA || isAgentB))) && (
-                        <div className="mt-2 flex items-center">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    togglePlayPause();
-                                }}
-                                className={`flex items-center justify-center w-8 h-8 rounded-full ${isAgentA ? 'bg-muted-foreground/20 hover:bg-muted-foreground/30' : 'bg-primary/20 hover:bg-primary/30'} transition-colors`}
-                                aria-label={isCurrentPlaying ? 'Pause audio' : 'Play audio'}
-                            >
-                                {isCurrentPlaying ? (
-                                    <Pause className="h-4 w-4" />
-                                ) : (
-                                    <Play className="h-4 w-4" />
-                                )}
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Streaming indicator */}
-                    {msg.isStreaming && (
-                        <span className="ml-1 animate-pulse text-primary" aria-hidden="true">▍</span>
-                    )}
                 </div>
+
+                {/* Sticky Play Button - Right side for Agent A (left-aligned messages) */}
+                {showPlayButton && isAgentA && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            togglePlayPause();
+                        }}
+                        className="flex-shrink-0 ml-3 sticky top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-muted-foreground/20 hover:bg-muted-foreground/30 transition-colors z-10"
+                        style={{ alignSelf: 'flex-start', marginTop: '2rem' }}
+                        aria-label={isCurrentPlaying ? 'Pause audio' : 'Play audio'}
+                    >
+                        {isCurrentPlaying ? (
+                            <Pause className="h-5 w-5" />
+                        ) : (
+                            <Play className="h-5 w-5" />
+                        )}
+                    </button>
+                )}
 
                 {/* Full screen image modal */}
                 {fullScreenImageMsgId === msg.id && msg.imageUrl &&
@@ -596,43 +723,7 @@ export default function ChatHistoryViewerPage() {
         );
     };
 
-    const AudioControl = () => {
-        if (!audioState.isPlaying && !audioState.isPaused) return null;
-        
-        return (
-            <div className="sticky bottom-0 left-0 right-0 bg-background border-t pt-2 mt-4 z-50">
-                <div className="flex items-center justify-center pb-2">
-                    <button
-                        onClick={() => {
-                            if (audioState.isPaused) {
-                                if (audioRef.current) {
-                                    audioRef.current.play().catch(console.error);
-                                } else if (utteranceRef.current) {
-                                    window.speechSynthesis.resume();
-                                }
-                                setAudioState(prev => ({ ...prev, isPaused: false }));
-                            } else {
-                                if (audioRef.current) {
-                                    audioRef.current.pause();
-                                } else if (utteranceRef.current) {
-                                    window.speechSynthesis.pause();
-                                }
-                                setAudioState(prev => ({ ...prev, isPaused: true }));
-                            }
-                        }}
-                        className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                        aria-label={audioState.isPaused ? 'Resume' : 'Pause'}
-                    >
-                        {audioState.isPaused ? (
-                            <Play className="h-6 w-6" />
-                        ) : (
-                            <Pause className="h-6 w-6" />
-                        )}
-                    </button>
-                </div>
-            </div>
-        );
-    };
+
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -663,13 +754,13 @@ export default function ChatHistoryViewerPage() {
                                     <div className="space-y-2">
                                         <Label className="block text-center">{t.history.agentAModel}</Label>
                                         <div className="w-full px-3 py-2 border rounded-md bg-background text-center text-sm">
-                                            {agentALLMInfo?.name || details.agentA_llm}
+                                            {getLLMInfoById(details.agentA_llm)?.name || details.agentA_llm}
                                         </div>
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="block text-center">{t.history.agentBModel}</Label>
                                         <div className="w-full px-3 py-2 border rounded-md bg-background text-center text-sm">
-                                            {agentBLLMInfo?.name || details.agentB_llm}
+                                            {getLLMInfoById(details.agentB_llm)?.name || details.agentB_llm}
                                         </div>
                                     </div>
                                 </div>
@@ -801,30 +892,95 @@ export default function ChatHistoryViewerPage() {
                         </CardFooter>
                     </Card>
                     
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{t.history.transcript}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="relative h-[calc(100vh-300px)] overflow-y-auto p-4">
-                                <div className="space-y-4">
-                                    {details.messages.length > 0 ? (
-                                        details.messages.map((msg) => (
-                                            <TranscriptMessageBubble
-                                                key={msg.id}
-                                                msg={msg}
-                                                agentALLMInfo={agentALLMInfo}
-                                                agentBLLMInfo={agentBLLMInfo}
-                                            />
-                                        ))
-                                    ) : (
-                                        <p className="text-center text-muted-foreground py-8">It looks like this conversation has no messages.</p>
-                                    )}
-                                </div>
-                                <AudioControl />
+                    {/* Transcript Section - Styled like ChatInterface */}
+                    <div className={`flex flex-col bg-card ${
+                        isFullscreen 
+                            ? 'fixed inset-0 z-50 rounded-none shadow-none border-0' 
+                            : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
+                    }`}>
+                        {/* Header Section */}
+                        <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
+                            <h2 className="text-lg font-semibold">{t.history.transcript}</h2>
+                        </div>
+
+                        {/* Scrollable Message Area */}
+                        <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4">
+                            <div className={`space-y-4 ${isFullscreen ? 'max-w-3xl mx-auto px-4' : ''}`} ref={scrollViewportRef}>
+                                {details.messages.length > 0 ? (
+                                    details.messages.map((msg) => (
+                                        <TranscriptMessageBubble
+                                            key={msg.id}
+                                            msg={msg}
+                                        />
+                                    ))
+                                ) : (
+                                    <p className="text-center text-muted-foreground py-8">It looks like this conversation has no messages.</p>
+                                )}
                             </div>
-                        </CardContent>
-                    </Card>
+                        </ScrollArea>
+
+                        {/* Controls Footer - Always Visible */}
+                        <div className={`flex-shrink-0 pt-2 border-t mt-4 ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4' : ''}`}>
+                            <div className="flex items-center gap-2 justify-center">
+                                {/* Pause/Resume Button */}
+                                {audioState.isPlaying ? (
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        onClick={handlePauseAudio}
+                                        className="h-12 w-12 rounded-full"
+                                        aria-label="Pause audio"
+                                    >
+                                        <Pause className="h-6 w-6" />
+                                    </Button>
+                                ) : audioState.isPaused ? (
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon"
+                                        onClick={handleResumeAudio}
+                                        className="h-12 w-12 rounded-full"
+                                        aria-label="Resume audio"
+                                    >
+                                        <Play className="h-6 w-6" />
+                                    </Button>
+                                ) : (
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon"
+                                        disabled
+                                        className="h-12 w-12 rounded-full opacity-50 cursor-not-allowed"
+                                        aria-label="No audio playing"
+                                    >
+                                        <Play className="h-6 w-6" />
+                                    </Button>
+                                )}
+                                
+                                {/* Auto-scroll Toggle */}
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    onClick={toggleTTSAutoScroll}
+                                    className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
+                                    aria-label={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.disable : t?.chatControls?.autoScroll?.enable}
+                                    title={isTTSAutoScrollEnabled ? t?.chatControls?.autoScroll?.enabled : t?.chatControls?.autoScroll?.disabled}
+                                >
+                                    <ScrollText className="h-6 w-6" />
+                                </Button>
+                                
+                                {/* Fullscreen Toggle */}
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    onClick={toggleFullscreen}
+                                    className="h-12 w-12 rounded-full"
+                                    aria-label={isFullscreen ? t?.chatControls?.fullscreen?.exit : t?.chatControls?.fullscreen?.enter}
+                                    title={isFullscreen ? t?.chatControls?.fullscreen?.exitLabel : t?.chatControls?.fullscreen?.enterLabel}
+                                >
+                                    {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
