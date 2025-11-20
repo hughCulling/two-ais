@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Label } from '@/components/ui/label';
 // import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause, Check } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
