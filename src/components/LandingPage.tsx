@@ -335,36 +335,38 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         aria-controls={`${providerCollapsibleId}-content`}
                         aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
                       >
-                        <span>{providerName}</span>
-                        <div className="absolute right-8 flex items-center gap-2">
-                          {providerName === 'Mistral AI' && (
-                            <FreeTierBadge 
-                              freeTier={{
-                                available: true,
-                                note: (t) => t.pricing.mistralFreeTierNote
-                              }} 
-                              t={t} 
-                            />
-                          )}
-                          {providerName === 'Ollama' && (
-                            <FreeTierBadge 
-                              freeTier={{
-                                available: true,
-                                note: (t) => t.pricing.ollamaFreeTierNote
-                              }} 
-                              t={t} 
-                            />
-                          )}
-                          {allModelsSupport && (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
-                              </TooltipTrigger>
-                              <TooltipContent side="top">
-                                <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          )}
+                        <div className="relative inline-flex items-center">
+                          <span>{providerName}</span>
+                          <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                            {providerName === 'Mistral AI' && (
+                              <FreeTierBadge 
+                                freeTier={{
+                                  available: true,
+                                  note: (t) => t.pricing.mistralFreeTierNote
+                                }} 
+                                t={t} 
+                              />
+                            )}
+                            {providerName === 'Ollama' && (
+                              <FreeTierBadge 
+                                freeTier={{
+                                  available: true,
+                                  note: (t) => t.pricing.ollamaFreeTierNote
+                                }} 
+                                t={t} 
+                              />
+                            )}
+                            {allModelsSupport && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                </TooltipTrigger>
+                                <TooltipContent side="top">
+                                  <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            )}
+                          </div>
                         </div>
                         <div className="absolute right-2">
                           {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
