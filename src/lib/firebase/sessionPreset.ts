@@ -20,6 +20,11 @@ export interface SessionPreset {
     };
     initialSystemPrompt: string;
     savedAt?: number; // timestamp
+    collapseStates?: {
+        cardDescription?: boolean;
+        initialPromptDescription?: boolean;
+        ollamaDetails?: boolean;
+    };
 }
 
 /**

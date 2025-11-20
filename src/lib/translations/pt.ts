@@ -130,7 +130,8 @@ const pt = {
             "agentBTTS": "Agent B TTS",
             "initialPrompt": "Initial System Prompt",
             "deletePreset": "Delete Preset",
-            "confirmDelete": "Are you sure you want to delete your saved preset?"
+            "confirmDelete": "Are you sure you want to delete your saved preset?",
+            "helperTextPreferences": "Helper Text Preferences"
         }
     },
     "main": {
@@ -476,6 +477,7 @@ const pt = {
             "enterLabel": "Enter fullscreen",
             "exitLabel": "Exit fullscreen"
         }
-    }
+    },
+    "page_OllamaDetectedTitle": "Ollama Detected"
 };
 export default pt;
