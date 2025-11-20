@@ -10,10 +10,11 @@ import { getImageModelById } from '@/lib/image_models';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 // import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Bot, Languages, Play, Pause, Check } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
@@ -636,8 +637,8 @@ export default function ChatHistoryViewerPage() {
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
-                <div className="w-full max-w-3xl space-y-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="w-full max-w-2xl space-y-6">
+                    <div className="flex flex-col items-center gap-4 mb-6">
                         <h1 className="text-3xl font-bold flex items-center">
                             <MessageCircle className="mr-3 h-8 w-8 text-primary" />
                             {t.history.viewConversation}
@@ -649,130 +650,155 @@ export default function ChatHistoryViewerPage() {
                             </Link>
                         </Button>
                     </div>
-                    {/* Resume Conversation Button */}
-                    {details && details.conversationId && details.agentA_llm && details.agentB_llm && details.language && details.messages &&
-                        details['status'] !== 'running' && (
-                        <div className="mb-2 flex flex-col items-center">
-                            <Button
-                                variant="default"
-                                onClick={async () => {
-                                    if (!details || !user) return;
-                                    setResumeLoading(true);
-                                    setResumeError(null);
-                                    try {
-                                        const idToken = await user.getIdToken();
-                                        const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Authorization': `Bearer ${idToken}`,
-                                            },
-                                        });
-                                        const result = await response.json();
-                                        if (!response.ok) {
-                                            throw new Error(result.error || 'Failed to resume conversation.');
-                                        }
-                                        // Redirect to live chat interface (same as after session setup)
-                                        router.push(`/${language.code}/app/?resume=${details.conversationId}`);
-                                    } catch (err) {
-                                        setResumeError(err instanceof Error ? err.message : String(err));
-                                    } finally {
-                                        setResumeLoading(false);
-                                    }
-                                }}
-                                disabled={resumeLoading || !user}
-                                aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
-                                aria-describedby="resume-conversation-description"
-                            >
-                                {resumeLoading ? t.history.resuming : t.history.resumeConversation}
-                            </Button>
-                            <div id="resume-conversation-description" className="sr-only">
-                                Click to continue this conversation from where it left off. This will create a new active session.
-                            </div>
-                            {resumeError && (
-                                <p className="text-destructive-foreground text-sm mt-2">{resumeError}</p>
-                            )}
-                        </div>
-                    )}
 
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="text-center">
                             <CardTitle>{t.history.sessionDetails}</CardTitle>
                             <CardDescription>{t.history.chatStartedOn.replace('{date}', formattedCreationDate)}</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-3 text-sm">
-                            <div className="flex items-center">
-                                <Bot className="mr-2 h-5 w-5 text-primary/80" />
-                                <strong>{t.history.agentAModel}:</strong>
-                                <span className="ml-2">{agentALLMInfo?.name || details.agentA_llm}</span>
+                        <CardContent className="space-y-6">
+                            {/* LLM Models Section - Side by Side */}
+                            <div className="space-y-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">{t.history.agentAModel}</Label>
+                                        <div className="w-full px-3 py-2 border rounded-md bg-background text-center text-sm">
+                                            {agentALLMInfo?.name || details.agentA_llm}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">{t.history.agentBModel}</Label>
+                                        <div className="w-full px-3 py-2 border rounded-md bg-background text-center text-sm">
+                                            {agentBLLMInfo?.name || details.agentB_llm}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex items-center">
-                                <Bot className="mr-2 h-5 w-5 text-primary/80" />
-                                <strong>{t.history.agentBModel}:</strong>
-                                <span className="ml-2">{agentBLLMInfo?.name || details.agentB_llm}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Languages className="mr-2 h-5 w-5 text-primary/80" />
-                                <strong>{t.history.language}:</strong>
-                                <span className="ml-2">{details.language.toUpperCase()}</span>
-                            </div>
+
+                            {/* TTS Section */}
+                            <hr className="my-6" />
                             <div className="space-y-4">
-                            <Separator className="my-3" />
+                                <div className="flex items-center justify-center space-x-2">
+                                    <div className={`h-4 w-4 rounded-sm border ${details.ttsSettings?.enabled ? 'bg-primary border-primary' : 'border-input'} flex items-center justify-center`}>
+                                        {details.ttsSettings?.enabled && (
+                                            <Check className="h-3 w-3 text-primary-foreground" />
+                                        )}
+                                    </div>
+                                    <Label className="text-base font-medium">
+                                        {t?.sessionSetupForm?.enableTTS || 'Enable TTS'}
+                                    </Label>
+                                </div>
 
                                 {details.ttsSettings?.enabled && (
-                                    <div className="mt-4">
-                                        <h3 className="text-sm font-medium mb-2">{t.history.ttsSettings}</h3>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="space-y-2 p-3 bg-muted/20 rounded-md">
-                                                <p className="font-medium">{t.history.agentATTS}:</p>
-                                                <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {getProviderDisplayName(details.ttsSettings.agentA.provider)}</p>
-                                                {details.ttsSettings.agentA.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {getModelDisplayName(details.ttsSettings.agentA.selectedTtsModelId)}</p>}
-                                                {details.ttsSettings.agentA.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {getVoiceDisplayName(details.ttsSettings.agentA.provider, details.ttsSettings.agentA.voice)}</p>}
-                                            </div>
-                                            <div className="space-y-2 p-3 bg-muted/20 rounded-md">
-                                                <p className="font-medium">{t.history.agentBTTS}:</p>
-                                                <p className="text-sm"><span className="text-muted-foreground">{t.history.provider}:</span> {getProviderDisplayName(details.ttsSettings.agentB.provider)}</p>
-                                                {details.ttsSettings.agentB.selectedTtsModelId && <p className="text-sm"><span className="text-muted-foreground">{t.history.model}:</span> {getModelDisplayName(details.ttsSettings.agentB.selectedTtsModelId)}</p>}
-                                                {details.ttsSettings.agentB.voice && <p className="text-sm"><span className="text-muted-foreground">{t.history.voice}:</span> {getVoiceDisplayName(details.ttsSettings.agentB.provider, details.ttsSettings.agentB.voice)}</p>}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                                        {/* Agent A TTS */}
+                                        <div className="space-y-3 p-4 border rounded-md bg-background/50">
+                                            <h3 className="font-semibold text-center mb-3">Agent A TTS</h3>
+                                            <div className="space-y-2">
+                                                <Label className="block text-center">{t?.sessionSetupForm?.voice || 'Voice'}</Label>
+                                                <div className="w-full px-3 py-2 border rounded-md bg-background text-sm truncate">
+                                                    {getVoiceDisplayName(details.ttsSettings.agentA.provider, details.ttsSettings.agentA.voice)}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
-                                {!details.ttsSettings?.enabled && details.ttsSettings && (
-                                    <p className="text-muted-foreground text-xs">TTS was not enabled for this session.</p>
-                                )}
-                                {details.imageGenSettings?.enabled && (
-                                    <div className="mt-4 pt-4 border-t">
-                                        <h3 className="text-sm font-medium mb-2 flex items-center">
-                                            {t.history.imageGenerationSettings}
-                                        </h3>
-                                        <div className="space-y-2">
-                                            <div>
-                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.imageModel}</h4>
-                                                <p className="text-sm">
-                                                    {getProviderDisplayName(details.imageGenSettings.provider)} - {getModelDisplayName(details.imageGenSettings.model)}
-                                                </p>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.quality}</h4>
-                                                    <p className="text-sm">{details.imageGenSettings.quality}</p>
+                                        {/* Agent B TTS */}
+                                        <div className="space-y-3 p-4 border rounded-md bg-background/50">
+                                            <h3 className="font-semibold text-center mb-3">Agent B TTS</h3>
+                                            <div className="space-y-2">
+                                                <Label className="block text-center">{t?.sessionSetupForm?.voice || 'Voice'}</Label>
+                                                <div className="w-full px-3 py-2 border rounded-md bg-background text-sm truncate">
+                                                    {getVoiceDisplayName(details.ttsSettings.agentB.provider, details.ttsSettings.agentB.voice)}
                                                 </div>
-                                                <div>
-                                                    <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.size}</h4>
-                                                    <p className="text-sm">{details.imageGenSettings.size}</p>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h4 className="text-xs font-medium text-muted-foreground mb-1">{t.sessionSetupForm.promptLLM}</h4>
-                                                <p className="text-sm">
-                                                    {getLLMInfoById(details.imageGenSettings.promptLlm)?.name || details.imageGenSettings.promptLlm}
-                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
+
+                            {/* Image Generation Section */}
+                            {details.imageGenSettings?.enabled && (
+                                <>
+                                    <Separator />
+                                    <div className="space-y-4">
+                                        <Label className="block text-center">{t.history.imageGenerationSettings}</Label>
+                                        <div className="space-y-3">
+                                            <div className="space-y-2">
+                                                <Label className="text-sm text-center block">{t.sessionSetupForm.imageModel}</Label>
+                                                <div className="w-full px-3 py-2 border rounded-md bg-muted text-center">
+                                                    {getProviderDisplayName(details.imageGenSettings.provider)} - {getModelDisplayName(details.imageGenSettings.model)}
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <Label className="text-sm text-center block">{t.sessionSetupForm.quality}</Label>
+                                                    <div className="w-full px-3 py-2 border rounded-md bg-muted text-center">
+                                                        {details.imageGenSettings.quality}
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label className="text-sm text-center block">{t.sessionSetupForm.size}</Label>
+                                                    <div className="w-full px-3 py-2 border rounded-md bg-muted text-center">
+                                                        {details.imageGenSettings.size}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-sm text-center block">{t.sessionSetupForm.promptLLM}</Label>
+                                                <div className="w-full px-3 py-2 border rounded-md bg-muted text-center">
+                                                    {getLLMInfoById(details.imageGenSettings.promptLlm)?.name || details.imageGenSettings.promptLlm}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
+                        <CardFooter className="flex flex-col gap-2">
+                            {/* Resume Conversation Button */}
+                            {details && details.conversationId && details.agentA_llm && details.agentB_llm && details.language && details.messages &&
+                                details['status'] !== 'running' && (
+                                <>
+                                    <Button
+                                        onClick={async () => {
+                                            if (!details || !user) return;
+                                            setResumeLoading(true);
+                                            setResumeError(null);
+                                            try {
+                                                const idToken = await user.getIdToken();
+                                                const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Authorization': `Bearer ${idToken}`,
+                                                    },
+                                                });
+                                                const result = await response.json();
+                                                if (!response.ok) {
+                                                    throw new Error(result.error || 'Failed to resume conversation.');
+                                                }
+                                                // Redirect to live chat interface (same as after session setup)
+                                                router.push(`/${language.code}/app/?resume=${details.conversationId}`);
+                                            } catch (err) {
+                                                setResumeError(err instanceof Error ? err.message : String(err));
+                                            } finally {
+                                                setResumeLoading(false);
+                                            }
+                                        }}
+                                        disabled={resumeLoading || !user}
+                                        className="w-full"
+                                        aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
+                                        aria-describedby="resume-conversation-description"
+                                    >
+                                        {resumeLoading ? t.history.resuming : t.history.resumeConversation}
+                                    </Button>
+                                    <div id="resume-conversation-description" className="sr-only">
+                                        Click to continue this conversation from where it left off. This will create a new active session.
+                                    </div>
+                                    {resumeError && (
+                                        <p className="text-destructive text-sm text-center">{resumeError}</p>
+                                    )}
+                                </>
+                            )}
+                        </CardFooter>
                     </Card>
                     
                     <Card>
