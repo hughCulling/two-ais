@@ -370,10 +370,41 @@ export async function triggerAgentResponse(
             // Final update with complete content
             await rtdbRef.update({ content: responseContent, status: "complete" });
         } catch (error) {
+            // Extract detailed error information, especially from Axios errors
+            let errorDetails = error instanceof Error ? error.message : String(error);
+            
+            // If it's an Axios error, extract the response body which contains the actual API error
+            if (error && typeof error === "object" && "response" in error) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const axiosError = error as any;
+                if (axiosError.response?.data) {
+                    try {
+                        // Try to read the response data (might be a stream or buffer)
+                        let responseData = axiosError.response.data;
+                        if (typeof responseData === "object" && responseData.read) {
+                            // It's a stream, read it
+                            const chunks: Buffer[] = [];
+                            for await (const chunk of responseData) {
+                                chunks.push(chunk);
+                            }
+                            responseData = Buffer.concat(chunks).toString("utf-8");
+                        }
+                        errorDetails = `${errorDetails} | API Response: ${JSON.stringify(responseData)}`;
+                        logger.error(`API Error Response from ${llmProvider}:`, responseData);
+                    } catch (readError) {
+                        logger.warn("Could not read API error response:", readError);
+                    }
+                }
+                if (axiosError.response?.status) {
+                    errorDetails = `HTTP ${axiosError.response.status}: ${errorDetails}`;
+                }
+            }
+            
             logger.error(`LLM streaming failed for ${agentToRespond} (${agentModelId}):`, error);
-            await rtdbRef.update({ status: "error", error: error instanceof Error ? error.message : String(error) });
+            logger.error(`Error details: ${errorDetails}`);
+            await rtdbRef.update({ status: "error", error: errorDetails });
             logger.error("Streaming error occurred, aborting before Firestore write.");
-            throw new Error(`LLM streaming failed for ${agentToRespond} (${agentModelId}): ${error}`);
+            throw new Error(`LLM streaming failed for ${agentToRespond} (${agentModelId}): ${errorDetails}`);
         }
         logger.info("Streaming complete. Preparing to start TTS and image generation in parallel", { messageId, responseContent });
 
