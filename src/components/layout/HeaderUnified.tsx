@@ -1,42 +1,50 @@
-// src/components/layout/Header.tsx
-// Shared header component with ThemeSwitcher and User Info integrated
+// src/components/layout/HeaderUnified.tsx
+// Unified header component for both public and authenticated routes
 
 'use client';
 
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext'; // Adjust path if needed
-import SignOutButton from '@/components/auth/SignOutButton'; // Adjust path if needed
+import { useAuth } from '@/context/AuthContext';
+import SignOutButton from '@/components/auth/SignOutButton';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
-import { UserCircle, Menu, X } from 'lucide-react'; // Import an icon for user
-import { useState } from 'react'; // Import useState
+import { UserCircle, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { usePathname } from 'next/navigation';
 
-export default function Header() {
+export default function HeaderUnified() {
     const { user, loading: authLoading } = useAuth();
     const { t, loading } = useTranslation();
     const { language } = useLanguage();
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
+    const pathname = usePathname();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     if (loading || !t) return null;
 
-    // Common classes for navigation links/buttons for easier clicking
-    // const navItemClasses = "px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
     const mobileMenuItemClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
-
 
     const handleMobileLinkClick = () => {
         setIsMenuOpen(false);
     };
+
+    // Determine if we're on an app route
+    const isAppRoute = pathname?.startsWith(`/${language.code}/app`);
+    const homeLink = isAppRoute ? `/${language.code}/app` : `/${language.code}`;
+    const appName = t.header.appName || 'Two AIs';
 
     return (
         <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative flex items-center justify-center h-16">
                     {/* Centered Logo/Home Link */}
-                    <Link href={`/${language.code}/app`} className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" aria-label="Go to Two AIs application">
-                        {t.header.appName}
+                    <Link 
+                        href={homeLink} 
+                        className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" 
+                        aria-label={isAppRoute ? "Go to Two AIs application" : "Go to Two AIs homepage"}
+                    >
+                        {appName}
                     </Link>
 
                     {/* Hamburger Menu Button - Always visible, positioned on right */}
@@ -82,24 +90,24 @@ export default function Header() {
                                 <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
                             </Link>
                             <Link href={`/${language.code}/app/settings`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
-                                Settings {/* {t.header.settings} */}
+                                Settings
                             </Link>
                         </>
                     ) : (
                         <Link href={`/${language.code}/login`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
-                            Sign In {/* {t.header.signIn} */}
+                            {t.header.signIn}
                         </Link>
                     )}
 
-                    {/* Language Selector for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label-app">
-                        <span id="mobile-language-label-app" className="mr-2">Language:</span> {/* Hardcoded Label */}
+                    {/* Language Selector */}
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label">
+                        <span id="mobile-language-label" className="mr-2">Language:</span>
                         <LanguageSelector showIcon={false} />
                     </div>
 
-                    {/* Theme Switcher for Mobile */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label-app">
-                        <span id="mobile-theme-label-app">Theme</span> {/* Hardcoded Label */}
+                    {/* Theme Switcher */}
+                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label">
+                        <span id="mobile-theme-label">Theme</span>
                         <ThemeSwitcher id="mobile" />
                     </div>
 
