@@ -23,7 +23,7 @@ export default function HeaderUnified() {
 
     if (loading || !t) return null;
 
-    const mobileMenuItemClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
+    const mobileMenuItemClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-center w-full max-w-xs";
 
     const handleMobileLinkClick = () => {
         setIsMenuOpen(false);
@@ -35,42 +35,52 @@ export default function HeaderUnified() {
     const appName = t.header.appName || 'Two AIs';
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md">
-            <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="relative flex items-center justify-center h-16">
-                    {/* Centered Logo/Home Link */}
-                    <Link 
-                        href={homeLink} 
-                        className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" 
-                        aria-label={isAppRoute ? "Go to Two AIs application" : "Go to Two AIs homepage"}
-                    >
-                        {appName}
-                    </Link>
+        <>
+            {/* Backdrop overlay - dims the page when menu is open */}
+            {isMenuOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40"
+                    onClick={() => setIsMenuOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
 
-                    {/* Hamburger Menu Button - Always visible, positioned on right */}
-                    <div className="absolute right-0 flex items-center">
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            type="button"
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                            aria-controls="main-menu"
-                            aria-expanded={isMenuOpen}
-                            aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
+            <header className="bg-white dark:bg-gray-800 shadow-md relative z-50">
+                <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="relative flex items-center justify-center h-16">
+                        {/* Centered Logo/Home Link */}
+                        <Link 
+                            href={homeLink} 
+                            className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" 
+                            aria-label={isAppRoute ? "Go to Two AIs application" : "Go to Two AIs homepage"}
                         >
-                            <span className="sr-only">{isMenuOpen ? "Close main menu" : "Open main menu"}</span>
-                            {isMenuOpen ? (
-                                <X className="block h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <Menu className="block h-6 w-6" aria-hidden="true" />
-                            )}
-                        </button>
-                    </div>
-                </div>
-            </nav>
+                            {appName}
+                        </Link>
 
-            {/* --- Menu Panel --- */}
-            <div className={`${isMenuOpen ? 'block' : 'hidden'} border-t border-gray-200 dark:border-gray-700`} id="main-menu" aria-label="Main navigation menu">
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        {/* Hamburger Menu Button - Always visible, positioned on right */}
+                        <div className="absolute right-0 flex items-center">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                type="button"
+                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                                aria-controls="main-menu"
+                                aria-expanded={isMenuOpen}
+                                aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
+                            >
+                                <span className="sr-only">{isMenuOpen ? "Close main menu" : "Open main menu"}</span>
+                                {isMenuOpen ? (
+                                    <X className="block h-6 w-6" aria-hidden="true" />
+                                ) : (
+                                    <Menu className="block h-6 w-6" aria-hidden="true" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                {/* --- Menu Panel --- */}
+                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg`} id="main-menu" aria-label="Main navigation menu">
+                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
                     {authLoading ? (
                         <div className="block px-3 py-2" role="status" aria-live="polite">
                             <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" aria-hidden="true"></div>
@@ -119,5 +129,6 @@ export default function HeaderUnified() {
                 </div>
             </div>
         </header>
+        </>
     );
 }
