@@ -39,6 +39,12 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
 
       processingRef.current = true;
 
+      // Add a small delay for agentB to avoid concurrent requests to Ollama
+      // since OLLAMA_NUM_PARALLEL is often set to 1
+      if (agentToRespond === 'agentB') {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
       try {
         // Check lookahead limit (same as Firebase Function)
         const LOOKAHEAD_LIMIT = 3;
@@ -115,55 +121,102 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           timestamp: Date.now(),
         });
 
-        // Stream from local Ollama via our API route
-        const response = await fetch('/api/ollama/stream', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: modelName,
-            messages: messages,
-            ollamaEndpoint: ollamaEndpoint,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Ollama API error: ${response.statusText}`);
-        }
-
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
+        // Stream from local Ollama via our API route with retry logic
         let fullContent = '';
+        let retryCount = 0;
+        const maxRetries = 2;
+        let streamSuccess = false;
+        
+        while (retryCount <= maxRetries && !streamSuccess) {
+          try {
+            console.log(`[Ollama] Attempt ${retryCount + 1}/${maxRetries + 1} for ${agentToRespond} with model ${modelName}`);
+            
+            const response = await fetch('/api/ollama/stream', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                model: modelName,
+                messages: messages,
+                ollamaEndpoint: ollamaEndpoint,
+              }),
+            });
 
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            fullContent = ''; // Reset content for retry
 
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6);
-                
-                if (data === '[DONE]') {
-                  break;
-                }
+            if (reader) {
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
 
-                try {
-                  const parsed = JSON.parse(data);
-                  if (parsed.token) {
-                    fullContent += parsed.token;
-                    await update(rtdbRef, { content: fullContent });
-                  } else if (parsed.error) {
-                    throw new Error(parsed.error);
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                  if (line.startsWith('data: ')) {
+                    const data = line.slice(6);
+                    
+                    if (data === '[DONE]') {
+                      streamSuccess = true;
+                      break;
+                    }
+
+                    try {
+                      const parsed = JSON.parse(data);
+                      if (parsed.token) {
+                        fullContent += parsed.token;
+                        await update(rtdbRef, { content: fullContent });
+                      } else if (parsed.error) {
+                        // Error in stream - throw to trigger retry
+                        throw new Error(`Ollama error: ${parsed.error}`);
+                      }
+                    } catch (parseError) {
+                      // If it's an error object, rethrow it
+                      if (parseError instanceof Error && parseError.message.startsWith('Ollama error:')) {
+                        throw parseError;
+                      }
+                      // Otherwise ignore parse errors for incomplete chunks
+                    }
                   }
-                } catch {
-                  // Ignore parse errors for incomplete chunks
                 }
+                
+                if (streamSuccess) break;
               }
             }
+
+            // If we got here without errors, we succeeded
+            if (streamSuccess) {
+              console.log(`[Ollama] Success on attempt ${retryCount + 1}`);
+              break;
+            }
+            
+          } catch (error) {
+            console.error(`[Ollama] Attempt ${retryCount + 1} failed:`, error);
+            
+            // If we have retries left, wait and retry
+            if (retryCount < maxRetries) {
+              const waitTime = (retryCount + 1) * 2000; // 2s, 4s
+              console.log(`[Ollama] Retrying in ${waitTime}ms...`);
+              await update(rtdbRef, { 
+                content: `Retrying (attempt ${retryCount + 2}/${maxRetries + 1})...`,
+                status: 'retrying'
+              });
+              await new Promise(resolve => setTimeout(resolve, waitTime));
+              retryCount++;
+            } else {
+              // No more retries, throw the error
+              throw new Error(`Failed after ${maxRetries + 1} attempts: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            }
           }
+        }
+
+        if (!streamSuccess || !fullContent) {
+          throw new Error('Stream did not complete successfully');
         }
 
         // Mark streaming as complete

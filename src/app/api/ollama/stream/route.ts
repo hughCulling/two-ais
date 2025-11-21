@@ -30,6 +30,9 @@ export async function POST(request: NextRequest) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          console.log(`[Ollama Stream] Starting chat with model: ${model}, endpoint: ${endpoint}`);
+          console.log(`[Ollama Stream] Message count: ${messages.length}`);
+          
           // Stream the response from Ollama
           const ollamaStream = await ollama.chat({
             model: model,
@@ -37,21 +40,32 @@ export async function POST(request: NextRequest) {
             stream: true,
           });
 
+          console.log(`[Ollama Stream] Stream established successfully`);
+          let tokenCount = 0;
+
           for await (const chunk of ollamaStream) {
             const token = chunk.message?.content || '';
             
             if (token) {
+              tokenCount++;
               // Send as Server-Sent Event
               const data = JSON.stringify({ token });
               controller.enqueue(encoder.encode(`data: ${data}\n\n`));
             }
           }
 
+          console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
           // Send completion signal
           controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
         } catch (error) {
-          console.error('Ollama streaming error:', error);
+          console.error('[Ollama Stream] Error details:', {
+            error: error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+            model: model,
+            endpoint: endpoint,
+          });
           const errorData = JSON.stringify({ 
             error: error instanceof Error ? error.message : 'Unknown error' 
           });
