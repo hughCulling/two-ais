@@ -35,7 +35,7 @@ export default function HeaderUnified() {
     const appName = t.header.appName || 'Two AIs';
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+        <header className="bg-white dark:bg-gray-800 shadow-md">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative flex items-center justify-center h-16">
                     {/* Centered Logo/Home Link */}
