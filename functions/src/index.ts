@@ -82,6 +82,7 @@ type ConversationData = {
   userId?: string;
   ttsSettings?: ConversationTTSSettingsBackend;
   waitingForTTSEndSignal?: boolean;
+  errorMessage?: string;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
@@ -366,9 +367,23 @@ export const orchestrateConversation = onDocumentCreated(
     else { logger.info(`No response needed by orchestrator trigger. New Message Role: "${newMessageRole}", Current Turn: "${currentTurn}".`); return; }
     logger.info(`Orchestrator determined agent to respond: ${agentToRespond}`);
 
-    await triggerAgentResponse(conversationId, agentToRespond, conversationRef, messagesRef);
+    // Check if the agent uses Ollama - if so, skip Cloud Function execution
+    // Ollama models should be handled client-side via the Next.js API route
+    const agentModelId = agentToRespond === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
+    if (agentModelId.startsWith("ollama:")) {
+        logger.info(`Skipping Cloud Function execution for Ollama model: ${agentModelId}. Client-side handling expected.`);
+        return;
+    }
 
-    logger.info("--- orchestrateConversation (onDocumentCreated) Finished ---");
+    try {
+        await triggerAgentResponse(conversationId, agentToRespond, conversationRef, messagesRef);
+        logger.info("--- orchestrateConversation (onDocumentCreated) Finished ---");
+    } catch (error) {
+        logger.error(`orchestrateConversation failed for ${conversationId}:`, error);
+        // Error has already been written to Firestore by triggerAgentResponse
+        // Just log and exit gracefully
+    }
+    
     return null;
 });
 // --- End orchestrateConversation ---
@@ -432,9 +447,23 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ mess
             logger.error(`requestNextTurn: Invalid turn value: ${currentTurn}`);
             throw new HttpsError("failed-precondition", "Invalid turn value");
         }
+        
+        // Check if the agent uses Ollama - if so, skip Cloud Function execution
+        const agentModelId = currentTurn === "agentA" ? conversationData.agentA_llm : conversationData.agentB_llm;
+        if (agentModelId.startsWith("ollama:")) {
+            logger.info(`requestNextTurn: Skipping Cloud Function execution for Ollama model: ${agentModelId}. Client-side handling expected.`);
+            return { message: "Ollama models handled client-side." };
+        }
+        
         logger.info(`requestNextTurn: Triggering agent response for ${currentTurn}`);
-        await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
-        return { message: `Agent ${currentTurn} response triggered.` };
+        try {
+            await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+            return { message: `Agent ${currentTurn} response triggered.` };
+        } catch (error) {
+            logger.error(`requestNextTurn: triggerAgentResponse failed for ${conversationId}:`, error);
+            // Error has already been written to Firestore by triggerAgentResponse
+            throw new HttpsError("internal", `Failed to trigger agent response: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 );
 // --- End requestNextTurn ---
@@ -501,9 +530,23 @@ export const onConversationProgressUpdate = onDocumentUpdated(
       logger.error(`onConversationProgressUpdate: Invalid turn value: ${currentTurn}`);
       return;
     }
+    
+    // Check if the agent uses Ollama - if so, skip Cloud Function execution
+    const agentModelId = currentTurn === "agentA" ? after.agentA_llm : after.agentB_llm;
+    if (agentModelId && agentModelId.startsWith("ollama:")) {
+      logger.info(`onConversationProgressUpdate: Skipping Cloud Function execution for Ollama model: ${agentModelId}. Client-side handling expected.`);
+      return;
+    }
+    
     logger.info(`onConversationProgressUpdate: Triggering agent response for ${currentTurn}`);
-    await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
-    logger.info(`onConversationProgressUpdate: Agent ${currentTurn} response triggered.`);
+    try {
+        await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+        logger.info(`onConversationProgressUpdate: Agent ${currentTurn} response triggered.`);
+    } catch (error) {
+        logger.error(`onConversationProgressUpdate: triggerAgentResponse failed for ${conversationId}:`, error);
+        // Error has already been written to Firestore by triggerAgentResponse
+        // Just log and exit gracefully
+    }
   }
 );
 

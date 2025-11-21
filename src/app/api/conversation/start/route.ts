@@ -202,6 +202,8 @@ type ConversationData = {
     apiSecretVersions: { [key: string]: string };
     createdAt: FirebaseFirestore.FieldValue;
     lastActivity: FirebaseFirestore.FieldValue;
+    errorMessage?: string;
+    errorContext?: string;
     ttsSettings: {
         enabled: boolean;
         agentA: {

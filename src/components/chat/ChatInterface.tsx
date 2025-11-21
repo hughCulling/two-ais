@@ -65,6 +65,7 @@ interface ConversationData {
         agentB: { provider: string; voice: string | null };
     };
     waitingForTTSEndSignal?: boolean;
+    errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string; // <-- Add this line
 }
@@ -560,8 +561,25 @@ export function ChatInterface({
                     if (data.status === 'stopped' || data.status === 'error') {
                         setIsStopped(true);
                         if (data.status === 'error') {
-                            setError("Conversation ended with an error.");
-                            setTechnicalErrorDetails(data.errorContext || 'No details provided.');
+                            // Display a user-friendly error message
+                            const errorMsg = data.errorMessage || "Conversation ended with an error.";
+                            
+                            // Extract user-friendly message (e.g., "Service tier capacity exceeded")
+                            // from technical error messages
+                            let displayMsg = errorMsg;
+                            if (errorMsg.includes('Service tier capacity exceeded')) {
+                                displayMsg = "Rate limit exceeded.";
+                            } else if (errorMsg.includes('429')) {
+                                displayMsg = "Too many requests. Please wait a moment and try again.";
+                            } else if (errorMsg.includes('LLM streaming failed')) {
+                                // Extract just the relevant part after the colon
+                                const match = errorMsg.match(/LLM streaming failed[^:]*: (.+)/);
+                                displayMsg = match ? match[1] : errorMsg;
+                            }
+                            
+                            setError(displayMsg);
+                            // Show full technical details in the expandable section
+                            setTechnicalErrorDetails(data.errorContext || errorMsg);
                         } else {
                             onConversationStopped();
                         }
