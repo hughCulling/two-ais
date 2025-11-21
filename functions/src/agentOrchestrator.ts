@@ -35,6 +35,7 @@ type ConversationData = {
   userId?: string;
   ttsSettings?: ConversationTTSSettingsBackend;
   waitingForTTSEndSignal?: boolean;
+  errorMessage?: string;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
@@ -937,6 +938,25 @@ export async function triggerAgentResponse(
         }
     } catch (error) {
         logger.error(`Error in triggerAgentResponse for ${conversationId} (${agentToRespond}):`, error);
-        // ... (error handling unchanged) ...
+        
+        // Update conversation status to error in Firestore
+        try {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorContext = error instanceof Error && error.stack ? error.stack : "No stack trace available";
+            
+            await conversationRef.update({
+                status: "error",
+                errorMessage: errorMessage,
+                errorContext: errorContext,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            
+            logger.info(`Updated conversation ${conversationId} status to "error" in Firestore`);
+        } catch (updateError) {
+            logger.error("Failed to update conversation status to error in Firestore:", updateError);
+        }
+        
+        // Re-throw the error so the orchestrator knows the operation failed
+        throw error;
     }
 }

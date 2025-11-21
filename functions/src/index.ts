@@ -82,6 +82,7 @@ type ConversationData = {
   userId?: string;
   ttsSettings?: ConversationTTSSettingsBackend;
   waitingForTTSEndSignal?: boolean;
+  errorMessage?: string;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
   initialSystemPrompt?: string;
@@ -374,9 +375,15 @@ export const orchestrateConversation = onDocumentCreated(
         return;
     }
 
-    await triggerAgentResponse(conversationId, agentToRespond, conversationRef, messagesRef);
-
-    logger.info("--- orchestrateConversation (onDocumentCreated) Finished ---");
+    try {
+        await triggerAgentResponse(conversationId, agentToRespond, conversationRef, messagesRef);
+        logger.info("--- orchestrateConversation (onDocumentCreated) Finished ---");
+    } catch (error) {
+        logger.error(`orchestrateConversation failed for ${conversationId}:`, error);
+        // Error has already been written to Firestore by triggerAgentResponse
+        // Just log and exit gracefully
+    }
+    
     return null;
 });
 // --- End orchestrateConversation ---
@@ -449,8 +456,14 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ mess
         }
         
         logger.info(`requestNextTurn: Triggering agent response for ${currentTurn}`);
-        await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
-        return { message: `Agent ${currentTurn} response triggered.` };
+        try {
+            await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+            return { message: `Agent ${currentTurn} response triggered.` };
+        } catch (error) {
+            logger.error(`requestNextTurn: triggerAgentResponse failed for ${conversationId}:`, error);
+            // Error has already been written to Firestore by triggerAgentResponse
+            throw new HttpsError("internal", `Failed to trigger agent response: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 );
 // --- End requestNextTurn ---
@@ -526,8 +539,14 @@ export const onConversationProgressUpdate = onDocumentUpdated(
     }
     
     logger.info(`onConversationProgressUpdate: Triggering agent response for ${currentTurn}`);
-    await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
-    logger.info(`onConversationProgressUpdate: Agent ${currentTurn} response triggered.`);
+    try {
+        await triggerAgentResponse(conversationId, currentTurn, conversationRef, messagesRef);
+        logger.info(`onConversationProgressUpdate: Agent ${currentTurn} response triggered.`);
+    } catch (error) {
+        logger.error(`onConversationProgressUpdate: triggerAgentResponse failed for ${conversationId}:`, error);
+        // Error has already been written to Firestore by triggerAgentResponse
+        // Just log and exit gracefully
+    }
   }
 );
 
