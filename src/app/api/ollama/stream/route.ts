@@ -22,7 +22,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Connect to local Ollama instance
-    const endpoint = ollamaEndpoint || 'http://localhost:11434';
+    // Use 127.0.0.1 instead of localhost to avoid DNS resolution issues
+    const endpoint = ollamaEndpoint || 'http://127.0.0.1:11434';
+    console.log(`[Ollama Stream] Connecting to endpoint: ${endpoint}`);
+    console.log(`[Ollama Stream] Model requested: ${model}`);
+    
     const ollama = new Ollama({ host: endpoint });
 
     // Create a readable stream for Server-Sent Events
@@ -33,28 +37,133 @@ export async function POST(request: NextRequest) {
           console.log(`[Ollama Stream] Starting chat with model: ${model}, endpoint: ${endpoint}`);
           console.log(`[Ollama Stream] Message count: ${messages.length}`);
           
-          // Stream the response from Ollama
-          const ollamaStream = await ollama.chat({
-            model: model,
-            messages: messages,
-            stream: true,
-          });
-
-          console.log(`[Ollama Stream] Stream established successfully`);
-          let tokenCount = 0;
-
-          for await (const chunk of ollamaStream) {
-            const token = chunk.message?.content || '';
+          // Test connectivity first
+          try {
+            await ollama.list();
+            console.log(`[Ollama Stream] Successfully connected to Ollama at ${endpoint}`);
+          } catch (connectError) {
+            console.error(`[Ollama Stream] Failed to connect to Ollama:`, connectError);
+            const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+            const helpMessage = isProduction 
+              ? ' Note: Ollama must be accessible from the server. If running on Vercel/production, Ollama needs to be deployed to a cloud server with a public URL.'
+              : ' Make sure Ollama is running locally with `ollama serve`.';
+            throw new Error(`Cannot connect to Ollama at ${endpoint}: ${connectError instanceof Error ? connectError.message : 'Unknown error'}.${helpMessage}`);
+          }
+          
+          // Check if this is a cloud model (contains :cloud suffix)
+          const isCloudModel = model.includes(':cloud');
+          
+          if (isCloudModel) {
+            // Use direct fetch for cloud models to avoid npm package issues
+            console.log(`[Ollama Stream] Using direct fetch for cloud model: ${model}`);
             
-            if (token) {
-              tokenCount++;
-              // Send as Server-Sent Event
-              const data = JSON.stringify({ token });
-              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+            // Cloud models require at least one user message
+            // If we only have a system message, convert it to a user message
+            let processedMessages = messages;
+            if (messages.length === 1 && messages[0].role === 'system') {
+              console.log(`[Ollama Stream] Converting system-only message to user message for cloud model compatibility`);
+              processedMessages = [
+                { role: 'user', content: messages[0].content }
+              ];
             }
+            
+            const requestBody = {
+              model: model,
+              messages: processedMessages,
+              stream: true,
+            };
+            console.log(`[Ollama Stream] Request body:`, JSON.stringify(requestBody));
+            console.log(`[Ollama Stream] Calling: ${endpoint}/api/chat`);
+            
+            // Add a small delay to avoid concurrent request issues
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            const response = await fetch(`${endpoint}/api/chat`, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'text/plain',
+              },
+              body: JSON.stringify(requestBody),
+            });
+
+            console.log(`[Ollama Stream] Response status: ${response.status} ${response.statusText}`);
+            console.log(`[Ollama Stream] Response headers:`, Object.fromEntries(response.headers.entries()));
+            
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error(`[Ollama Stream] Error response body:`, errorText);
+              throw new Error(`Ollama API returned ${response.status}: ${response.statusText} - ${errorText}`);
+            }
+
+            const reader = response.body?.getReader();
+            if (!reader) {
+              throw new Error('No response body from Ollama');
+            }
+
+            const decoder = new TextDecoder();
+            let tokenCount = 0;
+            let buffer = '';
+
+            console.log(`[Ollama Stream] Stream established successfully`);
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+              for (const line of lines) {
+                if (!line.trim()) continue;
+                
+                try {
+                  const chunk = JSON.parse(line);
+                  const token = chunk.message?.content || '';
+                  
+                  if (token) {
+                    tokenCount++;
+                    const data = JSON.stringify({ token });
+                    controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+                  }
+                  
+                  if (chunk.done) {
+                    console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
+                    break;
+                  }
+                } catch {
+                  console.warn(`[Ollama Stream] Failed to parse line:`, line);
+                }
+              }
+            }
+          } else {
+            // Use Ollama npm package for local models
+            console.log(`[Ollama Stream] Using Ollama npm package for local model: ${model}`);
+            
+            const ollamaStream = await ollama.chat({
+              model: model,
+              messages: messages,
+              stream: true,
+            });
+
+            console.log(`[Ollama Stream] Stream established successfully`);
+            let tokenCount = 0;
+
+            for await (const chunk of ollamaStream) {
+              const token = chunk.message?.content || '';
+              
+              if (token) {
+                tokenCount++;
+                // Send as Server-Sent Event
+                const data = JSON.stringify({ token });
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+              }
+            }
+            
+            console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
           }
 
-          console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
           // Send completion signal
           controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
