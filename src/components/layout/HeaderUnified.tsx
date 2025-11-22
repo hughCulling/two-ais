@@ -9,7 +9,7 @@ import SignOutButton from '@/components/auth/SignOutButton';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
-import { UserCircle, Menu, X } from 'lucide-react';
+import { UserCircle, Menu, X, Globe, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { usePathname } from 'next/navigation';
@@ -23,7 +23,8 @@ export default function HeaderUnified() {
 
     if (loading || !t) return null;
 
-    const mobileMenuItemClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-center w-full max-w-xs";
+    // Menu item styles - centered for dropdown menu
+    const mobileMenuItemClasses = "block px-4 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-center";
 
     const handleMobileLinkClick = () => {
         setIsMenuOpen(false);
@@ -78,9 +79,9 @@ export default function HeaderUnified() {
                     </div>
                 </nav>
 
-                {/* --- Menu Panel --- */}
-                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg`} id="main-menu" aria-label="Main navigation menu">
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+                {/* --- Menu Panel - Dropdown positioned at top-right --- */}
+                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-4 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md mt-2`} id="main-menu" aria-label="Main navigation menu">
+                <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
                     {authLoading ? (
                         <div className="block px-3 py-2" role="status" aria-live="polite">
                             <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" aria-hidden="true"></div>
@@ -88,19 +89,19 @@ export default function HeaderUnified() {
                         </div>
                     ) : user ? (
                         <>
-                            <div className="px-3 py-2 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700 mb-2" role="group" aria-label="User information">
+                            <div className="px-4 py-2 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700 mb-2" role="group" aria-label="User information">
                                 <UserCircle className="h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                                <div>
-                                    <span className="block text-base font-medium text-gray-900 dark:text-white truncate max-w-[180px]" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                <div className="flex-1 min-w-0">
+                                    <span className="block text-base font-medium text-gray-900 dark:text-white truncate" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
                                         {user.displayName || user.email}
                                     </span>
                                 </div>
                             </div>
                             <Link href={`/${language.code}/app/history`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="View previous conversations">
-                                <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
+                                <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
                             </Link>
                             <Link href={`/${language.code}/app/settings`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
-                                Settings
+                                <span className="flex items-center justify-center"><Settings className="h-4 w-4 mr-1" aria-hidden="true" />Settings</span>
                             </Link>
                         </>
                     ) : (
@@ -110,20 +111,19 @@ export default function HeaderUnified() {
                     )}
 
                     {/* Language Selector */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-language-label">
-                        <span id="mobile-language-label" className="mr-2">Language:</span>
+                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-2" role="group" aria-label="Language selector">
+                        <Globe className="h-5 w-5 text-gray-700 dark:text-gray-300" aria-hidden="true" />
                         <LanguageSelector showIcon={false} />
                     </div>
 
                     {/* Theme Switcher */}
-                    <div className={`${mobileMenuItemClasses} flex items-center justify-between`} role="group" aria-labelledby="mobile-theme-label">
-                        <span id="mobile-theme-label">Theme</span>
+                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-2" role="group" aria-label="Theme switcher">
                         <ThemeSwitcher id="mobile" />
                     </div>
 
                     {user && !authLoading && (
-                        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                            <SignOutButton className={mobileMenuItemClasses + " w-full text-left"} onSignOut={handleMobileLinkClick} />
+                        <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                            <SignOutButton className={mobileMenuItemClasses} onSignOut={handleMobileLinkClick} />
                         </div>
                     )}
                 </div>
