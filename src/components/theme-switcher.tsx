@@ -2,94 +2,86 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslation } from '@/hooks/useTranslation';
-
-// Assuming you might use shadcn/ui components, otherwise adapt UI as needed
-import { Button } from "@/components/ui/button"; // Adjust path if needed
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Adjust path if needed
-
-interface ThemeSwitcherProps {
-    id?: string;
-}
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 /**
  * A component that allows the user to switch between light, dark, and system themes.
  */
-export function ThemeSwitcher({ id }: ThemeSwitcherProps) {
+export function ThemeSwitcher() {
     // useTheme hook from next-themes
     const { setTheme, theme } = useTheme();
     const { t, loading } = useTranslation();
 
     if (loading || !t) return null;
 
-    // Create unique ID for this instance
-    const uniqueId = id ? `theme-switcher-description-${id}` : 'theme-switcher-description';
-
     const getCurrentThemeLabel = () => {
         switch (theme) {
             case 'light': return t.settings.appearance.light;
             case 'dark': return t.settings.appearance.dark;
             case 'system': return t.settings.appearance.system;
-            default: return 'Theme';
+            default: return t.settings.appearance.system;
+        }
+    };
+
+    const getThemeIcon = () => {
+        switch (theme) {
+            case 'light':
+                return <Sun className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" />;
+            case 'dark':
+                return <Moon className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" />;
+            case 'system':
+                return <Monitor className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" />;
+            default:
+                return <Monitor className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" />;
         }
     };
 
     return (
-    <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-        <Button 
-            variant="outline" 
-            size="icon"
-            aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
-            aria-haspopup="menu"
-            aria-expanded={false}
-            aria-describedby={uniqueId}
-        >
-            {/* Sun icon shown in light mode, Moon icon in dark mode */}
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" aria-hidden="true" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" aria-hidden="true" />
-            <span className="sr-only">Toggle theme</span>
-        </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent 
-            align="end"
-            role="menu"
-            aria-label="Theme options"
-            aria-describedby={uniqueId}
-        >
-        {/* Menu items to set the theme */}
-        <DropdownMenuItem 
-            onClick={() => setTheme("light")}
-            role="menuitem"
-            aria-label={`Switch to ${t.settings.appearance.light} theme`}
-        > 
-            {t.settings.appearance.light}
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-            onClick={() => setTheme("dark")}
-            role="menuitem"
-            aria-label={`Switch to ${t.settings.appearance.dark} theme`}
-        > 
-            {t.settings.appearance.dark}
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-            onClick={() => setTheme("system")}
-            role="menuitem"
-            aria-label={`Switch to ${t.settings.appearance.system} theme`}
-        > 
-            {t.settings.appearance.system}
-        </DropdownMenuItem>
-        </DropdownMenuContent>
-        <div id={uniqueId} className="sr-only">
-            Theme switcher. Choose between light, dark, or system theme. System theme automatically matches your operating system preference.
+        <div className="flex items-center" role="group" aria-label="Theme selector">
+            {getThemeIcon()}
+            <Select value={theme} onValueChange={setTheme}>
+                <SelectTrigger 
+                    className="w-[100px] relative justify-center pr-7 [&>span]:flex [&>span]:justify-center [&>span]:overflow-hidden [&>span]:text-ellipsis [&>span]:whitespace-nowrap [&>span]:max-w-[65px] [&>svg:last-child]:absolute [&>svg:last-child]:right-2 [&>svg:last-child]:left-auto" 
+                    aria-label={`Current theme: ${getCurrentThemeLabel()}. Click to change theme.`}
+                >
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent role="listbox" aria-label="Available themes">
+                    <SelectItem 
+                        value="light"
+                        role="option"
+                        aria-label={t.settings.appearance.light}
+                        className="justify-center"
+                    >
+                        <span className="font-medium">{t.settings.appearance.light}</span>
+                    </SelectItem>
+                    <SelectItem 
+                        value="dark"
+                        role="option"
+                        aria-label={t.settings.appearance.dark}
+                        className="justify-center"
+                    >
+                        <span className="font-medium">{t.settings.appearance.dark}</span>
+                    </SelectItem>
+                    <SelectItem 
+                        value="system"
+                        role="option"
+                        aria-label={t.settings.appearance.system}
+                        className="justify-center"
+                    >
+                        <span className="font-medium">{t.settings.appearance.system}</span>
+                    </SelectItem>
+                </SelectContent>
+            </Select>
         </div>
-    </DropdownMenu>
     );
 }

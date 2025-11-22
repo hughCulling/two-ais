@@ -9,7 +9,7 @@ import SignOutButton from '@/components/auth/SignOutButton';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
-import { UserCircle, Menu, X, Globe, Settings } from 'lucide-react';
+import { UserCircle, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { usePathname } from 'next/navigation';
@@ -80,7 +80,7 @@ export default function HeaderUnified() {
                 </nav>
 
                 {/* --- Menu Panel - Dropdown positioned at top-right --- */}
-                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-4 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md mt-2`} id="main-menu" aria-label="Main navigation menu">
+                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-4 w-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md mt-2`} id="main-menu" aria-label="Main navigation menu">
                 <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
                     {authLoading ? (
                         <div className="block px-3 py-2" role="status" aria-live="polite">
@@ -111,14 +111,13 @@ export default function HeaderUnified() {
                     )}
 
                     {/* Language Selector */}
-                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-2" role="group" aria-label="Language selector">
-                        <Globe className="h-5 w-5 text-gray-700 dark:text-gray-300" aria-hidden="true" />
-                        <LanguageSelector showIcon={false} />
+                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Language selector">
+                        <LanguageSelector showIcon={true} />
                     </div>
 
                     {/* Theme Switcher */}
-                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-2" role="group" aria-label="Theme switcher">
-                        <ThemeSwitcher id="mobile" />
+                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Theme switcher">
+                        <ThemeSwitcher />
                     </div>
 
                     {user && !authLoading && (

@@ -39,7 +39,7 @@ export default function AppearancePage() {
                 {/* Theme setting row */}
                 <div className="flex items-center justify-between rounded-md border p-4">
                         <span className="font-medium">{t.settings.appearance.theme}</span>
-                        <ThemeSwitcher id="settings" />
+                        <ThemeSwitcher />
                 </div>
 
                 {/* Add other appearance settings later if needed */}

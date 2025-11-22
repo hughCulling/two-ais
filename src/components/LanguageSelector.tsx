@@ -51,7 +51,7 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
             <div id={labelId} className="sr-only">Language Selection</div>
             <Select value={language.code} onValueChange={handleLanguageChange}>
                 <SelectTrigger 
-                    className="w-[180px]" 
+                    className="w-[100px] relative justify-center pr-7 [&>span]:flex [&>span]:justify-center [&>span]:overflow-hidden [&>span]:text-ellipsis [&>span]:whitespace-nowrap [&>span]:max-w-[65px] [&>svg:last-child]:absolute [&>svg:last-child]:right-2 [&>svg:last-child]:left-auto" 
                     aria-label={`Current language: ${language.nativeName}. Click to change language.`}
                 >
                     <SelectValue />
@@ -64,6 +64,7 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                             role="option"
                             aria-label={`${lang.nativeName}${lang.code !== language.code ? ` (${t.languages[lang.code as keyof typeof t.languages] || lang.name})` : ''}`}
                             aria-selected={lang.code === language.code}
+                            className="justify-center"
                         >
                             <span className="font-medium">{lang.nativeName}</span>
                             {lang.code !== language.code && (
