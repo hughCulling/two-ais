@@ -131,6 +131,8 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           try {
             console.log(`[Ollama] Attempt ${retryCount + 1}/${maxRetries + 1} for ${agentToRespond} with model ${modelName}`);
             
+            console.log(`[Ollama] Fetching from /api/ollama/stream with model: ${modelName}, endpoint: ${ollamaEndpoint}`);
+            
             const response = await fetch('/api/ollama/stream', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -141,8 +143,12 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
               }),
             });
 
+            console.log(`[Ollama] Response status: ${response.status} ${response.statusText}`);
+
             if (!response.ok) {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              const errorText = await response.text();
+              console.error(`[Ollama] Error response body:`, errorText);
+              throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
             }
 
             const reader = response.body?.getReader();
@@ -197,6 +203,12 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
             
           } catch (error) {
             console.error(`[Ollama] Attempt ${retryCount + 1} failed:`, error);
+            console.error(`[Ollama] Error type:`, error instanceof Error ? error.constructor.name : typeof error);
+            console.error(`[Ollama] Error details:`, {
+              message: error instanceof Error ? error.message : String(error),
+              cause: error instanceof Error ? error.cause : undefined,
+              stack: error instanceof Error ? error.stack : undefined,
+            });
             
             // If we have retries left, wait and retry
             if (retryCount < maxRetries) {
