@@ -111,12 +111,12 @@ export default function HeaderUnified() {
                     )}
 
                     {/* Language Selector */}
-                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center" role="group" aria-label="Language selector">
+                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Language selector">
                         <LanguageSelector showIcon={true} />
                     </div>
 
                     {/* Theme Switcher */}
-                    <div className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center" role="group" aria-label="Theme switcher">
+                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Theme switcher">
                         <ThemeSwitcher />
                     </div>
 

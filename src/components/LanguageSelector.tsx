@@ -64,6 +64,7 @@ export function LanguageSelector({ showIcon = true, className = '', id }: Langua
                             role="option"
                             aria-label={`${lang.nativeName}${lang.code !== language.code ? ` (${t.languages[lang.code as keyof typeof t.languages] || lang.name})` : ''}`}
                             aria-selected={lang.code === language.code}
+                            className="justify-center"
                         >
                             <span className="font-medium">{lang.nativeName}</span>
                             {lang.code !== language.code && (

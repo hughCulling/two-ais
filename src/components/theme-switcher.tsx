@@ -60,6 +60,7 @@ export function ThemeSwitcher() {
                         value="light"
                         role="option"
                         aria-label={t.settings.appearance.light}
+                        className="justify-center"
                     >
                         <span className="font-medium">{t.settings.appearance.light}</span>
                     </SelectItem>
@@ -67,6 +68,7 @@ export function ThemeSwitcher() {
                         value="dark"
                         role="option"
                         aria-label={t.settings.appearance.dark}
+                        className="justify-center"
                     >
                         <span className="font-medium">{t.settings.appearance.dark}</span>
                     </SelectItem>
@@ -74,6 +76,7 @@ export function ThemeSwitcher() {
                         value="system"
                         role="option"
                         aria-label={t.settings.appearance.system}
+                        className="justify-center"
                     >
                         <span className="font-medium">{t.settings.appearance.system}</span>
                     </SelectItem>
