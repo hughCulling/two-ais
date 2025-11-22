@@ -9,7 +9,7 @@ import SignOutButton from '@/components/auth/SignOutButton';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
-import { UserCircle, Menu, X, Globe, Settings } from 'lucide-react';
+import { UserCircle, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { usePathname } from 'next/navigation';
