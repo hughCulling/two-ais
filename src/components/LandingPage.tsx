@@ -256,9 +256,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   <div className="space-y-2">
                     <p>
                       {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
-                      <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
+                      <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
                         {t.page_OllamaLearnMore}
-                      </a>
+                      </a>.
                     </p>
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                       <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
