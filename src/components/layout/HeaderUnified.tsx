@@ -105,7 +105,7 @@ export default function HeaderUnified() {
                             </Link>
                         </>
                     ) : (
-                        <Link href={`/${language.code}/login`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                        <Link href={`/${language.code}/login`} className="block px-4 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 w-full text-center" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
                             {t.header.signIn}
                         </Link>
                     )}
