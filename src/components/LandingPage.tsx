@@ -15,7 +15,7 @@ import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { useOllama } from '@/hooks/useOllama';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -256,18 +256,20 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   <div className="space-y-2">
                     <p>
                       {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
-                      <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
+                      <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
                         {t.page_OllamaLearnMore}
-                      </a>.
+                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                      </a>
                     </p>
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                       <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
                       <p>
                         {t.page_OllamaStep1.split('ollama.com/download')[0]}
-                        <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline">
-                          ollama.com/download
+                        <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                          ollama.com/download.
+                          <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
                         </a>
-                        {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                        {t.page_OllamaStep1.split('ollama.com/download.')[1]}
                       </p>
                       <p>
                         {t.page_OllamaStep2.split("'ollama pull llama2'")[0]}

@@ -3,7 +3,7 @@
 // This bypasses Firebase Functions for local Ollama models
 
 import { useEffect, useRef } from 'react';
-import { doc, collection, onSnapshot, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, collection, onSnapshot, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, rtdb } from '@/lib/firebase/clientApp';
 import { ref, set, update } from 'firebase/database';
 
@@ -237,12 +237,13 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           status: 'complete' 
         });
 
-        // Save to Firestore
-        await addDoc(collection(db, 'conversations', conversationId, 'messages'), {
+        // Save to Firestore using the same messageId as the streaming message
+        // This prevents duplicate TTS playback by ensuring the streaming message
+        // and Firestore message have the same ID
+        await setDoc(doc(db, 'conversations', conversationId, 'messages', messageId), {
           role: agentToRespond,
           content: fullContent,
           timestamp: serverTimestamp(),
-          streamingMessageId: messageId,
           isStreaming: false,
           audioUrl: null, // Will be populated by TTS if enabled
           ttsWasSplit: false,

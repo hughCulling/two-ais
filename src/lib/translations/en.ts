@@ -310,7 +310,7 @@ const en = {
     page_OllamaSetupTitle: "Ollama",
     page_OllamaDetectedTitle: "Ollama Detected",
     page_OllamaSetupDescription: "Ollama lets you run AI models locally on your computer and in the cloud. {learnMoreLink}",
-    page_OllamaLearnMore: "You can learn more about Ollama here",
+    page_OllamaLearnMore: "You can learn more about Ollama here.",
     page_OllamaSetupInstructions: "Setup Instructions",
     page_OllamaStep1: "1. You can download and install Ollama from ollama.com/download.",
     page_OllamaStep2: "2. You can pull a model (e.g., 'ollama pull llama2') to download it to your local machine.",
