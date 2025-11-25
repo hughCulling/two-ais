@@ -34,7 +34,7 @@ import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
-import { removeEmojis } from '@/lib/utils';
+import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 
 // --- Interfaces ---
 interface Message {
@@ -989,7 +989,7 @@ export function ChatInterface({
                 }
             }
 
-            const cleanedContent = removeEmojis(removeMarkdown(nextMsg.content));
+            const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(nextMsg.content)));
             
             // Split into paragraphs first for better auto-scroll
             const paragraphs = splitIntoParagraphs(cleanedContent);

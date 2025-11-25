@@ -21,7 +21,7 @@ import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi,
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
-import { removeEmojis } from '@/lib/utils';
+import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 import Image from 'next/image';
 import {  prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
 
@@ -363,7 +363,7 @@ export default function ChatHistoryViewerPage() {
                 
                 if (ttsConfig?.provider === 'browser') {
                     // Use the same markdown removal and chunking as in ChatInterface
-                    const cleanedContent = removeEmojis(removeMarkdown(msg.content));
+                    const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(msg.content)));
                     
                     // Prepare TTS chunks with paragraph mapping for auto-scroll
                     const { chunks, paragraphIndices } = prepareTTSChunksWithParagraphs(cleanedContent, 4000);
