@@ -24,6 +24,7 @@ export interface SessionPreset {
         cardDescription?: boolean;
         initialPromptDescription?: boolean;
         ollamaDetails?: boolean;
+        ollamaNotDetected?: boolean;
     };
 }
 

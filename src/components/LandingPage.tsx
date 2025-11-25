@@ -277,7 +277,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         {t.page_OllamaStep2.split("'ollama pull llama2'")[1]}
                       </p>
                       <p>
-                        <span>3. You can run this command to allow Two AIs to connect to your local Ollama instance:</span>
+                        <span>3. Then you can run this command in your terminal to allow Two AIs to connect to your local Ollama instance:</span>
                       </p>
                       <p className="ml-4">
                         <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
