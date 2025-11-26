@@ -184,6 +184,7 @@ export default function SessionPresetPage() {
                                     <p>• Card description: {preset.collapseStates.cardDescription ? 'Hidden' : 'Visible'}</p>
                                     <p>• Initial prompt help: {preset.collapseStates.initialPromptDescription ? 'Hidden' : 'Visible'}</p>
                                     <p>• Ollama details: {preset.collapseStates.ollamaDetails ? 'Hidden' : 'Visible'}</p>
+                                    <p>• Ollama not detected info: {preset.collapseStates.ollamaNotDetected ? 'Hidden' : 'Visible'}</p>
                                 </div>
                             </div>
                         )}

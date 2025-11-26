@@ -581,6 +581,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [collapseCardDescription, setCollapseCardDescription] = useState<boolean>(false);
     const [collapseInitialPromptDescription, setCollapseInitialPromptDescription] = useState<boolean>(false);
     const [collapseOllamaDetails, setCollapseOllamaDetails] = useState<boolean>(false);
+    const [collapseOllamaNotDetected, setCollapseOllamaNotDetected] = useState<boolean>(false);
 
     // --- Image Generation State ---
     // const [imageGenEnabled, setImageGenEnabled] = useState(false);
@@ -1031,6 +1032,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     cardDescription: collapseCardDescription,
                     initialPromptDescription: collapseInitialPromptDescription,
                     ollamaDetails: collapseOllamaDetails,
+                    ollamaNotDetected: collapseOllamaNotDetected,
                 },
             };
 
@@ -1084,6 +1086,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setCollapseCardDescription(preset.collapseStates.cardDescription ?? false);
                 setCollapseInitialPromptDescription(preset.collapseStates.initialPromptDescription ?? false);
                 setCollapseOllamaDetails(preset.collapseStates.ollamaDetails ?? false);
+                setCollapseOllamaNotDetected(preset.collapseStates.ollamaNotDetected ?? false);
             }
 
             toast({
@@ -1362,7 +1365,22 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     </div>
                 )}
                 {!ollamaLoading && !ollamaAvailable && (
-                    <p className="text-sm text-muted-foreground pt-2">Ollama not detected. You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
+                    <div className="pt-2 space-y-1 flex flex-col items-center">
+                        <div className="flex items-center gap-2">
+                            <p className="text-sm text-muted-foreground">Ollama not detected</p>
+                            <button
+                                onClick={() => setCollapseOllamaNotDetected(!collapseOllamaNotDetected)}
+                                className="text-muted-foreground hover:text-foreground transition-colors"
+                                aria-expanded={!collapseOllamaNotDetected}
+                                aria-label="Toggle Ollama installation info"
+                            >
+                                {collapseOllamaNotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                            </button>
+                        </div>
+                        {!collapseOllamaNotDetected && (
+                            <p className="text-xs text-muted-foreground">You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
+                        )}
+                    </div>
                 )}
                 
                 {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
