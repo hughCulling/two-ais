@@ -1,0 +1,4 @@
+# Integration tests
+# This directory will contain end-to-end tests:
+# - conversation-flow.test.ts: End-to-end conversation tests
+# - tts-playback.test.ts: TTS integration tests
