@@ -1,0 +1,4 @@
+# Test helpers and utilities
+# This directory will contain:
+# - firebase-helpers.ts: Firebase test utilities
+# - test-data.ts: Common test fixtures

@@ -1,0 +1,6 @@
+# Test generators (arbitraries) for property-based testing
+# This directory will contain fast-check generators for:
+# - conversation.ts: Generate random conversation data
+# - messages.ts: Generate random messages
+# - sessionConfig.ts: Generate random session configs
+# - ttsSettings.ts: Generate random TTS settings
