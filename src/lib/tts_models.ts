@@ -124,13 +124,7 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     };
     
     // Some browsers fire the voiceschanged event when voices are loaded
-    // iPhone 7 / iOS 15 and older Safari versions do not support addEventListener on speechSynthesis
-    if (typeof window.speechSynthesis.addEventListener === 'function') {
-        window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
-    } else {
-        // Fallback for older browsers
-        window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
-    }
+    window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
     
     // Also try to populate voices immediately in case they're already loaded
     handleVoicesChanged();
