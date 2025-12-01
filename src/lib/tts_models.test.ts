@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getVoiceById, findFallbackBrowserVoice, OPENAI_TTS_VOICES, GOOGLE_TTS_VOICES } from './tts_models';
+import { getVoiceById, findFallbackBrowserVoice, OPENAI_TTS_VOICES, GOOGLE_TTS_VOICES, initializeVoiceListeners, populateBrowserVoices } from './tts_models';
 
 describe('getVoiceById', () => {
   it('should return undefined for non-existent voice ID', () => {
@@ -18,7 +18,7 @@ describe('getVoiceById', () => {
     // @ts-expect-error Testing commented-out provider
     const openaiVoice = getVoiceById('openai', 'alloy');
     expect(openaiVoice).toBeUndefined();
-    
+
     // @ts-expect-error Testing commented-out provider
     const googleVoice = getVoiceById('google-cloud', 'en-US-Standard-A');
     expect(googleVoice).toBeUndefined();
@@ -37,7 +37,7 @@ describe('getVoiceById', () => {
     expect(OPENAI_TTS_VOICES).toBeDefined();
     expect(Array.isArray(OPENAI_TTS_VOICES)).toBe(true);
     expect(OPENAI_TTS_VOICES.length).toBeGreaterThan(0);
-    
+
     // Verify structure of first voice
     const firstVoice = OPENAI_TTS_VOICES[0];
     expect(firstVoice).toHaveProperty('id');
@@ -49,7 +49,7 @@ describe('getVoiceById', () => {
     expect(GOOGLE_TTS_VOICES).toBeDefined();
     expect(Array.isArray(GOOGLE_TTS_VOICES)).toBe(true);
     expect(GOOGLE_TTS_VOICES.length).toBeGreaterThan(0);
-    
+
     // Verify structure of a known voice
     const usStandardA = GOOGLE_TTS_VOICES.find(v => v.id === 'en-US-Standard-A');
     expect(usStandardA).toBeDefined();
@@ -99,9 +99,9 @@ describe('findFallbackBrowserVoice', () => {
       createMockVoice('UK Voice', 'en-GB', true),
       createMockVoice('AU Voice', 'en-AU', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeDefined();
     expect(voice?.lang).toBe('en-US');
@@ -113,9 +113,9 @@ describe('findFallbackBrowserVoice', () => {
       createMockVoice('UK Voice', 'en-GB', true),
       createMockVoice('AU Voice', 'en-AU', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeDefined();
     expect(voice?.lang).toMatch(/^en-/);
@@ -127,9 +127,9 @@ describe('findFallbackBrowserVoice', () => {
       createMockVoice('Cloud Voice', 'en-US', false),
       createMockVoice('Local Voice', 'en-US', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeDefined();
     expect(voice?.localService).toBe(true);
@@ -141,16 +141,16 @@ describe('findFallbackBrowserVoice', () => {
       createMockVoice('Spanish Voice', 'es-ES', true),
       createMockVoice('French Voice', 'fr-FR', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeDefined();
   });
 
   it('should return null when no voices available', () => {
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue([]);
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeNull();
   });
@@ -158,7 +158,7 @@ describe('findFallbackBrowserVoice', () => {
   it('should return null in server-side environment', () => {
     // @ts-expect-error Testing server-side
     delete global.window;
-    
+
     const voice = findFallbackBrowserVoice('en-US');
     expect(voice).toBeNull();
   });
@@ -170,18 +170,18 @@ describe('findFallbackBrowserVoice', () => {
       createMockVoice('German Voice', 'de-DE', true),
       createMockVoice('Japanese Voice', 'ja-JP', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const spanishVoice = findFallbackBrowserVoice('es-ES');
     expect(spanishVoice?.lang).toBe('es-ES');
-    
+
     const frenchVoice = findFallbackBrowserVoice('fr-FR');
     expect(frenchVoice?.lang).toBe('fr-FR');
-    
+
     const germanVoice = findFallbackBrowserVoice('de-DE');
     expect(germanVoice?.lang).toBe('de-DE');
-    
+
     const japaneseVoice = findFallbackBrowserVoice('ja-JP');
     expect(japaneseVoice?.lang).toBe('ja-JP');
   });
@@ -190,11 +190,68 @@ describe('findFallbackBrowserVoice', () => {
     const mockVoices = [
       createMockVoice('Spanish Voice', 'es-MX', true),
     ];
-    
+
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue(mockVoices);
-    
+
     const voice = findFallbackBrowserVoice('es-ES');
     expect(voice).toBeDefined();
     expect(voice?.lang).toMatch(/^es-/);
+  });
+});
+
+describe('initializeVoiceListeners', () => {
+  let originalSpeechSynthesis: any;
+
+  beforeEach(() => {
+    originalSpeechSynthesis = window.speechSynthesis;
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: originalSpeechSynthesis,
+      writable: true
+    });
+    vi.clearAllMocks();
+  });
+
+  it('should fallback to onvoiceschanged if addEventListener is undefined (iPhone 7 fix)', () => {
+    // Mock speechSynthesis without addEventListener
+    const mockSpeechSynthesis = {
+      getVoices: vi.fn().mockReturnValue([]),
+      onvoiceschanged: null,
+      // addEventListener is explicitly undefined here
+    };
+
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: mockSpeechSynthesis,
+      writable: true
+    });
+
+    // Call the initialization function
+    initializeVoiceListeners();
+
+    // Verify that onvoiceschanged was set
+    expect(mockSpeechSynthesis.onvoiceschanged).toBeDefined();
+    expect(typeof mockSpeechSynthesis.onvoiceschanged).toBe('function');
+  });
+
+  it('should use addEventListener if available', () => {
+    const addEventListenerMock = vi.fn();
+    const mockSpeechSynthesis = {
+      getVoices: vi.fn().mockReturnValue([]),
+      addEventListener: addEventListenerMock,
+      onvoiceschanged: null
+    };
+
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: mockSpeechSynthesis,
+      writable: true
+    });
+
+    initializeVoiceListeners();
+
+    expect(addEventListenerMock).toHaveBeenCalledWith('voiceschanged', expect.any(Function));
+    // onvoiceschanged should remain null if addEventListener is used
+    expect(mockSpeechSynthesis.onvoiceschanged).toBeNull();
   });
 });
