@@ -4,9 +4,9 @@ import { TranslationKeys } from '@/lib/translations';
 
 // Browser TTS voice interface (extends base TTSVoice with browser-specific properties)
 export interface BrowserTTSVoice extends TTSVoice {
-  lang: string; // BCP-47 language tag (e.g., 'en-US', 'es-ES')
-  localService?: boolean; // Whether the voice is a local system voice
-  default?: boolean; // Whether this is the default voice for its language
+    lang: string; // BCP-47 language tag (e.g., 'en-US', 'es-ES')
+    localService?: boolean; // Whether the voice is a local system voice
+    default?: boolean; // Whether this is the default voice for its language
 }
 
 // Browser TTS voices will be populated at runtime from the Web Speech API
@@ -18,7 +18,7 @@ function testVoiceCompatibility(voice: SpeechSynthesisVoice): boolean {
         // Filter out known problematic voices
         const problematicVoices = [
             'Google UK English Male',
-            'Google UK English Female', 
+            'Google UK English Female',
             'Google US English Male',
             'Google US English Female',
             'Google Australian English Male',
@@ -28,19 +28,19 @@ function testVoiceCompatibility(voice: SpeechSynthesisVoice): boolean {
             'Google Indian English Male',
             'Google Indian English Female'
         ];
-        
+
         // Check if this is a known problematic voice
         if (problematicVoices.some(problematic => voice.name.includes(problematic))) {
             console.warn(`Filtering out problematic voice: ${voice.name}`);
             return false;
         }
-        
+
         // Also filter out any voice with "Google" in the name that's not a standard system voice
         if (voice.name.includes('Google') && !voice.localService) {
             console.warn(`Filtering out Google cloud voice (not local): ${voice.name}`);
             return false;
         }
-        
+
         // Create a test utterance to see if the voice can be assigned
         const testUtterance = new SpeechSynthesisUtterance('test');
         testUtterance.voice = voice;
@@ -59,28 +59,28 @@ export function populateBrowserVoices(): TTSVoice[] {
 
     const voices = window.speechSynthesis.getVoices();
     const voiceMap = new Map<string, number>();
-    
+
     return voices
         .filter(voice => voice.lang) // Filter out voices without a language
         .filter(voice => testVoiceCompatibility(voice)) // Filter out incompatible voices
         .map(voice => {
             // Create a base ID from the voice URI or name
             const baseId = `browser-${voice.voiceURI || voice.name.replace(/\s+/g, '-').toLowerCase()}`;
-            
+
             // Track how many times we've seen this voice ID
             const count = (voiceMap.get(baseId) || 0) + 1;
             voiceMap.set(baseId, count);
-            
+
             // Append a number if we've seen this ID before
             const uniqueId = count > 1 ? `${baseId}-${count}` : baseId;
-            
+
             // Create a cleaner display name: just name and language/dialect
             const displayName = `${voice.name} (${voice.lang})`;
-            
+
             // Map gender to match TTSVoice type
-            const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 
-                         voice.name.toLowerCase().includes('male') ? 'Male' : 'Neutral';
-            
+            const gender = voice.name.toLowerCase().includes('female') ? 'Female' :
+                voice.name.toLowerCase().includes('male') ? 'Male' : 'Neutral';
+
             return {
                 id: uniqueId,
                 name: displayName,
@@ -112,29 +112,40 @@ function notifyVoicesLoaded() {
 }
 
 // Initialize browser voices when the page loads
-if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    // Populate voices when they are loaded
-    const handleVoicesChanged = () => {
-        const voices = populateBrowserVoices();
-        BROWSER_TTS_VOICES.length = 0;
-        BROWSER_TTS_VOICES.push(...voices);
-        
-        // Notify callbacks that voices have been loaded
-        notifyVoicesLoaded();
-    };
-    
-    // Some browsers fire the voiceschanged event when voices are loaded
-    window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
-    
-    // Also try to populate voices immediately in case they're already loaded
-    handleVoicesChanged();
-    
-    // Set up multiple fallbacks in case voiceschanged doesn't fire
-    setTimeout(handleVoicesChanged, 100);
-    setTimeout(handleVoicesChanged, 500);
-    setTimeout(handleVoicesChanged, 1000);
-    setTimeout(handleVoicesChanged, 2000);
+export function initializeVoiceListeners() {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        // Populate voices when they are loaded
+        const handleVoicesChanged = () => {
+            const voices = populateBrowserVoices();
+            BROWSER_TTS_VOICES.length = 0;
+            BROWSER_TTS_VOICES.push(...voices);
+
+            // Notify callbacks that voices have been loaded
+            notifyVoicesLoaded();
+        };
+
+        // Handle voice loading (async)
+        // iPhone 7/iOS 15 fix: check if addEventListener exists
+        if (window.speechSynthesis.addEventListener) {
+            window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+        } else {
+            // Fallback for older browsers/iOS
+            window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+        }
+
+        // Also try to populate voices immediately in case they're already loaded
+        handleVoicesChanged();
+
+        // Set up multiple fallbacks in case voiceschanged doesn't fire
+        setTimeout(handleVoicesChanged, 100);
+        setTimeout(handleVoicesChanged, 500);
+        setTimeout(handleVoicesChanged, 1000);
+        setTimeout(handleVoicesChanged, 2000);
+    }
 }
+
+// Run initialization
+initializeVoiceListeners();
 
 // --- TTS Voice Interface ---
 export interface TTSVoice {
@@ -269,7 +280,7 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `nl-NL-Chirp3-HD-${variant}`, name: `NL ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['nl-NL'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // English (Australia)
     { id: 'en-AU-Standard-A', name: 'AU Standard A (F)', gender: 'Female', languageCodes: ['en-AU'], voiceType: 'Standard', status: 'GA' },
     { id: 'en-AU-Standard-B', name: 'AU Standard B (M)', gender: 'Male', languageCodes: ['en-AU'], voiceType: 'Standard', status: 'GA' },
@@ -449,7 +460,7 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
 
     // Galician (Spain)
     { id: 'gl-ES-Standard-A', name: 'ES Standard A (F)', gender: 'Female', languageCodes: ['gl-ES'], voiceType: 'Standard', status: 'GA' },
-    
+
     // German (Germany)
     { id: 'de-DE-Standard-A', name: 'DE Standard A (F)', gender: 'Female', languageCodes: ['de-DE'], voiceType: 'Standard', status: 'GA' },
     { id: 'de-DE-Standard-B', name: 'DE Standard B (M)', gender: 'Male', languageCodes: ['de-DE'], voiceType: 'Standard', status: 'GA' },
@@ -630,7 +641,7 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `cmn-CN-Chirp3-HD-${variant}`, name: `CN ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['cmn-CN'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Mandarin Chinese (Taiwan)
     { id: 'cmn-TW-Standard-A', name: 'TW Standard A (F)', gender: 'Female', languageCodes: ['cmn-TW'], voiceType: 'Standard', status: 'GA' },
     { id: 'cmn-TW-Standard-B', name: 'TW Standard B (M)', gender: 'Male', languageCodes: ['cmn-TW'], voiceType: 'Standard', status: 'GA' },
@@ -714,7 +725,7 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     // Romanian (Romania)
     { id: 'ro-RO-Standard-A', name: 'RO Standard A (F)', gender: 'Female', languageCodes: ['ro-RO'], voiceType: 'Standard', status: 'GA' },
     { id: 'ro-RO-Wavenet-A', name: 'RO Wavenet A (F)', gender: 'Female', languageCodes: ['ro-RO'], voiceType: 'WaveNet', status: 'GA' },
-    
+
     // Russian (Russia)
     { id: 'ru-RU-Standard-A', name: 'RU Standard A (F)', gender: 'Female', languageCodes: ['ru-RU'], voiceType: 'Standard', status: 'GA' },
     { id: 'ru-RU-Standard-B', name: 'RU Standard B (M)', gender: 'Male', languageCodes: ['ru-RU'], voiceType: 'Standard', status: 'GA' },
@@ -729,7 +740,7 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `ru-RU-Chirp3-HD-${variant}`, name: `RU ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['ru-RU'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Serbian (Cyrillic)
     { id: 'sr-RS-Standard-A', name: 'RS Standard A (F)', gender: 'Female', languageCodes: ['sr-RS'], voiceType: 'Standard', status: 'GA' },
 
@@ -771,12 +782,12 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `es-US-Chirp3-HD-${variant}`, name: `US ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['es-US'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Swahili (Kenya)
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `sw-KE-Chirp3-HD-${variant}`, name: `KE ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['sw-KE'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Swedish (Sweden)
     { id: 'sv-SE-Standard-A', name: 'SE Standard A (F)', gender: 'Female', languageCodes: ['sv-SE'], voiceType: 'Standard', status: 'GA' },
     { id: 'sv-SE-Wavenet-A', name: 'SE Wavenet A (F)', gender: 'Female', languageCodes: ['sv-SE'], voiceType: 'WaveNet', status: 'GA' },
@@ -804,14 +815,14 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `te-IN-Chirp3-HD-${variant}`, name: `IN ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['te-IN'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Thai (Thailand)
     { id: 'th-TH-Standard-A', name: 'TH Standard A (F)', gender: 'Female', languageCodes: ['th-TH'], voiceType: 'Standard', status: 'GA' },
     { id: 'th-TH-Neural2-C', name: 'TH Neural2 C (F)', gender: 'Female', languageCodes: ['th-TH'], voiceType: 'Neural2', status: 'GA' },
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `th-TH-Chirp3-HD-${variant}`, name: `TH ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['th-TH'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Turkish (Turkey)
     { id: 'tr-TR-Standard-A', name: 'TR Standard A (F)', gender: 'Female', languageCodes: ['tr-TR'], voiceType: 'Standard', status: 'GA' },
     { id: 'tr-TR-Standard-B', name: 'TR Standard B (M)', gender: 'Male', languageCodes: ['tr-TR'], voiceType: 'Standard', status: 'GA' },
@@ -826,14 +837,14 @@ export const GOOGLE_TTS_VOICES: TTSVoice[] = [
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `tr-TR-Chirp3-HD-${variant}`, name: `TR ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['tr-TR'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Ukrainian (Ukraine)
     { id: 'uk-UA-Standard-A', name: 'UA Standard A (F)', gender: 'Female', languageCodes: ['uk-UA'], voiceType: 'Standard', status: 'GA' },
     { id: 'uk-UA-Wavenet-A', name: 'UA Wavenet A (F)', gender: 'Female', languageCodes: ['uk-UA'], voiceType: 'WaveNet', status: 'GA' },
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `uk-UA-Chirp3-HD-${variant}`, name: `UA ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['uk-UA'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
     } as TTSVoice)),
-    
+
     // Urdu (India)
     ...CHIRP3_HD_VARIANT_NAMES.map(variant => ({
         id: `ur-IN-Chirp3-HD-${variant}`, name: `IN ${variant} (${getChirp3HDGender(variant).charAt(0)})`, gender: getChirp3HDGender(variant), languageCodes: ['ur-IN'], voiceType: 'Chirp3 HD', status: 'GA', notes: 'Conversational, nuanced intonation.'
@@ -907,46 +918,46 @@ export function findFallbackBrowserVoice(languageCode: string): SpeechSynthesisV
 
     const voices = window.speechSynthesis.getVoices();
     const simpleLanguageCode = languageCode.split('-')[0];
-    
+
     // First, try to find a voice that matches the exact language code and is local
-    let fallbackVoice = voices.find(voice => 
-        voice.lang === languageCode && 
+    let fallbackVoice = voices.find(voice =>
+        voice.lang === languageCode &&
         voice.localService === true && // Only local voices
         testVoiceCompatibility(voice)
     );
-    
+
     // If not found, try to find a voice that matches the simple language code and is local
     if (!fallbackVoice) {
-        fallbackVoice = voices.find(voice => 
-            voice.lang.startsWith(`${simpleLanguageCode}-`) && 
+        fallbackVoice = voices.find(voice =>
+            voice.lang.startsWith(`${simpleLanguageCode}-`) &&
             voice.localService === true &&
             testVoiceCompatibility(voice)
         );
     }
-    
+
     // If still not found, try any voice with the simple language code
     if (!fallbackVoice) {
-        fallbackVoice = voices.find(voice => 
-            voice.lang === simpleLanguageCode && 
+        fallbackVoice = voices.find(voice =>
+            voice.lang === simpleLanguageCode &&
             testVoiceCompatibility(voice)
         );
     }
-    
+
     // If still not found, try any compatible voice
     if (!fallbackVoice) {
         fallbackVoice = voices.find(voice => testVoiceCompatibility(voice));
     }
-    
+
     return fallbackVoice || null;
 }
 export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): TTSVoice | null {
     const provider = getTTSProviderInfoById(providerId);
     if (!provider) return null;
-    
+
     if (providerId === 'openai') {
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
-    
+
     if (providerId === 'google-cloud') {
         const preferredGoogleDefault = provider.availableVoices.find(v => v.id === 'en-US-Wavenet-A');
         if (preferredGoogleDefault) return preferredGoogleDefault;
@@ -955,7 +966,7 @@ export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): T
         if (firstEnglish) return firstEnglish;
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
-    
+
     if (providerId === 'elevenlabs') {
         // Rachel is a good default - professional female voice
         const preferredElevenLabsDefault = provider.availableVoices.find(v => v.id === '21m00Tcm4TlvDq8ikWAM'); // Rachel
@@ -966,7 +977,7 @@ export function getDefaultVoiceForProvider(providerId: TTSProviderInfo['id']): T
         // Default to the first voice in its list, e.g., Achernar or as specified by user preference later
         return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
     }
-    
+
     return provider.availableVoices.length > 0 ? provider.availableVoices[0] : null;
 }
 export function getTTSModelDetailByAppId(appModelId: string): { provider: TTSProviderInfo, model: TTSModelDetail } | undefined {
@@ -1001,14 +1012,14 @@ export function isTTSModelLanguageSupported(
     if (appModelId === 'browser-tts') {
         // Handle cases where languageCode is just the 2-letter part (e.g., 'en')
         const simpleLanguageCode = languageCode.split('-')[0];
-        
+
         // Check if any browser voices support this language
         return BROWSER_TTS_VOICES.some(voice => {
             const voiceLangCodes = voice.languageCodes || [];
             return voiceLangCodes.some(voiceLang => {
                 // Direct match (e.g., 'en-US' === 'en-US' or 'fr' === 'fr')
                 if (voiceLang === languageCode) return true;
-                
+
                 // Match the simple part of the language code (e.g., 'en-US'.startsWith('en-'))
                 if (voiceLang.startsWith(`${simpleLanguageCode}-`)) return true;
 
@@ -1027,14 +1038,14 @@ export function isTTSModelLanguageSupported(
     if (!ttsModelInfo.model.supportedLanguages) {
         return false;
     }
-    
+
     // Handle cases where languageCode is just the 2-letter part (e.g., 'en')
     const simpleLanguageCode = languageCode.split('-')[0];
 
     return ttsModelInfo.model.supportedLanguages.some(supportedLang => {
         // Direct match (e.g., 'en-US' === 'en-US' or 'fr' === 'fr')
         if (supportedLang === languageCode) return true;
-        
+
         // Match the simple part of the language code (e.g., 'en-US'.startsWith('en-'))
         if (supportedLang.startsWith(`${simpleLanguageCode}-`)) return true;
 
