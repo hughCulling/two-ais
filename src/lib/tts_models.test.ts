@@ -15,11 +15,9 @@ describe('getVoiceById', () => {
 
   it('should return undefined for commented-out providers', () => {
     // OpenAI and Google Cloud providers are currently commented out
-    // @ts-expect-error Testing commented-out provider
     const openaiVoice = getVoiceById('openai', 'alloy');
     expect(openaiVoice).toBeUndefined();
 
-    // @ts-expect-error Testing commented-out provider
     const googleVoice = getVoiceById('google-cloud', 'en-US-Standard-A');
     expect(googleVoice).toBeUndefined();
   });
