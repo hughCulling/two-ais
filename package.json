@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "browserslist": [
+    "ios >= 15",
     "defaults and supports es6-module",
     "not dead",
     "not IE 11"
