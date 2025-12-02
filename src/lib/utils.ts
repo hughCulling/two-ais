@@ -50,3 +50,42 @@ export function cleanTextForTTS(text: string): string {
     // Trim each line but preserve line breaks
     .split('\n').map(line => line.trim()).join('\n');
 }
+
+/**
+ * Safe markdown removal for iOS 15 compatibility (avoids lookbehind regexes).
+ * Replaces the 'remove-markdown' library which may contain incompatible regexes.
+ */
+export function removeMarkdownSafe(text: string): string {
+  if (!text) return '';
+  return text
+    // Headers
+    .replace(/^#+\s+/gm, '')
+    // Bold/Italic
+    .replace(/(\*\*|__)(.*?)\1/g, '$2')
+    .replace(/(\*|_)(.*?)\1/g, '$2')
+    // Strikethrough
+    .replace(/~~(.*?)~~/g, '$1')
+    // Links
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    // Images
+    .replace(/!\[([^\]]*)\]\([^\)]+\)/g, '$1')
+    // Code blocks (remove content of code blocks for TTS?) 
+    // Usually for TTS we might want to skip code or read it. 
+    // remove-markdown usually keeps the text. Let's keep the text inside inline code, but maybe strip fences.
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks entirely? Or just fences? 
+    // Let's remove code blocks entirely for TTS as reading code is annoying.
+    // Wait, the original remove-markdown keeps the text?
+    // "Fenced codeblocks with backticks ... code.trim()" -> it keeps the code.
+    // Let's keep the code for now but remove fences.
+    .replace(/```(?:.*)\n([\s\S]*?)```/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    // Blockquotes
+    .replace(/^>\s+/gm, '')
+    // Lists
+    .replace(/^[\*\-\+]\s+/gm, '')
+    .replace(/^\d+\.\s+/gm, '')
+    // Horizontal rules
+    .replace(/^-{3,}\s*$/gm, '')
+    // HTML tags
+    .replace(/<[^>]+>/g, '');
+}

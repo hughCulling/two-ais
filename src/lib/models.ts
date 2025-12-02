@@ -617,8 +617,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Magistral Medium 1.2',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 2.00, 
+        pricing: {
+            input: 2.00,
             output: 5.00,
             freeTier: {
                 available: true,
@@ -636,8 +636,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Medium 3.1',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.40, 
+        pricing: {
+            input: 0.40,
             output: 2.00,
             freeTier: {
                 available: true,
@@ -654,8 +654,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Large 2.1',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 2.00, 
+        pricing: {
+            input: 2.00,
             output: 6.00,
             freeTier: {
                 available: true,
@@ -672,8 +672,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 3B',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.04, 
+        pricing: {
+            input: 0.04,
             output: 0.04,
             freeTier: {
                 available: true,
@@ -690,8 +690,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Ministral 8B',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.10, 
+        pricing: {
+            input: 0.10,
             output: 0.10,
             freeTier: {
                 available: true,
@@ -708,8 +708,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Magistral Small 1.2',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.50, 
+        pricing: {
+            input: 0.50,
             output: 1.50,
             freeTier: {
                 available: true,
@@ -727,8 +727,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Small 3.2',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.10, 
+        pricing: {
+            input: 0.10,
             output: 0.30,
             freeTier: {
                 available: true,
@@ -745,8 +745,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         name: 'Mistral Nemo 12B',
         provider: 'Mistral AI',
         contextWindow: 128000,
-        pricing: { 
-            input: 0.15, 
+        pricing: {
+            input: 0.15,
             output: 0.15,
             freeTier: {
                 available: true,
@@ -961,12 +961,12 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     const claude4Ids = ['claude-opus-4-1-20250805', 'claude-opus-4-20250514'];
                     const aIndex = claude4Ids.indexOf(a.id);
                     const bIndex = claude4Ids.indexOf(b.id);
-                    
+
                     // If both are Claude 4 models, sort by our defined order
                     if (aIndex !== -1 && bIndex !== -1) {
                         return aIndex - bIndex;
                     }
-                    
+
                     // For other Anthropic models, sort by tier (Opus > Sonnet > Haiku)
                     const anthropicOrder = ['Opus', 'Sonnet', 'Haiku'];
                     const getAnthropicTier = (name: string) => {
@@ -975,11 +975,11 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                         }
                         return anthropicOrder.length;
                     };
-                    
+
                     const tierA = getAnthropicTier(a.name);
                     const tierB = getAnthropicTier(b.name);
                     if (tierA !== tierB) return tierA - tierB;
-                    
+
                     // If same tier, sort by name
                     return a.name.localeCompare(b.name);
                 });
@@ -1062,7 +1062,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
-            
+
             // Custom sorting for Mistral AI Premier models, follows order in Pricing documentation
             if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIPremierModels) {
                 const mistralPremierOrder = [
@@ -1081,7 +1081,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
-            
+
             // Custom sorting for Mistral AI Open models
             if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIOpenModels) {
                 const mistralOpenOrder = [
@@ -1098,7 +1098,7 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
-            
+
             // Custom sorting for Frontier models to ensure GPT-5 Chat appears last
             if (models.length > 0 && models[0].provider === 'OpenAI' && cat === t.modelCategory_Frontier) {
                 const frontierOrder = [
@@ -1121,11 +1121,11 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                 byCategory[cat].sort((a, b) => {
                     const aIsCloud = a.name.toLowerCase().includes('cloud');
                     const bIsCloud = b.name.toLowerCase().includes('cloud');
-                    
+
                     // Cloud models come first
                     if (aIsCloud && !bIsCloud) return -1;
                     if (!aIsCloud && bIsCloud) return 1;
-                    
+
                     // Within same group (both cloud or both non-cloud), sort alphabetically
                     return a.name.localeCompare(b.name);
                 });
@@ -1160,13 +1160,22 @@ export interface OllamaListResponse {
 }
 
 /**
+ * Helper to create a timeout signal (Polyfill-like for iOS 15)
+ */
+function timeoutSignal(ms: number): AbortSignal {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), ms);
+    return controller.signal;
+}
+
+/**
  * Check if Ollama is available on the local machine
  */
 export async function isOllamaAvailable(endpoint: string = 'http://localhost:11434'): Promise<boolean> {
     try {
         const response = await fetch(`${endpoint}/api/tags`, {
             method: 'GET',
-            signal: AbortSignal.timeout(3000), // 3 second timeout
+            signal: timeoutSignal(3000), // 3 second timeout
         });
         return response.ok;
     } catch (error) {
@@ -1182,15 +1191,15 @@ export async function fetchOllamaModels(endpoint: string = 'http://localhost:114
     try {
         const response = await fetch(`${endpoint}/api/tags`, {
             method: 'GET',
-            signal: AbortSignal.timeout(5000),
+            signal: timeoutSignal(5000),
         });
-        
+
         if (!response.ok) {
             throw new Error(`Failed to fetch Ollama models: ${response.statusText}`);
         }
-        
+
         const data: OllamaListResponse = await response.json();
-        
+
         // Convert Ollama models to LLMInfo format
         const ollamaModels: LLMInfo[] = data.models.map(model => ({
             id: `ollama:${model.name}`,
@@ -1213,7 +1222,7 @@ export async function fetchOllamaModels(endpoint: string = 'http://localhost:114
             isOllamaModel: true,
             ollamaEndpoint: endpoint,
         }));
-        
+
         return ollamaModels;
     } catch (error) {
         console.error('Error fetching Ollama models:', error);

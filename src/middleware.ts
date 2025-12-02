@@ -39,7 +39,7 @@ export function middleware(request: NextRequest) {
     "img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/ https://storage.googleapis.com https://*.googleapis.com https://oaidalleapiprodscus.blob.core.windows.net",
     "font-src 'self' https://fonts.gstatic.com",
     "media-src 'self' data: https://storage.googleapis.com",
-    "connect-src 'self' http://localhost:11434 https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net https://firebaseinstallations.googleapis.com",
+    "connect-src 'self' ws: http: http://localhost:11434 https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net https://firebaseinstallations.googleapis.com",
     "frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://two-ais.firebaseapp.com https://*.firebaseio.com https://accounts.google.com",
     "object-src 'none'",
     "base-uri 'self'",

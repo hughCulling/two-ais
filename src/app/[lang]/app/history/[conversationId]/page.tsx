@@ -19,11 +19,10 @@ import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import removeMarkdown from 'remove-markdown';
-import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
+import type { Pluggable } from 'unified';
+import { removeEmojis, cleanTextForTTS, removeMarkdownSafe } from '@/lib/utils';
 import Image from 'next/image';
-import {  prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
+import { prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -37,15 +36,15 @@ function getLocale(languageCode: string) {
 // Helper function to safely get voice display name
 function getVoiceDisplayName(provider: string, voiceId: string | null | undefined): string {
     if (!voiceId) return 'Default';
-    
+
     // Define valid TTS provider IDs based on TTSProviderInfo type
     const validProviders: TTSProviderInfo['id'][] = ['openai', 'google-cloud', 'elevenlabs', 'google-gemini', 'browser'];
-    
+
     // Cast to valid provider type or default to 'google-cloud' if invalid
-    const safeProvider = validProviders.includes(provider as TTSProviderInfo['id']) 
+    const safeProvider = validProviders.includes(provider as TTSProviderInfo['id'])
         ? provider as TTSProviderInfo['id']
         : 'google-cloud';
-        
+
     const voice = getVoiceById(safeProvider, voiceId);
     return voice?.name || voiceId;
 }
@@ -147,6 +146,19 @@ export default function ChatHistoryViewerPage() {
     const currentChunkIndexRef = useRef<number>(0);
     const paragraphIndicesRef = useRef<number[]>([]);
     const currentParagraphIndexRef = useRef<number>(-1);
+
+    const [remarkPlugins, setRemarkPlugins] = useState<Pluggable[]>([]);
+
+    // --- Effect: Load GFM Plugin Dynamically ---
+    useEffect(() => {
+        import('remark-gfm')
+            .then(mod => {
+                setRemarkPlugins([mod.default]);
+            })
+            .catch(err => {
+                console.warn('Failed to load remark-gfm (likely unsupported on this device), falling back to standard markdown:', err);
+            });
+    }, []);
 
     useEffect(() => {
         return () => {
@@ -265,8 +277,8 @@ export default function ChatHistoryViewerPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-destructive-foreground">{error}</p>
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             onClick={() => router.push(`/${language.code}/app/history`)}
                             aria-label="Return to conversation history"
                             aria-describedby="back-to-history-description"
@@ -296,7 +308,7 @@ export default function ChatHistoryViewerPage() {
                     <CardContent className="space-y-4">
                         <p>This conversation could not be found or is not accessible.</p>
                         <Button variant="outline" asChild>
-                             <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
+                            <Link href={`/${language.code}/app/history`} aria-label="Return to conversation history">
                                 <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
                                 {t.history.backToPreviousChats}
                             </Link>
@@ -314,12 +326,12 @@ export default function ChatHistoryViewerPage() {
     }> = ({ msg }) => {
         const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
-        
+
         const isAgentA = msg.role === 'agentA';
         const isAgentB = msg.role === 'agentB';
         const isUser = msg.role === 'user' || msg.role === 'human';
         const isSystem = msg.role === 'system';
-        
+
         const isCurrentPlaying = currentlyPlayingMsgId === msg.id && audioState.isPlaying && !audioState.isPaused;
         const isCurrentPaused = currentlyPlayingMsgId === msg.id && audioState.isPaused;
 
@@ -360,176 +372,190 @@ export default function ChatHistoryViewerPage() {
             if (!msg.audioUrl && (isAgentA || isAgentB)) {
                 const agentRole = msg.role as 'agentA' | 'agentB';
                 const ttsConfig = details?.ttsSettings?.[agentRole];
-                
+
                 if (ttsConfig?.provider === 'browser') {
                     // Use the same markdown removal and chunking as in ChatInterface
-                    const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(msg.content)));
-                    
-                    // Prepare TTS chunks with paragraph mapping for auto-scroll
-                    const { chunks, paragraphIndices } = prepareTTSChunksWithParagraphs(cleanedContent, 4000);
-                    ttsChunkQueueRef.current = chunks;
-                    paragraphIndicesRef.current = paragraphIndices;
-                    currentChunkIndexRef.current = 0;
-                    currentParagraphIndexRef.current = -1;
-                    
-                    // Function to play a specific chunk
-                    const playChunk = (chunkIndex: number) => {
-                        if (chunkIndex >= ttsChunkQueueRef.current.length) {
-                            handleAudioEnd();
-                            return;
+                    const playAudio = async () => {
+                        let cleanedContent = '';
+                        try {
+                            const removeMarkdownModule = await import('remove-markdown');
+                            const removeMarkdown = removeMarkdownModule.default;
+                            cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(msg.content)));
+                        } catch (err) {
+                            console.warn('Failed to load remove-markdown, falling back to safe implementation:', err);
+                            cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdownSafe(msg.content)));
                         }
 
-                        const chunk = ttsChunkQueueRef.current[chunkIndex];
-                        const utterance = new SpeechSynthesisUtterance(chunk);
-                        utteranceRef.current = utterance;
-                        
-                        utterance.onstart = () => {
-                            // Auto-scroll to paragraph when TTS starts
-                            if (isTTSAutoScrollEnabled) {
-                                requestAnimationFrame(() => {
-                                    const paragraphIndex = paragraphIndicesRef.current[chunkIndex] || 0;
-                                    const paragraphKey = `${msg.id}-p${paragraphIndex}`;
-                                    
-                                    const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
-                                    
-                                    if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
-                                        const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
-                                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
-                                        
-                                        if (paragraphElement && scrollContainer) {
-                                            const containerRect = scrollContainer.getBoundingClientRect();
-                                            const paragraphRect = paragraphElement.getBoundingClientRect();
-                                            
-                                            const currentScroll = scrollContainer.scrollTop;
-                                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
-                                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
-                                            
-                                            scrollContainer.scrollTo({
-                                                top: Math.max(0, targetScroll),
-                                                behavior: 'smooth'
-                                            });
-                                            
-                                            currentParagraphIndexRef.current = paragraphIndex;
+                        // Prepare TTS chunks with paragraph mapping for auto-scroll
+                        const { chunks, paragraphIndices } = prepareTTSChunksWithParagraphs(cleanedContent, 4000);
+                        ttsChunkQueueRef.current = chunks;
+                        paragraphIndicesRef.current = paragraphIndices;
+                        currentChunkIndexRef.current = 0;
+                        currentParagraphIndexRef.current = -1;
+
+                        // Function to play a specific chunk
+                        const playChunk = (chunkIndex: number) => {
+                            if (chunkIndex >= ttsChunkQueueRef.current.length) {
+                                handleAudioEnd();
+                                return;
+                            }
+
+                            const chunk = ttsChunkQueueRef.current[chunkIndex];
+                            const utterance = new SpeechSynthesisUtterance(chunk);
+                            utteranceRef.current = utterance;
+
+                            utterance.onstart = () => {
+                                // Auto-scroll to paragraph when TTS starts
+                                if (isTTSAutoScrollEnabled) {
+                                    requestAnimationFrame(() => {
+                                        const paragraphIndex = paragraphIndicesRef.current[chunkIndex] || 0;
+                                        const paragraphKey = `${msg.id}-p${paragraphIndex}`;
+
+                                        const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
+
+                                        if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
+                                            const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                                            const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+
+                                            if (paragraphElement && scrollContainer) {
+                                                const containerRect = scrollContainer.getBoundingClientRect();
+                                                const paragraphRect = paragraphElement.getBoundingClientRect();
+
+                                                const currentScroll = scrollContainer.scrollTop;
+                                                const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                                                const targetScroll = currentScroll + paragraphRelativeTop - 20;
+
+                                                scrollContainer.scrollTo({
+                                                    top: Math.max(0, targetScroll),
+                                                    behavior: 'smooth'
+                                                });
+
+                                                currentParagraphIndexRef.current = paragraphIndex;
+                                            }
+                                        }
+                                    });
+                                }
+                            };
+
+                            utterance.onend = () => {
+                                currentChunkIndexRef.current++;
+                                if (currentChunkIndexRef.current < ttsChunkQueueRef.current.length) {
+                                    playChunk(currentChunkIndexRef.current);
+                                } else {
+                                    handleAudioEnd();
+                                }
+                            };
+
+                            utterance.onerror = (event) => {
+                                if (event.error === 'canceled' || event.error === 'interrupted') {
+                                    console.debug(`Speech synthesis ${event.error} (expected)`);
+                                } else if (event.error === 'synthesis-failed') {
+                                    console.warn('Speech synthesis failed - this may be due to rapid playback attempts');
+                                } else {
+                                    console.error('Speech synthesis error:', event.error);
+                                }
+                                handleAudioEnd();
+                            };
+
+                            // Set the voice using getVoiceById with fallback
+                            if (ttsConfig.voice) {
+                                const voiceInfo = getVoiceById('browser', ttsConfig.voice);
+                                let voice = null;
+
+                                if (voiceInfo) {
+                                    const voices = window.speechSynthesis.getVoices();
+                                    voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
+                                }
+
+                                if (!voice) {
+                                    console.warn(`Voice not found for ID: ${ttsConfig.voice}, trying fallback`);
+                                    voice = findFallbackBrowserVoice(details?.language || 'en');
+                                    if (voice) {
+                                        console.info(`Using fallback voice: ${voice.name} (${voice.lang})`);
+                                    }
+                                }
+
+                                if (voice) {
+                                    try {
+                                        utterance.voice = voice;
+                                    } catch (error) {
+                                        console.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
+                                        const fallbackVoice = findFallbackBrowserVoice(details?.language || 'en');
+                                        if (fallbackVoice) {
+                                            utterance.voice = fallbackVoice;
+                                            console.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
                                         }
                                     }
-                                });
-                            }
-                        };
-                        
-                        utterance.onend = () => {
-                            currentChunkIndexRef.current++;
-                            if (currentChunkIndexRef.current < ttsChunkQueueRef.current.length) {
-                                playChunk(currentChunkIndexRef.current);
-                            } else {
-                                handleAudioEnd();
-                            }
-                        };
-                        
-                        utterance.onerror = (event) => {
-                            if (event.error === 'canceled' || event.error === 'interrupted') {
-                                console.debug(`Speech synthesis ${event.error} (expected)`);
-                            } else if (event.error === 'synthesis-failed') {
-                                console.warn('Speech synthesis failed - this may be due to rapid playback attempts');
-                            } else {
-                                console.error('Speech synthesis error:', event.error);
-                            }
-                            handleAudioEnd();
-                        };
-                        
-                        // Set the voice using getVoiceById with fallback
-                        if (ttsConfig.voice) {
-                            const voiceInfo = getVoiceById('browser', ttsConfig.voice);
-                            let voice = null;
-                            
-                            if (voiceInfo) {
-                                const voices = window.speechSynthesis.getVoices();
-                                voice = voices.find(v => v.voiceURI === voiceInfo.providerVoiceId);
-                            }
-                            
-                            if (!voice) {
-                                console.warn(`Voice not found for ID: ${ttsConfig.voice}, trying fallback`);
-                                voice = findFallbackBrowserVoice(details?.language || 'en');
-                                if (voice) {
-                                    console.info(`Using fallback voice: ${voice.name} (${voice.lang})`);
                                 }
                             }
-                            
-                            if (voice) {
-                                try {
-                                    utterance.voice = voice;
-                                } catch (error) {
-                                    console.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
-                                    const fallbackVoice = findFallbackBrowserVoice(details?.language || 'en');
-                                    if (fallbackVoice) {
-                                        utterance.voice = fallbackVoice;
-                                        console.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Cancel any pending speech
-                        if (window.speechSynthesis.speaking) {
-                            console.debug('Speech synthesis already speaking, cancelling first');
-                            window.speechSynthesis.cancel();
-                        }
-                        
-                        window.speechSynthesis.cancel();
-                        
-                        setTimeout(() => {
+
+                            // Cancel any pending speech
                             if (window.speechSynthesis.speaking) {
-                                console.warn('Speech synthesis still speaking after cancel, forcing cancel');
+                                console.debug('Speech synthesis already speaking, cancelling first');
                                 window.speechSynthesis.cancel();
-                                setTimeout(() => {
+                            }
+
+                            window.speechSynthesis.cancel();
+
+                            setTimeout(() => {
+                                if (window.speechSynthesis.speaking) {
+                                    console.warn('Speech synthesis still speaking after cancel, forcing cancel');
+                                    window.speechSynthesis.cancel();
+                                    setTimeout(() => {
+                                        try {
+                                            window.speechSynthesis.speak(utterance);
+                                        } catch (speakErr) {
+                                            console.error('Error speaking utterance after forced cancel:', speakErr);
+                                            handleAudioEnd();
+                                        }
+                                    }, 100);
+                                } else {
                                     try {
                                         window.speechSynthesis.speak(utterance);
                                     } catch (speakErr) {
-                                        console.error('Error speaking utterance after forced cancel:', speakErr);
+                                        console.error('Error speaking utterance:', speakErr);
                                         handleAudioEnd();
                                     }
-                                }, 100);
-                            } else {
-                                try {
-                                    window.speechSynthesis.speak(utterance);
-                                } catch (speakErr) {
-                                    console.error('Error speaking utterance:', speakErr);
-                                    handleAudioEnd();
                                 }
-                            }
-                        }, 150);
+                            }, 150);
+                        };
+
+                        setAudioState({ isPlaying: true, isPaused: false });
+                        setCurrentlyPlayingMsgId(msg.id);
+
+                        // Start playing the first chunk
+                        playChunk(0);
                     };
-                    
-                    setAudioState({ isPlaying: true, isPaused: false });
-                    setCurrentlyPlayingMsgId(msg.id);
-                    
-                    // Start playing the first chunk
-                    playChunk(0);
+
+                    playAudio();
                     return;
+
+
                 }
             }
-            
+
             // Handle pre-recorded audio
             if (msg.audioUrl) {
                 const audio = new Audio(msg.audioUrl);
                 audioRef.current = audio;
-                
+
                 audio.onended = handleAudioEnd;
                 audio.onpause = () => setAudioState({ isPlaying: false, isPaused: true });
                 audio.onplay = () => {
                     setAudioState({ isPlaying: true, isPaused: false });
                     setCurrentlyPlayingMsgId(msg.id);
                 };
-                
+
                 audio.play().catch(console.error);
             }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [msg, isAgentA, isAgentB, isCurrentPlaying, isCurrentPaused, handleAudioEnd]);
 
         // Determine bubble styling based on message role
         let bubbleClass = '';
         let alignClass = '';
         let showPlayButton = false;
-        
+
         if (isAgentA) {
             bubbleClass = 'bg-muted text-foreground';
             alignClass = 'justify-start';
@@ -577,7 +603,7 @@ export default function ChatHistoryViewerPage() {
                         )}
                     </button>
                 )}
-                
+
                 <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`} style={{ marginBottom: '0.5rem' }}>
                     {/* Playing indicator */}
                     {isCurrentPlaying && (
@@ -645,7 +671,7 @@ export default function ChatHistoryViewerPage() {
                                             }}
                                             className="mb-4"
                                         >
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            <ReactMarkdown remarkPlugins={remarkPlugins}>
                                                 {paragraph}
                                             </ReactMarkdown>
                                         </div>
@@ -653,7 +679,7 @@ export default function ChatHistoryViewerPage() {
                                 })}
                             </>
                         ) : (
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown remarkPlugins={remarkPlugins}>
                                 {msg.content}
                             </ReactMarkdown>
                         )}
@@ -848,56 +874,55 @@ export default function ChatHistoryViewerPage() {
                             {/* Resume Conversation Button */}
                             {details && details.conversationId && details.agentA_llm && details.agentB_llm && details.language && details.messages &&
                                 details['status'] !== 'running' && (
-                                <>
-                                    <Button
-                                        onClick={async () => {
-                                            if (!details || !user) return;
-                                            setResumeLoading(true);
-                                            setResumeError(null);
-                                            try {
-                                                const idToken = await user.getIdToken();
-                                                const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Authorization': `Bearer ${idToken}`,
-                                                    },
-                                                });
-                                                const result = await response.json();
-                                                if (!response.ok) {
-                                                    throw new Error(result.error || 'Failed to resume conversation.');
+                                    <>
+                                        <Button
+                                            onClick={async () => {
+                                                if (!details || !user) return;
+                                                setResumeLoading(true);
+                                                setResumeError(null);
+                                                try {
+                                                    const idToken = await user.getIdToken();
+                                                    const response = await fetch(`/api/conversation/${details.conversationId}/resume`, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Authorization': `Bearer ${idToken}`,
+                                                        },
+                                                    });
+                                                    const result = await response.json();
+                                                    if (!response.ok) {
+                                                        throw new Error(result.error || 'Failed to resume conversation.');
+                                                    }
+                                                    // Redirect to live chat interface (same as after session setup)
+                                                    router.push(`/${language.code}/app/?resume=${details.conversationId}`);
+                                                } catch (err) {
+                                                    setResumeError(err instanceof Error ? err.message : String(err));
+                                                } finally {
+                                                    setResumeLoading(false);
                                                 }
-                                                // Redirect to live chat interface (same as after session setup)
-                                                router.push(`/${language.code}/app/?resume=${details.conversationId}`);
-                                            } catch (err) {
-                                                setResumeError(err instanceof Error ? err.message : String(err));
-                                            } finally {
-                                                setResumeLoading(false);
-                                            }
-                                        }}
-                                        disabled={resumeLoading || !user}
-                                        className="w-full"
-                                        aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
-                                        aria-describedby="resume-conversation-description"
-                                    >
-                                        {resumeLoading ? t.history.resuming : t.history.resumeConversation}
-                                    </Button>
-                                    <div id="resume-conversation-description" className="sr-only">
-                                        Click to continue this conversation from where it left off. This will create a new active session.
-                                    </div>
-                                    {resumeError && (
-                                        <p className="text-destructive text-sm text-center">{resumeError}</p>
-                                    )}
-                                </>
-                            )}
+                                            }}
+                                            disabled={resumeLoading || !user}
+                                            className="w-full"
+                                            aria-label={resumeLoading ? "Resuming conversation..." : "Resume this conversation"}
+                                            aria-describedby="resume-conversation-description"
+                                        >
+                                            {resumeLoading ? t.history.resuming : t.history.resumeConversation}
+                                        </Button>
+                                        <div id="resume-conversation-description" className="sr-only">
+                                            Click to continue this conversation from where it left off. This will create a new active session.
+                                        </div>
+                                        {resumeError && (
+                                            <p className="text-destructive text-sm text-center">{resumeError}</p>
+                                        )}
+                                    </>
+                                )}
                         </CardFooter>
                     </Card>
-                    
+
                     {/* Transcript Section - Styled like ChatInterface */}
-                    <div className={`flex flex-col bg-card ${
-                        isFullscreen 
-                            ? 'fixed inset-0 z-50 rounded-none shadow-none border-0' 
-                            : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
-                    }`}>
+                    <div className={`flex flex-col bg-card ${isFullscreen
+                        ? 'fixed inset-0 z-50 rounded-none shadow-none border-0'
+                        : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
+                        }`}>
                         {/* Header Section */}
                         <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
                             <h2 className="text-lg font-semibold">{t.history.transcript}</h2>
@@ -924,9 +949,9 @@ export default function ChatHistoryViewerPage() {
                             <div className="flex items-center gap-2 justify-center">
                                 {/* Pause/Resume Button */}
                                 {audioState.isPlaying ? (
-                                    <Button 
-                                        variant="ghost" 
-                                        size="icon" 
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
                                         onClick={handlePauseAudio}
                                         className="h-12 w-12 rounded-full"
                                         aria-label="Pause audio"
@@ -934,8 +959,8 @@ export default function ChatHistoryViewerPage() {
                                         <Pause className="h-6 w-6" />
                                     </Button>
                                 ) : audioState.isPaused ? (
-                                    <Button 
-                                        variant="ghost" 
+                                    <Button
+                                        variant="ghost"
                                         size="icon"
                                         onClick={handleResumeAudio}
                                         className="h-12 w-12 rounded-full"
@@ -944,8 +969,8 @@ export default function ChatHistoryViewerPage() {
                                         <Play className="h-6 w-6" />
                                     </Button>
                                 ) : (
-                                    <Button 
-                                        variant="ghost" 
+                                    <Button
+                                        variant="ghost"
                                         size="icon"
                                         disabled
                                         className="h-12 w-12 rounded-full opacity-50 cursor-not-allowed"
@@ -954,10 +979,10 @@ export default function ChatHistoryViewerPage() {
                                         <Play className="h-6 w-6" />
                                     </Button>
                                 )}
-                                
+
                                 {/* Auto-scroll Toggle */}
-                                <Button 
-                                    variant="ghost" 
+                                <Button
+                                    variant="ghost"
                                     size="icon"
                                     onClick={toggleTTSAutoScroll}
                                     className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
@@ -966,10 +991,10 @@ export default function ChatHistoryViewerPage() {
                                 >
                                     <ScrollText className="h-6 w-6" />
                                 </Button>
-                                
+
                                 {/* Fullscreen Toggle */}
-                                <Button 
-                                    variant="ghost" 
+                                <Button
+                                    variant="ghost"
                                     size="icon"
                                     onClick={toggleFullscreen}
                                     className="h-12 w-12 rounded-full"
