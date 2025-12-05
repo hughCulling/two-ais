@@ -12,8 +12,34 @@ const QUEUE_ID = 'default';
 
 // Helper to build InvokeAI graph for text-to-image generation
 // Based on working workflow structure from InvokeAI UI
+// TypeScript interfaces for InvokeAI API responses
+interface InvokeAIModel {
+  id: string;
+  name: string;
+  base: string;
+  type?: string;
+  [key: string]: unknown;
+}
+
+interface GraphNode {
+  id: string;
+  type: string;
+  is_intermediate?: boolean;
+  use_cache?: boolean;
+  [key: string]: unknown;
+}
+
+interface QueueStatus {
+  completed: number;
+  failed: number;
+  canceled: number;
+  pending?: number;
+  in_progress?: number;
+  [key: string]: unknown;
+}
+
 // Helper to fetch available models
-async function fetchModels(endpoint: string): Promise<any[]> {
+async function fetchModels(endpoint: string): Promise<InvokeAIModel[]> {
   try {
     const response = await fetch(`${endpoint}/api/v2/models/?model_type=main`);
     if (!response.ok) return [];
@@ -29,7 +55,7 @@ async function fetchModels(endpoint: string): Promise<any[]> {
 // Based on working workflow structure from InvokeAI UI
 function buildInvokeAIGraph(params: {
   prompt: string;
-  model: any; // Full model object
+  model: InvokeAIModel; // Full model object
   steps?: number;
   cfg_scale?: number;
   width?: number;
@@ -50,7 +76,7 @@ function buildInvokeAIGraph(params: {
   const finalSeed = seed ?? Math.floor(Math.random() * 2147483647);
 
   // Build nodes - structure based on working InvokeAI workflow
-  const nodes: Record<string, any> = {
+  const nodes: Record<string, GraphNode> = {
     // Seed value
     'seed': {
       id: 'seed',
@@ -250,7 +276,7 @@ async function pollQueueStatus(
   batchId: string,
   maxAttempts = 60,
   intervalMs = 2000
-): Promise<any> {
+): Promise<QueueStatus> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const statusUrl = `${endpoint}/api/v1/queue/${queueId}/b/${batchId}/status`;
     const response = await fetch(statusUrl);
@@ -376,14 +402,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 4: Get the generated image
-    // We need to find the image name from the queue item
-    // Get the completed queue item to extract the image name
-    const itemsUrl = `${endpoint}/api/v1/queue/${QUEUE_ID}/b/${batchId}/status`;
-    const itemsResponse = await fetch(itemsUrl);
-    const itemsData = await itemsResponse.json();
-
-    // The image should be in the outputs of the completed item
-    // For now, we'll try to get the latest image from the images API
+    // We'll try to get the latest image from the images API
     // This is a simplified approach - in production you'd track the exact output
 
     // Alternative: Fetch the latest image that was just created

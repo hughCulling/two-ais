@@ -43,7 +43,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
         while (generationQueueRef.current.length > 0) {
             const { messageId, paragraphIndex, messageRef, paragraphs, imageGenSettings } = generationQueueRef.current.shift()!;
-            
+
             try {
                 // Get current message data
                 const messageSnap = await getDoc(messageRef);
@@ -74,8 +74,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 const prompt = await generateImagePrompt(
                     paragraph,
                     imageGenSettings.promptLlm,
-                    imageGenSettings.promptSystemMessage,
-                    imageGenSettings.invokeaiEndpoint
+                    imageGenSettings.promptSystemMessage
                 );
 
                 if (!prompt) {
@@ -129,7 +128,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
             } catch (error) {
                 console.error(`[InvokeAI ImageGen] Error generating image for paragraph ${paragraphIndex}:`, error);
-                
+
                 // Update status to error
                 try {
                     const messageSnap = await getDoc(messageRef);
@@ -163,7 +162,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             if (!snapshot.exists()) return;
 
             const conversationData = snapshot.data() as ConversationData;
-            
+
             // Only process if image generation is enabled and conversation is running
             if (!conversationData.imageGenSettings?.enabled || conversationData.status !== 'running') {
                 return;
@@ -176,14 +175,14 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     const messageData = messageDoc.data() as MessageData;
 
                     // Only process agent messages that don't have paragraph images yet
-                    if ((messageData.role === 'agentA' || messageData.role === 'agentB') && 
-                        messageData.content && 
+                    if ((messageData.role === 'agentA' || messageData.role === 'agentB') &&
+                        messageData.content &&
                         !messageData.paragraphImages &&
                         !processingRef.current.has(messageId)) {
-                        
+
                         // Split message into paragraphs
                         const paragraphs = splitIntoParagraphs(messageData.content);
-                        
+
                         if (paragraphs.length === 0) continue;
 
                         // Mark as processing
@@ -202,13 +201,15 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         });
 
                         // Queue all paragraphs for sequential generation
+                        // At this point, imageGenSettings is guaranteed to exist due to check at line 167
+                        const settings = conversationData.imageGenSettings!;
                         for (let i = 0; i < paragraphs.length; i++) {
-                            generationQueueRef.current.push({ 
-                                messageId, 
+                            generationQueueRef.current.push({
+                                messageId,
                                 paragraphIndex: i,
                                 messageRef: messageDoc.ref,
                                 paragraphs,
-                                imageGenSettings: conversationData.imageGenSettings,
+                                imageGenSettings: settings,
                             });
                         }
 
@@ -231,8 +232,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     async function generateImagePrompt(
         paragraph: string,
         promptLlmId: string,
-        promptSystemMessage: string,
-        invokeaiEndpoint: string
+        promptSystemMessage: string
     ): Promise<string | null> {
         try {
             // Replace {paragraph} placeholder
@@ -240,13 +240,13 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
             // Check if prompt LLM is Ollama (local) or cloud-based
             const provider = getProviderFromId(promptLlmId);
-            
+
             if (provider === 'Ollama') {
                 // Use Ollama API route
                 const modelName = promptLlmId.replace(/^ollama:/, '');
                 // Use default Ollama endpoint (localhost:11434) - InvokeAI endpoint is separate
                 const ollamaEndpoint = 'http://localhost:11434';
-                
+
                 const response = await fetch('/api/ollama/stream', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -352,7 +352,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             // Upload to Firebase Storage
             const storagePath = `conversations/${conversationId}/images/${messageId}_${paragraphIndex}.png`;
             const storageRef = ref(storage, storagePath);
-            
+
             await uploadBytes(storageRef, blob);
             const downloadURL = await getDownloadURL(storageRef);
 
