@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check, ScrollText, Maximize2, Minimize2 } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check, ScrollText, Maximize2, Minimize2, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
@@ -70,6 +70,13 @@ function getProviderDisplayName(provider: string): string {
     return providerMap[provider] || provider;
 }
 
+interface ParagraphImage {
+    paragraphIndex: number;
+    imageUrl: string | null;
+    status: 'pending' | 'generating' | 'complete' | 'error';
+    error?: string;
+}
+
 interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
@@ -77,6 +84,7 @@ interface Message {
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
+    paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
     ttsWasSplit?: boolean;
@@ -313,6 +321,7 @@ export default function ChatHistoryViewerPage() {
         msg: Message;
     }> = ({ msg }) => {
         const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
+        const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         
         const isAgentA = msg.role === 'agentA';
@@ -648,9 +657,56 @@ export default function ChatHistoryViewerPage() {
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                 {paragraph}
                                             </ReactMarkdown>
+                                            
+                                            {/* Paragraph Image Display */}
+                                            {msg.paragraphImages && msg.paragraphImages[index] && (
+                                                <div className="mt-2 flex flex-col items-center">
+                                                    {msg.paragraphImages[index].status === 'generating' && (
+                                                        <div className="text-xs text-muted-foreground">Generating image...</div>
+                                                    )}
+                                                    {msg.paragraphImages[index].status === 'complete' && msg.paragraphImages[index].imageUrl && (
+                                                        <Image
+                                                            src={msg.paragraphImages[index].imageUrl}
+                                                            alt={`Generated image for paragraph ${index + 1}`}
+                                                            className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
+                                                            style={{ objectFit: 'contain' }}
+                                                            onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: index })}
+                                                            width={512}
+                                                            height={512}
+                                                            unoptimized={msg.paragraphImages[index].imageUrl?.includes('storage.googleapis.com') || msg.paragraphImages[index].imageUrl?.includes('googleapis.com/storage')}
+                                                            aria-label="Show image in full screen"
+                                                        />
+                                                    )}
+                                                    {msg.paragraphImages[index].status === 'error' && (
+                                                        <div className="text-xs text-destructive mt-1">Image generation failed: {msg.paragraphImages[index].error}</div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}
+                                
+                                {/* Image Stack Indicator */}
+                                {msg.paragraphImages && msg.paragraphImages.length > 1 && (
+                                    <div className="mt-2 flex items-center justify-center">
+                                        <button
+                                            onClick={() => {
+                                                const firstCompleteImage = msg.paragraphImages!.findIndex(
+                                                    img => img.status === 'complete' && img.imageUrl
+                                                );
+                                                if (firstCompleteImage >= 0) {
+                                                    setFullScreenGallery({ 
+                                                        messageId: msg.id, 
+                                                        paragraphIndex: firstCompleteImage 
+                                                    });
+                                                }
+                                            }}
+                                            className="text-xs text-muted-foreground hover:text-foreground underline"
+                                        >
+                                            View {msg.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl).length} images
+                                        </button>
+                                    </div>
+                                )}
                             </>
                         ) : (
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -719,6 +775,91 @@ export default function ChatHistoryViewerPage() {
                         document.body
                     )
                 }
+                
+                {/* Fullscreen Paragraph Image Gallery */}
+                {fullScreenGallery && fullScreenGallery.messageId === msg.id && msg.paragraphImages && msg.paragraphImages.length > 0 && (() => {
+                    const currentImage = msg.paragraphImages[fullScreenGallery.paragraphIndex];
+                    const completeImages = msg.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl);
+                    const currentImageIndex = completeImages.findIndex(img => 
+                        msg.paragraphImages!.indexOf(img) === fullScreenGallery.paragraphIndex
+                    );
+                    
+                    const navigateImage = (direction: 'prev' | 'next') => {
+                        if (direction === 'prev' && currentImageIndex > 0) {
+                            const prevImage = completeImages[currentImageIndex - 1];
+                            const prevIndex = msg.paragraphImages!.indexOf(prevImage);
+                            setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: prevIndex });
+                        } else if (direction === 'next' && currentImageIndex < completeImages.length - 1) {
+                            const nextImage = completeImages[currentImageIndex + 1];
+                            const nextIndex = msg.paragraphImages!.indexOf(nextImage);
+                            setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: nextIndex });
+                        }
+                    };
+                    
+                    if (!currentImage || currentImage.status !== 'complete' || !currentImage.imageUrl) {
+                        return null;
+                    }
+                    
+                    return ReactDOM.createPortal(
+                        <div
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                            onClick={() => setFullScreenGallery(null)}
+                            tabIndex={0}
+                            aria-modal="true"
+                            role="dialog"
+                        >
+                            <Image
+                                src={currentImage.imageUrl}
+                                alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
+                                className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                style={{ objectFit: 'contain' }}
+                                width={1920}
+                                height={1080}
+                                unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                            
+                            {/* Navigation buttons */}
+                            {completeImages.length > 1 && (
+                                <>
+                                    <button
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        onClick={(e) => { e.stopPropagation(); navigateImage('prev'); }}
+                                        disabled={currentImageIndex === 0}
+                                        aria-label="Previous image"
+                                    >
+                                        <ChevronLeft className="h-6 w-6" />
+                                    </button>
+                                    <button
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        onClick={(e) => { e.stopPropagation(); navigateImage('next'); }}
+                                        disabled={currentImageIndex === completeImages.length - 1}
+                                        aria-label="Next image"
+                                    >
+                                        <ChevronRight className="h-6 w-6" />
+                                    </button>
+                                </>
+                            )}
+                            
+                            {/* Image counter */}
+                            {completeImages.length > 1 && (
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                    {currentImageIndex + 1} / {completeImages.length}
+                                </div>
+                            )}
+                            
+                            <button
+                                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                                onClick={(e) => { e.stopPropagation(); setFullScreenGallery(null); }}
+                                aria-label="Close full screen gallery"
+                            >
+                                <X className="h-4 w-4 inline mr-1" />
+                                Close
+                            </button>
+                        </div>,
+                        document.body
+                    );
+                })()}
             </div>
         );
     };

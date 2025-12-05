@@ -40,6 +40,13 @@ try {
     console.error("API Details Route: Failed to initialize Firebase Admin during module load:", error);
 }
 
+interface ParagraphImage {
+    paragraphIndex: number;
+    imageUrl: string | null;
+    status: 'pending' | 'generating' | 'complete' | 'error';
+    error?: string;
+}
+
 interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
@@ -47,6 +54,7 @@ interface Message {
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
+    paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
     ttsWasSplit?: boolean;
@@ -89,7 +97,7 @@ interface ConversationDetails {
 }
 
 export async function GET(
-    request: NextRequest, 
+    request: NextRequest,
     { params }: { params: Promise<{ conversationId: string }> }
 ) {
     const { conversationId } = await params;
@@ -151,7 +159,7 @@ export async function GET(
                 // Consider how to handle this - maybe filter out or use a placeholder.
                 // For now, using epoch as a fallback, but this indicates a potential issue upstream or with data integrity.
                 console.warn(`Message ${doc.id} in conversation ${conversationId} has an unexpected timestamp format or is missing.`);
-                isoTimestamp = new Date(0).toISOString(); 
+                isoTimestamp = new Date(0).toISOString();
             }
 
             messages.push({
@@ -161,12 +169,13 @@ export async function GET(
                 timestamp: isoTimestamp,
                 imageUrl: data.imageUrl || null,
                 imageGenError: data.imageGenError || null,
+                paragraphImages: data.paragraphImages || undefined,
                 isStreaming: data.isStreaming || false,
                 audioUrl: data.audioUrl,
                 ttsWasSplit: data.ttsWasSplit
             });
         });
-        
+
         const details: ConversationDetails = {
             conversationId,
             createdAt: (conversationDoc.data()?.createdAt as Timestamp)?.toDate().toISOString() || new Date().toISOString(),

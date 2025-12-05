@@ -5,6 +5,7 @@ import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // 
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/context/AuthContext';
 import { useOllamaAgent } from '@/hooks/useOllamaAgent';
+import { useInvokeAIImageGen } from '@/hooks/useInvokeAIImageGen';
 // import { httpsCallable } from 'firebase/functions';
 import {
     collection,
@@ -21,11 +22,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2 } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
+    Alert,
+    AlertDescription,
+    AlertTitle,
 } from "@/components/ui/alert";
 import { getDatabase, ref as rtdbRef, off, onChildAdded, onChildChanged, onChildRemoved } from 'firebase/database';
 import { useOptimizedScroll } from '@/hooks/useOptimizedScroll';
@@ -37,6 +38,13 @@ import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 
 // --- Interfaces ---
+interface ParagraphImage {
+    paragraphIndex: number;
+    imageUrl: string | null;
+    status: 'pending' | 'generating' | 'complete' | 'error';
+    error?: string;
+}
+
 interface Message {
     id: string;
     role: 'agentA' | 'agentB' | 'user' | 'system';
@@ -47,6 +55,7 @@ interface Message {
     isStreaming?: boolean;
     imageUrl?: string | null;
     imageGenError?: string | null;
+    paragraphImages?: ParagraphImage[];
 }
 
 interface ConversationData {
@@ -68,6 +77,7 @@ interface ConversationData {
     errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string; // <-- Add this line
+    imageGenSettings?: { enabled: boolean; invokeaiEndpoint?: string; promptLlm?: string; promptSystemMessage?: string };
 }
 
 interface ChatInterfaceProps {
@@ -101,21 +111,21 @@ function isMobileBrowserTTSUnsupported(): boolean {
     if (typeof window === 'undefined' || typeof navigator === 'undefined') {
         return false;
     }
-    
+
     const userAgent = navigator.userAgent.toLowerCase();
     const isMobile = /iphone|ipad|ipod|android|mobile/i.test(userAgent);
-    
+
     if (!isMobile) {
         return false; // Desktop browsers are fine
     }
-    
+
     // Only Firefox on mobile works reliably
     const isFirefox = /firefox|fxios/i.test(userAgent);
-    
+
     if (isFirefox) {
         return false; // Firefox works on mobile
     }
-    
+
     // All other mobile browsers (Safari, Chrome, Edge, Opera, etc.) have TTS issues
     // Return true to show warning for any mobile browser that isn't Firefox
     return true;
@@ -130,7 +140,7 @@ try {
         logger.error("Firebase Functions client instance not available for requestNextTurn.");
     }
 } catch (err) {
-     logger.error("Error initializing requestNextTurn callable function:", err);
+    logger.error("Error initializing requestNextTurn callable function:", err);
 }
 
 
@@ -155,9 +165,12 @@ export function ChatInterface({
     const [isStopping, setIsStopping] = useState(false);
     const [isStopped, setIsStopped] = useState(false);
     const { t } = useTranslation();
-    
+
     // Enable local Ollama agent handling
     useOllamaAgent(conversationId, user?.uid || null);
+
+    // Enable InvokeAI image generation
+    useInvokeAIImageGen(conversationId, user?.uid || null);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
@@ -170,7 +183,7 @@ export function ChatInterface({
     const [isBrowserTTSActive, setIsBrowserTTSActive] = useState(false);
     const [currentlyPlayingMsgId, setCurrentlyPlayingMsgId] = useState<string | null>(null);
     const [playedMessageIds, setPlayedMessageIds] = useState<Set<string>>(new Set());
-    const [imageLoadStatus, setImageLoadStatus] = useState<{[key: string]: 'loading' | 'loaded' | 'error'}>({});
+    const [imageLoadStatus, setImageLoadStatus] = useState<{ [key: string]: 'loading' | 'loaded' | 'error' }>({});
     const [pendingTtsMessage, setPendingTtsMessage] = useState<Message | null>(null);
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [showMobileTTSWarning, setShowMobileTTSWarning] = useState(false);
@@ -209,9 +222,9 @@ export function ChatInterface({
         const chunks: string[] = [];
         // Split by sentences (periods, exclamation marks, question marks followed by space or end)
         const sentences = text.match(/[^.!?]+[.!?]+[\s]?|[^.!?]+$/g) || [text];
-        
+
         let currentChunk = '';
-        
+
         for (const sentence of sentences) {
             // If adding this sentence would exceed the limit
             if (currentChunk.length + sentence.length > maxLength) {
@@ -220,7 +233,7 @@ export function ChatInterface({
                     chunks.push(currentChunk.trim());
                     currentChunk = '';
                 }
-                
+
                 // If the sentence itself is too long, split it by words
                 if (sentence.length > maxLength) {
                     const words = sentence.split(/\s+/);
@@ -240,12 +253,12 @@ export function ChatInterface({
                 currentChunk += sentence;
             }
         }
-        
+
         // Add any remaining content
         if (currentChunk.trim().length > 0) {
             chunks.push(currentChunk.trim());
         }
-        
+
         return chunks.length > 0 ? chunks : [text.substring(0, maxLength)];
     }, []);
 
@@ -317,19 +330,19 @@ export function ChatInterface({
 
     const handlePauseAudio = useCallback(() => {
         logger.info(`[Audio Control] Pause requested. isAudioPlaying: ${isAudioPlaying}, isAudioPaused: ${isAudioPaused}`);
-        
+
         if (!isAudioPlaying) {
             logger.warn("[Audio Control] Cannot pause - audio is not playing");
             return;
         }
-        
+
         if (utteranceRef.current) {
             try {
                 const isPaused = window.speechSynthesis.paused;
                 const isSpeaking = window.speechSynthesis.speaking;
                 logger.info(`[TTS Pause] SpeechSynthesis state - paused: ${isPaused}, speaking: ${isSpeaking}`);
                 logger.info(`[TTS Pause] Current chunk: ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
-                
+
                 window.speechSynthesis.pause();
                 setIsAudioPaused(true);
                 setIsAudioPlaying(false);
@@ -351,7 +364,7 @@ export function ChatInterface({
 
     const handleResumeAudio = useCallback(() => {
         logger.info(`[Audio Control] Resume requested. isAudioPlaying: ${isAudioPlaying}, isAudioPaused: ${isAudioPaused}`);
-        
+
         if (!isAudioPaused) {
             logger.warn("[Audio Control] Cannot resume - audio is not paused");
             return;
@@ -363,29 +376,29 @@ export function ChatInterface({
                 const isSpeaking = window.speechSynthesis.speaking;
                 logger.info(`[TTS Resume] SpeechSynthesis state before resume - paused: ${isPaused}, speaking: ${isSpeaking}`);
                 logger.info(`[TTS Resume] Current chunk: ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
-                
+
                 // Check if speechSynthesis is still valid
                 if (!isSpeaking && !isPaused) {
                     logger.warn("[TTS Resume] SpeechSynthesis lost state - attempting to restart from current chunk");
-                    
+
                     // If we have chunks remaining, restart from current position
                     if (currentChunkIndexRef.current < ttsChunkQueueRef.current.length) {
                         const currentChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
                         logger.info(`[TTS Resume] Restarting chunk ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
-                        
+
                         const newUtterance = new SpeechSynthesisUtterance(currentChunk);
                         newUtterance.voice = utteranceRef.current.voice;
                         newUtterance.rate = utteranceRef.current.rate;
                         newUtterance.pitch = utteranceRef.current.pitch;
-                        
+
                         // Copy event handlers from original utterance
                         newUtterance.onend = utteranceRef.current.onend;
                         newUtterance.onerror = utteranceRef.current.onerror;
                         newUtterance.onstart = utteranceRef.current.onstart;
-                        
+
                         utteranceRef.current = newUtterance;
                         window.speechSynthesis.speak(newUtterance);
-                        
+
                         setIsAudioPaused(false);
                         setIsAudioPlaying(true);
                         logger.info("[TTS Resume] Successfully restarted TTS from current chunk");
@@ -396,7 +409,7 @@ export function ChatInterface({
                         return;
                     }
                 }
-                
+
                 window.speechSynthesis.resume();
                 setIsAudioPaused(false);
                 setIsAudioPlaying(true);
@@ -440,14 +453,14 @@ export function ChatInterface({
         setIsFullscreen(prev => {
             const newValue = !prev;
             logger.info(`[Fullscreen] Toggled to: ${newValue}`);
-            
+
             // Update body class to hide header
             if (newValue) {
                 document.body.classList.add('chat-fullscreen');
             } else {
                 document.body.classList.remove('chat-fullscreen');
             }
-            
+
             return newValue;
         });
     }, []);
@@ -494,7 +507,8 @@ export function ChatInterface({
                             ttsWasSplit: data.ttsWasSplit,
                             isStreaming: data.isStreaming,
                             imageUrl: data.imageUrl,
-                            imageGenError: data.imageGenError
+                            imageGenError: data.imageGenError,
+                            paragraphImages: data.paragraphImages
                         } as Message);
                     } else {
                         logger.warn(`Skipping message doc ${doc.id} due to missing fields. Role: ${data.role}, Content: ${data.content ? 'present' : 'missing'}`);
@@ -519,9 +533,9 @@ export function ChatInterface({
                 }
             },
             (err: FirestoreError) => {
-                 logger.error(`Error listening to messages for conversation ${conversationId}:`, err);
-                 setError(`Failed to load messages: ${err.message}`);
-                 setTechnicalErrorDetails(null);
+                logger.error(`Error listening to messages for conversation ${conversationId}:`, err);
+                setError(`Failed to load messages: ${err.message}`);
+                setTechnicalErrorDetails(null);
             }
         );
 
@@ -543,14 +557,14 @@ export function ChatInterface({
     useEffect(() => {
         logger.debug(`ChatInterface: Conversation data listener effect running. conversationId prop: ${conversationId}`);
         if (!conversationId) {
-             logger.warn("ChatInterface: Conversation data listener effect skipped - no conversationId prop.");
+            logger.warn("ChatInterface: Conversation data listener effect skipped - no conversationId prop.");
             return;
         }
 
         logger.info(`ChatInterface: Setting up conversation data listener for conversation: ${conversationId}`);
         const conversationDocRef = doc(db, "conversations", conversationId);
 
-                const unsubscribe = onSnapshot(conversationDocRef,
+        const unsubscribe = onSnapshot(conversationDocRef,
             (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data() as ConversationData;
@@ -563,7 +577,7 @@ export function ChatInterface({
                         if (data.status === 'error') {
                             // Display a user-friendly error message
                             const errorMsg = data.errorMessage || "Conversation ended with an error.";
-                            
+
                             // Extract user-friendly message (e.g., "Service tier capacity exceeded")
                             // from technical error messages
                             let displayMsg = errorMsg;
@@ -576,7 +590,7 @@ export function ChatInterface({
                                 const match = errorMsg.match(/LLM streaming failed[^:]*: (.+)/);
                                 displayMsg = match ? match[1] : errorMsg;
                             }
-                            
+
                             setError(displayMsg);
                             // Show full technical details in the expandable section
                             setTechnicalErrorDetails(data.errorContext || errorMsg);
@@ -597,7 +611,7 @@ export function ChatInterface({
             }
         );
 
-                return () => {
+        return () => {
             logger.info(`ChatInterface: Cleaning up status listener for conversation: ${conversationId}`);
             unsubscribe();
         };
@@ -609,12 +623,12 @@ export function ChatInterface({
             setShowMobileTTSWarning(false);
             return;
         }
-        
+
         // Check if browser TTS is being used
-        const isUsingBrowserTTS = 
-            conversationData.ttsSettings.agentA?.provider === 'browser' || 
+        const isUsingBrowserTTS =
+            conversationData.ttsSettings.agentA?.provider === 'browser' ||
             conversationData.ttsSettings.agentB?.provider === 'browser';
-        
+
         if (isUsingBrowserTTS && isMobileBrowserTTSUnsupported()) {
             setShowMobileTTSWarning(true);
             logger.warn('Browser TTS may not work on this mobile browser. Safari and Firefox are recommended.');
@@ -634,13 +648,13 @@ export function ChatInterface({
             const isNewMessage = messages.length > prevMessagesLength.current;
             const lastMessage = messages[messages.length - 1];
             const isLastMessageFromAgent = lastMessage && (lastMessage.role === 'agentA' || lastMessage.role === 'agentB');
-            
+
             // Scroll if:
             // - It's a new message and we're not playing audio, OR
             // - The last message is from the user, OR
             // - The last agent message has finished playing
-            if ((isNewMessage && !isAudioPlaying) || 
-                !isLastMessageFromAgent || 
+            if ((isNewMessage && !isAudioPlaying) ||
+                !isLastMessageFromAgent ||
                 (isLastMessageFromAgent && playedMessageIds.has(lastMessage.id))) {
                 scrollToBottom(messagesEndRef.current);
             }
@@ -656,15 +670,15 @@ export function ChatInterface({
                 const testAudio = new Audio();
                 testAudio.volume = 0;
                 testAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-                
+
                 // Try to play it
                 await testAudio.play();
-                
+
                 // If we get here, autoplay is allowed
                 logger.info("Audio autoplay is allowed - no user interaction needed");
                 setAudioAutoplayBlocked(false);
                 setHasUserInteracted(true); // Mark as interacted since autoplay works
-                
+
                 // Clean up
                 testAudio.pause();
                 testAudio.src = '';
@@ -695,12 +709,12 @@ export function ChatInterface({
         }
 
         const handleInteraction = () => handleUserInteraction();
-        
+
         // Listen for various user interaction events
         document.addEventListener('click', handleInteraction, { once: true });
         document.addEventListener('keydown', handleInteraction, { once: true });
         document.addEventListener('touchstart', handleInteraction, { once: true });
-        
+
         return () => {
             document.removeEventListener('click', handleInteraction);
             document.removeEventListener('keydown', handleInteraction);
@@ -717,15 +731,15 @@ export function ChatInterface({
         }
         setIsStopping(true);
         logger.info(`Attempting to stop conversation via button: ${conversationId}`);
-        
+
         // Clean up HTML5 audio player
         if (audioPlayerRef.current) {
-             audioPlayerRef.current.pause();
-             setIsAudioPlaying(false);
-             setIsAudioPaused(false);
-             setCurrentlyPlayingMsgId(null);
+            audioPlayerRef.current.pause();
+            setIsAudioPlaying(false);
+            setIsAudioPaused(false);
+            setCurrentlyPlayingMsgId(null);
         }
-        
+
         // Clean up browser TTS completely
         if (window.speechSynthesis) {
             try {
@@ -740,10 +754,10 @@ export function ChatInterface({
                 logger.error("Error cancelling speech synthesis:", err);
             }
         }
-        
+
         // Clear TTS utterance reference
         utteranceRef.current = null;
-        
+
         // Reset all TTS-related state
         setIsAudioPlaying(false);
         setIsAudioPaused(false);
@@ -753,7 +767,7 @@ export function ChatInterface({
         setPendingTtsMessage(null);
         setHasUserInteracted(false);
         setIsAudioReady(false);
-        
+
         try {
             const conversationRef = doc(db, "conversations", conversationId);
             await updateDoc(conversationRef, {
@@ -781,25 +795,25 @@ export function ChatInterface({
         const messagesPath = `/streamingMessages/${conversationId}`;
         const messagesRef = rtdbRef(rtdb, messagesPath);
         let unsubscribed = false;
-        
+
         // Use onChildAdded and onChildChanged instead of onValue to reduce bandwidth
         const handleChildAdded = (snapshot: { key: string | null; val: () => Omit<StreamingMessage, 'id'> | null }) => {
             if (unsubscribed) return;
             const id = snapshot.key;
             const data = snapshot.val();
             if (!id || !data) return;
-            
+
             const message: StreamingMessage = { id, ...data };
             logger.debug("RTDB streaming message added:", { id: message.id, status: message.status, contentLength: message.content?.length });
             setStreamingMessage(message);
         };
-        
+
         const handleChildChanged = (snapshot: { key: string | null; val: () => Omit<StreamingMessage, 'id'> | null }) => {
             if (unsubscribed) return;
             const id = snapshot.key;
             const data = snapshot.val();
             if (!id || !data) return;
-            
+
             const message: StreamingMessage = { id, ...data };
             // Only update if this is the current streaming message or it's complete
             setStreamingMessage(prev => {
@@ -809,16 +823,16 @@ export function ChatInterface({
                 return prev;
             });
         };
-        
+
         const handleChildRemoved = () => {
             if (unsubscribed) return;
             setStreamingMessage(null);
         };
-        
+
         onChildAdded(messagesRef, handleChildAdded);
         onChildChanged(messagesRef, handleChildChanged);
         onChildRemoved(messagesRef, handleChildRemoved);
-        
+
         return () => {
             unsubscribed = true;
             off(messagesRef, 'child_added', handleChildAdded);
@@ -878,14 +892,14 @@ export function ChatInterface({
         const firstUnplayedTTSMessageIndex = mergedMessages.findIndex(msg => {
             // Only consider agent messages
             if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
-            
+
             // Check if this message has already been played
             if (playedMessageIds.has(msg.id)) return false;
-            
+
             // Check if TTS is enabled for this agent
             const agentTTSSettings = conversationData?.ttsSettings?.[msg.role];
             const hasTTS = agentTTSSettings?.provider && agentTTSSettings.provider !== 'none';
-            
+
             // This is an unplayed message with TTS
             return hasTTS;
         });
@@ -902,6 +916,7 @@ export function ChatInterface({
 
     // --- Image Modal State ---
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
+    const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
 
     // --- Auto-update fullscreen image modal when new image arrives ---
     useEffect(() => {
@@ -918,10 +933,30 @@ export function ChatInterface({
         }
     }, [visibleMessages, fullScreenImageMsgId]);
 
+    // --- Auto-advance fullscreen gallery when TTS moves to next paragraph ---
+    useEffect(() => {
+        if (!fullScreenGallery) return;
+
+        const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
+        if (!message || !message.paragraphImages) return;
+
+        // Find the paragraph that's currently being read
+        const currentParagraphIndex = currentParagraphIndexRef.current;
+        if (currentParagraphIndex >= 0 && currentParagraphIndex < message.paragraphImages.length) {
+            const currentImage = message.paragraphImages[currentParagraphIndex];
+            if (currentImage && currentImage.status === 'complete' && currentImage.imageUrl) {
+                // Auto-advance to current paragraph's image
+                if (fullScreenGallery.paragraphIndex !== currentParagraphIndex) {
+                    setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: currentParagraphIndex });
+                }
+            }
+        }
+    }, [fullScreenGallery, visibleMessages]);
+
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
         logger.debug('[TTS] Audio playback effect triggered');
-        
+
         // Early return if audio is already playing - CRITICAL to prevent interruptions
         if (isAudioPlaying || isAudioPaused || isBrowserTTSActive) {
             logger.debug('[TTS] Effect skipped - audio already playing or paused');
@@ -943,6 +978,27 @@ export function ChatInterface({
             if (playedMessageIds.has(msg.id)) return false;
             if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
             if (msg.imageUrl && imageLoadStatus[msg.id] !== 'loaded' && imageLoadStatus[msg.id] !== 'error') return false;
+
+            // If image generation is enabled, wait until paragraphImages are initialized
+            if (conversationData?.imageGenSettings?.enabled) {
+                if (!msg.paragraphImages || msg.paragraphImages.length === 0) {
+                    logger.debug(`[TTS] Waiting for image generation to initialize for message ${msg.id.substring(0, 8)}...`);
+                    return false;
+                }
+            }
+
+            // Wait for paragraph images to be generated (or attempted) before starting TTS
+            if (msg.paragraphImages && msg.paragraphImages.length > 0) {
+                // Check if all paragraph images are complete or error (not pending or generating)
+                const allImagesReady = msg.paragraphImages.every(img =>
+                    img.status === 'complete' || img.status === 'error'
+                );
+                if (!allImagesReady) {
+                    logger.debug(`[TTS] Waiting for paragraph images to complete for message ${msg.id.substring(0, 8)}...`);
+                    return false;
+                }
+            }
+
             return true;
         });
 
@@ -973,7 +1029,7 @@ export function ChatInterface({
         if (ttsConfig?.provider === 'browser') {
             const voiceInfo = getVoiceById(ttsConfig.provider, ttsConfig.voice || '');
             let voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceInfo?.providerVoiceId);
-            
+
             // If the selected voice is not found or not compatible, try to find a fallback
             if (!voice) {
                 logger.warn(`Browser voice not found for ID: ${ttsConfig.voice}, trying fallback`);
@@ -990,15 +1046,15 @@ export function ChatInterface({
             }
 
             const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(nextMsg.content)));
-            
+
             // Split into paragraphs first for better auto-scroll
             const paragraphs = splitIntoParagraphs(cleanedContent);
-            
+
             // Then split each paragraph into TTS-safe chunks if needed
             const MAX_TTS_LENGTH = 4000;
             const chunks: string[] = [];
             const paragraphIndices: number[] = []; // Track which paragraph each chunk belongs to
-            
+
             paragraphs.forEach((paragraph, paragraphIndex) => {
                 const paragraphChunks = splitIntoTTSChunks(paragraph, MAX_TTS_LENGTH);
                 paragraphChunks.forEach(chunk => {
@@ -1006,27 +1062,27 @@ export function ChatInterface({
                     paragraphIndices.push(paragraphIndex);
                 });
             });
-            
+
             if (chunks.length > 1) {
                 logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${paragraphs.length} paragraphs, ${chunks.length} total chunks for browser TTS`);
             }
-            
+
             // Store chunks and paragraph info in queue
             ttsChunkQueueRef.current = chunks;
             paragraphIndicesRef.current = paragraphIndices;
             currentChunkIndexRef.current = 0;
             currentParagraphIndexRef.current = 0;
-            
+
             // Safety check
             if (chunks.length === 0) {
                 logger.warn('[TTS] No chunks to play, skipping');
                 handleAudioEnd();
                 return;
             }
-            
+
             // Create utterance for first chunk
             const utterance = new SpeechSynthesisUtterance(chunks[0]);
-            
+
             // Try to assign the voice, with fallback if it fails
             try {
                 utterance.voice = voice;
@@ -1047,56 +1103,56 @@ export function ChatInterface({
                 const totalChunks = ttsChunkQueueRef.current?.length || 0;
                 const currentChunk = ttsChunkQueueRef.current?.[currentChunkIndexRef.current];
                 logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk?.length || 0} chars)`);
-                
+
                 if (chunkNum === 1) {
                     // Only set these on the first chunk
                     setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
                     setIsBrowserTTSActive(true);
                     setPendingTtsMessage(null);
-                    
+
                     // Reset paragraph index for new message
                     currentParagraphIndexRef.current = -1;
                 }
-                
+
                 // Auto-scroll to paragraph when TTS starts (for every chunk)
                 // Use requestAnimationFrame to ensure DOM is ready
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
                         const paragraphIndex = paragraphIndicesRef.current[currentChunkIndexRef.current] || 0;
                         const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
-                        
+
                         logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
                         logger.info(`[TTS Auto-Scroll] Message ID: ${nextMsg.id.substring(0, 8)}..., Looking for key: ${paragraphKey}`);
-                        
+
                         // Check if this is a new paragraph (different from last one)
                         const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
                         logger.info(`[TTS Auto-Scroll] Is new paragraph? ${isNewParagraph}`);
-                        
+
                         if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
                             const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
                             const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
-                            
+
                             if (paragraphElement && scrollContainer) {
                                 logger.info(`[TTS Auto-Scroll] ✓ Scrolling to paragraph ${paragraphIndex} of message ${nextMsg.id.substring(0, 8)}...`);
-                                
+
                                 // Get the position of the paragraph relative to the scroll container
                                 const containerRect = scrollContainer.getBoundingClientRect();
                                 const paragraphRect = paragraphElement.getBoundingClientRect();
-                                
+
                                 // Calculate how much to scroll to put the paragraph at the top
                                 // Use minimal padding (20px) for small screens
                                 const currentScroll = scrollContainer.scrollTop;
                                 const paragraphRelativeTop = paragraphRect.top - containerRect.top;
                                 const targetScroll = currentScroll + paragraphRelativeTop - 20;
-                                
+
                                 logger.debug(`[TTS Auto-Scroll] Container height: ${containerRect.height}px, Current scroll: ${currentScroll}, Target: ${targetScroll}`);
-                                
+
                                 scrollContainer.scrollTo({
                                     top: Math.max(0, targetScroll),
                                     behavior: 'smooth'
                                 });
-                                
+
                                 currentParagraphIndexRef.current = paragraphIndex;
                             } else {
                                 logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
@@ -1116,20 +1172,20 @@ export function ChatInterface({
             utterance.onend = () => {
                 currentChunkIndexRef.current++;
                 const hasMoreChunks = currentChunkIndexRef.current < ttsChunkQueueRef.current.length;
-                
+
                 if (hasMoreChunks) {
                     // Play next chunk
                     const nextChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
                     logger.info(`[TTS] Playing next chunk ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
-                    
+
                     const nextUtterance = new SpeechSynthesisUtterance(nextChunk);
                     nextUtterance.voice = voice;
                     nextUtterance.onstart = utterance.onstart;
                     nextUtterance.onend = utterance.onend;
                     nextUtterance.onerror = utterance.onerror;
-                    
+
                     utteranceRef.current = nextUtterance;
-                    
+
                     try {
                         window.speechSynthesis.speak(nextUtterance);
                     } catch (err) {
@@ -1165,14 +1221,14 @@ export function ChatInterface({
 
             // Store the current utterance reference before speaking
             utteranceRef.current = utterance;
-            
+
             // Final safety check before starting speech
             if (window.speechSynthesis.speaking) {
                 logger.warn('[TTS] speechSynthesis.speaking is true despite guards - this should not happen');
                 // Don't cancel here - let the guards prevent this situation
                 return;
             }
-            
+
             try {
                 logger.debug(`[TTS] Calling speechSynthesis.speak() for message ${nextMsg.id.substring(0, 8)}...`);
                 window.speechSynthesis.speak(utterance);
@@ -1196,7 +1252,7 @@ export function ChatInterface({
                     handleAudioEnd();
                 });
         }
-    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying, 
+    }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying,
         conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, splitIntoParagraphs]);
 
     // Add effect to handle pending messages when they become ready
@@ -1215,21 +1271,21 @@ export function ChatInterface({
     useEffect(() => {
         // Capture the current ref value in the effect scope
         const currentAudioPlayer = audioPlayerRef.current;
-        
+
         return () => {
             // Cleanup function that runs when component unmounts
             logger.info('ChatInterface: Component unmounting, cleaning up TTS and audio');
-            
+
             // Clear chunk queue
             ttsChunkQueueRef.current = [];
             currentChunkIndexRef.current = 0;
-            
+
             // Stop HTML5 audio using the captured ref value
             if (currentAudioPlayer) {
                 currentAudioPlayer.pause();
                 currentAudioPlayer.currentTime = 0;
             }
-            
+
             // Stop browser TTS completely
             if (window.speechSynthesis) {
                 try {
@@ -1244,10 +1300,10 @@ export function ChatInterface({
                     logger.error("Error during TTS cleanup on unmount:", err);
                 }
             }
-            
+
             // Clear utterance reference
             utteranceRef.current = null;
-            
+
             // Remove fullscreen class from body
             document.body.classList.remove('chat-fullscreen');
         };
@@ -1271,47 +1327,47 @@ export function ChatInterface({
 
     if (error) {
         return (
-             <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription className="text-sm break-words whitespace-pre-wrap w-full min-w-0">{error}</AlertDescription>
-              <div className="mt-4 flex flex-col items-start space-y-3 w-full col-span-full">
-                  {technicalErrorDetails && (
-                      <div className="w-full">
-                          <Button 
-                              variant="secondary" 
-                              size="sm" 
-                              onClick={() => setShowErrorDetails(!showErrorDetails)} 
-                              className="text-xs h-6 px-2"
-                              aria-label={showErrorDetails ? "Hide technical error details" : "Show technical error details"}
-                              aria-describedby="error-details-description"
-                          >
-                              {showErrorDetails ? 'Hide Details' : 'Show Details'}
-                              {showErrorDetails ? <ChevronUp className="ml-1 h-3 w-3" aria-hidden="true"/> : <ChevronDown className="ml-1 h-3 w-3" aria-hidden="true"/>}
-                          </Button>
-                          <div id="error-details-description" className="sr-only">
-                              Click to {showErrorDetails ? "hide" : "show"} detailed technical information about the error that occurred.
-                          </div>
-                          {showErrorDetails && <pre className="mt-1 text-xs whitespace-pre-wrap break-words overflow-auto max-h-32 rounded-md border bg-muted p-2 font-mono w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{technicalErrorDetails}</pre>}
-                      </div>
-                  )}
-                  {isStopped && onConversationStopped && (
-                       <div>
-                           <Button 
-                               variant="outline" 
-                               size="sm" 
-                               onClick={onConversationStopped}
-                               aria-label="Return to conversation setup"
-                               aria-describedby="go-back-description"
-                           >
-                               Go Back
-                           </Button>
-                           <div id="go-back-description" className="sr-only">
-                               Click to return to the conversation setup page where you can start a new conversation.
-                           </div>
-                       </div>
-                  )}
-              </div>
+            <Alert variant="destructive" className="w-full max-w-2xl mx-auto my-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription className="text-sm break-words whitespace-pre-wrap w-full min-w-0">{error}</AlertDescription>
+                <div className="mt-4 flex flex-col items-start space-y-3 w-full col-span-full">
+                    {technicalErrorDetails && (
+                        <div className="w-full">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setShowErrorDetails(!showErrorDetails)}
+                                className="text-xs h-6 px-2"
+                                aria-label={showErrorDetails ? "Hide technical error details" : "Show technical error details"}
+                                aria-describedby="error-details-description"
+                            >
+                                {showErrorDetails ? 'Hide Details' : 'Show Details'}
+                                {showErrorDetails ? <ChevronUp className="ml-1 h-3 w-3" aria-hidden="true" /> : <ChevronDown className="ml-1 h-3 w-3" aria-hidden="true" />}
+                            </Button>
+                            <div id="error-details-description" className="sr-only">
+                                Click to {showErrorDetails ? "hide" : "show"} detailed technical information about the error that occurred.
+                            </div>
+                            {showErrorDetails && <pre className="mt-1 text-xs whitespace-pre-wrap break-words overflow-auto max-h-32 rounded-md border bg-muted p-2 font-mono w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{technicalErrorDetails}</pre>}
+                        </div>
+                    )}
+                    {isStopped && onConversationStopped && (
+                        <div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={onConversationStopped}
+                                aria-label="Return to conversation setup"
+                                aria-describedby="go-back-description"
+                            >
+                                Go Back
+                            </Button>
+                            <div id="go-back-description" className="sr-only">
+                                Click to return to the conversation setup page where you can start a new conversation.
+                            </div>
+                        </div>
+                    )}
+                </div>
             </Alert>
         );
     }
@@ -1322,28 +1378,27 @@ export function ChatInterface({
     const isWaitingForMessage = pendingTtsMessage?.isStreaming && !isAudioPlaying;
 
     return (
-        <div className={`flex flex-col w-full mx-auto bg-background overflow-hidden ${
-            isFullscreen 
-                ? 'fixed inset-0 z-50 rounded-none shadow-none border-0' 
+        <div className={`flex flex-col w-full mx-auto bg-background overflow-hidden ${isFullscreen
+                ? 'fixed inset-0 z-50 rounded-none shadow-none border-0'
                 : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
-        }`}>
+            }`}>
             {/* Header Section */}
             <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
                 <h2 className="text-lg font-semibold">{t?.main?.aiConversation}</h2>
                 {(isAudioPlaying || isAudioPaused || isWaitingForMessage) && currentlyPlayingMsgId && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground" role="status" aria-live="polite">
-                        <Volume2 className={`h-4 w-4 ${isAudioPlaying ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} aria-hidden="true"/>
+                        <Volume2 className={`h-4 w-4 ${isAudioPlaying ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} aria-hidden="true" />
                         <span>
-                            {isWaitingForMessage ? 'Waiting for message...' : 
-                             isAudioPaused ? t?.chatControls.audioStatus.paused : 
-                             t?.chatControls.audioStatus.playing}
+                            {isWaitingForMessage ? 'Waiting for message...' :
+                                isAudioPaused ? t?.chatControls.audioStatus.paused :
+                                    t?.chatControls.audioStatus.playing}
                         </span>
                     </div>
                 )}
-                <Button 
-                    variant="destructive" 
-                    size="sm" 
-                    onClick={handleStopConversation} 
+                <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleStopConversation}
                     disabled={isStopping || isStopped}
                     aria-label={isStopped ? "Conversation already stopped" : (isStopping ? "Stopping conversation..." : "Stop the current conversation")}
                     aria-describedby="stop-conversation-description"
@@ -1401,32 +1456,32 @@ export function ChatInterface({
             {!hasUserInteracted && audioAutoplayBlocked === true && conversationStatus === "running" && (
                 (() => {
                     const hasUnplayedAudio = messages.some(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
-                    const isUsingBrowserTTS = conversationData?.ttsSettings?.agentA?.provider === 'browser' || 
-                                           conversationData?.ttsSettings?.agentB?.provider === 'browser';
+                    const isUsingBrowserTTS = conversationData?.ttsSettings?.agentA?.provider === 'browser' ||
+                        conversationData?.ttsSettings?.agentB?.provider === 'browser';
                     return hasUnplayedAudio || isWaitingForSignal || isUsingBrowserTTS;
                 })() && (
-                <div className={`bg-blue-50 border-l-4 border-blue-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
-                    <div className="flex">
-                        <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm text-blue-700">
-                                <strong>{t?.chatControls.audioStatus.ready.title}:</strong> {t?.chatControls.audioStatus.ready.description}
-                            </p>
-                            <p className="text-xs text-blue-800 dark:text-blue-200 mt-1">
-                                {t?.chatControls.audioStatus.ready.browserNote}
-                            </p>
+                    <div className={`bg-blue-50 border-l-4 border-blue-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-blue-700">
+                                    <strong>{t?.chatControls.audioStatus.ready.title}:</strong> {t?.chatControls.audioStatus.ready.description}
+                                </p>
+                                <p className="text-xs text-blue-800 dark:text-blue-200 mt-1">
+                                    {t?.chatControls.audioStatus.ready.browserNote}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
+                ))}
 
             {/* Scrollable Message Area */}
             <ScrollArea className="flex-grow min-h-0 mb-4 pr-4 -mr-4" style={{ contain: 'layout style paint' }}>
-               <div className={`space-y-4 ${isFullscreen ? 'max-w-3xl mx-auto px-4' : ''}`} ref={scrollViewportRef}>
+                <div className={`space-y-4 ${isFullscreen ? 'max-w-3xl mx-auto px-4' : ''}`} ref={scrollViewportRef}>
                     {visibleMessages.map((msg) => (
                         <div
                             key={msg.id}
@@ -1439,19 +1494,17 @@ export function ChatInterface({
                                     logger.debug(`[TTS Auto-Scroll] Removed ref for message ${msg.id.substring(0, 8)}...`);
                                 }
                             }}
-                            className={`flex ${
-                                msg.role === 'agentA' ? 'justify-start' :
-                                msg.role === 'agentB' ? 'justify-end' :
-                                'justify-center text-xs text-muted-foreground italic py-1'
-                            }`}
+                            className={`flex ${msg.role === 'agentA' ? 'justify-start' :
+                                    msg.role === 'agentB' ? 'justify-end' :
+                                        'justify-center text-xs text-muted-foreground italic py-1'
+                                }`}
                             style={{ contain: 'layout' }}
                         >
                             <div
-                                className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${
-                                    msg.role === 'agentA' ? 'bg-muted text-foreground' :
-                                    msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
-                                    'bg-transparent px-0 py-0 shadow-none'
-                                }`}
+                                className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
+                                        msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
+                                            'bg-transparent px-0 py-0 shadow-none'
+                                    }`}
                             >
                                 {/* IMAGE DISPLAY (above content) */}
                                 {(msg.role === 'agentA' || msg.role === 'agentB') && (
@@ -1529,37 +1582,77 @@ export function ChatInterface({
                                     </>
                                 )}
                                 {msg.role === 'agentA' || msg.role === 'agentB' ? (
-    <>
-      <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
-      <div>
-        {msg.content.split(/\n+/).map((paragraph, index) => {
-          const paragraphKey = `${msg.id}-p${index}`;
-          return (
-            <div
-              key={paragraphKey}
-              ref={(el) => {
-                if (el) {
-                  paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
-                  logger.debug(`[TTS Auto-Scroll] Set ref for paragraph ${paragraphKey}`);
-                } else {
-                  paragraphRefsMap.current.delete(paragraphKey);
-                }
-              }}
-              className="mb-4"
-            >
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {paragraph}
-              </ReactMarkdown>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  ) : (
-    msg.content
-  )}
+                                    <>
+                                        <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
+                                        <div>
+                                            {msg.content.split(/\n+/).map((paragraph, index) => {
+                                                const paragraphKey = `${msg.id}-p${index}`;
+                                                return (
+                                                    <div
+                                                        key={paragraphKey}
+                                                        ref={(el) => {
+                                                            if (el) {
+                                                                paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
+                                                                logger.debug(`[TTS Auto-Scroll] Set ref for paragraph ${paragraphKey}`);
+                                                            } else {
+                                                                paragraphRefsMap.current.delete(paragraphKey);
+                                                            }
+                                                        }}
+                                                        className="mb-4"
+                                                    >
+                                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                            {paragraph}
+                                                        </ReactMarkdown>
+
+                                                        {/* Paragraph Image Display */}
+                                                        {msg.paragraphImages && msg.paragraphImages[index] && (
+                                                            <div className="mt-2 flex flex-col items-center">
+                                                                {msg.paragraphImages[index].status === 'generating' && (
+                                                                    <div className="text-xs text-muted-foreground">Generating image...</div>
+                                                                )}
+                                                                {msg.paragraphImages[index].status === 'complete' && msg.paragraphImages[index].imageUrl && (
+                                                                    <Image
+                                                                        src={msg.paragraphImages[index].imageUrl}
+                                                                        alt={`Generated image for paragraph ${index + 1}`}
+                                                                        className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
+                                                                        style={{ objectFit: 'contain' }}
+                                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: index })}
+                                                                        width={512}
+                                                                        height={512}
+                                                                        unoptimized={msg.paragraphImages[index].imageUrl?.includes('storage.googleapis.com') || msg.paragraphImages[index].imageUrl?.includes('googleapis.com/storage')}
+                                                                        aria-label="Show image in full screen"
+                                                                    />
+                                                                )}
+                                                                {msg.paragraphImages[index].status === 'error' && (
+                                                                    <div className="text-xs text-destructive mt-1">Image generation failed: {msg.paragraphImages[index].error}</div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+
+                                            {/* Image Stack Indicator */}
+                                            {msg.paragraphImages && msg.paragraphImages.length > 1 && (
+                                                <div className="mt-2 flex items-center justify-center">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: 0 })}
+                                                        className="text-xs"
+                                                    >
+                                                        <ImageIcon className="h-3 w-3 mr-1" />
+                                                        View {msg.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl).length} images
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                ) : (
+                                    msg.content
+                                )}
                                 {msg.isStreaming && (
-                                  <span className="ml-1 animate-pulse" aria-hidden="true">▍</span>
+                                    <span className="ml-1 animate-pulse" aria-hidden="true">▍</span>
                                 )}
                                 {/* Removed manual audio play button logic */}
                                 {/* Audio played indicator */}
@@ -1573,10 +1666,10 @@ export function ChatInterface({
                                 )}
                                 {/* Split audio notification */}
                                 {msg.ttsWasSplit && (
-                                  <div className="mt-1 text-[11px] text-orange-800 dark:text-orange-200 font-medium flex items-center gap-1">
-                                    <AlertCircle className="inline h-3 w-3 mr-1" aria-hidden="true" />
-                                    Audio was split due to TTS input limit. Some long messages may be truncated or split into multiple parts.
-                                  </div>
+                                    <div className="mt-1 text-[11px] text-orange-800 dark:text-orange-200 font-medium flex items-center gap-1">
+                                        <AlertCircle className="inline h-3 w-3 mr-1" aria-hidden="true" />
+                                        Audio was split due to TTS input limit. Some long messages may be truncated or split into multiple parts.
+                                    </div>
                                 )}
                                 {isAudioPlaying && currentlyPlayingMsgId === msg.id && (
                                     <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
@@ -1602,9 +1695,9 @@ export function ChatInterface({
                 <div className="flex items-center gap-2 justify-center">
                     {/* Pause/Resume Button - Only enabled when audio is playing */}
                     {isAudioPlaying ? (
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={handlePauseAudio}
                             className="h-12 w-12 rounded-full"
                             aria-label="Pause audio"
@@ -1612,8 +1705,8 @@ export function ChatInterface({
                             <Pause className="h-6 w-6" />
                         </Button>
                     ) : isAudioPaused ? (
-                        <Button 
-                            variant="ghost" 
+                        <Button
+                            variant="ghost"
                             size="icon"
                             onClick={handleResumeAudio}
                             className="h-12 w-12 rounded-full"
@@ -1622,8 +1715,8 @@ export function ChatInterface({
                             <Play className="h-6 w-6" />
                         </Button>
                     ) : (
-                        <Button 
-                            variant="ghost" 
+                        <Button
+                            variant="ghost"
                             size="icon"
                             disabled
                             className="h-12 w-12 rounded-full opacity-50 cursor-not-allowed"
@@ -1632,10 +1725,10 @@ export function ChatInterface({
                             <Play className="h-6 w-6" />
                         </Button>
                     )}
-                    
+
                     {/* Auto-scroll Toggle - Always enabled */}
-                    <Button 
-                        variant="ghost" 
+                    <Button
+                        variant="ghost"
                         size="icon"
                         onClick={toggleTTSAutoScroll}
                         className={`h-12 w-12 rounded-full ${isTTSAutoScrollEnabled ? 'text-primary' : 'text-muted-foreground'}`}
@@ -1644,10 +1737,10 @@ export function ChatInterface({
                     >
                         <ScrollText className="h-6 w-6" />
                     </Button>
-                    
+
                     {/* Fullscreen Toggle - Always enabled */}
-                    <Button 
-                        variant="ghost" 
+                    <Button
+                        variant="ghost"
                         size="icon"
                         onClick={toggleFullscreen}
                         className="h-12 w-12 rounded-full"
@@ -1656,6 +1749,45 @@ export function ChatInterface({
                     >
                         {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
                     </Button>
+
+                    {/* Image Gallery Button - Show if there are paragraph images */}
+                    {(() => {
+                        const messagesWithImages = visibleMessages.filter(
+                            m => m.paragraphImages && m.paragraphImages.some(img => img.status === 'complete' && img.imageUrl)
+                        );
+                        if (messagesWithImages.length === 0) return null;
+
+                        const totalImages = messagesWithImages.reduce((sum, m) =>
+                            sum + (m.paragraphImages?.filter(img => img.status === 'complete' && img.imageUrl).length || 0), 0
+                        );
+
+                        return (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                    // Find first message with images
+                                    const firstMsgWithImages = messagesWithImages[0];
+                                    if (firstMsgWithImages && firstMsgWithImages.paragraphImages) {
+                                        const firstCompleteImage = firstMsgWithImages.paragraphImages.findIndex(
+                                            img => img.status === 'complete' && img.imageUrl
+                                        );
+                                        if (firstCompleteImage >= 0) {
+                                            setFullScreenGallery({
+                                                messageId: firstMsgWithImages.id,
+                                                paragraphIndex: firstCompleteImage
+                                            });
+                                        }
+                                    }
+                                }}
+                                className="h-12 w-12 rounded-full"
+                                aria-label={`View ${totalImages} generated images`}
+                                title={`View ${totalImages} generated images`}
+                            >
+                                <ImageIcon className="h-6 w-6" />
+                            </Button>
+                        );
+                    })()}
                 </div>
             </div>
 
@@ -1669,6 +1801,97 @@ export function ChatInterface({
                     handleAudioEnd();
                 }}
             />
+
+            {/* Fullscreen Paragraph Image Gallery */}
+            {fullScreenGallery && (() => {
+                const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
+                if (!message || !message.paragraphImages || message.paragraphImages.length === 0) {
+                    setFullScreenGallery(null);
+                    return null;
+                }
+
+                const currentImage = message.paragraphImages[fullScreenGallery.paragraphIndex];
+                const completeImages = message.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl);
+                const currentImageIndex = completeImages.findIndex(img =>
+                    message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
+                );
+
+                const navigateImage = (direction: 'prev' | 'next') => {
+                    if (direction === 'prev' && currentImageIndex > 0) {
+                        const prevImage = completeImages[currentImageIndex - 1];
+                        const prevIndex = message.paragraphImages!.indexOf(prevImage);
+                        setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: prevIndex });
+                    } else if (direction === 'next' && currentImageIndex < completeImages.length - 1) {
+                        const nextImage = completeImages[currentImageIndex + 1];
+                        const nextIndex = message.paragraphImages!.indexOf(nextImage);
+                        setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: nextIndex });
+                    }
+                };
+
+                return ReactDOM.createPortal(
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                        onClick={() => setFullScreenGallery(null)}
+                        tabIndex={0}
+                        aria-modal="true"
+                        role="dialog"
+                    >
+                        {currentImage && currentImage.status === 'complete' && currentImage.imageUrl && (
+                            <>
+                                <Image
+                                    src={currentImage.imageUrl}
+                                    alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
+                                    className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                    style={{ objectFit: 'contain' }}
+                                    width={1920}
+                                    height={1080}
+                                    unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+
+                                {/* Navigation buttons */}
+                                {completeImages.length > 1 && (
+                                    <>
+                                        <button
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={(e) => { e.stopPropagation(); navigateImage('prev'); }}
+                                            disabled={currentImageIndex === 0}
+                                            aria-label="Previous image"
+                                        >
+                                            <ChevronLeft className="h-6 w-6" />
+                                        </button>
+                                        <button
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={(e) => { e.stopPropagation(); navigateImage('next'); }}
+                                            disabled={currentImageIndex === completeImages.length - 1}
+                                            aria-label="Next image"
+                                        >
+                                            <ChevronRight className="h-6 w-6" />
+                                        </button>
+                                    </>
+                                )}
+
+                                {/* Image counter */}
+                                {completeImages.length > 1 && (
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                        {currentImageIndex + 1} / {completeImages.length}
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        <button
+                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                            onClick={(e) => { e.stopPropagation(); setFullScreenGallery(null); }}
+                            aria-label="Close full screen gallery"
+                        >
+                            <X className="h-4 w-4 inline mr-1" />
+                            Close
+                        </button>
+                    </div>,
+                    document.body
+                );
+            })()}
         </div>
     );
 }

@@ -19,6 +19,13 @@ export interface SessionPreset {
         ttsApiModelId?: string;
     };
     initialSystemPrompt: string;
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        invokeaiEndpoint: string;
+        promptLlm: string;
+        promptSystemMessage: string;
+    };
     savedAt?: number; // timestamp
     collapseStates?: {
         cardDescription?: boolean;

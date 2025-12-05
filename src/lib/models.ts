@@ -1236,3 +1236,27 @@ export async function updateOllamaModels(endpoint: string = 'http://localhost:11
 export function getAllAvailableLLMs(): LLMInfo[] {
     return [...AVAILABLE_LLMS, ...OLLAMA_MODELS];
 }
+
+/**
+ * Get provider from LLM ID
+ */
+export function getProviderFromId(id: string): LLMInfo["provider"] | null {
+    // Check for Ollama models first (format: "ollama:modelname")
+    if (id.startsWith("ollama:")) {
+        return "Ollama";
+    }
+    // Check other providers
+    if (id.startsWith("gpt-") || id === "o4-mini" || id === "o3" || id === "o3-mini" || id === "o1" || id === "chatgpt-4o-latest") return "OpenAI";
+    if (id.startsWith("gemini-")) return "Google";
+    if (id.startsWith("claude-")) return "Anthropic";
+    if (id.startsWith("grok-")) return "xAI";
+    if (id.startsWith("deepseek-")) return "DeepSeek";
+    if (id.startsWith("mistral-") || id.startsWith("magistral-") || id.startsWith("ministral-") || id === "open-mistral-nemo") return "Mistral AI";
+    if (id.includes("meta-llama/") || id.includes("google/") || id.includes("deepseek-ai/") || id.includes("Qwen/")) return "TogetherAI";
+    // Try to find in available LLMs
+    const llm = getLLMInfoById(id);
+    if (llm) {
+        return llm.provider;
+    }
+    return null;
+}

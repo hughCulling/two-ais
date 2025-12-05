@@ -22,6 +22,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
 import { getAllAvailableLLMs, getLLMInfoById } from '@/lib/models';
 import { useOllama } from '@/hooks/useOllama';
+import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import { IconTooltipBadge } from "@/components/ui/icon-tooltip-badge";
 import {
@@ -112,15 +113,13 @@ interface SessionConfig {
     agentB_tts: AgentTTSSettings;
     language?: string;
     initialSystemPrompt: string;
-    // imageGenSettings?: {
-    //     enabled: boolean;
-    //     provider: string;
-    //     model: string;
-    //     quality: ImageModelQuality;
-    //     size: ImageModelSize | ImageAspectRatio;
-    //     promptLlm: string;
-    //     promptSystemMessage: string;
-    // };
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        invokeaiEndpoint: string;
+        promptLlm: string;
+        promptSystemMessage: string;
+    };
 }
 
 interface SessionSetupFormProps {
@@ -175,7 +174,7 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
     // Group models by provider
     const allLLMs = getAllAvailableLLMs();
     const groupedByProvider: Record<string, typeof allLLMs> = {};
-    
+
     allLLMs.forEach((llm) => {
         if (!groupedByProvider[llm.provider]) {
             groupedByProvider[llm.provider] = [];
@@ -205,18 +204,18 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                 <SelectContent className="max-h-96">
                     {sortedProviders.map((provider) => {
                         // Check if all models in this provider support the current language
-                        const allModelsSupport = groupedByProvider[provider].every(llm => 
+                        const allModelsSupport = groupedByProvider[provider].every(llm =>
                             isLanguageSupported(llm.provider, language.code, llm.id)
                         );
-                        
+
                         // Check if all models in this provider have free tier
-                        const allHaveFreeTier = groupedByProvider[provider].every(llm => 
+                        const allHaveFreeTier = groupedByProvider[provider].every(llm =>
                             llm.pricing?.freeTier?.available
                         );
-                        
+
                         // Get the free tier info from the first model (they should all be the same for the provider)
                         const providerFreeTier = allHaveFreeTier ? groupedByProvider[provider][0]?.pricing?.freeTier : null;
-                        
+
                         return (
                             <SelectGroup key={provider}>
                                 <SelectLabel className="flex items-center gap-1.5">
@@ -232,75 +231,75 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                                     )}
                                 </SelectLabel>
                                 {groupedByProvider[provider].map((llm) => {
-                                const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
-                                return (
-                                    <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
-                                        <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
-                                            <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
-                                            {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
-                                            {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
-                                            {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
-                                            {/* Don't show pricing for Ollama models */}
-                                            {llm.provider !== 'Ollama' && (
-                                                <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
-                                                    llm.pricing.note ?
-                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                                }>
-                                                    ({llm.pricing.note ?
-                                                        (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                        `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                                    })
-                                                </span>
-                                            )}
-                                            {/* Only show language support icon on individual models if not all models support the language */}
-                                            {!allModelsSupport && (
-                                                supportsLanguage ? (
+                                    const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                                    return (
+                                        <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
+                                            <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
+                                                <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
+                                                {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
+                                                {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
+                                                {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
+                                                {/* Don't show pricing for Ollama models */}
+                                                {llm.provider !== 'Ollama' && (
+                                                    <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
+                                                        llm.pricing.note ?
+                                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                    }>
+                                                        ({llm.pricing.note ?
+                                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
+                                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
+                                                        })
+                                                    </span>
+                                                )}
+                                                {/* Only show language support icon on individual models if not all models support the language */}
+                                                {!allModelsSupport && (
+                                                    supportsLanguage ? (
+                                                        <IconTooltipBadge
+                                                            icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
+                                                            tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                                            className="flex-shrink-0"
+                                                        />
+                                                    ) : (
+                                                        <IconTooltipBadge
+                                                            icon={<X className="h-3 w-3 text-red-700 dark:text-red-300" />}
+                                                            tooltip={t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}
+                                                            className="flex-shrink-0"
+                                                        />
+                                                    )
+                                                )}
+                                                {llm.usesReasoningTokens && (
                                                     <IconTooltipBadge
-                                                        icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
-                                                        tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                                        icon={<Info className="h-3 w-3 text-blue-500" />}
+                                                        tooltip={
+                                                            llm.provider === 'Anthropic'
+                                                                ? t.page_TooltipAnthropicExtendedThinking
+                                                                : llm.provider === 'xAI'
+                                                                    ? t.page_TooltipXaiThinking
+                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                                        ? t.page_TooltipQwenReasoning
+                                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                                            ? t.page_TooltipDeepSeekReasoning
+                                                                            : t.page_TooltipGenericReasoning
+                                                        }
                                                         className="flex-shrink-0"
                                                     />
-                                                ) : (
+                                                )}
+                                                {llm.requiresOrgVerification && (
                                                     <IconTooltipBadge
-                                                        icon={<X className="h-3 w-3 text-red-700 dark:text-red-300" />}
-                                                        tooltip={t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}
+                                                        icon={<AlertTriangle className="h-3 w-3 text-yellow-500" />}
+                                                        tooltip={t.page_TooltipRequiresVerification}
                                                         className="flex-shrink-0"
                                                     />
-                                                )
-                                            )}
-                                            {llm.usesReasoningTokens && (
-                                                <IconTooltipBadge
-                                                    icon={<Info className="h-3 w-3 text-blue-500" />}
-                                                    tooltip={
-                                                        llm.provider === 'Anthropic'
-                                                            ? t.page_TooltipAnthropicExtendedThinking
-                                                            : llm.provider === 'xAI'
-                                                                ? t.page_TooltipXaiThinking
-                                                                : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
-                                                                    ? t.page_TooltipQwenReasoning
-                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
-                                                                        ? t.page_TooltipDeepSeekReasoning
-                                                                        : t.page_TooltipGenericReasoning
-                                                    }
-                                                    className="flex-shrink-0"
-                                                />
-                                            )}
-                                            {llm.requiresOrgVerification && (
-                                                <IconTooltipBadge
-                                                    icon={<AlertTriangle className="h-3 w-3 text-yellow-500" />}
-                                                    tooltip={t.page_TooltipRequiresVerification}
-                                                    className="flex-shrink-0"
-                                                />
-                                            )}
-                                            {/* Only show free tier badge on individual models if not all models in provider have it */}
-                                            {!allHaveFreeTier && llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
-                                            {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
-                                        </div>
-                                    </SelectItem>
-                                );
-                            })}
-                        </SelectGroup>
+                                                )}
+                                                {/* Only show free tier badge on individual models if not all models in provider have it */}
+                                                {!allHaveFreeTier && llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
+                                                {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
+                                            </div>
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectGroup>
                         );
                     })}
                 </SelectContent>
@@ -558,10 +557,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const { user, loading: authLoading } = useAuth();
     const { language } = useLanguage();
     const { t, loading: translationLoading } = useTranslation();
-    
+
     // Detect Ollama and load models
     const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
-    
+
+    // Detect InvokeAI
+    const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('http://localhost:9090');
+    const { isAvailable: invokeaiAvailable, isLoading: invokeaiLoading } = useInvokeAI(invokeaiEndpoint);
+
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
@@ -571,25 +574,24 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
     const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
-    
+
     // Preset management state
     const [showOverwriteDialog, setShowOverwriteDialog] = useState<boolean>(false);
     const [hasExistingPreset, setHasExistingPreset] = useState<boolean>(false);
     const { toast } = useToast();
-    
+
     // Collapse states for helper text
     const [collapseCardDescription, setCollapseCardDescription] = useState<boolean>(false);
     const [collapseInitialPromptDescription, setCollapseInitialPromptDescription] = useState<boolean>(false);
     const [collapseOllamaDetails, setCollapseOllamaDetails] = useState<boolean>(false);
     const [collapseOllamaNotDetected, setCollapseOllamaNotDetected] = useState<boolean>(false);
+    const [collapseInvokeAIDetails, setCollapseInvokeAIDetails] = useState<boolean>(false);
+    const [collapseInvokeAINotDetected, setCollapseInvokeAINotDetected] = useState<boolean>(false);
 
     // --- Image Generation State ---
-    // const [imageGenEnabled, setImageGenEnabled] = useState(false);
-    // const [selectedImageModelId, setSelectedImageModelId] = useState<string>('');
-    // const [selectedImageQuality, setSelectedImageQuality] = useState<ImageModelQuality>('medium');
-    // const [selectedImageSize, setSelectedImageSize] = useState<ImageModelSize | ImageAspectRatio>('1024x1024');
-    // const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
-    // const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this turn: {turn}');
+    const [imageGenEnabled, setImageGenEnabled] = useState(false);
+    const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
+    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -853,10 +855,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         const isChrome = isChromeBrowser();
         const isFirefox = isFirefoxBrowser();
         const isOpera = isOperaBrowser();
-        
+
         // Show Safari warning if using Safari with browser TTS
         setShowSafariWarning(isBrowserTTSSelected && isSafari);
-        
+
         // Show Edge recommendation if using Chrome/Firefox/Opera with browser TTS
         setShowEdgeRecommendation(isBrowserTTSSelected && (isChrome || isFirefox || isOpera));
     }, [agentATTSSettings.provider, agentBTTSSettings.provider]);
@@ -887,51 +889,36 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
 
         // Image generation validation
-        // let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
-        // if (imageGenEnabled) {
-        //     const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-        //     if (!model) {
-        //         alert('Please select an image model.');
-        //         return;
-        //     }
+        let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
+        if (imageGenEnabled) {
+            if (!selectedPromptLlm) {
+                alert('Please select a prompt LLM for image generation.');
+                return;
+            }
 
-        //     // Check if the model has any quality settings
-        //     const hasQualitySettings = model.qualities.some(q => q.quality);
+            if (!imagePromptSystemMessage || imagePromptSystemMessage.trim() === '') {
+                alert('Please provide a system prompt for the image prompt LLM.');
+                return;
+            }
 
-        //     // Only require quality if the model has quality settings
-        //     if (hasQualitySettings && !selectedImageQuality) {
-        //         alert('Please select an image quality.');
-        //         return;
-        //     }
+            // Check if prompt LLM requires API key (skip for Ollama)
+            const promptLLMInfo = getLLMInfoById(selectedPromptLlm);
+            if (promptLLMInfo && promptLLMInfo.provider !== 'Ollama') {
+                const promptLLMKey = promptLLMInfo.apiKeySecretName;
+                if (!savedKeyStatus[promptLLMKey]) {
+                    alert(`Missing required API key for prompt LLM (${promptLLMInfo.provider}). Please add it in Settings.`);
+                    return;
+                }
+            }
 
-        //     if (!selectedImageSize) {
-        //         alert('Please select an image size.');
-        //         return;
-        //     }
-
-        //     if (!selectedPromptLlm) {
-        //         alert('Please select a prompt LLM for image generation.');
-        //         return;
-        //     }
-
-        //     if (!imagePromptSystemMessage) {
-        //         alert('Please provide a system prompt for the image prompt LLM.');
-        //         return;
-        //     }
-
-        //     // Use 'standard' as default quality if the model doesn't have quality settings
-        //     const qualityToUse = hasQualitySettings ? selectedImageQuality : 'standard';
-
-        //     imageGenSettings = {
-        //         enabled: true,
-        //         provider: model.provider,
-        //         model: model.id,
-        //         quality: qualityToUse as ImageModelQuality, // Safe to cast since we provide a default
-        //         size: selectedImageSize,
-        //         promptLlm: selectedPromptLlm,
-        //         promptSystemMessage: imagePromptSystemMessage,
-        //     };
-        // }
+            imageGenSettings = {
+                enabled: true,
+                provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
+                invokeaiEndpoint: invokeaiEndpoint,
+                promptLlm: selectedPromptLlm,
+                promptSystemMessage: imagePromptSystemMessage,
+            };
+        }
 
         // ***FIX: Define a type-safe constant for the disabled state***
         const disabledTtsSettings: AgentTTSSettings = { provider: 'none', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined };
@@ -957,7 +944,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             agentA_tts: sessionAgentATTSSettings,
             agentB_tts: sessionAgentBTTSSettings,
             initialSystemPrompt,
-            // imageGenSettings,
+            imageGenSettings,
         });
     };
 
@@ -1028,6 +1015,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 agentA_tts: agentATTSSettings,
                 agentB_tts: agentBTTSSettings,
                 initialSystemPrompt,
+                imageGenSettings: imageGenEnabled ? {
+                    enabled: true,
+                    provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
+                    invokeaiEndpoint: invokeaiEndpoint,
+                    promptLlm: selectedPromptLlm,
+                    promptSystemMessage: imagePromptSystemMessage,
+                } : undefined,
                 collapseStates: {
                     cardDescription: collapseCardDescription,
                     initialPromptDescription: collapseInitialPromptDescription,
@@ -1039,7 +1033,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             await saveSessionPreset(user.uid, preset);
             setHasExistingPreset(true);
             setShowOverwriteDialog(false);
-            
+
             toast({
                 title: t?.sessionSetupForm?.presetSaved || "Preset saved",
                 description: "Your session configuration has been saved",
@@ -1064,7 +1058,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
         try {
             const preset = await loadSessionPreset(user.uid);
-            
+
             if (!preset) {
                 toast({
                     title: t?.sessionSetupForm?.noPresetFound || "No preset found",
@@ -1080,7 +1074,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             setAgentATTSSettings(preset.agentA_tts as AgentTTSSettings);
             setAgentBTTSSettings(preset.agentB_tts as AgentTTSSettings);
             setInitialSystemPrompt(preset.initialSystemPrompt);
-            
+
+            // Load image generation settings if present
+            if (preset.imageGenSettings) {
+                setImageGenEnabled(preset.imageGenSettings.enabled);
+                setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint || 'http://localhost:9090');
+                setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
+                setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
+            }
+
             // Load collapse states if they exist
             if (preset.collapseStates) {
                 setCollapseCardDescription(preset.collapseStates.cardDescription ?? false);
@@ -1319,442 +1321,416 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     return (
         <>
-        <Card className="w-full max-w-2xl">
-            <CardHeader className="text-center">
-                {translationLoading || !t ? (
-                    <CardTitle>...</CardTitle>
-                ) : (
-                    <CardTitle>{t.sessionSetupForm.title}</CardTitle>
-                )}
-                {t?.sessionSetupForm && t.sessionSetupForm.description && (
-                    <div className="space-y-1 flex flex-col items-center">
-                        <button
-                            onClick={() => setCollapseCardDescription(!collapseCardDescription)}
-                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            aria-expanded={!collapseCardDescription}
-                        >
-                            {collapseCardDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                            <span className="text-xs">Help</span>
-                        </button>
-                        {!collapseCardDescription && (
-                            <CardDescription>{t.sessionSetupForm.description}</CardDescription>
-                        )}
-                    </div>
-                )}
-                
-                {/* Ollama Status Indicator */}
-                {ollamaLoading && (
-                    <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
-                )}
-                {!ollamaLoading && ollamaAvailable && (
-                    <div className="pt-2 space-y-1 flex flex-col items-center">
-                        <div className="flex items-center gap-2">
-                            <p className="text-sm text-green-600 dark:text-green-400">✓ Ollama detected</p>
+            <Card className="w-full max-w-2xl">
+                <CardHeader className="text-center">
+                    {translationLoading || !t ? (
+                        <CardTitle>...</CardTitle>
+                    ) : (
+                        <CardTitle>{t.sessionSetupForm.title}</CardTitle>
+                    )}
+                    {t?.sessionSetupForm && t.sessionSetupForm.description && (
+                        <div className="space-y-1 flex flex-col items-center">
                             <button
-                                onClick={() => setCollapseOllamaDetails(!collapseOllamaDetails)}
-                                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
-                                aria-expanded={!collapseOllamaDetails}
-                                aria-label="Toggle Ollama details"
+                                onClick={() => setCollapseCardDescription(!collapseCardDescription)}
+                                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                aria-expanded={!collapseCardDescription}
                             >
-                                {collapseOllamaDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                {collapseCardDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                <span className="text-xs">Help</span>
                             </button>
+                            {!collapseCardDescription && (
+                                <CardDescription>{t.sessionSetupForm.description}</CardDescription>
+                            )}
                         </div>
-                        {!collapseOllamaDetails && (
-                            <p className="text-xs text-green-600 dark:text-green-400">Their local and cloud models are available</p>
-                        )}
-                    </div>
-                )}
-                {!ollamaLoading && !ollamaAvailable && (
-                    <div className="pt-2 space-y-1 flex flex-col items-center">
-                        <div className="flex items-center gap-2">
-                            <p className="text-sm text-muted-foreground">Ollama not detected</p>
-                            <button
-                                onClick={() => setCollapseOllamaNotDetected(!collapseOllamaNotDetected)}
-                                className="text-muted-foreground hover:text-foreground transition-colors"
-                                aria-expanded={!collapseOllamaNotDetected}
-                                aria-label="Toggle Ollama installation info"
-                            >
-                                {collapseOllamaNotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                            </button>
-                        </div>
-                        {!collapseOllamaNotDetected && (
-                            <p className="text-xs text-muted-foreground">You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
-                        )}
-                    </div>
-                )}
-                
-                {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
-                {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
-                
-            </CardHeader>
-            <CardContent className="space-y-6">
-                {/* LLM Selection Section */}
-                <div className="space-y-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Agent A LLM Selector */}
-                        <div className="space-y-2">
-                            <LLMSelector
-                                value={agentA_llm}
-                                onChange={setAgentA_llm}
-                                disabled={isLoading || isLoadingStatus || !user}
-                                label={t?.sessionSetupForm?.agentAModel || ''}
-                                placeholder={t?.sessionSetupForm?.selectLLMForAgentA || ''}
-                            />
-                        </div>
-                        {/* Agent B LLM Selector */}
-                        <div className="space-y-2">
-                            <LLMSelector
-                                value={agentB_llm}
-                                onChange={setAgentB_llm}
-                                disabled={isLoading || isLoadingStatus || !user}
-                                label={t?.sessionSetupForm?.agentBModel || ''}
-                                placeholder={t?.sessionSetupForm?.selectLLMForAgentB || ''}
-                            />
-                        </div>
-                    </div>
-                    {/* Explanation Notes - Only visible on mobile/touch devices */}
-                    <div className="md:hidden space-y-1">
-                        {t && (
-                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0" />
-                                <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0" />
-                                {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
-                            </p>
-                        )}
-                        {ANY_MODEL_USES_REASONING && (
-                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
-                                {t && t.sessionSetupForm.reasoningNote}
-                            </p>
-                        )}
-                        {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
-                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0" />
-                                {t && t.sessionSetupForm.openaiOrgVerificationNote}
-                                {t && (
-                                    <a
-                                        href="https://platform.openai.com/settings/organization/general"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                                    >
-                                        {t.common_verifyHere}
-                                    </a>
-                                )}
-                            </p>
-                        )}
-                        {ANY_MODEL_HAS_FREE_TIER && (
-                            <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
-                                <Info className="h-3.5 w-3.5 text-muted-foreground mr-1 flex-shrink-0" />
-                                {t && t.sessionSetupForm.freeTierNote}
-                            </p>
-                        )}
-                    </div>
-                </div>
+                    )}
 
-                {/* TTS Configuration Section */}
-                <hr className="my-6" />
-                <div className="space-y-4">
-                    <div className="flex items-center justify-center space-x-2">
-                        <Checkbox
-                            id="tts-enabled-checkbox"
-                            checked={ttsEnabled}
-                            onCheckedChange={handleTtsToggle}
-                            disabled={!user}
-                            aria-describedby="tts-checkbox-description"
-                        />
-                        <Label
-                            htmlFor="tts-enabled-checkbox"
-                            className="text-base font-medium"
-                        >
-                            {t?.sessionSetupForm?.enableTTS}
-                        </Label>
-                    </div>
-                    <div id="tts-checkbox-description" className="sr-only">
-                        Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
-                    </div>
-
-                    {/* Safari Browser Warning */}
-                    {ttsEnabled && showSafariWarning && (
-                        <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md">
-                            <div className="flex">
-                                <div className="flex-shrink-0">
-                                    <AlertTriangle className="h-5 w-5 text-orange-400" />
-                                </div>
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                                        {t?.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
-                                    </p>
-                                    <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                                        {t?.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
-                                    </p>
-                                </div>
+                    {/* Ollama Status Indicator */}
+                    {ollamaLoading && (
+                        <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
+                    )}
+                    {!ollamaLoading && ollamaAvailable && (
+                        <div className="pt-2 space-y-1 flex flex-col items-center">
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm text-green-600 dark:text-green-400">✓ Ollama detected</p>
+                                <button
+                                    onClick={() => setCollapseOllamaDetails(!collapseOllamaDetails)}
+                                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                                    aria-expanded={!collapseOllamaDetails}
+                                    aria-label="Toggle Ollama details"
+                                >
+                                    {collapseOllamaDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                </button>
                             </div>
+                            {!collapseOllamaDetails && (
+                                <p className="text-xs text-green-600 dark:text-green-400">Their local and cloud models are available</p>
+                            )}
                         </div>
                     )}
-
-                    {/* Edge Recommendation for Chrome/Firefox/Opera */}
-                    {ttsEnabled && showEdgeRecommendation && (
-                        <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md">
-                            <div className="flex">
-                                <div className="flex-shrink-0">
-                                    <Info className="h-5 w-5 text-blue-400" />
-                                </div>
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                                        {t?.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
-                                    </p>
-                                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                                        {t?.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
-                                    </p>
-                                </div>
+                    {!ollamaLoading && !ollamaAvailable && (
+                        <div className="pt-2 space-y-1 flex flex-col items-center">
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm text-muted-foreground">Ollama not detected</p>
+                                <button
+                                    onClick={() => setCollapseOllamaNotDetected(!collapseOllamaNotDetected)}
+                                    className="text-muted-foreground hover:text-foreground transition-colors"
+                                    aria-expanded={!collapseOllamaNotDetected}
+                                    aria-label="Toggle Ollama installation info"
+                                >
+                                    {collapseOllamaNotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                </button>
                             </div>
+                            {!collapseOllamaNotDetected && (
+                                <p className="text-xs text-muted-foreground">You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
+                            )}
                         </div>
                     )}
 
-                    {ttsEnabled && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="tts-settings-label">
-                            <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
-                            {renderTTSConfigForAgent('A', agentATTSSettings, currentVoicesA)}
-                            {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
+                    {/* InvokeAI Status Indicator */}
+                    {invokeaiLoading && (
+                        <p className="text-sm text-muted-foreground pt-2">Checking for InvokeAI...</p>
+                    )}
+                    {!invokeaiLoading && invokeaiAvailable && (
+                        <div className="pt-2 space-y-1 flex flex-col items-center">
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI detected</p>
+                                <button
+                                    onClick={() => setCollapseInvokeAIDetails(!collapseInvokeAIDetails)}
+                                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                                    aria-expanded={!collapseInvokeAIDetails}
+                                    aria-label="Toggle InvokeAI details"
+                                >
+                                    {collapseInvokeAIDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                </button>
+                            </div>
+                            {!collapseInvokeAIDetails && (
+                                <p className="text-xs text-green-600 dark:text-green-400">Local image generation is available</p>
+                            )}
                         </div>
                     )}
-                </div>
-                {/* IMAGE GENERATION CONFIGURATION SECTION */}
-                <hr className="my-6" />
-                {/* <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                        <Checkbox 
-                            id="image-gen-enabled-checkbox" 
-                            checked={imageGenEnabled} 
-                            onCheckedChange={checked => setImageGenEnabled(Boolean(checked))} 
-                            aria-describedby="image-gen-checkbox-description"
-                        />
-                        <Label 
-                            htmlFor="image-gen-enabled-checkbox" 
-                            className="text-base font-medium"
-                        >
-                            {t?.sessionSetupForm?.enableImageGen}
-                        </Label>
-                    </div>
-                    <div id="image-gen-checkbox-description" className="sr-only">
-                        Check this box to enable image generation for each turn. An image will be generated and shown for each agent message.
-                    </div>
-                    {imageGenEnabled && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="image-gen-settings-label">
-                            <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div> */}
-                {/* Image Model Selection */}
-                {/* <div className="space-y-2">
-                                <Label htmlFor="image-model-select">{t?.sessionSetupForm?.imageModel}</Label>
-                                <Select
-                                    value={selectedImageModelId}
-                                    onValueChange={setSelectedImageModelId}
+                    {!invokeaiLoading && !invokeaiAvailable && (
+                        <div className="pt-2 space-y-1 flex flex-col items-center">
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm text-muted-foreground">InvokeAI not detected</p>
+                                <button
+                                    onClick={() => setCollapseInvokeAINotDetected(!collapseInvokeAINotDetected)}
+                                    className="text-muted-foreground hover:text-foreground transition-colors"
+                                    aria-expanded={!collapseInvokeAINotDetected}
+                                    aria-label="Toggle InvokeAI installation info"
                                 >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={t?.sessionSetupForm?.selectImageModel} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {AVAILABLE_IMAGE_MODELS.map(m => (
-                                            <SelectItem key={m.id} value={m.id}>{m.name} ({m.provider})</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
-                {/* Quality Selection */}
-                {/* <div className="space-y-2">
-                                <Label htmlFor="image-quality-select">{t?.sessionSetupForm?.quality}</Label>
-                                <Select
-                                    value={selectedImageQuality}
-                                    onValueChange={v => setSelectedImageQuality(v as ImageModelQuality)}
-                                    disabled={!selectedImageModelId}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select quality" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {(() => {
-                                            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-                                            if (!model) return null;
-                                            
-                                            // Only include qualities that are defined
-                                            const qualities = model.qualities
-                                                .filter(q => q.quality) // Filter out undefined qualities
-                                                .map(q => q.quality as string); // Cast to string since we filtered out undefined
-                                            
-                                            // If no qualities, return a default option
-                                            if (qualities.length === 0) {
-                                                return <SelectItem value="standard">Standard</SelectItem>;
-                                            }
-                                            
-                                            return qualities.map(quality => (
-                                                <SelectItem 
-                                                    key={quality} 
-                                                    value={quality}
-                                                >
-                                                    {quality.charAt(0).toUpperCase() + quality.slice(1)}
-                                                </SelectItem>
-                                            ));
-                                        })()}
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
-                {/* Size Selection */}
-                {/* <div className="space-y-2">
-                                <Label htmlFor="image-size-select">{t?.sessionSetupForm?.size}</Label>
-                                <Select
-                                    value={selectedImageSize}
-                                    onValueChange={v => setSelectedImageSize(v as ImageModelSize)}
-                                    disabled={!selectedImageModelId || (() => {
-                                        const currentModel = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-                                        return currentModel?.qualities.some((q: { quality?: string }) => q.quality) && !selectedImageQuality;
-                                    })()}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select size" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {(() => {
-                                            const model = AVAILABLE_IMAGE_MODELS.find(m => m.id === selectedImageModelId);
-                                            if (!model) return null;
-                                            
-                                            // For models without quality settings, use the first quality object
-                                            if (model.qualities.length > 0 && !model.qualities.some(q => q.quality)) {
-                                                return model.qualities[0].sizes.map(s => (
-                                                    <SelectItem key={s.size} value={s.size}>{s.size}</SelectItem>
-                                                ));
-                                            }
-                                            
-                                            // For models with quality settings, find the selected quality
-                                            const qualityObj = model.qualities.find(q => q.quality === selectedImageQuality);
-                                            return qualityObj?.sizes.map(s => (
-                                                <SelectItem key={s.size} value={s.size}>{s.size}</SelectItem>
-                                            )) || null;
-                                        })()}
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
-                {/* Prompt LLM Selection */}
-                {/* <div className="space-y-2">
-                                <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM}</Label>
-                                <Select
-                                    value={selectedPromptLlm}
-                                    onValueChange={setSelectedPromptLlm}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {getAllAvailableLLMs().map(llm => (
-                                            <SelectItem key={llm.id} value={llm.id}>{llm.name} ({llm.provider})</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
-                {/* System Prompt for Image Prompt LLM */}
-                {/* <div className="space-y-2 col-span-1 md:col-span-2">
-                                <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage}</Label>
-                                <textarea
-                                    id="image-prompt-system-message"
-                                    className="w-full border rounded-md p-2 text-sm min-h-[60px]"
-                                    value={imagePromptSystemMessage}
-                                    onChange={e => setImagePromptSystemMessage(e.target.value)}
-                                    placeholder="Create a prompt to give to the image generation model based on this turn: {turn}"
-                                    aria-describedby="image-prompt-system-message-description"
-                                    aria-label="System prompt for image prompt LLM"
+                                    {collapseInvokeAINotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                </button>
+                            </div>
+                            {!collapseInvokeAINotDetected && (
+                                <p className="text-xs text-muted-foreground">You can <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="underline">install InvokeAI</a> for free local image generation.</p>
+                            )}
+                        </div>
+                    )}
+
+                    {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
+                    {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
+
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    {/* LLM Selection Section */}
+                    <div className="space-y-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Agent A LLM Selector */}
+                            <div className="space-y-2">
+                                <LLMSelector
+                                    value={agentA_llm}
+                                    onChange={setAgentA_llm}
+                                    disabled={isLoading || isLoadingStatus || !user}
+                                    label={t?.sessionSetupForm?.agentAModel || ''}
+                                    placeholder={t?.sessionSetupForm?.selectLLMForAgentA || ''}
                                 />
-                                <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground mt-1" dangerouslySetInnerHTML={{ __html: t?.sessionSetupForm?.imagePromptSystemMessageHelp || '' }} />
+                            </div>
+                            {/* Agent B LLM Selector */}
+                            <div className="space-y-2">
+                                <LLMSelector
+                                    value={agentB_llm}
+                                    onChange={setAgentB_llm}
+                                    disabled={isLoading || isLoadingStatus || !user}
+                                    label={t?.sessionSetupForm?.agentBModel || ''}
+                                    placeholder={t?.sessionSetupForm?.selectLLMForAgentB || ''}
+                                />
                             </div>
                         </div>
-                    )}
-                </div> */}
-                {/* Move initial prompt section here */}
-                <div className="mt-4">
-                    <label htmlFor="initial-system-prompt" className="block font-medium mb-1 text-center">{t?.sessionSetupForm?.initialSystemPrompt}</label>
-                    <textarea
-                        id="initial-system-prompt"
-                        className="w-full border rounded-md p-2 text-sm min-h-[60px] text-center"
-                        value={initialSystemPrompt}
-                        onChange={e => setInitialSystemPrompt(e.target.value)}
-                        placeholder={t?.sessionSetupForm?.startTheConversation || ''}
-                        aria-describedby="initial-prompt-description"
-                        aria-label="Initial system prompt for starting the conversation"
-                    />
-                    <div className="mt-1 flex flex-col items-center">
-                        <button
-                            onClick={() => setCollapseInitialPromptDescription(!collapseInitialPromptDescription)}
-                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-1"
-                            aria-expanded={!collapseInitialPromptDescription}
-                        >
-                            {collapseInitialPromptDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                            <span>Help</span>
-                        </button>
-                        {!collapseInitialPromptDescription && (
-                            <p id="initial-prompt-description" className="text-xs text-muted-foreground text-center">
-                                {t?.sessionSetupForm?.initialPromptDescription}
-                            </p>
+                        {/* Explanation Notes - Only visible on mobile/touch devices */}
+                        <div className="md:hidden space-y-1">
+                            {t && (
+                                <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                    <Check className="h-3 w-3 text-green-700 dark:text-green-300 mr-1 flex-shrink-0" />
+                                    <X className="h-3 w-3 text-red-700 dark:text-red-300 mr-1 flex-shrink-0" />
+                                    {t.sessionSetupForm.languageSupportNote.replace('{languageName}', language.nativeName)}
+                                </p>
+                            )}
+                            {ANY_MODEL_USES_REASONING && (
+                                <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                    <Info className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
+                                    {t && t.sessionSetupForm.reasoningNote}
+                                </p>
+                            )}
+                            {ANY_OPENAI_REQUIRES_ORG_VERIFICATION && (
+                                <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                    <AlertTriangle className="h-3 w-3 text-yellow-500 mr-1 flex-shrink-0" />
+                                    {t && t.sessionSetupForm.openaiOrgVerificationNote}
+                                    {t && (
+                                        <a
+                                            href="https://platform.openai.com/settings/organization/general"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                        >
+                                            {t.common_verifyHere}
+                                        </a>
+                                    )}
+                                </p>
+                            )}
+                            {ANY_MODEL_HAS_FREE_TIER && (
+                                <p className="text-xs text-muted-foreground px-1 pt-1 flex items-center">
+                                    <Info className="h-3.5 w-3.5 text-muted-foreground mr-1 flex-shrink-0" />
+                                    {t && t.sessionSetupForm.freeTierNote}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* TTS Configuration Section */}
+                    <hr className="my-6" />
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Checkbox
+                                id="tts-enabled-checkbox"
+                                checked={ttsEnabled}
+                                onCheckedChange={handleTtsToggle}
+                                disabled={!user}
+                                aria-describedby="tts-checkbox-description"
+                            />
+                            <Label
+                                htmlFor="tts-enabled-checkbox"
+                                className="text-base font-medium"
+                            >
+                                {t?.sessionSetupForm?.enableTTS}
+                            </Label>
+                        </div>
+                        <div id="tts-checkbox-description" className="sr-only">
+                            Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
+                        </div>
+
+                        {/* Safari Browser Warning */}
+                        {ttsEnabled && showSafariWarning && (
+                            <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <AlertTriangle className="h-5 w-5 text-orange-400" />
+                                    </div>
+                                    <div className="ml-3">
+                                        <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                                            {t?.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
+                                        </p>
+                                        <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+                                            {t?.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Edge Recommendation for Chrome/Firefox/Opera */}
+                        {ttsEnabled && showEdgeRecommendation && (
+                            <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <Info className="h-5 w-5 text-blue-400" />
+                                    </div>
+                                    <div className="ml-3">
+                                        <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                                            {t?.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
+                                        </p>
+                                        <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                                            {t?.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {ttsEnabled && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" role="group" aria-labelledby="tts-settings-label">
+                                <div id="tts-settings-label" className="sr-only">Text-to-Speech Settings</div>
+                                {renderTTSConfigForAgent('A', agentATTSSettings, currentVoicesA)}
+                                {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
+                            </div>
                         )}
                     </div>
-                </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-2">
-                {/* Preset Management Buttons */}
-                {user && t && (
-                    <div className="flex gap-2 w-full">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleLoadPreset}
-                            disabled={isLoading}
-                            className="flex items-center gap-2 flex-1"
-                        >
-                            <Download className="h-4 w-4" />
-                            {t.sessionSetupForm.loadPreset}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleSavePreset}
-                            disabled={isLoading}
-                            className="flex items-center gap-2 flex-1"
-                        >
-                            <Save className="h-4 w-4" />
-                            {t.sessionSetupForm.savePreset}
-                        </Button>
-                    </div>
-                )}
-                <Button
-                    onClick={handleStartClick}
-                    disabled={isStartDisabled}
-                    className="w-full"
-                    aria-label={isStartDisabled ? "Cannot start session - please select models for both agents" : "Start a new conversation with the selected settings"}
-                    aria-describedby="start-button-description"
-                >
-                    {isLoading ? t?.sessionSetupForm?.starting : t?.sessionSetupForm?.startConversation}
-                </Button>
-                <div id="start-button-description" className="sr-only">
-                    Click to begin a new AI conversation with the selected language models and settings.
-                </div>
-            </CardFooter>
-        </Card>
+                    {/* IMAGE GENERATION CONFIGURATION SECTION */}
+                    <hr className="my-6" />
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Checkbox
+                                id="image-gen-enabled-checkbox"
+                                checked={imageGenEnabled}
+                                onCheckedChange={checked => setImageGenEnabled(Boolean(checked))}
+                                disabled={!user}
+                                aria-describedby="image-gen-checkbox-description"
+                            />
+                            <Label
+                                htmlFor="image-gen-enabled-checkbox"
+                                className="text-base font-medium"
+                            >
+                                {t?.sessionSetupForm?.enableImageGen || 'Enable Image Generation'}
+                            </Label>
+                        </div>
+                        <div id="image-gen-checkbox-description" className="sr-only">
+                            Check this box to enable image generation for each paragraph. An image will be generated and shown for each paragraph in agent messages.
+                        </div>
+                        {imageGenEnabled && (
+                            <div className="space-y-4 pt-4" role="group" aria-labelledby="image-gen-settings-label">
+                                <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
 
-        {/* Overwrite Confirmation Dialog */}
-        <AlertDialog open={showOverwriteDialog} onOpenChange={setShowOverwriteDialog}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>{t?.sessionSetupForm?.savePreset || "Save Preset"}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {t?.sessionSetupForm?.confirmOverwritePreset || "This will replace your existing preset. Continue?"}
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>{t?.common?.cancel || "Cancel"}</AlertDialogCancel>
-                    <AlertDialogAction onClick={savePresetToDatabase}>
-                        {t?.common?.continue || "Continue"}
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
-    </>
+                                {/* InvokeAI Endpoint */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="invokeai-endpoint">InvokeAI Endpoint</Label>
+                                    <input
+                                        id="invokeai-endpoint"
+                                        type="text"
+                                        className="w-full border rounded-md p-2 text-sm"
+                                        value={invokeaiEndpoint}
+                                        onChange={e => setInvokeaiEndpoint(e.target.value)}
+                                        placeholder="http://localhost:9090"
+                                        disabled={!user}
+                                    />
+                                    <p className="text-xs text-muted-foreground">The URL where your InvokeAI server is running</p>
+                                </div>
+
+                                {/* Prompt LLM Selection */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM || 'Prompt LLM'}</Label>
+                                    <Select
+                                        value={selectedPromptLlm}
+                                        onValueChange={setSelectedPromptLlm}
+                                        disabled={!user || isLoadingStatus}
+                                    >
+                                        <SelectTrigger id="prompt-llm-select" className="w-full">
+                                            <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM || 'Select LLM for prompt generation'} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getAllAvailableLLMs().map(llm => (
+                                                <SelectItem key={llm.id} value={llm.id}>{llm.name} ({llm.provider})</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-muted-foreground">The LLM used to generate image prompts from paragraphs</p>
+                                </div>
+
+                                {/* System Prompt for Image Prompt LLM */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage || 'Prompt System Message'}</Label>
+                                    <textarea
+                                        id="image-prompt-system-message"
+                                        className="w-full border rounded-md p-2 text-sm min-h-[60px] text-center"
+                                        value={imagePromptSystemMessage}
+                                        onChange={e => setImagePromptSystemMessage(e.target.value)}
+                                        placeholder="Create a prompt to give to the image generation model based on this paragraph: {paragraph}"
+                                        aria-describedby="image-prompt-system-message-description"
+                                        aria-label="System prompt for image prompt LLM"
+                                        disabled={!user}
+                                    />
+                                    <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground text-center">
+                                        Use {"{paragraph}"} as a placeholder for the paragraph text
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {/* Move initial prompt section here */}
+                    <div className="mt-4">
+                        <label htmlFor="initial-system-prompt" className="block font-medium mb-1 text-center">{t?.sessionSetupForm?.initialSystemPrompt}</label>
+                        <textarea
+                            id="initial-system-prompt"
+                            className="w-full border rounded-md p-2 text-sm min-h-[60px] text-center"
+                            value={initialSystemPrompt}
+                            onChange={e => setInitialSystemPrompt(e.target.value)}
+                            placeholder={t?.sessionSetupForm?.startTheConversation || ''}
+                            aria-describedby="initial-prompt-description"
+                            aria-label="Initial system prompt for starting the conversation"
+                        />
+                        <div className="mt-1 flex flex-col items-center">
+                            <button
+                                onClick={() => setCollapseInitialPromptDescription(!collapseInitialPromptDescription)}
+                                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-1"
+                                aria-expanded={!collapseInitialPromptDescription}
+                            >
+                                {collapseInitialPromptDescription ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                                <span>Help</span>
+                            </button>
+                            {!collapseInitialPromptDescription && (
+                                <p id="initial-prompt-description" className="text-xs text-muted-foreground text-center">
+                                    {t?.sessionSetupForm?.initialPromptDescription}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </CardContent>
+                <CardFooter className="flex flex-col gap-2">
+                    {/* Preset Management Buttons */}
+                    {user && t && (
+                        <div className="flex gap-2 w-full">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleLoadPreset}
+                                disabled={isLoading}
+                                className="flex items-center gap-2 flex-1"
+                            >
+                                <Download className="h-4 w-4" />
+                                {t.sessionSetupForm.loadPreset}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleSavePreset}
+                                disabled={isLoading}
+                                className="flex items-center gap-2 flex-1"
+                            >
+                                <Save className="h-4 w-4" />
+                                {t.sessionSetupForm.savePreset}
+                            </Button>
+                        </div>
+                    )}
+                    <Button
+                        onClick={handleStartClick}
+                        disabled={isStartDisabled}
+                        className="w-full"
+                        aria-label={isStartDisabled ? "Cannot start session - please select models for both agents" : "Start a new conversation with the selected settings"}
+                        aria-describedby="start-button-description"
+                    >
+                        {isLoading ? t?.sessionSetupForm?.starting : t?.sessionSetupForm?.startConversation}
+                    </Button>
+                    <div id="start-button-description" className="sr-only">
+                        Click to begin a new AI conversation with the selected language models and settings.
+                    </div>
+                </CardFooter>
+            </Card>
+
+            {/* Overwrite Confirmation Dialog */}
+            <AlertDialog open={showOverwriteDialog} onOpenChange={setShowOverwriteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t?.sessionSetupForm?.savePreset || "Save Preset"}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t?.sessionSetupForm?.confirmOverwritePreset || "This will replace your existing preset. Continue?"}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t?.common?.cancel || "Cancel"}</AlertDialogCancel>
+                        <AlertDialogAction onClick={savePresetToDatabase}>
+                            {t?.common?.continue || "Continue"}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 };
 
