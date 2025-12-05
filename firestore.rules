@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Existing Rules for Users Collection (Keep As Is) ---
+    // Allow users to manage their own profile document.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- NEW Rules for Conversations Collection ---
+    match /conversations/{conversationId} {
+      // Allow create if the user is logged in and the document's userId field
+      // being created matches their own authenticated UID.
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+
+      // Allow read and update (e.g., for changing the 'status' field to 'stopped')
+      // if the user is logged in and owns the conversation document.
+      // 'resource' refers to the existing document data.
+      allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      // Optionally allow delete if needed (be careful with this)
+      // allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      // --- NEW Rules for Nested Messages Subcollection ---
+      match /messages/{messageId} {
+        // Allow create (adding a message) if the user owns the parent conversation document.
+        // This covers the client adding the initial 'system' message.
+        // Cloud Function writes using the Admin SDK typically bypass these rules.
+        allow create: if request.auth != null && get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId == request.auth.uid;
+
+        // Allow read (listening for messages) if the user owns the parent conversation document.
+        allow read: if request.auth != null && get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId == request.auth.uid;
+
+        // Allow client-side updates ONLY for the paragraphImages field
+        // This enables the InvokeAI image generation hook to update image statuses
+        allow update: if request.auth != null && 
+                         get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId == request.auth.uid &&
+                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paragraphImages']);
+
+        // Disallow client-side deletes of messages for integrity
+        allow delete: if false;
+      }
+    }
+
+    // Access to any other path not explicitly matched remains denied by default.
+  }
+}

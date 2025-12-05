@@ -182,10 +182,7 @@ interface StartConversationRequest {
     initialSystemPrompt?: string; // <-- Add this line
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        model: string;
-        quality: string;
-        size: string;
+        invokeaiEndpoint: string;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -222,10 +219,7 @@ type ConversationData = {
     initialSystemPrompt: string;
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        model: string;
-        quality: string;
-        size: string;
+        invokeaiEndpoint: string;
         promptLlm: string;
         promptSystemMessage: string;
     };

@@ -88,6 +88,12 @@ type ConversationData = {
   initialSystemPrompt?: string;
   processingTurnFor?: "agentA" | "agentB" | null;
   ollamaEndpoint?: string;
+  imageGenSettings?: {
+    enabled: boolean;
+    invokeaiEndpoint: string;
+    promptLlm: string;
+    promptSystemMessage: string;
+  };
 };
 // --- End Interfaces ---
 

@@ -13,6 +13,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { useOllama } from '@/hooks/useOllama';
+import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
 import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink } from "lucide-react";
@@ -140,6 +141,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
+  const { isAvailable: invokeaiAvailable, isLoading: invokeaiLoading } = useInvokeAI();
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   // Redirect authenticated users to the app
@@ -285,6 +287,62 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         </span>
                       </p>
                       <p>{t.page_OllamaStep4}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* InvokeAI Status */}
+            {!invokeaiLoading && invokeaiAvailable && (
+              <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <h3 className="font-semibold text-base text-green-900 dark:text-green-100">InvokeAI Detected</h3>
+                </div>
+                <p className="text-sm text-green-800 dark:text-green-200">
+                  You can use InvokeAI for local image generation.
+                </p>
+              </div>
+            )}
+            {!invokeaiLoading && !invokeaiAvailable && (
+              <div className="border border-blue-500/50 rounded-lg p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <h3 className="font-semibold text-base">InvokeAI Setup</h3>
+                </div>
+                <div>
+                  <div className="space-y-2">
+                    <p>
+                      InvokeAI allows you to generate images locally using Stable Diffusion models. 
+                      <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
+                        Learn more
+                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                      </a>
+                    </p>
+                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                      <p className="font-semibold">Setup Instructions:</p>
+                      <p>
+                        1. Download and install InvokeAI from 
+                        <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
+                          invoke-ai.github.io
+                          <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                        </a>
+                      </p>
+                      <p>
+                        2. Start the InvokeAI server. You can use the InvokeAI launcher or run:
+                      </p>
+                      <p className="ml-4">
+                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                          invokeai-web --root ~/invokeai
+                        </span>
+                      </p>
+                      <p>
+                        3. The server will run on <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">http://localhost:9090</span> by default.
+                      </p>
+                      <p>
+                        4. Once running, you can enable image generation in the session setup form.
+                      </p>
                     </div>
                   </div>
                 </div>

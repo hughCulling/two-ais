@@ -5,6 +5,7 @@ import { db, functions as clientFunctions } from '@/lib/firebase/clientApp'; // 
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/context/AuthContext';
 import { useOllamaAgent } from '@/hooks/useOllamaAgent';
+import { useInvokeAIImageGen } from '@/hooks/useInvokeAIImageGen';
 // import { httpsCallable } from 'firebase/functions';
 import {
     collection,
@@ -21,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2 } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -37,6 +38,13 @@ import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 
 // --- Interfaces ---
+interface ParagraphImage {
+    paragraphIndex: number;
+    imageUrl: string | null;
+    status: 'pending' | 'generating' | 'complete' | 'error';
+    error?: string;
+}
+
 interface Message {
     id: string;
     role: 'agentA' | 'agentB' | 'user' | 'system';
@@ -47,6 +55,7 @@ interface Message {
     isStreaming?: boolean;
     imageUrl?: string | null;
     imageGenError?: string | null;
+    paragraphImages?: ParagraphImage[];
 }
 
 interface ConversationData {
@@ -68,6 +77,7 @@ interface ConversationData {
     errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string; // <-- Add this line
+    imageGenSettings?: { enabled: boolean; invokeaiEndpoint?: string; promptLlm?: string; promptSystemMessage?: string };
 }
 
 interface ChatInterfaceProps {
@@ -158,6 +168,9 @@ export function ChatInterface({
     
     // Enable local Ollama agent handling
     useOllamaAgent(conversationId, user?.uid || null);
+    
+    // Enable InvokeAI image generation
+    useInvokeAIImageGen(conversationId, user?.uid || null);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
@@ -902,6 +915,7 @@ export function ChatInterface({
 
     // --- Image Modal State ---
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
+    const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
 
     // --- Auto-update fullscreen image modal when new image arrives ---
     useEffect(() => {
@@ -917,6 +931,26 @@ export function ChatInterface({
             setFullScreenImageMsgId(lastImageMsg.id);
         }
     }, [visibleMessages, fullScreenImageMsgId]);
+    
+    // --- Auto-advance fullscreen gallery when TTS moves to next paragraph ---
+    useEffect(() => {
+        if (!fullScreenGallery) return;
+        
+        const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
+        if (!message || !message.paragraphImages) return;
+        
+        // Find the paragraph that's currently being read
+        const currentParagraphIndex = currentParagraphIndexRef.current;
+        if (currentParagraphIndex >= 0 && currentParagraphIndex < message.paragraphImages.length) {
+            const currentImage = message.paragraphImages[currentParagraphIndex];
+            if (currentImage && currentImage.status === 'complete' && currentImage.imageUrl) {
+                // Auto-advance to current paragraph's image
+                if (fullScreenGallery.paragraphIndex !== currentParagraphIndex) {
+                    setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: currentParagraphIndex });
+                }
+            }
+        }
+    }, [fullScreenGallery, visibleMessages]);
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
@@ -943,6 +977,27 @@ export function ChatInterface({
             if (playedMessageIds.has(msg.id)) return false;
             if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
             if (msg.imageUrl && imageLoadStatus[msg.id] !== 'loaded' && imageLoadStatus[msg.id] !== 'error') return false;
+            
+            // If image generation is enabled, wait until paragraphImages are initialized
+            if (conversationData?.imageGenSettings?.enabled) {
+                if (!msg.paragraphImages || msg.paragraphImages.length === 0) {
+                    logger.debug(`[TTS] Waiting for image generation to initialize for message ${msg.id.substring(0, 8)}...`);
+                    return false;
+                }
+            }
+
+            // Wait for paragraph images to be generated (or attempted) before starting TTS
+            if (msg.paragraphImages && msg.paragraphImages.length > 0) {
+                // Check if all paragraph images are complete or error (not pending or generating)
+                const allImagesReady = msg.paragraphImages.every(img => 
+                    img.status === 'complete' || img.status === 'error'
+                );
+                if (!allImagesReady) {
+                    logger.debug(`[TTS] Waiting for paragraph images to complete for message ${msg.id.substring(0, 8)}...`);
+                    return false;
+                }
+            }
+            
             return true;
         });
 
@@ -1550,9 +1605,49 @@ export function ChatInterface({
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {paragraph}
               </ReactMarkdown>
+              
+              {/* Paragraph Image Display */}
+              {msg.paragraphImages && msg.paragraphImages[index] && (
+                <div className="mt-2 flex flex-col items-center">
+                  {msg.paragraphImages[index].status === 'generating' && (
+                    <div className="text-xs text-muted-foreground">Generating image...</div>
+                  )}
+                  {msg.paragraphImages[index].status === 'complete' && msg.paragraphImages[index].imageUrl && (
+                    <Image
+                      src={msg.paragraphImages[index].imageUrl}
+                      alt={`Generated image for paragraph ${index + 1}`}
+                      className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
+                      style={{ objectFit: 'contain' }}
+                      onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: index })}
+                      width={512}
+                      height={512}
+                      unoptimized={msg.paragraphImages[index].imageUrl?.includes('storage.googleapis.com') || msg.paragraphImages[index].imageUrl?.includes('googleapis.com/storage')}
+                      aria-label="Show image in full screen"
+                    />
+                  )}
+                  {msg.paragraphImages[index].status === 'error' && (
+                    <div className="text-xs text-destructive mt-1">Image generation failed: {msg.paragraphImages[index].error}</div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
+        
+        {/* Image Stack Indicator */}
+        {msg.paragraphImages && msg.paragraphImages.length > 1 && (
+          <div className="mt-2 flex items-center justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: 0 })}
+              className="text-xs"
+            >
+              <ImageIcon className="h-3 w-3 mr-1" />
+              View {msg.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl).length} images
+            </Button>
+          </div>
+        )}
       </div>
     </>
   ) : (
@@ -1656,6 +1751,45 @@ export function ChatInterface({
                     >
                         {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
                     </Button>
+                    
+                    {/* Image Gallery Button - Show if there are paragraph images */}
+                    {(() => {
+                        const messagesWithImages = visibleMessages.filter(
+                            m => m.paragraphImages && m.paragraphImages.some(img => img.status === 'complete' && img.imageUrl)
+                        );
+                        if (messagesWithImages.length === 0) return null;
+                        
+                        const totalImages = messagesWithImages.reduce((sum, m) => 
+                            sum + (m.paragraphImages?.filter(img => img.status === 'complete' && img.imageUrl).length || 0), 0
+                        );
+                        
+                        return (
+                            <Button 
+                                variant="ghost" 
+                                size="icon"
+                                onClick={() => {
+                                    // Find first message with images
+                                    const firstMsgWithImages = messagesWithImages[0];
+                                    if (firstMsgWithImages && firstMsgWithImages.paragraphImages) {
+                                        const firstCompleteImage = firstMsgWithImages.paragraphImages.findIndex(
+                                            img => img.status === 'complete' && img.imageUrl
+                                        );
+                                        if (firstCompleteImage >= 0) {
+                                            setFullScreenGallery({ 
+                                                messageId: firstMsgWithImages.id, 
+                                                paragraphIndex: firstCompleteImage 
+                                            });
+                                        }
+                                    }
+                                }}
+                                className="h-12 w-12 rounded-full"
+                                aria-label={`View ${totalImages} generated images`}
+                                title={`View ${totalImages} generated images`}
+                            >
+                                <ImageIcon className="h-6 w-6" />
+                            </Button>
+                        );
+                    })()}
                 </div>
             </div>
 
@@ -1669,6 +1803,97 @@ export function ChatInterface({
                     handleAudioEnd();
                 }}
             />
+            
+            {/* Fullscreen Paragraph Image Gallery */}
+            {fullScreenGallery && (() => {
+                const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
+                if (!message || !message.paragraphImages || message.paragraphImages.length === 0) {
+                    setFullScreenGallery(null);
+                    return null;
+                }
+                
+                const currentImage = message.paragraphImages[fullScreenGallery.paragraphIndex];
+                const completeImages = message.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl);
+                const currentImageIndex = completeImages.findIndex(img => 
+                    message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
+                );
+                
+                const navigateImage = (direction: 'prev' | 'next') => {
+                    if (direction === 'prev' && currentImageIndex > 0) {
+                        const prevImage = completeImages[currentImageIndex - 1];
+                        const prevIndex = message.paragraphImages!.indexOf(prevImage);
+                        setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: prevIndex });
+                    } else if (direction === 'next' && currentImageIndex < completeImages.length - 1) {
+                        const nextImage = completeImages[currentImageIndex + 1];
+                        const nextIndex = message.paragraphImages!.indexOf(nextImage);
+                        setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: nextIndex });
+                    }
+                };
+                
+                return ReactDOM.createPortal(
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                        onClick={() => setFullScreenGallery(null)}
+                        tabIndex={0}
+                        aria-modal="true"
+                        role="dialog"
+                    >
+                        {currentImage && currentImage.status === 'complete' && currentImage.imageUrl && (
+                            <>
+                                <Image
+                                    src={currentImage.imageUrl}
+                                    alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
+                                    className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                    style={{ objectFit: 'contain' }}
+                                    width={1920}
+                                    height={1080}
+                                    unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                
+                                {/* Navigation buttons */}
+                                {completeImages.length > 1 && (
+                                    <>
+                                        <button
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={(e) => { e.stopPropagation(); navigateImage('prev'); }}
+                                            disabled={currentImageIndex === 0}
+                                            aria-label="Previous image"
+                                        >
+                                            <ChevronLeft className="h-6 w-6" />
+                                        </button>
+                                        <button
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={(e) => { e.stopPropagation(); navigateImage('next'); }}
+                                            disabled={currentImageIndex === completeImages.length - 1}
+                                            aria-label="Next image"
+                                        >
+                                            <ChevronRight className="h-6 w-6" />
+                                        </button>
+                                    </>
+                                )}
+                                
+                                {/* Image counter */}
+                                {completeImages.length > 1 && (
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                        {currentImageIndex + 1} / {completeImages.length}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                        
+                        <button
+                            className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                            onClick={(e) => { e.stopPropagation(); setFullScreenGallery(null); }}
+                            aria-label="Close full screen gallery"
+                        >
+                            <X className="h-4 w-4 inline mr-1" />
+                            Close
+                        </button>
+                    </div>,
+                    document.body
+                );
+            })()}
         </div>
     );
 }
