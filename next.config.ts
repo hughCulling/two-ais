@@ -24,13 +24,13 @@ const getHSTSHeader = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const isVercelProduction = process.env.VERCEL_ENV === 'production';
   const isVercelPreview = process.env.VERCEL_ENV === 'preview';
-  
+
   // Stage 1: Development (localhost) - No HSTS
   if (!isProduction) {
     console.log('HSTS: Development mode - No HSTS header (allows HTTP for local development)');
     return null;
   }
-  
+
   // Stage 2: Vercel Preview/Staging - Short max-age, includeSubDomains, no preload
   if (isProduction && isVercelPreview) {
     console.log('HSTS: Preview/Staging mode - Short max-age with includeSubDomains (no preload)');
@@ -39,7 +39,7 @@ const getHSTSHeader = () => {
       value: 'max-age=3600; includeSubDomains', // 1 hour
     };
   }
-  
+
   // Stage 3: Vercel Production - Very conservative HSTS for multiple daily deployments
   if (isProduction && isVercelProduction) {
     console.log('HSTS: Production mode - Very conservative HSTS (safe for multiple daily deployments)');
@@ -48,7 +48,7 @@ const getHSTSHeader = () => {
       value: 'max-age=3600; includeSubDomains', // 1 hour - very safe for rapid development
     };
   }
-  
+
   // Fallback for other production environments
   if (isProduction) {
     console.log('HSTS: Production mode (non-Vercel) - Moderate HSTS without preload');
@@ -57,7 +57,7 @@ const getHSTSHeader = () => {
       value: 'max-age=604800; includeSubDomains', // 1 week
     };
   }
-  
+
   return null;
 };
 
@@ -101,7 +101,7 @@ const nextConfig: NextConfig = {
     // Remove console logs in production
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  
+
   images: {
     remotePatterns: [
       {
@@ -113,6 +113,18 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'imgen.x.ai',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
         port: '',
         pathname: '/**',
       },
@@ -131,14 +143,14 @@ const nextConfig: NextConfig = {
     // Optimize for modern browsers
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  
+
   // Configure webpack to target modern browsers
   webpack: (config, { dev, isServer }) => {
     // Only apply optimizations in production
     if (!dev && !isServer) {
       // Target modern browsers to reduce polyfills
       config.target = ['web', 'es2020'];
-      
+
       // Disable polyfills for modern features
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -149,7 +161,7 @@ const nextConfig: NextConfig = {
         buffer: false,
         process: false,
       };
-      
+
       // Configure module rules to avoid unnecessary polyfills
       config.module.rules.push({
         test: /\.m?js$/,
@@ -158,7 +170,7 @@ const nextConfig: NextConfig = {
         },
       });
     }
-    
+
     return config;
   },
   async headers() {
