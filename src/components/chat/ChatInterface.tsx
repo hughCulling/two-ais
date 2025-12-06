@@ -188,6 +188,7 @@ export function ChatInterface({
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [showMobileTTSWarning, setShowMobileTTSWarning] = useState(false);
     const [isTTSAutoScrollEnabled, setIsTTSAutoScrollEnabled] = useState(true);
+    const [currentTTSParagraph, setCurrentTTSParagraph] = useState<number>(-1); // Track current TTS paragraph for gallery sync
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const audioPlayerRef = useRef<HTMLAudioElement>(null);
@@ -940,18 +941,17 @@ export function ChatInterface({
         const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
         if (!message || !message.paragraphImages) return;
 
-        // Find the paragraph that's currently being read
-        const currentParagraphIndex = currentParagraphIndexRef.current;
-        if (currentParagraphIndex >= 0 && currentParagraphIndex < message.paragraphImages.length) {
-            const currentImage = message.paragraphImages[currentParagraphIndex];
+        // Find the paragraph that's currently being read (use state, not ref, for reactivity)
+        if (currentTTSParagraph >= 0 && currentTTSParagraph < message.paragraphImages.length) {
+            const currentImage = message.paragraphImages[currentTTSParagraph];
             if (currentImage && currentImage.status === 'complete' && currentImage.imageUrl) {
                 // Auto-advance to current paragraph's image
-                if (fullScreenGallery.paragraphIndex !== currentParagraphIndex) {
-                    setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: currentParagraphIndex });
+                if (fullScreenGallery.paragraphIndex !== currentTTSParagraph) {
+                    setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: currentTTSParagraph });
                 }
             }
         }
-    }, [fullScreenGallery, visibleMessages]);
+    }, [fullScreenGallery, visibleMessages, currentTTSParagraph]);
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
@@ -1113,6 +1113,7 @@ export function ChatInterface({
 
                     // Reset paragraph index for new message
                     currentParagraphIndexRef.current = -1;
+                    setCurrentTTSParagraph(-1);
                 }
 
                 // Auto-scroll to paragraph when TTS starts (for every chunk)
@@ -1154,6 +1155,7 @@ export function ChatInterface({
                                 });
 
                                 currentParagraphIndexRef.current = paragraphIndex;
+                                setCurrentTTSParagraph(paragraphIndex); // Update state to trigger gallery sync
                             } else {
                                 logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
                                 if (!paragraphElement) logger.warn(`  - Missing paragraph element`);
@@ -1379,8 +1381,8 @@ export function ChatInterface({
 
     return (
         <div className={`flex flex-col w-full mx-auto bg-background overflow-hidden ${isFullscreen
-                ? 'fixed inset-0 z-50 rounded-none shadow-none border-0'
-                : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
+            ? 'fixed inset-0 z-50 rounded-none shadow-none border-0'
+            : 'h-[70vh] max-w-3xl p-4 rounded-lg shadow-md border'
             }`}>
             {/* Header Section */}
             <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
@@ -1495,15 +1497,15 @@ export function ChatInterface({
                                 }
                             }}
                             className={`flex ${msg.role === 'agentA' ? 'justify-start' :
-                                    msg.role === 'agentB' ? 'justify-end' :
-                                        'justify-center text-xs text-muted-foreground italic py-1'
+                                msg.role === 'agentB' ? 'justify-end' :
+                                    'justify-center text-xs text-muted-foreground italic py-1'
                                 }`}
                             style={{ contain: 'layout' }}
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
-                                        msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
-                                            'bg-transparent px-0 py-0 shadow-none'
+                                    msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
+                                        'bg-transparent px-0 py-0 shadow-none'
                                     }`}
                             >
                                 {/* IMAGE DISPLAY (above content) */}
