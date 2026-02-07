@@ -39,20 +39,20 @@ export default function HeaderUnified() {
         <>
             {/* Backdrop overlay - dims the page when menu is open */}
             {isMenuOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black/50 z-40"
                     onClick={() => setIsMenuOpen(false)}
                     aria-hidden="true"
                 />
             )}
 
-            <header className="bg-theme-primary shadow-md relative z-50">
+            <header className="bg-theme-primary dark:bg-gray-800 shadow-md relative z-50">
                 <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative flex items-center justify-center h-16">
                         {/* Centered Logo/Home Link */}
-                        <Link 
-                            href={homeLink} 
-                            className="text-xl font-bold text-gray-900 hover:text-gray-700" 
+                        <Link
+                            href={homeLink}
+                            className="text-xl font-bold text-gray-900 dark:text-theme-primary hover:text-gray-700 dark:hover:text-theme-primary/80"
                             aria-label={isAppRoute ? "Go to Two AIs application" : "Go to Two AIs homepage"}
                         >
                             {appName}
@@ -63,7 +63,7 @@ export default function HeaderUnified() {
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 type="button"
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-gray-600 hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-800"
+                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 dark:text-theme-primary hover:text-gray-600 dark:hover:text-theme-primary/80 hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-800 dark:focus:ring-theme-primary"
                                 aria-controls="main-menu"
                                 aria-expanded={isMenuOpen}
                                 aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
@@ -81,53 +81,53 @@ export default function HeaderUnified() {
 
                 {/* --- Menu Panel - Dropdown positioned at top-right --- */}
                 <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-4 w-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md mt-2`} id="main-menu" aria-label="Main navigation menu">
-                <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
-                    {authLoading ? (
-                        <div className="block px-3 py-2" role="status" aria-live="polite">
-                            <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" aria-hidden="true"></div>
-                            <div className="h-8 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true"></div>
-                        </div>
-                    ) : user ? (
-                        <>
-                            <div className="px-4 py-2 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700 mb-2" role="group" aria-label="User information">
-                                <UserCircle className="h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                                <div className="flex-1 min-w-0">
-                                    <span className="block text-base font-medium text-gray-900 dark:text-white truncate" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
-                                        {user.displayName || user.email}
-                                    </span>
-                                </div>
+                    <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
+                        {authLoading ? (
+                            <div className="block px-3 py-2" role="status" aria-live="polite">
+                                <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" aria-hidden="true"></div>
+                                <div className="h-8 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true"></div>
                             </div>
-                            <Link href={`/${language.code}/app/history`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="View previous conversations">
-                                <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
+                        ) : user ? (
+                            <>
+                                <div className="px-4 py-2 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700 mb-2" role="group" aria-label="User information">
+                                    <UserCircle className="h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                                    <div className="flex-1 min-w-0">
+                                        <span className="block text-base font-medium text-gray-900 dark:text-white truncate" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                            {user.displayName || user.email}
+                                        </span>
+                                    </div>
+                                </div>
+                                <Link href={`/${language.code}/app/history`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="View previous conversations">
+                                    <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
+                                </Link>
+                                <Link href={`/${language.code}/app/settings`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
+                                    <span className="flex items-center justify-center"><Settings className="h-4 w-4 mr-1" aria-hidden="true" />Settings</span>
+                                </Link>
+                            </>
+                        ) : (
+                            <Link href={`/${language.code}/login`} className="block px-4 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 w-full text-center" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                                {t.header.signIn}
                             </Link>
-                            <Link href={`/${language.code}/app/settings`} className={mobileMenuItemClasses} onClick={handleMobileLinkClick} aria-label="Go to settings">
-                                <span className="flex items-center justify-center"><Settings className="h-4 w-4 mr-1" aria-hidden="true" />Settings</span>
-                            </Link>
-                        </>
-                    ) : (
-                        <Link href={`/${language.code}/login`} className="block px-4 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 w-full text-center" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
-                            {t.header.signIn}
-                        </Link>
-                    )}
+                        )}
 
-                    {/* Language Selector */}
-                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Language selector">
-                        <LanguageSelector showIcon={true} />
-                    </div>
-
-                    {/* Theme Switcher */}
-                    <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Theme switcher">
-                        <ThemeSwitcher />
-                    </div>
-
-                    {user && !authLoading && (
-                        <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
-                            <SignOutButton className="block px-4 py-2 rounded-md text-base font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 w-full text-center" onSignOut={handleMobileLinkClick} />
+                        {/* Language Selector */}
+                        <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Language selector">
+                            <LanguageSelector showIcon={true} />
                         </div>
-                    )}
+
+                        {/* Theme Switcher */}
+                        <div className="px-4 py-2 flex items-center justify-center" role="group" aria-label="Theme switcher">
+                            <ThemeSwitcher />
+                        </div>
+
+                        {user && !authLoading && (
+                            <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                                <SignOutButton className="block px-4 py-2 rounded-md text-base font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 w-full text-center" onSignOut={handleMobileLinkClick} />
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
         </>
     );
 }
