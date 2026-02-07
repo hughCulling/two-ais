@@ -46,13 +46,13 @@ export default function HeaderUnified() {
                 />
             )}
 
-            <header className="bg-white dark:bg-gray-800 shadow-md relative z-50">
+            <header className="bg-theme-primary shadow-md relative z-50">
                 <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative flex items-center justify-center h-16">
                         {/* Centered Logo/Home Link */}
                         <Link 
                             href={homeLink} 
-                            className="text-xl font-bold text-gray-900 dark:text-white hover:text-indigo-700 dark:hover:text-indigo-400" 
+                            className="text-xl font-bold text-gray-900 hover:text-gray-700" 
                             aria-label={isAppRoute ? "Go to Two AIs application" : "Go to Two AIs homepage"}
                         >
                             {appName}
@@ -63,7 +63,7 @@ export default function HeaderUnified() {
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 type="button"
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-gray-600 hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-800"
                                 aria-controls="main-menu"
                                 aria-expanded={isMenuOpen}
                                 aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
