@@ -24,25 +24,25 @@ import { useTranslation } from '@/hooks/useTranslation';
 // import type { ImageModelInfo } from '@/lib/image_models';
 import { FreeTierBadge } from './ui/free-tier-badge';
 
-   // Replace these with your actual base64 strings!
-  //  const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
-  //  const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
+// Replace these with your actual base64 strings!
+//  const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
+//  const BLUR_DATA_URL_DARK = "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoKAAgAAgA0JaQAAsaV+nuAAP79uYWGrQjZy8mqFTDgNKT3aIxwozIHbCZA1zRZacB6ZcAA";
 
 // TruncatableNote component for pricing notes
 import type { TranslationKeys } from '@/lib/translations';
 
-const TruncatableNote: React.FC<{ 
+const TruncatableNote: React.FC<{
   noteText: string | ((t: TranslationKeys) => string);
   tooltipMaxWidth?: string;
 }> = ({ noteText, tooltipMaxWidth = "max-w-xs" }) => {
   const [isActuallyOverflowing, setIsActuallyOverflowing] = React.useState(false);
   const textRef = React.useRef<HTMLSpanElement>(null);
   const { t, loading } = useTranslation();
-  
+
   React.useEffect(() => {
     const el = textRef.current;
     if (!el) return;
-    
+
     // Simple debounced overflow check
     let timeoutId: NodeJS.Timeout;
     const checkOverflow = () => {
@@ -53,20 +53,20 @@ const TruncatableNote: React.FC<{
         }
       }, 100); // Increased debounce time to reduce reflows
     };
-    
+
     // Initial check
     checkOverflow();
-    
+
     // Use ResizeObserver with debouncing
     let resizeObserver: ResizeObserver | null = null;
     if (typeof window !== 'undefined' && 'ResizeObserver' in window) {
       resizeObserver = new ResizeObserver(checkOverflow);
       resizeObserver.observe(el);
     }
-    
-    return () => { 
+
+    return () => {
       clearTimeout(timeoutId);
-      if (resizeObserver && el) resizeObserver.disconnect(); 
+      if (resizeObserver && el) resizeObserver.disconnect();
     };
   }, [noteText]);
   if (loading || !t) return null;
@@ -154,7 +154,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Listen for voice loading events to update UI (force re-render when voices load)
     onVoicesLoaded(() => {
       // Force a re-render to update language support indicators
@@ -178,10 +178,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const toggleCollapsible = (id: string) => {
     setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
   };
-  
+
   // Show nothing while loading translations
   if (loading || !t) return null;
-  
+
   // Don't render landing page if user is authenticated (redirect is in progress)
   if (!authLoading && user) return null;
   if (user) return null;
@@ -222,9 +222,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
             <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
-            <div className="border border-theme-primary/50 rounded-lg p-4 text-center">
+            <div className="border rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <KeyRound className="h-4 w-4 text-theme-primary" />
+                <KeyRound className="h-4 w-4" />
                 <h3 className="font-semibold text-base">{t.page_ApiKeysRequiredTitle}</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -235,7 +235,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 {t.page_ApiKeysRequiredDescription.split('{settingsLink}')[1]}
               </p>
             </div>
-            
+
             {/* Ollama Status */}
             {!ollamaLoading && ollamaAvailable && (
               <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
@@ -292,7 +292,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 </div>
               </div>
             )}
-            
+
             {/* InvokeAI Status */}
             {!invokeaiLoading && invokeaiAvailable && (
               <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
@@ -314,7 +314,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 <div>
                   <div className="space-y-2">
                     <p>
-                      InvokeAI allows you to generate images locally using Stable Diffusion models. 
+                      InvokeAI allows you to generate images locally using Stable Diffusion models.
                       <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
                         Learn more
                         <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
@@ -323,7 +323,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                       <p className="font-semibold">Setup Instructions:</p>
                       <p>
-                        1. Download and install InvokeAI from 
+                        1. Download and install InvokeAI from
                         <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
                           invoke-ai.github.io
                           <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
@@ -348,7 +348,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 </div>
               </div>
             )}
-            
+
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">
@@ -380,16 +380,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                 let lastDisplayedBrand: string | null = null;
-                
+
                 // Check if all models in this provider support the current language
-                const allModelsSupport = providerModels.every(llm => 
+                const allModelsSupport = providerModels.every(llm =>
                   isLanguageSupported(llm.provider, language.code, llm.id)
                 );
-                
+
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
                     <div className="flex items-center justify-center w-full mb-2">
-                      <CollapsibleTrigger 
+                      <CollapsibleTrigger
                         className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
@@ -399,21 +399,21 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           <span>{providerName}</span>
                           <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
                             {providerName === 'Mistral AI' && (
-                              <FreeTierBadge 
+                              <FreeTierBadge
                                 freeTier={{
                                   available: true,
                                   note: (t) => t.pricing.mistralFreeTierNote
-                                }} 
-                                t={t} 
+                                }}
+                                t={t}
                               />
                             )}
                             {providerName === 'Ollama' && (
-                              <FreeTierBadge 
+                              <FreeTierBadge
                                 freeTier={{
                                   available: true,
                                   note: (t) => t.pricing.ollamaFreeTierNote
-                                }} 
-                                t={t} 
+                                }}
+                                t={t}
                               />
                             )}
                             {allModelsSupport && (
@@ -433,7 +433,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         </div>
                       </CollapsibleTrigger>
                     </div>
-                    <CollapsibleContent 
+                    <CollapsibleContent
                       id={`${providerCollapsibleId}-content`}
                       className="space-y-3 pl-2 pt-1"
                       role="region"
@@ -451,8 +451,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                               translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Claude 4');
                             } else if (m.categoryKey === 'modelCategory_Grok4') {
                               translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Grok 4');
-                            // } else if (m.categoryKey === 'modelCategory_Gemma3n') {
-                            //   translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Gemma 3n');
+                              // } else if (m.categoryKey === 'modelCategory_Gemma3n') {
+                              //   translatedCategory = t.page_ModelCategoryModels.replace('{model}', 'Gemma 3n');
                             } else {
                               const maybeTranslation = (m.categoryKey && m.categoryKey in t)
                                 ? t[m.categoryKey as keyof typeof t]
@@ -486,101 +486,101 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                       {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                    {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
-                                    {/* Don't show pricing for Ollama models - it's shown in the provider header */}
-                                    {llm.provider !== 'Ollama' && (llm.pricing.note ? (
-                                      <TruncatableNote noteText={llm.pricing.note} />
-                                    ) : (
-                                      <span
-                                        className="text-xs text-muted-foreground truncate min-w-0"
-                                        title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
-                                      >
-                                        (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
-                                      </span>
-                                    ))}
-                                    {/* Only show language support icon on individual models if not all models support the language */}
-                                    {!allModelsSupport && (
-                                      isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                          </TooltipTrigger>
-                                          <TooltipContent side="top">
-                                            <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                          </TooltipContent>
-                                        </Tooltip>
+                                      {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+                                      {/* Don't show pricing for Ollama models - it's shown in the provider header */}
+                                      {llm.provider !== 'Ollama' && (llm.pricing.note ? (
+                                        <TruncatableNote noteText={llm.pricing.note} />
                                       ) : (
+                                        <span
+                                          className="text-xs text-muted-foreground truncate min-w-0"
+                                          title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
+                                        >
+                                          (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
+                                        </span>
+                                      ))}
+                                      {/* Only show language support icon on individual models if not all models support the language */}
+                                      {!allModelsSupport && (
+                                        isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top">
+                                              <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        ) : (
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top">
+                                              <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        )
+                                      )}
+                                      {llm.usesReasoningTokens && (
                                         <Tooltip>
                                           <TooltipTrigger asChild>
-                                            <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                            <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
                                           </TooltipTrigger>
-                                          <TooltipContent side="top">
-                                            <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                          <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
+                                            <p className="text-xs">
+                                              {llm.provider === 'Google'
+                                                ? t.page_TooltipGoogleThinkingBudget
+                                                : llm.provider === 'Anthropic'
+                                                  ? t.page_TooltipAnthropicExtendedThinking
+                                                  : llm.provider === 'xAI'
+                                                    ? t.page_TooltipXaiThinking
+                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                      ? t.page_TooltipQwenReasoning
+                                                      : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                        ? t.page_TooltipDeepSeekReasoning
+                                                        : t.page_TooltipGenericReasoning
+                                              }
+                                            </p>
                                           </TooltipContent>
                                         </Tooltip>
-                                      )
-                                    )}
-                                    {llm.usesReasoningTokens && (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
-                                          <p className="text-xs">
-                                            {llm.provider === 'Google'
-                                              ? t.page_TooltipGoogleThinkingBudget
-                                              : llm.provider === 'Anthropic'
-                                                ? t.page_TooltipAnthropicExtendedThinking
-                                                : llm.provider === 'xAI'
-                                                  ? t.page_TooltipXaiThinking
-                                                  : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
-                                                    ? t.page_TooltipQwenReasoning
-                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
-                                                      ? t.page_TooltipDeepSeekReasoning
-                                                      : t.page_TooltipGenericReasoning
-                                            }
-                                          </p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )}
-                                    {llm.requiresOrgVerification && (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
-                                          <p className="text-xs">
-                                            {t.page_TooltipRequiresVerification.split("verify here")[0]}
-                                            <a
-                                              href="https://platform.openai.com/settings/organization/general"
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                              className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                                            >
-                                              {t.common_verifyHere}
-                                            </a>
-                                            {t.page_TooltipRequiresVerification.split("verify here")[1]}
-                                          </p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )}
-                                    {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
-                                    {llm.knowledgeCutoff && (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
-                                            <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
-                                            <span className="truncate" title={llm.knowledgeCutoff}>
-                                              {llm.knowledgeCutoff}
-                                            </span>
-                                          </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top">
-                                          <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )}
-                                    {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+                                      )}
+                                      {llm.requiresOrgVerification && (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                            <p className="text-xs">
+                                              {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                              <a
+                                                href="https://platform.openai.com/settings/organization/general"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                              >
+                                                {t.common_verifyHere}
+                                              </a>
+                                              {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                            </p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      )}
+                                      {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
+                                      {llm.knowledgeCutoff && (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
+                                              <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
+                                              <span className="truncate" title={llm.knowledgeCutoff}>
+                                                {llm.knowledgeCutoff}
+                                              </span>
+                                            </div>
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top">
+                                            <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      )}
+                                      {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
                                     </div>
                                   </li>
                                 ))}
@@ -609,7 +609,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                   return (
                     <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                      <CollapsibleTrigger 
+                      <CollapsibleTrigger
                         className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
@@ -620,7 +620,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
                         </div>
                       </CollapsibleTrigger>
-                      <CollapsibleContent 
+                      <CollapsibleContent
                         id={`${providerCollapsibleId}-content`}
                         className="space-y-2 flex flex-col items-center"
                         role="region"
@@ -662,12 +662,12 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   </Tooltip>
                                 )}
                                 {model.freeTier?.available && (
-                                    <FreeTierBadge
-                                      freeTier={model.freeTier}
-                                      t={t}
-                                      className="ml-1"
-                                    />
-                                  )}  
+                                  <FreeTierBadge
+                                    freeTier={model.freeTier}
+                                    t={t}
+                                    className="ml-1"
+                                  />
+                                )}
                               </li>
                             );
                           })}
