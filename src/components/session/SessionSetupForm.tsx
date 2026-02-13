@@ -20,8 +20,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-import { getAllAvailableLLMs, getLLMInfoById } from '@/lib/models';
-import { useOllama } from '@/hooks/useOllama';
+import { getAllAvailableLLMs, getLLMInfoById, setOllamaModelsFromNames } from '@/lib/models';
+// useOllama replaced with manual verify flow for ngrok support
 import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import { IconTooltipBadge } from "@/components/ui/icon-tooltip-badge";
@@ -113,6 +113,7 @@ interface SessionConfig {
     agentB_tts: AgentTTSSettings;
     language?: string;
     initialSystemPrompt: string;
+    ollamaEndpoint?: string;
     imageGenSettings?: {
         enabled: boolean;
         provider: string;
@@ -558,8 +559,44 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const { language } = useLanguage();
     const { t, loading: translationLoading } = useTranslation();
 
-    // Detect Ollama and load models
-    const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
+    // Ollama endpoint (ngrok URL) - manual verify flow
+    const [ollamaEndpoint, setOllamaEndpoint] = useState<string>('');
+    const [ollamaAvailable, setOllamaAvailable] = useState(false);
+    const [ollamaLoading, setOllamaLoading] = useState(false);
+    const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
+
+    const handleVerifyOllama = async () => {
+        if (!ollamaEndpoint.trim()) return;
+        setOllamaLoading(true);
+        setOllamaVerifyError(null);
+        try {
+            // Proxy through server-side route to bypass ngrok CORS/browser warning
+            const res = await fetch('/api/ollama/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ endpoint: ollamaEndpoint.trim() }),
+            });
+            const data = await res.json();
+            if (data.available) {
+                setOllamaAvailable(true);
+                // Use model names from server response (avoids client-side CORS issues)
+                setOllamaModelsFromNames(data.models || [], ollamaEndpoint.trim());
+            } else {
+                setOllamaAvailable(false);
+                // Show the specific error from the proxy if available
+                let errorMessage = data.error || t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.';
+                if (errorMessage.includes('403')) {
+                    errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
+                }
+                setOllamaVerifyError(errorMessage);
+            }
+        } catch {
+            setOllamaAvailable(false);
+            setOllamaVerifyError(t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.');
+        } finally {
+            setOllamaLoading(false);
+        }
+    };
 
     // Detect InvokeAI
     const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('http://localhost:9090');
@@ -583,8 +620,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     // Collapse states for helper text
     const [collapseCardDescription, setCollapseCardDescription] = useState<boolean>(false);
     const [collapseInitialPromptDescription, setCollapseInitialPromptDescription] = useState<boolean>(false);
-    const [collapseOllamaDetails, setCollapseOllamaDetails] = useState<boolean>(false);
-    const [collapseOllamaNotDetected, setCollapseOllamaNotDetected] = useState<boolean>(false);
+    const [collapseOllamaHelp, setCollapseOllamaHelp] = useState<boolean>(false);
     const [collapseInvokeAIDetails, setCollapseInvokeAIDetails] = useState<boolean>(false);
     const [collapseInvokeAINotDetected, setCollapseInvokeAINotDetected] = useState<boolean>(false);
 
@@ -944,6 +980,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             agentA_tts: sessionAgentATTSSettings,
             agentB_tts: sessionAgentBTTSSettings,
             initialSystemPrompt,
+            ollamaEndpoint: ollamaEndpoint.trim() || undefined,
             imageGenSettings,
         });
     };
@@ -1025,8 +1062,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 collapseStates: {
                     cardDescription: collapseCardDescription,
                     initialPromptDescription: collapseInitialPromptDescription,
-                    ollamaDetails: collapseOllamaDetails,
-                    ollamaNotDetected: collapseOllamaNotDetected,
+                    ollamaHelp: collapseOllamaHelp,
+                    invokeAIDetails: collapseInvokeAIDetails,
+                    invokeAINotDetected: collapseInvokeAINotDetected,
                 },
             };
 
@@ -1087,8 +1125,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             if (preset.collapseStates) {
                 setCollapseCardDescription(preset.collapseStates.cardDescription ?? false);
                 setCollapseInitialPromptDescription(preset.collapseStates.initialPromptDescription ?? false);
-                setCollapseOllamaDetails(preset.collapseStates.ollamaDetails ?? false);
-                setCollapseOllamaNotDetected(preset.collapseStates.ollamaNotDetected ?? false);
+                setCollapseOllamaHelp(preset.collapseStates.ollamaHelp ?? false);
+                setCollapseInvokeAIDetails(preset.collapseStates.invokeAIDetails ?? false);
+                setCollapseInvokeAINotDetected(preset.collapseStates.invokeAINotDetected ?? false);
             }
 
             toast({
@@ -1344,46 +1383,63 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </div>
                     )}
 
-                    {/* Ollama Status Indicator */}
-                    {ollamaLoading && (
-                        <p className="text-sm text-muted-foreground pt-2">Checking for Ollama...</p>
-                    )}
-                    {!ollamaLoading && ollamaAvailable && (
-                        <div className="pt-2 space-y-1 flex flex-col items-center">
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm text-green-600 dark:text-green-400">✓ Ollama detected</p>
-                                <button
-                                    onClick={() => setCollapseOllamaDetails(!collapseOllamaDetails)}
-                                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
-                                    aria-expanded={!collapseOllamaDetails}
-                                    aria-label="Toggle Ollama details"
-                                >
-                                    {collapseOllamaDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                                </button>
-                            </div>
-                            {!collapseOllamaDetails && (
-                                <p className="text-xs text-green-600 dark:text-green-400">Their local and cloud models are available</p>
-                            )}
+                    {/* Ollama Endpoint (ngrok URL) */}
+                    <div className="pt-3 space-y-2 flex flex-col items-center">
+                        <Label htmlFor="ollama-endpoint" className="text-sm">
+                            {t?.page_OllamaEndpointLabel || 'Ollama Endpoint (ngrok URL)'}
+                        </Label>
+                        <button
+                            onClick={() => setCollapseOllamaHelp(!collapseOllamaHelp)}
+                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            aria-expanded={!collapseOllamaHelp}
+                        >
+                            {collapseOllamaHelp ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                            <span className="text-xs">Help</span>
+                        </button>
+                        {!collapseOllamaHelp && (
+                            <p className="text-xs text-muted-foreground text-center">
+                                Run <code className="bg-muted px-1 rounded text-xs">{t?.page_OllamaStep3 || 'OLLAMA_ORIGINS=* ollama serve'}</code> then <code className="bg-muted px-1 rounded text-xs">{t?.page_OllamaStep3b || 'ngrok http 11434'}</code> and paste the forwarding URL here.
+                            </p>
+                        )}
+                        <div className="flex gap-2 w-full max-w-sm">
+                            <input
+                                id="ollama-endpoint"
+                                type="url"
+                                value={ollamaEndpoint}
+                                onChange={(e) => {
+                                    setOllamaEndpoint(e.target.value);
+                                    // Reset verification state when URL changes
+                                    if (ollamaAvailable) {
+                                        setOllamaAvailable(false);
+                                    }
+                                    setOllamaVerifyError(null);
+                                }}
+                                placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
+                                className="flex-1 px-3 py-1.5 text-sm border rounded-md bg-background"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        handleVerifyOllama();
+                                    }
+                                }}
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleVerifyOllama}
+                                disabled={!ollamaEndpoint.trim() || ollamaLoading}
+                            >
+                                {ollamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
+                            </Button>
                         </div>
-                    )}
-                    {!ollamaLoading && !ollamaAvailable && (
-                        <div className="pt-2 space-y-1 flex flex-col items-center">
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm text-muted-foreground">Ollama not detected</p>
-                                <button
-                                    onClick={() => setCollapseOllamaNotDetected(!collapseOllamaNotDetected)}
-                                    className="text-muted-foreground hover:text-foreground transition-colors"
-                                    aria-expanded={!collapseOllamaNotDetected}
-                                    aria-label="Toggle Ollama installation info"
-                                >
-                                    {collapseOllamaNotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                                </button>
-                            </div>
-                            {!collapseOllamaNotDetected && (
-                                <p className="text-xs text-muted-foreground">You can <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="underline">install Ollama</a> for free local models.</p>
-                            )}
-                        </div>
-                    )}
+                        {ollamaAvailable && (
+                            <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
+                        )}
+                        {ollamaVerifyError && (
+                            <p className="text-sm text-red-600 dark:text-red-400">{ollamaVerifyError}</p>
+                        )}
+                    </div>
 
                     {/* InvokeAI Status Indicator */}
                     {invokeaiLoading && (

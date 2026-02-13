@@ -478,6 +478,13 @@ const mk = {
             "exitLabel": "Exit fullscreen"
         }
     },
-    "page_OllamaDetectedTitle": "Ollama Detected"
+    "page_OllamaDetectedTitle": "Ollama Detected",
+    "page_OllamaStep3b": "2. ngrok http 11434",
+    "page_OllamaEndpointLabel": "Ollama Endpoint (ngrok URL)",
+    "page_OllamaEndpointPlaceholder": "e.g. https://abc123.ngrok-free.app",
+    "page_OllamaVerify": "Verify",
+    "page_OllamaVerifying": "Verifying...",
+    "page_OllamaVerifySuccess": "Ollama connected!",
+    "page_OllamaVerifyFail": "Could not connect to Ollama at this endpoint."
 };
 export default mk;

@@ -28,13 +28,13 @@ function initializeServices() {
         if (!firebaseAdminApp) firebaseAdminApp = getApps()[0];
         if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
         if (!secretManagerClient) {
-             console.warn("API Route: Attempting to initialize Secret Manager Client (might already exist).");
-             try {
-                 secretManagerClient = new SecretManagerServiceClient();
-             } catch (error) {
-                  console.error("API Route: Failed to initialize Secret Manager Client:", error);
-                  secretManagerClient = null;
-             }
+            console.warn("API Route: Attempting to initialize Secret Manager Client (might already exist).");
+            try {
+                secretManagerClient = new SecretManagerServiceClient();
+            } catch (error) {
+                console.error("API Route: Failed to initialize Secret Manager Client:", error);
+                secretManagerClient = null;
+            }
         }
         return;
     }
@@ -44,10 +44,10 @@ function initializeServices() {
         if (!serviceAccountJson) throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.");
         let serviceAccount: ServiceAccount;
         try {
-             serviceAccount = JSON.parse(serviceAccountJson);
+            serviceAccount = JSON.parse(serviceAccountJson);
         } catch (parseError) {
-             console.error("API Route: JSON PARSE ERROR:", parseError);
-             throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY JSON.");
+            console.error("API Route: JSON PARSE ERROR:", parseError);
+            throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY JSON.");
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rawPrivateKey = (serviceAccount as any).private_key;
@@ -55,7 +55,7 @@ function initializeServices() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (serviceAccount as any).private_key = rawPrivateKey.replace(/\\n/g, '\n');
         } else {
-             throw new Error("Parsed service account key 'private_key' is not a string.");
+            throw new Error("Parsed service account key 'private_key' is not a string.");
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!serviceAccount || !(serviceAccount as any).client_email || !(serviceAccount as any).private_key || !(serviceAccount as any).project_id) {
@@ -180,6 +180,7 @@ interface StartConversationRequest {
     agentB_tts: AgentTTSSettingsApi;
     language?: string; // Add optional language parameter
     initialSystemPrompt?: string; // <-- Add this line
+    ollamaEndpoint?: string; // ngrok URL for remote Ollama access
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
@@ -217,6 +218,7 @@ type ConversationData = {
         };
     };
     initialSystemPrompt: string;
+    ollamaEndpoint?: string;
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
@@ -230,13 +232,13 @@ export async function POST(request: NextRequest) {
     console.log("API route /api/conversation/start hit");
 
     if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
-         console.error("API Route: Services not initialized at start of POST handler.");
-         initializeServices();
-         if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
+        console.error("API Route: Services not initialized at start of POST handler.");
+        initializeServices();
+        if (!dbAdmin || !firebaseAdminApp || !secretManagerClient) {
             console.error("API Route: Re-initialization failed again. Services unavailable.");
             return NextResponse.json({ error: "Server configuration error - services not initialized" }, { status: 500 });
-         }
-         console.log("API Route: Services successfully re-initialized within POST handler.");
+        }
+        console.log("API Route: Services successfully re-initialized within POST handler.");
     }
 
     try {
@@ -263,7 +265,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', imageGenSettings } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', ollamaEndpoint, imageGenSettings } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -271,8 +273,8 @@ export async function POST(request: NextRequest) {
         }
 
         if (!VALID_TTS_PROVIDER_IDS_API.includes(agentA_tts.provider) || !VALID_TTS_PROVIDER_IDS_API.includes(agentB_tts.provider)) {
-             console.warn(`API Route: Invalid TTS provider specified: AgentA=${agentA_tts.provider}, AgentB=${agentB_tts.provider}`);
-             return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
+            console.warn(`API Route: Invalid TTS provider specified: AgentA=${agentA_tts.provider}, AgentB=${agentB_tts.provider}`);
+            return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
         }
 
         if (ttsEnabled) {
@@ -298,7 +300,7 @@ export async function POST(request: NextRequest) {
         // Get LLM info, handling Ollama models specially (they're loaded dynamically on client)
         let agentALLMInfo = getLLMInfoById(agentA_llm);
         let agentBLLMInfo = getLLMInfoById(agentB_llm);
-        
+
         // If model ID starts with "ollama:", create a synthetic LLMInfo for it
         if (!agentALLMInfo && agentA_llm.startsWith('ollama:')) {
             agentALLMInfo = {
@@ -336,8 +338,8 @@ export async function POST(request: NextRequest) {
         const agentBRequiredKey = agentBLLMInfo.apiKeySecretName;
 
         if (!agentARequiredKey || !agentBRequiredKey) {
-             console.error(`API Route: Could not determine required API key secret name for one or both agents: A=${agentARequiredKey} (from provider ${agentALLMInfo.provider}), B=${agentBRequiredKey} (from provider ${agentBLLMInfo.provider})`);
-             return NextResponse.json({ error: "Internal configuration error mapping provider to key ID." }, { status: 500 });
+            console.error(`API Route: Could not determine required API key secret name for one or both agents: A=${agentARequiredKey} (from provider ${agentALLMInfo.provider}), B=${agentBRequiredKey} (from provider ${agentBLLMInfo.provider})`);
+            return NextResponse.json({ error: "Internal configuration error mapping provider to key ID." }, { status: 500 });
         }
 
         let userApiSecretVersions: Record<string, string> = {};
@@ -352,7 +354,7 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "User profile not found" }, { status: 404 });
             }
             userApiSecretVersions = userDocSnap.data()?.apiSecretVersions || {};
-            
+
             // Skip API key validation for Ollama (doesn't need API keys)
             const agentASecretVersion = agentALLMInfo.provider === 'Ollama' ? 'ollama-local' : (userApiSecretVersions[agentARequiredKey] || null);
             const agentBSecretVersion = agentBLLMInfo.provider === 'Ollama' ? 'ollama-local' : (userApiSecretVersions[agentBRequiredKey] || null);
@@ -361,11 +363,11 @@ export async function POST(request: NextRequest) {
                 console.error(`API Route: Missing secret version name for key type '${agentARequiredKey}' (Provider: ${agentALLMInfo.provider}) for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentALLMInfo.provider} not found in settings.` }, { status: 404 });
             }
-             if (!agentBSecretVersion && agentBLLMInfo.provider !== 'Ollama') {
+            if (!agentBSecretVersion && agentBLLMInfo.provider !== 'Ollama') {
                 console.error(`API Route: Missing secret version name for key type '${agentBRequiredKey}' (Provider: ${agentBLLMInfo.provider}) for user ${userId}`);
                 return NextResponse.json({ error: `API key reference for ${agentBLLMInfo.provider} not found in settings.` }, { status: 404 });
             }
-            
+
             // Add Ollama placeholder to apiSecretVersions if needed
             if (agentALLMInfo.provider === 'Ollama') {
                 userApiSecretVersions[agentARequiredKey] = 'ollama-local';
@@ -394,7 +396,7 @@ export async function POST(request: NextRequest) {
                 ...(ttsEnabled && agentA_tts.selectedTtsModelId ? { selectedTtsModelId: agentA_tts.selectedTtsModelId } : {}),
                 ...(ttsEnabled && agentA_tts.ttsApiModelId ? { ttsApiModelId: agentA_tts.ttsApiModelId } : {})
             };
-            
+
             const finalAgentBTts = {
                 provider: ttsEnabled ? agentB_tts.provider : 'none',
                 voice: ttsEnabled ? agentB_tts.voice : null,
@@ -419,6 +421,9 @@ export async function POST(request: NextRequest) {
                 },
                 initialSystemPrompt: initialSystemPrompt, // <-- Store in Firestore
             };
+            if (ollamaEndpoint) {
+                conversationData.ollamaEndpoint = ollamaEndpoint;
+            }
             if (imageGenSettings !== undefined) {
                 conversationData.imageGenSettings = imageGenSettings;
             }
@@ -430,22 +435,22 @@ export async function POST(request: NextRequest) {
 
             // Use the provided initialSystemPrompt (even if empty)
             const initialPrompt = initialSystemPrompt;
-            
+
             await newConversationRef.collection("messages").add({
                 role: "system",
                 content: initialPrompt,
                 timestamp: FieldValue.serverTimestamp(),
             });
-             console.log(`API Route: Added initial system message for conversation in ${language}: ${conversationId}`);
+            console.log(`API Route: Added initial system message for conversation in ${language}: ${conversationId}`);
 
-             return NextResponse.json({
-                 message: "Conversation created successfully.",
-                 conversationId: conversationId,
-             }, { status: 200 });
+            return NextResponse.json({
+                message: "Conversation created successfully.",
+                conversationId: conversationId,
+            }, { status: 200 });
 
         } catch (firestoreError) {
-             console.error(`API Route: Error creating conversation document or initial message for user ${userId}:`, firestoreError);
-             return NextResponse.json({ error: "Error initializing conversation." }, { status: 500 });
+            console.error(`API Route: Error creating conversation document or initial message for user ${userId}:`, firestoreError);
+            return NextResponse.json({ error: "Error initializing conversation." }, { status: 500 });
         }
 
     } catch (error) {
