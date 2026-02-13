@@ -13,7 +13,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
-import { useOllama } from '@/hooks/useOllama';
 import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
