@@ -1160,12 +1160,20 @@ export interface OllamaListResponse {
 }
 
 /**
- * Check if Ollama is available on the local machine
+ * Check if Ollama is available at the given endpoint
  */
 export async function isOllamaAvailable(endpoint: string = 'http://localhost:11434'): Promise<boolean> {
     try {
+        const headers: Record<string, string> = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        };
+        // Add ngrok bypass header for non-localhost endpoints
+        if (!endpoint.includes('localhost') && !endpoint.includes('127.0.0.1')) {
+            headers['ngrok-skip-browser-warning'] = 'true';
+        }
         const response = await fetch(`${endpoint}/api/tags`, {
             method: 'GET',
+            headers,
             signal: AbortSignal.timeout(3000), // 3 second timeout
         });
         return response.ok;
@@ -1176,12 +1184,20 @@ export async function isOllamaAvailable(endpoint: string = 'http://localhost:114
 }
 
 /**
- * Fetch available models from local Ollama instance
+ * Fetch available models from Ollama instance
  */
 export async function fetchOllamaModels(endpoint: string = 'http://localhost:11434'): Promise<LLMInfo[]> {
     try {
+        const headers: Record<string, string> = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        };
+        // Add ngrok bypass header for non-localhost endpoints
+        if (!endpoint.includes('localhost') && !endpoint.includes('127.0.0.1')) {
+            headers['ngrok-skip-browser-warning'] = 'true';
+        }
         const response = await fetch(`${endpoint}/api/tags`, {
             method: 'GET',
+            headers,
             signal: AbortSignal.timeout(5000),
         });
 
@@ -1228,6 +1244,35 @@ export async function updateOllamaModels(endpoint: string = 'http://localhost:11
     const models = await fetchOllamaModels(endpoint);
     OLLAMA_MODELS.length = 0; // Clear existing
     OLLAMA_MODELS.push(...models);
+}
+
+/**
+ * Set OLLAMA_MODELS from a list of model names (used when models are fetched server-side)
+ * This avoids the need for a direct client-side fetch to the Ollama endpoint (which fails through ngrok)
+ */
+export function setOllamaModelsFromNames(modelNames: string[], endpoint: string): void {
+    const ollamaModels: LLMInfo[] = modelNames.map(name => ({
+        id: `ollama:${name}`,
+        name,
+        provider: 'Ollama' as const,
+        contextWindow: 0,
+        pricing: {
+            input: 0,
+            output: 0,
+            freeTier: {
+                available: true,
+                note: (t: TranslationKeys) => t.pricing.ollamaFreeTierNote
+            }
+        },
+        apiKeyInstructionsUrl: 'https://ollama.com/download',
+        apiKeySecretName: 'ollama',
+        status: 'stable' as const,
+        categoryKey: 'modelCategory_Ollama',
+        isOllamaModel: true,
+        ollamaEndpoint: endpoint,
+    }));
+    OLLAMA_MODELS.length = 0;
+    OLLAMA_MODELS.push(...ollamaModels);
 }
 
 /**

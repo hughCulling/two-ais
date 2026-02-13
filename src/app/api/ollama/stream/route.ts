@@ -26,8 +26,13 @@ export async function POST(request: NextRequest) {
     const endpoint = ollamaEndpoint || 'http://127.0.0.1:11434';
     console.log(`[Ollama Stream] Connecting to endpoint: ${endpoint}`);
     console.log(`[Ollama Stream] Model requested: ${model}`);
-    
-    const ollama = new Ollama({ host: endpoint });
+
+    const ollama = new Ollama({
+      host: endpoint,
+      headers: (!endpoint.includes('localhost') && !endpoint.includes('127.0.0.1'))
+        ? { 'ngrok-skip-browser-warning': 'true' }
+        : undefined
+    });
 
     // Create a readable stream for Server-Sent Events
     const encoder = new TextEncoder();
@@ -36,7 +41,7 @@ export async function POST(request: NextRequest) {
         try {
           console.log(`[Ollama Stream] Starting chat with model: ${model}, endpoint: ${endpoint}`);
           console.log(`[Ollama Stream] Message count: ${messages.length}`);
-          
+
           // Test connectivity first
           try {
             await ollama.list();
@@ -44,19 +49,19 @@ export async function POST(request: NextRequest) {
           } catch (connectError) {
             console.error(`[Ollama Stream] Failed to connect to Ollama:`, connectError);
             const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
-            const helpMessage = isProduction 
+            const helpMessage = isProduction
               ? ' Note: Ollama must be accessible from the server. If running on Vercel/production, Ollama needs to be deployed to a cloud server with a public URL.'
               : ' Make sure Ollama is running locally with `ollama serve`.';
             throw new Error(`Cannot connect to Ollama at ${endpoint}: ${connectError instanceof Error ? connectError.message : 'Unknown error'}.${helpMessage}`);
           }
-          
+
           // Check if this is a cloud model (contains :cloud suffix)
           const isCloudModel = model.includes(':cloud');
-          
+
           if (isCloudModel) {
             // Use direct fetch for cloud models to avoid npm package issues
             console.log(`[Ollama Stream] Using direct fetch for cloud model: ${model}`);
-            
+
             // Cloud models require at least one user message
             // If we only have a system message, convert it to a user message
             let processedMessages = messages;
@@ -66,7 +71,7 @@ export async function POST(request: NextRequest) {
                 { role: 'user', content: messages[0].content }
               ];
             }
-            
+
             const requestBody = {
               model: model,
               messages: processedMessages,
@@ -74,22 +79,29 @@ export async function POST(request: NextRequest) {
             };
             console.log(`[Ollama Stream] Request body:`, JSON.stringify(requestBody));
             console.log(`[Ollama Stream] Calling: ${endpoint}/api/chat`);
-            
+
             // Add a small delay to avoid concurrent request issues
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
+            const fetchHeaders: Record<string, string> = {
+              'Content-Type': 'application/json',
+              'Accept': 'text/plain',
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            };
+            // Add ngrok bypass header for non-localhost endpoints
+            if (!endpoint.includes('localhost') && !endpoint.includes('127.0.0.1')) {
+              fetchHeaders['ngrok-skip-browser-warning'] = 'true';
+            }
+
             const response = await fetch(`${endpoint}/api/chat`, {
               method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'text/plain',
-              },
+              headers: fetchHeaders,
               body: JSON.stringify(requestBody),
             });
 
             console.log(`[Ollama Stream] Response status: ${response.status} ${response.statusText}`);
             console.log(`[Ollama Stream] Response headers:`, Object.fromEntries(response.headers.entries()));
-            
+
             if (!response.ok) {
               const errorText = await response.text();
               console.error(`[Ollama Stream] Error response body:`, errorText);
@@ -117,17 +129,17 @@ export async function POST(request: NextRequest) {
 
               for (const line of lines) {
                 if (!line.trim()) continue;
-                
+
                 try {
                   const chunk = JSON.parse(line);
                   const token = chunk.message?.content || '';
-                  
+
                   if (token) {
                     tokenCount++;
                     const data = JSON.stringify({ token });
                     controller.enqueue(encoder.encode(`data: ${data}\n\n`));
                   }
-                  
+
                   if (chunk.done) {
                     console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
                     break;
@@ -140,7 +152,7 @@ export async function POST(request: NextRequest) {
           } else {
             // Use Ollama npm package for local models
             console.log(`[Ollama Stream] Using Ollama npm package for local model: ${model}`);
-            
+
             const ollamaStream = await ollama.chat({
               model: model,
               messages: messages,
@@ -152,7 +164,7 @@ export async function POST(request: NextRequest) {
 
             for await (const chunk of ollamaStream) {
               const token = chunk.message?.content || '';
-              
+
               if (token) {
                 tokenCount++;
                 // Send as Server-Sent Event
@@ -160,7 +172,7 @@ export async function POST(request: NextRequest) {
                 controller.enqueue(encoder.encode(`data: ${data}\n\n`));
               }
             }
-            
+
             console.log(`[Ollama Stream] Completed successfully. Tokens: ${tokenCount}`);
           }
 
@@ -175,8 +187,8 @@ export async function POST(request: NextRequest) {
             model: model,
             endpoint: endpoint,
           });
-          const errorData = JSON.stringify({ 
-            error: error instanceof Error ? error.message : 'Unknown error' 
+          const errorData = JSON.stringify({
+            error: error instanceof Error ? error.message : 'Unknown error'
           });
           controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
           controller.close();

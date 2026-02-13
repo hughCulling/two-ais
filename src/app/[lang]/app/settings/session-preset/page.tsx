@@ -108,7 +108,7 @@ export default function SessionPresetPage() {
 
     const agentAModel = getLLMInfoById(preset.agentA_llm);
     const agentBModel = getLLMInfoById(preset.agentB_llm);
-    const agentAProvider = preset.agentA_tts.provider !== 'none' 
+    const agentAProvider = preset.agentA_tts.provider !== 'none'
         ? getTTSProviderInfoById(preset.agentA_tts.provider as 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser')
         : null;
     const agentBProvider = preset.agentB_tts.provider !== 'none'
@@ -183,8 +183,9 @@ export default function SessionPresetPage() {
                                 <div className="text-sm text-muted-foreground space-y-1">
                                     <p>• Card description: {preset.collapseStates.cardDescription ? 'Hidden' : 'Visible'}</p>
                                     <p>• Initial prompt help: {preset.collapseStates.initialPromptDescription ? 'Hidden' : 'Visible'}</p>
-                                    <p>• Ollama details: {preset.collapseStates.ollamaDetails ? 'Hidden' : 'Visible'}</p>
-                                    <p>• Ollama not detected info: {preset.collapseStates.ollamaNotDetected ? 'Hidden' : 'Visible'}</p>
+                                    <p>• Ollama help: {preset.collapseStates.ollamaHelp ? 'Hidden' : 'Visible'}</p>
+                                    <p>• InvokeAI details: {preset.collapseStates.invokeAIDetails ? 'Hidden' : 'Visible'}</p>
+                                    <p>• InvokeAI not detected info: {preset.collapseStates.invokeAINotDetected ? 'Hidden' : 'Visible'}</p>
                                 </div>
                             </div>
                         )}

@@ -4,19 +4,19 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-// import Image from 'next/image';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
-import { useOllama } from '@/hooks/useOllama';
 import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink } from "lucide-react";
+import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -140,7 +140,65 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
+  // const { isAvailable: ollamaAvailable, isLoading: ollamaLoading } = useOllama();
+  const [ollamaEndpoint, setOllamaEndpoint] = useState<string>('');
+  const [customOllamaAvailable, setCustomOllamaAvailable] = useState<boolean>(false);
+  const [customOllamaLoading, setCustomOllamaLoading] = useState<boolean>(false);
+  const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
+
+  const handleVerifyOllama = async () => {
+    if (!ollamaEndpoint.trim()) return;
+    setCustomOllamaLoading(true);
+    setOllamaVerifyError(null);
+    try {
+      // Proxy through server-side route to bypass ngrok CORS/browser warning
+      const res = await fetch('/api/ollama/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: ollamaEndpoint.trim() }),
+      });
+      const data = await res.json();
+      if (data.available) {
+        setCustomOllamaAvailable(true);
+      } else {
+        setCustomOllamaAvailable(false);
+        // Show the specific error from the proxy if available
+        let errorMessage = data.error || t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.';
+        if (errorMessage.includes('403')) {
+          errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
+        }
+        setOllamaVerifyError(errorMessage);
+      }
+    } catch {
+      setCustomOllamaAvailable(false);
+      setOllamaVerifyError(t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.');
+    } finally {
+      setCustomOllamaLoading(false);
+    }
+  };
+
+  const [copiedStep, setCopiedStep] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, stepId: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedStep(stepId);
+      setTimeout(() => setCopiedStep(null), 2000);
+    });
+  };
+
+  const CopyButton = ({ text, stepId }: { text: string, stepId: string }) => (
+    <button
+      onClick={() => copyToClipboard(text, stepId)}
+      className="ml-2 p-1 hover:bg-blue-200 dark:hover:bg-blue-800 rounded transition-colors inline-flex items-center gap-1 group"
+      title="Copy to clipboard"
+    >
+      {copiedStep === stepId ? (
+        <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+      ) : (
+        <Copy className="h-3 w-3 text-blue-600 dark:text-blue-400 opacity-70 group-hover:opacity-100" />
+      )}
+    </button>
+  );
   const { isAvailable: invokeaiAvailable, isLoading: invokeaiLoading } = useInvokeAI();
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
@@ -236,62 +294,104 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </p>
             </div>
 
-            {/* Ollama Status */}
-            {!ollamaLoading && ollamaAvailable && (
-              <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <h3 className="font-semibold text-base text-green-900 dark:text-green-100">{t.page_OllamaDetectedTitle}</h3>
+            {/* Ollama Setup Instructions */}
+            <div className="border border-blue-500/50 rounded-lg p-4">
+              <div className="flex justify-center mb-4 pt-1">
+                <div className="relative">
+                  <div className="absolute right-full mr-2 translate-y-px">
+                    <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
+                      <Image
+                        src="/ollama.svg"
+                        alt="Ollama Logo"
+                        fill
+                        className="object-contain dark:invert"
+                      />
+                    </div>
+                  </div>
+                  <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
                 </div>
-                <p className="text-sm text-green-800 dark:text-green-200">
-                  You can use LLMs through Ollama.
-                </p>
               </div>
-            )}
-            {!ollamaLoading && !ollamaAvailable && (
-              <div className="border border-blue-500/50 rounded-lg p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <h3 className="font-semibold text-base">{t.page_OllamaSetupTitle}</h3>
-                </div>
-                <div>
-                  <div className="space-y-2">
-                    <p>
-                      {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
-                      <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                        {t.page_OllamaLearnMore}
-                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                      </a>
-                    </p>
-                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
+              <div>
+                <div className="space-y-2">
+
+                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                    {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
+                    <div className="bg-muted/30 rounded-md p-3 mb-4 text-sm border">
                       <p>
+                        <span className="font-bold">Prerequisite: </span>
                         {t.page_OllamaStep1.split('ollama.com/download')[0]}
                         <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                          ollama.com/download.
+                          ollama.com/download
                           <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
                         </a>
-                        {t.page_OllamaStep1.split('ollama.com/download.')[1]}
+                        {t.page_OllamaStep1.split('ollama.com/download')[1]}
                       </p>
-                      <p>
-                        {t.page_OllamaStep2.split("'ollama pull llama2'")[0]}
-                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">ollama pull llama2</span>
-                        {t.page_OllamaStep2.split("'ollama pull llama2'")[1]}
-                      </p>
-                      <p>
-                        <span>3. Then you can run this command in your terminal to allow Two AIs to connect to your local Ollama instance:</span>
-                      </p>
-                      <p className="ml-4">
-                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                          {t.page_OllamaStep3.replace(/^3\.\s*/, '')}
-                        </span>
-                      </p>
-                      <p>{t.page_OllamaStep4}</p>
                     </div>
+
+                    <p className="text-center">
+                      <span>1. You can run this command in your terminal to start Ollama:</span>
+                    </p>
+                    <div className="flex items-center justify-center">
+                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                        {t.page_OllamaStep3.replace(/^1\.\s*/, '')}
+                      </span>
+                      <CopyButton text={t.page_OllamaStep3.replace(/^1\.\s*/, '')} stepId="step1" />
+                    </div>
+                    <p className="text-center">
+                      <span>2. Then you can run this command in your terminal to create a tunnel with ngrok:</span>
+                    </p>
+                    <div className="flex items-center justify-center">
+                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                        {t.page_OllamaStep3b.replace(/^2\.\s*/, '')}
+                      </span>
+                      <CopyButton text={t.page_OllamaStep3b.replace(/^2\.\s*/, '')} stepId="step2" />
+                    </div>
+                    <p className="text-center">
+                      <span>3. Then you can paste your ngrok URL here and verify it:</span>
+                    </p>
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="flex gap-2 w-full max-w-sm">
+                        <input
+                          type="url"
+                          value={ollamaEndpoint}
+                          onChange={(e) => {
+                            setOllamaEndpoint(e.target.value);
+                            if (customOllamaAvailable) {
+                              setCustomOllamaAvailable(false);
+                            }
+                            setOllamaVerifyError(null);
+                          }}
+                          placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
+                          className="flex-1 px-3 py-1.5 text-sm border rounded-md bg-background"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleVerifyOllama();
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleVerifyOllama}
+                          disabled={!ollamaEndpoint.trim() || customOllamaLoading}
+                        >
+                          {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
+                        </Button>
+                      </div>
+                      {customOllamaAvailable && (
+                        <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
+                      )}
+                      {ollamaVerifyError && (
+                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{ollamaVerifyError}</p>
+                      )}
+                    </div>
+                    {/* <p className="text-center">{t.page_OllamaStep4}</p> */}
                   </div>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* InvokeAI Status */}
             {!invokeaiLoading && invokeaiAvailable && (
@@ -308,20 +408,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             {!invokeaiLoading && !invokeaiAvailable && (
               <div className="border border-blue-500/50 rounded-lg p-4 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+
                   <h3 className="font-semibold text-base">InvokeAI Setup</h3>
                 </div>
                 <div>
                   <div className="space-y-2">
-                    <p>
-                      InvokeAI allows you to generate images locally using Stable Diffusion models.
-                      <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
-                        Learn more
-                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                      </a>
-                    </p>
+
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      <p className="font-semibold">Setup Instructions:</p>
+                      {/* <p className="font-semibold">Setup Instructions:</p> */}
                       <p>
                         1. Download and install InvokeAI from
                         <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">

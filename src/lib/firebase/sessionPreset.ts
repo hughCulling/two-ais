@@ -30,8 +30,9 @@ export interface SessionPreset {
     collapseStates?: {
         cardDescription?: boolean;
         initialPromptDescription?: boolean;
-        ollamaDetails?: boolean;
-        ollamaNotDetected?: boolean;
+        ollamaHelp?: boolean;
+        invokeAIDetails?: boolean;
+        invokeAINotDetected?: boolean;
     };
 }
 
