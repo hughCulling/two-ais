@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-// import Image from 'next/image';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -249,41 +249,41 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </div>
             )}
             {!ollamaLoading && !ollamaAvailable && (
-              <div className="border border-blue-500/50 rounded-lg p-4 text-center">
+              <div className="border border-blue-500/50 rounded-lg p-4">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
+                    <Image
+                      src="/ollama.svg"
+                      alt="Ollama Logo"
+                      fill
+                      className="object-contain dark:invert"
+                    />
+                  </div>
                   <h3 className="font-semibold text-base">{t.page_OllamaSetupTitle}</h3>
                 </div>
                 <div>
                   <div className="space-y-2">
-                    <p>
-                      {t.page_OllamaSetupDescription.split('{learnMoreLink}')[0]}
-                      <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                        {t.page_OllamaLearnMore}
-                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                      </a>
-                    </p>
+
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p>
+                      {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
+                      <div className="bg-muted/30 rounded-md p-3 mb-4 text-sm border">
+                        <p>
+                          <span className="font-bold">Prerequisite: </span>
+                          {t.page_OllamaStep1.split('ollama.com/download')[0]}
+                          <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                            ollama.com/download
+                            <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                          </a>
+                          {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                        </p>
+                      </div>
+
                       <p>
-                        {t.page_OllamaStep1.split('ollama.com/download')[0]}
-                        <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                          ollama.com/download.
-                          <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                        </a>
-                        {t.page_OllamaStep1.split('ollama.com/download.')[1]}
-                      </p>
-                      <p>
-                        {t.page_OllamaStep2.split("'ollama pull llama2'")[0]}
-                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">ollama pull llama2</span>
-                        {t.page_OllamaStep2.split("'ollama pull llama2'")[1]}
-                      </p>
-                      <p>
-                        <span>3. Then you can run this command in your terminal to allow Two AIs to connect to your local Ollama instance:</span>
+                        <span>1. Then you can run this command in your terminal to allow Two AIs to connect to your local Ollama instance:</span>
                       </p>
                       <p className="ml-4">
                         <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                          {t.page_OllamaStep3.replace(/^3\.\s*/, '')}
+                          {t.page_OllamaStep3.replace(/^1\.\s*/, '')}
                         </span>
                       </p>
                       <p>{t.page_OllamaStep4}</p>
@@ -308,20 +308,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             {!invokeaiLoading && !invokeaiAvailable && (
               <div className="border border-blue-500/50 rounded-lg p-4 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+
                   <h3 className="font-semibold text-base">InvokeAI Setup</h3>
                 </div>
                 <div>
                   <div className="space-y-2">
-                    <p>
-                      InvokeAI allows you to generate images locally using Stable Diffusion models.
-                      <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
-                        Learn more
-                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                      </a>
-                    </p>
+
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      <p className="font-semibold">Setup Instructions:</p>
+                      {/* <p className="font-semibold">Setup Instructions:</p> */}
                       <p>
                         1. Download and install InvokeAI from
                         <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
