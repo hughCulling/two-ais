@@ -304,7 +304,7 @@ const en = {
     page_LoadingUserData: "Loading user data...",
     page_ErrorAlertTitle: "Error",
     page_WelcomeTitle: "Welcome to Two AIs",
-    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS).",
+    page_WelcomeSubtitle: "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS) and generate an image for each paragraph using a Text-to-Image model.",
     page_ApiKeysRequiredTitle: "API Key or Ollama Required",
     page_ApiKeysRequiredDescription: "To run conversations, you have to at minimum provide your own Mistral AI API key, or use Ollama. Instructions for obtaining an API key can be found on the {settingsLink} page after signing in.",
     page_OllamaSetupTitle: "Ollama",
@@ -386,15 +386,15 @@ const en = {
             }
         }
     },
-    
+
     // Image quality options
     imageQuality: {
-      standard: 'Standard',
-      hd: 'High Definition',
-      low: 'Low',
-      medium: 'Medium',
-      high: 'High',
-      // Add any other quality options used in your image models
+        standard: 'Standard',
+        hd: 'High Definition',
+        low: 'Low',
+        medium: 'Medium',
+        high: 'High',
+        // Add any other quality options used in your image models
     },
     // Common terms
 
@@ -508,7 +508,7 @@ const en = {
             exitLabel: 'Exit fullscreen'
         }
     },
-    
+
     // --------------- END OF FILE --------------- 
 };
 export default en; 
