@@ -566,21 +566,61 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
 
     const handleVerifyOllama = async () => {
-        if (!ollamaEndpoint.trim()) return;
+        const endpoint = ollamaEndpoint.trim().replace(/\/+$/, '');
+        if (!endpoint) return;
+
         setOllamaLoading(true);
         setOllamaVerifyError(null);
+
+        // Determine if we can attempt a direct browser-based verification
+        const isHttps = endpoint.startsWith('https://');
+        const isLocalHost = typeof window !== 'undefined' &&
+            (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
         try {
-            // Proxy through server-side route to bypass ngrok CORS/browser warning
+            // Try direct browser verification first if it's HTTPS (ngrok) or LocalHost
+            if (isHttps || isLocalHost) {
+                try {
+                    console.log(`[Ollama Verify] Attempting direct browser verify: ${endpoint}/api/tags`);
+                    const directHeaders: Record<string, string> = {
+                        'Accept': 'application/json',
+                    };
+                    if (isHttps) {
+                        directHeaders['ngrok-skip-browser-warning'] = 'true';
+                    }
+
+                    const res = await fetch(`${endpoint}/api/tags`, {
+                        method: 'GET',
+                        headers: directHeaders,
+                        // Use AbortSignal.timeout if supported, otherwise just proceed
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json() as { models?: { name: string }[] };
+                        const models = data.models?.map((m) => m.name) || [];
+                        setOllamaAvailable(true);
+                        setOllamaModelsFromNames(models, endpoint);
+                        console.log(`[Ollama Verify] Direct verify successful, found ${models.length} models`);
+                        setOllamaLoading(false);
+                        return;
+                    }
+                } catch (directError) {
+                    console.warn(`[Ollama Verify] Direct verification failed, falling back to proxy:`, directError);
+                }
+            }
+
+            // Proxy through server-side route to bypass ngrok CORS/browser warning (or as a fallback)
+            console.log(`[Ollama Verify] Using proxy /api/ollama/verify for: ${endpoint}`);
             const res = await fetch('/api/ollama/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ endpoint: ollamaEndpoint.trim() }),
+                body: JSON.stringify({ endpoint }),
             });
             const data = await res.json();
             if (data.available) {
                 setOllamaAvailable(true);
                 // Use model names from server response (avoids client-side CORS issues)
-                setOllamaModelsFromNames(data.models || [], ollamaEndpoint.trim());
+                setOllamaModelsFromNames(data.models || [], endpoint);
             } else {
                 setOllamaAvailable(false);
                 // Show the specific error from the proxy if available
