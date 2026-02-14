@@ -63,7 +63,7 @@ export default function HeaderUnified() {
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 type="button"
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 dark:text-theme-primary hover:text-gray-600 dark:hover:text-theme-primary/80 hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-800 dark:focus:ring-theme-primary"
+                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-800 dark:focus:ring-white"
                                 aria-controls="main-menu"
                                 aria-expanded={isMenuOpen}
                                 aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
