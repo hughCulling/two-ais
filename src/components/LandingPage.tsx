@@ -277,14 +277,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       />
       <TooltipProvider delayDuration={100}>
         <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
-          <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
+          <div className="p-6 liquid-glass-themed bg-card/60 text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
             <h1 className="text-2xl font-bold">
               {t.page_WelcomeTitle.split('Two AIs')[0]}
               <span className="dark:text-theme-primary">Two AIs</span>
               {t.page_WelcomeTitle.split('Two AIs')[1]}
             </h1>
             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
-            <div className="border rounded-lg p-4 text-center">
+            <div className="liquid-glass-themed border rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 {/* KeyRound icon removed as per user request */}
                 <h3 className="font-semibold text-base">{t.page_ApiKeysRequiredTitle}</h3>
@@ -299,7 +299,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             </div>
 
             {/* Ollama Setup Instructions */}
-            <div className="border border-blue-500/50 rounded-lg p-4">
+            <div className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4">
               <div className="flex justify-center mb-4 pt-1">
                 <div className="relative">
                   <div className="absolute right-full mr-2 translate-y-px">
@@ -399,7 +399,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
             {/* InvokeAI Status */}
             {!invokeaiLoading && invokeaiAvailable && (
-              <div className="border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
+              <div className="liquid-glass-themed border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                   <h3 className="font-semibold text-base text-green-900 dark:text-green-100">InvokeAI Detected</h3>
@@ -410,7 +410,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </div>
             )}
             {!invokeaiLoading && !invokeaiAvailable && (
-              <div className="border border-blue-500/50 rounded-lg p-4 text-center">
+              <div className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
 
                   <h3 className="font-semibold text-base">InvokeAI Setup</h3>
@@ -449,20 +449,22 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
-          <div className="w-full aspect-video overflow-hidden rounded-lg shadow-md border relative">
-            {mounted && (
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : '52oUvRFdaXE'}`}
-                title={t.page_VideoTitle}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              ></iframe>
-            )}
+          <div className="w-full aspect-video liquid-glass-themed p-2 rounded-xl shadow-2xl relative">
+            <div className="w-full h-full overflow-hidden rounded-lg relative bg-black">
+              {mounted && (
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : '52oUvRFdaXE'}`}
+                  title={t.page_VideoTitle}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
+              )}
+            </div>
           </div>
-          <Card className="w-full">
+          <Card className="w-full liquid-glass-themed bg-card/60">
             <CardHeader>
               <h2 className="flex items-center justify-center text-xl font-semibold">
                 <BrainCircuit className="mr-2 h-5 w-5" />
@@ -693,7 +695,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               })}
             </CardContent>
           </Card>
-          <Card className="w-full">
+          <Card className="w-full liquid-glass-themed bg-card/60">
             <CardHeader>
               <h2 className="flex items-center justify-center text-xl font-semibold">
                 <Volume2 className="mr-2 h-5 w-5" />
