@@ -15,6 +15,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { getTranslationAsync } from '@/lib/translations';
 import { Toaster } from '@/components/ui/toaster';
+import { FaviconSwitcher } from '@/components/layout/FaviconSwitcher';
 
 // --- Re-added original font setup ---
 const geistSans = Geist({
@@ -106,9 +107,9 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
           />
         ) : null}
         {/* Canonical URL - includes language code for all languages including English */}
-        <link 
-          rel="canonical" 
-          href={`${baseUrl}/${lang}`} 
+        <link
+          rel="canonical"
+          href={`${baseUrl}/${lang}`}
         />
         {alternates}
         {/* Favicon declarations for better Bing compatibility */}
@@ -179,6 +180,7 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
         )}
       >
         <ThemeProvider nonce={nonce}>
+          <FaviconSwitcher />
           <div className="flex flex-col min-h-screen">
             <LanguageProvider lang={lang}>
               <AuthProvider>
