@@ -16,7 +16,7 @@ import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, KeyRound, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
+import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
