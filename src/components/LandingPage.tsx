@@ -278,11 +278,15 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       <TooltipProvider delayDuration={100}>
         <div className="w-full max-w-3xl flex flex-col items-center space-y-8 flex-grow pt-8 md:pt-12">
           <div className="p-6 bg-card text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
-            <h1 className="text-2xl font-bold">{t.page_WelcomeTitle}</h1>
+            <h1 className="text-2xl font-bold">
+              {t.page_WelcomeTitle.split('Two AIs')[0]}
+              <span className="dark:text-theme-primary">Two AIs</span>
+              {t.page_WelcomeTitle.split('Two AIs')[1]}
+            </h1>
             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
             <div className="border rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <KeyRound className="h-4 w-4" />
+                {/* KeyRound icon removed as per user request */}
                 <h3 className="font-semibold text-base">{t.page_ApiKeysRequiredTitle}</h3>
               </div>
               <p className="text-sm text-muted-foreground">
