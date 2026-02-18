@@ -324,11 +324,13 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <p>
                         <span className="font-bold">Prerequisite: </span>
                         {t.page_OllamaStep1.split('ollama.com/download')[0]}
-                        <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                          ollama.com/download
-                          <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                        </a>
-                        {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                        <span className="whitespace-nowrap">
+                          <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                            ollama.com/download
+                            <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                          </a>
+                          {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                        </span>
                       </p>
                     </div>
 
