@@ -186,27 +186,97 @@
   }
 
   /* Buttons that sit ON glass should 'pop' or be glass themselves */
-  .liquid-glass-button {
-    @apply px-4 py-2 rounded-lg transition-all duration-200 active:scale-95;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(5px);
+  .liquid-glass-button,
+  .liquid-glass-button-primary {
+    @apply px-4 py-2 rounded-lg transition-all duration-200 active:scale-95 flex items-center justify-center gap-2;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.35);
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     }
   }
 
-  .dark .liquid-glass-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .dark .liquid-glass-button,
+  .dark .liquid-glass-button-primary {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     }
+  }
+
+  /* Colored glass button variant */
+  .liquid-glass-button-primary {
+    @apply bg-blue-500/20 border-blue-500/30 text-blue-700;
+
+    &:hover {
+      @apply bg-blue-500/30 border-blue-500/40;
+    }
+  }
+
+  .dark .liquid-glass-button-primary {
+    @apply bg-blue-500/10 border-blue-500/20 text-blue-300;
+
+    &:hover {
+      @apply bg-blue-500/20 border-blue-500/30;
+    }
+  }
+
+  /* Liquid Glass Inputs */
+  .liquid-glass-input {
+    @apply transition-all duration-200;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  .dark .liquid-glass-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  /* Liquid Glass Badges */
+  .liquid-glass-badge,
+  .liquid-glass-badge-blue,
+  .liquid-glass-badge-green {
+    @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border backdrop-blur-md;
+  }
+
+  .liquid-glass-badge-blue {
+    @apply bg-blue-500/10 border-blue-500/30 text-blue-700;
+  }
+
+  .dark .liquid-glass-badge-blue {
+    @apply bg-blue-500/20 border-blue-500/40 text-blue-300;
+  }
+
+  .liquid-glass-badge-green {
+    @apply bg-green-500/10 border-green-500/30 text-green-700;
+  }
+
+  .dark .liquid-glass-badge-green {
+    @apply bg-green-500/20 border-green-500/40 text-green-300;
   }
 }
 

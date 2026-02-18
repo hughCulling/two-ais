@@ -189,7 +189,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const CopyButton = ({ text, stepId }: { text: string, stepId: string }) => (
     <button
       onClick={() => copyToClipboard(text, stepId)}
-      className="ml-2 p-1 hover:bg-blue-200 dark:hover:bg-blue-800 rounded transition-colors inline-flex items-center gap-1 group"
+      className="ml-2 p-1 hover:bg-white/20 dark:hover:bg-black/20 rounded transition-all duration-200 inline-flex items-center gap-1 group active:scale-90"
       title="Copy to clipboard"
     >
       {copiedStep === stepId ? (
@@ -320,7 +320,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
                   <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                     {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
-                    <div className="bg-muted/30 rounded-md p-3 mb-4 text-sm border">
+                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm">
                       <p>
                         <span className="font-bold">Prerequisite: </span>
                         {t.page_OllamaStep1.split('ollama.com/download')[0]}
@@ -366,7 +366,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             setOllamaVerifyError(null);
                           }}
                           placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
-                          className="flex-1 px-3 py-1.5 text-sm border rounded-md bg-background"
+                          className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               e.preventDefault();
@@ -380,6 +380,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           size="sm"
                           onClick={handleVerifyOllama}
                           disabled={!ollamaEndpoint.trim() || customOllamaLoading}
+                          className="liquid-glass-button-primary h-auto py-1.5"
                         >
                           {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
                         </Button>
@@ -490,7 +491,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
                     <div className="flex items-center justify-center w-full mb-2">
                       <CollapsibleTrigger
-                        className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 hover:bg-white/10 dark:hover:bg-white/5 p-2 rounded-md transition-all duration-200 focus-visible:ring-1 focus-visible:ring-ring group"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
                         aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${providerName} models`}
@@ -581,9 +582,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   <li key={llm.id} className="flex flex-col items-center py-1">
                                     <div className="flex items-center space-x-2 mb-1">
                                       <span className="whitespace-nowrap font-medium">{llm.name}</span>
-                                      {llm.status === 'preview' && <Badge variant="preview" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgePreview}</Badge>}
-                                      {llm.status === 'experimental' && <Badge variant="experimental" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeExperimental}</Badge>}
-                                      {llm.status === 'beta' && <Badge variant="beta" className="text-xs px-1.5 py-0.5 flex-shrink-0">{t.page_BadgeBeta}</Badge>}
+                                      {llm.status === 'preview' && <Badge variant="preview" className="liquid-glass-badge-blue">{t.page_BadgePreview}</Badge>}
+                                      {llm.status === 'experimental' && <Badge variant="experimental" className="liquid-glass-badge-blue">{t.page_BadgeExperimental}</Badge>}
+                                      {llm.status === 'beta' && <Badge variant="beta" className="liquid-glass-badge-blue">{t.page_BadgeBeta}</Badge>}
                                     </div>
                                     <div className="flex items-center space-x-2">
                                       {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
@@ -710,7 +711,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   return (
                     <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
                       <CollapsibleTrigger
-                        className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-muted/50 p-2 rounded-md transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+                        className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-white/10 dark:hover:bg-white/5 p-2 rounded-md transition-all duration-200 focus-visible:ring-1 focus-visible:ring-ring group"
                         aria-expanded={isProviderOpen}
                         aria-controls={`${providerCollapsibleId}-content`}
                         aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${provider.name} TTS models`}

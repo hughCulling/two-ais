@@ -106,7 +106,7 @@ export default function HeaderUnified() {
                                 </Link>
                             </>
                         ) : (
-                            <Link href={`/${language.code}/login`} className="block px-4 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 w-full text-center shadow-lg" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                            <Link href={`/${language.code}/login`} className="liquid-glass-button-primary w-full text-center py-3" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
                                 {t.header.signIn}
                             </Link>
                         )}
@@ -123,7 +123,7 @@ export default function HeaderUnified() {
 
                         {user && !authLoading && (
                             <div className="pt-2 mt-2 border-t border-gray-200/20 dark:border-gray-700/20 w-full">
-                                <SignOutButton className="block px-4 py-2 rounded-md text-base font-medium text-white bg-red-600 hover:bg-red-700 w-full text-center shadow-lg" onSignOut={handleMobileLinkClick} />
+                                <SignOutButton className="liquid-glass-button bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400 w-full text-center py-3 hover:bg-red-500/20 hover:border-red-500/30" onSignOut={handleMobileLinkClick} />
                             </div>
                         )}
                     </div>
