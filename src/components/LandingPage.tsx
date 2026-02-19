@@ -16,7 +16,7 @@ import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
+import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -322,7 +322,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
                   </div>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                    {openCollapsibles['ollama-setup'] ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                    {openCollapsibles['ollama-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                   </div>
                 </div>
               </CollapsibleTrigger>
