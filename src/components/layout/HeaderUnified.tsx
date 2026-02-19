@@ -106,7 +106,7 @@ export default function HeaderUnified() {
                                 </Link>
                             </>
                         ) : (
-                            <Link href={`/${language.code}/login`} className="liquid-glass-button-primary w-full text-center py-3" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                            <Link href={`/${language.code}/login`} className="liquid-glass-button-primary w-[124px] text-center py-3" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
                                 {t.header.signIn}
                             </Link>
                         )}
