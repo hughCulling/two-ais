@@ -224,7 +224,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
     () => {
       const initialOpenState: Record<string, boolean> = {
-        'ollama-setup': false
+        'ollama-setup': false,
+        'invokeai-setup': false
       };
       Object.keys(groupLLMsByProvider()).forEach(provider => {
         initialOpenState[`provider-${provider.replace(/\s+/g, '-')}`] = true;
@@ -424,14 +425,33 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </div>
             )}
             {!invokeaiLoading && !invokeaiAvailable && (
-              <div className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-
-                  <h3 className="font-semibold text-base">InvokeAI Setup</h3>
-                </div>
-                <div>
-                  <div className="space-y-2">
-
+              <Collapsible
+                open={openCollapsibles['invokeai-setup'] || false}
+                onOpenChange={() => toggleCollapsible('invokeai-setup')}
+                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+              >
+                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                  <div className="flex justify-center pt-1 relative group cursor-pointer">
+                    <div className="relative">
+                      <div className="absolute right-full mr-2 translate-y-px">
+                        <div className="relative w-6 h-6 shrink-0">
+                          <Image
+                            src="/invoke-ai.svg"
+                            alt="InvokeAI Logo"
+                            fill
+                            className="object-contain brightness-0"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-base whitespace-nowrap">InvokeAI Setup</h3>
+                    </div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                      {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-2 mt-4">
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                       {/* <p className="font-semibold">Setup Instructions:</p> */}
                       <p>
@@ -457,8 +477,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </p>
                     </div>
                   </div>
-                </div>
-              </div>
+                </CollapsibleContent>
+              </Collapsible>
             )}
 
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
