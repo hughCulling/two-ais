@@ -353,7 +353,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <CopyButton text={t.page_OllamaStep3b.replace(/^2\.\s*/, '')} stepId="step2" />
                     </div>
                     <p className="text-center">
-                      <span>3. Then you can paste your ngrok URL here and verify it:</span>
+                      <span>3. Then you can paste your forwarding URL here and verify it:</span>
                     </p>
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex gap-2 w-full max-w-sm">
