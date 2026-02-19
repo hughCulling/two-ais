@@ -401,7 +401,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <div className="flex gap-2 w-full max-w-md">
                         {ollamaHelperEnabled ? (
                           <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground border-r border-border whitespace-nowrap">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
                               https://
                             </span>
                             <input
@@ -423,7 +423,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 }
                               }}
                             />
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground border-l border-border whitespace-nowrap">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
                               .ngrok-free.app
                             </span>
                           </div>
@@ -439,7 +439,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                               setOllamaVerifyError(null);
                             }}
                             placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
-                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input"
+                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
@@ -464,7 +464,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
                         </Button>
                       </div>
-                      <div className="flex items-center gap-2 w-full max-w-md">
+                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
                         <input
                           id="ollama-helper-toggle"
                           type="checkbox"
@@ -476,7 +476,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           htmlFor="ollama-helper-toggle"
                           className="text-xs text-muted-foreground cursor-pointer"
                         >
-                          Add https:// and .ngrok-free.app
+                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
                         </label>
                       </div>
                       {customOllamaAvailable && (
@@ -533,16 +534,21 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 <CollapsibleContent>
                   <div className="space-y-2 mt-4">
                     <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      {/* <p className="font-semibold">Setup Instructions:</p> */}
+                      <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm">
+                        <p>
+                          <span className="font-bold">Prerequisite: </span>
+                          Download and install InvokeAI from{' '}
+                          <span className="whitespace-nowrap">
+                            <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              invoke-ai.github.io
+                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                            </a>
+                          </span>
+                        </p>
+                      </div>
+
                       <p>
-                        1. Download and install InvokeAI from
-                        <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1 ml-1">
-                          invoke-ai.github.io
-                          <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                        </a>
-                      </p>
-                      <p>
-                        2. Start the InvokeAI server. You can use the InvokeAI launcher or run:
+                        1. Start the InvokeAI server. You can use the InvokeAI launcher or run:
                       </p>
                       <p className="ml-4">
                         <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
@@ -550,10 +556,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         </span>
                       </p>
                       <p>
-                        3. The server will run on <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">http://localhost:9090</span> by default.
+                        2. The server will run on <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">http://localhost:9090</span> by default.
                       </p>
                       <p>
-                        4. Once running, you can enable image generation in the session setup form.
+                        3. Once running, you can enable image generation in the session setup form.
                       </p>
                     </div>
                   </div>
