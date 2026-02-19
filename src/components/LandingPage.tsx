@@ -13,7 +13,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
-import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
 import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
@@ -148,6 +147,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [ollamaHelperEnabled, setOllamaHelperEnabled] = useState<boolean>(false);
   const [ollamaSubdomain, setOllamaSubdomain] = useState<string>('');
 
+  // InvokeAI verification state (similar to Ollama)
+  const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('');
+  const [customInvokeaiAvailable, setCustomInvokeaiAvailable] = useState<boolean>(false);
+  const [customInvokeaiLoading, setCustomInvokeaiLoading] = useState<boolean>(false);
+  const [invokeaiVerifyError, setInvokeaiVerifyError] = useState<string | null>(null);
+  const [invokeaiHelperEnabled, setInvokeaiHelperEnabled] = useState<boolean>(false);
+  const [invokeaiSubdomain, setInvokeaiSubdomain] = useState<string>('');
+
   const handleVerifyOllama = async () => {
     const rawEndpoint = ollamaEndpoint.trim();
     const rawSubdomain = ollamaSubdomain.trim();
@@ -207,6 +214,65 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     }
   };
 
+  const handleVerifyInvokeAI = async () => {
+    const rawEndpoint = invokeaiEndpoint.trim();
+    const rawSubdomain = invokeaiSubdomain.trim();
+
+    if (!invokeaiHelperEnabled) {
+      if (!rawEndpoint) return;
+    } else {
+      if (!rawSubdomain) return;
+    }
+
+    let endpointToVerify = rawEndpoint;
+
+    if (invokeaiHelperEnabled) {
+      let candidate = rawSubdomain;
+
+      if (candidate && !candidate.startsWith('http://') && !candidate.startsWith('https://')) {
+        if (!candidate.includes('.')) {
+          candidate = `https://${candidate}.ngrok-free.app`;
+        } else {
+          candidate = `https://${candidate}`;
+        }
+      }
+
+      endpointToVerify = candidate;
+
+      if (endpointToVerify !== invokeaiEndpoint) {
+        setInvokeaiEndpoint(endpointToVerify);
+      }
+    }
+
+    setCustomInvokeaiLoading(true);
+    setInvokeaiVerifyError(null);
+    try {
+      // Proxy through server-side route to bypass ngrok CORS/browser warning
+      const res = await fetch('/api/invokeai/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: endpointToVerify }),
+      });
+      const data = await res.json();
+      if (data.available) {
+        setCustomInvokeaiAvailable(true);
+      } else {
+        setCustomInvokeaiAvailable(false);
+        // Show the specific error from the proxy if available
+        let errorMessage = data.error || 'Could not connect to InvokeAI at this endpoint.';
+        if (errorMessage.includes('403')) {
+          errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
+        }
+        setInvokeaiVerifyError(errorMessage);
+      }
+    } catch {
+      setCustomInvokeaiAvailable(false);
+      setInvokeaiVerifyError('Could not connect to InvokeAI at this endpoint.');
+    } finally {
+      setCustomInvokeaiLoading(false);
+    }
+  };
+
   const [copiedStep, setCopiedStep] = useState<string | null>(null);
 
   const copyToClipboard = (text: string, stepId: string) => {
@@ -229,7 +295,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       )}
     </button>
   );
-  const { isAvailable: invokeaiAvailable, isLoading: invokeaiLoading } = useInvokeAI();
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   // Redirect authenticated users to the app
@@ -493,20 +558,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </CollapsibleContent>
             </Collapsible>
 
-            {/* InvokeAI Status */}
-            {!invokeaiLoading && invokeaiAvailable && (
-              <div className="liquid-glass-themed border border-green-500/50 bg-green-50 dark:bg-green-950/20 rounded-lg p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <h3 className="font-semibold text-base text-green-900 dark:text-green-100">InvokeAI Detected</h3>
-                </div>
-                <p className="text-sm text-green-800 dark:text-green-200">
-                  You can use InvokeAI for local image generation.
-                </p>
-              </div>
-            )}
-            {!invokeaiLoading && !invokeaiAvailable && (
-              <Collapsible
+            {/* InvokeAI Setup Instructions */}
+            <Collapsible
                 open={openCollapsibles['invokeai-setup'] || false}
                 onOpenChange={() => toggleCollapsible('invokeai-setup')}
                 className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
@@ -550,17 +603,112 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <p>
                         1. You can open the installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
                       </p>
-                      <p>
-                        2. The server will run on <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">http://localhost:9090</span> by default.
+                      <p className="text-center">
+                        <span>2. Then you can run this command in your terminal to create a tunnel with ngrok:</span>
                       </p>
-                      <p>
-                        3. Once running, you can enable image generation in the session setup form.
+                      <div className="flex items-center justify-center">
+                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                          ngrok http 9090 --host-header=&quot;localhost:9090&quot;
+                        </span>
+                        <CopyButton text='ngrok http 9090 --host-header="localhost:9090"' stepId="invokeai-step2" />
+                      </div>
+                      <p className="text-center">
+                        <span>3. Then you can paste your forwarding URL here and verify it:</span>
                       </p>
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className="flex gap-2 w-full max-w-md">
+                          {invokeaiHelperEnabled ? (
+                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                https://
+                              </span>
+                              <input
+                                type="text"
+                                value={invokeaiSubdomain}
+                                onChange={(e) => {
+                                  setInvokeaiSubdomain(e.target.value);
+                                  if (customInvokeaiAvailable) {
+                                    setCustomInvokeaiAvailable(false);
+                                  }
+                                  setInvokeaiVerifyError(null);
+                                }}
+                                placeholder="e.g. abc123"
+                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleVerifyInvokeAI();
+                                  }
+                                }}
+                              />
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                .ngrok-free.app
+                              </span>
+                            </div>
+                          ) : (
+                            <input
+                              type="url"
+                              value={invokeaiEndpoint}
+                              onChange={(e) => {
+                                setInvokeaiEndpoint(e.target.value);
+                                if (customInvokeaiAvailable) {
+                                  setCustomInvokeaiAvailable(false);
+                                }
+                                setInvokeaiVerifyError(null);
+                              }}
+                              placeholder="e.g. https://abc123.ngrok-free.app"
+                              className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyInvokeAI();
+                                }
+                              }}
+                            />
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleVerifyInvokeAI}
+                            disabled={
+                              customInvokeaiLoading ||
+                              (!invokeaiHelperEnabled
+                                ? !invokeaiEndpoint.trim()
+                                : !invokeaiSubdomain.trim())
+                            }
+                            className="liquid-glass-button-primary h-auto py-1.5"
+                          >
+                            {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                          <input
+                            id="invokeai-helper-toggle"
+                            type="checkbox"
+                            checked={invokeaiHelperEnabled}
+                            onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
+                            className="h-3 w-3"
+                          />
+                          <label
+                            htmlFor="invokeai-helper-toggle"
+                            className="text-xs text-muted-foreground cursor-pointer"
+                          >
+                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                          </label>
+                        </div>
+                        {customInvokeaiAvailable && (
+                          <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI connected!</p>
+                        )}
+                        {invokeaiVerifyError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
-            )}
 
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
