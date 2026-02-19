@@ -145,9 +145,39 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [customOllamaAvailable, setCustomOllamaAvailable] = useState<boolean>(false);
   const [customOllamaLoading, setCustomOllamaLoading] = useState<boolean>(false);
   const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
+  const [ollamaHelperEnabled, setOllamaHelperEnabled] = useState<boolean>(false);
+  const [ollamaSubdomain, setOllamaSubdomain] = useState<string>('');
 
   const handleVerifyOllama = async () => {
-    if (!ollamaEndpoint.trim()) return;
+    const rawEndpoint = ollamaEndpoint.trim();
+    const rawSubdomain = ollamaSubdomain.trim();
+
+    if (!ollamaHelperEnabled) {
+      if (!rawEndpoint) return;
+    } else {
+      if (!rawSubdomain) return;
+    }
+
+    let endpointToVerify = rawEndpoint;
+
+    if (ollamaHelperEnabled) {
+      let candidate = rawSubdomain;
+
+      if (candidate && !candidate.startsWith('http://') && !candidate.startsWith('https://')) {
+        if (!candidate.includes('.')) {
+          candidate = `https://${candidate}.ngrok-free.app`;
+        } else {
+          candidate = `https://${candidate}`;
+        }
+      }
+
+      endpointToVerify = candidate;
+
+      if (endpointToVerify !== ollamaEndpoint) {
+        setOllamaEndpoint(endpointToVerify);
+      }
+    }
+
     setCustomOllamaLoading(true);
     setOllamaVerifyError(null);
     try {
@@ -155,7 +185,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       const res = await fetch('/api/ollama/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ endpoint: ollamaEndpoint.trim() }),
+        body: JSON.stringify({ endpoint: endpointToVerify }),
       });
       const data = await res.json();
       if (data.available) {
@@ -368,36 +398,86 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <span>3. Then you can paste your forwarding URL here and verify it:</span>
                     </p>
                     <div className="flex flex-col items-center space-y-2">
-                      <div className="flex gap-2 w-full max-w-sm">
-                        <input
-                          type="url"
-                          value={ollamaEndpoint}
-                          onChange={(e) => {
-                            setOllamaEndpoint(e.target.value);
-                            if (customOllamaAvailable) {
-                              setCustomOllamaAvailable(false);
-                            }
-                            setOllamaVerifyError(null);
-                          }}
-                          placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
-                          className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              handleVerifyOllama();
-                            }
-                          }}
-                        />
+                      <div className="flex gap-2 w-full max-w-md">
+                        {ollamaHelperEnabled ? (
+                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground border-r border-border whitespace-nowrap">
+                              https://
+                            </span>
+                            <input
+                              type="text"
+                              value={ollamaSubdomain}
+                              onChange={(e) => {
+                                setOllamaSubdomain(e.target.value);
+                                if (customOllamaAvailable) {
+                                  setCustomOllamaAvailable(false);
+                                }
+                                setOllamaVerifyError(null);
+                              }}
+                              placeholder="e.g. abc123"
+                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyOllama();
+                                }
+                              }}
+                            />
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground border-l border-border whitespace-nowrap">
+                              .ngrok-free.app
+                            </span>
+                          </div>
+                        ) : (
+                          <input
+                            type="url"
+                            value={ollamaEndpoint}
+                            onChange={(e) => {
+                              setOllamaEndpoint(e.target.value);
+                              if (customOllamaAvailable) {
+                                setCustomOllamaAvailable(false);
+                              }
+                              setOllamaVerifyError(null);
+                            }}
+                            placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
+                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleVerifyOllama();
+                              }
+                            }}
+                          />
+                        )}
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
                           onClick={handleVerifyOllama}
-                          disabled={!ollamaEndpoint.trim() || customOllamaLoading}
+                          disabled={
+                            customOllamaLoading ||
+                            (!ollamaHelperEnabled
+                              ? !ollamaEndpoint.trim()
+                              : !ollamaSubdomain.trim())
+                          }
                           className="liquid-glass-button-primary h-auto py-1.5"
                         >
                           {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
                         </Button>
+                      </div>
+                      <div className="flex items-center gap-2 w-full max-w-md">
+                        <input
+                          id="ollama-helper-toggle"
+                          type="checkbox"
+                          checked={ollamaHelperEnabled}
+                          onChange={(e) => setOllamaHelperEnabled(e.target.checked)}
+                          className="h-3 w-3"
+                        />
+                        <label
+                          htmlFor="ollama-helper-toggle"
+                          className="text-xs text-muted-foreground cursor-pointer"
+                        >
+                          Add https:// and .ngrok-free.app
+                        </label>
                       </div>
                       {customOllamaAvailable && (
                         <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
