@@ -223,7 +223,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   }, []); // <-- Set mounted after mount
   const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
     () => {
-      const initialOpenState: Record<string, boolean> = {};
+      const initialOpenState: Record<string, boolean> = {
+        'ollama-setup': false
+      };
       Object.keys(groupLLMsByProvider()).forEach(provider => {
         initialOpenState[`provider-${provider.replace(/\s+/g, '-')}`] = true;
       });
@@ -299,24 +301,33 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             </div>
 
             {/* Ollama Setup Instructions */}
-            <div className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4">
-              <div className="flex justify-center mb-4 pt-1">
-                <div className="relative">
-                  <div className="absolute right-full mr-2 translate-y-px">
-                    <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
-                      <Image
-                        src="/ollama.svg"
-                        alt="Ollama Logo"
-                        fill
-                        className="object-contain dark:invert"
-                      />
+            <Collapsible
+              open={openCollapsibles['ollama-setup'] || false}
+              onOpenChange={() => toggleCollapsible('ollama-setup')}
+              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+            >
+              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                <div className="flex justify-center pt-1 relative group cursor-pointer">
+                  <div className="relative">
+                    <div className="absolute right-full mr-2 translate-y-px">
+                      <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
+                        <Image
+                          src="/ollama.svg"
+                          alt="Ollama Logo"
+                          fill
+                          className="object-contain dark:invert"
+                        />
+                      </div>
                     </div>
+                    <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
                   </div>
-                  <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                    {openCollapsibles['ollama-setup'] ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="space-y-2">
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-2 mt-4">
 
                   <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                     {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
@@ -397,8 +408,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     {/* <p className="text-center">{t.page_OllamaStep4}</p> */}
                   </div>
                 </div>
-              </div>
-            </div>
+              </CollapsibleContent>
+            </Collapsible>
 
             {/* InvokeAI Status */}
             {!invokeaiLoading && invokeaiAvailable && (
