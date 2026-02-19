@@ -312,7 +312,7 @@ const en = {
     page_OllamaSetupDescription: "Ollama lets you run LLMs locally on your computer and in the cloud. {learnMoreLink}",
     page_OllamaLearnMore: "You can learn more about Ollama here.",
     page_OllamaSetupInstructions: "Setup Instructions",
-    page_OllamaStep1: "Ollama installed on your local machine. It is downloadable from ollama.com/download.",
+    page_OllamaStep1: "Ollama installed on your machine. It is downloadable from ollama.com/download.",
     page_OllamaStep3: "OLLAMA_ORIGINS=* ollama serve",
     page_OllamaStep3b: "ngrok http 11434 --host-header=\"localhost:11434\"",
     page_OllamaStep4: "3. Paste the ngrok URL into the 'Ollama Endpoint' field in the Session Setup form and click 'Verify'.",
