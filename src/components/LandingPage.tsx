@@ -280,7 +280,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           <div className="p-6 liquid-glass-themed bg-card/60 text-card-foreground rounded-lg shadow-md space-y-4 text-center w-full">
             <h1 className="text-2xl font-bold">
               {t.page_WelcomeTitle.split('Two AIs')[0]}
-              <span className="dark:text-theme-primary">Two AIs</span>
+              <span className="bg-theme-primary/90 dark:bg-transparent dark:text-theme-primary px-1.5 py-0.5 rounded-md">
+                Two AIs
+              </span>
               {t.page_WelcomeTitle.split('Two AIs')[1]}
             </h1>
             <p className="text-muted-foreground">{t.page_WelcomeSubtitle}</p>
