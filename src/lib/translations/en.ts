@@ -322,7 +322,7 @@ const en = {
     page_OllamaVerifying: "Verifying...",
     page_OllamaVerifySuccess: "Ollama connected!",
     page_OllamaVerifyFail: "Could not connect to Ollama at this endpoint.",
-    page_SignInPrompt: "To start your own session, you can sign in or create an account using the link in the header.",
+    page_SignInPrompt: "You can access the session setup form by signing in or creating an account using the link in the hamburger menu.",
     page_VideoTitle: "Two AIs Conversation Demo",
     page_AvailableLLMsTitle: "Currently Available LLMs",
     page_TooltipKnowledgeCutoff: "The model's knowledge is cut off at this date.",
