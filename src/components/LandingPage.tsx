@@ -537,23 +537,18 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm">
                         <p>
                           <span className="font-bold">Prerequisite: </span>
-                          Download and install InvokeAI from{' '}
+                          InvokeAI installed on your machine. It is downloadable from{' '}
                           <span className="whitespace-nowrap">
                             <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
                               invoke-ai.github.io
                               <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                            </a>
+                            </a>.
                           </span>
                         </p>
                       </div>
 
                       <p>
-                        1. Start the InvokeAI server. You can use the InvokeAI launcher or run:
-                      </p>
-                      <p className="ml-4">
-                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                          invokeai-web --root ~/invokeai
-                        </span>
+                        1. You can open the installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
                       </p>
                       <p>
                         2. The server will run on <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded">http://localhost:9090</span> by default.
