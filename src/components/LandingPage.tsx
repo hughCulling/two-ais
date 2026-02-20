@@ -427,18 +427,25 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
                   <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
                     {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
-                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm">
+                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
                       <p>
-                        <span className="font-bold">Prerequisite: </span>
-                        {t.page_OllamaStep1.split('ollama.com/download')[0]}
-                        <span className="whitespace-nowrap">
-                          <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                            ollama.com/download
-                            <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                          </a>
-                          {t.page_OllamaStep1.split('ollama.com/download')[1]}
-                        </span>
+                        <span className="font-bold">Prerequisites:</span>
                       </p>
+                      <ol className="list-decimal list-inside space-y-1 ml-2">
+                        <li>
+                          {t.page_OllamaStep1.split('ollama.com/download')[0]}
+                          <span className="whitespace-nowrap">
+                            <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              ollama.com/download
+                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                            </a>
+                            {t.page_OllamaStep1.split('ollama.com/download')[1]}
+                          </span>
+                        </li>
+                        <li>
+                          Your ngrok config file location. This can be found by running:{' '}
+                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.                        </li>
+                      </ol>
                     </div>
 
                     <p className="text-center">
@@ -450,17 +457,36 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </span>
                       <CopyButton text={t.page_OllamaStep3.replace(/^1\.\s*/, '')} stepId="step1" />
                     </div>
-                    <p className="text-center">
-                      <span>2. Then you can run this command in your terminal to create a tunnel with ngrok:</span>
+                    <p className="text-center mt-3">
+                      <span>2. Edit your ngrok config file and add tunnel configurations:</span>
+                    </p>
+                    <div className="flex justify-center items-center">
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
+                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
+{`tunnels:
+  ollama:
+    proto: http
+    addr: 11434
+    host_header: "localhost:11434"`}
+                        </pre>
+                      </div>
+                      <CopyButton text={`tunnels:
+  ollama:
+    proto: http
+    addr: 11434
+    host_header: "localhost:11434"`} stepId="ollama-yaml" />
+                    </div>
+                    <p className="text-center mt-3">
+                      <span>3. Start the tunnels with this command:</span>
                     </p>
                     <div className="flex items-center justify-center">
                       <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                        {t.page_OllamaStep3b.replace(/^2\.\s*/, '')}
+                        ngrok start --all
                       </span>
-                      <CopyButton text={t.page_OllamaStep3b.replace(/^2\.\s*/, '')} stepId="step2" />
+                      <CopyButton text="ngrok start --all" stepId="step3" />
                     </div>
-                    <p className="text-center">
-                      <span>3. Then you can paste your forwarding URL here and verify it:</span>
+                    <p className="text-center mt-3">
+                      <span>4. Copy the Ollama forwarding URL from the ngrok output and paste it here to verify:</span>
                     </p>
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex gap-2 w-full max-w-md">
@@ -601,19 +627,32 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </div>
 
                       <p>
-                        1. You can open the installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
+                        1. Open the InvokeAI installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
                       </p>
-                      <p className="text-center">
-                        <span>2. Then you can run this command in your terminal to create a tunnel with ngrok:</span>
+                      <p className="text-center mt-3">
+                        <span>2. If you followed the Ollama setup above, your ngrok config already includes InvokeAI. If not, make sure your ngrok config file includes:</span>
                       </p>
-                      <div className="flex items-center justify-center">
-                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                          ngrok http 9090 --host-header=&quot;localhost:9090&quot;
-                        </span>
-                        <CopyButton text='ngrok http 9090 --host-header="localhost:9090"' stepId="invokeai-step2" />
+                      <div className="flex justify-center items-center">
+                        <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
+                          <pre className="font-mono text-xs text-left whitespace-pre m-0">
+{`tunnels:
+  invokeai:
+    proto: http
+    addr: 9090
+    host_header: "localhost:9090"`}
+                          </pre>
+                        </div>
+                        <CopyButton text={`tunnels:
+  invokeai:
+    proto: http
+    addr: 9090
+    host_header: "localhost:9090"`} stepId="invokeai-yaml" />
                       </div>
-                      <p className="text-center">
-                        <span>3. Then you can paste your forwarding URL here and verify it:</span>
+                      <p className="text-center mt-3">
+                        <span>3. Start the tunnel with: <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start invokeai</code> (or <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start --all</code> if running both)</span>
+                      </p>
+                      <p className="text-center mt-3">
+                        <span>4. Copy the InvokeAI forwarding URL from the ngrok output and paste it here to verify:</span>
                       </p>
                       <div className="flex flex-col items-center space-y-2">
                         <div className="flex gap-2 w-full max-w-md">
