@@ -48,7 +48,7 @@ export default function HeaderUnified() {
 
             {/* Liquid Glass Header */}
             <header className="liquid-glass-themed bg-theme-primary/90 dark:bg-gray-800/90 shadow-sm relative z-50">
-                <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <nav className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <div className="relative flex items-center justify-center h-16">
                         {/* Centered Logo/Home Link */}
                         <Link
@@ -78,10 +78,9 @@ export default function HeaderUnified() {
                             </button>
                         </div>
                     </div>
-                </nav>
 
-                {/* --- Liquid Glass Menu Panel - Dropdown positioned at top-right --- */}
-                <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-4 w-auto liquid-glass-panel shadow-2xl mt-2`} id="main-menu" aria-label="Main navigation menu">
+                    {/* --- Liquid Glass Menu Panel - Dropdown positioned below hamburger button --- */}
+                    <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-0 w-auto liquid-glass-panel shadow-2xl mt-2`} id="main-menu" aria-label="Main navigation menu">
                     <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
                         {authLoading ? (
                             <div className="block px-3 py-2" role="status" aria-live="polite">
@@ -127,7 +126,8 @@ export default function HeaderUnified() {
                             </div>
                         )}
                     </div>
-                </div>
+                    </div>
+                </nav>
             </header>
         </>
     );
