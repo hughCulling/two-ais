@@ -7,13 +7,12 @@ export function FaviconSwitcher() {
     const { resolvedTheme } = useTheme();
 
     useEffect(() => {
-        // Select both the standard icon and the shortcut icon links
-        const favicons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+        // Select only the standard icon link to avoid confusing search bots over fallback icons
+        const favicons = document.querySelectorAll('link[rel="icon"]');
 
         favicons.forEach(favicon => {
 
             // Determine the path based on the resolved theme
-            // Keeping the names exactly as requested/provided
             const iconPath = resolvedTheme === 'dark' ? '/icon-dark-mode.png' : '/icon.png';
 
             favicon.setAttribute('href', iconPath);

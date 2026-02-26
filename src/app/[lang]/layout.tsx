@@ -113,7 +113,8 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
         />
         {alternates}
         {/* Favicon declarations for better Bing compatibility */}
-        <link rel="icon" type="image/png" href="/icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon.png" />
         <meta name="description" content={description} />

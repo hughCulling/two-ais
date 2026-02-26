@@ -2,7 +2,6 @@
 User-agent: *
 Allow: /
 Disallow: /api/ # Example: Disallow crawling API routes
-Disallow: /_next/static/
 Disallow: /*/login$
 Disallow: /*/signup$
 Disallow: /login

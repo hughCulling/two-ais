@@ -1,0 +1,21 @@
+{
+    "name": "Two AIs",
+    "short_name": "Two AIs",
+    "description": "This website lets you listen to conversations between two Large Language Models (LLMs) using Text-to-Speech (TTS) and generate an image for each paragraph using Text-to-Image.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#d4d65b",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
