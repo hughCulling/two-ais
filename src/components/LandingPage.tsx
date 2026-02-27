@@ -680,7 +680,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           src="/invoke-ai.svg"
                           alt="InvokeAI Logo"
                           fill
-                          className="object-contain brightness-0"
+                          className="object-contain brightness-0 dark:brightness-100"
                         />
                       </div>
                     </div>
