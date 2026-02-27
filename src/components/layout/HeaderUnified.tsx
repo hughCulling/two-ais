@@ -47,7 +47,7 @@ export default function HeaderUnified() {
             )}
 
             {/* Liquid Glass Header */}
-            <header className="liquid-glass-themed bg-theme-primary/90 dark:bg-gray-800/90 shadow-sm relative z-50">
+            <header className="liquid-glass-themed bg-theme-primary/90 dark:bg-card/60 shadow-sm relative z-50">
                 <nav className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <div className="relative flex items-center justify-center h-16">
                         {/* Centered Logo/Home Link */}
@@ -81,51 +81,57 @@ export default function HeaderUnified() {
 
                     {/* --- Liquid Glass Menu Panel - Dropdown positioned below hamburger button --- */}
                     <div className={`${isMenuOpen ? 'block' : 'hidden'} absolute top-full right-0 w-auto liquid-glass-panel shadow-2xl mt-2`} id="main-menu" aria-label="Main navigation menu">
-                    <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
-                        {authLoading ? (
-                            <div className="block px-3 py-2" role="status" aria-live="polite">
-                                <div className="h-8 w-full bg-gray-200/50 dark:bg-gray-700/50 rounded animate-pulse mb-1" aria-hidden="true"></div>
-                                <div className="h-8 w-3/4 bg-gray-200/50 dark:bg-gray-700/50 rounded animate-pulse" aria-hidden="true"></div>
-                            </div>
-                        ) : user ? (
-                            <>
-                                <div className="px-4 py-2 flex items-center space-x-2 border-b border-gray-200/20 dark:border-gray-700/20 mb-2 w-full" role="group" aria-label="User information">
-                                    <UserCircle className="h-8 w-8 text-gray-600 dark:text-gray-300" aria-hidden="true" />
-                                    <div className="flex-1 min-w-0">
-                                        <span className="block text-base font-medium text-gray-900 dark:text-white truncate" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
-                                            {user.displayName || user.email}
-                                        </span>
-                                    </div>
+                        <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-center">
+                            {authLoading ? (
+                                <div className="block px-3 py-2" role="status" aria-live="polite">
+                                    <div className="h-8 w-full bg-gray-200/50 dark:bg-gray-700/50 rounded animate-pulse mb-1" aria-hidden="true"></div>
+                                    <div className="h-8 w-3/4 bg-gray-200/50 dark:bg-gray-700/50 rounded animate-pulse" aria-hidden="true"></div>
                                 </div>
-                                <Link href={`/${language.code}/app/history`} className={`${mobileMenuItemClasses} liquid-glass-button my-1`} onClick={handleMobileLinkClick} aria-label="View previous conversations">
-                                    <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
-                                </Link>
-                                <Link href={`/${language.code}/app/settings`} className={`${mobileMenuItemClasses} liquid-glass-button my-1`} onClick={handleMobileLinkClick} aria-label="Go to settings">
-                                    <span className="flex items-center justify-center"><Settings className="h-4 w-4 mr-1" aria-hidden="true" />Settings</span>
-                                </Link>
-                            </>
-                        ) : (
-                            <Link href={`/${language.code}/login`} className="liquid-glass-button-primary w-[124px] text-center py-1.5" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
-                                {t.header.signIn}
-                            </Link>
-                        )}
+                            ) : (
+                                <>
+                                    {user && (
+                                        <>
+                                            <div className="px-4 py-2 flex items-center space-x-2 border-b border-gray-200/20 dark:border-gray-700/20 mb-2 w-full" role="group" aria-label="User information">
+                                                <UserCircle className="h-8 w-8 text-gray-600 dark:text-gray-300" aria-hidden="true" />
+                                                <div className="flex-1 min-w-0">
+                                                    <span className="block text-base font-medium text-gray-900 dark:text-white truncate" title={user.email || 'User'} aria-label={`Signed in as ${user.displayName || user.email}`}>
+                                                        {user.displayName || user.email}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <Link href={`/${language.code}/app/history`} className={`${mobileMenuItemClasses} liquid-glass-button my-1`} onClick={handleMobileLinkClick} aria-label="View previous conversations">
+                                                <span className="flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{t.header.previousChats}</span>
+                                            </Link>
+                                            <Link href={`/${language.code}/app/settings`} className={`${mobileMenuItemClasses} liquid-glass-button my-1`} onClick={handleMobileLinkClick} aria-label="Go to settings">
+                                                <span className="flex items-center justify-center"><Settings className="h-4 w-4 mr-1" aria-hidden="true" />Settings</span>
+                                            </Link>
+                                        </>
+                                    )}
 
-                        {/* Language Selector */}
-                        <div className="px-4 py-2 flex items-center justify-center w-full" role="group" aria-label="Language selector">
-                            <LanguageSelector showIcon={true} />
+                                    {/* Language Selector */}
+                                    <div className="px-4 py-2 flex items-center justify-center w-full" role="group" aria-label="Language selector">
+                                        <LanguageSelector showIcon={true} />
+                                    </div>
+
+                                    {/* Theme Switcher */}
+                                    <div className="px-4 py-2 flex items-center justify-center w-full" role="group" aria-label="Theme switcher">
+                                        <ThemeSwitcher />
+                                    </div>
+
+                                    {!user ? (
+                                        <div className="pt-2 mt-2 border-t border-gray-200/20 dark:border-gray-700/20 w-full flex justify-center">
+                                            <Link href={`/${language.code}/login`} className="liquid-glass-button-primary w-[124px] text-center py-1.5" onClick={handleMobileLinkClick} aria-label="Sign in to your account">
+                                                {t.header.signIn}
+                                            </Link>
+                                        </div>
+                                    ) : (
+                                        <div className="pt-2 mt-2 border-t border-gray-200/20 dark:border-gray-700/20 w-full">
+                                            <SignOutButton className="liquid-glass-button bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400 w-full text-center py-1.5 hover:bg-red-500/20 hover:border-red-500/30" onSignOut={handleMobileLinkClick} />
+                                        </div>
+                                    )}
+                                </>
+                            )}
                         </div>
-
-                        {/* Theme Switcher */}
-                        <div className="px-4 py-2 flex items-center justify-center w-full" role="group" aria-label="Theme switcher">
-                            <ThemeSwitcher />
-                        </div>
-
-                        {user && !authLoading && (
-                            <div className="pt-2 mt-2 border-t border-gray-200/20 dark:border-gray-700/20 w-full">
-                                <SignOutButton className="liquid-glass-button bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400 w-full text-center py-1.5 hover:bg-red-500/20 hover:border-red-500/30" onSignOut={handleMobileLinkClick} />
-                            </div>
-                        )}
-                    </div>
                     </div>
                 </nav>
             </header>

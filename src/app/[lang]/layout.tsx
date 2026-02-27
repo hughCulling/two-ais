@@ -117,7 +117,6 @@ function HtmlWithNonce({ children, nonce, lang, title, description }: { children
         <link rel="icon" type="image/png" sizes="512x512" href="/icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon.png" />
-        <meta name="description" content={description} />
         <script
           type="application/ld+json"
           nonce={nonce}
