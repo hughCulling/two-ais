@@ -454,6 +454,9 @@ const en = {
         safariWarningMessage: 'For the best experience, I recommend using Microsoft Edge which has the highest quality Web Speech API voice options. Chrome, Firefox, and Opera also provide a better selection than Safari.',
         edgeRecommendationTitle: 'Microsoft Edge recommendation',
         edgeRecommendationMessage: 'For the best voice selection with Browser TTS, I recommend using Microsoft Edge, which offers the highest quality voices.',
+        mobileTTSNotSupportedTitle: 'Browser TTS Not Supported',
+        mobileTTSNotSupportedMessage: 'Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.',
+        firefoxRecommendationMessage: 'For audio playback on mobile, I recommend using Firefox.',
     },
 
     history: {

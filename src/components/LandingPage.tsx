@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 // import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
 // import type { ImageModelInfo } from '@/lib/image_models';
-import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
+import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser, isMobileDevice, isMobileBrowserTTSUnsupported } from '@/lib/browser-utils';
 import { FreeTierBadge } from './ui/free-tier-badge';
 
 // Replace these with your actual base64 strings!
@@ -158,6 +158,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
   const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
   const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
+  const [showMobileWarning, setShowMobileWarning] = useState<boolean>(false);
 
   const handleVerifyOllama = async () => {
     const rawEndpoint = ollamaEndpoint.trim();
@@ -317,10 +318,19 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     const isChrome = isChromeBrowser();
     const isFirefox = isFirefoxBrowser();
     const isOpera = isOperaBrowser();
+    const isMobile = isMobileDevice();
+    const isMobileUnsupported = isMobileBrowserTTSUnsupported();
 
-    setShowSafariWarning(isSafari);
-    // Show Edge recommendation if using Chrome/Firefox/Opera
-    setShowEdgeRecommendation(isChrome || isFirefox || isOpera);
+    if (isMobile) {
+      setShowMobileWarning(isMobileUnsupported);
+      setShowSafariWarning(false);
+      setShowEdgeRecommendation(false);
+    } else {
+      setShowMobileWarning(false);
+      setShowSafariWarning(isSafari);
+      // Show Edge recommendation if using Chrome/Firefox/Opera
+      setShowEdgeRecommendation(isChrome || isFirefox || isOpera);
+    }
 
     // Listen for voice loading events to update UI (force re-render when voices load)
     onVoicesLoaded(() => {
@@ -411,6 +421,24 @@ export default function LandingPage({ nonce }: LandingPageProps) {
             </div>
 
             {/* Browser Warnings (similar to SessionSetupForm) */}
+            {showMobileWarning && (
+              <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md text-center mb-6">
+                <div className="flex flex-col items-center">
+                  <div className="relative w-fit mx-auto mb-1">
+                    <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                      <AlertTriangle className="h-5 w-5 text-orange-400" />
+                    </div>
+                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                      {t.sessionSetupForm?.mobileTTSNotSupportedTitle || 'Browser TTS Not Supported'}
+                    </p>
+                  </div>
+                  <p className="text-xs text-orange-700 dark:text-orange-300">
+                    {t.sessionSetupForm?.mobileTTSNotSupportedMessage || 'Text-to-speech likely does not work on this mobile browser.'} {t.sessionSetupForm?.firefoxRecommendationMessage || 'For audio playback on mobile, we recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {showSafariWarning && (
               <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md text-center">
                 <div className="flex flex-col items-center">
