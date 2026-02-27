@@ -409,7 +409,10 @@ const id = {
         "presetLoadFailed": "Failed to load preset. Some models may not be available.",
         "confirmOverwritePreset": "This will replace your existing preset. Continue?",
         "noPresetFound": "No preset found",
-        "presetDeleted": "Preset deleted successfully"
+        "presetDeleted": "Preset deleted successfully",
+        "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
+        "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
     },
     "history": {
         "backToMain": "Kembali ke Utama",
