@@ -451,9 +451,9 @@ const en = {
         noPresetFound: 'No preset found',
         presetDeleted: 'Preset deleted successfully',
         safariWarningTitle: 'Limited Voice Selection in Safari',
-        safariWarningMessage: 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.',
-        edgeRecommendationTitle: 'Best Voice Selection Available',
-        edgeRecommendationMessage: 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.',
+        safariWarningMessage: 'For the best experience, I recommend using Microsoft Edge which has the highest quality Web Speech API voice options. Chrome, Firefox, and Opera also provide a better selection than Safari.',
+        edgeRecommendationTitle: 'Microsoft Edge recommendation',
+        edgeRecommendationMessage: 'For the best voice selection with Browser TTS, I recommend using Microsoft Edge, which offers the highest quality voices.',
     },
 
     history: {

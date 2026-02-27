@@ -50,49 +50,7 @@ import {
 import { saveSessionPreset, loadSessionPreset, SessionPreset } from '@/lib/firebase/sessionPreset';
 // import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
-
-// --- Utility Functions ---
-function isSafariBrowser(): boolean {
-    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        return false;
-    }
-    const userAgent = navigator.userAgent.toLowerCase();
-    // Safari detection: has 'safari' but not 'chrome' or 'chromium'
-    return userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('chromium');
-}
-
-// function isEdgeBrowser(): boolean {
-//     if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-//         return false;
-//     }
-//     const userAgent = navigator.userAgent.toLowerCase();
-//     return userAgent.includes('edg/') || userAgent.includes('edge/');
-// }
-
-function isChromeBrowser(): boolean {
-    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        return false;
-    }
-    const userAgent = navigator.userAgent.toLowerCase();
-    // Chrome detection: has 'chrome' but not 'edg' (Edge) and not 'opr' (Opera)
-    return userAgent.includes('chrome') && !userAgent.includes('edg') && !userAgent.includes('opr');
-}
-
-function isFirefoxBrowser(): boolean {
-    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        return false;
-    }
-    const userAgent = navigator.userAgent.toLowerCase();
-    return userAgent.includes('firefox');
-}
-
-function isOperaBrowser(): boolean {
-    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        return false;
-    }
-    const userAgent = navigator.userAgent.toLowerCase();
-    return userAgent.includes('opr/') || userAgent.includes('opera/');
-}
+import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'none';

@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 // import { AVAILABLE_IMAGE_MODELS } from '@/lib/image_models';
 // import type { ImageModelInfo } from '@/lib/image_models';
+import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
 import { FreeTierBadge } from './ui/free-tier-badge';
 
 // Replace these with your actual base64 strings!
@@ -154,6 +155,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [invokeaiVerifyError, setInvokeaiVerifyError] = useState<string | null>(null);
   const [invokeaiHelperEnabled, setInvokeaiHelperEnabled] = useState<boolean>(false);
   const [invokeaiSubdomain, setInvokeaiSubdomain] = useState<string>('');
+
+  const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
+  const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
 
   const handleVerifyOllama = async () => {
     const rawEndpoint = ollamaEndpoint.trim();
@@ -308,6 +312,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   useEffect(() => {
     setMounted(true);
 
+    // Browser detection for warnings
+    const isSafari = isSafariBrowser();
+    const isChrome = isChromeBrowser();
+    const isFirefox = isFirefoxBrowser();
+    const isOpera = isOperaBrowser();
+
+    setShowSafariWarning(isSafari);
+    // Show Edge recommendation if using Chrome/Firefox/Opera
+    setShowEdgeRecommendation(isChrome || isFirefox || isOpera);
+
     // Listen for voice loading events to update UI (force re-render when voices load)
     onVoicesLoaded(() => {
       // Force a re-render to update language support indicators
@@ -396,6 +410,43 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </p>
             </div>
 
+            {/* Browser Warnings (similar to SessionSetupForm) */}
+            {showSafariWarning && (
+              <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md text-center">
+                <div className="flex flex-col items-center">
+                  <div className="relative w-fit mx-auto mb-1">
+                    <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                      <AlertTriangle className="h-5 w-5 text-orange-400" />
+                    </div>
+                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                      {t.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
+                    </p>
+                  </div>
+                  <p className="text-xs text-orange-700 dark:text-orange-300">
+                    {t.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {showEdgeRecommendation && (
+              <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md text-center">
+                <div className="flex flex-col items-center">
+                  <div className="relative w-fit mx-auto mb-1">
+                    <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                      <Info className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                      {t.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
+                    </p>
+                  </div>
+                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                    {t.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Ollama Setup Instructions */}
             <Collapsible
               open={openCollapsibles['ollama-setup'] || false}
@@ -463,7 +514,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     <div className="flex justify-center items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
                         <pre className="font-mono text-xs text-left whitespace-pre m-0">
-{`tunnels:
+                          {`tunnels:
   ollama:
     proto: http
     addr: 11434
@@ -488,7 +539,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     <p className="text-center mt-3">
                       <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:11434</span> here and verify it:
 
-</span>
+                      </span>
                     </p>
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex gap-2 w-full max-w-md">
@@ -588,125 +639,101 @@ export default function LandingPage({ nonce }: LandingPageProps) {
 
             {/* InvokeAI Setup Instructions */}
             <Collapsible
-                open={openCollapsibles['invokeai-setup'] || false}
-                onOpenChange={() => toggleCollapsible('invokeai-setup')}
-                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
-              >
-                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
-                  <div className="flex justify-center pt-1 relative group cursor-pointer">
-                    <div className="relative">
-                      <div className="absolute right-full mr-2 translate-y-px">
-                        <div className="relative w-6 h-6 shrink-0">
-                          <Image
-                            src="/invoke-ai.svg"
-                            alt="InvokeAI Logo"
-                            fill
-                            className="object-contain brightness-0"
-                          />
-                        </div>
+              open={openCollapsibles['invokeai-setup'] || false}
+              onOpenChange={() => toggleCollapsible('invokeai-setup')}
+              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+            >
+              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                <div className="flex justify-center pt-1 relative group cursor-pointer">
+                  <div className="relative">
+                    <div className="absolute right-full mr-2 translate-y-px">
+                      <div className="relative w-6 h-6 shrink-0">
+                        <Image
+                          src="/invoke-ai.svg"
+                          alt="InvokeAI Logo"
+                          fill
+                          className="object-contain brightness-0"
+                        />
                       </div>
-                      <h3 className="font-semibold text-base whitespace-nowrap">InvokeAI Setup</h3>
                     </div>
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                      {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                    </div>
+                    <h3 className="font-semibold text-base whitespace-nowrap">InvokeAI Setup</h3>
                   </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="space-y-2 mt-4">
-                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                      <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
-                        <p>
-                          <span className="font-bold">Prerequisites:</span>
-                        </p>
-                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                          <li>
-                            InvokeAI installed on your machine. It is downloadable from{' '}
-                            <span className="whitespace-nowrap">
-                              <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                                invoke-ai.github.io
-                                <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                              </a>.
-                            </span>
-                          </li>
-                          <li>
-                            Your ngrok config file location. This can be found by running:{' '}
-                            <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
-                          </li>
-                        </ol>
-                      </div>
-
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                    {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                  </div>
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-2 mt-4">
+                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
                       <p>
-                        1. You can open the InvokeAI installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
+                        <span className="font-bold">Prerequisites:</span>
                       </p>
-                      <p className="text-center mt-3">
-                        <span>2. Next, you can edit your ngrok config file and add this tunnel configuration. If you already have a <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> section, adding the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invokeai:</code> part under that same <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> parent prevents the pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> from being overwritten:</span>
-                      </p>
-                      <div className="flex justify-center items-center">
-                        <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
-                          <pre className="font-mono text-xs text-left whitespace-pre m-0">
-{`tunnels:
+                      <ol className="list-decimal list-inside space-y-1 ml-2">
+                        <li>
+                          InvokeAI installed on your machine. It is downloadable from{' '}
+                          <span className="whitespace-nowrap">
+                            <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              invoke-ai.github.io
+                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                            </a>.
+                          </span>
+                        </li>
+                        <li>
+                          Your ngrok config file location. This can be found by running:{' '}
+                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
+                        </li>
+                      </ol>
+                    </div>
+
+                    <p>
+                      1. You can open the InvokeAI installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
+                    </p>
+                    <p className="text-center mt-3">
+                      <span>2. Next, you can edit your ngrok config file and add this tunnel configuration. If you already have a <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> section, adding the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invokeai:</code> part under that same <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> parent prevents the pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> from being overwritten:</span>
+                    </p>
+                    <div className="flex justify-center items-center">
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
+                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
+                          {`tunnels:
   invokeai:
     proto: http
     addr: 9090
     host_header: "localhost:9090"`}
-                          </pre>
-                        </div>
-                        <CopyButton text={`tunnels:
+                        </pre>
+                      </div>
+                      <CopyButton text={`tunnels:
   invokeai:
     proto: http
     addr: 9090
     host_header: "localhost:9090"`} stepId="invokeai-yaml" />
-                      </div>
-                      <p className="text-center mt-3">
-                        <span>3. Next you can start the tunnel with: <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start --all</code>.</span>
-                      </p>
-                      <p className="text-center mt-3">
-                        <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
-                      </p>
-                      <div className="flex flex-col items-center space-y-2">
-                        <div className="flex gap-2 w-full max-w-md">
-                          {invokeaiHelperEnabled ? (
-                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
-                                https://
-                              </span>
-                              <input
-                                type="text"
-                                value={invokeaiSubdomain}
-                                onChange={(e) => {
-                                  setInvokeaiSubdomain(e.target.value);
-                                  if (customInvokeaiAvailable) {
-                                    setCustomInvokeaiAvailable(false);
-                                  }
-                                  setInvokeaiVerifyError(null);
-                                }}
-                                placeholder="e.g. abc123"
-                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleVerifyInvokeAI();
-                                  }
-                                }}
-                              />
-                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
-                                .ngrok-free.app
-                              </span>
-                            </div>
-                          ) : (
+                    </div>
+                    <p className="text-center mt-3">
+                      <span>3. Next you can start the tunnel with: <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start --all</code>.</span>
+                    </p>
+                    <p className="text-center mt-3">
+                      <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
+                    </p>
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="flex gap-2 w-full max-w-md">
+                        {invokeaiHelperEnabled ? (
+                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                              https://
+                            </span>
                             <input
-                              type="url"
-                              value={invokeaiEndpoint}
+                              type="text"
+                              value={invokeaiSubdomain}
                               onChange={(e) => {
-                                setInvokeaiEndpoint(e.target.value);
+                                setInvokeaiSubdomain(e.target.value);
                                 if (customInvokeaiAvailable) {
                                   setCustomInvokeaiAvailable(false);
                                 }
                                 setInvokeaiVerifyError(null);
                               }}
-                              placeholder="e.g. https://abc123.ngrok-free.app"
-                              className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                              placeholder="e.g. abc123"
+                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                   e.preventDefault();
@@ -714,50 +741,74 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                 }
                               }}
                             />
-                          )}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleVerifyInvokeAI}
-                            disabled={
-                              customInvokeaiLoading ||
-                              (!invokeaiHelperEnabled
-                                ? !invokeaiEndpoint.trim()
-                                : !invokeaiSubdomain.trim())
-                            }
-                            className="liquid-glass-button-primary h-auto py-1.5"
-                          >
-                            {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                              .ngrok-free.app
+                            </span>
+                          </div>
+                        ) : (
                           <input
-                            id="invokeai-helper-toggle"
-                            type="checkbox"
-                            checked={invokeaiHelperEnabled}
-                            onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
-                            className="h-3 w-3"
+                            type="url"
+                            value={invokeaiEndpoint}
+                            onChange={(e) => {
+                              setInvokeaiEndpoint(e.target.value);
+                              if (customInvokeaiAvailable) {
+                                setCustomInvokeaiAvailable(false);
+                              }
+                              setInvokeaiVerifyError(null);
+                            }}
+                            placeholder="e.g. https://abc123.ngrok-free.app"
+                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleVerifyInvokeAI();
+                              }
+                            }}
                           />
-                          <label
-                            htmlFor="invokeai-helper-toggle"
-                            className="text-xs text-muted-foreground cursor-pointer"
-                          >
-                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
-                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
-                          </label>
-                        </div>
-                        {customInvokeaiAvailable && (
-                          <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI connected!</p>
                         )}
-                        {invokeaiVerifyError && (
-                          <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
-                        )}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleVerifyInvokeAI}
+                          disabled={
+                            customInvokeaiLoading ||
+                            (!invokeaiHelperEnabled
+                              ? !invokeaiEndpoint.trim()
+                              : !invokeaiSubdomain.trim())
+                          }
+                          className="liquid-glass-button-primary h-auto py-1.5"
+                        >
+                          {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
+                        </Button>
                       </div>
+                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                        <input
+                          id="invokeai-helper-toggle"
+                          type="checkbox"
+                          checked={invokeaiHelperEnabled}
+                          onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
+                          className="h-3 w-3"
+                        />
+                        <label
+                          htmlFor="invokeai-helper-toggle"
+                          className="text-xs text-muted-foreground cursor-pointer"
+                        >
+                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                        </label>
+                      </div>
+                      {customInvokeaiAvailable && (
+                        <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI connected!</p>
+                      )}
+                      {invokeaiVerifyError && (
+                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
+                      )}
                     </div>
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
