@@ -537,7 +537,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       <CopyButton text={t.page_OllamaStep3.replace(/^1\.\s*/, '')} stepId="step1" />
                     </div>
                     <p className="text-center mt-3">
-                      <span>2. You can edit your ngrok config file and add this tunnel configuration. If you already have a <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> section, adding the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ollama:</code> part under that same <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> parent prevents the pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> from being overwritten:</span>
+                      <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
                     </p>
                     <div className="flex justify-center items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
@@ -554,6 +554,20 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     proto: http
     addr: 11434
     host_header: "localhost:11434"`} stepId="ollama-yaml" />
+                    </div>
+                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
+                        </span>
+                      </div>
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ollama:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
+                        </span>
+                      </div>
                     </div>
                     <p className="text-center mt-3">
                       <span>3. You can start the tunnels with this command:</span>
