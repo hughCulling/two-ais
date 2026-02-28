@@ -974,7 +974,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         {orderedCategories.map((category, index) => {
                           const categoryModels = modelsByCategory[category];
                           if (!categoryModels) return null;
-                          let brandHeadingElement = null;
+                          const brandHeadingElement = null;
                           return (
                             <React.Fragment key={`${category}-${index}`}>
                               {brandHeadingElement}
