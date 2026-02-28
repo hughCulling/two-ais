@@ -23,6 +23,16 @@ export interface SessionPreset {
         enabled: boolean;
         provider: string;
         invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -31,6 +41,7 @@ export interface SessionPreset {
         cardDescription?: boolean;
         initialPromptDescription?: boolean;
         ollamaHelp?: boolean;
+        invokeAIHelp?: boolean;
         invokeAIDetails?: boolean;
         invokeAINotDetected?: boolean;
     };

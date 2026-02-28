@@ -107,7 +107,7 @@ export default function SignUpForm() {
                     onChange={(e) => setEmail(e.target.value)} 
                     required 
                     autoComplete="email" 
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 text-center" 
+                    className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
                     placeholder={translation.auth.signup.emailPlaceholder}
                     aria-describedby="email-signup-description"
                     aria-invalid={error && error.includes('email') ? true : false}
@@ -129,7 +129,7 @@ export default function SignUpForm() {
                     required 
                     minLength={6} 
                     autoComplete="new-password" 
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 text-center" 
+                    className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
                     placeholder={translation.auth.signup.passwordPlaceholder.substring(0, translation.auth.signup.passwordPlaceholder.indexOf(' ('))}
                     aria-describedby="password-signup-description"
                     aria-invalid={error && error.includes('password') ? true : false}
@@ -151,7 +151,7 @@ export default function SignUpForm() {
                     required 
                     minLength={6} 
                     autoComplete="new-password" 
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 text-center" 
+                    className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
                     placeholder={translation.auth.signup.confirmPasswordPlaceholder}
                     aria-describedby="confirm-password-signup-description"
                     aria-invalid={error && error.includes('password') ? true : false}
@@ -164,7 +164,7 @@ export default function SignUpForm() {
                 <button 
                     type="submit" 
                     disabled={loading} 
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-offset-gray-800"
+                    className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white liquid-glass-button liquid-glass-themed bg-blue-600/60 hover:bg-blue-600/70 disabled:opacity-50 dark:bg-blue-500/30 dark:hover:bg-blue-500/40"
                     aria-label={loading ? "Creating account..." : "Create new account"}
                     aria-describedby="signup-button-description"
                     aria-busy={loading}

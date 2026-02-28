@@ -61,6 +61,10 @@ function buildInvokeAIGraph(params: {
   width?: number;
   height?: number;
   seed?: number;
+  scheduler?: string;
+  clip_skip?: number;
+  cfg_rescale_multiplier?: number;
+  negative_prompt?: string;
 }) {
   const {
     prompt,
@@ -70,6 +74,9 @@ function buildInvokeAIGraph(params: {
     width = 512,
     height = 512,
     seed,
+    scheduler = 'dpmpp_3m_k',
+    clip_skip = 0,
+    cfg_rescale_multiplier = 0,
   } = params;
 
   // Generate random seed if not provided
@@ -108,7 +115,7 @@ function buildInvokeAIGraph(params: {
       is_intermediate: true,
       use_cache: true,
       clip: null,
-      skipped_layers: 0,
+      skipped_layers: clip_skip,
     },
     // Positive conditioning
     'pos_cond': {
@@ -172,12 +179,12 @@ function buildInvokeAIGraph(params: {
       cfg_scale: cfg_scale,
       denoising_start: 0,
       denoising_end: 1,
-      scheduler: 'dpmpp_3m_k',
+      scheduler,
       unet: null,
       control: null,
       ip_adapter: null,
       t2i_adapter: null,
-      cfg_rescale_multiplier: 0,
+      cfg_rescale_multiplier,
       latents: null,
       denoise_mask: null,
     },
@@ -303,7 +310,20 @@ async function pollQueueStatus(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { prompt, invokeaiEndpoint, model, steps, guidance_scale, width, height, seed } = body;
+    const {
+      prompt,
+      invokeaiEndpoint,
+      model,
+      steps,
+      guidance_scale,
+      width,
+      height,
+      seed,
+      negative_prompt,
+      scheduler,
+      clip_skip,
+      cfg_rescale_multiplier,
+    } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
@@ -340,6 +360,19 @@ export async function POST(request: NextRequest) {
 
     console.log(`[InvokeAI Generate] Using model: ${selectedModel.name} (${selectedModel.base})`);
 
+    // NOTE: The graph built in this route is currently tailored to SD-1 models.
+    // Some model bases (e.g. SDXL, SD-2, or tiny/specialty pipelines) require different graph topology.
+    // Fail fast with a clear message rather than returning a generic 500 later.
+    if (selectedModel.base !== 'sd-1') {
+      return NextResponse.json(
+        {
+          error: `Selected model base '${selectedModel.base}' is not supported by this generator yet. Please choose an SD-1 model (e.g. Dreamshaper 8).`,
+          selectedModel: { id: selectedModel.id, name: selectedModel.name, base: selectedModel.base },
+        },
+        { status: 400 }
+      );
+    }
+
     // Step 1: Build the graph
     const { graph, seed: finalSeed } = buildInvokeAIGraph({
       prompt,
@@ -349,6 +382,10 @@ export async function POST(request: NextRequest) {
       width,
       height,
       seed,
+      negative_prompt,
+      scheduler,
+      clip_skip,
+      cfg_rescale_multiplier,
     });
 
     console.log(`[InvokeAI Generate] Built graph with seed: ${finalSeed}`);

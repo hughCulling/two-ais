@@ -8,6 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase/clientApp';
 import { splitIntoParagraphs } from '@/lib/tts-utils';
 import { getProviderFromId } from '@/lib/models';
+import { auth } from '@/lib/firebase/clientApp';
 
 interface ParagraphImage {
     paragraphIndex: number;
@@ -21,6 +22,16 @@ interface ConversationData {
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -88,7 +99,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 }
 
                 // Step 2: Generate image using InvokeAI
-                const imageBase64 = await generateImage(prompt, imageGenSettings.invokeaiEndpoint);
+                const imageBase64 = await generateImage(prompt, imageGenSettings);
 
                 if (!imageBase64) {
                     paragraphImages[paragraphIndex] = {
@@ -297,11 +308,32 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
                 return prompt.trim() || null;
             } else {
-                // Use cloud LLM via Firebase Functions or API
-                // For now, return a simple prompt - this can be enhanced later
-                // TODO: Implement cloud LLM prompt generation
-                console.warn('[InvokeAI ImageGen] Cloud LLM prompt generation not yet implemented');
-                return `A detailed image depicting: ${paragraph}`;
+                const currentUser = auth.currentUser;
+                const idToken = currentUser ? await currentUser.getIdToken() : null;
+                if (!idToken) {
+                    throw new Error('Not authenticated');
+                }
+
+                const res = await fetch('/api/image-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`,
+                    },
+                    body: JSON.stringify({
+                        paragraph,
+                        promptLlmId,
+                        promptSystemMessage,
+                    }),
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Image prompt API error: ${res.status} ${res.statusText} - ${errorText}`);
+                }
+                const data = await res.json();
+                const prompt = typeof data?.prompt === 'string' ? data.prompt : '';
+                return prompt.trim() || null;
             }
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error generating prompt:', error);
@@ -309,18 +341,27 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         }
     }
 
-    async function generateImage(prompt: string, invokeaiEndpoint: string): Promise<string | null> {
+    async function generateImage(
+        prompt: string,
+        imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
+    ): Promise<string | null> {
         try {
             const response = await fetch('/api/invokeai/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt,
-                    invokeaiEndpoint,
-                    steps: 20,
-                    guidance_scale: 7.5,
-                    width: 512,
-                    height: 512,
+                    invokeaiEndpoint: imageGenSettings.invokeaiEndpoint,
+                    model: imageGenSettings.invokeaiModel,
+                    negative_prompt: imageGenSettings.negativePrompt,
+                    steps: imageGenSettings.steps,
+                    guidance_scale: imageGenSettings.guidanceScale,
+                    width: imageGenSettings.width,
+                    height: imageGenSettings.height,
+                    seed: imageGenSettings.seed,
+                    scheduler: imageGenSettings.scheduler,
+                    clip_skip: imageGenSettings.clipSkip,
+                    cfg_rescale_multiplier: imageGenSettings.cfgRescaleMultiplier,
                 }),
             });
 

@@ -184,6 +184,16 @@ interface StartConversationRequest {
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -222,6 +232,16 @@ type ConversationData = {
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
     };
