@@ -761,7 +761,7 @@ export default function ChatHistoryViewerPage() {
                                     priority
                                 />
                                 <button
-                                    className="absolute top-4 right-4 bg-white/90 hover:bg-white text-black rounded-full p-2 shadow-lg transition-colors"
+                                    className="absolute top-4 right-4 liquid-glass-button liquid-glass-themed bg-theme-primary/25 hover:bg-theme-primary/35 text-black dark:text-white rounded-full p-2 shadow-lg transition-colors"
                                     onClick={e => { e.stopPropagation(); setFullScreenImageMsgId(null); }}
                                     aria-label="Close full screen image"
                                 >
@@ -823,7 +823,7 @@ export default function ChatHistoryViewerPage() {
                             {completeImages.length > 1 && (
                                 <>
                                     <button
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 liquid-glass-button liquid-glass-themed bg-theme-primary/25 hover:bg-theme-primary/35 text-black dark:text-white rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                         onClick={(e) => { e.stopPropagation(); navigateImage('prev'); }}
                                         disabled={currentImageIndex === 0}
                                         aria-label="Previous image"
@@ -831,7 +831,7 @@ export default function ChatHistoryViewerPage() {
                                         <ChevronLeft className="h-6 w-6" />
                                     </button>
                                     <button
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 liquid-glass-button liquid-glass-themed bg-theme-primary/25 hover:bg-theme-primary/35 text-black dark:text-white rounded-full p-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                         onClick={(e) => { e.stopPropagation(); navigateImage('next'); }}
                                         disabled={currentImageIndex === completeImages.length - 1}
                                         aria-label="Next image"
@@ -843,13 +843,13 @@ export default function ChatHistoryViewerPage() {
                             
                             {/* Image counter */}
                             {completeImages.length > 1 && (
-                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 liquid-glass-themed bg-black/50 text-white px-4 py-2 rounded-full text-sm border border-white/15">
                                     {currentImageIndex + 1} / {completeImages.length}
                                 </div>
                             )}
                             
                             <button
-                                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-black rounded-full px-3 py-1 text-sm font-semibold shadow"
+                                className="absolute top-4 right-4 liquid-glass-button liquid-glass-themed bg-theme-primary/25 hover:bg-theme-primary/35 text-black dark:text-white rounded-full px-3 py-1 text-sm font-semibold shadow"
                                 onClick={(e) => { e.stopPropagation(); setFullScreenGallery(null); }}
                                 aria-label="Close full screen gallery"
                             >

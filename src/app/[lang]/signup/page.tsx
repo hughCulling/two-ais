@@ -42,7 +42,7 @@ function SignupPageContent() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
             <div className="w-full max-w-md space-y-6">
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md space-y-6">
+                <div className="p-6 rounded-xl shadow-md space-y-6 liquid-glass-themed bg-theme-primary/15 dark:bg-card/60">
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                         {translation.auth.signup.title}
                     </h1>

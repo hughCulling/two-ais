@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
+import Image from 'next/image';
 import {
     Select,
     SelectContent,
@@ -16,17 +17,16 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { db } from '@/lib/firebase/clientApp';
-import { getAllAvailableLLMs, getLLMInfoById, setOllamaModelsFromNames } from '@/lib/models';
+import { getAllAvailableLLMs, getLLMInfoById, groupLLMsByProvider, groupModelsByCategory, setOllamaModelsFromNames } from '@/lib/models';
 // useOllama replaced with manual verify flow for ngrok support
-import { useInvokeAI } from '@/hooks/useInvokeAI';
 import { FreeTierBadge } from "@/components/ui/free-tier-badge";
 import { IconTooltipBadge } from "@/components/ui/icon-tooltip-badge";
 import {
-    // AVAILABLE_TTS_PROVIDERS,
     TTSProviderInfo,
     TTSVoice,
     getTTSProviderInfoById,
@@ -35,7 +35,7 @@ import {
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, ExternalLink, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,
@@ -76,6 +76,16 @@ interface SessionConfig {
         enabled: boolean;
         provider: string;
         invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
     };
@@ -85,6 +95,41 @@ interface SessionSetupFormProps {
     onStartSession: (config: SessionConfig) => void;
     isLoading: boolean;
 }
+
+const INVOKEAI_SCHEDULERS: { id: string; label: string }[] = [
+    { id: 'ddim', label: 'DDIM' },
+    { id: 'ddpm', label: 'DDPM' },
+    { id: 'deis', label: 'DEIS' },
+    { id: 'deis_k', label: 'DEIS Karras' },
+    { id: 'dpm2', label: 'DPM 2' },
+    { id: 'kdpm2', label: 'KDPM 2' },
+    { id: 'kdpm2_k', label: 'KDPM 2 Karras' },
+    { id: 'kdpm2_a', label: 'KDPM 2 Ancestral' },
+    { id: 'kdpm2_a_k', label: 'KDPM 2 Ancestral Karras' },
+    { id: 'dpmpp_2s', label: 'DPM++ 2S' },
+    { id: 'dpmpp_2s_k', label: 'DPM++ 2S Karras' },
+    { id: 'dpmpp_2m', label: 'DPM++ 2M' },
+    { id: 'dpmpp_2m_k', label: 'DPM++ 2M Karras' },
+    { id: 'dpmpp_2m_sde', label: 'DPM++ 2M SDE' },
+    { id: 'dpmpp_2m_sde_k', label: 'DPM++ 2M SDE Karras' },
+    { id: 'dpmpp_3m', label: 'DPM++ 3M' },
+    { id: 'dpmpp_3m_k', label: 'DPM++ 3M Karras' },
+    { id: 'dpmpp_sde', label: 'DPM++ SDE' },
+    { id: 'dpmpp_sde_k', label: 'DPM++ SDE Karras' },
+    { id: 'euler', label: 'Euler' },
+    { id: 'euler_k', label: 'Euler Karras' },
+    { id: 'euler_a', label: 'Euler Ancestral' },
+    { id: 'heun', label: 'Heun' },
+    { id: 'heun_k', label: 'Heun Karras' },
+    { id: 'lcm', label: 'LCM' },
+    { id: 'lms', label: 'LMS' },
+    { id: 'lms_k', label: 'LMS Karras' },
+    { id: 'pndm', label: 'PNDM' },
+    { id: 'tcd', label: 'TCD' },
+    { id: 'uni_pc', label: 'UniPC' },
+    { id: 'uni_pc_k', label: 'UniPC Karras' },
+    { id: 'uni_pc_bh2', label: 'UniPC BH2' },
+];
 
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral'];
 
@@ -130,23 +175,8 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
         );
     }
 
-    // Group models by provider
-    const allLLMs = getAllAvailableLLMs();
-    const groupedByProvider: Record<string, typeof allLLMs> = {};
-
-    allLLMs.forEach((llm) => {
-        if (!groupedByProvider[llm.provider]) {
-            groupedByProvider[llm.provider] = [];
-        }
-        groupedByProvider[llm.provider].push(llm);
-    });
-
-    // Sort providers alphabetically, but put Ollama last if it exists
-    const sortedProviders = Object.keys(groupedByProvider).sort((a, b) => {
-        if (a === 'Ollama') return 1;
-        if (b === 'Ollama') return -1;
-        return a.localeCompare(b);
-    });
+    const groupedByProvider = groupLLMsByProvider();
+    const orderedProviders = Object.keys(groupedByProvider);
 
     // Get the selected model info to display only its name in the trigger
     const selectedLLM = value ? getLLMInfoById(value) : null;
@@ -160,8 +190,8 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                         {selectedLLM ? selectedLLM.name : placeholder || 'Select LLM'}
                     </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="max-h-96">
-                    {sortedProviders.map((provider) => {
+                <SelectContent className="max-h-96 liquid-glass-panel">
+                    {orderedProviders.map((provider) => {
                         // Check if all models in this provider support the current language
                         const allModelsSupport = groupedByProvider[provider].every(llm =>
                             isLanguageSupported(llm.provider, language.code, llm.id)
@@ -175,88 +205,74 @@ const LLMSelector: React.FC<LLMSelectorProps> = ({ value, onChange, disabled, la
                         // Get the free tier info from the first model (they should all be the same for the provider)
                         const providerFreeTier = allHaveFreeTier ? groupedByProvider[provider][0]?.pricing?.freeTier : null;
 
+                        const { orderedCategories, byCategory } = groupModelsByCategory(groupedByProvider[provider], t);
+
                         return (
                             <SelectGroup key={provider}>
-                                <SelectLabel className="flex items-center gap-1.5">
-                                    {provider}
-                                    {allModelsSupport && (
-                                        <IconTooltipBadge
-                                            icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
-                                            tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
-                                        />
-                                    )}
-                                    {allHaveFreeTier && providerFreeTier && (
-                                        <FreeTierBadge freeTier={providerFreeTier} t={t} />
-                                    )}
+                                <SelectLabel className="flex items-center justify-center text-center">
+                                    <div className="relative inline-flex items-center justify-center">
+                                        <span>{provider}</span>
+                                        <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                                            {allHaveFreeTier && providerFreeTier && (
+                                                <FreeTierBadge freeTier={providerFreeTier} t={t} />
+                                            )}
+                                            {allModelsSupport && (
+                                                <IconTooltipBadge
+                                                    icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
+                                                    tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
                                 </SelectLabel>
-                                {groupedByProvider[provider].map((llm) => {
-                                    const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
-                                    return (
-                                        <SelectItem key={llm.id} value={llm.id} disabled={!supportsLanguage} className="pr-2 py-2 overflow-hidden">
-                                            <div className="flex items-center w-full text-sm min-w-0 space-x-1.5 overflow-hidden">
-                                                <span className="font-medium truncate" style={{ flexShrink: 0.5, minWidth: 0 }}>{llm.name}</span>
-                                                {llm.status === 'preview' && <span className="text-xs text-orange-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
-                                                {llm.status === 'beta' && <span className="text-xs text-blue-500 flex-shrink-0 whitespace-nowrap">(Beta)</span>}
-                                                {llm.status === 'experimental' && <span className="text-xs text-purple-500 flex-shrink-0 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
-                                                {/* Don't show pricing for Ollama models */}
-                                                {llm.provider !== 'Ollama' && (
-                                                    <span className="text-xs text-muted-foreground truncate" style={{ flexShrink: 2, minWidth: 0 }} title={
-                                                        llm.pricing.note ?
-                                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                                    }>
-                                                        ({llm.pricing.note ?
-                                                            (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note) :
-                                                            `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`
-                                                        })
-                                                    </span>
-                                                )}
-                                                {/* Only show language support icon on individual models if not all models support the language */}
-                                                {!allModelsSupport && (
-                                                    supportsLanguage ? (
-                                                        <IconTooltipBadge
-                                                            icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
-                                                            tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
-                                                            className="flex-shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <IconTooltipBadge
-                                                            icon={<X className="h-3 w-3 text-red-700 dark:text-red-300" />}
-                                                            tooltip={t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}
-                                                            className="flex-shrink-0"
-                                                        />
-                                                    )
-                                                )}
-                                                {llm.usesReasoningTokens && (
-                                                    <IconTooltipBadge
-                                                        icon={<Info className="h-3 w-3 text-blue-500" />}
-                                                        tooltip={
-                                                            llm.provider === 'Anthropic'
-                                                                ? t.page_TooltipAnthropicExtendedThinking
-                                                                : llm.provider === 'xAI'
-                                                                    ? t.page_TooltipXaiThinking
-                                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
-                                                                        ? t.page_TooltipQwenReasoning
-                                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
-                                                                            ? t.page_TooltipDeepSeekReasoning
-                                                                            : t.page_TooltipGenericReasoning
-                                                        }
-                                                        className="flex-shrink-0"
-                                                    />
-                                                )}
-                                                {llm.requiresOrgVerification && (
-                                                    <IconTooltipBadge
-                                                        icon={<AlertTriangle className="h-3 w-3 text-yellow-500" />}
-                                                        tooltip={t.page_TooltipRequiresVerification}
-                                                        className="flex-shrink-0"
-                                                    />
-                                                )}
-                                                {/* Only show free tier badge on individual models if not all models in provider have it */}
-                                                {!allHaveFreeTier && llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="flex-shrink-0" />}
-                                                {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0 whitespace-nowrap">(No {language.nativeName})</span>}
-                                            </div>
-                                        </SelectItem>
-                                    );
+                                {orderedCategories.flatMap((category) => {
+                                    const models = byCategory[category] || [];
+                                    return models.map((llm) => {
+                                        const supportsLanguage = isLanguageSupported(llm.provider, language.code, llm.id);
+                                        const pricingText = llm.pricing.note
+                                            ? (typeof llm.pricing.note === 'function' ? llm.pricing.note(t) : llm.pricing.note)
+                                            : `$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t?.page_PricingPerTokens || 'per 1M tokens'}`;
+
+                                        return (
+                                            <SelectItem
+                                                key={llm.id}
+                                                value={llm.id}
+                                                disabled={!supportsLanguage}
+                                                className="py-2 justify-center"
+                                            >
+                                                <div className="w-full flex flex-col items-center justify-center text-center">
+                                                    <div className="w-full flex items-center justify-center gap-1.5 text-sm">
+                                                        <span className="font-medium max-w-full truncate">{llm.name}</span>
+                                                        {llm.status === 'preview' && <span className="text-xs text-orange-500 whitespace-nowrap">({t?.page_BadgePreview || 'Preview'})</span>}
+                                                        {llm.status === 'beta' && <span className="text-xs text-blue-500 whitespace-nowrap">(Beta)</span>}
+                                                        {llm.status === 'experimental' && <span className="text-xs text-purple-500 whitespace-nowrap">({t?.page_BadgeExperimental || 'Experimental'})</span>}
+                                                    </div>
+
+                                                    {llm.provider !== 'Ollama' && (
+                                                        <div className="text-xs text-muted-foreground max-w-full truncate" title={pricingText}>
+                                                            ({pricingText})
+                                                        </div>
+                                                    )}
+
+                                                    {!allModelsSupport && (
+                                                        <div className="pt-1">
+                                                            {supportsLanguage ? (
+                                                                <IconTooltipBadge
+                                                                    icon={<Check className="h-3 w-3 text-green-700 dark:text-green-300" />}
+                                                                    tooltip={t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}
+                                                                />
+                                                            ) : (
+                                                                <IconTooltipBadge
+                                                                    icon={<X className="h-3 w-3 text-red-700 dark:text-red-300" />}
+                                                                    tooltip={t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </SelectItem>
+                                        );
+                                    });
                                 })}
                             </SelectGroup>
                         );
@@ -522,9 +538,39 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [ollamaAvailable, setOllamaAvailable] = useState(false);
     const [ollamaLoading, setOllamaLoading] = useState(false);
     const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
+    const [ollamaHelperEnabled, setOllamaHelperEnabled] = useState<boolean>(false);
+    const [ollamaSubdomain, setOllamaSubdomain] = useState<string>('');
 
     const handleVerifyOllama = async () => {
-        if (!ollamaEndpoint.trim()) return;
+        const rawEndpoint = ollamaEndpoint.trim();
+        const rawSubdomain = ollamaSubdomain.trim();
+
+        if (!ollamaHelperEnabled) {
+            if (!rawEndpoint) return;
+        } else {
+            if (!rawSubdomain) return;
+        }
+
+        let endpointToVerify = rawEndpoint;
+
+        if (ollamaHelperEnabled) {
+            let candidate = rawSubdomain;
+
+            if (candidate && !candidate.startsWith('http://') && !candidate.startsWith('https://')) {
+                if (!candidate.includes('.')) {
+                    candidate = `https://${candidate}.ngrok-free.app`;
+                } else {
+                    candidate = `https://${candidate}`;
+                }
+            }
+
+            endpointToVerify = candidate;
+
+            if (endpointToVerify !== ollamaEndpoint) {
+                setOllamaEndpoint(endpointToVerify);
+            }
+        }
+
         setOllamaLoading(true);
         setOllamaVerifyError(null);
         try {
@@ -532,13 +578,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             const res = await fetch('/api/ollama/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ endpoint: ollamaEndpoint.trim() }),
+                body: JSON.stringify({ endpoint: endpointToVerify }),
             });
             const data = await res.json();
             if (data.available) {
                 setOllamaAvailable(true);
                 // Use model names from server response (avoids client-side CORS issues)
-                setOllamaModelsFromNames(data.models || [], ollamaEndpoint.trim());
+                setOllamaModelsFromNames(data.models || [], endpointToVerify);
             } else {
                 setOllamaAvailable(false);
                 // Show the specific error from the proxy if available
@@ -556,9 +602,75 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     };
 
-    // Detect InvokeAI
-    const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('http://localhost:9090');
-    const { isAvailable: invokeaiAvailable, isLoading: invokeaiLoading } = useInvokeAI(invokeaiEndpoint);
+    // InvokeAI endpoint (ngrok URL) - manual verify flow
+    const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('');
+    const [customInvokeaiAvailable, setCustomInvokeaiAvailable] = useState<boolean>(false);
+    const [customInvokeaiLoading, setCustomInvokeaiLoading] = useState<boolean>(false);
+    const [invokeaiVerifyError, setInvokeaiVerifyError] = useState<string | null>(null);
+    const [invokeaiHelperEnabled, setInvokeaiHelperEnabled] = useState<boolean>(false);
+    const [invokeaiSubdomain, setInvokeaiSubdomain] = useState<string>('');
+    const [invokeaiModelNames, setInvokeaiModelNames] = useState<string[]>([]);
+
+    const handleVerifyInvokeAI = async () => {
+        const rawEndpoint = invokeaiEndpoint.trim();
+        const rawSubdomain = invokeaiSubdomain.trim();
+
+        if (!invokeaiHelperEnabled) {
+            if (!rawEndpoint) return;
+        } else {
+            if (!rawSubdomain) return;
+        }
+
+        let endpointToVerify = rawEndpoint;
+
+        if (invokeaiHelperEnabled) {
+            let candidate = rawSubdomain;
+
+            if (candidate && !candidate.startsWith('http://') && !candidate.startsWith('https://')) {
+                if (!candidate.includes('.')) {
+                    candidate = `https://${candidate}.ngrok-free.app`;
+                } else {
+                    candidate = `https://${candidate}`;
+                }
+            }
+
+            endpointToVerify = candidate;
+
+            if (endpointToVerify !== invokeaiEndpoint) {
+                setInvokeaiEndpoint(endpointToVerify);
+            }
+        }
+
+        setCustomInvokeaiLoading(true);
+        setInvokeaiVerifyError(null);
+        try {
+            // Proxy through server-side route to bypass ngrok CORS/browser warning
+            const res = await fetch('/api/invokeai/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ endpoint: endpointToVerify }),
+            });
+            const data = await res.json();
+            if (data.available) {
+                setCustomInvokeaiAvailable(true);
+                setInvokeaiModelNames(Array.isArray(data.models) ? data.models : []);
+            } else {
+                setCustomInvokeaiAvailable(false);
+                setInvokeaiModelNames([]);
+                let errorMessage = data.error || 'Could not connect to InvokeAI at this endpoint.';
+                if (errorMessage.includes('403')) {
+                    errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
+                }
+                setInvokeaiVerifyError(errorMessage);
+            }
+        } catch {
+            setCustomInvokeaiAvailable(false);
+            setInvokeaiModelNames([]);
+            setInvokeaiVerifyError('Could not connect to InvokeAI at this endpoint.');
+        } finally {
+            setCustomInvokeaiLoading(false);
+        }
+    };
 
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
@@ -579,13 +691,55 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [collapseCardDescription, setCollapseCardDescription] = useState<boolean>(false);
     const [collapseInitialPromptDescription, setCollapseInitialPromptDescription] = useState<boolean>(false);
     const [collapseOllamaHelp, setCollapseOllamaHelp] = useState<boolean>(false);
-    const [collapseInvokeAIDetails, setCollapseInvokeAIDetails] = useState<boolean>(false);
-    const [collapseInvokeAINotDetected, setCollapseInvokeAINotDetected] = useState<boolean>(false);
+    const [collapseInvokeAIHelp, setCollapseInvokeAIHelp] = useState<boolean>(false);
+
+    const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(() => ({
+        'ollama-setup': false,
+        'invokeai-setup': false,
+    }));
+
+    const toggleCollapsible = (id: string) => {
+        setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    const [copiedStep, setCopiedStep] = useState<string | null>(null);
+
+    const copyToClipboard = (text: string, stepId: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopiedStep(stepId);
+            setTimeout(() => setCopiedStep(null), 2000);
+        });
+    };
+
+    const CopyButton = ({ text, stepId }: { text: string; stepId: string }) => (
+        <button
+            onClick={() => copyToClipboard(text, stepId)}
+            className="ml-2 p-1 hover:bg-white/20 dark:hover:bg-black/20 rounded transition-all duration-200 inline-flex items-center gap-1 group active:scale-90"
+            title="Copy to clipboard"
+            type="button"
+        >
+            {copiedStep === stepId ? (
+                <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+            ) : (
+                <Copy className="h-3 w-3 text-blue-600 dark:text-blue-400 opacity-70 group-hover:opacity-100" />
+            )}
+        </button>
+    );
 
     // --- Image Generation State ---
     const [imageGenEnabled, setImageGenEnabled] = useState(false);
     const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
     const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
+    const [invokeaiSelectedModel, setInvokeaiSelectedModel] = useState<string>('');
+    const [invokeaiNegativePrompt, setInvokeaiNegativePrompt] = useState<string>('');
+    const [invokeaiSteps, setInvokeaiSteps] = useState<number>(20);
+    const [invokeaiGuidanceScale, setInvokeaiGuidanceScale] = useState<number>(7.5);
+    const [invokeaiWidth, setInvokeaiWidth] = useState<number>(512);
+    const [invokeaiHeight, setInvokeaiHeight] = useState<number>(512);
+    const [invokeaiSeed, setInvokeaiSeed] = useState<string>('');
+    const [invokeaiScheduler, setInvokeaiScheduler] = useState<string>('dpmpp_3m_k');
+    const [invokeaiClipSkip, setInvokeaiClipSkip] = useState<number>(0);
+    const [invokeaiCfgRescaleMultiplier, setInvokeaiCfgRescaleMultiplier] = useState<number>(0);
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -885,6 +1039,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         // Image generation validation
         let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
         if (imageGenEnabled) {
+            if (!customInvokeaiAvailable || !invokeaiEndpoint.trim()) {
+                alert('Please verify your InvokeAI endpoint above before enabling image generation.');
+                return;
+            }
+
+            if (!invokeaiSelectedModel) {
+                alert('Please select an InvokeAI model.');
+                return;
+            }
+
             if (!selectedPromptLlm) {
                 alert('Please select a prompt LLM for image generation.');
                 return;
@@ -909,6 +1073,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 enabled: true,
                 provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
                 invokeaiEndpoint: invokeaiEndpoint,
+                invokeaiModel: invokeaiSelectedModel,
+                negativePrompt: invokeaiNegativePrompt.trim() || undefined,
+                steps: invokeaiSteps,
+                guidanceScale: invokeaiGuidanceScale,
+                width: invokeaiWidth,
+                height: invokeaiHeight,
+                seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
+                scheduler: invokeaiScheduler.trim() || undefined,
+                clipSkip: invokeaiClipSkip,
+                cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                 promptLlm: selectedPromptLlm,
                 promptSystemMessage: imagePromptSystemMessage,
             };
@@ -1014,6 +1188,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     enabled: true,
                     provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
                     invokeaiEndpoint: invokeaiEndpoint,
+                    invokeaiModel: invokeaiSelectedModel,
+                    negativePrompt: invokeaiNegativePrompt.trim() || undefined,
+                    steps: invokeaiSteps,
+                    guidanceScale: invokeaiGuidanceScale,
+                    width: invokeaiWidth,
+                    height: invokeaiHeight,
+                    seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
+                    scheduler: invokeaiScheduler.trim() || undefined,
+                    clipSkip: invokeaiClipSkip,
+                    cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                     promptLlm: selectedPromptLlm,
                     promptSystemMessage: imagePromptSystemMessage,
                 } : undefined,
@@ -1021,8 +1205,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     cardDescription: collapseCardDescription,
                     initialPromptDescription: collapseInitialPromptDescription,
                     ollamaHelp: collapseOllamaHelp,
-                    invokeAIDetails: collapseInvokeAIDetails,
-                    invokeAINotDetected: collapseInvokeAINotDetected,
+                    invokeAIHelp: collapseInvokeAIHelp,
                 },
             };
 
@@ -1074,7 +1257,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             // Load image generation settings if present
             if (preset.imageGenSettings) {
                 setImageGenEnabled(preset.imageGenSettings.enabled);
-                setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint || 'http://localhost:9090');
+                setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint || '');
+                setInvokeaiSelectedModel((preset.imageGenSettings as { invokeaiModel?: string }).invokeaiModel || '');
+                setInvokeaiNegativePrompt((preset.imageGenSettings as { negativePrompt?: string }).negativePrompt || '');
+                setInvokeaiSteps((preset.imageGenSettings as { steps?: number }).steps ?? 20);
+                setInvokeaiGuidanceScale((preset.imageGenSettings as { guidanceScale?: number }).guidanceScale ?? 7.5);
+                setInvokeaiWidth((preset.imageGenSettings as { width?: number }).width ?? 512);
+                setInvokeaiHeight((preset.imageGenSettings as { height?: number }).height ?? 512);
+                const loadedSeed = (preset.imageGenSettings as { seed?: number }).seed;
+                setInvokeaiSeed(typeof loadedSeed === 'number' ? String(loadedSeed) : '');
+                setInvokeaiScheduler((preset.imageGenSettings as { scheduler?: string }).scheduler ?? 'dpmpp_3m_k');
+                setInvokeaiClipSkip((preset.imageGenSettings as { clipSkip?: number }).clipSkip ?? 0);
+                setInvokeaiCfgRescaleMultiplier((preset.imageGenSettings as { cfgRescaleMultiplier?: number }).cfgRescaleMultiplier ?? 0);
                 setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
                 setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
             }
@@ -1084,8 +1278,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setCollapseCardDescription(preset.collapseStates.cardDescription ?? false);
                 setCollapseInitialPromptDescription(preset.collapseStates.initialPromptDescription ?? false);
                 setCollapseOllamaHelp(preset.collapseStates.ollamaHelp ?? false);
-                setCollapseInvokeAIDetails(preset.collapseStates.invokeAIDetails ?? false);
-                setCollapseInvokeAINotDetected(preset.collapseStates.invokeAINotDetected ?? false);
+                setCollapseInvokeAIHelp((preset.collapseStates as { invokeAIHelp?: boolean }).invokeAIHelp ?? false);
             }
 
             toast({
@@ -1159,7 +1352,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
         // Simplified version - only show voice selector since we only have browser TTS with one model
         return (
-            <div className="space-y-3 p-4 border rounded-md bg-background/50">
+            <div className="space-y-3 p-4 border rounded-md bg-background/50 text-center">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
                 {shouldShowVoiceDropdown && (
                     <div className="space-y-2">
@@ -1169,18 +1362,23 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
                             disabled={!user || currentAgentVoices.length === 0}
                         >
-                            <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full [&>span]:mx-auto [&>span]:text-center">
+                            <SelectTrigger
+                                id={`agent-${agentIdentifierLowerCase}-voice`}
+                                className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3"
+                            >
                                 <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
                             </SelectTrigger>
-                            <SelectContent className="max-h-60">
+                            <SelectContent className="max-h-60 w-[var(--radix-select-trigger-width)] liquid-glass-panel">
                                 {currentAgentVoices.map(v => {
                                     const providerId = currentAgentTTSSettings.provider;
                                     const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                     return (
-                                        <SelectItem key={v.id} value={v.id}>
-                                            {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                            {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
-                                            {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                        <SelectItem key={v.id} value={v.id} className="justify-center">
+                                            <div className="w-full text-center">
+                                                {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                                {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
+                                                {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                            </div>
                                         </SelectItem>
                                     );
                                 })}
@@ -1210,7 +1408,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
 
         return (
-            <div className="space-y-3 p-4 border rounded-md bg-background/50">
+            <div className="space-y-3 p-4 border rounded-md liquid-glass-themed bg-theme-primary/10 dark:bg-card/50">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
                 <div className="space-y-2">
                     <Label htmlFor={`agent-${agentIdentifierLowerCase}-tts-provider`}>{t?.sessionSetupForm?.provider}</Label>
@@ -1219,17 +1417,19 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         onValueChange={(value: TTSProviderOptionId) => handleTTSProviderChange(agentIdentifier, value)}
                         disabled={!user || isLoadingStatus}
                     >
-                        <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-provider`} className="w-full">
+                        <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-provider`} className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                             <SelectValue placeholder={t?.sessionSetupForm?.selectProvider} />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="liquid-glass-panel">
                             <SelectItem value="none">{t?.ttsNoneOption || 'None'}</SelectItem>
                             {AVAILABLE_TTS_PROVIDERS.map(p => {
                                 const isDisabled = isTTSProviderDisabled(p.id);
                                 return (
-                                    <SelectItem key={p.id} value={p.id} disabled={isDisabled}>
-                                        {p.name}
-                                        {isDisabled && ' (Key Missing)'}
+                                    <SelectItem key={p.id} value={p.id} disabled={isDisabled} className="justify-center">
+                                        <div className="w-full text-center">
+                                            {p.name}
+                                            {isDisabled && ' (Key Missing)'}
+                                        </div>
                                     </SelectItem>
                                 );
                             })}
@@ -1248,10 +1448,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 onValueChange={(value: string) => handleTTSModelChange(agentIdentifier, value)}
                                 disabled={!user || selectedProviderInfo.models.length === 0}
                             >
-                                <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-model`} className="w-full">
+                                <SelectTrigger id={`agent-${agentIdentifierLowerCase}-tts-model`} className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                                     <SelectValue placeholder={t?.sessionSetupForm?.selectTtsProviderModel?.replace('{providerName}', selectedProviderInfo.name)} />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="liquid-glass-panel">
                                     {selectedProviderInfo.models.map(m => {
                                         const supportsLanguage = isTTSModelLanguageSupported(m.id, language.code);
                                         const isDisabled = !supportsLanguage;
@@ -1260,9 +1460,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 key={m.id}
                                                 value={m.id}
                                                 disabled={isDisabled}
-                                                className="pr-2 py-2"
+                                                className="pr-2 py-2 justify-center"
                                             >
-                                                <div className="flex justify-between items-center w-full text-sm min-w-0">
+                                                <div className="w-full flex flex-col items-center justify-center text-center">
                                                     <div className="flex items-center space-x-1.5 mr-2 min-w-0 flex-1">
                                                         {supportsLanguage ? (
                                                             <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
@@ -1272,9 +1472,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                         <span className="truncate font-medium" style={{ maxWidth: '16rem' }}>{m.name}</span>
                                                         {!supportsLanguage && <span className="text-xs text-muted-foreground flex-shrink-0">(No {language.nativeName})</span>}
                                                     </div>
-                                                    <span className="text-xs text-muted-foreground whitespace-nowrap pl-2 flex-shrink-0 truncate max-w-[8rem]" title={m.description}>
+                                                    <div className="text-xs text-muted-foreground max-w-full truncate" title={m.description}>
                                                         ({typeof m.pricingText === 'function' ? (t ? m.pricingText(t) : 'Loading...') : m.pricingText})
-                                                    </span>
+                                                    </div>
                                                 </div>
                                             </SelectItem>
                                         );
@@ -1290,18 +1490,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
                                     disabled={!user || currentAgentVoices.length === 0}
                                 >
-                                    <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full">
+                                    <SelectTrigger id={`agent-${agentIdentifierLowerCase}-voice`} className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                                         <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
                                     </SelectTrigger>
-                                    <SelectContent className="max-h-60">
+                                    <SelectContent className="max-h-60 liquid-glass-panel">
                                         {currentAgentVoices.map(v => {
                                             const providerId = currentAgentTTSSettings.provider;
                                             const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                             return (
-                                                <SelectItem key={v.id} value={v.id}>
-                                                    {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
-                                                    {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                                <SelectItem key={v.id} value={v.id} className="justify-center pl-0">
+                                                    <div className="w-full text-center">
+                                                        {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                                        {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
+                                                        {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                                    </div>
                                                 </SelectItem>
                                             );
                                         })}
@@ -1318,7 +1520,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     return (
         <>
-            <Card className="w-full max-w-2xl">
+            <Card className="w-full max-w-2xl liquid-glass-themed bg-theme-primary/10 dark:bg-card/60">
                 <CardHeader className="text-center">
                     {translationLoading || !t ? (
                         <CardTitle>...</CardTitle>
@@ -1341,104 +1543,204 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </div>
                     )}
 
-                    {/* Ollama Endpoint (ngrok URL) */}
-                    <div className="pt-3 space-y-2 flex flex-col items-center">
-                        <Label htmlFor="ollama-endpoint" className="text-sm">
-                            {t?.page_OllamaEndpointLabel || 'Ollama Endpoint (ngrok URL)'}
-                        </Label>
-                        <button
-                            onClick={() => setCollapseOllamaHelp(!collapseOllamaHelp)}
-                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            aria-expanded={!collapseOllamaHelp}
-                        >
-                            {collapseOllamaHelp ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                            <span className="text-xs">Help</span>
-                        </button>
-                        {!collapseOllamaHelp && (
-                            <p className="text-xs text-muted-foreground text-center">
-                                Run <code className="bg-muted px-1 rounded text-xs">{t?.page_OllamaStep3 || 'OLLAMA_ORIGINS=* ollama serve'}</code> then <code className="bg-muted px-1 rounded text-xs">{t?.page_OllamaStep3b || 'ngrok http 11434'}</code> and paste the forwarding URL here.
-                            </p>
-                        )}
-                        <div className="flex gap-2 w-full max-w-sm">
-                            <input
-                                id="ollama-endpoint"
-                                type="url"
-                                value={ollamaEndpoint}
-                                onChange={(e) => {
-                                    setOllamaEndpoint(e.target.value);
-                                    // Reset verification state when URL changes
-                                    if (ollamaAvailable) {
-                                        setOllamaAvailable(false);
-                                    }
-                                    setOllamaVerifyError(null);
-                                }}
-                                placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
-                                className="flex-1 px-3 py-1.5 text-sm border rounded-md bg-background"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        handleVerifyOllama();
-                                    }
-                                }}
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={handleVerifyOllama}
-                                disabled={!ollamaEndpoint.trim() || ollamaLoading}
-                            >
-                                {ollamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
-                            </Button>
-                        </div>
-                        {ollamaAvailable && (
-                            <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
-                        )}
-                        {ollamaVerifyError && (
-                            <p className="text-sm text-red-600 dark:text-red-400">{ollamaVerifyError}</p>
-                        )}
-                    </div>
+                    {/* Ollama Setup Instructions */}
+                    <Collapsible
+                        open={openCollapsibles['ollama-setup'] || false}
+                        onOpenChange={() => toggleCollapsible('ollama-setup')}
+                        className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4 mt-4"
+                    >
+                        <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                            <div className="flex justify-center pt-1 relative group cursor-pointer">
+                                <div className="relative">
+                                    <div className="absolute right-full mr-2 translate-y-px">
+                                        <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
+                                            <Image
+                                                src="/ollama.svg"
+                                                alt="Ollama Logo"
+                                                fill
+                                                className="object-contain dark:invert"
+                                            />
+                                        </div>
+                                    </div>
+                                    <h3 className="font-semibold text-base whitespace-nowrap">{t?.page_OllamaSetupTitle || 'Ollama Setup'}</h3>
+                                </div>
+                                <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                                    {openCollapsibles['ollama-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                                </div>
+                            </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                            <div className="space-y-2 mt-4">
 
-                    {/* InvokeAI Status Indicator */}
-                    {invokeaiLoading && (
-                        <p className="text-sm text-muted-foreground pt-2">Checking for InvokeAI...</p>
-                    )}
-                    {!invokeaiLoading && invokeaiAvailable && (
-                        <div className="pt-2 space-y-1 flex flex-col items-center">
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI detected</p>
-                                <button
-                                    onClick={() => setCollapseInvokeAIDetails(!collapseInvokeAIDetails)}
-                                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
-                                    aria-expanded={!collapseInvokeAIDetails}
-                                    aria-label="Toggle InvokeAI details"
-                                >
-                                    {collapseInvokeAIDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                                </button>
+                                <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                                    {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
+                                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
+                                        <p>
+                                            <span className="font-bold">Prerequisites:</span>
+                                        </p>
+                                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                                            <li>
+                                                {t?.page_OllamaStep1
+                                                    ? t.page_OllamaStep1.split('ollama.com/download')[0]
+                                                    : 'Ollama installed on your machine. It is downloadable from '}
+                                                <span className="whitespace-nowrap">
+                                                    <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                                                        ollama.com/download
+                                                        <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                                                    </a>
+                                                    {t?.page_OllamaStep1 ? t.page_OllamaStep1.split('ollama.com/download')[1] : ''}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                Your ngrok config file location. This can be found by running:{' '}
+                                                <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
+                                            </li>
+                                        </ol>
+                                    </div>
+
+                                    <p className="text-center">
+                                        <span>1. You can run this command in your terminal to start the Ollama server:</span>
+                                    </p>
+                                    <div className="flex items-center justify-center">
+                                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                                            {t?.page_OllamaStep3 ? t.page_OllamaStep3.replace(/^1\.\s*/, '') : 'OLLAMA_ORIGINS=* ollama serve'}
+                                        </span>
+                                        <CopyButton text={t?.page_OllamaStep3 ? t.page_OllamaStep3.replace(/^1\.\s*/, '') : 'OLLAMA_ORIGINS=* ollama serve'} stepId="step1" />
+                                    </div>
+                                    <p className="text-center mt-3">
+                                        <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
+                                    </p>
+                                    <div className="flex justify-center items-center">
+                                        <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
+                                            <pre className="font-mono text-xs text-left whitespace-pre m-0">
+                                                {`tunnels:\n  ollama:\n    proto: http\n    addr: 11434\n    host_header: "localhost:11434"`}
+                                            </pre>
+                                        </div>
+                                        <CopyButton text={`tunnels:\n  ollama:\n    proto: http\n    addr: 11434\n    host_header: "localhost:11434"`} stepId="ollama-yaml" />
+                                    </div>
+                                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                                        <div className="text-center">
+                                            <span className="inline-block relative pl-4">
+                                                <span className="absolute left-0 top-0">•</span>
+                                                <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
+                                            </span>
+                                        </div>
+                                        <div className="text-center">
+                                            <span className="inline-block relative pl-4">
+                                                <span className="absolute left-0 top-0">•</span>
+                                                <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ollama:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p className="text-center mt-3">
+                                        <span>3. You can start ngrok with this command:</span>
+                                    </p>
+                                    <div className="flex items-center justify-center">
+                                        <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                                            ngrok start --all
+                                        </span>
+                                        <CopyButton text="ngrok start --all" stepId="step3" />
+                                    </div>
+                                    <p className="text-center mt-3">
+                                        <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:11434</span> here and verify it:
+
+                                        </span>
+                                    </p>
+                                    <div className="flex flex-col items-center space-y-2">
+                                        <div className="flex gap-2 w-full max-w-md">
+                                            {ollamaHelperEnabled ? (
+                                                <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                                                    <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                                        https://
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        value={ollamaSubdomain}
+                                                        onChange={(e) => {
+                                                            setOllamaSubdomain(e.target.value);
+                                                            if (ollamaAvailable) {
+                                                                setOllamaAvailable(false);
+                                                            }
+                                                            setOllamaVerifyError(null);
+                                                        }}
+                                                        placeholder="e.g. abc123"
+                                                        className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                e.preventDefault();
+                                                                handleVerifyOllama();
+                                                            }
+                                                        }}
+                                                    />
+                                                    <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                                        .ngrok-free.app
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <input
+                                                    type="url"
+                                                    value={ollamaEndpoint}
+                                                    onChange={(e) => {
+                                                        setOllamaEndpoint(e.target.value);
+                                                        if (ollamaAvailable) {
+                                                            setOllamaAvailable(false);
+                                                        }
+                                                        setOllamaVerifyError(null);
+                                                    }}
+                                                    placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
+                                                    className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            e.preventDefault();
+                                                            handleVerifyOllama();
+                                                        }
+                                                    }}
+                                                />
+                                            )}
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleVerifyOllama}
+                                                disabled={
+                                                    ollamaLoading ||
+                                                    (!ollamaHelperEnabled
+                                                        ? !ollamaEndpoint.trim()
+                                                        : !ollamaSubdomain.trim())
+                                                }
+                                                className="liquid-glass-button-primary h-auto py-1.5"
+                                            >
+                                                {ollamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
+                                            </Button>
+                                        </div>
+                                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                                            <input
+                                                id="ollama-helper-toggle"
+                                                type="checkbox"
+                                                checked={ollamaHelperEnabled}
+                                                onChange={(e) => setOllamaHelperEnabled(e.target.checked)}
+                                                className="h-3 w-3"
+                                            />
+                                            <label
+                                                htmlFor="ollama-helper-toggle"
+                                                className="text-xs text-muted-foreground cursor-pointer"
+                                            >
+                                                Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                                                <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                                            </label>
+                                        </div>
+                                        {ollamaAvailable && (
+                                            <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
+                                        )}
+                                        {ollamaVerifyError && (
+                                            <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{ollamaVerifyError}</p>
+                                        )}
+                                    </div>
+                                    {/* <p className="text-center">{t.page_OllamaStep4}</p> */}
+                                </div>
                             </div>
-                            {!collapseInvokeAIDetails && (
-                                <p className="text-xs text-green-600 dark:text-green-400">Local image generation is available</p>
-                            )}
-                        </div>
-                    )}
-                    {!invokeaiLoading && !invokeaiAvailable && (
-                        <div className="pt-2 space-y-1 flex flex-col items-center">
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm text-muted-foreground">InvokeAI not detected</p>
-                                <button
-                                    onClick={() => setCollapseInvokeAINotDetected(!collapseInvokeAINotDetected)}
-                                    className="text-muted-foreground hover:text-foreground transition-colors"
-                                    aria-expanded={!collapseInvokeAINotDetected}
-                                    aria-label="Toggle InvokeAI installation info"
-                                >
-                                    {collapseInvokeAINotDetected ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
-                                </button>
-                            </div>
-                            {!collapseInvokeAINotDetected && (
-                                <p className="text-xs text-muted-foreground">You can <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="underline">install InvokeAI</a> for free local image generation.</p>
-                            )}
-                        </div>
-                    )}
+                        </CollapsibleContent>
+                    </Collapsible>
 
                     {statusError && <p className="text-sm text-destructive pt-2">{statusError}</p>}
                     {isLoadingStatus && !authLoading && !statusError && <p className="text-sm text-muted-foreground pt-2">Loading API key status...</p>}
@@ -1602,47 +1904,367 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <div className="space-y-4 pt-4" role="group" aria-labelledby="image-gen-settings-label">
                                 <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
 
-                                {/* InvokeAI Endpoint */}
+                                {/* Invoke Setup (LandingPage exact copy) */}
+                                <Collapsible
+                                    open={openCollapsibles['invokeai-setup'] || false}
+                                    onOpenChange={() => toggleCollapsible('invokeai-setup')}
+                                    className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+                                >
+                                    <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                                        <div className="flex justify-center pt-1 relative group cursor-pointer">
+                                            <div className="relative">
+                                                <div className="absolute right-full mr-2 translate-y-px">
+                                                    <div className="relative w-6 h-6 shrink-0">
+                                                        <Image
+                                                            src="/invoke-ai.svg"
+                                                            alt="InvokeAI Logo"
+                                                            fill
+                                                            className="object-contain brightness-0 dark:brightness-100"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <h3 className="font-semibold text-base whitespace-nowrap">Invoke Setup</h3>
+                                            </div>
+                                            <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                                                {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                                            </div>
+                                        </div>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <div className="space-y-2 mt-4">
+                                            <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                                                <div className="flex justify-center">
+                                                    <div className="w-full max-w-xl">
+                                                        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
+                                                            <p>
+                                                                <span className="font-bold">Prerequisites:</span>
+                                                            </p>
+                                                            <ol className="list-decimal list-inside space-y-1 ml-2">
+                                                                <li>
+                                                                    Invoke installed on your machine. It is downloadable from{' '}
+                                                                    <span className="whitespace-nowrap">
+                                                                        <a href="https://invoke.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                                                                            invoke.ai
+                                                                            <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
+                                                                        </a>.
+                                                                    </span>
+                                                                </li>
+                                                                <li>
+                                                                    Your ngrok config file location. This can be found by running:{' '}
+                                                                    <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
+                                                                </li>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <p>
+                                                    1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
+                                                </p>
+                                                <p className="text-center mt-3">
+                                                    <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
+                                                </p>
+                                                <div className="flex justify-center items-center">
+                                                    <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
+                                                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
+                                                            {`tunnels:\n  invoke:\n    proto: http\n    addr: 9090\n    host_header: "localhost:9090"`}
+                                                        </pre>
+                                                    </div>
+                                                    <CopyButton text={`tunnels:\n  invoke:\n    proto: http\n    addr: 9090\n    host_header: "localhost:9090"`} stepId="invoke-yaml" />
+                                                </div>
+                                                <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                                                    <div className="text-center">
+                                                        <span className="inline-block relative pl-4">
+                                                            <span className="absolute left-0 top-0">•</span>
+                                                            <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <span className="inline-block relative pl-4">
+                                                            <span className="absolute left-0 top-0">•</span>
+                                                            <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invoke:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <p className="text-center mt-3">
+                                                    <span>3. You can start ngrok with this command:</span>
+                                                </p>
+                                                <div className="flex items-center justify-center">
+                                                    <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                                                        ngrok start --all
+                                                    </span>
+                                                    <CopyButton text="ngrok start --all" stepId="invokeai-step3" />
+                                                </div>
+                                                <p className="text-center mt-3">
+                                                    <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
+                                                </p>
+                                                <div className="flex flex-col items-center space-y-2">
+                                                    <div className="flex gap-2 w-full max-w-md">
+                                                        {invokeaiHelperEnabled ? (
+                                                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                                                                <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                                                    https://
+                                                                </span>
+                                                                <input
+                                                                    type="text"
+                                                                    value={invokeaiSubdomain}
+                                                                    onChange={(e) => {
+                                                                        setInvokeaiSubdomain(e.target.value);
+                                                                        if (customInvokeaiAvailable) {
+                                                                            setCustomInvokeaiAvailable(false);
+                                                                        }
+                                                                        setInvokeaiVerifyError(null);
+                                                                    }}
+                                                                    placeholder="e.g. abc123"
+                                                                    className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === 'Enter') {
+                                                                            e.preventDefault();
+                                                                            handleVerifyInvokeAI();
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                                                    .ngrok-free.app
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <input
+                                                                type="url"
+                                                                value={invokeaiEndpoint}
+                                                                onChange={(e) => {
+                                                                    setInvokeaiEndpoint(e.target.value);
+                                                                    if (customInvokeaiAvailable) {
+                                                                        setCustomInvokeaiAvailable(false);
+                                                                    }
+                                                                    setInvokeaiVerifyError(null);
+                                                                }}
+                                                                placeholder="e.g. https://abc123.ngrok-free.app"
+                                                                className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter') {
+                                                                        e.preventDefault();
+                                                                        handleVerifyInvokeAI();
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={handleVerifyInvokeAI}
+                                                            disabled={
+                                                                customInvokeaiLoading ||
+                                                                (!invokeaiHelperEnabled
+                                                                    ? !invokeaiEndpoint.trim()
+                                                                    : !invokeaiSubdomain.trim())
+                                                            }
+                                                            className="liquid-glass-button-primary h-auto py-1.5"
+                                                        >
+                                                            {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
+                                                        </Button>
+                                                    </div>
+                                                    <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                                                        <input
+                                                            id="invokeai-helper-toggle"
+                                                            type="checkbox"
+                                                            checked={invokeaiHelperEnabled}
+                                                            onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
+                                                            className="h-3 w-3"
+                                                        />
+                                                        <label
+                                                            htmlFor="invokeai-helper-toggle"
+                                                            className="text-xs text-muted-foreground cursor-pointer"
+                                                        >
+                                                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                                                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                                                        </label>
+                                                    </div>
+                                                    {customInvokeaiAvailable && (
+                                                        <p className="text-sm text-green-600 dark:text-green-400">✓ Invoke connected!</p>
+                                                    )}
+                                                    {invokeaiVerifyError && (
+                                                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CollapsibleContent>
+                                </Collapsible>
+
+                                {/* InvokeAI selection + advanced settings */}
+                                <div className="space-y-2 flex flex-col items-center">
+                                    <Label className="text-center">Invoke Model</Label>
+                                    <Select
+                                        value={invokeaiSelectedModel}
+                                        onValueChange={setInvokeaiSelectedModel}
+                                        disabled={!user || !customInvokeaiAvailable || invokeaiModelNames.length === 0}
+                                    >
+                                        <SelectTrigger className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                            <SelectValue placeholder={customInvokeaiAvailable ? 'Select model' : 'Verify Invoke first'} />
+                                        </SelectTrigger>
+                                        <SelectContent className="max-h-60 liquid-glass-panel">
+                                            {invokeaiModelNames.length > 0 ? (
+                                                invokeaiModelNames.map((name) => (
+                                                    <SelectItem key={name} value={name} className="justify-center">
+                                                        <div className="w-full text-center">{name}</div>
+                                                    </SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="__no_models" disabled className="justify-center">
+                                                    <div className="w-full text-center">No models detected</div>
+                                                </SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">Steps</Label>
+                                        <input
+                                            type="number"
+                                            min={1}
+                                            max={200}
+                                            value={invokeaiSteps}
+                                            onChange={(e) => setInvokeaiSteps(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">CFG Scale</Label>
+                                        <input
+                                            type="number"
+                                            step={0.5}
+                                            min={0}
+                                            max={30}
+                                            value={invokeaiGuidanceScale}
+                                            onChange={(e) => setInvokeaiGuidanceScale(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">Width</Label>
+                                        <input
+                                            type="number"
+                                            min={64}
+                                            step={64}
+                                            value={invokeaiWidth}
+                                            onChange={(e) => setInvokeaiWidth(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">Height</Label>
+                                        <input
+                                            type="number"
+                                            min={64}
+                                            step={64}
+                                            value={invokeaiHeight}
+                                            onChange={(e) => setInvokeaiHeight(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">Seed (optional)</Label>
+                                        <input
+                                            type="text"
+                                            value={invokeaiSeed}
+                                            onChange={(e) => setInvokeaiSeed(e.target.value)}
+                                            placeholder="Leave blank for random"
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">Scheduler</Label>
+                                        <Select value={invokeaiScheduler} onValueChange={setInvokeaiScheduler} disabled={!user}>
+                                            <SelectTrigger className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                <SelectValue placeholder="Select scheduler" />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-60 liquid-glass-panel">
+                                                {INVOKEAI_SCHEDULERS.map((s) => (
+                                                    <SelectItem key={s.id} value={s.id} className="justify-center">
+                                                        <div className="w-full text-center">{s.label}</div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">CLIP Skip</Label>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={12}
+                                            value={invokeaiClipSkip}
+                                            onChange={(e) => setInvokeaiClipSkip(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="block text-center">CFG Rescale Multiplier</Label>
+                                        <input
+                                            type="number"
+                                            step={0.1}
+                                            min={0}
+                                            max={10}
+                                            value={invokeaiCfgRescaleMultiplier}
+                                            onChange={(e) => setInvokeaiCfgRescaleMultiplier(Number(e.target.value))}
+                                            className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="space-y-2">
-                                    <Label htmlFor="invokeai-endpoint">InvokeAI Endpoint</Label>
-                                    <input
-                                        id="invokeai-endpoint"
-                                        type="text"
-                                        className="w-full border rounded-md p-2 text-sm"
-                                        value={invokeaiEndpoint}
-                                        onChange={e => setInvokeaiEndpoint(e.target.value)}
-                                        placeholder="http://localhost:9090"
+                                    <Label className="block text-center">Negative Prompt (optional)</Label>
+                                    <textarea
+                                        className="w-full px-3 py-2 rounded-md text-center liquid-glass-input min-h-[60px]"
+                                        value={invokeaiNegativePrompt}
+                                        onChange={(e) => setInvokeaiNegativePrompt(e.target.value)}
+                                        placeholder="e.g. blurry, low quality"
                                         disabled={!user}
                                     />
-                                    <p className="text-xs text-muted-foreground">The URL where your InvokeAI server is running</p>
                                 </div>
 
                                 {/* Prompt LLM Selection */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="prompt-llm-select">{t?.sessionSetupForm?.promptLLM || 'Prompt LLM'}</Label>
+                                    <Label htmlFor="prompt-llm-select" className="block text-center">{t?.sessionSetupForm?.promptLLM || 'Prompt LLM'}</Label>
                                     <Select
                                         value={selectedPromptLlm}
                                         onValueChange={setSelectedPromptLlm}
                                         disabled={!user || isLoadingStatus}
                                     >
-                                        <SelectTrigger id="prompt-llm-select" className="w-full">
+                                        <SelectTrigger id="prompt-llm-select" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                                             <SelectValue placeholder={t?.sessionSetupForm?.selectPromptLLM || 'Select LLM for prompt generation'} />
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent className="max-h-96 liquid-glass-panel">
                                             {getAllAvailableLLMs().map(llm => (
-                                                <SelectItem key={llm.id} value={llm.id}>{llm.name} ({llm.provider})</SelectItem>
+                                                <SelectItem key={llm.id} value={llm.id}>
+                                                    <div className="w-full text-center">{llm.name} ({llm.provider})</div>
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <p className="text-xs text-muted-foreground">The LLM used to generate image prompts from paragraphs</p>
+                                    <p className="text-xs text-muted-foreground text-center">The LLM used to generate image prompts from paragraphs</p>
                                 </div>
 
                                 {/* System Prompt for Image Prompt LLM */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="image-prompt-system-message">{t?.sessionSetupForm?.imagePromptSystemMessage || 'Prompt System Message'}</Label>
+                                    <Label htmlFor="image-prompt-system-message" className="block text-center">{t?.sessionSetupForm?.imagePromptSystemMessage || 'Prompt System Message'}</Label>
                                     <textarea
                                         id="image-prompt-system-message"
-                                        className="w-full border rounded-md p-2 text-sm min-h-[60px] text-center"
+                                        className="w-full px-3 py-2 rounded-md text-center liquid-glass-input min-h-[60px]"
                                         value={imagePromptSystemMessage}
                                         onChange={e => setImagePromptSystemMessage(e.target.value)}
                                         placeholder="Create a prompt to give to the image generation model based on this paragraph: {paragraph}"
@@ -1651,12 +2273,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         disabled={!user}
                                     />
                                     <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground text-center">
-                                        Use {"{paragraph}"} as a placeholder for the paragraph text
+                                        Use {"{paragraph}"} as a placeholder for the paragraph text.
                                     </p>
                                 </div>
                             </div>
                         )}
                     </div>
+                    <hr className="my-6" />
+
                     {/* Move initial prompt section here */}
                     <div className="mt-4">
                         <label htmlFor="initial-system-prompt" className="block font-medium mb-1 text-center">{t?.sessionSetupForm?.initialSystemPrompt}</label>

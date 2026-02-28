@@ -104,7 +104,7 @@ export default function GoogleSignInButton() {
             <button 
                 onClick={handleGoogleSignIn} 
                 disabled={loading} 
-                className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800"
+                className="w-full flex items-center justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-gray-900 dark:text-gray-200 liquid-glass-button liquid-glass-themed bg-white/40 hover:bg-white/50 disabled:opacity-50 dark:bg-card/60 dark:hover:bg-card/70"
                 aria-label={loading ? "Signing in with Google..." : "Sign in with Google account"}
                 aria-describedby="google-signin-description"
                 aria-busy={loading}

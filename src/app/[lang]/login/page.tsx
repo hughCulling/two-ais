@@ -53,7 +53,7 @@ function LoginPageContent() {
         <>
             <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
                 <div className="w-full max-w-md space-y-6">
-                    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md space-y-6">
+                    <div className="p-6 rounded-xl shadow-md space-y-6 liquid-glass-themed bg-card/60">
                         <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                             {t.auth.login.title}
                         </h1>
@@ -63,7 +63,9 @@ function LoginPageContent() {
                                 <span className="w-full border-t dark:border-gray-700"></span>
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">{t.auth.login.orContinueWith}</span>
+                                <span className="px-2 text-gray-500 dark:text-gray-400 liquid-glass-themed bg-white/40 dark:bg-card/60 rounded-md">
+                                    {t.auth.login.orContinueWith}
+                                </span>
                             </div>
                         </div>
                         <GoogleSignInButton />
