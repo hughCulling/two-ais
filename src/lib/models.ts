@@ -669,12 +669,12 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'ministral-3b-latest',
-        name: 'Ministral 3B',
+        name: 'Ministral 3 3B',
         provider: 'Mistral AI',
-        contextWindow: 128000,
+        contextWindow: 256000,
         pricing: {
-            input: 0.04,
-            output: 0.04,
+            input: 0.1,
+            output: 0.1,
             freeTier: {
                 available: true,
                 note: (t) => t.pricing.mistralFreeTierNote
@@ -687,12 +687,12 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
     },
     {
         id: 'ministral-8b-latest',
-        name: 'Ministral 8B',
+        name: 'Ministral 3 8B',
         provider: 'Mistral AI',
-        contextWindow: 128000,
+        contextWindow: 256000,
         pricing: {
-            input: 0.10,
-            output: 0.10,
+            input: 0.15,
+            output: 0.15,
             freeTier: {
                 available: true,
                 note: (t) => t.pricing.mistralFreeTierNote
@@ -720,7 +720,7 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeySecretName: 'mistral',
         status: 'stable',
         usesReasoningTokens: true,
-        categoryKey: 'modelCategory_MistralAIOpenModels',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
     },
     {
         id: 'mistral-small-latest',
@@ -738,16 +738,34 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
-        categoryKey: 'modelCategory_MistralAIOpenModels',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
     },
+    // {
+    //     id: 'open-mistral-nemo',
+    //     name: 'Mistral Nemo 12B',
+    //     provider: 'Mistral AI',
+    //     contextWindow: 128000,
+    //     pricing: {
+    //         input: 0.15,
+    //         output: 0.15,
+    //         freeTier: {
+    //             available: true,
+    //             note: (t) => t.pricing.mistralFreeTierNote
+    //         }
+    //     },
+    //     apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
+    //     apiKeySecretName: 'mistral',
+    //     status: 'stable',
+    //     categoryKey: 'modelCategory_MistralAIOpenModels',
+    // },
     {
-        id: 'open-mistral-nemo',
-        name: 'Mistral Nemo 12B',
+        id: 'ministral-14b-latest',
+        name: 'Ministral 3 14B',
         provider: 'Mistral AI',
-        contextWindow: 128000,
+        contextWindow: 256000,
         pricing: {
-            input: 0.15,
-            output: 0.15,
+            input: 0.2,
+            output: 0.2,
             freeTier: {
                 available: true,
                 note: (t) => t.pricing.mistralFreeTierNote
@@ -756,9 +774,8 @@ export const AVAILABLE_LLMS: LLMInfo[] = [
         apiKeyInstructionsUrl: 'https://console.mistral.ai/api-keys/',
         apiKeySecretName: 'mistral',
         status: 'stable',
-        categoryKey: 'modelCategory_MistralAIOpenModels',
+        categoryKey: 'modelCategory_MistralAIPremierModels',
     },
-
     // === Ollama ===
     // Note: Ollama models are dynamically loaded from the user's local Ollama instance
     // This is a placeholder entry to show Ollama as an available provider
@@ -1062,15 +1079,18 @@ export const groupModelsByCategory = (models: LLMInfo[], t: TranslationKeys): { 
                     return a.name.localeCompare(b.name);
                 });
             }
-
+//
             // Custom sorting for Mistral AI Premier models, follows order in Pricing documentation
             if (models.length > 0 && models[0].provider === 'Mistral AI' && cat === t.modelCategory_MistralAIPremierModels) {
                 const mistralPremierOrder = [
-                    'magistral-medium-latest',
+                    'mistral-large-latest',
                     'mistral-medium-latest',
-                    'mistral-large-2411',
-                    'ministral-3b-latest',
+                    'mistral-small-latest',
+                    'ministral-14b-latest',
                     'ministral-8b-latest',
+                    'ministral-3b-latest',
+                    'magistral-medium-latest',
+                    'magistral-small-latest',
                 ];
                 byCategory[cat].sort((a, b) => {
                     const idxA = mistralPremierOrder.indexOf(a.id);

@@ -11,11 +11,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { groupLLMsByProvider, LLMInfo, groupModelsByCategory } from '@/lib/models';
+import { groupLLMsByProvider, LLMInfo, groupModelsByCategory, setOllamaModelsFromNames } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ExternalLink, Copy } from "lucide-react";
+import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ExternalLink, Copy, ImageIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -147,6 +147,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [ollamaVerifyError, setOllamaVerifyError] = useState<string | null>(null);
   const [ollamaHelperEnabled, setOllamaHelperEnabled] = useState<boolean>(false);
   const [ollamaSubdomain, setOllamaSubdomain] = useState<string>('');
+  const [ollamaModelNames, setOllamaModelNames] = useState<string[]>([]);
 
   // InvokeAI verification state (similar to Ollama)
   const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('');
@@ -155,6 +156,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [invokeaiVerifyError, setInvokeaiVerifyError] = useState<string | null>(null);
   const [invokeaiHelperEnabled, setInvokeaiHelperEnabled] = useState<boolean>(false);
   const [invokeaiSubdomain, setInvokeaiSubdomain] = useState<string>('');
+  const [invokeaiModelNames, setInvokeaiModelNames] = useState<string[]>([]);
 
   const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
   const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
@@ -202,8 +204,13 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       const data = await res.json();
       if (data.available) {
         setCustomOllamaAvailable(true);
+        const names: string[] = Array.isArray(data.models) ? data.models : [];
+        setOllamaModelNames(names);
+        setOllamaModelsFromNames(names, endpointToVerify);
       } else {
         setCustomOllamaAvailable(false);
+        setOllamaModelNames([]);
+        setOllamaModelsFromNames([], endpointToVerify);
         // Show the specific error from the proxy if available
         let errorMessage = data.error || t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.';
         if (errorMessage.includes('403')) {
@@ -213,6 +220,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       }
     } catch {
       setCustomOllamaAvailable(false);
+      setOllamaModelNames([]);
+      setOllamaModelsFromNames([], ollamaEndpoint.trim());
       setOllamaVerifyError(t?.page_OllamaVerifyFail || 'Could not connect to Ollama at this endpoint.');
     } finally {
       setCustomOllamaLoading(false);
@@ -261,8 +270,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       const data = await res.json();
       if (data.available) {
         setCustomInvokeaiAvailable(true);
+        const names: string[] = Array.isArray(data.models) ? data.models : [];
+        setInvokeaiModelNames(names);
       } else {
         setCustomInvokeaiAvailable(false);
+        setInvokeaiModelNames([]);
         // Show the specific error from the proxy if available
         let errorMessage = data.error || 'Could not connect to InvokeAI at this endpoint.';
         if (errorMessage.includes('403')) {
@@ -272,6 +284,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
       }
     } catch {
       setCustomInvokeaiAvailable(false);
+      setInvokeaiModelNames([]);
       setInvokeaiVerifyError('Could not connect to InvokeAI at this endpoint.');
     } finally {
       setCustomInvokeaiLoading(false);
@@ -528,7 +541,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </div>
 
                     <p className="text-center">
-                      <span>1. You can run this command in your terminal to start Ollama:</span>
+                      <span>1. You can run this command in your terminal to start the Ollama server:</span>
                     </p>
                     <div className="flex items-center justify-center">
                       <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
@@ -570,7 +583,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </div>
                     </div>
                     <p className="text-center mt-3">
-                      <span>3. You can start the tunnels with this command:</span>
+                      <span>3. You can start ngrok with this command:</span>
                     </p>
                     <div className="flex items-center justify-center">
                       <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
@@ -698,7 +711,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         />
                       </div>
                     </div>
-                    <h3 className="font-semibold text-base whitespace-nowrap">InvokeAI Setup</h3>
+                    <h3 className="font-semibold text-base whitespace-nowrap">Invoke Setup</h3>
                   </div>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
                     {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
@@ -714,10 +727,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </p>
                       <ol className="list-decimal list-inside space-y-1 ml-2">
                         <li>
-                          InvokeAI installed on your machine. It is downloadable from{' '}
+                          Invoke installed on your machine. It is downloadable from{' '}
                           <span className="whitespace-nowrap">
-                            <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              invoke-ai.github.io
+                            <a href="https://invoke.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              invoke.ai
                               <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
                             </a>.
                           </span>
@@ -730,16 +743,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </div>
 
                     <p>
-                      1. You can open the InvokeAI installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
+                      1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
                     </p>
                     <p className="text-center mt-3">
-                      <span>2. Next, you can edit your ngrok config file and add this tunnel configuration. If you already have a <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> section, adding the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invokeai:</code> part under that same <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> parent prevents the pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> from being overwritten:</span>
+                      <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
                     </p>
                     <div className="flex justify-center items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
                         <pre className="font-mono text-xs text-left whitespace-pre m-0">
                           {`tunnels:
-  invokeai:
+  invoke:
     proto: http
     addr: 9090
     host_header: "localhost:9090"`}
@@ -751,9 +764,29 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     addr: 9090
     host_header: "localhost:9090"`} stepId="invokeai-yaml" />
                     </div>
+                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
+                        </span>
+                      </div>
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invoke:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
+                        </span>
+                      </div>
+                    </div>
                     <p className="text-center mt-3">
-                      <span>3. Next you can start the tunnel with: <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start --all</code>.</span>
+                      <span>3. You can start ngrok with this command:</span>
                     </p>
+                    <div className="flex items-center justify-center">
+                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                        ngrok start --all
+                      </span>
+                      <CopyButton text="ngrok start --all" stepId="invokeai-step3" />
+                    </div>
                     <p className="text-center mt-3">
                       <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
                     </p>
@@ -841,7 +874,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         </label>
                       </div>
                       {customInvokeaiAvailable && (
-                        <p className="text-sm text-green-600 dark:text-green-400">✓ InvokeAI connected!</p>
+                        <p className="text-sm text-green-600 dark:text-green-400">✓ Invoke connected!</p>
                       )}
                       {invokeaiVerifyError && (
                         <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
@@ -871,12 +904,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           </div>
           <Card className="w-full liquid-glass-themed bg-card/60">
             <CardHeader>
-              <h2 className="flex items-center justify-center text-xl font-semibold">
-                <BrainCircuit className="mr-2 h-5 w-5" />
-                {t.page_AvailableLLMsTitle}
+              <h2 className="relative flex items-center justify-center text-xl font-semibold">
+                <span className="relative inline-block">
+                  <BrainCircuit className="absolute right-full mr-2 h-5 w-5 top-1/2 -translate-y-1/2" aria-hidden="true" />
+                  <span>{t.page_AvailableLLMsTitle}</span>
+                </span>
               </h2>
               <p className="text-xs text-muted-foreground text-center mt-1">
-                {t.page_PricesLastVerifiedOn.replace('{date}', '2025-11-12')}
+                {t.page_PricesLastVerifiedOn.replace('{date}', '2026-02-28')}
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -884,12 +919,189 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(providerModels, t);
                 const providerCollapsibleId = `provider-${providerName.replace(/\s+/g, '-')}`;
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+                const isStaticProviderSection = providerName === 'Mistral AI';
+                const isOllamaProvider = providerName === 'Ollama';
+                const shouldShowOllamaProvider = isOllamaProvider && customOllamaAvailable && ollamaModelNames.length > 0;
+                const isStaticOllamaSection = isOllamaProvider;
                 let lastDisplayedBrand: string | null = null;
 
                 // Check if all models in this provider support the current language
                 const allModelsSupport = providerModels.every(llm =>
                   isLanguageSupported(llm.provider, language.code, llm.id)
                 );
+
+                if (isStaticProviderSection || (isStaticOllamaSection && shouldShowOllamaProvider)) {
+                  return (
+                    <div key={providerName} className="space-y-1">
+                      <div className="flex items-center justify-center w-full mb-2">
+                        <div className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 p-2 rounded-md">
+                          <div className="relative inline-flex items-center">
+                            <span>{providerName}</span>
+                            <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                              {providerName === 'Mistral AI' && (
+                                <FreeTierBadge
+                                  freeTier={{
+                                    available: true,
+                                    note: (t) => t.pricing.mistralFreeTierNote
+                                  }}
+                                  t={t}
+                                />
+                              )}
+                              {providerName === 'Ollama' && (
+                                <FreeTierBadge
+                                  freeTier={{
+                                    available: true,
+                                    note: (t) => t.pricing.ollamaFreeTierNote
+                                  }}
+                                  t={t}
+                                />
+                              )}
+                              {allModelsSupport && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top">
+                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-3 pl-2 pt-1">
+                        {orderedCategories.map((category, index) => {
+                          const categoryModels = modelsByCategory[category];
+                          if (!categoryModels) return null;
+                          const brandHeadingElement = null;
+                          return (
+                            <React.Fragment key={`${category}-${index}`}>
+                              {brandHeadingElement}
+                              <div className={cn("flex flex-col items-center", brandHeadingElement ? "mt-1" : "mt-0")}>
+                                <div className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5 text-center">{category}</div>
+                                <ul className="space-y-1 text-sm w-full max-w-2xl">
+                                  {categoryModels.map((llm) => (
+                                    <li key={llm.id} className="flex flex-col items-center py-1">
+                                      <div className="flex items-center space-x-2 mb-1">
+                                        <span className="whitespace-nowrap font-medium">{llm.name}</span>
+                                        {llm.status === 'preview' && <Badge variant="preview" className="liquid-glass-badge-blue">{t.page_BadgePreview}</Badge>}
+                                        {llm.status === 'experimental' && <Badge variant="experimental" className="liquid-glass-badge-blue">{t.page_BadgeExperimental}</Badge>}
+                                        {llm.status === 'beta' && <Badge variant="beta" className="liquid-glass-badge-blue">{t.page_BadgeBeta}</Badge>}
+                                      </div>
+                                      <div className="relative w-full flex justify-center">
+                                        <div className="relative inline-flex items-center justify-center">
+                                          {llm.provider !== 'Ollama' && (llm.pricing.note ? (
+                                            <TruncatableNote noteText={llm.pricing.note} />
+                                          ) : (
+                                            <span
+                                              className="text-xs text-muted-foreground truncate min-w-0"
+                                              title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
+                                            >
+                                              (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
+                                            </span>
+                                          ))}
+
+                                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 flex items-center space-x-2 whitespace-nowrap">
+                                            {!allModelsSupport && (
+                                              isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                                <Tooltip>
+                                                  <TooltipTrigger asChild>
+                                                    <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                                  </TooltipTrigger>
+                                                  <TooltipContent side="top">
+                                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                  </TooltipContent>
+                                                </Tooltip>
+                                              ) : (
+                                                <Tooltip>
+                                                  <TooltipTrigger asChild>
+                                                    <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                                  </TooltipTrigger>
+                                                  <TooltipContent side="top">
+                                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                  </TooltipContent>
+                                                </Tooltip>
+                                              )
+                                            )}
+                                            {llm.usesReasoningTokens && (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
+                                                  <p className="text-xs">
+                                                    {llm.provider === 'Google'
+                                                      ? t.page_TooltipGoogleThinkingBudget
+                                                      : llm.provider === 'Anthropic'
+                                                        ? t.page_TooltipAnthropicExtendedThinking
+                                                        : llm.provider === 'xAI'
+                                                          ? t.page_TooltipXaiThinking
+                                                          : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                            ? t.page_TooltipQwenReasoning
+                                                            : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                              ? t.page_TooltipDeepSeekReasoning
+                                                              : t.page_TooltipGenericReasoning
+                                                    }
+                                                  </p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            )}
+                                            {llm.requiresOrgVerification && (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                                  <p className="text-xs">
+                                                    {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                                    <a
+                                                      href="https://platform.openai.com/settings/organization/general"
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                                    >
+                                                      {t.common_verifyHere}
+                                                    </a>
+                                                    {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                                  </p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            )}
+                                            {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
+                                            {llm.knowledgeCutoff && (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
+                                                    <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
+                                                    <span className="truncate" title={llm.knowledgeCutoff}>
+                                                      {llm.knowledgeCutoff}
+                                                    </span>
+                                                  </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top">
+                                                  <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (isOllamaProvider && !shouldShowOllamaProvider) {
+                  return null;
+                }
 
                 return (
                   <Collapsible key={providerName} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
@@ -990,102 +1202,107 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                       {llm.status === 'experimental' && <Badge variant="experimental" className="liquid-glass-badge-blue">{t.page_BadgeExperimental}</Badge>}
                                       {llm.status === 'beta' && <Badge variant="beta" className="liquid-glass-badge-blue">{t.page_BadgeBeta}</Badge>}
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                      {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
-                                      {/* Don't show pricing for Ollama models - it's shown in the provider header */}
-                                      {llm.provider !== 'Ollama' && (llm.pricing.note ? (
-                                        <TruncatableNote noteText={llm.pricing.note} />
-                                      ) : (
-                                        <span
-                                          className="text-xs text-muted-foreground truncate min-w-0"
-                                          title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
-                                        >
-                                          (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
-                                        </span>
-                                      ))}
-                                      {/* Only show language support icon on individual models if not all models support the language */}
-                                      {!allModelsSupport && (
-                                        isLanguageSupported(llm.provider, language.code, llm.id) ? (
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top">
-                                              <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                            </TooltipContent>
-                                          </Tooltip>
+                                    <div className="relative w-full flex justify-center">
+                                      <div className="relative inline-flex items-center justify-center">
+                                        {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+                                        {/* Don't show pricing for Ollama models - it's shown in the provider header */}
+                                        {llm.provider !== 'Ollama' && (llm.pricing.note ? (
+                                          <TruncatableNote noteText={llm.pricing.note} />
                                         ) : (
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top">
-                                              <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        )
-                                      )}
-                                      {llm.usesReasoningTokens && (
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                                          </TooltipTrigger>
-                                          <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
-                                            <p className="text-xs">
-                                              {llm.provider === 'Google'
-                                                ? t.page_TooltipGoogleThinkingBudget
-                                                : llm.provider === 'Anthropic'
-                                                  ? t.page_TooltipAnthropicExtendedThinking
-                                                  : llm.provider === 'xAI'
-                                                    ? t.page_TooltipXaiThinking
-                                                    : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
-                                                      ? t.page_TooltipQwenReasoning
-                                                      : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
-                                                        ? t.page_TooltipDeepSeekReasoning
-                                                        : t.page_TooltipGenericReasoning
-                                              }
-                                            </p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      )}
-                                      {llm.requiresOrgVerification && (
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                                          </TooltipTrigger>
-                                          <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
-                                            <p className="text-xs">
-                                              {t.page_TooltipRequiresVerification.split("verify here")[0]}
-                                              <a
-                                                href="https://platform.openai.com/settings/organization/general"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
-                                              >
-                                                {t.common_verifyHere}
-                                              </a>
-                                              {t.page_TooltipRequiresVerification.split("verify here")[1]}
-                                            </p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      )}
-                                      {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
-                                      {llm.knowledgeCutoff && (
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
-                                              <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
-                                              <span className="truncate" title={llm.knowledgeCutoff}>
-                                                {llm.knowledgeCutoff}
-                                              </span>
-                                            </div>
-                                          </TooltipTrigger>
-                                          <TooltipContent side="top">
-                                            <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      )}
-                                      {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+                                          <span
+                                            className="text-xs text-muted-foreground truncate min-w-0"
+                                            title={`$${formatPrice(llm.pricing.input)} / $${formatPrice(llm.pricing.output)} ${t.page_PricingPerTokens.replace('{amount}', '1M')}`}
+                                          >
+                                            (${formatPrice(llm.pricing.input)} / ${formatPrice(llm.pricing.output)} {t.page_PricingPerTokens.replace('{amount}', '1M')})
+                                          </span>
+                                        ))}
+
+                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 flex items-center space-x-2 whitespace-nowrap">
+                                          {/* Only show language support icon on individual models if not all models support the language */}
+                                          {!allModelsSupport && (
+                                            isLanguageSupported(llm.provider, language.code, llm.id) ? (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top">
+                                                  <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            ) : (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top">
+                                                  <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            )
+                                          )}
+                                          {llm.usesReasoningTokens && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Info className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top" className="w-auto max-w-[230px] p-2">
+                                                <p className="text-xs">
+                                                  {llm.provider === 'Google'
+                                                    ? t.page_TooltipGoogleThinkingBudget
+                                                    : llm.provider === 'Anthropic'
+                                                      ? t.page_TooltipAnthropicExtendedThinking
+                                                      : llm.provider === 'xAI'
+                                                        ? t.page_TooltipXaiThinking
+                                                        : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('Qwen'))
+                                                          ? t.page_TooltipQwenReasoning
+                                                          : (llm.provider === 'TogetherAI' && llm.categoryKey?.includes('DeepSeek'))
+                                                            ? t.page_TooltipDeepSeekReasoning
+                                                            : t.page_TooltipGenericReasoning
+                                                  }
+                                                </p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          )}
+                                          {llm.requiresOrgVerification && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top" className="w-auto max-w-[200px] p-2">
+                                                <p className="text-xs">
+                                                  {t.page_TooltipRequiresVerification.split("verify here")[0]}
+                                                  <a
+                                                    href="https://platform.openai.com/settings/organization/general"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="underline text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                                                  >
+                                                    {t.common_verifyHere}
+                                                  </a>
+                                                  {t.page_TooltipRequiresVerification.split("verify here")[1]}
+                                                </p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          )}
+                                          {llm.pricing?.freeTier?.available && llm.provider !== 'Mistral AI' && llm.provider !== 'Ollama' && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />}
+                                          {llm.knowledgeCutoff && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <div className="flex items-center text-xs text-muted-foreground ml-2 max-w-[120px] overflow-hidden">
+                                                  <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
+                                                  <span className="truncate" title={llm.knowledgeCutoff}>
+                                                    {llm.knowledgeCutoff}
+                                                  </span>
+                                                </div>
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top">
+                                                <p className="text-xs">{t.page_TooltipKnowledgeCutoff}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          )}
+                                          {/* {llm.pricing?.freeTier?.available && <FreeTierBadge freeTier={llm.pricing.freeTier} t={t} className="ml-0.5" />} */}
+                                        </div>
+                                      </div>
                                     </div>
                                   </li>
                                 ))}
@@ -1102,9 +1319,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
           </Card>
           <Card className="w-full liquid-glass-themed bg-card/60">
             <CardHeader>
-              <h2 className="flex items-center justify-center text-xl font-semibold">
-                <Volume2 className="mr-2 h-5 w-5" />
-                {t.page_AvailableTTSTitle}
+              <h2 className="relative flex items-center justify-center text-xl font-semibold">
+                <span className="relative inline-block">
+                  <Volume2 className="absolute right-full mr-2 h-5 w-5 top-1/2 -translate-y-1/2" aria-hidden="true" />
+                  <span>{t.page_AvailableTTSTitle}</span>
+                </span>
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1112,73 +1331,134 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 AVAILABLE_TTS_PROVIDERS.map((provider) => {
                   const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
+                  const isStaticTTSProviderSection = provider.id === 'browser';
+                  const allTTSModelsSupport = provider.models.every(model => isTTSModelLanguageSupported(model.id, language.code));
                   return (
-                    <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
-                      <CollapsibleTrigger
-                        className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-white/10 dark:hover:bg-white/5 p-2 rounded-md transition-all duration-200 focus-visible:ring-1 focus-visible:ring-ring group"
-                        aria-expanded={isProviderOpen}
-                        aria-controls={`${providerCollapsibleId}-content`}
-                        aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${provider.name} TTS models`}
-                      >
-                        <span>{provider.name}</span>
-                        <div className="absolute right-2">
-                          {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                    isStaticTTSProviderSection ? (
+                      <div key={provider.id} className="space-y-1">
+                        <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
+                          <div className="relative inline-flex items-center">
+                            <span>{provider.name}</span>
+                            <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                              {allTTSModelsSupport ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top">
+                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <X className="h-4 w-4 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top">
+                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent
-                        id={`${providerCollapsibleId}-content`}
-                        className="space-y-2 flex flex-col items-center"
-                        role="region"
-                        aria-labelledby={`${providerCollapsibleId}-trigger`}
-                      >
-                        <ul className="space-y-1 text-sm w-full max-w-2xl">
-                          {provider.models.map((model) => {
-                            const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
-                            return (
-                              <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
-                                <div className="flex items-center space-x-1">
-                                  <span className="whitespace-nowrap">{model.name}</span>
-                                  {/* {model.freeTier?.available && (
+                        <div className="space-y-2 flex flex-col items-center">
+                          <ul className="space-y-1 text-sm w-full max-w-2xl">
+                            {provider.models.map((model) => {
+                              return (
+                                <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
+                                  <div className="flex items-center space-x-1">
+                                    <span className="whitespace-nowrap">{model.name}</span>
+                                    {/* {model.freeTier?.available && (
+                                      <FreeTierBadge
+                                        freeTier={model.freeTier}
+                                        t={t}
+                                        className="ml-1"
+                                      />
+                                    )} */}
+                                  </div>
+                                  <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
+                                  {model.freeTier?.available && (
                                     <FreeTierBadge
                                       freeTier={model.freeTier}
                                       t={t}
                                       className="ml-1"
                                     />
-                                  )} */}
-                                </div>
-                                <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
-                                {supportsLanguage ? (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                    </TooltipTrigger>
-                                    <TooltipContent side="top">
-                                      <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                ) : (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                    </TooltipTrigger>
-                                    <TooltipContent side="top">
-                                      <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
-                                {model.freeTier?.available && (
-                                  <FreeTierBadge
-                                    freeTier={model.freeTier}
-                                    t={t}
-                                    className="ml-1"
-                                  />
-                                )}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </CollapsibleContent>
-                    </Collapsible>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </div>
+                    ) : (
+                      <Collapsible key={provider.id} open={isProviderOpen} onOpenChange={() => toggleCollapsible(providerCollapsibleId)} className="space-y-1">
+                        <CollapsibleTrigger
+                          className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 hover:bg-white/10 dark:hover:bg-white/5 p-2 rounded-md transition-all duration-200 focus-visible:ring-1 focus-visible:ring-ring group"
+                          aria-expanded={isProviderOpen}
+                          aria-controls={`${providerCollapsibleId}-content`}
+                          aria-label={`${isProviderOpen ? 'Collapse' : 'Expand'} ${provider.name} TTS models`}
+                        >
+                          <span>{provider.name}</span>
+                          <div className="absolute right-2">
+                            {isProviderOpen ? <ChevronDown className="h-5 w-5" aria-hidden="true" /> : <ChevronRight className="h-5 w-5" aria-hidden="true" />}
+                          </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent
+                          id={`${providerCollapsibleId}-content`}
+                          className="space-y-2 flex flex-col items-center"
+                          role="region"
+                          aria-labelledby={`${providerCollapsibleId}-trigger`}
+                        >
+                          <ul className="space-y-1 text-sm w-full max-w-2xl">
+                            {provider.models.map((model) => {
+                              const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
+                              return (
+                                <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
+                                  <div className="flex items-center space-x-1">
+                                    <span className="whitespace-nowrap">{model.name}</span>
+                                    {/* {model.freeTier?.available && (
+                                      <FreeTierBadge
+                                        freeTier={model.freeTier}
+                                        t={t}
+                                        className="ml-1"
+                                      />
+                                    )} */}
+                                  </div>
+                                  <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
+                                  {supportsLanguage ? (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top">
+                                        <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  ) : (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top">
+                                        <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                  {model.freeTier?.available && (
+                                    <FreeTierBadge
+                                      freeTier={model.freeTier}
+                                      t={t}
+                                      className="ml-1"
+                                    />
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )
                   );
                 })
               ) : (
@@ -1186,6 +1466,33 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               )}
             </CardContent>
           </Card>
+
+          {customInvokeaiAvailable && invokeaiModelNames.length > 0 && (
+            <Card className="w-full liquid-glass-themed bg-card/60">
+              <CardHeader>
+                <h2 className="relative flex items-center justify-center text-xl font-semibold">
+                  <span className="relative inline-block">
+                    <ImageIcon className="absolute right-full mr-2 h-5 w-5 top-1/2 -translate-y-1/2" aria-hidden="true" />
+                    <span>Currently Available Text-to-Image Models</span>
+                  </span>
+                </h2>
+              </CardHeader>
+              <CardContent className="space-y-2 flex flex-col items-center">
+                <div className="space-y-1 w-full max-w-2xl">
+                  <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
+                    <span>Invoke</span>
+                  </div>
+                  <ul className="space-y-1 text-sm w-full">
+                    {invokeaiModelNames.map((name) => (
+                      <li key={name} className="flex items-center justify-center py-0.5">
+                        <span className="whitespace-nowrap">{name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* IMAGE MODELS SECTION */}
           {/* <Card className="w-full">
