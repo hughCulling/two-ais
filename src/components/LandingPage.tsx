@@ -528,7 +528,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </div>
 
                     <p className="text-center">
-                      <span>1. You can run this command in your terminal to start Ollama:</span>
+                      <span>1. You can run this command in your terminal to start the Ollama server:</span>
                     </p>
                     <div className="flex items-center justify-center">
                       <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
@@ -570,7 +570,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </div>
                     </div>
                     <p className="text-center mt-3">
-                      <span>3. You can start the tunnels with this command:</span>
+                      <span>3. You can start ngrok with this command:</span>
                     </p>
                     <div className="flex items-center justify-center">
                       <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
@@ -698,7 +698,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                         />
                       </div>
                     </div>
-                    <h3 className="font-semibold text-base whitespace-nowrap">InvokeAI Setup</h3>
+                    <h3 className="font-semibold text-base whitespace-nowrap">Invoke Setup</h3>
                   </div>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
                     {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
@@ -714,10 +714,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </p>
                       <ol className="list-decimal list-inside space-y-1 ml-2">
                         <li>
-                          InvokeAI installed on your machine. It is downloadable from{' '}
+                          Invoke installed on your machine. It is downloadable from{' '}
                           <span className="whitespace-nowrap">
-                            <a href="https://invoke-ai.github.io/InvokeAI/installation/quick_start/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              invoke-ai.github.io
+                            <a href="https://invoke.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              invoke.ai
                               <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
                             </a>.
                           </span>
@@ -730,16 +730,16 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </div>
 
                     <p>
-                      1. You can open the InvokeAI installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the InvokeAI server.
+                      1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
                     </p>
                     <p className="text-center mt-3">
-                      <span>2. Next, you can edit your ngrok config file and add this tunnel configuration. If you already have a <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> section, adding the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invokeai:</code> part under that same <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> parent prevents the pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> from being overwritten:</span>
+                      <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
                     </p>
                     <div className="flex justify-center items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
                         <pre className="font-mono text-xs text-left whitespace-pre m-0">
                           {`tunnels:
-  invokeai:
+  invoke:
     proto: http
     addr: 9090
     host_header: "localhost:9090"`}
@@ -751,9 +751,29 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     addr: 9090
     host_header: "localhost:9090"`} stepId="invokeai-yaml" />
                     </div>
+                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
+                        </span>
+                      </div>
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
+                          <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invoke:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
+                        </span>
+                      </div>
+                    </div>
                     <p className="text-center mt-3">
-                      <span>3. Next you can start the tunnel with: <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ngrok start --all</code>.</span>
+                      <span>3. You can start ngrok with this command:</span>
                     </p>
+                    <div className="flex items-center justify-center">
+                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
+                        ngrok start --all
+                      </span>
+                      <CopyButton text="ngrok start --all" stepId="invokeai-step3" />
+                    </div>
                     <p className="text-center mt-3">
                       <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
                     </p>
