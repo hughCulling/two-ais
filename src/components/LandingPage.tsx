@@ -555,15 +555,19 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     addr: 11434
     host_header: "localhost:11434"`} stepId="ollama-yaml" />
                     </div>
-                    <div className="text-center mt-3 text-xs text-muted-foreground">
-                      <ul className="list-disc inline-block text-left space-y-1">
-                        <li>
+                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
                           <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
-                        </li>
-                        <li>
+                        </span>
+                      </div>
+                      <div className="text-center">
+                        <span className="inline-block relative pl-4">
+                          <span className="absolute left-0 top-0">•</span>
                           <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ollama:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
-                        </li>
-                      </ul>
+                        </span>
+                      </div>
                     </div>
                     <p className="text-center mt-3">
                       <span>3. You can start the tunnels with this command:</span>
