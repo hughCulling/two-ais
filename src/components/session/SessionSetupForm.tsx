@@ -35,7 +35,7 @@ import {
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, ExternalLink, Copy } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, ExternalLink, Copy, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,
@@ -532,6 +532,33 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const { user, loading: authLoading } = useAuth();
     const { language } = useLanguage();
     const { t, loading: translationLoading } = useTranslation();
+
+    const playVoiceSample = useCallback((voice: TTSVoice) => {
+        if (!window.speechSynthesis) return;
+
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        // Find the actual SpeechSynthesisVoice
+        const voices = window.speechSynthesis.getVoices();
+
+        // Try to match by URI first, then by name
+        let browserVoice = voices.find(v => v.voiceURI === voice.providerVoiceId);
+        if (!browserVoice) {
+            // Note: voice.name often includes the language tag e.g., "Google US English (en-US)", while browser voice name might just be "Google US English"
+            browserVoice = voices.find(v => v.name === voice.name.replace(/\s\([^)]+\)$/, ''));
+        }
+
+        if (browserVoice) {
+            const utterance = new SpeechSynthesisUtterance("Hello, this is a preview of my voice.");
+            utterance.voice = browserVoice;
+            // Best effort language matching based on the voice's reported lang
+            utterance.lang = browserVoice.lang || "en-US";
+            window.speechSynthesis.speak(utterance);
+        } else {
+            console.warn("Could not find matching browser voice for preview:", voice);
+        }
+    }, []);
 
     // Ollama endpoint (ngrok URL) - manual verify flow
     const [ollamaEndpoint, setOllamaEndpoint] = useState<string>('');
@@ -1364,20 +1391,42 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         >
                             <SelectTrigger
                                 id={`agent-${agentIdentifierLowerCase}-voice`}
-                                className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3"
+                                className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-left [&>span]:truncate [&>span]:px-6 [&>svg]:absolute [&>svg]:right-3"
                             >
-                                <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)} />
+                                <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)}>
+                                    {currentAgentTTSSettings.voice && currentAgentVoices.find(v => v.id === currentAgentTTSSettings.voice)?.name}
+                                </SelectValue>
                             </SelectTrigger>
                             <SelectContent className="max-h-60 w-[var(--radix-select-trigger-width)] liquid-glass-panel">
                                 {currentAgentVoices.map(v => {
                                     const providerId = currentAgentTTSSettings.provider;
                                     const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
                                     return (
-                                        <SelectItem key={v.id} value={v.id} className="justify-center">
-                                            <div className="w-full text-center">
-                                                {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                                {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
-                                                {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                        <SelectItem key={v.id} value={v.id} className="justify-center w-full">
+                                            <div className="flex items-center w-full group relative pl-6 pr-10">
+                                                <div className="flex-1 text-center whitespace-normal break-words text-sm py-1">
+                                                    {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
+                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
+                                                    {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
+                                                </div>
+                                                {providerId === 'browser' && (
+                                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center pr-1">
+                                                        <button
+                                                            type="button"
+                                                            className="p-1.5 flex-shrink-0 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+                                                            onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                                            onPointerUp={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                playVoiceSample(v);
+                                                            }}
+                                                            title="Play Voice Sample"
+                                                        >
+                                                            <Play className="h-4 w-4" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
                                         </SelectItem>
                                     );
