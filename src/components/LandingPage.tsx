@@ -762,27 +762,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </p>
                       <ol className="list-decimal list-inside space-y-1 ml-2">
                         <li>
-                          LocalAI installed on your machine. Installation options:{' '}
+                          LocalAI installed on your machine. It is installable from {' '}
                           <span className="whitespace-nowrap">
-                            <a href="https://localai.io/basics/getting_started/index.html#installation-methods" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              Docker/Podman
+                            <a href="https://localai.io/installation/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
+                              localai.io/installation
                               <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
                             </a>
                           </span>
-                          {' '}(recommended),{' '}
-                          <span className="whitespace-nowrap">
-                            <a href="https://localai.io/basics/getting_started/index.html#macos" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              macOS DMG
-                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                            </a>
-                          </span>
-                          , or{' '}
-                          <span className="whitespace-nowrap">
-                            <a href="https://localai.io/basics/getting_started/index.html#linux" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              Linux binaries
-                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                            </a>
-                          </span>.
+                          {' '}.
                         </li>
                         <li>
                           Your ngrok config file location. This can be found by running:{' '}
@@ -792,7 +779,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     </div>
 
                     <p className="text-center">
-                      <span>1. Start LocalAI using one of these methods:</span>
+                      <span>1. You can run one of these commands in a terminal to start the LocalAI server:</span>
                     </p>
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex items-center justify-center">
