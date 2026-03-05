@@ -55,7 +55,7 @@ import { saveSessionPreset, loadSessionPreset, SessionPreset } from '@/lib/fireb
 import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
 
 // --- Define TTS Types ---
-type TTSProviderOptionId = TTSProviderInfo['id'] | 'localai' | 'none';
+type TTSProviderOptionId = TTSProviderInfo['id'] | 'localai';
 
 interface AgentTTSSettings {
     provider: TTSProviderOptionId;
@@ -986,11 +986,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         const simpleUserLangCode = language.code.split('-')[0];
         let voices: TTSVoice[] = [];
 
-        if (providerId === 'none') {
-            agentSettingsSetter(prev => ({ ...prev, provider: 'none', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined }));
-            voicesListSetter([]);
-            return;
-        }
+
 
         if (providerId === 'localai') {
             agentSettingsSetter(prev => ({
@@ -1231,17 +1227,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
 
         // ***FIX: Define a type-safe constant for the disabled state***
-        const disabledTtsSettings: AgentTTSSettings = { provider: 'none', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined };
+        const disabledTtsSettings: AgentTTSSettings = { provider: 'browser', voice: null, selectedTtsModelId: undefined, ttsApiModelId: undefined };
 
         const sessionAgentATTSSettings = ttsEnabled ? agentATTSSettings : disabledTtsSettings;
         const sessionAgentBTTSSettings = ttsEnabled ? agentBTTSSettings : disabledTtsSettings;
 
         if (ttsEnabled) {
-            if (sessionAgentATTSSettings.provider !== 'none' && !sessionAgentATTSSettings.voice) {
+            if (!sessionAgentATTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent A or disable TTS.`);
                 return;
             }
-            if (sessionAgentBTTSSettings.provider !== 'none' && !sessionAgentBTTSSettings.voice) {
+            if (!sessionAgentBTTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent B or disable TTS.`);
                 return;
             }
@@ -1338,7 +1334,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setter(prev => ({
             ...prev,
             provider: newProviderId,
-            voice: newProviderId === 'none' ? null : prev.voice,
         }));
     };
 
@@ -1528,7 +1523,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     if (!isStartDisabled && ttsEnabled) {
         const checkAgentTTSValidity = (settings: AgentTTSSettings): boolean => {
-            if (settings.provider === 'none') return false;
 
             if (settings.provider === 'localai') {
                 if (!settings.selectedTtsModelId || !settings.selectedTtsModelId.trim()) return true;
@@ -1572,9 +1566,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <SelectValue placeholder={t?.sessionSetupForm?.selectProvider || 'Select provider'} />
                         </SelectTrigger>
                         <SelectContent className="liquid-glass-panel">
-                            <SelectItem value="none" className="justify-center">
-                                <div className="w-full text-center">{t?.ttsNoneOption || 'None'}</div>
-                            </SelectItem>
+
                             <SelectItem value="browser" className="justify-center">
                                 <div className="w-full text-center">Browser</div>
                             </SelectItem>
