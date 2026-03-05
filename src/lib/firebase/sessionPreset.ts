@@ -19,6 +19,7 @@ export interface SessionPreset {
         ttsApiModelId?: string;
     };
     initialSystemPrompt: string;
+    localaiEndpoint?: string;
     imageGenSettings?: {
         enabled: boolean;
         provider: string;
