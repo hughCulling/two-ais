@@ -191,7 +191,8 @@ const bn = {
             "signIn": "প্রবেশ কর",
             "emailLabel": "ইমেল ঠিকানা",
             "confirmPasswordPlaceholder": "পাসওয়ার্ড নিশ্চিত করুন",
-            "signingUp": "সাইন আপ করা হচ্ছে..."
+            "signingUp": "সাইন আপ করা হচ্ছে...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "অবৈধ ইমেল বা পাসওয়ার্ড",

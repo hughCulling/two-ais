@@ -191,7 +191,8 @@ const hi = {
             "signIn": "दाखिल करना",
             "emailLabel": "मेल पता",
             "confirmPasswordPlaceholder": "पासवर्ड की पुष्टि कीजिये",
-            "signingUp": "साइन उप हो रहा है..."
+            "signingUp": "साइन उप हो रहा है...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "अमान्य ईमेल या पासवर्ड",

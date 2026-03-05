@@ -191,7 +191,8 @@ const id = {
             "signIn": "Masuk",
             "emailLabel": "Alamat email",
             "confirmPasswordPlaceholder": "Konfirmasi Kata Sandi",
-            "signingUp": "Mendaftar..."
+            "signingUp": "Mendaftar...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Email atau kata sandi tidak valid",

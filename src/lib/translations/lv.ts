@@ -191,7 +191,8 @@ const lv = {
             "signIn": "Pierakstīties",
             "emailLabel": "E-pasta adrese",
             "confirmPasswordPlaceholder": "Apstiprināt paroli",
-            "signingUp": "Reģistrēšanās..."
+            "signingUp": "Reģistrēšanās...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Nederīga e-pasta adrese vai parole",

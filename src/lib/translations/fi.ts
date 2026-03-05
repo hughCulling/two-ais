@@ -191,7 +191,8 @@ const fi = {
             "signIn": "Kirjaudu sisään",
             "emailLabel": "Sähköpostiosoite",
             "confirmPasswordPlaceholder": "Vahvista salasana",
-            "signingUp": "Rekisteröityminen..."
+            "signingUp": "Rekisteröityminen...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Virheellinen sähköpostiosoite tai salasana",

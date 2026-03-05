@@ -191,7 +191,8 @@ const so = {
             "signIn": "Soo gal",
             "emailLabel": "Ciwaanka iimaylka",
             "confirmPasswordPlaceholder": "Xaqiiji erayga sirta ah",
-            "signingUp": "Isdiiwaangalinta..."
+            "signingUp": "Isdiiwaangalinta...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Iimayl ama erayga sirta ah ee aan sax ahayn",

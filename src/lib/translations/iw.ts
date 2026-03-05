@@ -191,7 +191,8 @@ const iw = {
             "signIn": "כניסה",
             "emailLabel": "כתובת דוא\"ל",
             "confirmPasswordPlaceholder": "אשר סיסמה",
-            "signingUp": "הרשמה..."
+            "signingUp": "הרשמה...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "כתובת דוא\"ל או סיסמה לא חוקיים",

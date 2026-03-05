@@ -191,7 +191,8 @@ const ro = {
             "signIn": "Conectare",
             "emailLabel": "Adresa de e-mail",
             "confirmPasswordPlaceholder": "Confirmați parola",
-            "signingUp": "Înscriere..."
+            "signingUp": "Înscriere...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Adresă de e-mail sau parolă nevalidă",

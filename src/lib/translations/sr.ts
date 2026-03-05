@@ -191,7 +191,8 @@ const sr = {
             "signIn": "Пријавите се",
             "emailLabel": "Адреса е-поште",
             "confirmPasswordPlaceholder": "Потврдите лозинку",
-            "signingUp": "Пријављивање..."
+            "signingUp": "Пријављивање...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Неважећа имејл адреса или лозинка",

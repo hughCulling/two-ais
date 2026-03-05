@@ -191,7 +191,8 @@ const el = {
             "signIn": "Σύνδεση",
             "emailLabel": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
             "confirmPasswordPlaceholder": "Επιβεβαίωση κωδικού πρόσβασης",
-            "signingUp": "Εγγραφή..."
+            "signingUp": "Εγγραφή...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Μη έγκυρο email ή κωδικός πρόσβασης",

@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SignUpForm from '@/components/auth/SignUpForm';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function SignupPage() {
@@ -42,11 +43,22 @@ function SignupPageContent() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
             <div className="w-full max-w-md space-y-6">
-                <div className="p-6 rounded-xl shadow-md space-y-6 liquid-glass-themed bg-theme-primary/15 dark:bg-card/60">
+                <div className="p-6 rounded-xl shadow-md space-y-6 liquid-glass-themed dark:bg-card/60">
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                         {translation.auth.signup.title}
                     </h1>
                     <SignUpForm />
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                                {translation.auth.signup.orContinueWith || 'Or continue with'}
+                            </span>
+                        </div>
+                    </div>
+                    <GoogleSignInButton />
                     <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                         {translation.auth.signup.hasAccount}{' '}
                         <Link href={`/${language.code}/login`} className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">

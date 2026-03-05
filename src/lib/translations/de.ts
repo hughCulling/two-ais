@@ -191,7 +191,8 @@ const de = {
             "signIn": "anmelden",
             "emailLabel": "E-Mail-Adresse",
             "confirmPasswordPlaceholder": "Passwort bestätigen",
-            "signingUp": "Anmeldung..."
+            "signingUp": "Anmeldung...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort",

@@ -191,7 +191,8 @@ const sk = {
             "signIn": "Prihlásiť sa",
             "emailLabel": "E-mailová adresa",
             "confirmPasswordPlaceholder": "Potvrdiť heslo",
-            "signingUp": "Registrácia..."
+            "signingUp": "Registrácia...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Neplatný e-mail alebo heslo",

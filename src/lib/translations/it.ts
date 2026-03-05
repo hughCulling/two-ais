@@ -191,7 +191,8 @@ const it = {
             "signIn": "Registrazione",
             "emailLabel": "Indirizzo e-mail",
             "confirmPasswordPlaceholder": "Conferma password",
-            "signingUp": "Registrazione in corso..."
+            "signingUp": "Registrazione in corso...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Email o password non valide",

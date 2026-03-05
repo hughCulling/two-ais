@@ -191,7 +191,8 @@ const is = {
             "signIn": "Innskráning",
             "emailLabel": "Netfang",
             "confirmPasswordPlaceholder": "Staðfesta lykilorð",
-            "signingUp": "Skráning..."
+            "signingUp": "Skráning...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ógilt netfang eða lykilorð",

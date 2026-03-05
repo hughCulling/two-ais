@@ -191,7 +191,8 @@ const ka = {
             "signIn": "შესვლა",
             "emailLabel": "ელექტრონული ფოსტის მისამართი",
             "confirmPasswordPlaceholder": "პაროლის დადასტურება",
-            "signingUp": "რეგისტრაცია..."
+            "signingUp": "რეგისტრაცია...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "არასწორი ელ. ფოსტა ან პაროლი",

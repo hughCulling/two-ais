@@ -191,7 +191,8 @@ const ca = {
             "signIn": "Inicia la sessió",
             "emailLabel": "Adreça electrònica",
             "confirmPasswordPlaceholder": "Confirma la contrasenya",
-            "signingUp": "Registrant-se..."
+            "signingUp": "Registrant-se...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Correu electrònic o contrasenya no vàlids",

@@ -191,7 +191,8 @@ const ja = {
             "signIn": "サインイン",
             "emailLabel": "電子メールアドレス",
             "confirmPasswordPlaceholder": "パスワードを認証する",
-            "signingUp": "サインアップ中..."
+            "signingUp": "サインアップ中...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "メールアドレスまたはパスワードが無効です",

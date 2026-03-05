@@ -191,7 +191,8 @@ const pa = {
             "signIn": "ਸਾਈਨ - ਇਨ",
             "emailLabel": "ਈਮੇਲ ਪਤਾ",
             "confirmPasswordPlaceholder": "ਪਾਸਵਰਡ ਪੱਕਾ ਕਰੋ",
-            "signingUp": "ਸਾਈਨ ਅੱਪ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
+            "signingUp": "ਸਾਈਨ ਅੱਪ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "ਗਲਤ ਈਮੇਲ ਜਾਂ ਪਾਸਵਰਡ",

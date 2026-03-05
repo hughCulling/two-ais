@@ -191,7 +191,8 @@ const pl = {
             "signIn": "Zalogować się",
             "emailLabel": "Adres e-mail",
             "confirmPasswordPlaceholder": "Potwierdź hasło",
-            "signingUp": "Rejestracja..."
+            "signingUp": "Rejestracja...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło",

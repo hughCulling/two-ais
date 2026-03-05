@@ -191,7 +191,8 @@ const ms = {
             "signIn": "Log masuk",
             "emailLabel": "Alamat e-mel",
             "confirmPasswordPlaceholder": "Sahkan Kata Laluan",
-            "signingUp": "Mendaftar..."
+            "signingUp": "Mendaftar...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "E-mel atau kata laluan tidak sah",

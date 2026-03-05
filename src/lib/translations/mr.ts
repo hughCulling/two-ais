@@ -191,7 +191,8 @@ const mr = {
             "signIn": "भाषा",
             "emailLabel": "ईमेल पत्ता",
             "confirmPasswordPlaceholder": "पासवर्डची पुष्टी करा",
-            "signingUp": "साइन अप करत आहे..."
+            "signingUp": "साइन अप करत आहे...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "चुकीचा ईमेल किंवा पासवर्ड",

@@ -191,7 +191,8 @@ const am = {
             "signIn": "ይግቡ",
             "emailLabel": "የኢሜል አድራሻ",
             "confirmPasswordPlaceholder": "የይለፍ ቃል ያረጋግጡ",
-            "signingUp": "በመመዝገብ ላይ..."
+            "signingUp": "በመመዝገብ ላይ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "ልክ ያልሆነ ኢሜይል ወይም የይለፍ ቃል",

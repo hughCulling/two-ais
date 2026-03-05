@@ -191,7 +191,8 @@ const et = {
             "signIn": "Logi sisse",
             "emailLabel": "E-posti aadress",
             "confirmPasswordPlaceholder": "Kinnita parool",
-            "signingUp": "Registreerumine..."
+            "signingUp": "Registreerumine...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Kehtetu e-posti aadress või parool",

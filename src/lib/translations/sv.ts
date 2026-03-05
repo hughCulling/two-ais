@@ -191,7 +191,8 @@ const sv = {
             "signIn": "Logga in",
             "emailLabel": "E-postadress",
             "confirmPasswordPlaceholder": "Bekräfta lösenord",
-            "signingUp": "Registrerar dig..."
+            "signingUp": "Registrerar dig...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ogiltig e-postadress eller lösenord",

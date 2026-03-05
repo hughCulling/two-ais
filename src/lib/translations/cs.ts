@@ -191,7 +191,8 @@ const cs = {
             "signIn": "Přihlásit se",
             "emailLabel": "E-mailová adresa",
             "confirmPasswordPlaceholder": "Potvrzení hesla",
-            "signingUp": "Registrace..."
+            "signingUp": "Registrace...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Neplatný e-mail nebo heslo",

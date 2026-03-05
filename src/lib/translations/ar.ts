@@ -191,7 +191,8 @@ const ar = {
             "signIn": "تسجيل الدخول",
             "emailLabel": "عنوان البريد الإلكتروني",
             "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
-            "signingUp": "جاري التسجيل..."
+            "signingUp": "جاري التسجيل...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صالحة",

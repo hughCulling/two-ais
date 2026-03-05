@@ -191,7 +191,8 @@ const mt = {
             "signIn": "Idħol",
             "emailLabel": "Indirizz elettroniku",
             "confirmPasswordPlaceholder": "Ikkonferma l-Password",
-            "signingUp": "Reġistrazzjoni..."
+            "signingUp": "Reġistrazzjoni...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Email jew password mhux valida",

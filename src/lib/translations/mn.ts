@@ -191,7 +191,8 @@ const mn = {
             "signIn": "Нэвтрэх",
             "emailLabel": "Имэйл хаяг",
             "confirmPasswordPlaceholder": "Нууц үгээ баталгаажуулна уу",
-            "signingUp": "Бүртгүүлж байна..."
+            "signingUp": "Бүртгүүлж байна...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Хүчингүй имэйл эсвэл нууц үг",

@@ -191,7 +191,8 @@ const sl = {
             "signIn": "Prijava",
             "emailLabel": "E-poštni naslov",
             "confirmPasswordPlaceholder": "Potrdite geslo",
-            "signingUp": "Prijava ..."
+            "signingUp": "Prijava ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Neveljaven e-poštni naslov ali geslo",

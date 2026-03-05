@@ -191,7 +191,8 @@ const ko = {
             "signIn": "로그인",
             "emailLabel": "이메일 주소",
             "confirmPasswordPlaceholder": "비밀번호 확인",
-            "signingUp": "가입 중..."
+            "signingUp": "가입 중...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "잘못된 이메일 또는 비밀번호입니다",

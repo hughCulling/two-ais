@@ -191,7 +191,8 @@ const tl = {
             "signIn": "Mag-sign in",
             "emailLabel": "Email address",
             "confirmPasswordPlaceholder": "Kumpirmahin ang Password",
-            "signingUp": "Nagsa-sign Up..."
+            "signingUp": "Nagsa-sign Up...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Di-wastong email o password",

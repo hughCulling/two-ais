@@ -191,7 +191,8 @@ const hy = {
             "signIn": "Մուտք գործել",
             "emailLabel": "Էլ․ հասցե",
             "confirmPasswordPlaceholder": "Հաստատել գաղտնաբառը",
-            "signingUp": "Գրանցվում է..."
+            "signingUp": "Գրանցվում է...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Անվավեր էլ․ հասցե կամ գաղտնաբառ",

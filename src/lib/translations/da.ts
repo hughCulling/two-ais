@@ -191,7 +191,8 @@ const da = {
             "signIn": "Log ind",
             "emailLabel": "E-mailadresse",
             "confirmPasswordPlaceholder": "Bekræft adgangskode",
-            "signingUp": "Tilmelding..."
+            "signingUp": "Tilmelding...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ugyldig e-mail eller adgangskode",

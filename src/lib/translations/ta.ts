@@ -191,7 +191,8 @@ const ta = {
             "signIn": "உள்நுழையவும்",
             "emailLabel": "மின்னஞ்சல் முகவரி",
             "confirmPasswordPlaceholder": "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
-            "signingUp": "பதிவு செய்கிறது..."
+            "signingUp": "பதிவு செய்கிறது...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "தவறான மின்னஞ்சல் அல்லது கடவுச்சொல்",

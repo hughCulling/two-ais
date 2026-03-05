@@ -191,7 +191,8 @@ const no = {
             "signIn": "Logg inn",
             "emailLabel": "E-postadresse",
             "confirmPasswordPlaceholder": "Bekreft passord",
-            "signingUp": "Registrerer seg..."
+            "signingUp": "Registrerer seg...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ugyldig e-post eller passord",

@@ -191,7 +191,8 @@ const es = {
             "signIn": "Iniciar sesión",
             "emailLabel": "Dirección de correo electrónico",
             "confirmPasswordPlaceholder": "confirmar Contraseña",
-            "signingUp": "Inscribiéndose..."
+            "signingUp": "Inscribiéndose...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Correo electrónico o contraseña no válidos",

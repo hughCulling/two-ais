@@ -191,7 +191,8 @@ const fa = {
             "signIn": "ورود",
             "emailLabel": "آدرس ایمیل",
             "confirmPasswordPlaceholder": "تأیید رمز عبور",
-            "signingUp": "ثبت نام ..."
+            "signingUp": "ثبت نام ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است",

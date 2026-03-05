@@ -191,7 +191,8 @@ const vi = {
             "signIn": "Đăng nhập",
             "emailLabel": "Địa chỉ email",
             "confirmPasswordPlaceholder": "Xác nhận mật khẩu",
-            "signingUp": "Đang đăng ký..."
+            "signingUp": "Đang đăng ký...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Email hoặc mật khẩu không hợp lệ",

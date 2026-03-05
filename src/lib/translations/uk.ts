@@ -191,7 +191,8 @@ const uk = {
             "signIn": "Увійти",
             "emailLabel": "Адреса електронної пошти",
             "confirmPasswordPlaceholder": "Підтвердьте пароль",
-            "signingUp": "Реєстрація..."
+            "signingUp": "Реєстрація...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Недійсна електронна адреса або пароль",

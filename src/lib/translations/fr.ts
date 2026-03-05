@@ -191,7 +191,8 @@ const fr = {
             "signIn": "Se connecter",
             "emailLabel": "Adresse email",
             "confirmPasswordPlaceholder": "Confirmez le mot de passe",
-            "signingUp": "Signature..."
+            "signingUp": "Signature...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "E-mail ou mot de passe invalide",

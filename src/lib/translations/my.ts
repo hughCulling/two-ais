@@ -191,7 +191,8 @@ const my = {
             "signIn": "ဆိုင်းအင်လုပ်ခြင်း",
             "emailLabel": "အီးမေးလ်လိပ်စာ",
             "confirmPasswordPlaceholder": "စကားဝှက်အတည်ပြုခြင်း",
-            "signingUp": "စာရင်းသွင်းနေသည်..."
+            "signingUp": "စာရင်းသွင်းနေသည်...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "မမှန်ကန်သော အီးမေးလ် သို့မဟုတ် စကားဝှက်",

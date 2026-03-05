@@ -191,7 +191,8 @@ const lt = {
             "signIn": "Prisijungti",
             "emailLabel": "El. pašto adresas",
             "confirmPasswordPlaceholder": "Patvirtinkite slaptažodį",
-            "signingUp": "Registruojamės..."
+            "signingUp": "Registruojamės...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Neteisingas el. pašto adresas arba slaptažodis",

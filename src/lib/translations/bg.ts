@@ -191,7 +191,8 @@ const bg = {
             "signIn": "Вход",
             "emailLabel": "Имейл адрес",
             "confirmPasswordPlaceholder": "Потвърдете паролата",
-            "signingUp": "Регистрация..."
+            "signingUp": "Регистрация...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Невалиден имейл или парола",

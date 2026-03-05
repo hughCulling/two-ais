@@ -201,6 +201,7 @@ const en = {
             signIn: 'Sign in',
             emailLabel: "Email address",
             confirmPasswordPlaceholder: "Confirm Password",
+            orContinueWith: "Or you can continue with",
             signingUp: "Signing Up..."
         },
         errors: {

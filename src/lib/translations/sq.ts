@@ -191,7 +191,8 @@ const sq = {
             "signIn": "Hyr",
             "emailLabel": "Adresa e email-it",
             "confirmPasswordPlaceholder": "Konfirmo fjalëkalimin",
-            "signingUp": "Duke u regjistruar..."
+            "signingUp": "Duke u regjistruar...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Email ose fjalëkalim i pavlefshëm",

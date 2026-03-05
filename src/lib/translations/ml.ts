@@ -191,7 +191,8 @@ const ml = {
             "signIn": "സൈൻ ഇൻ",
             "emailLabel": "ഇമെയിൽ വിലാസം",
             "confirmPasswordPlaceholder": "പാസ്വേഡ് സ്ഥിരീകരിക്കുക",
-            "signingUp": "സൈൻ അപ്പ് ചെയ്യുന്നു..."
+            "signingUp": "സൈൻ അപ്പ് ചെയ്യുന്നു...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "അസാധുവായ ഇമെയിൽ വിലാസം അല്ലെങ്കിൽ പാസ്‌വേഡ്",

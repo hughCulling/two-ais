@@ -191,7 +191,8 @@ const ru = {
             "signIn": "Войти",
             "emailLabel": "Адрес электронной почты",
             "confirmPasswordPlaceholder": "Подтвердите пароль",
-            "signingUp": "Регистрация..."
+            "signingUp": "Регистрация...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Неверный адрес электронной почты или пароль",

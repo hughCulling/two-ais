@@ -191,7 +191,8 @@ const bs = {
             "signIn": "Prijava",
             "emailLabel": "E-mail adresa",
             "confirmPasswordPlaceholder": "Potvrdite lozinku",
-            "signingUp": "Prijava..."
+            "signingUp": "Prijava...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Nevažeća e-pošta ili lozinka",

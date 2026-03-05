@@ -191,7 +191,8 @@ const mk = {
             "signIn": "Најави се",
             "emailLabel": "Е-адреса",
             "confirmPasswordPlaceholder": "Потврди ја лозинката",
-            "signingUp": "Пријавување..."
+            "signingUp": "Пријавување...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Неважечка е-пошта или лозинка",

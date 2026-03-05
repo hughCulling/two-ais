@@ -191,7 +191,8 @@ const zh = {
             "signIn": "登入",
             "emailLabel": "电子邮件",
             "confirmPasswordPlaceholder": "确认密码",
-            "signingUp": "正在注册..."
+            "signingUp": "正在注册...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "无效的电子邮件或密码",

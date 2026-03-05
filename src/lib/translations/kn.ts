@@ -191,7 +191,8 @@ const kn = {
             "signIn": "ಸೈನ್ ಇನ್",
             "emailLabel": "ಇಮೇಲ್ ವಿಳಾಸ",
             "confirmPasswordPlaceholder": "ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
-            "signingUp": "ಸೈನ್ ಅಪ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+            "signingUp": "ಸೈನ್ ಅಪ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "ಅಮಾನ್ಯ ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್",

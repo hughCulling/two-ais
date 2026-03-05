@@ -191,7 +191,8 @@ const ur = {
             "signIn": "سائن ان کریں۔",
             "emailLabel": "ای میل ایڈریس",
             "confirmPasswordPlaceholder": "پاس ورڈ کی تصدیق کریں۔",
-            "signingUp": "سائن اپ ہو رہا ہے..."
+            "signingUp": "سائن اپ ہو رہا ہے...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "غلط ای میل یا پاس ورڈ",

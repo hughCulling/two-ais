@@ -191,7 +191,8 @@ const gu = {
             "signIn": "સાઇન ઇન કરો",
             "emailLabel": "ઇમેઇલ સરનામું",
             "confirmPasswordPlaceholder": "પાસવર્ડ કન્ફર્મ કરો",
-            "signingUp": "સાઇન અપ કરી રહ્યું છે..."
+            "signingUp": "સાઇન અપ કરી રહ્યું છે...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "અમાન્ય ઇમેઇલ અથવા પાસવર્ડ",

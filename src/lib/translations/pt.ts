@@ -191,7 +191,8 @@ const pt = {
             "signIn": "Entrar",
             "emailLabel": "Endereço de email",
             "confirmPasswordPlaceholder": "Confirme sua senha",
-            "signingUp": "Inscrevendo-se..."
+            "signingUp": "Inscrevendo-se...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "E-mail ou senha inválidos",

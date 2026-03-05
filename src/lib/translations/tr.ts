@@ -191,7 +191,8 @@ const tr = {
             "signIn": "Giriş yap",
             "emailLabel": "E-posta adresi",
             "confirmPasswordPlaceholder": "Şifreyi Onayla",
-            "signingUp": "Kayıt Olunuyor..."
+            "signingUp": "Kayıt Olunuyor...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Geçersiz e-posta veya şifre",

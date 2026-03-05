@@ -191,7 +191,8 @@ const te = {
             "signIn": "సైన్ ఇన్",
             "emailLabel": "ఇమెయిల్ చిరునామా",
             "confirmPasswordPlaceholder": "పాస్‌వర్డ్‌ను నిర్ధారించండి",
-            "signingUp": "సైన్ అప్ చేస్తోంది..."
+            "signingUp": "సైన్ అప్ చేస్తోంది...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "చెల్లని ఇమెయిల్ లేదా పాస్‌వర్డ్",

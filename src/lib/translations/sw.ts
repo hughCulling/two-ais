@@ -191,7 +191,8 @@ const sw = {
             "signIn": "Ingia",
             "emailLabel": "Anwani ya barua pepe",
             "confirmPasswordPlaceholder": "Thibitisha Nenosiri",
-            "signingUp": "Unajisajili..."
+            "signingUp": "Unajisajili...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Barua pepe au nenosiri batili",

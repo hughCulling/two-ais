@@ -191,7 +191,8 @@ const nl = {
             "signIn": "Aanmelden",
             "emailLabel": "E-mailadres",
             "confirmPasswordPlaceholder": "Bevestig wachtwoord",
-            "signingUp": "Aanmelden..."
+            "signingUp": "Aanmelden...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",

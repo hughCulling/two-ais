@@ -191,7 +191,8 @@ const kk = {
             "signIn": "Кіру",
             "emailLabel": "Электрондық поштаның адресі",
             "confirmPasswordPlaceholder": "Құпия сөзді Растау",
-            "signingUp": "Тіркелуде..."
+            "signingUp": "Тіркелуде...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Жарамсыз электрондық пошта немесе құпия сөз",

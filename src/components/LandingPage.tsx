@@ -923,6 +923,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const allModelsSupport = providerModels.every(llm =>
                   isLanguageSupported(llm.provider, language.code, llm.id)
                 );
+                const showLanguageSupportForProvider = providerName !== 'Ollama'; // Don't show for Ollama (dynamic models)
 
                 if (isStaticProviderSection || (isStaticOllamaSection && shouldShowOllamaProvider)) {
                   return (
@@ -950,7 +951,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   t={t}
                                 />
                               )}
-                              {allModelsSupport && (
+                              {allModelsSupport && showLanguageSupportForProvider && (
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />

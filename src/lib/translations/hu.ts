@@ -191,7 +191,8 @@ const hu = {
             "signIn": "Bejelentkezés",
             "emailLabel": "E-mail cím",
             "confirmPasswordPlaceholder": "Jelszó megerősítése",
-            "signingUp": "Regisztráció..."
+            "signingUp": "Regisztráció...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Érvénytelen e-mail cím vagy jelszó",

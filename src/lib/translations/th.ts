@@ -191,7 +191,8 @@ const th = {
             "signIn": "ลงชื่อเข้าใช้",
             "emailLabel": "ที่อยู่อีเมล",
             "confirmPasswordPlaceholder": "ยืนยันรหัสผ่าน",
-            "signingUp": "กำลังสมัครสมาชิก..."
+            "signingUp": "กำลังสมัครสมาชิก...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
