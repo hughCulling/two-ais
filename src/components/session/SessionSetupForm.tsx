@@ -582,7 +582,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             const blob = await res.blob();
             const url = URL.createObjectURL(blob);
             const audio = new Audio(url);
-            audio.play();
+            audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true });
+            audio.addEventListener('error', () => URL.revokeObjectURL(url), { once: true });
+            try {
+                await audio.play();
+            } catch (playError) {
+                URL.revokeObjectURL(url);
+                throw playError;
+            }
         } catch (error) {
             console.error("LocalAI TTS preview failed:", error);
         }
@@ -1568,7 +1575,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         <SelectContent className="liquid-glass-panel">
 
                             <SelectItem value="browser" className="justify-center">
-                                <div className="w-full text-center">Browser</div>
+                                <div className="w-full text-center">Web Speech API</div>
                             </SelectItem>
                             <SelectItem value="localai" className="justify-center">
                                 <div className="w-full text-center">LocalAI</div>
