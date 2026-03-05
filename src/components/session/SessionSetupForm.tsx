@@ -1993,7 +1993,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     return (
         <>
-            <Card className="w-full max-w-2xl liquid-glass-themed bg-theme-primary/10 dark:bg-card/60">
+            <Card className="w-full max-w-2xl liquid-glass-themed dark:bg-card/60">
                 <CardHeader className="text-center">
                     {translationLoading || !t ? (
                         <CardTitle>...</CardTitle>
