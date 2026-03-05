@@ -176,7 +176,7 @@ export function SetupInstructions({ type }: SetupInstructionsProps) {
             <CopyButton text="local-ai" stepId={`${type}-binary`} />
           </div>
           <p className="text-xs text-muted-foreground text-center max-w-md">
-            Or start the container from Docker Desktop app if already installed.
+            Or you can start the container from the Docker Desktop app.
           </p>
         </div>
         <p className="text-center mt-3">

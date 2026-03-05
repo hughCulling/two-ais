@@ -22,7 +22,14 @@ interface InvokeAIModelsResponse {
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
+        let body;
+        try {
+            body = await request.json();
+        } catch (parseError) {
+            console.error('[InvokeAI Verify] Failed to parse request body:', parseError);
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        }
+
         const { endpoint } = body;
 
         if (!endpoint || typeof endpoint !== 'string') {
@@ -63,9 +70,12 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ available: true, models }, { status: 200 });
     } catch (error) {
-        console.error('[InvokeAI Verify] Error:', error);
+        console.error('[InvokeAI Verify] Unexpected error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        const errorStack = error instanceof Error ? error.stack : undefined;
+        console.error('[InvokeAI Verify] Error stack:', errorStack);
         return NextResponse.json(
-            { available: false, error: error instanceof Error ? error.message : 'Unknown error' },
+            { available: false, error: `Server error: ${errorMessage}` },
             { status: 200 }
         );
     }

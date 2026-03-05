@@ -32,7 +32,14 @@ function buildHeaders(cleanEndpoint: string) {
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
+        let body;
+        try {
+            body = await request.json();
+        } catch (parseError) {
+            console.error('[LocalAI Verify] Failed to parse request body:', parseError);
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        }
+
         const { endpoint } = body;
 
         if (!endpoint || typeof endpoint !== 'string') {
@@ -101,9 +108,12 @@ export async function POST(request: NextRequest) {
             );
         }
     } catch (error) {
-        console.error('[LocalAI Verify] Error:', error);
+        console.error('[LocalAI Verify] Unexpected error in outer catch:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        const errorStack = error instanceof Error ? error.stack : undefined;
+        console.error('[LocalAI Verify] Error stack:', errorStack);
         return NextResponse.json(
-            { available: false, error: error instanceof Error ? error.message : 'Unknown error' },
+            { available: false, error: `Server error: ${errorMessage}` },
             { status: 200 }
         );
     }
