@@ -8,7 +8,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app'; // Import FirebaseError
 import { auth, db } from '@/lib/firebase/clientApp';
-import { useLanguage } from '@/context/LanguageContext'; // Added
+import { useTranslation } from '@/hooks/useTranslation';
 // import { useRouter } from 'next/navigation';
 
 export default function SignUpForm() {
@@ -17,22 +17,22 @@ export default function SignUpForm() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const { translation, loading: langLoading } = useLanguage();
-    if (langLoading || !translation) return null;
+    const { t, loading: translationLoading } = useTranslation();
+    if (translationLoading || !t) return null;
     // const router = useRouter();
 
     const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         if (password !== confirmPassword) {
-            setError(translation.auth.errors.passwordsDoNotMatch);
+            setError(t.auth.errors.passwordsDoNotMatch);
             return;
         }
         setLoading(true);
 
         if (!auth || !db) {
             console.error("Firebase auth or db not initialized.");
-            setError(translation.auth.errors.initialization);
+            setError(t.auth.errors.initialization);
             setLoading(false);
             return;
         }
@@ -57,8 +57,8 @@ export default function SignUpForm() {
                 console.log("Firestore document created successfully.");
             } catch (firestoreError: unknown) { // Catch Firestore write error
                 console.error("Error writing document to Firestore:", firestoreError);
-                const message = (firestoreError instanceof Error) ? firestoreError.message : translation.auth.errors.unknownProfileSaveError;
-                setError(`${translation.auth.errors.accountCreatedProfileSaveFailedPrefix}${message}`);
+                const message = (firestoreError instanceof Error) ? firestoreError.message : t.auth.errors.unknownProfileSaveError;
+                setError(`${t.auth.errors.accountCreatedProfileSaveFailedPrefix}${message}`);
             }
 
             // router.push('/dashboard');
@@ -68,18 +68,18 @@ export default function SignUpForm() {
              // Check if it's a FirebaseError to access error.code safely
             if (authError instanceof FirebaseError) {
                 if (authError.code === 'auth/email-already-in-use') {
-                    setError(translation.auth.errors.emailAlreadyRegistered);
+                    setError(t.auth.errors.emailAlreadyRegistered);
                 } else if (authError.code === 'auth/weak-password') {
-                    setError(translation.auth.errors.passwordTooShortSignUp);
+                    setError(t.auth.errors.passwordTooShortSignUp);
                 } else if (authError.code === 'auth/invalid-email') {
-                    setError(translation.auth.errors.invalidEmail);
+                    setError(t.auth.errors.invalidEmail);
                 } else {
-                    setError(`${translation.auth.errors.signUpFailedPrefix}${authError.message}`);
+                    setError(`${t.auth.errors.signUpFailedPrefix}${authError.message}`);
                 }
             } else if (authError instanceof Error) {
-                 setError(`${translation.auth.errors.signUpFailedPrefix}${authError.message}`);
+                 setError(`${t.auth.errors.signUpFailedPrefix}${authError.message}`);
             } else {
-                setError(translation.auth.errors.unknownSignUpError);
+                setError(t.auth.errors.unknownSignUpError);
             }
         } finally {
             setLoading(false);
@@ -97,7 +97,7 @@ export default function SignUpForm() {
             )}
             <div>
                 <label htmlFor="email-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
-                    {translation.auth.signup.emailLabel}
+                    {t.auth.signup.emailPlaceholder}
                 </label>
                 <input 
                     type="email" 
@@ -108,7 +108,6 @@ export default function SignUpForm() {
                     required 
                     autoComplete="email" 
                     className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
-                    placeholder={translation.auth.signup.emailPlaceholder}
                     aria-describedby="email-signup-description"
                     aria-invalid={error && error.includes('email') ? true : false}
                 />
@@ -118,7 +117,7 @@ export default function SignUpForm() {
             </div>
             <div>
                 <label htmlFor="password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
-                    {translation.auth.signup.passwordPlaceholder}
+                    {t.auth.signup.passwordPlaceholder}
                 </label>
                 <input 
                     type="password" 
@@ -130,7 +129,6 @@ export default function SignUpForm() {
                     minLength={6} 
                     autoComplete="new-password" 
                     className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
-                    placeholder={translation.auth.signup.passwordPlaceholder.substring(0, translation.auth.signup.passwordPlaceholder.indexOf(' ('))}
                     aria-describedby="password-signup-description"
                     aria-invalid={error && error.includes('password') ? true : false}
                 />
@@ -140,7 +138,7 @@ export default function SignUpForm() {
             </div>
             <div>
                 <label htmlFor="confirm-password-signup" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
-                    {translation.auth.signup.confirmPasswordPlaceholder}
+                    {t.auth.signup.confirmPasswordPlaceholder}
                 </label>
                 <input 
                     type="password" 
@@ -152,7 +150,6 @@ export default function SignUpForm() {
                     minLength={6} 
                     autoComplete="new-password" 
                     className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-500/80 dark:placeholder-gray-400 text-center liquid-glass-input" 
-                    placeholder={translation.auth.signup.confirmPasswordPlaceholder}
                     aria-describedby="confirm-password-signup-description"
                     aria-invalid={error && error.includes('password') ? true : false}
                 />
@@ -160,20 +157,18 @@ export default function SignUpForm() {
                     Confirm your password by entering it again
                 </div>
             </div>
-            <div>
-                <button 
-                    type="submit" 
-                    disabled={loading} 
-                    className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white liquid-glass-button liquid-glass-themed bg-blue-600/60 hover:bg-blue-600/70 disabled:opacity-50 dark:bg-blue-500/30 dark:hover:bg-blue-500/40"
-                    aria-label={loading ? "Creating account..." : "Create new account"}
-                    aria-describedby="signup-button-description"
-                    aria-busy={loading}
-                >
-                    {loading ? translation.auth.signup.signingUp : translation.auth.signup.signUp}
-                </button>
-                <div id="signup-button-description" className="sr-only">
-                    Click to create a new account with your email and password
-                </div>
+            <button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white liquid-glass-button liquid-glass-themed bg-blue-600/60 hover:bg-blue-600/70 disabled:opacity-50 dark:bg-blue-500/30 dark:hover:bg-blue-500/40"
+                aria-label={loading ? "Creating account..." : "Create new account"}
+                aria-describedby="signup-button-description"
+                aria-busy={loading}
+            >
+                {loading ? t.auth.signup.signingUp : t.auth.signup.signUp}
+            </button>
+            <div id="signup-button-description" className="sr-only">
+                Click to create a new account with your email and password
             </div>
         </form>
     );

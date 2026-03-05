@@ -32,8 +32,7 @@ import {
     TTSVoice,
     getTTSProviderInfoById,
     onVoicesLoaded,
-    setLocalAIModels,
-    setLocalAIVoices
+    setLocalAIModels
 } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
@@ -564,6 +563,31 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     }, []);
 
+    const playLocalAIVoiceSample = useCallback(async (endpoint: string, model: string) => {
+        if (!endpoint || !model) return;
+
+        try {
+            const res = await fetch('/api/localai/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    endpoint,
+                    model,
+                    input: "Hello, this is a test of the LocalAI voice model.",
+                }),
+            });
+
+            if (!res.ok) throw new Error('Failed to generate TTS');
+
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+            audio.play();
+        } catch (error) {
+            console.error("LocalAI TTS preview failed:", error);
+        }
+    }, []);
+
     // Ollama endpoint (ngrok URL) - manual verify flow
     const [ollamaEndpoint, setOllamaEndpoint] = useState<string>('');
     const [ollamaAvailable, setOllamaAvailable] = useState(false);
@@ -712,8 +736,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [localaiSubdomain, setLocalaiSubdomain] = useState<string>('');
     const [localaiModelNames, setLocalaiModelNames] = useState<string[]>([]);
 
-    const [localaiVoiceNames, setLocalaiVoiceNames] = useState<string[]>([]);
-    const [localaiVoicesLoading, setLocalaiVoicesLoading] = useState<boolean>(false);
 
     const handleVerifyLocalAI = async () => {
         const rawEndpoint = localaiEndpoint.trim();
@@ -747,7 +769,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
         setLocalaiLoading(true);
         setLocalaiVerifyError(null);
-        setLocalaiVoiceNames([]);
         try {
             const res = await fetch('/api/localai/verify', {
                 method: 'POST',
@@ -779,27 +800,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     };
 
-    const discoverLocalAIVoices = async (model: string) => {
-        if (!localaiAvailable || !localaiEndpoint.trim() || !model.trim()) return;
-        setLocalaiVoicesLoading(true);
-        try {
-            const res = await fetch('/api/localai/voices', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ endpoint: localaiEndpoint.trim(), model }),
-            });
-            const data = await res.json();
-            const voices = Array.isArray(data.voices) ? (data.voices as string[]) : [];
-            setLocalaiVoiceNames(voices);
-            // Update TTS voices in tts_models.ts
-            setLocalAIVoices(model, voices);
-        } catch {
-            setLocalaiVoiceNames([]);
-            setLocalAIVoices(model, []);
-        } finally {
-            setLocalaiVoicesLoading(false);
-        }
-    };
 
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
@@ -1350,9 +1350,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             selectedTtsModelId: modelName,
             ttsApiModelId: modelName,
         }));
-
-        setLocalaiVoiceNames([]);
-        discoverLocalAIVoices(modelName);
     };
 
     // Preset management functions
@@ -1535,7 +1532,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
             if (settings.provider === 'localai') {
                 if (!settings.selectedTtsModelId || !settings.selectedTtsModelId.trim()) return true;
-                if (!settings.voice || !settings.voice.trim()) return true;
                 return false;
             }
 
@@ -1555,17 +1551,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         currentAgentVoices: TTSVoice[]
     ) => {
         const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
-        const selectedProviderInfo = currentAgentTTSSettings.provider === 'localai'
-            ? undefined
-            : getTTSProviderInfoById(currentAgentTTSSettings.provider as TTSProviderInfo['id']);
 
-        const shouldShowVoiceDropdown =
-            selectedProviderInfo &&
-            currentAgentTTSSettings.provider !== 'none' &&
-            currentAgentTTSSettings.selectedTtsModelId &&
-            isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
-
-        // Simplified version - only show voice selector since we only have browser TTS with one model
         return (
             <div className="space-y-3 p-4 border rounded-md bg-background/50 text-center">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
@@ -1595,154 +1581,20 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <SelectItem value="localai" className="justify-center">
                                 <div className="w-full text-center">LocalAI</div>
                             </SelectItem>
-                            <SelectItem value="elevenlabs" className="justify-center">
-                                <div className="w-full text-center">ElevenLabs</div>
-                            </SelectItem>
-                            <SelectItem value="google-cloud" className="justify-center">
-                                <div className="w-full text-center">Google Cloud</div>
-                            </SelectItem>
-                            <SelectItem value="google-gemini" className="justify-center">
-                                <div className="w-full text-center">Google Gemini</div>
-                            </SelectItem>
-                            <SelectItem value="openai" className="justify-center">
-                                <div className="w-full text-center">OpenAI</div>
-                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 {currentAgentTTSSettings.provider === 'localai' && (
-                    <div className="space-y-3">
-                        <Collapsible
-                            open={openCollapsibles['localai-setup'] || false}
-                            onOpenChange={() => toggleCollapsible('localai-setup')}
-                            className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
-                        >
-                            <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
-                                <div className="flex justify-center pt-1 relative group cursor-pointer">
-                                    <div className="relative">
-                                        <div className="absolute right-full mr-2 translate-y-px">
-                                            <div className="relative w-6 h-6 shrink-0">
-                                                <Image
-                                                    src="/localai.svg"
-                                                    alt="LocalAI Logo"
-                                                    fill
-                                                    className="object-contain"
-                                                />
-                                            </div>
-                                        </div>
-                                        <h3 className="font-semibold text-base whitespace-nowrap">LocalAI Setup</h3>
-                                    </div>
-                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                                        {openCollapsibles['localai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                                    </div>
-                                </div>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent>
-                                <div className="space-y-2 mt-4">
-                                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                                        <p className="text-center mt-2">
-                                            <span>Paste your URL forwarding to your LocalAI server and verify it:</span>
-                                        </p>
-                                        <div className="flex flex-col items-center space-y-2">
-                                            <div className="flex gap-2 w-full max-w-md">
-                                                {localaiHelperEnabled ? (
-                                                    <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                                                        <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
-                                                            https://
-                                                        </span>
-                                                        <input
-                                                            type="text"
-                                                            value={localaiSubdomain}
-                                                            onChange={(e) => {
-                                                                setLocalaiSubdomain(e.target.value);
-                                                                if (localaiAvailable) setLocalaiAvailable(false);
-                                                                setLocalaiVerifyError(null);
-                                                            }}
-                                                            placeholder="e.g. abc123"
-                                                            className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === 'Enter') {
-                                                                    e.preventDefault();
-                                                                    handleVerifyLocalAI();
-                                                                }
-                                                            }}
-                                                        />
-                                                        <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
-                                                            .ngrok-free.app
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    <input
-                                                        type="url"
-                                                        value={localaiEndpoint}
-                                                        onChange={(e) => {
-                                                            setLocalaiEndpoint(e.target.value);
-                                                            if (localaiAvailable) setLocalaiAvailable(false);
-                                                            setLocalaiVerifyError(null);
-                                                        }}
-                                                        placeholder="e.g. https://abc123.ngrok-free.app"
-                                                        className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                e.preventDefault();
-                                                                handleVerifyLocalAI();
-                                                            }
-                                                        }}
-                                                    />
-                                                )}
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={handleVerifyLocalAI}
-                                                    disabled={
-                                                        localaiLoading ||
-                                                        (!localaiHelperEnabled
-                                                            ? !localaiEndpoint.trim()
-                                                            : !localaiSubdomain.trim())
-                                                    }
-                                                    className="liquid-glass-button-primary h-auto py-1.5"
-                                                >
-                                                    {localaiLoading ? 'Verifying...' : 'Verify'}
-                                                </Button>
-                                            </div>
-                                            <div className="flex items-center justify-center gap-2 w-full max-w-md">
-                                                <input
-                                                    id="localai-helper-toggle"
-                                                    type="checkbox"
-                                                    checked={localaiHelperEnabled}
-                                                    onChange={(e) => setLocalaiHelperEnabled(e.target.checked)}
-                                                    className="h-3 w-3"
-                                                />
-                                                <label
-                                                    htmlFor="localai-helper-toggle"
-                                                    className="text-xs text-muted-foreground cursor-pointer"
-                                                >
-                                                    Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
-                                                    <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
-                                                </label>
-                                            </div>
-                                            {localaiAvailable && (
-                                                <p className="text-sm text-green-600 dark:text-green-400">✓ LocalAI connected!</p>
-                                            )}
-                                            {localaiVerifyError && (
-                                                <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{localaiVerifyError}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </CollapsibleContent>
-                        </Collapsible>
-
-                        <div className="space-y-2">
-                            <Label className="block text-center">LocalAI Model</Label>
+                    <div className="space-y-2">
+                        <Label className="block text-center">LocalAI Model</Label>
+                        <div className="flex items-center gap-2 max-w-md mx-auto">
                             <Select
                                 value={currentAgentTTSSettings.selectedTtsModelId || ''}
                                 onValueChange={(value) => handleLocalAIModelChange(agentIdentifier, value)}
                                 disabled={!user || !localaiAvailable || localaiModelNames.length === 0}
                             >
-                                <SelectTrigger className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                <SelectTrigger className="flex-1 relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
                                     <SelectValue placeholder={localaiAvailable ? 'Select model' : 'Verify LocalAI first'} />
                                 </SelectTrigger>
                                 <SelectContent className="max-h-60 liquid-glass-panel">
@@ -1759,105 +1611,63 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     )}
                                 </SelectContent>
                             </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-center gap-2">
-                                <Label className="block text-center">LocalAI Voice</Label>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => discoverLocalAIVoices(currentAgentTTSSettings.selectedTtsModelId || '')}
-                                    disabled={!localaiAvailable || !localaiEndpoint.trim() || !currentAgentTTSSettings.selectedTtsModelId || localaiVoicesLoading}
-                                >
-                                    {localaiVoicesLoading ? '...' : 'Discover'}
-                                </Button>
-                            </div>
-
-                            {localaiVoiceNames.length > 0 ? (
-                                <Select
-                                    value={currentAgentTTSSettings.voice || ''}
-                                    onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
-                                    disabled={!user}
-                                >
-                                    <SelectTrigger className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
-                                        <SelectValue placeholder={'Select voice'} />
-                                    </SelectTrigger>
-                                    <SelectContent className="max-h-60 liquid-glass-panel">
-                                        {localaiVoiceNames.map((v) => (
-                                            <SelectItem key={v} value={v} className="justify-center">
-                                                <div className="w-full text-center">{v}</div>
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={currentAgentTTSSettings.voice || ''}
-                                    onChange={(e) => handleExternalVoiceChange(agentIdentifier, e.target.value)}
-                                    placeholder="e.g. en_US-amy"
-                                    className="w-full max-w-md mx-auto px-3 py-2 rounded-md text-center liquid-glass-input"
-                                    disabled={!user}
-                                />
-                            )}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => playLocalAIVoiceSample(localaiEndpoint, currentAgentTTSSettings.selectedTtsModelId || '')}
+                                disabled={!localaiAvailable || !currentAgentTTSSettings.selectedTtsModelId}
+                                title="Play Sample"
+                                className="flex-shrink-0"
+                            >
+                                <Play className="h-4 w-4" />
+                            </Button>
                         </div>
                     </div>
                 )}
 
-                {shouldShowVoiceDropdown && (
+                {currentAgentTTSSettings.provider === 'browser' && currentAgentVoices.length > 0 && (
                     <div className="space-y-2">
                         <Label htmlFor={`agent-${agentIdentifierLowerCase}-voice`} className="block text-center">{t?.sessionSetupForm?.voice}</Label>
-                        <Select
-                            value={currentAgentTTSSettings.voice || ''}
-                            onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
-                            disabled={!user || currentAgentVoices.length === 0}
-                        >
-                            <SelectTrigger
-                                id={`agent-${agentIdentifierLowerCase}-voice`}
-                                className="w-full max-w-md mx-auto relative [&>span]:mx-auto [&>span]:text-left [&>span]:truncate [&>span]:px-6 [&>svg]:absolute [&>svg]:right-3"
+                        <div className="flex items-center gap-2 max-w-md mx-auto">
+                            <Select
+                                value={currentAgentTTSSettings.voice || ''}
+                                onValueChange={(value) => handleExternalVoiceChange(agentIdentifier, value)}
+                                disabled={!user || currentAgentVoices.length === 0}
                             >
-                                <SelectValue placeholder={currentAgentVoices.length > 0 ? t?.sessionSetupForm?.selectVoice : t?.sessionSetupForm?.noVoicesFor?.replace('{languageName}', language.nativeName)}>
-                                    {currentAgentTTSSettings.voice && currentAgentVoices.find(v => v.id === currentAgentTTSSettings.voice)?.name}
-                                </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent className="max-h-60 w-[var(--radix-select-trigger-width)] liquid-glass-panel">
-                                {currentAgentVoices.map(v => {
-                                    const providerId = currentAgentTTSSettings.provider;
-                                    const showGender = providerId !== 'google-cloud' && providerId !== 'google-gemini' && providerId !== 'browser';
-                                    return (
+                                <SelectTrigger
+                                    id={`agent-${agentIdentifierLowerCase}-voice`}
+                                    className="flex-1 relative [&>span]:mx-auto [&>span]:text-left [&>span]:truncate [&>span]:px-6 [&>svg]:absolute [&>svg]:right-3"
+                                >
+                                    <SelectValue placeholder={t?.sessionSetupForm?.selectVoice}>
+                                        {currentAgentTTSSettings.voice && currentAgentVoices.find(v => v.id === currentAgentTTSSettings.voice)?.name}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="max-h-60 w-[var(--radix-select-trigger-width)] liquid-glass-panel">
+                                    {currentAgentVoices.map(v => (
                                         <SelectItem key={v.id} value={v.id} className="justify-center w-full">
-                                            <div className="flex items-center w-full group relative pl-6 pr-10">
-                                                <div className="flex-1 text-center whitespace-normal break-words text-sm py-1">
-                                                    {v.name} {showGender && v.gender ? `(${v.gender.charAt(0)})` : ''}
-                                                    {v.status === 'Preview' ? <span className="text-xs text-orange-500 ml-1">({t?.page_BadgePreview || 'Preview'})</span> : ''}
-                                                    {v.notes ? <span className="text-xs text-muted-foreground ml-1">({v.notes})</span> : ''}
-                                                </div>
-                                                {providerId === 'browser' && (
-                                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center pr-1">
-                                                        <button
-                                                            type="button"
-                                                            className="p-1.5 flex-shrink-0 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-muted-foreground hover:text-foreground transition-colors"
-                                                            onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                                            onPointerUp={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                playVoiceSample(v);
-                                                            }}
-                                                            title="Play Voice Sample"
-                                                        >
-                                                            <Play className="h-4 w-4" />
-                                                        </button>
-                                                    </div>
-                                                )}
+                                            <div className="w-full text-center text-sm py-1">
+                                                {v.name}
                                             </div>
                                         </SelectItem>
-                                    );
-                                })}
-                            </SelectContent>
-                        </Select>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const v = currentAgentVoices.find(v => v.id === currentAgentTTSSettings.voice);
+                                    if (v) playVoiceSample(v);
+                                }}
+                                disabled={!currentAgentTTSSettings.voice}
+                                title="Play Sample"
+                                className="flex-shrink-0"
+                            >
+                                <Play className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -1874,13 +1684,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     ) => {
         const agentIdentifierLowerCase = agentIdentifier.toLowerCase();
         const selectedProviderInfo = getTTSProviderInfoById(currentAgentTTSSettings.provider as TTSProviderInfo['id']);
-
+    
         const shouldShowVoiceDropdown =
             selectedProviderInfo &&
             currentAgentTTSSettings.provider !== 'none' &&
             currentAgentTTSSettings.selectedTtsModelId &&
             isTTSModelLanguageSupported(currentAgentTTSSettings.selectedTtsModelId, language.code);
-
+    
         return (
             <div className="space-y-3 p-4 border rounded-md liquid-glass-themed bg-theme-primary/10 dark:bg-card/50">
                 <h3 className="font-semibold text-center mb-3">Agent {agentIdentifier} TTS</h3>
@@ -1910,7 +1720,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </SelectContent>
                     </Select>
                 </div>
-
+    
                 {selectedProviderInfo && currentAgentTTSSettings.provider !== 'none' && (
                     <>
                         <div className="space-y-2">
@@ -2235,21 +2045,146 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
                         </div>
 
+                        {/* LocalAI Setup Instructions */}
+                        {ttsEnabled && (
+                            <Collapsible
+                                open={openCollapsibles['localai-setup'] || false}
+                                onOpenChange={() => toggleCollapsible('localai-setup')}
+                                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4 mt-4 mb-4"
+                            >
+                                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                                    <div className="flex justify-center pt-1 relative group cursor-pointer">
+                                        <div className="relative">
+                                            <div className="absolute right-full mr-2 translate-y-px">
+                                                <div className="relative w-6 h-6 shrink-0">
+                                                    <Image
+                                                        src="/localai.svg"
+                                                        alt="LocalAI Logo"
+                                                        fill
+                                                        className="object-contain"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <h3 className="font-semibold text-base whitespace-nowrap">LocalAI Setup</h3>
+                                        </div>
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                                            {openCollapsibles['localai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                                        </div>
+                                    </div>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent>
+                                    <div className="space-y-2 mt-4">
+                                        <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                                            <p className="text-center mt-2">
+                                                <span>Paste your URL forwarding to your LocalAI server and verify it:</span>
+                                            </p>
+                                            <div className="flex flex-col items-center space-y-2">
+                                                <div className="flex gap-2 w-full max-w-md">
+                                                    {localaiHelperEnabled ? (
+                                                        <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                                                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                                                https://
+                                                            </span>
+                                                            <input
+                                                                type="text"
+                                                                value={localaiSubdomain}
+                                                                onChange={(e) => {
+                                                                    setLocalaiSubdomain(e.target.value);
+                                                                    if (localaiAvailable) setLocalaiAvailable(false);
+                                                                    setLocalaiVerifyError(null);
+                                                                }}
+                                                                placeholder="e.g. abc123"
+                                                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter') {
+                                                                        e.preventDefault();
+                                                                        handleVerifyLocalAI();
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                                                .ngrok-free.app
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <input
+                                                            type="url"
+                                                            value={localaiEndpoint}
+                                                            onChange={(e) => {
+                                                                setLocalaiEndpoint(e.target.value);
+                                                                if (localaiAvailable) setLocalaiAvailable(false);
+                                                                setLocalaiVerifyError(null);
+                                                            }}
+                                                            placeholder="e.g. https://abc123.ngrok-free.app"
+                                                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter') {
+                                                                    e.preventDefault();
+                                                                    handleVerifyLocalAI();
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={handleVerifyLocalAI}
+                                                        disabled={
+                                                            localaiLoading ||
+                                                            (!localaiHelperEnabled
+                                                                ? !localaiEndpoint.trim()
+                                                                : !localaiSubdomain.trim())
+                                                        }
+                                                        className="liquid-glass-button-primary h-auto py-1.5"
+                                                    >
+                                                        {localaiLoading ? 'Verifying...' : 'Verify'}
+                                                    </Button>
+                                                </div>
+                                                <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                                                    <input
+                                                        id="localai-helper-toggle"
+                                                        type="checkbox"
+                                                        checked={localaiHelperEnabled}
+                                                        onChange={(e) => setLocalaiHelperEnabled(e.target.checked)}
+                                                        className="h-3 w-3"
+                                                    />
+                                                    <label
+                                                        htmlFor="localai-helper-toggle"
+                                                        className="text-xs text-muted-foreground cursor-pointer"
+                                                    >
+                                                        Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                                                        <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                                                    </label>
+                                                </div>
+                                                {localaiAvailable && (
+                                                    <p className="text-sm text-green-600 dark:text-green-400">✓ LocalAI connected!</p>
+                                                )}
+                                                {localaiVerifyError && (
+                                                    <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{localaiVerifyError}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CollapsibleContent>
+                            </Collapsible>
+                        )}
+
                         {/* Browser Voice Quality Info */}
                         {ttsEnabled && (showSafariWarning || showEdgeRecommendation) && (
-                            <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md">
-                                <div className="flex">
-                                    <div className="flex-shrink-0">
-                                        <Info className="h-5 w-5 text-blue-400" />
-                                    </div>
-                                    <div className="ml-3">
+                            <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md flex flex-col items-center text-center">
+                                <div className="flex flex-col items-center">
+                                    <div className="relative mb-1">
+                                        <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                                            <Info className="h-4 w-4 text-blue-400" />
+                                        </div>
                                         <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
                                             {t?.sessionSetupForm?.browserVoiceRecommendationTitle || 'Browser Voice Quality'}
                                         </p>
-                                        <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                                            {t?.sessionSetupForm?.browserVoiceRecommendationMessage || 'Microsoft Edge offers the best voice selection for Web Speech API. Chrome, Firefox, and Opera have good options, while Safari has more limited voice selection.'}
-                                        </p>
                                     </div>
+                                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1 max-w-md">
+                                        {t?.sessionSetupForm?.browserVoiceRecommendationMessage || 'Microsoft Edge offers the best voice selection for Web Speech API. Chrome, Firefox, and Opera have good options, while Safari has more limited voice selection.'}
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -2261,6 +2196,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 {renderTTSConfigForAgent('B', agentBTTSSettings, currentVoicesB)}
                             </div>
                         )}
+
                     </div>
                     {/* IMAGE GENERATION CONFIGURATION SECTION */}
                     <hr className="my-6" />
