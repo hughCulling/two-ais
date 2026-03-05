@@ -155,24 +155,29 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                     const paragraphs = splitIntoParagraphs(messageData.content);
                     if (paragraphs.length === 0) continue;
 
-                    processingRef.current.add(messageId);
+                    try {
+                        processingRef.current.add(messageId);
 
-                    const initialUrls: Array<string | null> = paragraphs.map(() => null);
-                    await updateDoc(messageDoc.ref, { paragraphAudioUrls: initialUrls });
+                        const initialUrls: Array<string | null> = paragraphs.map(() => null);
+                        await updateDoc(messageDoc.ref, { paragraphAudioUrls: initialUrls });
 
-                    for (let i = 0; i < paragraphs.length; i++) {
-                        generationQueueRef.current.push({
-                            messageId,
-                            paragraphIndex: i,
-                            messageRef: messageDoc.ref,
-                            paragraphs,
-                            endpoint,
-                            model,
-                            voice,
-                        });
+                        for (let i = 0; i < paragraphs.length; i++) {
+                            generationQueueRef.current.push({
+                                messageId,
+                                paragraphIndex: i,
+                                messageRef: messageDoc.ref,
+                                paragraphs,
+                                endpoint,
+                                model,
+                                voice,
+                            });
+                        }
+
+                        processGenerationQueue();
+                    } catch (error) {
+                        console.error('[LocalAI TTS] Failed to initialize paragraphAudioUrls:', error);
+                        processingRef.current.delete(messageId);
                     }
-
-                    processGenerationQueue();
                 }
             });
 
