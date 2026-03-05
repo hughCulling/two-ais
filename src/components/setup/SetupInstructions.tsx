@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { ExternalLink, Copy, Check } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
