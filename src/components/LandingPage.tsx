@@ -570,8 +570,12 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           </span>
                         </li>
                         <li>
-                          Your ngrok config file location. This can be found by running:{' '}
-                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.                        </li>
+                          Your ngrok config file location. This can be found by running:
+                          <div className="flex items-center justify-center gap-1 mt-1">
+                            <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>
+                            <CopyButton text="ngrok config check" stepId="ollama-ngrok-config" />
+                          </div>
+                        </li>
                       </ol>
                     </div>
 
@@ -772,8 +776,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           {' '}.
                         </li>
                         <li>
-                          Your ngrok config file location. This can be found by running:{' '}
-                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
+                          Your ngrok config file location. This can be found by running:
+                          <div className="flex items-center justify-center gap-1 mt-1">
+                            <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>
+                            <CopyButton text="ngrok config check" stepId="localai-ngrok-config" />
+                          </div>
                         </li>
                       </ol>
                     </div>
@@ -991,8 +998,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           </span>
                         </li>
                         <li>
-                          Your ngrok config file location. This can be found by running:{' '}
-                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
+                          Your ngrok config file location. This can be found by running:
+                          <div className="flex items-center justify-center gap-1 mt-1">
+                            <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>
+                            <CopyButton text="ngrok config check" stepId="invokeai-ngrok-config" />
+                          </div>
                         </li>
                       </ol>
                     </div>
