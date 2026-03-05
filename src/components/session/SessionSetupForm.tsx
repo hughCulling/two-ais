@@ -2235,27 +2235,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             Check this box to enable text-to-speech functionality. When enabled, AI messages will be converted to audio and played automatically.
                         </div>
 
-                        {/* Safari Browser Warning */}
-                        {ttsEnabled && showSafariWarning && (
-                            <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md">
-                                <div className="flex">
-                                    <div className="flex-shrink-0">
-                                        <AlertTriangle className="h-5 w-5 text-orange-400" />
-                                    </div>
-                                    <div className="ml-3">
-                                        <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                                            {t?.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
-                                        </p>
-                                        <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                                            {t?.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Edge Recommendation for Chrome/Firefox/Opera */}
-                        {ttsEnabled && showEdgeRecommendation && (
+                        {/* Browser Voice Quality Info */}
+                        {ttsEnabled && (showSafariWarning || showEdgeRecommendation) && (
                             <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md">
                                 <div className="flex">
                                     <div className="flex-shrink-0">
@@ -2263,10 +2244,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </div>
                                     <div className="ml-3">
                                         <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                                            {t?.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
+                                            {t?.sessionSetupForm?.browserVoiceRecommendationTitle || 'Browser Voice Quality'}
                                         </p>
                                         <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                                            {t?.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
+                                            {t?.sessionSetupForm?.browserVoiceRecommendationMessage || 'Microsoft Edge offers the best voice selection for Web Speech API. Chrome, Firefox, and Opera have good options, while Safari has more limited voice selection.'}
                                         </p>
                                     </div>
                                 </div>

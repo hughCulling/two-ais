@@ -1371,24 +1371,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                             )}
                           </div>
                         </div>
-                        {provider.id === 'browser' && showSafariWarning && (
-                          <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-3 rounded-md text-center mb-3">
-                            <div className="flex flex-col items-center">
-                              <div className="relative w-fit mx-auto mb-1">
-                                <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
-                                  <AlertTriangle className="h-4 w-4 text-orange-400" />
-                                </div>
-                                <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                                  {t.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
-                                </p>
-                              </div>
-                              <p className="text-xs text-orange-700 dark:text-orange-300">
-                                {t.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        {provider.id === 'browser' && showEdgeRecommendation && (
+                        {provider.id === 'browser' && (showSafariWarning || showEdgeRecommendation) && (
                           <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-3 rounded-md text-center mb-3">
                             <div className="flex flex-col items-center">
                               <div className="relative w-fit mx-auto mb-1">
@@ -1396,11 +1379,11 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   <Info className="h-4 w-4 text-blue-400" />
                                 </div>
                                 <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                                  {t.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
+                                  {t.sessionSetupForm?.browserVoiceRecommendationTitle || 'Browser Voice Quality'}
                                 </p>
                               </div>
                               <p className="text-xs text-blue-700 dark:text-blue-300">
-                                {t.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
+                                {t.sessionSetupForm?.browserVoiceRecommendationMessage || 'Microsoft Edge offers the best voice selection for Web Speech API. Chrome, Firefox, and Opera have good options, while Safari has more limited voice selection.'}
                               </p>
                             </div>
                           </div>

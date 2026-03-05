@@ -1251,7 +1251,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
     // },
     {
         id: 'browser',
-        name: 'Browser TTS',
+        name: 'Web Speech API',
         requiresOwnKey: false,
         models: [
             {
