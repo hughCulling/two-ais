@@ -407,7 +407,7 @@ const en = {
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',
-        description: 'Here you can select the Large Language Model (LLM) and optional Text-to-Speech (TTS) settings for each agent.',
+        description: 'Here you can select the Large Language Models (LLMs), optional Text-to-Speech (TTS) models and optional Text-to-Image model for the conversation.',
         agentAModel: 'Agent A Model',
         agentBModel: 'Agent B Model',
         selectLLMForAgentA: 'LLM selector for Agent A',
