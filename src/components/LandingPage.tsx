@@ -1592,8 +1592,20 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
-              {AVAILABLE_TTS_PROVIDERS.length > 0 ? (
-                AVAILABLE_TTS_PROVIDERS.map((provider) => {
+              {AVAILABLE_TTS_PROVIDERS.filter(provider => {
+                // Filter out LocalAI if it has no models (not verified)
+                if (provider.id === 'localai' && provider.models.length === 0) {
+                  return false;
+                }
+                return true;
+              }).length > 0 ? (
+                AVAILABLE_TTS_PROVIDERS.filter(provider => {
+                  // Filter out LocalAI if it has no models (not verified)
+                  if (provider.id === 'localai' && provider.models.length === 0) {
+                    return false;
+                  }
+                  return true;
+                }).map((provider) => {
                   const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                   const isStaticTTSProviderSection = provider.id === 'browser' || provider.id === 'localai';
