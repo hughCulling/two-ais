@@ -39,7 +39,7 @@ export function SetupInstructions({ type }: SetupInstructionsProps) {
   if (type === 'ollama') {
     return (
       <div className="space-y-2 mt-4">
-        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
+        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2 text-center">
           <p>
             <span className="font-bold">Prerequisites:</span>
           </p>
@@ -125,7 +125,7 @@ export function SetupInstructions({ type }: SetupInstructionsProps) {
   if (type === 'localai') {
     return (
       <div className="space-y-2 mt-4">
-        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
+        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2 text-center">
           <p>
             <span className="font-bold">Prerequisites:</span>
           </p>
@@ -231,7 +231,7 @@ export function SetupInstructions({ type }: SetupInstructionsProps) {
   if (type === 'invokeai') {
     return (
       <div className="space-y-2 mt-4">
-        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
+        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2 text-center">
           <p>
             <span className="font-bold">Prerequisites:</span>
           </p>
@@ -255,7 +255,7 @@ export function SetupInstructions({ type }: SetupInstructionsProps) {
           </ol>
         </div>
 
-        <p>
+        <p className="text-center">
           1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
         </p>
         <p className="text-center mt-3">

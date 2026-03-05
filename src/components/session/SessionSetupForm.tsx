@@ -37,7 +37,7 @@ import {
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, ExternalLink, Copy, Play } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,
@@ -832,29 +832,29 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setOpenCollapsibles(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
-    const [copiedStep, setCopiedStep] = useState<string | null>(null);
+    // const [copiedStep, setCopiedStep] = useState<string | null>(null);
 
-    const copyToClipboard = (text: string, stepId: string) => {
-        navigator.clipboard.writeText(text).then(() => {
-            setCopiedStep(stepId);
-            setTimeout(() => setCopiedStep(null), 2000);
-        });
-    };
+    // const copyToClipboard = (text: string, stepId: string) => {
+    //     navigator.clipboard.writeText(text).then(() => {
+    //         setCopiedStep(stepId);
+    //         setTimeout(() => setCopiedStep(null), 2000);
+    //     });
+    // };
 
-    const CopyButton = ({ text, stepId }: { text: string; stepId: string }) => (
-        <button
-            onClick={() => copyToClipboard(text, stepId)}
-            className="ml-2 p-1 hover:bg-white/20 dark:hover:bg-black/20 rounded transition-all duration-200 inline-flex items-center gap-1 group active:scale-90"
-            title="Copy to clipboard"
-            type="button"
-        >
-            {copiedStep === stepId ? (
-                <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-            ) : (
-                <Copy className="h-3 w-3 text-blue-600 dark:text-blue-400 opacity-70 group-hover:opacity-100" />
-            )}
-        </button>
-    );
+    // const CopyButton = ({ text, stepId }: { text: string; stepId: string }) => (
+    //     <button
+    //         onClick={() => copyToClipboard(text, stepId)}
+    //         className="ml-2 p-1 hover:bg-white/20 dark:hover:bg-black/20 rounded transition-all duration-200 inline-flex items-center gap-1 group active:scale-90"
+    //         title="Copy to clipboard"
+    //         type="button"
+    //     >
+    //         {copiedStep === stepId ? (
+    //             <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+    //         ) : (
+    //             <Copy className="h-3 w-3 text-blue-600 dark:text-blue-400 opacity-70 group-hover:opacity-100" />
+    //         )}
+    //     </button>
+    // );
 
     // --- Image Generation State ---
     const [imageGenEnabled, setImageGenEnabled] = useState(false);
@@ -2075,9 +2075,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 <CollapsibleContent>
                                     <div className="space-y-2 mt-4">
                                         <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                                            <p className="text-center mt-2">
-                                                <span>Paste your URL forwarding to your LocalAI server and verify it:</span>
-                                            </p>
+                                            <SetupInstructions type="localai" />
                                             <div className="flex flex-col items-center space-y-2">
                                                 <div className="flex gap-2 w-full max-w-md">
                                                     {localaiHelperEnabled ? (
@@ -2094,7 +2092,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                     setLocalaiVerifyError(null);
                                                                 }}
                                                                 placeholder="e.g. abc123"
-                                                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
                                                                 onKeyDown={(e) => {
                                                                     if (e.key === 'Enter') {
                                                                         e.preventDefault();
@@ -2252,71 +2250,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     <CollapsibleContent>
                                         <div className="space-y-2 mt-4">
                                             <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                                                <div className="flex justify-center">
-                                                    <div className="w-full max-w-xl">
-                                                        <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
-                                                            <p>
-                                                                <span className="font-bold">Prerequisites:</span>
-                                                            </p>
-                                                            <ol className="list-decimal list-inside space-y-1 ml-2">
-                                                                <li>
-                                                                    Invoke installed on your machine. It is downloadable from{' '}
-                                                                    <span className="whitespace-nowrap">
-                                                                        <a href="https://invoke.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                                                                            invoke.ai
-                                                                            <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                                                                        </a>.
-                                                                    </span>
-                                                                </li>
-                                                                <li>
-                                                                    Your ngrok config file location. This can be found by running:{' '}
-                                                                    <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <p>
-                                                    1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
-                                                </p>
-                                                <p className="text-center mt-3">
-                                                    <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
-                                                </p>
-                                                <div className="flex justify-center items-center">
-                                                    <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
-                                                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
-                                                            {`tunnels:\n  invoke:\n    proto: http\n    addr: 9090\n    host_header: "localhost:9090"`}
-                                                        </pre>
-                                                    </div>
-                                                    <CopyButton text={`tunnels:\n  invoke:\n    proto: http\n    addr: 9090\n    host_header: "localhost:9090"`} stepId="invoke-yaml" />
-                                                </div>
-                                                <div className="mt-3 text-xs text-muted-foreground space-y-1">
-                                                    <div className="text-center">
-                                                        <span className="inline-block relative pl-4">
-                                                            <span className="absolute left-0 top-0">•</span>
-                                                            <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
-                                                        </span>
-                                                    </div>
-                                                    <div className="text-center">
-                                                        <span className="inline-block relative pl-4">
-                                                            <span className="absolute left-0 top-0">•</span>
-                                                            <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invoke:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <p className="text-center mt-3">
-                                                    <span>3. You can start ngrok with this command:</span>
-                                                </p>
-                                                <div className="flex items-center justify-center">
-                                                    <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                                                        ngrok start --all
-                                                    </span>
-                                                    <CopyButton text="ngrok start --all" stepId="invokeai-step3" />
-                                                </div>
-                                                <p className="text-center mt-3">
-                                                    <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
-                                                </p>
+                                                <SetupInstructions type="invokeai" />
                                                 <div className="flex flex-col items-center space-y-2">
                                                     <div className="flex gap-2 w-full max-w-md">
                                                         {invokeaiHelperEnabled ? (
@@ -2335,7 +2269,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                                         setInvokeaiVerifyError(null);
                                                                     }}
                                                                     placeholder="e.g. abc123"
-                                                                    className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                                                    className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
                                                                     onKeyDown={(e) => {
                                                                         if (e.key === 'Enter') {
                                                                             e.preventDefault();
@@ -2668,10 +2602,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         Click to begin a new AI conversation with the selected language models and settings.
                     </div>
                 </CardFooter>
-            </Card>
+            </Card >
 
             {/* Overwrite Confirmation Dialog */}
-            <AlertDialog open={showOverwriteDialog} onOpenChange={setShowOverwriteDialog}>
+            < AlertDialog open={showOverwriteDialog} onOpenChange={setShowOverwriteDialog} >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>{t?.sessionSetupForm?.savePreset || "Save Preset"}</AlertDialogTitle>
@@ -2686,7 +2620,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
-            </AlertDialog>
+            </AlertDialog >
         </>
     );
 };
