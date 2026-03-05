@@ -1339,33 +1339,36 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                   const isStaticTTSProviderSection = provider.id === 'browser' || provider.id === 'localai';
                   const allTTSModelsSupport = provider.models.every(model => isTTSModelLanguageSupported(model.id, language.code));
+                  const showLanguageSupport = provider.id !== 'localai'; // Don't show language support for LocalAI
                   return (
                     isStaticTTSProviderSection ? (
                       <div key={provider.id} className="space-y-1">
                         <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
                           <div className="relative inline-flex items-center">
                             <span>{provider.name}</span>
-                            <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
-                              {allTTSModelsSupport ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                  </TooltipTrigger>
-                                  <TooltipContent side="top">
-                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <X className="h-4 w-4 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                  </TooltipTrigger>
-                                  <TooltipContent side="top">
-                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              )}
-                            </div>
+                            {showLanguageSupport && (
+                              <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                                {allTTSModelsSupport ? (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                      <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <X className="h-4 w-4 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                      <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
                         {provider.id === 'browser' && showSafariWarning && (
