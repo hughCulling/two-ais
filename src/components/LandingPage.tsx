@@ -14,8 +14,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { groupLLMsByProvider, LLMInfo, groupModelsByCategory, setOllamaModelsFromNames } from '@/lib/models';
 import { AVAILABLE_TTS_PROVIDERS } from '@/lib/tts_models';
 import { isLanguageSupported } from '@/lib/model-language-support';
-import { isTTSModelLanguageSupported, onVoicesLoaded } from '@/lib/tts_models';
-import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ExternalLink, Copy, ImageIcon } from "lucide-react";
+import { isTTSModelLanguageSupported, onVoicesLoaded, setLocalAIModels } from '@/lib/tts_models';
+import { BrainCircuit, Volume2, AlertTriangle, Info, ChevronDown, ChevronRight, ChevronUp, Check, X, Calendar, ImageIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 // import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -23,6 +23,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 // import type { ImageModelInfo } from '@/lib/image_models';
 import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser, isMobileDevice, isMobileBrowserTTSUnsupported } from '@/lib/browser-utils';
 import { FreeTierBadge } from './ui/free-tier-badge';
+import { SetupInstructions } from './setup/SetupInstructions';
 
 // Replace these with your actual base64 strings!
 //  const BLUR_DATA_URL_LIGHT = "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAQCdASoKAAgAAgA0JaQAAuaagDgAAP71Xb6d+314jsHrzm9ej3y/fZ6USdOktwc5p4Kcf/Pu2GbRDRTt7Cf7uf+fUeXfxA+CAnT/g9AxVkfMAAA=";
@@ -148,6 +149,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
   const [ollamaHelperEnabled, setOllamaHelperEnabled] = useState<boolean>(false);
   const [ollamaSubdomain, setOllamaSubdomain] = useState<string>('');
   const [ollamaModelNames, setOllamaModelNames] = useState<string[]>([]);
+
+  // LocalAI verification state (similar to Ollama)
+  const [localaiEndpoint, setLocalaiEndpoint] = useState<string>('');
+  const [customLocalaiAvailable, setCustomLocalaiAvailable] = useState<boolean>(false);
+  const [customLocalaiLoading, setCustomLocalaiLoading] = useState<boolean>(false);
+  const [localaiVerifyError, setLocalaiVerifyError] = useState<string | null>(null);
+  const [localaiHelperEnabled, setLocalaiHelperEnabled] = useState<boolean>(false);
+  const [localaiSubdomain, setLocalaiSubdomain] = useState<string>('');
 
   // InvokeAI verification state (similar to Ollama)
   const [invokeaiEndpoint, setInvokeaiEndpoint] = useState<string>('');
@@ -291,28 +300,68 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     }
   };
 
-  const [copiedStep, setCopiedStep] = useState<string | null>(null);
+  const handleVerifyLocalAI = async () => {
+    const rawEndpoint = localaiEndpoint.trim();
+    const rawSubdomain = localaiSubdomain.trim();
 
-  const copyToClipboard = (text: string, stepId: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedStep(stepId);
-      setTimeout(() => setCopiedStep(null), 2000);
-    });
+    if (!localaiHelperEnabled) {
+      if (!rawEndpoint) return;
+    } else {
+      if (!rawSubdomain) return;
+    }
+
+    let endpointToVerify = rawEndpoint;
+
+    if (localaiHelperEnabled) {
+      let candidate = rawSubdomain;
+
+      if (candidate && !candidate.startsWith('http://') && !candidate.startsWith('https://')) {
+        if (!candidate.includes('.')) {
+          candidate = `https://${candidate}.ngrok-free.app`;
+        } else {
+          candidate = `https://${candidate}`;
+        }
+      }
+
+      endpointToVerify = candidate;
+
+      if (endpointToVerify !== localaiEndpoint) {
+        setLocalaiEndpoint(endpointToVerify);
+      }
+    }
+
+    setCustomLocalaiLoading(true);
+    setLocalaiVerifyError(null);
+    try {
+      const res = await fetch('/api/localai/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: endpointToVerify }),
+      });
+      const data = await res.json();
+      if (data.available) {
+        setCustomLocalaiAvailable(true);
+        const names: string[] = Array.isArray(data.models) ? data.models : [];
+        // Update TTS models in tts_models.ts
+        setLocalAIModels(names);
+      } else {
+        setCustomLocalaiAvailable(false);
+        setLocalAIModels([]);
+        let errorMessage = data.error || 'Could not connect to LocalAI at this endpoint.';
+        if (errorMessage.includes('403')) {
+          errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
+        }
+        setLocalaiVerifyError(errorMessage);
+      }
+    } catch {
+      setCustomLocalaiAvailable(false);
+      setLocalAIModels([]);
+      setLocalaiVerifyError('Could not connect to LocalAI at this endpoint.');
+    } finally {
+      setCustomLocalaiLoading(false);
+    }
   };
 
-  const CopyButton = ({ text, stepId }: { text: string, stepId: string }) => (
-    <button
-      onClick={() => copyToClipboard(text, stepId)}
-      className="ml-2 p-1 hover:bg-white/20 dark:hover:bg-black/20 rounded transition-all duration-200 inline-flex items-center gap-1 group active:scale-90"
-      title="Copy to clipboard"
-    >
-      {copiedStep === stepId ? (
-        <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-      ) : (
-        <Copy className="h-3 w-3 text-blue-600 dark:text-blue-400 opacity-70 group-hover:opacity-100" />
-      )}
-    </button>
-  );
   // const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   // Redirect authenticated users to the app
@@ -357,6 +406,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     () => {
       const initialOpenState: Record<string, boolean> = {
         'ollama-setup': false,
+        'localai-setup': false,
         'invokeai-setup': false
       };
       Object.keys(groupLLMsByProvider()).forEach(provider => {
@@ -452,42 +502,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </div>
             )}
 
-            {showSafariWarning && (
-              <div className="bg-orange-50 dark:bg-orange-950 border-l-4 border-orange-400 p-4 rounded-md text-center">
-                <div className="flex flex-col items-center">
-                  <div className="relative w-fit mx-auto mb-1">
-                    <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
-                      <AlertTriangle className="h-5 w-5 text-orange-400" />
-                    </div>
-                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                      {t.sessionSetupForm?.safariWarningTitle || 'Limited Voice Selection in Safari'}
-                    </p>
-                  </div>
-                  <p className="text-xs text-orange-700 dark:text-orange-300">
-                    {t.sessionSetupForm?.safariWarningMessage || 'Safari has limited voice selection. For the best experience, we recommend Microsoft Edge, which offers the most comprehensive voice options. Chrome, Firefox, and Opera also provide better selection than Safari.'}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {showEdgeRecommendation && (
-              <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-4 rounded-md text-center">
-                <div className="flex flex-col items-center">
-                  <div className="relative w-fit mx-auto mb-1">
-                    <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
-                      <Info className="h-5 w-5 text-blue-400" />
-                    </div>
-                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                      {t.sessionSetupForm?.edgeRecommendationTitle || 'Best Voice Selection Available'}
-                    </p>
-                  </div>
-                  <p className="text-xs text-blue-700 dark:text-blue-300">
-                    {t.sessionSetupForm?.edgeRecommendationMessage || 'For the best voice selection with Browser TTS, we recommend using Microsoft Edge, which offers the most comprehensive range of voices.'}
-                  </p>
-                </div>
-              </div>
-            )}
-
             {/* Ollama Setup Instructions */}
             <Collapsible
               open={openCollapsibles['ollama-setup'] || false}
@@ -518,84 +532,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 <div className="space-y-2 mt-4">
 
                   <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                    {/* <p className="font-semibold">{t.page_OllamaSetupInstructions}:</p> */}
-                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
-                      <p>
-                        <span className="font-bold">Prerequisites:</span>
-                      </p>
-                      <ol className="list-decimal list-inside space-y-1 ml-2">
-                        <li>
-                          {t.page_OllamaStep1.split('ollama.com/download')[0]}
-                          <span className="whitespace-nowrap">
-                            <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              ollama.com/download
-                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                            </a>
-                            {t.page_OllamaStep1.split('ollama.com/download')[1]}
-                          </span>
-                        </li>
-                        <li>
-                          Your ngrok config file location. This can be found by running:{' '}
-                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.                        </li>
-                      </ol>
-                    </div>
-
-                    <p className="text-center">
-                      <span>1. You can run this command in your terminal to start the Ollama server:</span>
-                    </p>
-                    <div className="flex items-center justify-center">
-                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                        {t.page_OllamaStep3.replace(/^1\.\s*/, '')}
-                      </span>
-                      <CopyButton text={t.page_OllamaStep3.replace(/^1\.\s*/, '')} stepId="step1" />
-                    </div>
-                    <p className="text-center mt-3">
-                      <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
-                    </p>
-                    <div className="flex justify-center items-center">
-                      <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
-                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
-                          {`tunnels:
-  ollama:
-    proto: http
-    addr: 11434
-    host_header: "localhost:11434"`}
-                        </pre>
-                      </div>
-                      <CopyButton text={`tunnels:
-  ollama:
-    proto: http
-    addr: 11434
-    host_header: "localhost:11434"`} stepId="ollama-yaml" />
-                    </div>
-                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
-                      <div className="text-center">
-                        <span className="inline-block relative pl-4">
-                          <span className="absolute left-0 top-0">•</span>
-                          <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
-                        </span>
-                      </div>
-                      <div className="text-center">
-                        <span className="inline-block relative pl-4">
-                          <span className="absolute left-0 top-0">•</span>
-                          <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">ollama:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-center mt-3">
-                      <span>3. You can start ngrok with this command:</span>
-                    </p>
-                    <div className="flex items-center justify-center">
-                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                        ngrok start --all
-                      </span>
-                      <CopyButton text="ngrok start --all" stepId="step3" />
-                    </div>
-                    <p className="text-center mt-3">
-                      <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:11434</span> here and verify it:
-
-                      </span>
-                    </p>
+                    <SetupInstructions type="ollama" />
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex gap-2 w-full max-w-md">
                         {ollamaHelperEnabled ? (
@@ -692,6 +629,131 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </CollapsibleContent>
             </Collapsible>
 
+            {/* LocalAI Setup Instructions */}
+            <Collapsible
+              open={openCollapsibles['localai-setup'] || false}
+              onOpenChange={() => toggleCollapsible('localai-setup')}
+              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+            >
+              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                <div className="flex justify-center pt-1 relative group cursor-pointer">
+                  <div className="relative">
+                    <div className="absolute right-full mr-2 translate-y-px">
+                      <div className="relative w-6 h-6 shrink-0">
+                        <Image
+                          src="/localai.svg"
+                          alt="LocalAI Logo"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-base whitespace-nowrap">LocalAI Setup</h3>
+                  </div>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                    {openCollapsibles['localai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                  </div>
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-2 mt-4">
+                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                    <SetupInstructions type="localai" />
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="flex gap-2 w-full max-w-md">
+                        {localaiHelperEnabled ? (
+                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                              https://
+                            </span>
+                            <input
+                              type="text"
+                              value={localaiSubdomain}
+                              onChange={(e) => {
+                                setLocalaiSubdomain(e.target.value);
+                                if (customLocalaiAvailable) {
+                                  setCustomLocalaiAvailable(false);
+                                }
+                                setLocalaiVerifyError(null);
+                              }}
+                              placeholder="e.g. abc123"
+                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyLocalAI();
+                                }
+                              }}
+                            />
+                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                              .ngrok-free.app
+                            </span>
+                          </div>
+                        ) : (
+                          <input
+                            type="url"
+                            value={localaiEndpoint}
+                            onChange={(e) => {
+                              setLocalaiEndpoint(e.target.value);
+                              if (customLocalaiAvailable) {
+                                setCustomLocalaiAvailable(false);
+                              }
+                              setLocalaiVerifyError(null);
+                            }}
+                            placeholder="e.g. https://abc123.ngrok-free.app"
+                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleVerifyLocalAI();
+                              }
+                            }}
+                          />
+                        )}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleVerifyLocalAI}
+                          disabled={
+                            customLocalaiLoading ||
+                            (!localaiHelperEnabled
+                              ? !localaiEndpoint.trim()
+                              : !localaiSubdomain.trim())
+                          }
+                          className="liquid-glass-button-primary h-auto py-1.5"
+                        >
+                          {customLocalaiLoading ? 'Verifying...' : 'Verify'}
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                        <input
+                          id="localai-helper-toggle"
+                          type="checkbox"
+                          checked={localaiHelperEnabled}
+                          onChange={(e) => setLocalaiHelperEnabled(e.target.checked)}
+                          className="h-3 w-3"
+                        />
+                        <label
+                          htmlFor="localai-helper-toggle"
+                          className="text-xs text-muted-foreground cursor-pointer"
+                        >
+                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                        </label>
+                      </div>
+                      {customLocalaiAvailable && (
+                        <p className="text-sm text-green-600 dark:text-green-400">✓ LocalAI connected!</p>
+                      )}
+                      {localaiVerifyError && (
+                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{localaiVerifyError}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+
             {/* InvokeAI Setup Instructions */}
             <Collapsible
               open={openCollapsibles['invokeai-setup'] || false}
@@ -721,75 +783,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               <CollapsibleContent>
                 <div className="space-y-2 mt-4">
                   <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                    <div className="liquid-glass border border-white/20 dark:border-white/10 rounded-md p-3 mb-4 text-sm space-y-2">
-                      <p>
-                        <span className="font-bold">Prerequisites:</span>
-                      </p>
-                      <ol className="list-decimal list-inside space-y-1 ml-2">
-                        <li>
-                          Invoke installed on your machine. It is downloadable from{' '}
-                          <span className="whitespace-nowrap">
-                            <a href="https://invoke.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-medium underline inline-flex items-center gap-1">
-                              invoke.ai
-                              <ExternalLink className="h-3 w-3" aria-label="(opens in new tab)" />
-                            </a>.
-                          </span>
-                        </li>
-                        <li>
-                          Your ngrok config file location. This can be found by running:{' '}
-                          <code className="bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded font-mono text-xs">ngrok config check</code>.
-                        </li>
-                      </ol>
-                    </div>
-
-                    <p>
-                      1. You can open the Invoke installation and click the <span className="font-medium bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">Launch</span> button to start the Invoke server.
-                    </p>
-                    <p className="text-center mt-3">
-                      <span>2. You can edit your ngrok config file and add this tunnel configuration:</span>
-                    </p>
-                    <div className="flex justify-center items-center">
-                      <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded inline-block">
-                        <pre className="font-mono text-xs text-left whitespace-pre m-0">
-                          {`tunnels:
-  invoke:
-    proto: http
-    addr: 9090
-    host_header: "localhost:9090"`}
-                        </pre>
-                      </div>
-                      <CopyButton text={`tunnels:
-  invokeai:
-    proto: http
-    addr: 9090
-    host_header: "localhost:9090"`} stepId="invokeai-yaml" />
-                    </div>
-                    <div className="mt-3 text-xs text-muted-foreground space-y-1">
-                      <div className="text-center">
-                        <span className="inline-block relative pl-4">
-                          <span className="absolute left-0 top-0">•</span>
-                          <span>Creating a second <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> key would cause the first to be overwritten.</span>
-                        </span>
-                      </div>
-                      <div className="text-center">
-                        <span className="inline-block relative pl-4">
-                          <span className="absolute left-0 top-0">•</span>
-                          <span>You can append the <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">invoke:</code> section inside a pre-existing <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">tunnels:</code> mapping.</span>
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-center mt-3">
-                      <span>3. You can start ngrok with this command:</span>
-                    </p>
-                    <div className="flex items-center justify-center">
-                      <span className="font-mono text-xs bg-blue-100 dark:bg-blue-900/30 p-1 rounded inline-block">
-                        ngrok start --all
-                      </span>
-                      <CopyButton text="ngrok start --all" stepId="invokeai-step3" />
-                    </div>
-                    <p className="text-center mt-3">
-                      <span>4. Then you can paste your URL forwarding to <span className="text-blue-600 dark:text-blue-400 font-medium">http://localhost:9090</span> here and verify it:</span>
-                    </p>
+                    <SetupInstructions type="invokeai" />
                     <div className="flex flex-col items-center space-y-2">
                       <div className="flex gap-2 w-full max-w-md">
                         {invokeaiHelperEnabled ? (
@@ -929,6 +923,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const allModelsSupport = providerModels.every(llm =>
                   isLanguageSupported(llm.provider, language.code, llm.id)
                 );
+                const showLanguageSupportForProvider = providerName !== 'Ollama'; // Don't show for Ollama (dynamic models)
 
                 if (isStaticProviderSection || (isStaticOllamaSection && shouldShowOllamaProvider)) {
                   return (
@@ -956,7 +951,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   t={t}
                                 />
                               )}
-                              {allModelsSupport && (
+                              {allModelsSupport && showLanguageSupportForProvider && (
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
@@ -1327,63 +1322,93 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
-              {AVAILABLE_TTS_PROVIDERS.length > 0 ? (
-                AVAILABLE_TTS_PROVIDERS.map((provider) => {
+              {AVAILABLE_TTS_PROVIDERS.filter(provider => {
+                // Filter out LocalAI if it has no models (not verified)
+                if (provider.id === 'localai' && provider.models.length === 0) {
+                  return false;
+                }
+                return true;
+              }).length > 0 ? (
+                AVAILABLE_TTS_PROVIDERS.filter(provider => {
+                  // Filter out LocalAI if it has no models (not verified)
+                  if (provider.id === 'localai' && provider.models.length === 0) {
+                    return false;
+                  }
+                  return true;
+                }).map((provider) => {
                   const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
-                  const isStaticTTSProviderSection = provider.id === 'browser';
+                  const isStaticTTSProviderSection = provider.id === 'browser' || provider.id === 'localai';
                   const allTTSModelsSupport = provider.models.every(model => isTTSModelLanguageSupported(model.id, language.code));
+                  const showLanguageSupport = provider.id !== 'localai'; // Don't show language support for LocalAI
                   return (
                     isStaticTTSProviderSection ? (
                       <div key={provider.id} className="space-y-1">
                         <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
                           <div className="relative inline-flex items-center">
                             <span>{provider.name}</span>
-                            <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
-                              {allTTSModelsSupport ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                  </TooltipTrigger>
-                                  <TooltipContent side="top">
-                                    <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <X className="h-4 w-4 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                  </TooltipTrigger>
-                                  <TooltipContent side="top">
-                                    <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              )}
-                            </div>
+                            {showLanguageSupport && (
+                              <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                                {allTTSModelsSupport ? (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Check className="h-4 w-4 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                      <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <X className="h-4 w-4 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                      <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
+                        {provider.id === 'browser' && (showSafariWarning || showEdgeRecommendation) && (
+                          <div className="bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-400 p-3 rounded-md text-center mb-3">
+                            <div className="flex flex-col items-center">
+                              <div className="relative w-fit mx-auto mb-1">
+                                <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                                  <Info className="h-4 w-4 text-blue-400" />
+                                </div>
+                                <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                                  {t.sessionSetupForm?.browserVoiceRecommendationTitle || 'Browser Voice Quality'}
+                                </p>
+                              </div>
+                              <p className="text-xs text-blue-700 dark:text-blue-300">
+                                {t.sessionSetupForm?.browserVoiceRecommendationMessage || 'Microsoft Edge offers the best voice selection for Web Speech API. Chrome, Firefox, and Opera have good options, while Safari has more limited voice selection.'}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                         <div className="space-y-2 flex flex-col items-center">
                           <ul className="space-y-1 text-sm w-full max-w-2xl">
                             {provider.models.map((model) => {
+                              const isLocalAI = provider.id === 'localai';
                               return (
-                                <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
-                                  <div className="flex items-center space-x-1">
+                                <li key={model.id} className="flex flex-col items-center py-1">
+                                  <div className="flex items-center space-x-2 mb-1">
                                     <span className="whitespace-nowrap">{model.name}</span>
-                                    {/* {model.freeTier?.available && (
+                                    {model.freeTier?.available && (
                                       <FreeTierBadge
                                         freeTier={model.freeTier}
                                         t={t}
                                         className="ml-1"
                                       />
-                                    )} */}
+                                    )}
                                   </div>
-                                  <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
-                                  {model.freeTier?.available && (
-                                    <FreeTierBadge
-                                      freeTier={model.freeTier}
-                                      t={t}
-                                      className="ml-1"
-                                    />
+                                  {!isLocalAI && (
+                                    <div className="text-xs text-muted-foreground" title={model.description}>
+                                      ({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})
+                                    </div>
                                   )}
                                 </li>
                               );
@@ -1413,44 +1438,48 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                           <ul className="space-y-1 text-sm w-full max-w-2xl">
                             {provider.models.map((model) => {
                               const supportsLanguage = isTTSModelLanguageSupported(model.id, language.code);
+                              const isLocalAI = provider.id === 'localai';
                               return (
-                                <li key={model.id} className="flex items-center justify-center space-x-2 py-0.5">
-                                  <div className="flex items-center space-x-1">
+                                <li key={model.id} className="flex flex-col items-center py-1">
+                                  <div className="flex items-center space-x-2 mb-1">
                                     <span className="whitespace-nowrap">{model.name}</span>
-                                    {/* {model.freeTier?.available && (
+                                    {model.freeTier?.available && (
                                       <FreeTierBadge
                                         freeTier={model.freeTier}
                                         t={t}
                                         className="ml-1"
                                       />
-                                    )} */}
+                                    )}
                                   </div>
-                                  <span className="text-xs text-muted-foreground truncate min-w-0" title={model.description}>({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})</span>
-                                  {supportsLanguage ? (
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
-                                      </TooltipTrigger>
-                                      <TooltipContent side="top">
-                                        <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  ) : (
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
-                                      </TooltipTrigger>
-                                      <TooltipContent side="top">
-                                        <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  )}
-                                  {model.freeTier?.available && (
-                                    <FreeTierBadge
-                                      freeTier={model.freeTier}
-                                      t={t}
-                                      className="ml-1"
-                                    />
+                                  {!isLocalAI && (
+                                    <div className="relative w-full flex justify-center">
+                                      <div className="relative inline-flex items-center justify-center">
+                                        <span className="text-xs text-muted-foreground" title={model.description}>
+                                          ({typeof model.pricingText === 'function' ? (t ? model.pricingText(t) : 'Loading...') : model.pricingText})
+                                        </span>
+                                        <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                                          {supportsLanguage ? (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Check className="h-3 w-3 text-green-700 dark:text-green-300 flex-shrink-0" />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top">
+                                                <p className="text-xs">{t.page_TooltipSupportsLanguage.replace("{languageName}", language.nativeName)}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          ) : (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <X className="h-3 w-3 text-red-700 dark:text-red-300 flex-shrink-0" />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top">
+                                                <p className="text-xs">{t.page_TooltipMayNotSupportLanguage.replace("{languageName}", language.nativeName)}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
                                   )}
                                 </li>
                               );

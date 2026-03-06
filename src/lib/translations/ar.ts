@@ -191,7 +191,8 @@ const ar = {
             "signIn": "تسجيل الدخول",
             "emailLabel": "عنوان البريد الإلكتروني",
             "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
-            "signingUp": "جاري التسجيل..."
+            "signingUp": "جاري التسجيل...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صالحة",
@@ -412,7 +413,9 @@ const ar = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "العودة إلى الصفحة الرئيسية",

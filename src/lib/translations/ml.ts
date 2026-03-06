@@ -191,7 +191,8 @@ const ml = {
             "signIn": "സൈൻ ഇൻ",
             "emailLabel": "ഇമെയിൽ വിലാസം",
             "confirmPasswordPlaceholder": "പാസ്വേഡ് സ്ഥിരീകരിക്കുക",
-            "signingUp": "സൈൻ അപ്പ് ചെയ്യുന്നു..."
+            "signingUp": "സൈൻ അപ്പ് ചെയ്യുന്നു...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "അസാധുവായ ഇമെയിൽ വിലാസം അല്ലെങ്കിൽ പാസ്‌വേഡ്",
@@ -412,7 +413,9 @@ const ml = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "മെയിനിലേക്ക് മടങ്ങുക",

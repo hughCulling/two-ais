@@ -16,6 +16,9 @@
     ]
   }
   ],
+  "firestore": {
+  "rules": "firestore.rules"
+  },
   "hosting": {
   "public": "public",
   "ignore": [
@@ -43,5 +46,8 @@
     ]
   }
   ]
+  },
+  "storage": {
+  "rules": "storage.rules"
   }
   }

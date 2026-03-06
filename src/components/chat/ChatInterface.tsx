@@ -6,6 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/context/AuthContext';
 import { useOllamaAgent } from '@/hooks/useOllamaAgent';
 import { useInvokeAIImageGen } from '@/hooks/useInvokeAIImageGen';
+import { useLocalAITTSGen } from '@/hooks/useLocalAITTSGen';
 // import { httpsCallable } from 'firebase/functions';
 import {
     collection,
@@ -51,6 +52,7 @@ interface Message {
     content: string;
     timestamp: Timestamp | null;
     audioUrl?: string; // Optional audioUrl
+    paragraphAudioUrls?: Array<string | null>;
     ttsWasSplit?: boolean; // Optional: true if audio was split due to TTS input limits
     isStreaming?: boolean;
     imageUrl?: string | null;
@@ -171,6 +173,9 @@ export function ChatInterface({
 
     // Enable InvokeAI image generation
     useInvokeAIImageGen(conversationId, user?.uid || null);
+
+    // Enable LocalAI TTS generation (per paragraph)
+    useLocalAITTSGen(conversationId, user?.uid || null);
     const [conversationStatus, setConversationStatus] = useState<ConversationData['status'] | null>(null);
     const [isWaitingForSignal, setIsWaitingForSignal] = useState<boolean>(false);
     const [streamingMessage, setStreamingMessage] = useState<StreamingMessage | null>(null);
@@ -201,6 +206,8 @@ export function ChatInterface({
     const ttsChunkQueueRef = useRef<string[]>([]);
     const currentChunkIndexRef = useRef<number>(0);
     const paragraphIndicesRef = useRef<number[]>([]);
+    const paragraphAudioQueueRef = useRef<string[]>([]);
+    const currentAudioParagraphIndexRef = useRef<number>(0);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
@@ -504,6 +511,7 @@ export function ChatInterface({
                             content: data.content,
                             timestamp: data.timestamp || null,
                             audioUrl: data.audioUrl,
+                            paragraphAudioUrls: data.paragraphAudioUrls,
                             ttsWasSplit: data.ttsWasSplit,
                             isStreaming: data.isStreaming,
                             imageUrl: data.imageUrl,
@@ -520,7 +528,8 @@ export function ChatInterface({
                     if (lastPlayedAgentMessageId) {
                         const playedIds = new Set<string>();
                         for (const msg of fetchedMessages) {
-                            if ((msg.role === 'agentA' || msg.role === 'agentB') && msg.audioUrl) {
+                            const hasAnyRecordedAudio = !!msg.audioUrl || (Array.isArray(msg.paragraphAudioUrls) && msg.paragraphAudioUrls.some((u) => typeof u === 'string' && u.length > 0));
+                            if ((msg.role === 'agentA' || msg.role === 'agentB') && hasAnyRecordedAudio) {
                                 playedIds.add(msg.id);
                                 if (msg.id === lastPlayedAgentMessageId) break;
                             }
@@ -1237,6 +1246,88 @@ export function ChatInterface({
                 handleAudioEnd();
             }
 
+        } else if (ttsConfig?.provider === 'localai') {
+            // LocalAI: play stored paragraph clips sequentially
+            const urls = Array.isArray(nextMsg.paragraphAudioUrls) ? nextMsg.paragraphAudioUrls : null;
+            if (!urls || urls.length === 0) {
+                // Not ready yet
+                setPendingTtsMessage(nextMsg);
+                setIsAudioReady(false);
+                return;
+            }
+
+            // Wait until generation finishes: null means pending.
+            if (urls.some((u) => u === null)) {
+                setPendingTtsMessage(nextMsg);
+                setIsAudioReady(false);
+                return;
+            }
+
+            const playable = urls
+                .map((u, idx) => ({ url: typeof u === 'string' ? u : '', idx }))
+                .filter((x) => x.url.length > 0);
+
+            if (playable.length === 0) {
+                // All paragraphs skipped/failed. Mark as played to prevent stalling.
+                setCurrentlyPlayingMsgId(nextMsg.id);
+                setIsAudioPlaying(true);
+                setPendingTtsMessage(null);
+                setTimeout(() => handleAudioEnd(), 0);
+                return;
+            }
+
+            paragraphAudioQueueRef.current = playable.map((x) => x.url);
+            const paragraphIndexMap = playable.map((x) => x.idx);
+            currentAudioParagraphIndexRef.current = 0;
+            currentParagraphIndexRef.current = -1;
+
+            const playIndex = (queueIndex: number) => {
+                if (!audioPlayerRef.current) return;
+                if (queueIndex >= paragraphAudioQueueRef.current.length) {
+                    handleAudioEnd();
+                    return;
+                }
+
+                const paragraphIndex = paragraphIndexMap[queueIndex] ?? 0;
+
+                if (isTTSAutoScrollEnabled) {
+                    requestAnimationFrame(() => {
+                        const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
+                        const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+                        if (paragraphElement && scrollContainer) {
+                            const containerRect = scrollContainer.getBoundingClientRect();
+                            const paragraphRect = paragraphElement.getBoundingClientRect();
+                            const currentScroll = scrollContainer.scrollTop;
+                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
+                            scrollContainer.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+                            currentParagraphIndexRef.current = paragraphIndex;
+                        }
+                    });
+                }
+
+                audioPlayerRef.current.onended = () => {
+                    currentAudioParagraphIndexRef.current++;
+                    playIndex(currentAudioParagraphIndexRef.current);
+                };
+
+                audioPlayerRef.current.src = paragraphAudioQueueRef.current[queueIndex];
+                audioPlayerRef.current.play()
+                    .then(() => {
+                        if (queueIndex === 0) {
+                            setCurrentlyPlayingMsgId(nextMsg.id);
+                            setIsAudioPlaying(true);
+                            setPendingTtsMessage(null);
+                        }
+                    })
+                    .catch(err => {
+                        logger.error(`[Audio] LocalAI paragraph playback failed:`, err);
+                        handleAudioEnd();
+                    });
+            };
+
+            playIndex(0);
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
             logger.info(`[Audio] Starting playback for message ${nextMsg.id.substring(0, 8)}...`);
             audioPlayerRef.current.src = nextMsg.audioUrl;

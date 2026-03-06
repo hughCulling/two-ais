@@ -57,6 +57,7 @@ interface Message {
     paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
+    paragraphAudioUrls?: Array<string | null>;
     ttsWasSplit?: boolean;
 }
 
@@ -172,6 +173,7 @@ export async function GET(
                 paragraphImages: data.paragraphImages || undefined,
                 isStreaming: data.isStreaming || false,
                 audioUrl: data.audioUrl,
+                paragraphAudioUrls: data.paragraphAudioUrls,
                 ttsWasSplit: data.ttsWasSplit
             });
         });

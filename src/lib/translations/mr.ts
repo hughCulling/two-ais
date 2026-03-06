@@ -191,7 +191,8 @@ const mr = {
             "signIn": "भाषा",
             "emailLabel": "ईमेल पत्ता",
             "confirmPasswordPlaceholder": "पासवर्डची पुष्टी करा",
-            "signingUp": "साइन अप करत आहे..."
+            "signingUp": "साइन अप करत आहे...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "चुकीचा ईमेल किंवा पासवर्ड",
@@ -412,7 +413,9 @@ const mr = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "मुख्य कडे परत",

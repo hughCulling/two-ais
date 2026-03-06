@@ -191,7 +191,8 @@ const ta = {
             "signIn": "உள்நுழையவும்",
             "emailLabel": "மின்னஞ்சல் முகவரி",
             "confirmPasswordPlaceholder": "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
-            "signingUp": "பதிவு செய்கிறது..."
+            "signingUp": "பதிவு செய்கிறது...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "தவறான மின்னஞ்சல் அல்லது கடவுச்சொல்",
@@ -412,7 +413,9 @@ const ta = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "முதன்மைக்குத் திரும்பு",

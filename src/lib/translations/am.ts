@@ -191,7 +191,8 @@ const am = {
             "signIn": "ይግቡ",
             "emailLabel": "የኢሜል አድራሻ",
             "confirmPasswordPlaceholder": "የይለፍ ቃል ያረጋግጡ",
-            "signingUp": "በመመዝገብ ላይ..."
+            "signingUp": "በመመዝገብ ላይ...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "ልክ ያልሆነ ኢሜይል ወይም የይለፍ ቃል",
@@ -412,7 +413,9 @@ const am = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "ወደ ዋናው ተመለስ",

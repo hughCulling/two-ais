@@ -191,7 +191,8 @@ const ko = {
             "signIn": "로그인",
             "emailLabel": "이메일 주소",
             "confirmPasswordPlaceholder": "비밀번호 확인",
-            "signingUp": "가입 중..."
+            "signingUp": "가입 중...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "잘못된 이메일 또는 비밀번호입니다",
@@ -412,7 +413,9 @@ const ko = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "메인으로 돌아가기",

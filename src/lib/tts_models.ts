@@ -889,7 +889,7 @@ export interface TTSModelDetail {
 
 // --- TTS Provider Interface ---
 export interface TTSProviderInfo {
-    id: 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser';
+    id: 'openai' | 'google-cloud' | 'elevenlabs' | 'google-gemini' | 'browser' | 'localai';
     name: string;
     requiresOwnKey: boolean;
     apiKeyId?: string;
@@ -1251,7 +1251,7 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
     // },
     {
         id: 'browser',
-        name: 'Browser TTS',
+        name: 'Web Speech API',
         requiresOwnKey: false,
         models: [
             {
@@ -1267,4 +1267,64 @@ export const AVAILABLE_TTS_PROVIDERS: TTSProviderInfo[] = [
         ],
         availableVoices: BROWSER_TTS_VOICES,
     },
+    {
+        id: 'localai',
+        name: 'LocalAI',
+        requiresOwnKey: false,
+        models: [], // Models will be discovered dynamically from the LocalAI endpoint
+        availableVoices: [], // Voices will be discovered dynamically from the LocalAI endpoint
+    },
 ];
+
+
+// --- LocalAI Dynamic Model and Voice Management ---
+// LocalAI models and voices are discovered at runtime from the user's endpoint
+
+export function setLocalAIModels(models: string[]) {
+    const localaiProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === 'localai');
+    if (!localaiProvider) return;
+
+    localaiProvider.models = models.map(modelName => ({
+        id: `localai-${modelName}`,
+        apiModelId: modelName,
+        name: modelName,
+        description: `LocalAI TTS model: ${modelName}`,
+        pricingText: (t: TranslationKeys) => t.pricing.freeBuiltIn || 'Free (Self-hosted)',
+        supportedLanguages: [], // LocalAI models typically support multiple languages
+        inputLimitType: 'characters',
+        inputLimitValue: 4096,
+    }));
+}
+
+export function setLocalAIVoices(modelId: string, voices: string[]) {
+    const localaiProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === 'localai');
+    if (!localaiProvider) return;
+
+    // Create voice entries for this model
+    const newVoices: TTSVoice[] = voices.map(voiceName => ({
+        id: `localai-${modelId}-${voiceName}`,
+        name: voiceName,
+        provider: 'localai',
+        providerVoiceId: voiceName,
+        voiceType: 'LocalAI',
+        status: 'GA',
+    }));
+
+    // Remove old voices for this model and add new ones
+    localaiProvider.availableVoices = [
+        ...localaiProvider.availableVoices.filter(v => !v.id.startsWith(`localai-${modelId}-`)),
+        ...newVoices
+    ];
+}
+
+export function getLocalAIModels(): TTSModelDetail[] {
+    const localaiProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === 'localai');
+    return localaiProvider?.models || [];
+}
+
+export function getLocalAIVoicesForModel(modelId: string): TTSVoice[] {
+    const localaiProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === 'localai');
+    if (!localaiProvider) return [];
+    
+    return localaiProvider.availableVoices.filter(v => v.id.startsWith(`localai-${modelId}-`));
+}

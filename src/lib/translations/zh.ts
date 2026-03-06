@@ -191,7 +191,8 @@ const zh = {
             "signIn": "登入",
             "emailLabel": "电子邮件",
             "confirmPasswordPlaceholder": "确认密码",
-            "signingUp": "正在注册..."
+            "signingUp": "正在注册...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "无效的电子邮件或密码",
@@ -412,7 +413,9 @@ const zh = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "返回主页",

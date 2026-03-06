@@ -191,7 +191,8 @@ const th = {
             "signIn": "ลงชื่อเข้าใช้",
             "emailLabel": "ที่อยู่อีเมล",
             "confirmPasswordPlaceholder": "ยืนยันรหัสผ่าน",
-            "signingUp": "กำลังสมัครสมาชิก..."
+            "signingUp": "กำลังสมัครสมาชิก...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
@@ -412,7 +413,9 @@ const th = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "กลับสู่หน้าหลัก",

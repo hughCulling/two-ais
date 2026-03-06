@@ -191,7 +191,8 @@ const tr = {
             "signIn": "Giriş yap",
             "emailLabel": "E-posta adresi",
             "confirmPasswordPlaceholder": "Şifreyi Onayla",
-            "signingUp": "Kayıt Olunuyor..."
+            "signingUp": "Kayıt Olunuyor...",
+            "orContinueWith": "Or you can continue with"
         },
         "errors": {
             "invalidCredentials": "Geçersiz e-posta veya şifre",
@@ -412,7 +413,9 @@ const tr = {
         "presetDeleted": "Preset deleted successfully",
         "mobileTTSNotSupportedTitle": "Browser TTS Not Supported",
         "mobileTTSNotSupportedMessage": "Text-to-speech likely does not work on this mobile browser.",
-        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices."
+        "firefoxRecommendationMessage": "For audio playback on mobile, I recommend using Firefox. Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.",
+        "browserVoiceRecommendationTitle": "Web Speech API Voice Options",
+        "browserVoiceRecommendationMessage": "In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera."
     },
     "history": {
         "backToMain": "Ana Sayfaya Dön",

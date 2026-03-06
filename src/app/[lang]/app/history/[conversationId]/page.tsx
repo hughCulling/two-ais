@@ -87,6 +87,7 @@ interface Message {
     paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
+    paragraphAudioUrls?: Array<string | null>;
     ttsWasSplit?: boolean;
 }
 
@@ -513,6 +514,64 @@ export default function ChatHistoryViewerPage() {
                     
                     // Start playing the first chunk
                     playChunk(0);
+                    return;
+                }
+
+                if (ttsConfig?.provider === 'localai') {
+                    const urls = Array.isArray(msg.paragraphAudioUrls) ? msg.paragraphAudioUrls : null;
+                    if (!urls || urls.length === 0) return;
+                    if (urls.some((u) => u === null)) return;
+
+                    const playable = urls
+                        .map((u, idx) => ({ url: typeof u === 'string' ? u : '', idx }))
+                        .filter((x) => x.url.length > 0);
+                    if (playable.length === 0) return;
+
+                    const playQueue = playable.map((x) => x.url);
+                    const paragraphIndexMap = playable.map((x) => x.idx);
+                    let queueIndex = 0;
+
+                    const playNext = () => {
+                        if (queueIndex >= playQueue.length) {
+                            handleAudioEnd();
+                            return;
+                        }
+
+                        const paragraphIndex = paragraphIndexMap[queueIndex] ?? 0;
+                        if (isTTSAutoScrollEnabled) {
+                            requestAnimationFrame(() => {
+                                const paragraphKey = `${msg.id}-p${paragraphIndex}`;
+                                const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
+                                const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
+                                if (paragraphElement && scrollContainer) {
+                                    const containerRect = scrollContainer.getBoundingClientRect();
+                                    const paragraphRect = paragraphElement.getBoundingClientRect();
+                                    const currentScroll = scrollContainer.scrollTop;
+                                    const paragraphRelativeTop = paragraphRect.top - containerRect.top;
+                                    const targetScroll = currentScroll + paragraphRelativeTop - 20;
+                                    scrollContainer.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+                                    currentParagraphIndexRef.current = paragraphIndex;
+                                }
+                            });
+                        }
+
+                        const audio = new Audio(playQueue[queueIndex]);
+                        audioRef.current = audio;
+
+                        audio.onended = () => {
+                            queueIndex++;
+                            playNext();
+                        };
+                        audio.onpause = () => setAudioState({ isPlaying: false, isPaused: true });
+                        audio.onplay = () => {
+                            setCurrentlyPlayingMsgId(msg.id);
+                            setAudioState({ isPlaying: true, isPaused: false });
+                        };
+
+                        audio.play().catch(console.error);
+                    };
+
+                    playNext();
                     return;
                 }
             }

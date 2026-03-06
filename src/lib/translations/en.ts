@@ -201,6 +201,7 @@ const en = {
             signIn: 'Sign in',
             emailLabel: "Email address",
             confirmPasswordPlaceholder: "Confirm Password",
+            orContinueWith: "Or you can continue with",
             signingUp: "Signing Up..."
         },
         errors: {
@@ -338,7 +339,7 @@ const en = {
     page_BadgePreview: "Preview",
     page_BadgeExperimental: "Experimental",
     page_BadgeBeta: "Beta",
-    page_AvailableTTSTitle: "Currently Available TTS Model",
+    page_AvailableTTSTitle: "Currently Available TTS Model(s)",
     page_AvailableImageModelsTitle: "Currently Available Image Models", // Added for image models section
     page_NoTTSOptions: "No TTS options currently available.",
     page_TruncatableNoteFormat: "({noteText})",
@@ -407,7 +408,7 @@ const en = {
     // Session Setup Form
     sessionSetupForm: {
         title: 'Session Setup Form',
-        description: 'Here you can select the Large Language Model (LLM) and optional Text-to-Speech (TTS) settings for each agent.',
+        description: 'Here you can select the Large Language Models (LLMs), optional Text-to-Speech (TTS) models and optional Text-to-Image model for the conversation.',
         agentAModel: 'Agent A Model',
         agentBModel: 'Agent B Model',
         selectLLMForAgentA: 'LLM selector for Agent A',
@@ -450,10 +451,12 @@ const en = {
         confirmOverwritePreset: 'This will replace your existing preset. Continue?',
         noPresetFound: 'No preset found',
         presetDeleted: 'Preset deleted successfully',
-        safariWarningTitle: 'Limited Voice Selection in Safari',
-        safariWarningMessage: 'For the best experience, I recommend using Microsoft Edge which has the highest quality Web Speech API voice options. Chrome, Firefox, and Opera also provide a better selection than Safari.',
+        safariWarningTitle: 'Limited Web Speech API Voice Selection in Safari',
+        safariWarningMessage: 'In my opinion Microsoft Edge which has the highest quality Web Speech API voice options. Chrome, Firefox, and Opera also provide a slightly better selection than Safari in my opinion.',
         edgeRecommendationTitle: 'Microsoft Edge recommendation',
         edgeRecommendationMessage: 'For the best voice selection with Browser TTS, I recommend using Microsoft Edge, which offers the highest quality voices.',
+        browserVoiceRecommendationTitle: 'Web Speech API Voice Options',
+        browserVoiceRecommendationMessage: 'In my opinion, Microsoft Edge offers a much better voice selection for the Web Speech API than Safari, Chrome, Firefox and Opera.',
         mobileTTSNotSupportedTitle: 'Browser TTS Not Supported',
         mobileTTSNotSupportedMessage: 'Safari, Chrome, Edge, and Opera have unreliable or no TTS support on mobile devices.',
         firefoxRecommendationMessage: 'For audio playback on mobile, I recommend using Firefox.',

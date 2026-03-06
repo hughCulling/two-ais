@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to upload/read images for their own conversations
+    match /conversations/{conversationId}/images/{imageName} {
+      allow read, write: if request.auth != null &&
+        firestore.get(/databases/(default)/documents/conversations/$(conversationId)).data.userId == request.auth.uid;
+    }
+
+    // LocalAI audio files are uploaded client-side in the current implementation.
+    // Restrict write/read to authenticated owners of the conversation.
+    match /conversations/{conversationId}/audio/{audioName} {
+      allow read, write: if request.auth != null &&
+        firestore.get(/databases/(default)/documents/conversations/$(conversationId)).data.userId == request.auth.uid;
+    }
+
+    // Default: deny everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
