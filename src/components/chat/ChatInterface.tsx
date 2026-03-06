@@ -303,6 +303,17 @@ export function ChatInterface({
             }
         }
 
+        // Ensure HTML5 audio is fully stopped and detached from previous callbacks
+        if (audioPlayerRef.current) {
+            try {
+                audioPlayerRef.current.onended = null;
+                audioPlayerRef.current.pause();
+                audioPlayerRef.current.currentTime = 0;
+            } catch (err) {
+                logger.error("Error cleaning up audio player:", err);
+            }
+        }
+
         // Mark message as played FIRST, before resetting audio state
         // This ensures the next message becomes visible before we try to play it
         setPlayedMessageIds(prev => {
@@ -743,6 +754,7 @@ export function ChatInterface({
 
         // Clean up HTML5 audio player
         if (audioPlayerRef.current) {
+            audioPlayerRef.current.onended = null;
             audioPlayerRef.current.pause();
             setIsAudioPlaying(false);
             setIsAudioPaused(false);
@@ -1284,6 +1296,7 @@ export function ChatInterface({
             const playIndex = (queueIndex: number) => {
                 if (!audioPlayerRef.current) return;
                 if (queueIndex >= paragraphAudioQueueRef.current.length) {
+                    audioPlayerRef.current.onended = null;
                     handleAudioEnd();
                     return;
                 }
@@ -1330,6 +1343,7 @@ export function ChatInterface({
             playIndex(0);
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
             logger.info(`[Audio] Starting playback for message ${nextMsg.id.substring(0, 8)}...`);
+            audioPlayerRef.current.onended = handleAudioEnd;
             audioPlayerRef.current.src = nextMsg.audioUrl;
             audioPlayerRef.current.play()
                 .then(() => {
@@ -1373,6 +1387,7 @@ export function ChatInterface({
 
             // Stop HTML5 audio using the captured ref value
             if (currentAudioPlayer) {
+                currentAudioPlayer.onended = null;
                 currentAudioPlayer.pause();
                 currentAudioPlayer.currentTime = 0;
             }
@@ -1887,10 +1902,6 @@ export function ChatInterface({
                 ref={audioPlayerRef}
                 style={{ display: 'none' }}
                 aria-hidden="true"
-                onEnded={() => {
-                    // This now only handles audio file endings. Speech synthesis endings are handled by utterance.onend
-                    handleAudioEnd();
-                }}
             />
 
             {/* Fullscreen Paragraph Image Gallery */}
