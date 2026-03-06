@@ -53,6 +53,7 @@ interface Message {
     timestamp: Timestamp | null;
     audioUrl?: string; // Optional audioUrl
     paragraphAudioUrls?: Array<string | null>;
+    paragraphAudioErrors?: Array<string | null>;
     ttsWasSplit?: boolean; // Optional: true if audio was split due to TTS input limits
     isStreaming?: boolean;
     imageUrl?: string | null;
@@ -199,6 +200,8 @@ export function ChatInterface({
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
+    const latestMessagesRef = useRef<Message[]>([]);
+    const localAIWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const messageRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
     const paragraphRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
     const scrollViewportRef = useRef<HTMLDivElement>(null);
@@ -206,9 +209,9 @@ export function ChatInterface({
     const ttsChunkQueueRef = useRef<string[]>([]);
     const currentChunkIndexRef = useRef<number>(0);
     const paragraphIndicesRef = useRef<number[]>([]);
-    const paragraphAudioQueueRef = useRef<string[]>([]);
     const currentAudioParagraphIndexRef = useRef<number>(0);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
+    latestMessagesRef.current = messages;
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
@@ -312,6 +315,12 @@ export function ChatInterface({
             } catch (err) {
                 logger.error("Error cleaning up audio player:", err);
             }
+        }
+
+        // Stop any pending LocalAI paragraph wait loop
+        if (localAIWaitTimerRef.current) {
+            clearTimeout(localAIWaitTimerRef.current);
+            localAIWaitTimerRef.current = null;
         }
 
         // Mark message as played FIRST, before resetting audio state
@@ -523,6 +532,7 @@ export function ChatInterface({
                             timestamp: data.timestamp || null,
                             audioUrl: data.audioUrl,
                             paragraphAudioUrls: data.paragraphAudioUrls,
+                            paragraphAudioErrors: data.paragraphAudioErrors,
                             ttsWasSplit: data.ttsWasSplit,
                             isStreaming: data.isStreaming,
                             imageUrl: data.imageUrl,
@@ -759,6 +769,11 @@ export function ChatInterface({
             setIsAudioPlaying(false);
             setIsAudioPaused(false);
             setCurrentlyPlayingMsgId(null);
+        }
+
+        if (localAIWaitTimerRef.current) {
+            clearTimeout(localAIWaitTimerRef.current);
+            localAIWaitTimerRef.current = null;
         }
 
         // Clean up browser TTS completely
@@ -1259,7 +1274,8 @@ export function ChatInterface({
             }
 
         } else if (ttsConfig?.provider === 'localai') {
-            // LocalAI: play stored paragraph clips sequentially
+            // LocalAI: play paragraph clips in order as they become available.
+            // Do not wait for the entire turn to finish generating.
             const urls = Array.isArray(nextMsg.paragraphAudioUrls) ? nextMsg.paragraphAudioUrls : null;
             if (!urls || urls.length === 0) {
                 // Not ready yet
@@ -1268,40 +1284,57 @@ export function ChatInterface({
                 return;
             }
 
-            // Wait until generation finishes: null means pending.
-            if (urls.some((u) => u === null)) {
+            // The first paragraph is required. Wait until it is ready.
+            if (urls[0] === null || typeof urls[0] === 'undefined' || urls[0] === '') {
+                const firstParagraphError = Array.isArray(nextMsg.paragraphAudioErrors) ? nextMsg.paragraphAudioErrors[0] : null;
+                if (firstParagraphError) {
+                    setTtsError(firstParagraphError);
+                }
                 setPendingTtsMessage(nextMsg);
                 setIsAudioReady(false);
                 return;
             }
 
-            const playable = urls
-                .map((u, idx) => ({ url: typeof u === 'string' ? u : '', idx }))
-                .filter((x) => x.url.length > 0);
+            currentParagraphIndexRef.current = -1;
+            currentAudioParagraphIndexRef.current = 0;
 
-            if (playable.length === 0) {
-                // All paragraphs skipped/failed. Mark as played to prevent stalling.
-                setCurrentlyPlayingMsgId(nextMsg.id);
-                setIsAudioPlaying(true);
-                setPendingTtsMessage(null);
-                setTimeout(() => handleAudioEnd(), 0);
-                return;
+            if (localAIWaitTimerRef.current) {
+                clearTimeout(localAIWaitTimerRef.current);
+                localAIWaitTimerRef.current = null;
             }
 
-            paragraphAudioQueueRef.current = playable.map((x) => x.url);
-            const paragraphIndexMap = playable.map((x) => x.idx);
-            currentAudioParagraphIndexRef.current = 0;
-            currentParagraphIndexRef.current = -1;
-
-            const playIndex = (queueIndex: number) => {
+            const playParagraph = (paragraphIndex: number) => {
                 if (!audioPlayerRef.current) return;
-                if (queueIndex >= paragraphAudioQueueRef.current.length) {
+                if (paragraphIndex >= urls.length) {
                     audioPlayerRef.current.onended = null;
                     handleAudioEnd();
                     return;
                 }
 
-                const paragraphIndex = paragraphIndexMap[queueIndex] ?? 0;
+                currentAudioParagraphIndexRef.current = paragraphIndex;
+                const latestMsg = latestMessagesRef.current.find((m) => m.id === nextMsg.id);
+                const latestUrls = Array.isArray(latestMsg?.paragraphAudioUrls) ? latestMsg.paragraphAudioUrls : urls;
+                const latestErrors = Array.isArray(latestMsg?.paragraphAudioErrors) ? latestMsg.paragraphAudioErrors : [];
+                const paragraphUrl = latestUrls[paragraphIndex];
+                const paragraphError = latestErrors[paragraphIndex];
+
+                if (paragraphUrl === null || typeof paragraphUrl === 'undefined' || paragraphUrl === '') {
+                    setPendingTtsMessage(nextMsg);
+                    setIsAudioReady(false);
+                    if (paragraphError) {
+                        setTtsError(paragraphError);
+                    }
+                    localAIWaitTimerRef.current = setTimeout(() => {
+                        playParagraph(paragraphIndex);
+                    }, 250);
+                    return;
+                }
+
+                if (localAIWaitTimerRef.current) {
+                    clearTimeout(localAIWaitTimerRef.current);
+                    localAIWaitTimerRef.current = null;
+                }
+                setTtsError(null);
 
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
@@ -1321,18 +1354,18 @@ export function ChatInterface({
                 }
 
                 audioPlayerRef.current.onended = () => {
-                    currentAudioParagraphIndexRef.current++;
-                    playIndex(currentAudioParagraphIndexRef.current);
+                    playParagraph(paragraphIndex + 1);
                 };
 
-                audioPlayerRef.current.src = paragraphAudioQueueRef.current[queueIndex];
+                audioPlayerRef.current.src = paragraphUrl;
                 audioPlayerRef.current.play()
                     .then(() => {
-                        if (queueIndex === 0) {
+                        if (paragraphIndex === 0) {
                             setCurrentlyPlayingMsgId(nextMsg.id);
                             setIsAudioPlaying(true);
                             setPendingTtsMessage(null);
                         }
+                        setIsAudioReady(true);
                     })
                     .catch(err => {
                         logger.error(`[Audio] LocalAI paragraph playback failed:`, err);
@@ -1340,7 +1373,7 @@ export function ChatInterface({
                     });
             };
 
-            playIndex(0);
+            playParagraph(0);
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
             logger.info(`[Audio] Starting playback for message ${nextMsg.id.substring(0, 8)}...`);
             audioPlayerRef.current.onended = handleAudioEnd;
@@ -1390,6 +1423,11 @@ export function ChatInterface({
                 currentAudioPlayer.onended = null;
                 currentAudioPlayer.pause();
                 currentAudioPlayer.currentTime = 0;
+            }
+
+            if (localAIWaitTimerRef.current) {
+                clearTimeout(localAIWaitTimerRef.current);
+                localAIWaitTimerRef.current = null;
             }
 
             // Stop browser TTS completely
