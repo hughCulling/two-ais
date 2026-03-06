@@ -38,7 +38,7 @@ service cloud.firestore {
         // This enables the InvokeAI image generation hook and LocalAI TTS hook.
         allow update: if request.auth != null && 
                          get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId == request.auth.uid &&
-                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paragraphImages', 'paragraphAudioUrls']);
+                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paragraphImages', 'paragraphAudioUrls', 'paragraphAudioErrors']);
 
         // Disallow client-side deletes of messages for integrity
         allow delete: if false;
