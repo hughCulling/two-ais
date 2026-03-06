@@ -999,7 +999,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             agentSettingsSetter(prev => ({
                 ...prev,
                 provider: 'localai',
-                voice: prev.voice ?? '',
+                // LocalAI TTS is model-only in this UI flow; do not carry browser voice IDs.
+                voice: null,
                 selectedTtsModelId: prev.selectedTtsModelId,
                 ttsApiModelId: prev.ttsApiModelId,
             }));
@@ -1240,11 +1241,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         const sessionAgentBTTSSettings = ttsEnabled ? agentBTTSSettings : disabledTtsSettings;
 
         if (ttsEnabled) {
-            if (!sessionAgentATTSSettings.voice) {
+            const isAgentAUsingLocalAI = sessionAgentATTSSettings.provider === 'localai';
+            const isAgentBUsingLocalAI = sessionAgentBTTSSettings.provider === 'localai';
+
+            if (!isAgentAUsingLocalAI && !sessionAgentATTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent A or disable TTS.`);
                 return;
             }
-            if (!sessionAgentBTTSSettings.voice) {
+            if (!isAgentBUsingLocalAI && !sessionAgentBTTSSettings.voice) {
                 alert(`Please select a TTS voice for Agent B or disable TTS.`);
                 return;
             }
@@ -1260,10 +1264,6 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     if (settings.provider !== 'localai') return true;
                     if (!settings.selectedTtsModelId || !settings.selectedTtsModelId.trim()) {
                         alert(`Please select a LocalAI model for Agent ${agentLabel}.`);
-                        return false;
-                    }
-                    if (!settings.voice || !settings.voice.trim()) {
-                        alert(`Please select a LocalAI voice for Agent ${agentLabel}.`);
                         return false;
                     }
                     return true;
@@ -1333,7 +1333,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 provider: 'localai',
                 selectedTtsModelId: prev.selectedTtsModelId,
                 ttsApiModelId: prev.ttsApiModelId,
-                voice: prev.voice ?? '',
+                // LocalAI currently has no selectable voice in the session UI.
+                voice: null,
             }));
             return;
         }

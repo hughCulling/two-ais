@@ -32,7 +32,7 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
         paragraphs: string[];
         endpoint: string;
         model: string;
-        voice: string;
+        voice?: string;
     }>>([]);
     const isGeneratingRef = useRef(false);
 
@@ -149,8 +149,8 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                     if (agentTts.provider !== 'localai') continue;
 
                     const model = agentTts.selectedTtsModelId;
-                    const voice = agentTts.voice;
-                    if (!model || !model.trim() || !voice || !voice.trim()) continue;
+                    const voice = typeof agentTts.voice === 'string' ? agentTts.voice.trim() : '';
+                    if (!model || !model.trim()) continue;
 
                     const paragraphs = splitIntoParagraphs(messageData.content);
                     if (paragraphs.length === 0) continue;
@@ -169,7 +169,7 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                                 paragraphs,
                                 endpoint,
                                 model,
-                                voice,
+                                voice: voice || undefined,
                             });
                         }
 

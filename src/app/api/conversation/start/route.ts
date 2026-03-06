@@ -306,7 +306,8 @@ export async function POST(request: NextRequest) {
                     if (!settings.selectedTtsModelId) {
                         return `Missing TTS model selection for ${agentName} (${settings.provider}).`;
                     }
-                    if (!settings.voice) {
+                    // LocalAI is model-only in the current app flow.
+                    if (settings.provider !== "localai" && !settings.voice) {
                         return `Missing TTS voice selection for ${agentName} (${settings.provider}).`;
                     }
                 }
