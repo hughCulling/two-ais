@@ -210,6 +210,7 @@ export function ChatInterface({
     const currentChunkIndexRef = useRef<number>(0);
     const paragraphIndicesRef = useRef<number[]>([]);
     const currentAudioParagraphIndexRef = useRef<number>(0);
+    const isPlaybackStartingRef = useRef(false);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
     latestMessagesRef.current = messages;
 
@@ -322,6 +323,7 @@ export function ChatInterface({
             clearTimeout(localAIWaitTimerRef.current);
             localAIWaitTimerRef.current = null;
         }
+        isPlaybackStartingRef.current = false;
 
         // Mark message as played FIRST, before resetting audio state
         // This ensures the next message becomes visible before we try to play it
@@ -770,6 +772,7 @@ export function ChatInterface({
             setIsAudioPaused(false);
             setCurrentlyPlayingMsgId(null);
         }
+        isPlaybackStartingRef.current = false;
 
         if (localAIWaitTimerRef.current) {
             clearTimeout(localAIWaitTimerRef.current);
@@ -994,7 +997,7 @@ export function ChatInterface({
         logger.debug('[TTS] Audio playback effect triggered');
 
         // Early return if audio is already playing - CRITICAL to prevent interruptions
-        if (isAudioPlaying || isAudioPaused || isBrowserTTSActive) {
+        if (isAudioPlaying || isAudioPaused || isBrowserTTSActive || isPlaybackStartingRef.current) {
             logger.debug('[TTS] Effect skipped - audio already playing or paused');
             return;
         }
@@ -1358,9 +1361,13 @@ export function ChatInterface({
                 };
 
                 audioPlayerRef.current.src = paragraphUrl;
+                if (paragraphIndex === 0) {
+                    isPlaybackStartingRef.current = true;
+                }
                 audioPlayerRef.current.play()
                     .then(() => {
                         if (paragraphIndex === 0) {
+                            isPlaybackStartingRef.current = false;
                             setCurrentlyPlayingMsgId(nextMsg.id);
                             setIsAudioPlaying(true);
                             setPendingTtsMessage(null);
@@ -1368,6 +1375,13 @@ export function ChatInterface({
                         setIsAudioReady(true);
                     })
                     .catch(err => {
+                        if (paragraphIndex === 0) {
+                            isPlaybackStartingRef.current = false;
+                        }
+                        if (err instanceof DOMException && err.name === 'AbortError') {
+                            logger.debug('[Audio] LocalAI paragraph playback aborted (likely replaced by a newer play request)');
+                            return;
+                        }
                         logger.error(`[Audio] LocalAI paragraph playback failed:`, err);
                         handleAudioEnd();
                     });
@@ -1429,6 +1443,7 @@ export function ChatInterface({
                 clearTimeout(localAIWaitTimerRef.current);
                 localAIWaitTimerRef.current = null;
             }
+            isPlaybackStartingRef.current = false;
 
             // Stop browser TTS completely
             if (window.speechSynthesis) {
@@ -1597,12 +1612,26 @@ export function ChatInterface({
             )}
 
             {/* User Interaction Prompt for Audio - Only show if autoplay is actually blocked */}
-            {!hasUserInteracted && audioAutoplayBlocked === true && conversationStatus === "running" && (
+            {!hasUserInteracted && conversationStatus === "running" && (
                 (() => {
-                    const hasUnplayedAudio = messages.some(msg => msg.audioUrl && !playedMessageIds.has(msg.id));
+                    const hasUnplayedAudio = messages.some(msg => {
+                        if (playedMessageIds.has(msg.id)) return false;
+                        if (msg.role !== 'agentA' && msg.role !== 'agentB') return false;
+
+                        const agentTtsSettings = conversationData?.ttsSettings?.[msg.role];
+                        if (!agentTtsSettings || agentTtsSettings.provider === 'none') return false;
+
+                        if (agentTtsSettings.provider === 'localai') {
+                            return true;
+                        }
+
+                        return !!msg.audioUrl;
+                    });
                     const isUsingBrowserTTS = conversationData?.ttsSettings?.agentA?.provider === 'browser' ||
                         conversationData?.ttsSettings?.agentB?.provider === 'browser';
-                    return hasUnplayedAudio || isWaitingForSignal || isUsingBrowserTTS;
+                    const isUsingLocalAITTS = conversationData?.ttsSettings?.agentA?.provider === 'localai' ||
+                        conversationData?.ttsSettings?.agentB?.provider === 'localai';
+                    return hasUnplayedAudio || isWaitingForSignal || isUsingBrowserTTS || isUsingLocalAITTS;
                 })() && (
                     <div className={`bg-blue-50 border-l-4 border-blue-400 p-4 mt-4 rounded-md ${isFullscreen ? 'max-w-3xl mx-auto' : 'mx-4'}`}>
                         <div className="flex">
