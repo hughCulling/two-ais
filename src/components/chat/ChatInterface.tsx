@@ -211,6 +211,8 @@ export function ChatInterface({
     const paragraphIndicesRef = useRef<number[]>([]);
     const currentAudioParagraphIndexRef = useRef<number>(0);
     const isPlaybackStartingRef = useRef(false);
+    const streamingAutoScrollRafRef = useRef<number | null>(null);
+    const prevStreamingSnapshotRef = useRef<{ id: string; contentLength: number } | null>(null);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
     latestMessagesRef.current = messages;
 
@@ -693,6 +695,57 @@ export function ChatInterface({
         }
         prevMessagesLength.current = messages.length;
     }, [messages, conversationStatus, isStopped, isAudioPlaying, playedMessageIds, scrollToBottom]);
+
+    // --- Effect 3.5: Auto-follow while a message is actively streaming ---
+    useEffect(() => {
+        if (conversationStatus !== "running" || isStopped) {
+            prevStreamingSnapshotRef.current = null;
+            return;
+        }
+
+        if (!streamingMessage || streamingMessage.status !== 'streaming') {
+            prevStreamingSnapshotRef.current = null;
+            return;
+        }
+
+        // Avoid fighting playback auto-scroll while any audio/TTS is active.
+        if (isAudioPlaying || isAudioPaused || isBrowserTTSActive || isPlaybackStartingRef.current) {
+            return;
+        }
+
+        const contentLength = streamingMessage.content?.length ?? 0;
+        const prevSnapshot = prevStreamingSnapshotRef.current;
+        const hasChanged =
+            !prevSnapshot ||
+            prevSnapshot.id !== streamingMessage.id ||
+            prevSnapshot.contentLength !== contentLength;
+
+        if (!hasChanged) {
+            return;
+        }
+
+        prevStreamingSnapshotRef.current = {
+            id: streamingMessage.id,
+            contentLength,
+        };
+
+        if (streamingAutoScrollRafRef.current !== null) {
+            cancelAnimationFrame(streamingAutoScrollRafRef.current);
+            streamingAutoScrollRafRef.current = null;
+        }
+
+        streamingAutoScrollRafRef.current = requestAnimationFrame(() => {
+            scrollToBottom(messagesEndRef.current);
+            streamingAutoScrollRafRef.current = null;
+        });
+
+        return () => {
+            if (streamingAutoScrollRafRef.current !== null) {
+                cancelAnimationFrame(streamingAutoScrollRafRef.current);
+                streamingAutoScrollRafRef.current = null;
+            }
+        };
+    }, [streamingMessage, conversationStatus, isStopped, isAudioPlaying, isAudioPaused, isBrowserTTSActive, scrollToBottom]);
 
     // --- Effect: Test Audio Autoplay on Mount ---
     useEffect(() => {
@@ -1287,9 +1340,34 @@ export function ChatInterface({
                 return;
             }
 
-            // The first paragraph is required. Wait until it is ready.
-            if (urls[0] === null || typeof urls[0] === 'undefined' || urls[0] === '') {
-                const firstParagraphError = Array.isArray(nextMsg.paragraphAudioErrors) ? nextMsg.paragraphAudioErrors[0] : null;
+            const sourceParagraphs = splitIntoParagraphs(nextMsg.content);
+            const speakableParagraphs = sourceParagraphs.map((paragraph) => {
+                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+                return cleanedParagraph.trim().length > 0;
+            });
+
+            const getNextSpeakableParagraphIndex = (startIndex: number): number => {
+                const totalParagraphs = Math.max(urls.length, speakableParagraphs.length);
+                for (let i = startIndex; i < totalParagraphs; i++) {
+                    if (speakableParagraphs[i] === false) {
+                        continue;
+                    }
+                    return i;
+                }
+                return -1;
+            };
+
+            // Wait for the first speakable paragraph (emoji/markdown-only paragraphs are skipped).
+            const firstSpeakableParagraphIndex = getNextSpeakableParagraphIndex(0);
+            if (firstSpeakableParagraphIndex === -1) {
+                // Message has no speakable content after sanitization; mark as played and continue.
+                currentlyPlayingMsgIdRef.current = nextMsg.id;
+                setCurrentlyPlayingMsgId(nextMsg.id);
+                handleAudioEnd();
+                return;
+            }
+            if (urls[firstSpeakableParagraphIndex] === null || typeof urls[firstSpeakableParagraphIndex] === 'undefined' || urls[firstSpeakableParagraphIndex] === '') {
+                const firstParagraphError = Array.isArray(nextMsg.paragraphAudioErrors) ? nextMsg.paragraphAudioErrors[firstSpeakableParagraphIndex] : null;
                 if (firstParagraphError) {
                     setTtsError(firstParagraphError);
                 }
@@ -1308,18 +1386,20 @@ export function ChatInterface({
 
             const playParagraph = (paragraphIndex: number) => {
                 if (!audioPlayerRef.current) return;
-                if (paragraphIndex >= urls.length) {
+                const currentParagraphIndex = getNextSpeakableParagraphIndex(paragraphIndex);
+                if (currentParagraphIndex === -1) {
                     audioPlayerRef.current.onended = null;
+                    audioPlayerRef.current.onerror = null;
                     handleAudioEnd();
                     return;
                 }
 
-                currentAudioParagraphIndexRef.current = paragraphIndex;
+                currentAudioParagraphIndexRef.current = currentParagraphIndex;
                 const latestMsg = latestMessagesRef.current.find((m) => m.id === nextMsg.id);
                 const latestUrls = Array.isArray(latestMsg?.paragraphAudioUrls) ? latestMsg.paragraphAudioUrls : urls;
                 const latestErrors = Array.isArray(latestMsg?.paragraphAudioErrors) ? latestMsg.paragraphAudioErrors : [];
-                const paragraphUrl = latestUrls[paragraphIndex];
-                const paragraphError = latestErrors[paragraphIndex];
+                const paragraphUrl = latestUrls[currentParagraphIndex];
+                const paragraphError = latestErrors[currentParagraphIndex];
 
                 if (paragraphUrl === null || typeof paragraphUrl === 'undefined' || paragraphUrl === '') {
                     setPendingTtsMessage(nextMsg);
@@ -1328,7 +1408,7 @@ export function ChatInterface({
                         setTtsError(paragraphError);
                     }
                     localAIWaitTimerRef.current = setTimeout(() => {
-                        playParagraph(paragraphIndex);
+                        playParagraph(currentParagraphIndex);
                     }, 250);
                     return;
                 }
@@ -1341,7 +1421,7 @@ export function ChatInterface({
 
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
-                        const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
+                        const paragraphKey = `${nextMsg.id}-p${currentParagraphIndex}`;
                         const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
                         const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
                         if (paragraphElement && scrollContainer) {
@@ -1351,22 +1431,27 @@ export function ChatInterface({
                             const paragraphRelativeTop = paragraphRect.top - containerRect.top;
                             const targetScroll = currentScroll + paragraphRelativeTop - 20;
                             scrollContainer.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
-                            currentParagraphIndexRef.current = paragraphIndex;
+                            currentParagraphIndexRef.current = currentParagraphIndex;
                         }
                     });
                 }
 
                 audioPlayerRef.current.onended = () => {
-                    playParagraph(paragraphIndex + 1);
+                    playParagraph(currentParagraphIndex + 1);
+                };
+
+                audioPlayerRef.current.onerror = () => {
+                    logger.warn(`[Audio] LocalAI paragraph ${currentParagraphIndex + 1} media error. Skipping to next paragraph.`);
+                    playParagraph(currentParagraphIndex + 1);
                 };
 
                 audioPlayerRef.current.src = paragraphUrl;
-                if (paragraphIndex === 0) {
+                if (currentParagraphIndex === firstSpeakableParagraphIndex) {
                     isPlaybackStartingRef.current = true;
                 }
                 audioPlayerRef.current.play()
                     .then(() => {
-                        if (paragraphIndex === 0) {
+                        if (currentParagraphIndex === firstSpeakableParagraphIndex) {
                             isPlaybackStartingRef.current = false;
                             setCurrentlyPlayingMsgId(nextMsg.id);
                             setIsAudioPlaying(true);
@@ -1375,19 +1460,31 @@ export function ChatInterface({
                         setIsAudioReady(true);
                     })
                     .catch(err => {
-                        if (paragraphIndex === 0) {
+                        if (currentParagraphIndex === firstSpeakableParagraphIndex) {
                             isPlaybackStartingRef.current = false;
                         }
                         if (err instanceof DOMException && err.name === 'AbortError') {
                             logger.debug('[Audio] LocalAI paragraph playback aborted (likely replaced by a newer play request)');
                             return;
                         }
+                        if (err instanceof DOMException && err.name === 'NotAllowedError') {
+                            logger.info('[Audio] LocalAI playback blocked by autoplay policy. Waiting for user interaction.');
+                            setAudioAutoplayBlocked(true);
+                            setHasUserInteracted(false);
+                            setPendingTtsMessage(nextMsg);
+                            return;
+                        }
                         logger.error(`[Audio] LocalAI paragraph playback failed:`, err);
+                        if (currentParagraphIndex + 1 < Math.max(latestUrls.length, speakableParagraphs.length)) {
+                            logger.warn(`[Audio] LocalAI paragraph ${currentParagraphIndex + 1} failed. Skipping to next paragraph.`);
+                            playParagraph(currentParagraphIndex + 1);
+                            return;
+                        }
                         handleAudioEnd();
                     });
             };
 
-            playParagraph(0);
+            playParagraph(firstSpeakableParagraphIndex);
         } else if (nextMsg.audioUrl && audioPlayerRef.current) {
             logger.info(`[Audio] Starting playback for message ${nextMsg.id.substring(0, 8)}...`);
             audioPlayerRef.current.onended = handleAudioEnd;
