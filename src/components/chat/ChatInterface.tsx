@@ -211,6 +211,8 @@ export function ChatInterface({
     const paragraphIndicesRef = useRef<number[]>([]);
     const currentAudioParagraphIndexRef = useRef<number>(0);
     const isPlaybackStartingRef = useRef(false);
+    const streamingAutoScrollRafRef = useRef<number | null>(null);
+    const prevStreamingSnapshotRef = useRef<{ id: string; contentLength: number } | null>(null);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
     latestMessagesRef.current = messages;
 
@@ -693,6 +695,57 @@ export function ChatInterface({
         }
         prevMessagesLength.current = messages.length;
     }, [messages, conversationStatus, isStopped, isAudioPlaying, playedMessageIds, scrollToBottom]);
+
+    // --- Effect 3.5: Auto-follow while a message is actively streaming ---
+    useEffect(() => {
+        if (conversationStatus !== "running" || isStopped) {
+            prevStreamingSnapshotRef.current = null;
+            return;
+        }
+
+        if (!streamingMessage || streamingMessage.status !== 'streaming') {
+            prevStreamingSnapshotRef.current = null;
+            return;
+        }
+
+        // Avoid fighting playback auto-scroll while any audio/TTS is active.
+        if (isAudioPlaying || isAudioPaused || isBrowserTTSActive || isPlaybackStartingRef.current) {
+            return;
+        }
+
+        const contentLength = streamingMessage.content?.length ?? 0;
+        const prevSnapshot = prevStreamingSnapshotRef.current;
+        const hasChanged =
+            !prevSnapshot ||
+            prevSnapshot.id !== streamingMessage.id ||
+            prevSnapshot.contentLength !== contentLength;
+
+        if (!hasChanged) {
+            return;
+        }
+
+        prevStreamingSnapshotRef.current = {
+            id: streamingMessage.id,
+            contentLength,
+        };
+
+        if (streamingAutoScrollRafRef.current !== null) {
+            cancelAnimationFrame(streamingAutoScrollRafRef.current);
+            streamingAutoScrollRafRef.current = null;
+        }
+
+        streamingAutoScrollRafRef.current = requestAnimationFrame(() => {
+            scrollToBottom(messagesEndRef.current);
+            streamingAutoScrollRafRef.current = null;
+        });
+
+        return () => {
+            if (streamingAutoScrollRafRef.current !== null) {
+                cancelAnimationFrame(streamingAutoScrollRafRef.current);
+                streamingAutoScrollRafRef.current = null;
+            }
+        };
+    }, [streamingMessage, conversationStatus, isStopped, isAudioPlaying, isAudioPaused, isBrowserTTSActive, scrollToBottom]);
 
     // --- Effect: Test Audio Autoplay on Mount ---
     useEffect(() => {
