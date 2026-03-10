@@ -1223,33 +1223,19 @@ export function ChatInterface({
 
                         if (isNewParagraph && paragraphRefsMap.current.has(paragraphKey)) {
                             const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
-                            const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
 
-                            if (paragraphElement && scrollContainer) {
+                            if (paragraphElement) {
                                 logger.info(`[TTS Auto-Scroll] ✓ Scrolling to paragraph ${paragraphIndex} of message ${nextMsg.id.substring(0, 8)}...`);
 
-                                // Get the position of the paragraph relative to the scroll container
-                                const containerRect = scrollContainer.getBoundingClientRect();
-                                const paragraphRect = paragraphElement.getBoundingClientRect();
-
-                                // Calculate how much to scroll to put the paragraph at the top
-                                // Use minimal padding (20px) for small screens
-                                const currentScroll = scrollContainer.scrollTop;
-                                const paragraphRelativeTop = paragraphRect.top - containerRect.top;
-                                const targetScroll = currentScroll + paragraphRelativeTop - 20;
-
-                                logger.debug(`[TTS Auto-Scroll] Container height: ${containerRect.height}px, Current scroll: ${currentScroll}, Target: ${targetScroll}`);
-
-                                scrollContainer.scrollTo({
-                                    top: Math.max(0, targetScroll),
-                                    behavior: 'smooth'
+                                // Use scrollIntoView to scroll element to top of scrollable container
+                                paragraphElement.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
                                 });
 
                                 currentParagraphIndexRef.current = paragraphIndex;
                             } else {
-                                logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element or scroll container is null for ${paragraphKey}`);
-                                if (!paragraphElement) logger.warn(`  - Missing paragraph element`);
-                                if (!scrollContainer) logger.warn(`  - Missing scroll container`);
+                                logger.warn(`[TTS Auto-Scroll] ✗ Paragraph element is null for ${paragraphKey}`);
                             }
                         } else if (!isNewParagraph) {
                             logger.debug(`[TTS Auto-Scroll] Still on same paragraph ${paragraphIndex}, not scrolling`);
@@ -1423,14 +1409,11 @@ export function ChatInterface({
                     requestAnimationFrame(() => {
                         const paragraphKey = `${nextMsg.id}-p${currentParagraphIndex}`;
                         const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
-                        const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
-                        if (paragraphElement && scrollContainer) {
-                            const containerRect = scrollContainer.getBoundingClientRect();
-                            const paragraphRect = paragraphElement.getBoundingClientRect();
-                            const currentScroll = scrollContainer.scrollTop;
-                            const paragraphRelativeTop = paragraphRect.top - containerRect.top;
-                            const targetScroll = currentScroll + paragraphRelativeTop - 20;
-                            scrollContainer.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+                        if (paragraphElement) {
+                            paragraphElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
                             currentParagraphIndexRef.current = currentParagraphIndex;
                         }
                     });
@@ -1772,7 +1755,7 @@ export function ChatInterface({
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
-                                        msg.role === 'agentB' ? 'bg-primary text-primary-foreground' :
+                                        msg.role === 'agentB' ? 'bg-primary text-primary-foreground dark:bg-blue-950/70 dark:text-blue-100 dark:border dark:border-blue-900/80' :
                                             'bg-transparent px-0 py-0 shadow-none'
                                     }`}
                             >
