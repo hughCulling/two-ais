@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
 import {
     Alert,
     AlertDescription,
@@ -226,6 +226,20 @@ export function ChatInterface({
         return paragraphs;
     }, []);
 
+    // --- Helper: Get TTS-compatible paragraph indices for auto-scroll ---
+    // Maps DOM paragraph indices to TTS paragraph indices (skipping non-speakable ones)
+    const getTTSParagraphIndex = useCallback((content: string, domIndex: number): number => {
+        const allParagraphs = content.split(/\n+/);
+        let ttsIndex = 0;
+        for (let i = 0; i < domIndex; i++) {
+            const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(allParagraphs[i])));
+            if (cleaned.trim().length > 0) {
+                ttsIndex++;
+            }
+        }
+        return ttsIndex;
+    }, []);
+
     // --- Helper: Split text into TTS-safe chunks ---
     const splitIntoTTSChunks = useCallback((text: string, maxLength: number = 4000): string[] => {
         if (text.length <= maxLength) {
@@ -355,6 +369,71 @@ export function ChatInterface({
                 logger.info(`Updated lastPlayedAgentMessageId to ${playedMsgId}`);
             } catch (err) {
                 logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
+            }
+        }
+    }, [conversationId, messages]);
+
+    const handleSkipTurn = useCallback(() => {
+        const skippedMsgId = currentlyPlayingMsgIdRef.current;
+        if (!skippedMsgId) {
+            logger.debug("[TTS] Skip requested but no message is playing");
+            return;
+        }
+
+        logger.info(`[TTS] Skipping turn for message ${skippedMsgId.substring(0, 8)}...`);
+
+        if (utteranceRef.current) {
+            try {
+                window.speechSynthesis.cancel();
+                utteranceRef.current.onend = null;
+                utteranceRef.current.onerror = null;
+                utteranceRef.current = null;
+            } catch (err) {
+                logger.error("Error cancelling speech on skip:", err);
+            }
+        }
+
+        if (audioPlayerRef.current) {
+            try {
+                audioPlayerRef.current.onended = null;
+                audioPlayerRef.current.onerror = null;
+                audioPlayerRef.current.pause();
+                audioPlayerRef.current.currentTime = 0;
+            } catch (err) {
+                logger.error("Error stopping audio on skip:", err);
+            }
+        }
+
+        if (localAIWaitTimerRef.current) {
+            clearTimeout(localAIWaitTimerRef.current);
+            localAIWaitTimerRef.current = null;
+        }
+
+        isPlaybackStartingRef.current = false;
+
+        setPlayedMessageIds(prev => {
+            const newSet = new Set(prev);
+            newSet.add(skippedMsgId);
+            return newSet;
+        });
+
+        setIsAudioPlaying(false);
+        setIsAudioPaused(false);
+        setCurrentlyPlayingMsgId(null);
+        setIsBrowserTTSActive(false);
+        setTtsError(null);
+        setPendingTtsMessage(null);
+
+        const skippedMsg = messages.find(m => m.id === skippedMsgId);
+        if (skippedMsg && (skippedMsg.role === 'agentA' || skippedMsg.role === 'agentB')) {
+            try {
+                const conversationRef = doc(db, "conversations", conversationId);
+                updateDoc(conversationRef, {
+                    lastPlayedAgentMessageId: skippedMsgId,
+                    lastActivity: serverTimestamp(),
+                });
+            } catch (err) {
+                logger.error("Failed to update lastPlayedAgentMessageId on skip:", err);
             }
         }
     }, [conversationId, messages]);
@@ -1841,14 +1920,15 @@ export function ChatInterface({
                                             {msg.content.split(/\n+/).map((paragraph, index) => {
                                                 const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
                                                 const isSpeakable = cleanedParagraph.trim().length > 0;
-                                                const paragraphKey = `${msg.id}-p${index}`;
+                                                // Use TTS-compatible index so auto-scroll aligns with TTS
+                                                const ttsIndex = getTTSParagraphIndex(msg.content, index);
+                                                const paragraphKey = `${msg.id}-p${ttsIndex}`;
                                                 return (
                                                     <div
-                                                        key={paragraphKey}
+                                                        key={`${msg.id}-dom-${index}`}
                                                         ref={(el) => {
                                                             if (el && isSpeakable) {
                                                                 paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
-                                                                logger.debug(`[TTS Auto-Scroll] Set ref for paragraph ${paragraphKey}`);
                                                             } else {
                                                                 paragraphRefsMap.current.delete(paragraphKey);
                                                             }
@@ -1978,6 +2058,30 @@ export function ChatInterface({
                             aria-label="No audio playing"
                         >
                             <Play className="h-6 w-6" />
+                        </Button>
+                    )}
+
+                    {/* Skip Turn Button - Enabled when audio is playing or paused */}
+                    {(isAudioPlaying || isAudioPaused) ? (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleSkipTurn}
+                            className="h-12 w-12 rounded-full"
+                            aria-label="Skip to next turn"
+                            title="Skip to next turn"
+                        >
+                            <SkipForward className="h-6 w-6" />
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled
+                            className="h-12 w-12 rounded-full opacity-50 cursor-not-allowed"
+                            aria-label="No audio playing"
+                        >
+                            <SkipForward className="h-6 w-6" />
                         </Button>
                     )}
 
