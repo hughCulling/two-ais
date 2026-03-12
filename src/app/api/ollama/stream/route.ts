@@ -58,20 +58,25 @@ export async function POST(request: NextRequest) {
 
           // Check if this is a cloud model (contains :cloud suffix)
           const isCloudModel = model.includes(':cloud');
+          
+          // Also check if this is a Gemini model (requires special handling)
+          const isGeminiModel = model.toLowerCase().includes('gemini');
 
-          if (isCloudModel) {
-            // Use direct fetch for cloud models to avoid npm package issues
-            console.log(`[Ollama Stream] Using direct fetch for cloud model: ${model}`);
+          // Process messages - always ensure at least one user message exists
+          // Some models (Gemini, cloud models) and even some local models fail with system-only messages
+          // Converting system to user is safe for all models
+          let processedMessages = messages;
+          if (messages.length === 1 && messages[0].role === 'system') {
+            console.log(`[Ollama Stream] Converting system-only message to user message for compatibility`);
+            processedMessages = [
+              { role: 'user', content: messages[0].content }
+            ];
+          }
 
-            // Cloud models require at least one user message
-            // If we only have a system message, convert it to a user message
-            let processedMessages = messages;
-            if (messages.length === 1 && messages[0].role === 'system') {
-              console.log(`[Ollama Stream] Converting system-only message to user message for cloud model compatibility`);
-              processedMessages = [
-                { role: 'user', content: messages[0].content }
-              ];
-            }
+          if (isCloudModel || isGeminiModel) {
+
+            // Use direct fetch for cloud/Gemini models to avoid npm package issues
+            console.log(`[Ollama Stream] Using direct fetch for ${isGeminiModel ? 'Gemini' : 'cloud'} model: ${model}`);
 
             const requestBody = {
               model: model,
@@ -156,7 +161,7 @@ export async function POST(request: NextRequest) {
 
             const ollamaStream = await ollama.chat({
               model: model,
-              messages: messages,
+              messages: processedMessages,
               stream: true,
             });
 
