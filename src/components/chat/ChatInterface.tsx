@@ -1839,12 +1839,14 @@ export function ChatInterface({
                                         <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                         <div>
                                             {msg.content.split(/\n+/).map((paragraph, index) => {
+                                                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+                                                const isSpeakable = cleanedParagraph.trim().length > 0;
                                                 const paragraphKey = `${msg.id}-p${index}`;
                                                 return (
                                                     <div
                                                         key={paragraphKey}
                                                         ref={(el) => {
-                                                            if (el) {
+                                                            if (el && isSpeakable) {
                                                                 paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
                                                                 logger.debug(`[TTS Auto-Scroll] Set ref for paragraph ${paragraphKey}`);
                                                             } else {
