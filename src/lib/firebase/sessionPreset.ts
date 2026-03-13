@@ -20,6 +20,7 @@ export interface SessionPreset {
     };
     initialSystemPrompt: string;
     localaiEndpoint?: string;
+    lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
         provider: string;

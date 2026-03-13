@@ -40,6 +40,7 @@ type ConversationData = {
     lastPlayedAgentMessageId?: string;
     initialSystemPrompt?: string;
     ollamaEndpoint?: string;
+    lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint?: string;
@@ -104,8 +105,9 @@ export async function triggerAgentResponse(
                     agentMessagesAhead++;
                 }
             }
-            if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
-                logger.info(`[Lookahead Limit] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+            const effectiveLookaheadLimit = conversationData.lookaheadLimit ?? LOOKAHEAD_LIMIT;
+            if (agentMessagesAhead >= effectiveLookaheadLimit) {
+                logger.info(`[Lookahead Limit] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
                 return;
             }
         }
