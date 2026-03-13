@@ -183,6 +183,7 @@ interface StartConversationRequest {
     initialSystemPrompt?: string; // <-- Add this line
     ollamaEndpoint?: string; // ngrok URL for remote Ollama access
     localaiEndpoint?: string; // ngrok URL for remote LocalAI access (TTS)
+    lookaheadLimit?: number; // Number of turns to generate in advance
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
@@ -232,6 +233,7 @@ type ConversationData = {
     initialSystemPrompt: string;
     ollamaEndpoint?: string;
     localaiEndpoint?: string;
+    lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
@@ -288,7 +290,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', ollamaEndpoint, localaiEndpoint, imageGenSettings } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', ollamaEndpoint, localaiEndpoint, lookaheadLimit, imageGenSettings } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -450,6 +452,9 @@ export async function POST(request: NextRequest) {
             }
             if (localaiEndpoint) {
                 conversationData.localaiEndpoint = localaiEndpoint;
+            }
+            if (lookaheadLimit !== undefined) {
+                conversationData.lookaheadLimit = lookaheadLimit;
             }
             if (imageGenSettings !== undefined) {
                 conversationData.imageGenSettings = imageGenSettings;

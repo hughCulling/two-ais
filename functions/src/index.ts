@@ -88,6 +88,7 @@ type ConversationData = {
   initialSystemPrompt?: string;
   processingTurnFor?: "agentA" | "agentB" | null;
   ollamaEndpoint?: string;
+  lookaheadLimit?: number;
   imageGenSettings?: {
     enabled: boolean;
     invokeaiEndpoint: string;
@@ -443,8 +444,9 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ mess
                 agentMessagesAhead++;
             }
         }
-        if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
-            logger.info(`[requestNextTurn] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+        const effectiveLookaheadLimit = conversationData.lookaheadLimit ?? LOOKAHEAD_LIMIT;
+        if (agentMessagesAhead >= effectiveLookaheadLimit) {
+            logger.info(`[requestNextTurn] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
             return { message: "Lookahead buffer full." };
         }
         // --- Determine which agent should respond next ---
@@ -526,8 +528,9 @@ export const onConversationProgressUpdate = onDocumentUpdated(
         agentMessagesAhead++;
       }
     }
-    if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
-      logger.info(`[onConversationProgressUpdate] ${agentMessagesAhead} agent messages ahead of user. Limit is ${LOOKAHEAD_LIMIT}. Skipping agent response generation.`);
+    const effectiveLookaheadLimit = after.lookaheadLimit ?? LOOKAHEAD_LIMIT;
+    if (agentMessagesAhead >= effectiveLookaheadLimit) {
+      logger.info(`[onConversationProgressUpdate] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
       return;
     }
     // --- Determine which agent should respond next ---

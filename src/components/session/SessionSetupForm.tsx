@@ -75,6 +75,7 @@ interface SessionConfig {
     initialSystemPrompt: string;
     ollamaEndpoint?: string;
     localaiEndpoint?: string;
+    lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
         provider: string;
@@ -817,6 +818,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showSafariWarning, setShowSafariWarning] = useState<boolean>(false);
     const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
+    const [lookaheadLimit, setLookaheadLimit] = useState<number>(3);
 
     // Preset management state
     const [showOverwriteDialog, setShowOverwriteDialog] = useState<boolean>(false);
@@ -1284,6 +1286,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             ollamaEndpoint: ollamaEndpoint.trim() || undefined,
             localaiEndpoint: localaiEndpoint.trim() || undefined,
             imageGenSettings,
+            lookaheadLimit,
         });
     };
 
@@ -1386,6 +1389,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 agentB_tts: agentBTTSSettings,
                 initialSystemPrompt,
                 localaiEndpoint: localaiEndpoint.trim() || undefined,
+                lookaheadLimit,
                 imageGenSettings: imageGenEnabled ? {
                     enabled: true,
                     provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
@@ -1455,6 +1459,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             setAgentATTSSettings(preset.agentA_tts as AgentTTSSettings);
             setAgentBTTSSettings(preset.agentB_tts as AgentTTSSettings);
             setInitialSystemPrompt(preset.initialSystemPrompt);
+            if (typeof (preset as unknown as { lookaheadLimit?: number }).lookaheadLimit === 'number') {
+                setLookaheadLimit((preset as unknown as { lookaheadLimit: number }).lookaheadLimit);
+            }
             if (typeof (preset as unknown as { localaiEndpoint?: unknown }).localaiEndpoint === 'string') {
                 setLocalaiEndpoint((preset as unknown as { localaiEndpoint: string }).localaiEndpoint);
             }
@@ -2561,6 +2568,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </p>
                             )}
                         </div>
+                    </div>
+
+                    {/* Lookahead Limit */}
+                    <div className="mt-4">
+                        <label htmlFor="lookahead-limit" className="block font-medium mb-1 text-center">
+                            Lookahead Limit
+                        </label>
+                        <div className="flex items-center justify-center gap-2">
+                            <input
+                                id="lookahead-limit"
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={lookaheadLimit}
+                                onChange={e => setLookaheadLimit(Math.max(1, Math.min(10, parseInt(e.target.value) || 3)))}
+                                className="w-20 border rounded-md p-2 text-center"
+                            />
+                        </div>
+                        <p className="text-xs text-muted-foreground text-center mt-1">
+                            Number of turns to generate in advance (default: 3)
+                        </p>
                     </div>
                 </CardContent>
                 <CardFooter className="flex flex-col gap-2">

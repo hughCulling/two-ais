@@ -47,7 +47,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
 
       try {
         // Check lookahead limit (same as Firebase Function)
-        const LOOKAHEAD_LIMIT = 3;
+        const effectiveLookaheadLimit = data.lookaheadLimit ?? 3;
         const { getDocs, query: firestoreQuery, orderBy: firestoreOrderBy, limit: firestoreLimit } = await import('firebase/firestore');
         const messagesQuery = firestoreQuery(
           collection(db, 'conversations', conversationId, 'messages'),
@@ -73,8 +73,8 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           }
         }
 
-        if (agentMessagesAhead >= LOOKAHEAD_LIMIT) {
-          console.log(`[Ollama Lookahead] ${agentMessagesAhead} messages ahead. Limit is ${LOOKAHEAD_LIMIT}. Skipping.`);
+        if (agentMessagesAhead >= effectiveLookaheadLimit) {
+          console.log(`[Ollama Lookahead] ${agentMessagesAhead} messages ahead. Limit is ${effectiveLookaheadLimit}. Skipping.`);
           processingRef.current = false;
           return;
         }
