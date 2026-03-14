@@ -80,6 +80,8 @@ interface ConversationData {
     errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string; // <-- Add this line
+    lastPlayedAgentIndex?: number;
+    agentMessageCount?: number;
     imageGenSettings?: { enabled: boolean; invokeaiEndpoint?: string; promptLlm?: string; promptSystemMessage?: string };
 }
 
@@ -215,6 +217,16 @@ export function ChatInterface({
     const prevStreamingSnapshotRef = useRef<{ id: string; contentLength: number } | null>(null);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
     latestMessagesRef.current = messages;
+
+    const getLastPlayedAgentIndex = useCallback((messageId: string): number | null => {
+        let agentIndex = 0;
+        for (const message of messages) {
+            if (message.role !== 'agentA' && message.role !== 'agentB') continue;
+            agentIndex += 1;
+            if (message.id === messageId) return agentIndex;
+        }
+        return null;
+    }, [messages]);
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
@@ -362,16 +374,21 @@ export function ChatInterface({
         if (playedMsg && (playedMsg.role === 'agentA' || playedMsg.role === 'agentB')) {
             try {
                 const conversationRef = doc(db, "conversations", conversationId);
-                updateDoc(conversationRef, {
+                const lastPlayedAgentIndex = getLastPlayedAgentIndex(playedMsgId);
+                const updatePayload: Record<string, unknown> = {
                     lastPlayedAgentMessageId: playedMsgId,
                     lastActivity: serverTimestamp(),
-                });
+                };
+                if (typeof lastPlayedAgentIndex === 'number') {
+                    updatePayload.lastPlayedAgentIndex = lastPlayedAgentIndex;
+                }
+                updateDoc(conversationRef, updatePayload);
                 logger.info(`Updated lastPlayedAgentMessageId to ${playedMsgId}`);
             } catch (err) {
                 logger.error("Failed to update lastPlayedAgentMessageId in Firestore:", err);
             }
         }
-    }, [conversationId, messages]);
+    }, [conversationId, getLastPlayedAgentIndex, messages]);
 
     const handleSkipTurn = useCallback(() => {
         const skippedMsgId = currentlyPlayingMsgIdRef.current;
@@ -428,15 +445,20 @@ export function ChatInterface({
         if (skippedMsg && (skippedMsg.role === 'agentA' || skippedMsg.role === 'agentB')) {
             try {
                 const conversationRef = doc(db, "conversations", conversationId);
-                updateDoc(conversationRef, {
+                const lastPlayedAgentIndex = getLastPlayedAgentIndex(skippedMsgId);
+                const updatePayload: Record<string, unknown> = {
                     lastPlayedAgentMessageId: skippedMsgId,
                     lastActivity: serverTimestamp(),
-                });
+                };
+                if (typeof lastPlayedAgentIndex === 'number') {
+                    updatePayload.lastPlayedAgentIndex = lastPlayedAgentIndex;
+                }
+                updateDoc(conversationRef, updatePayload);
             } catch (err) {
                 logger.error("Failed to update lastPlayedAgentMessageId on skip:", err);
             }
         }
-    }, [conversationId, messages]);
+    }, [conversationId, getLastPlayedAgentIndex, messages]);
 
     const handlePauseAudio = useCallback(() => {
         logger.info(`[Audio Control] Pause requested. isAudioPlaying: ${isAudioPlaying}, isAudioPaused: ${isAudioPaused}`);
