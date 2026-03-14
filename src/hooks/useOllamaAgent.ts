@@ -3,7 +3,7 @@
 // This bypasses Firebase Functions for local Ollama models
 
 import { useEffect, useRef } from 'react';
-import { doc, collection, onSnapshot, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, collection, onSnapshot, updateDoc, setDoc, serverTimestamp, increment } from 'firebase/firestore';
 import { db, rtdb } from '@/lib/firebase/clientApp';
 import { ref, set, update } from 'firebase/database';
 
@@ -49,27 +49,40 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
         // Check lookahead limit (same as Firebase Function)
         const effectiveLookaheadLimit = data.lookaheadLimit ?? 3;
         const { getDocs, query: firestoreQuery, orderBy: firestoreOrderBy, limit: firestoreLimit } = await import('firebase/firestore');
-        const messagesQuery = firestoreQuery(
-          collection(db, 'conversations', conversationId, 'messages'),
-          firestoreOrderBy('timestamp', 'asc')
-        );
-        const allMessagesSnap = await getDocs(messagesQuery);
-        const allMessages = allMessagesSnap.docs.map(doc => ({
-          id: doc.id,
-          role: doc.data().role,
-        }));
+        let agentMessagesAhead: number | null = null;
+        let agentMessageCount: number | null = null;
+        let lastPlayedAgentIndex: number | null = null;
 
-        // Find index of last played message
-        let lastPlayedIdx = -1;
-        if (data.lastPlayedAgentMessageId) {
-          lastPlayedIdx = allMessages.findIndex(m => m.id === data.lastPlayedAgentMessageId);
-        }
-
-        // Count agent messages ahead
-        let agentMessagesAhead = 0;
-        for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
-          if (allMessages[i].role === 'agentA' || allMessages[i].role === 'agentB') {
-            agentMessagesAhead++;
+        if (typeof data.agentMessageCount === 'number' && typeof data.lastPlayedAgentIndex === 'number') {
+          agentMessageCount = data.agentMessageCount;
+          lastPlayedAgentIndex = data.lastPlayedAgentIndex;
+          agentMessagesAhead = Math.max(0, agentMessageCount - lastPlayedAgentIndex);
+        } else {
+          const messagesQuery = firestoreQuery(
+            collection(db, 'conversations', conversationId, 'messages'),
+            firestoreOrderBy('timestamp', 'asc')
+          );
+          const allMessagesSnap = await getDocs(messagesQuery);
+          let runningAgentCount = 0;
+          let computedLastPlayedIndex = 0;
+          for (const messageDoc of allMessagesSnap.docs) {
+            const role = messageDoc.data().role;
+            if (role !== 'agentA' && role !== 'agentB') continue;
+            runningAgentCount += 1;
+            if (data.lastPlayedAgentMessageId && messageDoc.id === data.lastPlayedAgentMessageId) {
+              computedLastPlayedIndex = runningAgentCount;
+            }
+          }
+          agentMessageCount = runningAgentCount;
+          lastPlayedAgentIndex = computedLastPlayedIndex;
+          agentMessagesAhead = Math.max(0, runningAgentCount - computedLastPlayedIndex);
+          try {
+            await updateDoc(conversationRef, {
+              agentMessageCount: runningAgentCount,
+              lastPlayedAgentIndex: computedLastPlayedIndex,
+            });
+          } catch (error) {
+            console.warn('[Ollama Lookahead] Failed to update cached counters:', error);
           }
         }
 
@@ -256,6 +269,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           processingLock: false,
           [`${agentToRespond}Processing`]: false,
           lastActivity: serverTimestamp(),
+          agentMessageCount: increment(1),
         });
 
       } catch (error) {

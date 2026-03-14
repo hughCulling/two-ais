@@ -38,6 +38,8 @@ type ConversationData = {
     errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string;
+    lastPlayedAgentIndex?: number;
+    agentMessageCount?: number;
     initialSystemPrompt?: string;
     ollamaEndpoint?: string;
     lookaheadLimit?: number;
@@ -53,6 +55,49 @@ type ConversationData = {
         model?: string;
     };
 };
+
+async function getLookaheadState(
+    conversationRef: DocumentReference,
+    messagesRef: CollectionReference,
+    conversationData: ConversationData,
+    logger: Console
+): Promise<{ agentMessagesAhead: number; agentMessageCount: number; lastPlayedAgentIndex: number }> {
+    const hasCounters = typeof conversationData.agentMessageCount === "number"
+        && typeof conversationData.lastPlayedAgentIndex === "number";
+    if (hasCounters) {
+        const agentMessageCount = conversationData.agentMessageCount as number;
+        const lastPlayedAgentIndex = conversationData.lastPlayedAgentIndex as number;
+        return {
+            agentMessageCount,
+            lastPlayedAgentIndex,
+            agentMessagesAhead: Math.max(0, agentMessageCount - lastPlayedAgentIndex),
+        };
+    }
+
+    const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+    let agentMessageCount = 0;
+    let lastPlayedAgentIndex = 0;
+    for (const doc of allMessagesSnap.docs) {
+        const data = doc.data() as { role?: string };
+        if (data.role !== "agentA" && data.role !== "agentB") continue;
+        agentMessageCount += 1;
+        if (conversationData.lastPlayedAgentMessageId && doc.id === conversationData.lastPlayedAgentMessageId) {
+            lastPlayedAgentIndex = agentMessageCount;
+        }
+    }
+
+    try {
+        await conversationRef.update({ agentMessageCount, lastPlayedAgentIndex });
+    } catch (error) {
+        logger.warn("Failed to cache lookahead counters:", error);
+    }
+
+    return {
+        agentMessageCount,
+        lastPlayedAgentIndex,
+        agentMessagesAhead: Math.max(0, agentMessageCount - lastPlayedAgentIndex),
+    };
+}
 
 // Copy the _triggerAgentResponse function here and export as triggerAgentResponse
 export async function triggerAgentResponse(
@@ -87,24 +132,7 @@ export async function triggerAgentResponse(
 
         // --- NEW: Enforce lookahead limit ---
         if (!forceNextTurn) {
-            // Fetch all messages ordered by timestamp
-            const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
-            const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
-                const data = doc.data() as { role: string };
-                return { id: doc.id, role: data.role };
-            });
-            // Find the index of lastPlayedAgentMessageId
-            let lastPlayedIdx = -1;
-            if (conversationData.lastPlayedAgentMessageId) {
-                lastPlayedIdx = allMessages.findIndex(m => m.id === conversationData.lastPlayedAgentMessageId);
-            }
-            // Count agent messages after lastPlayedIdx
-            let agentMessagesAhead = 0;
-            for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
-                if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
-                    agentMessagesAhead++;
-                }
-            }
+            const { agentMessagesAhead } = await getLookaheadState(conversationRef, messagesRef, conversationData, logger);
             const effectiveLookaheadLimit = conversationData.lookaheadLimit ?? LOOKAHEAD_LIMIT;
             if (agentMessagesAhead >= effectiveLookaheadLimit) {
                 logger.info(`[Lookahead Limit] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
@@ -944,10 +972,11 @@ export async function triggerAgentResponse(
         try {
             await messagesRef.doc(messageId).set(responseMessage);
             logger.info(`Agent ${agentToRespond} response saved to Firestore (message ID: ${messageId}). TTS and image generation complete.`);
-            const updateData: { lastActivity: FieldValue; turn?: string } = {
+            const updateData: { lastActivity: FieldValue; turn?: string; agentMessageCount?: FieldValue } = {
                 lastActivity: admin.firestore.FieldValue.serverTimestamp()
             };
             updateData.turn = nextTurn;
+            updateData.agentMessageCount = admin.firestore.FieldValue.increment(1);
             logger.info(`Updating turn to ${nextTurn} for conversation ${conversationId}.`);
             await conversationRef.update(updateData);
             logger.info(`Conversation ${conversationId} updated after ${agentToRespond}'s turn.`);

@@ -213,6 +213,8 @@ type ConversationData = {
     apiSecretVersions: { [key: string]: string };
     createdAt: FirebaseFirestore.FieldValue;
     lastActivity: FirebaseFirestore.FieldValue;
+    agentMessageCount?: number;
+    lastPlayedAgentIndex?: number;
     errorMessage?: string;
     errorContext?: string;
     ttsSettings: {
@@ -440,6 +442,8 @@ export async function POST(request: NextRequest) {
                 apiSecretVersions: userApiSecretVersions,
                 createdAt: FieldValue.serverTimestamp(),
                 lastActivity: FieldValue.serverTimestamp(),
+                agentMessageCount: 0,
+                lastPlayedAgentIndex: 0,
                 ttsSettings: {
                     enabled: ttsEnabled,
                     agentA: finalAgentATts,

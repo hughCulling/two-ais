@@ -3,7 +3,7 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
-import { DocumentReference } from "firebase-admin/firestore";
+import { DocumentReference, CollectionReference } from "firebase-admin/firestore";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { getStorage } from "firebase-admin/storage";
 
@@ -85,6 +85,8 @@ type ConversationData = {
   errorMessage?: string;
   errorContext?: string;
   lastPlayedAgentMessageId?: string;
+  lastPlayedAgentIndex?: number;
+  agentMessageCount?: number;
   initialSystemPrompt?: string;
   processingTurnFor?: "agentA" | "agentB" | null;
   ollamaEndpoint?: string;
@@ -131,6 +133,48 @@ function createWavBuffer(pcmData: Buffer, channels = 1, sampleRate = 24000, bits
     pcmData.copy(buffer, offset);
     
     return buffer;
+}
+
+async function getLookaheadState(
+    conversationRef: DocumentReference<ConversationData>,
+    messagesRef: CollectionReference,
+    conversationData: ConversationData
+): Promise<{ agentMessagesAhead: number; agentMessageCount: number; lastPlayedAgentIndex: number }> {
+    const hasCounters = typeof conversationData.agentMessageCount === "number"
+        && typeof conversationData.lastPlayedAgentIndex === "number";
+    if (hasCounters) {
+        const agentMessageCount = conversationData.agentMessageCount as number;
+        const lastPlayedAgentIndex = conversationData.lastPlayedAgentIndex as number;
+        return {
+            agentMessageCount,
+            lastPlayedAgentIndex,
+            agentMessagesAhead: Math.max(0, agentMessageCount - lastPlayedAgentIndex),
+        };
+    }
+
+    const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
+    let agentMessageCount = 0;
+    let lastPlayedAgentIndex = 0;
+    for (const doc of allMessagesSnap.docs) {
+        const data = doc.data() as { role?: string };
+        if (data.role !== "agentA" && data.role !== "agentB") continue;
+        agentMessageCount += 1;
+        if (conversationData.lastPlayedAgentMessageId && doc.id === conversationData.lastPlayedAgentMessageId) {
+            lastPlayedAgentIndex = agentMessageCount;
+        }
+    }
+
+    try {
+        await conversationRef.update({ agentMessageCount, lastPlayedAgentIndex });
+    } catch (error) {
+        logger.warn("Failed to cache lookahead counters:", error);
+    }
+
+    return {
+        agentMessageCount,
+        lastPlayedAgentIndex,
+        agentMessagesAhead: Math.max(0, agentMessageCount - lastPlayedAgentIndex),
+    };
 }
 
 function getProviderFromId(id: string): LLMInfo["provider"] | null {
@@ -429,21 +473,7 @@ export const requestNextTurn = onCall<{ conversationId: string }, Promise<{ mess
             throw new HttpsError("internal", "Failed to fetch conversation");
         }
         // --- Lookahead logic: count agent messages ahead ---
-        const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
-        const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
-            const data = doc.data() as { role: string };
-            return { id: doc.id, role: data.role };
-        });
-        let lastPlayedIdx = -1;
-        if (conversationData.lastPlayedAgentMessageId) {
-            lastPlayedIdx = allMessages.findIndex(m => m.id === conversationData.lastPlayedAgentMessageId);
-        }
-        let agentMessagesAhead = 0;
-        for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
-            if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
-                agentMessagesAhead++;
-            }
-        }
+        const { agentMessagesAhead } = await getLookaheadState(conversationRef, messagesRef, conversationData);
         const effectiveLookaheadLimit = conversationData.lookaheadLimit ?? LOOKAHEAD_LIMIT;
         if (agentMessagesAhead >= effectiveLookaheadLimit) {
             logger.info(`[requestNextTurn] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
@@ -513,21 +543,7 @@ export const onConversationProgressUpdate = onDocumentUpdated(
     const conversationRef = db.collection("conversations").doc(conversationId) as DocumentReference<ConversationData>;
     const messagesRef = conversationRef.collection("messages");
     // --- Lookahead logic: count agent messages ahead ---
-    const allMessagesSnap = await messagesRef.orderBy("timestamp", "asc").get();
-    const allMessages: { id: string; role: string }[] = allMessagesSnap.docs.map(doc => {
-      const data = doc.data() as { role: string };
-      return { id: doc.id, role: data.role };
-    });
-    let lastPlayedIdx = -1;
-    if (after.lastPlayedAgentMessageId) {
-      lastPlayedIdx = allMessages.findIndex(m => m.id === after.lastPlayedAgentMessageId);
-    }
-    let agentMessagesAhead = 0;
-    for (let i = lastPlayedIdx + 1; i < allMessages.length; i++) {
-      if (allMessages[i].role === "agentA" || allMessages[i].role === "agentB") {
-        agentMessagesAhead++;
-      }
-    }
+    const { agentMessagesAhead } = await getLookaheadState(conversationRef, messagesRef, after as ConversationData);
     const effectiveLookaheadLimit = after.lookaheadLimit ?? LOOKAHEAD_LIMIT;
     if (agentMessagesAhead >= effectiveLookaheadLimit) {
       logger.info(`[onConversationProgressUpdate] ${agentMessagesAhead} agent messages ahead of user. Limit is ${effectiveLookaheadLimit}. Skipping agent response generation.`);
