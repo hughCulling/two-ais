@@ -646,7 +646,7 @@ export default function ChatHistoryViewerPage() {
                     </button>
                 )}
                 
-                <div className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${bubbleClass}`} style={{ marginBottom: '0.5rem' }}>
+                <div className={`p-3 rounded-lg max-w-[75%] min-w-0 whitespace-pre-wrap shadow-sm relative ${bubbleClass}`} style={{ marginBottom: '0.5rem' }}>
                     {/* Playing indicator */}
                     {isCurrentPlaying && (
                         <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
@@ -713,9 +713,11 @@ export default function ChatHistoryViewerPage() {
                                             }}
                                             className="mb-4"
                                         >
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                {paragraph}
-                                            </ReactMarkdown>
+                                            <div className="chat-markdown min-w-0">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                    {paragraph}
+                                                </ReactMarkdown>
+                                            </div>
                                             
                                             {/* Paragraph Image Display */}
                                             {msg.paragraphImages && msg.paragraphImages[index] && (
@@ -768,9 +770,11 @@ export default function ChatHistoryViewerPage() {
                                 )}
                             </>
                         ) : (
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {msg.content}
-                            </ReactMarkdown>
+                            <div className="chat-markdown min-w-0">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {msg.content}
+                                </ReactMarkdown>
+                            </div>
                         )}
                     </div>
                 </div>

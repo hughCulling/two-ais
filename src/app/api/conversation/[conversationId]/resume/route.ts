@@ -109,6 +109,8 @@ export async function POST(request: NextRequest) {
             status: 'running',
             turn: nextTurn,
             waitingForTTSEndSignal: false,
+            autoStopPending: false,
+            autoStopMessage: '',
             errorContext: '',
         });
         console.log(`Resume endpoint: Updated conversation ${conversationId} to status 'running' and turn '${nextTurn}'.`);
