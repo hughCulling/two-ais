@@ -395,12 +395,14 @@ export default function LandingPage({ nonce }: LandingPageProps) {
     }
 
     // Listen for voice loading events to update UI (force re-render when voices load)
-    onVoicesLoaded(() => {
+    const unsubscribe = onVoicesLoaded(() => {
       // Force a re-render to update language support indicators
       console.log('Browser voices loaded, updating UI');
       // Trigger a custom event that components can listen to
       window.dispatchEvent(new CustomEvent('voices-loaded'));
     });
+
+    return unsubscribe;
   }, []); // <-- Set mounted after mount
   const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>(
     () => {
