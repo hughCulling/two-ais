@@ -99,11 +99,14 @@ export function populateBrowserVoices(): TTSVoice[] {
 }
 
 // Callbacks to notify when voices are loaded
-const voicesLoadedCallbacks: (() => void)[] = [];
+const voicesLoadedCallbacks = new Set<() => void>();
 
 // Function to register a callback for when voices are loaded
-export function onVoicesLoaded(callback: () => void) {
-    voicesLoadedCallbacks.push(callback);
+export function onVoicesLoaded(callback: () => void): () => void {
+    voicesLoadedCallbacks.add(callback);
+    return () => {
+        voicesLoadedCallbacks.delete(callback);
+    };
 }
 
 // Function to notify all callbacks that voices have been loaded

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getVoiceById, findFallbackBrowserVoice, OPENAI_TTS_VOICES, GOOGLE_TTS_VOICES, initializeVoiceListeners, populateBrowserVoices } from './tts_models';
+import { getVoiceById, findFallbackBrowserVoice, OPENAI_TTS_VOICES, GOOGLE_TTS_VOICES, initializeVoiceListeners, onVoicesLoaded, populateBrowserVoices } from './tts_models';
 
 describe('getVoiceById', () => {
   it('should return undefined for non-existent voice ID', () => {
@@ -251,5 +251,36 @@ describe('initializeVoiceListeners', () => {
     expect(addEventListenerMock).toHaveBeenCalledWith('voiceschanged', expect.any(Function));
     // onvoiceschanged should remain null if addEventListener is used
     expect(mockSpeechSynthesis.onvoiceschanged).toBeNull();
+  });
+
+  it('should remove voices-loaded callbacks when unsubscribed', () => {
+    const addEventListenerMock = vi.fn();
+    const mockSpeechSynthesis = {
+      getVoices: vi.fn().mockReturnValue([]),
+      addEventListener: addEventListenerMock,
+      onvoiceschanged: null
+    };
+
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: mockSpeechSynthesis,
+      writable: true
+    });
+
+    const callback = vi.fn();
+    const unsubscribe = onVoicesLoaded(callback);
+    unsubscribe();
+
+    initializeVoiceListeners();
+
+    expect(callback).not.toHaveBeenCalled();
+
+    const voicesChangedHandler = addEventListenerMock.mock.calls.find(
+      ([eventName]) => eventName === 'voiceschanged'
+    )?.[1] as (() => void) | undefined;
+
+    expect(voicesChangedHandler).toBeDefined();
+    voicesChangedHandler?.();
+
+    expect(callback).not.toHaveBeenCalled();
   });
 });

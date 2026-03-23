@@ -34,6 +34,7 @@ import {
     onVoicesLoaded,
     setLocalAIModels
 } from '@/lib/tts_models';
+import { getNextSelectedVoiceId } from '@/lib/tts-selection';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
@@ -1047,7 +1048,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             provider: providerId,
             selectedTtsModelId: defaultModel?.id,
             ttsApiModelId: defaultModel?.apiModelId,
-            voice: voices[0]?.id ?? null,
+            voice: getNextSelectedVoiceId(prev.voice, voices),
         }));
         voicesListSetter(voices);
     }, [googleCloudProviderInfo, language.code]);
@@ -1072,7 +1073,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             }
         };
 
-        onVoicesLoaded(handleVoicesLoaded);
+        const unsubscribe = onVoicesLoaded(handleVoicesLoaded);
+        return unsubscribe;
     }, [agentATTSSettings.provider, agentBTTSSettings.provider, updateTTSConfigForProvider]);
 
     const updateVoicesForGoogleModel = useCallback((
