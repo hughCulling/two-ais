@@ -127,11 +127,16 @@ export async function POST(request: NextRequest) {
 
             while (true) {
               const { done, value } = await reader.read();
-              if (done) break;
+              if (value) {
+                buffer += decoder.decode(value, { stream: !done });
+              } else if (done) {
+                // Flush any remaining decoder state at end-of-stream.
+                buffer += decoder.decode();
+              }
 
-              buffer += decoder.decode(value, { stream: true });
               const lines = buffer.split('\n');
-              buffer = lines.pop() || ''; // Keep incomplete line in buffer
+              // Keep incomplete line between chunks, but when done parse everything left.
+              buffer = done ? '' : (lines.pop() || '');
 
               for (const line of lines) {
                 if (!line.trim()) continue;
@@ -153,6 +158,10 @@ export async function POST(request: NextRequest) {
                 } catch {
                   console.warn(`[Ollama Stream] Failed to parse line:`, line);
                 }
+              }
+
+              if (done) {
+                break;
               }
             }
           } else {

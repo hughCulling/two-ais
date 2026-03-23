@@ -9,6 +9,8 @@ import { ref, set, update } from 'firebase/database';
 
 export function useOllamaAgent(conversationId: string | null, userId: string | null) {
   const processingRef = useRef(false);
+  const NATURAL_STOP_MESSAGE = 'System: Conversation ended naturally because a model returned an empty response.';
+  const DEFERRED_STOP_MESSAGE = 'System: Conversation will stop after queued messages finish because a background generation failed.';
 
   useEffect(() => {
     if (!conversationId || !userId) return;
@@ -33,6 +35,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
 
       const agentToRespond = data.turn;
       const agentModelId = agentToRespond === 'agentA' ? data.agentA_llm : data.agentB_llm;
+      let agentMessagesAheadForAttempt = 0;
 
       // Only handle if this agent uses Ollama
       if (!agentModelId?.startsWith('ollama:')) return;
@@ -85,6 +88,7 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
             console.warn('[Ollama Lookahead] Failed to update cached counters:', error);
           }
         }
+        agentMessagesAheadForAttempt = agentMessagesAhead ?? 0;
 
         if (agentMessagesAhead >= effectiveLookaheadLimit) {
           console.log(`[Ollama Lookahead] ${agentMessagesAhead} messages ahead. Limit is ${effectiveLookaheadLimit}. Skipping.`);
@@ -169,42 +173,48 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
             fullContent = ''; // Reset content for retry
 
             if (reader) {
+              let buffer = '';
+
               while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                if (value) {
+                  buffer += decoder.decode(value, { stream: !done });
+                } else if (done) {
+                  // Flush decoder state in case the final chunk ended mid-codepoint.
+                  buffer += decoder.decode();
+                }
 
-                const chunk = decoder.decode(value);
-                const lines = chunk.split('\n');
+                const lines = buffer.split('\n');
+                buffer = done ? '' : (lines.pop() || '');
 
                 for (const line of lines) {
-                  if (line.startsWith('data: ')) {
-                    const data = line.slice(6);
-                    
-                    if (data === '[DONE]') {
-                      streamSuccess = true;
-                      break;
-                    }
+                  if (!line.startsWith('data: ')) continue;
+                  const data = line.slice(6);
+                  
+                  if (data === '[DONE]') {
+                    streamSuccess = true;
+                    break;
+                  }
 
-                    try {
-                      const parsed = JSON.parse(data);
-                      if (parsed.token) {
-                        fullContent += parsed.token;
-                        await update(rtdbRef, { content: fullContent });
-                      } else if (parsed.error) {
-                        // Error in stream - throw to trigger retry
-                        throw new Error(`Ollama error: ${parsed.error}`);
-                      }
-                    } catch (parseError) {
-                      // If it's an error object, rethrow it
-                      if (parseError instanceof Error && parseError.message.startsWith('Ollama error:')) {
-                        throw parseError;
-                      }
-                      // Otherwise ignore parse errors for incomplete chunks
+                  try {
+                    const parsed = JSON.parse(data);
+                    if (parsed.token) {
+                      fullContent += parsed.token;
+                      await update(rtdbRef, { content: fullContent });
+                    } else if (parsed.error) {
+                      // Error in stream - throw to trigger retry
+                      throw new Error(`Ollama error: ${parsed.error}`);
                     }
+                  } catch (parseError) {
+                    // If it's an error object, rethrow it
+                    if (parseError instanceof Error && parseError.message.startsWith('Ollama error:')) {
+                      throw parseError;
+                    }
+                    // Otherwise ignore parse errors for incomplete chunks
                   }
                 }
                 
-                if (streamSuccess) break;
+                if (streamSuccess || done) break;
               }
             }
 
@@ -240,8 +250,39 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           }
         }
 
-        if (!streamSuccess || !fullContent) {
+        if (!streamSuccess) {
           throw new Error('Stream did not complete successfully');
+        }
+
+        if (!fullContent.trim()) {
+          const shouldDeferStopUntilPlayback = Boolean(data.ttsSettings?.enabled) && agentMessagesAheadForAttempt > 0;
+
+          await update(rtdbRef, {
+            content: '',
+            status: 'complete'
+          });
+
+          if (shouldDeferStopUntilPlayback) {
+            await updateDoc(conversationRef, {
+              processingLock: false,
+              [`${agentToRespond}Processing`]: false,
+              waitingForTTSEndSignal: true,
+              autoStopPending: true,
+              autoStopMessage: NATURAL_STOP_MESSAGE,
+              lastActivity: serverTimestamp(),
+            });
+          } else {
+            await updateDoc(conversationRef, {
+              status: 'stopped',
+              processingLock: false,
+              [`${agentToRespond}Processing`]: false,
+              waitingForTTSEndSignal: false,
+              autoStopPending: false,
+              autoStopMessage: NATURAL_STOP_MESSAGE,
+              lastActivity: serverTimestamp(),
+            });
+          }
+          return;
         }
 
         // Mark streaming as complete
@@ -268,20 +309,37 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
           turn: nextTurn,
           processingLock: false,
           [`${agentToRespond}Processing`]: false,
+          waitingForTTSEndSignal: false,
+          autoStopPending: false,
+          autoStopMessage: '',
           lastActivity: serverTimestamp(),
           agentMessageCount: increment(1),
         });
 
       } catch (error) {
         console.error('Ollama agent error:', error);
-        
-        // Clear lock and set error
-        await updateDoc(conversationRef, {
-          processingLock: false,
-          [`${agentToRespond}Processing`]: false,
-          status: 'error',
-          errorContext: `Error during ${agentToRespond}'s turn: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        });
+        const errorMessage = `Error during ${agentToRespond}'s turn: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        const shouldDeferStopUntilPlayback = Boolean(data.ttsSettings?.enabled) && agentMessagesAheadForAttempt > 0;
+
+        if (shouldDeferStopUntilPlayback) {
+          await updateDoc(conversationRef, {
+            processingLock: false,
+            [`${agentToRespond}Processing`]: false,
+            waitingForTTSEndSignal: true,
+            autoStopPending: true,
+            autoStopMessage: DEFERRED_STOP_MESSAGE,
+            deferredErrorContext: errorMessage,
+            lastActivity: serverTimestamp(),
+          });
+        } else {
+          // Foreground failure: keep existing error behavior
+          await updateDoc(conversationRef, {
+            processingLock: false,
+            [`${agentToRespond}Processing`]: false,
+            status: 'error',
+            errorContext: errorMessage,
+          });
+        }
       } finally {
         processingRef.current = false;
       }

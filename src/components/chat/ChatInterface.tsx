@@ -77,6 +77,8 @@ interface ConversationData {
         agentB: { provider: string; voice: string | null };
     };
     waitingForTTSEndSignal?: boolean;
+    autoStopPending?: boolean;
+    autoStopMessage?: string;
     errorMessage?: string;
     errorContext?: string;
     lastPlayedAgentMessageId?: string; // <-- Add this line
@@ -215,8 +217,15 @@ export function ChatInterface({
     const isPlaybackStartingRef = useRef(false);
     const streamingAutoScrollRafRef = useRef<number | null>(null);
     const prevStreamingSnapshotRef = useRef<{ id: string; contentLength: number } | null>(null);
+    const browserTtsWatchdogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const browserTtsWatchdogChunkKeyRef = useRef<string | null>(null);
+    const browserTtsWatchdogRetryCountRef = useRef<number>(0);
+    const isFinalizingAutoStopRef = useRef(false);
     currentlyPlayingMsgIdRef.current = currentlyPlayingMsgId;
     latestMessagesRef.current = messages;
+
+    const BROWSER_TTS_WATCHDOG_TIMEOUT_MS = 4000;
+    const BROWSER_TTS_WATCHDOG_MAX_RETRIES = 1;
 
     const getLastPlayedAgentIndex = useCallback((messageId: string): number | null => {
         let agentIndex = 0;
@@ -352,6 +361,10 @@ export function ChatInterface({
             localAIWaitTimerRef.current = null;
         }
         isPlaybackStartingRef.current = false;
+        if (browserTtsWatchdogTimerRef.current) {
+            clearTimeout(browserTtsWatchdogTimerRef.current);
+            browserTtsWatchdogTimerRef.current = null;
+        }
 
         // Mark message as played FIRST, before resetting audio state
         // This ensures the next message becomes visible before we try to play it
@@ -389,6 +402,86 @@ export function ChatInterface({
             }
         }
     }, [conversationId, getLastPlayedAgentIndex, messages]);
+
+    const clearBrowserTtsWatchdog = useCallback(() => {
+        if (browserTtsWatchdogTimerRef.current) {
+            clearTimeout(browserTtsWatchdogTimerRef.current);
+            browserTtsWatchdogTimerRef.current = null;
+        }
+    }, []);
+
+    const resetBrowserTtsWatchdogForChunk = useCallback((msgId: string, chunkIndex: number) => {
+        const chunkKey = `${msgId}:${chunkIndex}`;
+        if (browserTtsWatchdogChunkKeyRef.current !== chunkKey) {
+            browserTtsWatchdogChunkKeyRef.current = chunkKey;
+            browserTtsWatchdogRetryCountRef.current = 0;
+        }
+    }, []);
+
+    const scheduleBrowserTtsWatchdog = useCallback((params: {
+        msgId: string;
+        chunkIndex: number;
+        chunkText: string;
+        totalChunks: number;
+        voice: SpeechSynthesisVoice;
+        onstart: SpeechSynthesisUtterance['onstart'];
+        onend: SpeechSynthesisUtterance['onend'];
+        onerror: SpeechSynthesisUtterance['onerror'];
+    }) => {
+        const { msgId, chunkIndex, chunkText, totalChunks, voice, onstart, onend, onerror } = params;
+        if (!window.speechSynthesis) return;
+
+        clearBrowserTtsWatchdog();
+        resetBrowserTtsWatchdogForChunk(msgId, chunkIndex);
+
+        browserTtsWatchdogTimerRef.current = setTimeout(() => {
+            const currentMsgId = currentlyPlayingMsgIdRef.current;
+            if (!currentMsgId || currentMsgId !== msgId) return;
+            if (currentChunkIndexRef.current !== chunkIndex) return;
+            if (window.speechSynthesis.paused) {
+                logger.info(`[TTS Watchdog] SpeechSynthesis paused; skipping watchdog recovery for chunk ${chunkIndex + 1}/${totalChunks}`);
+                return;
+            }
+            if (window.speechSynthesis.speaking) {
+                logger.debug(`[TTS Watchdog] SpeechSynthesis started without onstart; ignoring watchdog for chunk ${chunkIndex + 1}/${totalChunks}`);
+                return;
+            }
+
+            if (browserTtsWatchdogRetryCountRef.current >= BROWSER_TTS_WATCHDOG_MAX_RETRIES) {
+                logger.error(`[TTS Watchdog] No onstart after ${BROWSER_TTS_WATCHDOG_TIMEOUT_MS}ms for message ${msgId.substring(0, 8)}..., chunk ${chunkIndex + 1}/${totalChunks}. Giving up.`);
+                setIsBrowserTTSActive(false);
+                handleAudioEnd();
+                return;
+            }
+
+            browserTtsWatchdogRetryCountRef.current += 1;
+            logger.warn(`[TTS Watchdog] No onstart after ${BROWSER_TTS_WATCHDOG_TIMEOUT_MS}ms for message ${msgId.substring(0, 8)}..., retrying chunk ${chunkIndex + 1}/${totalChunks} (attempt ${browserTtsWatchdogRetryCountRef.current}/${BROWSER_TTS_WATCHDOG_MAX_RETRIES})`);
+
+            try {
+                window.speechSynthesis.cancel();
+            } catch (err) {
+                logger.error('[TTS Watchdog] Error cancelling speech synthesis before retry:', err);
+            }
+
+            const retryUtterance = new SpeechSynthesisUtterance(chunkText);
+            retryUtterance.voice = voice;
+            retryUtterance.onstart = onstart;
+            retryUtterance.onend = onend;
+            retryUtterance.onerror = onerror;
+            utteranceRef.current = retryUtterance;
+
+            try {
+                window.speechSynthesis.speak(retryUtterance);
+            } catch (err) {
+                logger.error('[TTS Watchdog] Error speaking retry chunk:', err);
+                setIsBrowserTTSActive(false);
+                handleAudioEnd();
+                return;
+            }
+
+            scheduleBrowserTtsWatchdog(params);
+        }, BROWSER_TTS_WATCHDOG_TIMEOUT_MS);
+    }, [clearBrowserTtsWatchdog, resetBrowserTtsWatchdogForChunk, handleAudioEnd]);
 
     const handleSkipTurn = useCallback(() => {
         const skippedMsgId = currentlyPlayingMsgIdRef.current;
@@ -966,6 +1059,8 @@ export function ChatInterface({
             await updateDoc(conversationRef, {
                 status: "stopped",
                 waitingForTTSEndSignal: false,
+                autoStopPending: false,
+                autoStopMessage: '',
                 lastActivity: serverTimestamp()
             });
             logger.info(`Client-side updateDoc call successful for conversation ${conversationId} status to 'stopped'.`);
@@ -1292,6 +1387,7 @@ export function ChatInterface({
                 }
             }
             utterance.onstart = () => {
+                clearBrowserTtsWatchdog();
                 const chunkNum = currentChunkIndexRef.current + 1;
                 const totalChunks = ttsChunkQueueRef.current?.length || 0;
                 const currentChunk = ttsChunkQueueRef.current?.[currentChunkIndexRef.current];
@@ -1367,6 +1463,16 @@ export function ChatInterface({
 
                     try {
                         window.speechSynthesis.speak(nextUtterance);
+                        scheduleBrowserTtsWatchdog({
+                            msgId: nextMsg.id,
+                            chunkIndex: currentChunkIndexRef.current,
+                            chunkText: nextChunk,
+                            totalChunks: ttsChunkQueueRef.current.length,
+                            voice,
+                            onstart: utterance.onstart,
+                            onend: utterance.onend,
+                            onerror: utterance.onerror
+                        });
                     } catch (err) {
                         logger.error('[TTS] Error speaking next chunk:', err);
                         setIsBrowserTTSActive(false);
@@ -1411,6 +1517,16 @@ export function ChatInterface({
             try {
                 logger.debug(`[TTS] Calling speechSynthesis.speak() for message ${nextMsg.id.substring(0, 8)}...`);
                 window.speechSynthesis.speak(utterance);
+                scheduleBrowserTtsWatchdog({
+                    msgId: nextMsg.id,
+                    chunkIndex: 0,
+                    chunkText: chunks[0],
+                    totalChunks: chunks.length,
+                    voice,
+                    onstart: utterance.onstart,
+                    onend: utterance.onend,
+                    onerror: utterance.onerror
+                });
             } catch (err) {
                 logger.error('[TTS] Error in speechSynthesis.speak():', err);
                 handleAudioEnd();
@@ -1586,7 +1702,7 @@ export function ChatInterface({
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying,
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, splitIntoParagraphs]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, splitIntoParagraphs, scheduleBrowserTtsWatchdog, clearBrowserTtsWatchdog]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -1599,6 +1715,58 @@ export function ChatInterface({
             return () => clearTimeout(timer);
         }
     }, [pendingTtsMessage, pendingTtsMessage?.isStreaming, isAudioReady]);
+
+    // When a deferred auto-stop is pending, let queued audio finish first, then stop cleanly.
+    useEffect(() => {
+        if (!conversationId || !conversationData?.autoStopPending || !conversationData.waitingForTTSEndSignal || conversationStatus !== 'running') {
+            isFinalizingAutoStopRef.current = false;
+            return;
+        }
+
+        const hasUnplayedAgentMessages = messages.some((msg) =>
+            (msg.role === 'agentA' || msg.role === 'agentB') &&
+            !msg.isStreaming &&
+            !playedMessageIds.has(msg.id)
+        );
+
+        const isPlaybackBusy =
+            isAudioPlaying ||
+            isAudioPaused ||
+            isBrowserTTSActive ||
+            isPlaybackStartingRef.current ||
+            Boolean(pendingTtsMessage);
+
+        if (hasUnplayedAgentMessages || isPlaybackBusy) {
+            return;
+        }
+
+        if (isFinalizingAutoStopRef.current) {
+            return;
+        }
+        isFinalizingAutoStopRef.current = true;
+
+        const conversationDocRef = doc(db, "conversations", conversationId);
+        updateDoc(conversationDocRef, {
+            status: "stopped",
+            waitingForTTSEndSignal: false,
+            autoStopPending: false,
+            lastActivity: serverTimestamp(),
+        }).catch((err) => {
+            logger.error(`Failed to finalize deferred auto-stop for conversation ${conversationId}:`, err);
+            isFinalizingAutoStopRef.current = false;
+        });
+    }, [
+        conversationId,
+        conversationData?.autoStopPending,
+        conversationData?.waitingForTTSEndSignal,
+        conversationStatus,
+        messages,
+        playedMessageIds,
+        isAudioPlaying,
+        isAudioPaused,
+        isBrowserTTSActive,
+        pendingTtsMessage
+    ]);
 
     // --- Effect 6: Component Cleanup ---
     useEffect(() => {
@@ -1625,6 +1793,10 @@ export function ChatInterface({
                 localAIWaitTimerRef.current = null;
             }
             isPlaybackStartingRef.current = false;
+            if (browserTtsWatchdogTimerRef.current) {
+                clearTimeout(browserTtsWatchdogTimerRef.current);
+                browserTtsWatchdogTimerRef.current = null;
+            }
 
             // Stop browser TTS completely
             if (window.speechSynthesis) {
@@ -1855,7 +2027,7 @@ export function ChatInterface({
                             style={{ contain: 'layout' }}
                         >
                             <div
-                                className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
+                                className={`p-3 rounded-lg max-w-[75%] min-w-0 whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
                                         msg.role === 'agentB' ? 'bg-primary text-primary-foreground dark:bg-blue-950/70 dark:text-blue-100 dark:border dark:border-blue-900/80' :
                                             'bg-transparent px-0 py-0 shadow-none'
                                     }`}
@@ -1957,9 +2129,11 @@ export function ChatInterface({
                                                         }}
                                                         className="mb-4"
                                                     >
-                                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                            {paragraph}
-                                                        </ReactMarkdown>
+                                                        <div className="chat-markdown min-w-0">
+                                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                                {paragraph}
+                                                            </ReactMarkdown>
+                                                        </div>
 
                                                         {/* Paragraph Image Display */}
                                                         {msg.paragraphImages && msg.paragraphImages[index] && (
@@ -2040,8 +2214,19 @@ export function ChatInterface({
                     {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
                         <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Waiting for first message...</div>
                     )}
+                    {conversationStatus === "running" && conversationData?.autoStopPending && conversationData?.autoStopMessage && (
+                        <div className="flex justify-center text-xs text-muted-foreground italic py-1" role="status" aria-live="polite">
+                            <div className="p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-none bg-transparent">
+                                {conversationData.autoStopMessage}
+                            </div>
+                        </div>
+                    )}
                     {isStopped && conversationStatus === "stopped" && !error && (
-                        <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Conversation stopped.</div>
+                        <div className="flex justify-center text-xs text-muted-foreground italic py-1" role="status" aria-live="polite">
+                            <div className="p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-none bg-transparent">
+                                {conversationData?.autoStopMessage || "System: Conversation stopped."}
+                            </div>
+                        </div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>

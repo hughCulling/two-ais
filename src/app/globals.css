@@ -283,6 +283,35 @@
   .dark .liquid-glass-badge-green {
     @apply bg-green-500/20 border-green-500/40 text-green-300;
   }
+
+  /* Chat markdown wrapping safeguards */
+  .chat-markdown {
+    min-width: 0;
+  }
+
+  .chat-markdown p,
+  .chat-markdown li,
+  .chat-markdown blockquote {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .chat-markdown pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .chat-markdown pre code {
+    white-space: inherit;
+  }
+
+  .chat-markdown code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
 
 /* Fullscreen mode styles */
