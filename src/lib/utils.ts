@@ -50,3 +50,15 @@ export function cleanTextForTTS(text: string): string {
     // Trim each line but preserve line breaks
     .split('\n').map(line => line.trim()).join('\n');
 }
+
+/**
+ * Determines if cleaned text has speech-worthy content.
+ * Symbol-only lines like markdown table separators should be skipped.
+ */
+export function isSpeakableText(text: string): boolean {
+  const normalized = text.trim();
+  if (!normalized) return false;
+
+  // Require at least one letter or number in any language/script.
+  return /[\p{L}\p{N}]/u.test(normalized);
+}

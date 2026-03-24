@@ -36,7 +36,7 @@ import ReactDOM from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
-import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
+import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 
 // --- Interfaces ---
 interface ParagraphImage {
@@ -254,7 +254,7 @@ export function ChatInterface({
         let ttsIndex = 0;
         for (let i = 0; i < domIndex; i++) {
             const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(allParagraphs[i])));
-            if (cleaned.trim().length > 0) {
+            if (isSpeakableText(cleaned)) {
                 ttsIndex++;
             }
         }
@@ -1336,7 +1336,7 @@ export function ChatInterface({
             const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(nextMsg.content)));
 
             // Split into paragraphs first for better auto-scroll
-            const paragraphs = splitIntoParagraphs(cleanedContent);
+            const paragraphs = splitIntoParagraphs(cleanedContent).filter((paragraph) => isSpeakableText(paragraph));
 
             // Then split each paragraph into TTS-safe chunks if needed
             const MAX_TTS_LENGTH = 4000;
@@ -1368,39 +1368,38 @@ export function ChatInterface({
                 return;
             }
 
-            // Create utterance for first chunk
-            const utterance = new SpeechSynthesisUtterance(chunks[0]);
+            const MAX_SYNTHESIS_FAILED_RETRIES_PER_CHUNK = 1;
+            let synthesisFailedRetryChunkIndex = -1;
+            let synthesisFailedRetryCount = 0;
+            let hasStartedCurrentMessage = false;
 
-            // Try to assign the voice, with fallback if it fails
-            try {
-                utterance.voice = voice;
-            } catch (error) {
-                logger.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
-                const fallbackVoice = findFallbackBrowserVoice(conversationData.language || 'en');
-                if (fallbackVoice) {
-                    utterance.voice = fallbackVoice;
-                    logger.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
-                } else {
-                    logger.error('No compatible fallback voice found');
-                    handleAudioEnd();
-                    return;
-                }
-            }
-            utterance.onstart = () => {
+            const resetSynthesisFailedRetryState = () => {
+                synthesisFailedRetryChunkIndex = -1;
+                synthesisFailedRetryCount = 0;
+            };
+
+            const finishCurrentMessagePlayback = () => {
+                logger.info(`[TTS] Finished playing all ${ttsChunkQueueRef.current.length} chunks for message ${nextMsg.id.substring(0, 8)}...`);
+                ttsChunkQueueRef.current = [];
+                currentChunkIndexRef.current = 0;
+                setIsBrowserTTSActive(false);
+                handleAudioEnd();
+            };
+
+            const handleChunkStart = () => {
                 clearBrowserTtsWatchdog();
-                const chunkNum = currentChunkIndexRef.current + 1;
+                const chunkIndexAtStart = currentChunkIndexRef.current;
+                const chunkNum = chunkIndexAtStart + 1;
                 const totalChunks = ttsChunkQueueRef.current?.length || 0;
-                const currentChunk = ttsChunkQueueRef.current?.[currentChunkIndexRef.current];
+                const currentChunk = ttsChunkQueueRef.current?.[chunkIndexAtStart];
                 logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk?.length || 0} chars)`);
 
-                if (chunkNum === 1) {
-                    // Only set these on the first chunk
+                if (!hasStartedCurrentMessage) {
+                    hasStartedCurrentMessage = true;
                     setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
                     setIsBrowserTTSActive(true);
                     setPendingTtsMessage(null);
-
-                    // Reset paragraph index for new message
                     currentParagraphIndexRef.current = -1;
                 }
 
@@ -1408,7 +1407,7 @@ export function ChatInterface({
                 // Use requestAnimationFrame to ensure DOM is ready
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
-                        const paragraphIndex = paragraphIndicesRef.current[currentChunkIndexRef.current] || 0;
+                        const paragraphIndex = paragraphIndicesRef.current[chunkIndexAtStart] || 0;
                         const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
 
                         logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
@@ -1444,68 +1443,146 @@ export function ChatInterface({
                     logger.debug(`[TTS Auto-Scroll] Auto-scroll is disabled`);
                 }
             };
-            utterance.onend = () => {
-                currentChunkIndexRef.current++;
-                const hasMoreChunks = currentChunkIndexRef.current < ttsChunkQueueRef.current.length;
 
-                if (hasMoreChunks) {
-                    // Play next chunk
-                    const nextChunk = ttsChunkQueueRef.current[currentChunkIndexRef.current];
-                    logger.info(`[TTS] Playing next chunk ${currentChunkIndexRef.current + 1}/${ttsChunkQueueRef.current.length}`);
+            const playChunkAtIndex = (chunkIndex: number, reason: 'initial' | 'next' | 'retry' | 'skip' = 'next') => {
+                if (chunkIndex < 0 || chunkIndex >= ttsChunkQueueRef.current.length) {
+                    finishCurrentMessagePlayback();
+                    return;
+                }
 
-                    const nextUtterance = new SpeechSynthesisUtterance(nextChunk);
-                    nextUtterance.voice = voice;
-                    nextUtterance.onstart = utterance.onstart;
-                    nextUtterance.onend = utterance.onend;
-                    nextUtterance.onerror = utterance.onerror;
+                currentChunkIndexRef.current = chunkIndex;
+                const chunkText = ttsChunkQueueRef.current[chunkIndex];
+                if (!chunkText) {
+                    logger.warn(`[TTS] Missing chunk text at index ${chunkIndex}, skipping`);
+                    const nextIndex = chunkIndex + 1;
+                    if (nextIndex < ttsChunkQueueRef.current.length) {
+                        playChunkAtIndex(nextIndex, 'skip');
+                    } else {
+                        finishCurrentMessagePlayback();
+                    }
+                    return;
+                }
 
-                    utteranceRef.current = nextUtterance;
+                if (reason === 'next') {
+                    logger.info(`[TTS] Playing next chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length}`);
+                } else if (reason === 'retry') {
+                    logger.info(`[TTS] Retrying chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length}`);
+                } else if (reason === 'skip') {
+                    logger.info(`[TTS] Playing next chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length} after skip`);
+                }
 
-                    try {
-                        window.speechSynthesis.speak(nextUtterance);
-                        scheduleBrowserTtsWatchdog({
-                            msgId: nextMsg.id,
-                            chunkIndex: currentChunkIndexRef.current,
-                            chunkText: nextChunk,
-                            totalChunks: ttsChunkQueueRef.current.length,
-                            voice,
-                            onstart: utterance.onstart,
-                            onend: utterance.onend,
-                            onerror: utterance.onerror
-                        });
-                    } catch (err) {
-                        logger.error('[TTS] Error speaking next chunk:', err);
+                const chunkUtterance = new SpeechSynthesisUtterance(chunkText);
+                chunkUtterance.voice = activeVoice;
+                chunkUtterance.onstart = handleChunkStart;
+                chunkUtterance.onend = () => {
+                    resetSynthesisFailedRetryState();
+                    const nextIndex = currentChunkIndexRef.current + 1;
+                    if (nextIndex < ttsChunkQueueRef.current.length) {
+                        playChunkAtIndex(nextIndex, 'next');
+                    } else {
+                        finishCurrentMessagePlayback();
+                    }
+                };
+                chunkUtterance.onerror = (event) => {
+                    const chunkIndexAtError = currentChunkIndexRef.current;
+                    const totalChunks = ttsChunkQueueRef.current.length;
+                    const chunkNum = chunkIndexAtError + 1;
+                    const charIndex = typeof event.charIndex === 'number' ? event.charIndex : -1;
+                    const elapsedTime = typeof event.elapsedTime === 'number' ? event.elapsedTime : -1;
+
+                    if (event.error === 'canceled' || event.error === 'interrupted') {
+                        logger.debug(`[TTS] Speech synthesis ${event.error} for message ${nextMsg.id.substring(0, 8)}... (expected)`);
                         setIsBrowserTTSActive(false);
                         handleAudioEnd();
+                        return;
                     }
-                } else {
-                    // All chunks complete
-                    logger.info(`[TTS] Finished playing all ${ttsChunkQueueRef.current.length} chunks for message ${nextMsg.id.substring(0, 8)}...`);
-                    ttsChunkQueueRef.current = [];
-                    currentChunkIndexRef.current = 0;
+
+                    if (event.error === 'synthesis-failed') {
+                        logger.warn(
+                            `[TTS] Speech synthesis failed for message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} ` +
+                            `(charIndex: ${charIndex}, elapsedTime: ${elapsedTime}).`
+                        );
+
+                        if (synthesisFailedRetryChunkIndex !== chunkIndexAtError) {
+                            synthesisFailedRetryChunkIndex = chunkIndexAtError;
+                            synthesisFailedRetryCount = 0;
+                        }
+
+                        if (synthesisFailedRetryCount < MAX_SYNTHESIS_FAILED_RETRIES_PER_CHUNK) {
+                            synthesisFailedRetryCount += 1;
+                            logger.warn(
+                                `[TTS] Retrying failed chunk ${chunkNum}/${totalChunks} ` +
+                                `(attempt ${synthesisFailedRetryCount}/${MAX_SYNTHESIS_FAILED_RETRIES_PER_CHUNK})`
+                            );
+                            playChunkAtIndex(chunkIndexAtError, 'retry');
+                            return;
+                        }
+
+                        logger.warn(`[TTS] Skipping failed chunk ${chunkNum}/${totalChunks} after retry attempts`);
+                        resetSynthesisFailedRetryState();
+                        const nextIndex = chunkIndexAtError + 1;
+                        if (nextIndex < totalChunks) {
+                            playChunkAtIndex(nextIndex, 'skip');
+                            return;
+                        }
+
+                        finishCurrentMessagePlayback();
+                        return;
+                    }
+
+                    logger.error(
+                        `[TTS] Speech synthesis error for message ${nextMsg.id.substring(0, 8)}... ` +
+                        `chunk ${chunkNum}/${totalChunks} (charIndex: ${charIndex}, elapsedTime: ${elapsedTime}):`,
+                        event.error
+                    );
+                    setTtsError(`Speech synthesis failed: ${event.error}`);
+                    setIsBrowserTTSActive(false);
+                    handleAudioEnd();
+                };
+
+                utteranceRef.current = chunkUtterance;
+
+                try {
+                    window.speechSynthesis.speak(chunkUtterance);
+                    scheduleBrowserTtsWatchdog({
+                        msgId: nextMsg.id,
+                        chunkIndex,
+                        chunkText,
+                        totalChunks: ttsChunkQueueRef.current.length,
+                        voice: activeVoice,
+                        onstart: chunkUtterance.onstart,
+                        onend: chunkUtterance.onend,
+                        onerror: chunkUtterance.onerror
+                    });
+                } catch (err) {
+                    logger.error('[TTS] Error speaking chunk:', err);
                     setIsBrowserTTSActive(false);
                     handleAudioEnd();
                 }
             };
-            utterance.onerror = (event) => {
-                // Ignore 'canceled' and 'interrupted' errors as they're expected during normal operation
-                // Also ignore 'synthesis-failed' if it follows an interruption (common in Edge)
-                if (event.error === 'canceled' || event.error === 'interrupted') {
-                    logger.debug(`[TTS] Speech synthesis ${event.error} for message ${nextMsg.id.substring(0, 8)}... (expected)`);
-                } else if (event.error === 'synthesis-failed') {
-                    // Only show error if this is a genuine failure, not a cascade from interruption
-                    logger.warn(`[TTS] Speech synthesis failed for message ${nextMsg.id.substring(0, 8)}... - may be due to rapid playback attempts`);
-                    // Don't set TTS error for synthesis-failed as it's often a transient issue
-                } else {
-                    logger.error(`[TTS] Speech synthesis error for message ${nextMsg.id.substring(0, 8)}...:`, event.error);
-                    setTtsError(`Speech synthesis failed: ${event.error}`);
-                }
-                setIsBrowserTTSActive(false);
-                handleAudioEnd();
-            };
 
-            // Store the current utterance reference before speaking
-            utteranceRef.current = utterance;
+            // Try to assign the voice once so we can fail early and fallback if needed.
+            try {
+                const voiceProbe = new SpeechSynthesisUtterance(chunks[0]);
+                voiceProbe.voice = voice ?? null;
+            } catch (error) {
+                logger.warn(`Failed to assign voice ${voice.name}, trying fallback:`, error);
+                const fallbackVoice = findFallbackBrowserVoice(conversationData.language || 'en');
+                if (fallbackVoice) {
+                    voice = fallbackVoice;
+                    logger.info(`Using fallback voice: ${fallbackVoice.name} (${fallbackVoice.lang})`);
+                } else {
+                    logger.error('No compatible fallback voice found');
+                    handleAudioEnd();
+                    return;
+                }
+            }
+            if (!voice) {
+                logger.error('No compatible browser voice available after probe/fallback');
+                handleAudioEnd();
+                return;
+            }
+            const activeVoice = voice;
 
             // Final safety check before starting speech
             if (window.speechSynthesis.speaking) {
@@ -1516,17 +1593,7 @@ export function ChatInterface({
 
             try {
                 logger.debug(`[TTS] Calling speechSynthesis.speak() for message ${nextMsg.id.substring(0, 8)}...`);
-                window.speechSynthesis.speak(utterance);
-                scheduleBrowserTtsWatchdog({
-                    msgId: nextMsg.id,
-                    chunkIndex: 0,
-                    chunkText: chunks[0],
-                    totalChunks: chunks.length,
-                    voice,
-                    onstart: utterance.onstart,
-                    onend: utterance.onend,
-                    onerror: utterance.onerror
-                });
+                playChunkAtIndex(0, 'initial');
             } catch (err) {
                 logger.error('[TTS] Error in speechSynthesis.speak():', err);
                 handleAudioEnd();
@@ -1546,7 +1613,7 @@ export function ChatInterface({
             const sourceParagraphs = splitIntoParagraphs(nextMsg.content);
             const speakableParagraphs = sourceParagraphs.map((paragraph) => {
                 const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
-                return cleanedParagraph.trim().length > 0;
+                return isSpeakableText(cleanedParagraph);
             });
 
             const getNextSpeakableParagraphIndex = (startIndex: number): number => {
@@ -2113,7 +2180,7 @@ export function ChatInterface({
                                         <div>
                                             {msg.content.split(/\n+/).map((paragraph, index) => {
                                                 const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
-                                                const isSpeakable = cleanedParagraph.trim().length > 0;
+                                                const isSpeakable = isSpeakableText(cleanedParagraph);
                                                 // Use TTS-compatible index so auto-scroll aligns with TTS
                                                 const ttsIndex = getTTSParagraphIndex(msg.content, index);
                                                 const paragraphKey = `${msg.id}-p${ttsIndex}`;

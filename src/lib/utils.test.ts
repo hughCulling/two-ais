@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { removeEmojis, cleanTextForTTS } from './utils';
+import { removeEmojis, cleanTextForTTS, isSpeakableText } from './utils';
 
 describe('removeEmojis', () => {
   it('should remove basic emojis', () => {
@@ -114,5 +114,27 @@ describe('cleanTextForTTS', () => {
   it('should handle empty string', () => {
     const result = cleanTextForTTS('');
     expect(result).toBe('');
+  });
+});
+
+describe('isSpeakableText', () => {
+  it('should return false for empty or whitespace-only strings', () => {
+    expect(isSpeakableText('')).toBe(false);
+    expect(isSpeakableText('   \n\t  ')).toBe(false);
+  });
+
+  it('should return false for punctuation-only lines', () => {
+    expect(isSpeakableText('|----------|------------------|----------------|')).toBe(false);
+    expect(isSpeakableText('---')).toBe(false);
+    expect(isSpeakableText('***___')).toBe(false);
+  });
+
+  it('should return true when letters are present', () => {
+    expect(isSpeakableText('Hello world')).toBe(true);
+    expect(isSpeakableText('Привет мир')).toBe(true);
+  });
+
+  it('should return true when only numbers are present', () => {
+    expect(isSpeakableText('2026')).toBe(true);
   });
 });
