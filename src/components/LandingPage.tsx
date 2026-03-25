@@ -504,383 +504,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </div>
             )}
 
-            {/* Ollama Setup Instructions */}
-            <Collapsible
-              open={openCollapsibles['ollama-setup'] || false}
-              onOpenChange={() => toggleCollapsible('ollama-setup')}
-              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
-            >
-              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
-                <div className="flex justify-center pt-1 relative group cursor-pointer">
-                  <div className="relative">
-                    <div className="absolute right-full mr-2 translate-y-px">
-                      <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
-                        <Image
-                          src="/ollama.svg"
-                          alt="Ollama Logo"
-                          fill
-                          className="object-contain dark:invert"
-                        />
-                      </div>
-                    </div>
-                    <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
-                  </div>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                    {openCollapsibles['ollama-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                  </div>
-                </div>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="space-y-2 mt-4">
-
-                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                    <SetupInstructions type="ollama" />
-                    <div className="flex flex-col items-center space-y-2">
-                      <div className="flex gap-2 w-full max-w-md">
-                        {ollamaHelperEnabled ? (
-                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
-                              https://
-                            </span>
-                            <input
-                              type="text"
-                              value={ollamaSubdomain}
-                              onChange={(e) => {
-                                setOllamaSubdomain(e.target.value);
-                                if (customOllamaAvailable) {
-                                  setCustomOllamaAvailable(false);
-                                }
-                                setOllamaVerifyError(null);
-                              }}
-                              placeholder="e.g. abc123"
-                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleVerifyOllama();
-                                }
-                              }}
-                            />
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
-                              .ngrok-free.app
-                            </span>
-                          </div>
-                        ) : (
-                          <input
-                            type="url"
-                            value={ollamaEndpoint}
-                            onChange={(e) => {
-                              setOllamaEndpoint(e.target.value);
-                              if (customOllamaAvailable) {
-                                setCustomOllamaAvailable(false);
-                              }
-                              setOllamaVerifyError(null);
-                            }}
-                            placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
-                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleVerifyOllama();
-                              }
-                            }}
-                          />
-                        )}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleVerifyOllama}
-                          disabled={
-                            customOllamaLoading ||
-                            (!ollamaHelperEnabled
-                              ? !ollamaEndpoint.trim()
-                              : !ollamaSubdomain.trim())
-                          }
-                          className="liquid-glass-button-primary h-auto py-1.5"
-                        >
-                          {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
-                        </Button>
-                      </div>
-                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
-                        <input
-                          id="ollama-helper-toggle"
-                          type="checkbox"
-                          checked={ollamaHelperEnabled}
-                          onChange={(e) => setOllamaHelperEnabled(e.target.checked)}
-                          className="h-3 w-3"
-                        />
-                        <label
-                          htmlFor="ollama-helper-toggle"
-                          className="text-xs text-muted-foreground cursor-pointer"
-                        >
-                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
-                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
-                        </label>
-                      </div>
-                      {customOllamaAvailable && (
-                        <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
-                      )}
-                      {ollamaVerifyError && (
-                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{ollamaVerifyError}</p>
-                      )}
-                    </div>
-                    {/* <p className="text-center">{t.page_OllamaStep4}</p> */}
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* LocalAI Setup Instructions */}
-            <Collapsible
-              open={openCollapsibles['localai-setup'] || false}
-              onOpenChange={() => toggleCollapsible('localai-setup')}
-              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
-            >
-              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
-                <div className="flex justify-center pt-1 relative group cursor-pointer">
-                  <div className="relative">
-                    <div className="absolute right-full mr-2 translate-y-px">
-                      <div className="relative w-6 h-6 shrink-0">
-                        <Image
-                          src="/localai.svg"
-                          alt="LocalAI Logo"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
-                    <h3 className="font-semibold text-base whitespace-nowrap">LocalAI Setup</h3>
-                  </div>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                    {openCollapsibles['localai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                  </div>
-                </div>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="space-y-2 mt-4">
-                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                    <SetupInstructions type="localai" />
-                    <div className="flex flex-col items-center space-y-2">
-                      <div className="flex gap-2 w-full max-w-md">
-                        {localaiHelperEnabled ? (
-                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
-                              https://
-                            </span>
-                            <input
-                              type="text"
-                              value={localaiSubdomain}
-                              onChange={(e) => {
-                                setLocalaiSubdomain(e.target.value);
-                                if (customLocalaiAvailable) {
-                                  setCustomLocalaiAvailable(false);
-                                }
-                                setLocalaiVerifyError(null);
-                              }}
-                              placeholder="e.g. abc123"
-                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleVerifyLocalAI();
-                                }
-                              }}
-                            />
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
-                              .ngrok-free.app
-                            </span>
-                          </div>
-                        ) : (
-                          <input
-                            type="url"
-                            value={localaiEndpoint}
-                            onChange={(e) => {
-                              setLocalaiEndpoint(e.target.value);
-                              if (customLocalaiAvailable) {
-                                setCustomLocalaiAvailable(false);
-                              }
-                              setLocalaiVerifyError(null);
-                            }}
-                            placeholder="e.g. https://abc123.ngrok-free.app"
-                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleVerifyLocalAI();
-                              }
-                            }}
-                          />
-                        )}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleVerifyLocalAI}
-                          disabled={
-                            customLocalaiLoading ||
-                            (!localaiHelperEnabled
-                              ? !localaiEndpoint.trim()
-                              : !localaiSubdomain.trim())
-                          }
-                          className="liquid-glass-button-primary h-auto py-1.5"
-                        >
-                          {customLocalaiLoading ? 'Verifying...' : 'Verify'}
-                        </Button>
-                      </div>
-                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
-                        <input
-                          id="localai-helper-toggle"
-                          type="checkbox"
-                          checked={localaiHelperEnabled}
-                          onChange={(e) => setLocalaiHelperEnabled(e.target.checked)}
-                          className="h-3 w-3"
-                        />
-                        <label
-                          htmlFor="localai-helper-toggle"
-                          className="text-xs text-muted-foreground cursor-pointer"
-                        >
-                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
-                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
-                        </label>
-                      </div>
-                      {customLocalaiAvailable && (
-                        <p className="text-sm text-green-600 dark:text-green-400">✓ LocalAI connected!</p>
-                      )}
-                      {localaiVerifyError && (
-                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{localaiVerifyError}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* InvokeAI Setup Instructions */}
-            <Collapsible
-              open={openCollapsibles['invokeai-setup'] || false}
-              onOpenChange={() => toggleCollapsible('invokeai-setup')}
-              className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
-            >
-              <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
-                <div className="flex justify-center pt-1 relative group cursor-pointer">
-                  <div className="relative">
-                    <div className="absolute right-full mr-2 translate-y-px">
-                      <div className="relative w-6 h-6 shrink-0">
-                        <Image
-                          src="/invoke-ai.svg"
-                          alt="InvokeAI Logo"
-                          fill
-                          className="object-contain brightness-0 dark:brightness-100"
-                        />
-                      </div>
-                    </div>
-                    <h3 className="font-semibold text-base whitespace-nowrap">Invoke Setup</h3>
-                  </div>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
-                    {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                  </div>
-                </div>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="space-y-2 mt-4">
-                  <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                    <SetupInstructions type="invokeai" />
-                    <div className="flex flex-col items-center space-y-2">
-                      <div className="flex gap-2 w-full max-w-md">
-                        {invokeaiHelperEnabled ? (
-                          <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
-                              https://
-                            </span>
-                            <input
-                              type="text"
-                              value={invokeaiSubdomain}
-                              onChange={(e) => {
-                                setInvokeaiSubdomain(e.target.value);
-                                if (customInvokeaiAvailable) {
-                                  setCustomInvokeaiAvailable(false);
-                                }
-                                setInvokeaiVerifyError(null);
-                              }}
-                              placeholder="e.g. abc123"
-                              className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleVerifyInvokeAI();
-                                }
-                              }}
-                            />
-                            <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
-                              .ngrok-free.app
-                            </span>
-                          </div>
-                        ) : (
-                          <input
-                            type="url"
-                            value={invokeaiEndpoint}
-                            onChange={(e) => {
-                              setInvokeaiEndpoint(e.target.value);
-                              if (customInvokeaiAvailable) {
-                                setCustomInvokeaiAvailable(false);
-                              }
-                              setInvokeaiVerifyError(null);
-                            }}
-                            placeholder="e.g. https://abc123.ngrok-free.app"
-                            className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleVerifyInvokeAI();
-                              }
-                            }}
-                          />
-                        )}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleVerifyInvokeAI}
-                          disabled={
-                            customInvokeaiLoading ||
-                            (!invokeaiHelperEnabled
-                              ? !invokeaiEndpoint.trim()
-                              : !invokeaiSubdomain.trim())
-                          }
-                          className="liquid-glass-button-primary h-auto py-1.5"
-                        >
-                          {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
-                        </Button>
-                      </div>
-                      <div className="flex items-center justify-center gap-2 w-full max-w-md">
-                        <input
-                          id="invokeai-helper-toggle"
-                          type="checkbox"
-                          checked={invokeaiHelperEnabled}
-                          onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
-                          className="h-3 w-3"
-                        />
-                        <label
-                          htmlFor="invokeai-helper-toggle"
-                          className="text-xs text-muted-foreground cursor-pointer"
-                        >
-                          Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
-                          <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
-                        </label>
-                      </div>
-                      {customInvokeaiAvailable && (
-                        <p className="text-sm text-green-600 dark:text-green-400">✓ Invoke connected!</p>
-                      )}
-                      {invokeaiVerifyError && (
-                        <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-
             <p className="text-muted-foreground pt-2">{t.page_SignInPrompt}</p>
           </div>
           <div className="w-full aspect-video liquid-glass-themed p-2 rounded-xl shadow-2xl relative">
@@ -917,8 +540,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                 const isStaticProviderSection = providerName === 'Mistral AI';
                 const isOllamaProvider = providerName === 'Ollama';
-                const shouldShowOllamaProvider = isOllamaProvider && customOllamaAvailable && ollamaModelNames.length > 0;
-                const isStaticOllamaSection = isOllamaProvider;
                 let lastDisplayedBrand: string | null = null;
 
                 // Check if all models in this provider support the current language
@@ -927,7 +548,10 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                 );
                 const showLanguageSupportForProvider = providerName !== 'Ollama'; // Don't show for Ollama (dynamic models)
 
-                if (isStaticProviderSection || (isStaticOllamaSection && shouldShowOllamaProvider)) {
+                // Ollama models are rendered after the setup section at the bottom of this card
+                if (isOllamaProvider) return null;
+
+                if (isStaticProviderSection) {
                   return (
                     <div key={providerName} className="space-y-1">
                       <div className="flex items-center justify-center w-full mb-2">
@@ -940,15 +564,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                                   freeTier={{
                                     available: true,
                                     note: (t) => t.pricing.mistralFreeTierNote
-                                  }}
-                                  t={t}
-                                />
-                              )}
-                              {providerName === 'Ollama' && (
-                                <FreeTierBadge
-                                  freeTier={{
-                                    available: true,
-                                    note: (t) => t.pricing.ollamaFreeTierNote
                                   }}
                                   t={t}
                                 />
@@ -1094,10 +709,6 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                       </div>
                     </div>
                   );
-                }
-
-                if (isOllamaProvider && !shouldShowOllamaProvider) {
-                  return null;
                 }
 
                 return (
@@ -1312,6 +923,175 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                   </Collapsible>
                 );
               })}
+
+              {/* Ollama Setup Instructions */}
+              <Collapsible
+                open={openCollapsibles['ollama-setup'] || false}
+                onOpenChange={() => toggleCollapsible('ollama-setup')}
+                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+              >
+                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                  <div className="flex justify-center pt-1 relative group cursor-pointer">
+                    <div className="relative">
+                      <div className="absolute right-full mr-2 translate-y-px">
+                        <div className="relative w-6 h-6 shrink-0 mix-blend-multiply dark:mix-blend-screen">
+                          <Image
+                            src="/ollama.svg"
+                            alt="Ollama Logo"
+                            fill
+                            className="object-contain dark:invert"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-base whitespace-nowrap">{t.page_OllamaSetupTitle}</h3>
+                    </div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                      {openCollapsibles['ollama-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-2 mt-4">
+
+                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                      <SetupInstructions type="ollama" />
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className="flex gap-2 w-full max-w-md">
+                          {ollamaHelperEnabled ? (
+                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                https://
+                              </span>
+                              <input
+                                type="text"
+                                value={ollamaSubdomain}
+                                onChange={(e) => {
+                                  setOllamaSubdomain(e.target.value);
+                                  if (customOllamaAvailable) {
+                                    setCustomOllamaAvailable(false);
+                                  }
+                                  setOllamaVerifyError(null);
+                                }}
+                                placeholder="e.g. abc123"
+                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleVerifyOllama();
+                                  }
+                                }}
+                              />
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                .ngrok-free.app
+                              </span>
+                            </div>
+                          ) : (
+                            <input
+                              type="url"
+                              value={ollamaEndpoint}
+                              onChange={(e) => {
+                                setOllamaEndpoint(e.target.value);
+                                if (customOllamaAvailable) {
+                                  setCustomOllamaAvailable(false);
+                                }
+                                setOllamaVerifyError(null);
+                              }}
+                              placeholder={t?.page_OllamaEndpointPlaceholder || 'e.g. https://abc123.ngrok-free.app'}
+                              className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyOllama();
+                                }
+                              }}
+                            />
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleVerifyOllama}
+                            disabled={
+                              customOllamaLoading ||
+                              (!ollamaHelperEnabled
+                                ? !ollamaEndpoint.trim()
+                                : !ollamaSubdomain.trim())
+                            }
+                            className="liquid-glass-button-primary h-auto py-1.5"
+                          >
+                            {customOllamaLoading ? (t?.page_OllamaVerifying || 'Verifying...') : (t?.page_OllamaVerify || 'Verify')}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                          <input
+                            id="ollama-helper-toggle"
+                            type="checkbox"
+                            checked={ollamaHelperEnabled}
+                            onChange={(e) => setOllamaHelperEnabled(e.target.checked)}
+                            className="h-3 w-3"
+                          />
+                          <label
+                            htmlFor="ollama-helper-toggle"
+                            className="text-xs text-muted-foreground cursor-pointer"
+                          >
+                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                          </label>
+                        </div>
+                        {customOllamaAvailable && (
+                          <p className="text-sm text-green-600 dark:text-green-400">✓ {t?.page_OllamaVerifySuccess || 'Ollama connected!'}</p>
+                        )}
+                        {ollamaVerifyError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{ollamaVerifyError}</p>
+                        )}
+                      </div>
+                      {/* <p className="text-center">{t.page_OllamaStep4}</p> */}
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Ollama models — rendered below setup section */}
+              {customOllamaAvailable && ollamaModelNames.length > 0 && (() => {
+                const ollamaProviderModels = groupLLMsByProvider()['Ollama'] || [];
+                const { orderedCategories, byCategory: modelsByCategory } = groupModelsByCategory(ollamaProviderModels, t);
+                return (
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center w-full mb-2">
+                      <div className="relative flex items-center justify-center w-full text-xl font-semibold border-b pb-1 p-2 rounded-md">
+                        <div className="relative inline-flex items-center">
+                          <span>Ollama</span>
+                          <div className="absolute left-full ml-2 flex items-center gap-2 whitespace-nowrap">
+                            <FreeTierBadge freeTier={{ available: true, note: (t) => t.pricing.ollamaFreeTierNote }} t={t} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3 pl-2 pt-1">
+                      {orderedCategories.map((category, index) => {
+                        const categoryModels = modelsByCategory[category];
+                        if (!categoryModels) return null;
+                        return (
+                          <React.Fragment key={`${category}-${index}`}>
+                            <div className="flex flex-col items-center mt-0">
+                              <div className="text-md font-medium text-muted-foreground mb-1.5 mt-2 pb-0.5 text-center">{category}</div>
+                              <ul className="space-y-1 text-sm w-full max-w-2xl">
+                                {categoryModels.map((llm) => (
+                                  <li key={llm.id} className="flex flex-col items-center py-1">
+                                    <div className="flex items-center space-x-2 mb-1">
+                                      <span className="whitespace-nowrap font-medium">{llm.name}</span>
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </React.Fragment>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
           <Card className="w-full liquid-glass-themed bg-card/60">
@@ -1324,20 +1104,8 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
-              {AVAILABLE_TTS_PROVIDERS.filter(provider => {
-                // Filter out LocalAI if it has no models (not verified)
-                if (provider.id === 'localai' && provider.models.length === 0) {
-                  return false;
-                }
-                return true;
-              }).length > 0 ? (
-                AVAILABLE_TTS_PROVIDERS.filter(provider => {
-                  // Filter out LocalAI if it has no models (not verified)
-                  if (provider.id === 'localai' && provider.models.length === 0) {
-                    return false;
-                  }
-                  return true;
-                }).map((provider) => {
+              {AVAILABLE_TTS_PROVIDERS.filter(provider => provider.id !== 'localai').length > 0 ? (
+                AVAILABLE_TTS_PROVIDERS.filter(provider => provider.id !== 'localai').map((provider) => {
                   const providerCollapsibleId = `tts-provider-${provider.id.replace(/\s+/g, '-')}`;
                   const isProviderOpen = openCollapsibles[providerCollapsibleId] ?? true;
                   const isStaticTTSProviderSection = provider.id === 'browser' || provider.id === 'localai';
@@ -1495,20 +1263,296 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               ) : (
                 <p className="text-center text-muted-foreground text-sm">{t.page_NoTTSOptions}</p>
               )}
+
+              {/* LocalAI Setup Instructions */}
+              <Collapsible
+                open={openCollapsibles['localai-setup'] || false}
+                onOpenChange={() => toggleCollapsible('localai-setup')}
+                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4"
+              >
+                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                  <div className="flex justify-center pt-1 relative group cursor-pointer">
+                    <div className="relative">
+                      <div className="absolute right-full mr-2 translate-y-px">
+                        <div className="relative w-6 h-6 shrink-0">
+                          <Image
+                            src="/localai.svg"
+                            alt="LocalAI Logo"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-base whitespace-nowrap">LocalAI Setup</h3>
+                    </div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                      {openCollapsibles['localai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-2 mt-4">
+                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                      <SetupInstructions type="localai" />
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className="flex gap-2 w-full max-w-md">
+                          {localaiHelperEnabled ? (
+                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                https://
+                              </span>
+                              <input
+                                type="text"
+                                value={localaiSubdomain}
+                                onChange={(e) => {
+                                  setLocalaiSubdomain(e.target.value);
+                                  if (customLocalaiAvailable) {
+                                    setCustomLocalaiAvailable(false);
+                                  }
+                                  setLocalaiVerifyError(null);
+                                }}
+                                placeholder="e.g. abc123"
+                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleVerifyLocalAI();
+                                  }
+                                }}
+                              />
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                .ngrok-free.app
+                              </span>
+                            </div>
+                          ) : (
+                            <input
+                              type="url"
+                              value={localaiEndpoint}
+                              onChange={(e) => {
+                                setLocalaiEndpoint(e.target.value);
+                                if (customLocalaiAvailable) {
+                                  setCustomLocalaiAvailable(false);
+                                }
+                                setLocalaiVerifyError(null);
+                              }}
+                              placeholder="e.g. https://abc123.ngrok-free.app"
+                              className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyLocalAI();
+                                }
+                              }}
+                            />
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleVerifyLocalAI}
+                            disabled={
+                              customLocalaiLoading ||
+                              (!localaiHelperEnabled
+                                ? !localaiEndpoint.trim()
+                                : !localaiSubdomain.trim())
+                            }
+                            className="liquid-glass-button-primary h-auto py-1.5"
+                          >
+                            {customLocalaiLoading ? 'Verifying...' : 'Verify'}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                          <input
+                            id="localai-helper-toggle"
+                            type="checkbox"
+                            checked={localaiHelperEnabled}
+                            onChange={(e) => setLocalaiHelperEnabled(e.target.checked)}
+                            className="h-3 w-3"
+                          />
+                          <label
+                            htmlFor="localai-helper-toggle"
+                            className="text-xs text-muted-foreground cursor-pointer"
+                          >
+                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                          </label>
+                        </div>
+                        {customLocalaiAvailable && (
+                          <p className="text-sm text-green-600 dark:text-green-400">✓ LocalAI connected!</p>
+                        )}
+                        {localaiVerifyError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{localaiVerifyError}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* LocalAI models — rendered below setup section */}
+              {customLocalaiAvailable && (() => {
+                const localaiProvider = AVAILABLE_TTS_PROVIDERS.find(p => p.id === 'localai');
+                if (!localaiProvider || localaiProvider.models.length === 0) return null;
+                return (
+                  <div className="space-y-1">
+                    <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
+                      <div className="relative inline-flex items-center">
+                        <span>{localaiProvider.name}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 flex flex-col items-center">
+                      <ul className="space-y-1 text-sm w-full max-w-2xl">
+                        {localaiProvider.models.map((model) => (
+                          <li key={model.id} className="flex flex-col items-center py-1">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="whitespace-nowrap">{model.name}</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
 
-          {customInvokeaiAvailable && invokeaiModelNames.length > 0 && (
-            <Card className="w-full liquid-glass-themed bg-card/60">
-              <CardHeader>
-                <h2 className="relative flex items-center justify-center text-xl font-semibold">
-                  <span className="relative inline-block">
-                    <ImageIcon className="absolute right-full mr-2 h-5 w-5 top-1/2 -translate-y-1/2" aria-hidden="true" />
-                    <span>Currently Available Text-to-Image Models</span>
-                  </span>
-                </h2>
-              </CardHeader>
-              <CardContent className="space-y-2 flex flex-col items-center">
+          <Card className="w-full liquid-glass-themed bg-card/60">
+            <CardHeader>
+              <h2 className="relative flex items-center justify-center text-xl font-semibold">
+                <span className="relative inline-block">
+                  <ImageIcon className="absolute right-full mr-2 h-5 w-5 top-1/2 -translate-y-1/2" aria-hidden="true" />
+                  <span>Currently Available Text-to-Image Models</span>
+                </span>
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* InvokeAI Setup Instructions */}
+              <Collapsible
+                open={openCollapsibles['invokeai-setup'] || false}
+                onOpenChange={() => toggleCollapsible('invokeai-setup')}
+                className="liquid-glass-themed border border-blue-500/50 rounded-lg p-4 w-full"
+              >
+                <CollapsibleTrigger className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md">
+                  <div className="flex justify-center pt-1 relative group cursor-pointer">
+                    <div className="relative">
+                      <div className="absolute right-full mr-2 translate-y-px">
+                        <div className="relative w-6 h-6 shrink-0">
+                          <Image
+                            src="/invoke-ai.svg"
+                            alt="InvokeAI Logo"
+                            fill
+                            className="object-contain brightness-0 dark:brightness-100"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-base whitespace-nowrap">Invoke Setup</h3>
+                    </div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-blue-500/70 group-hover:text-blue-500 transition-colors">
+                      {openCollapsibles['invokeai-setup'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-2 mt-4">
+                    <div className="text-sm space-y-1 mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                      <SetupInstructions type="invokeai" />
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className="flex gap-2 w-full max-w-md">
+                          {invokeaiHelperEnabled ? (
+                            <div className="flex-1 flex items-stretch rounded-md liquid-glass-input overflow-hidden">
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-r border-border whitespace-nowrap">
+                                https://
+                              </span>
+                              <input
+                                type="text"
+                                value={invokeaiSubdomain}
+                                onChange={(e) => {
+                                  setInvokeaiSubdomain(e.target.value);
+                                  if (customInvokeaiAvailable) {
+                                    setCustomInvokeaiAvailable(false);
+                                  }
+                                  setInvokeaiVerifyError(null);
+                                }}
+                                placeholder="e.g. abc123"
+                                className="flex-1 px-2 py-1.5 text-sm bg-transparent outline-none text-center"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleVerifyInvokeAI();
+                                  }
+                                }}
+                              />
+                              <span className="px-2 py-1.5 text-xs bg-muted text-muted-foreground font-medium border-l border-border whitespace-nowrap">
+                                .ngrok-free.app
+                              </span>
+                            </div>
+                          ) : (
+                            <input
+                              type="url"
+                              value={invokeaiEndpoint}
+                              onChange={(e) => {
+                                setInvokeaiEndpoint(e.target.value);
+                                if (customInvokeaiAvailable) {
+                                  setCustomInvokeaiAvailable(false);
+                                }
+                                setInvokeaiVerifyError(null);
+                              }}
+                              placeholder="e.g. https://abc123.ngrok-free.app"
+                              className="flex-1 px-3 py-1.5 text-sm rounded-md liquid-glass-input text-center"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleVerifyInvokeAI();
+                                }
+                              }}
+                            />
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleVerifyInvokeAI}
+                            disabled={
+                              customInvokeaiLoading ||
+                              (!invokeaiHelperEnabled
+                                ? !invokeaiEndpoint.trim()
+                                : !invokeaiSubdomain.trim())
+                            }
+                            className="liquid-glass-button-primary h-auto py-1.5"
+                          >
+                            {customInvokeaiLoading ? 'Verifying...' : 'Verify'}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 w-full max-w-md">
+                          <input
+                            id="invokeai-helper-toggle"
+                            type="checkbox"
+                            checked={invokeaiHelperEnabled}
+                            onChange={(e) => setInvokeaiHelperEnabled(e.target.checked)}
+                            className="h-3 w-3"
+                          />
+                          <label
+                            htmlFor="invokeai-helper-toggle"
+                            className="text-xs text-muted-foreground cursor-pointer"
+                          >
+                            Add <span className="text-blue-600 dark:text-blue-400 font-medium">https://</span> and{' '}
+                            <span className="text-blue-600 dark:text-blue-400 font-medium">.ngrok-free.app</span>
+                          </label>
+                        </div>
+                        {customInvokeaiAvailable && (
+                          <p className="text-sm text-green-600 dark:text-green-400">✓ Invoke connected!</p>
+                        )}
+                        {invokeaiVerifyError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 max-w-xs text-center">{invokeaiVerifyError}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {customInvokeaiAvailable && invokeaiModelNames.length > 0 && (
                 <div className="space-y-1 w-full max-w-2xl">
                   <div className="relative flex items-center justify-center w-full text-lg font-semibold mb-2 border-b pb-1 p-2 rounded-md">
                     <span>Invoke</span>
@@ -1521,9 +1565,9 @@ export default function LandingPage({ nonce }: LandingPageProps) {
                     ))}
                   </ul>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              )}
+            </CardContent>
+          </Card>
 
           {/* IMAGE MODELS SECTION */}
           {/* <Card className="w-full">
