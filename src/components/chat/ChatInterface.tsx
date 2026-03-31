@@ -866,30 +866,24 @@ export function ChatInterface({
         }
     }, [conversationData]);
 
-    // --- Effect 3: Auto-scroll ---
+    // --- Effect 3: Auto-scroll for non-agent messages only ---
     const prevMessagesLength = useRef(messages.length);
     useEffect(() => {
         // Only auto-scroll when:
         // 1. Conversation is running and not stopped
-        // 2. A new message was added (not just updated)
-        // 3. We're not currently playing audio
+        // 2. The last visible update is non-agent content
+        // (Agent turn visibility/reading flow is handled by streaming + TTS paragraph auto-scroll effects)
         if (conversationStatus === "running" && !isStopped) {
-            const isNewMessage = messages.length > prevMessagesLength.current;
             const lastMessage = messages[messages.length - 1];
             const isLastMessageFromAgent = lastMessage && (lastMessage.role === 'agentA' || lastMessage.role === 'agentB');
 
-            // Scroll if:
-            // - It's a new message and we're not playing audio, OR
-            // - The last message is from the user, OR
-            // - The last agent message has finished playing
-            if ((isNewMessage && !isAudioPlaying) ||
-                !isLastMessageFromAgent ||
-                (isLastMessageFromAgent && playedMessageIds.has(lastMessage.id))) {
+            // Do not bottom-jump for agent messages.
+            if (!isLastMessageFromAgent) {
                 scrollToBottom(messagesEndRef.current);
             }
         }
         prevMessagesLength.current = messages.length;
-    }, [messages, conversationStatus, isStopped, isAudioPlaying, playedMessageIds, scrollToBottom]);
+    }, [messages, conversationStatus, isStopped, scrollToBottom]);
 
     // --- Effect 3.5: Auto-follow while a message is actively streaming ---
     useEffect(() => {
