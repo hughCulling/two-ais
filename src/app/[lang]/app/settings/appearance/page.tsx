@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/hooks/useTranslation';
+import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 
 export default function AppearancePage() {
     const { t, loading: translationLoading } = useTranslation();
@@ -42,7 +43,21 @@ export default function AppearancePage() {
                         <ThemeSwitcher />
                 </div>
 
-                {/* Add other appearance settings later if needed */}
+                <div className="rounded-md border p-4 space-y-3">
+                        <p className="text-sm font-medium">Chat Bubble Preview</p>
+                        <div className="space-y-3">
+                                <div className="flex justify-start">
+                                        <div className="p-3 rounded-lg max-w-[75%] min-w-0 whitespace-pre-wrap shadow-sm bg-muted text-foreground">
+                                                Agent A preview message
+                                        </div>
+                                </div>
+                                <div className="flex justify-end">
+                                        <div className={`p-3 rounded-lg max-w-[75%] min-w-0 whitespace-pre-wrap shadow-sm ${AGENT_B_BUBBLE_CLASS}`}>
+                                                Agent B preview message
+                                        </div>
+                                </div>
+                        </div>
+                </div>
             </div>
     );
 }
