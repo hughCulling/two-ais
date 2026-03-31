@@ -24,6 +24,7 @@ import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 import Image from 'next/image';
 import {  prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
+import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -603,7 +604,7 @@ export default function ChatHistoryViewerPage() {
             alignClass = 'justify-start';
             showPlayButton = !!(msg.audioUrl || details?.ttsSettings?.agentA?.provider === 'browser');
         } else if (isAgentB) {
-            bubbleClass = 'bg-primary text-primary-foreground';
+            bubbleClass = AGENT_B_BUBBLE_CLASS;
             alignClass = 'justify-end';
             showPlayButton = !!(msg.audioUrl || details?.ttsSettings?.agentB?.provider === 'browser');
         } else if (isUser) {

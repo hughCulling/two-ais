@@ -37,6 +37,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
+import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 
 // --- Interfaces ---
 interface ParagraphImage {
@@ -2095,7 +2096,7 @@ export function ChatInterface({
                         >
                             <div
                                 className={`p-3 rounded-lg max-w-[75%] min-w-0 whitespace-pre-wrap shadow-sm relative ${msg.role === 'agentA' ? 'bg-muted text-foreground' :
-                                        msg.role === 'agentB' ? 'bg-primary text-primary-foreground dark:bg-blue-950/70 dark:text-blue-100 dark:border dark:border-blue-900/80' :
+                                        msg.role === 'agentB' ? AGENT_B_BUBBLE_CLASS :
                                             'bg-transparent px-0 py-0 shadow-none'
                                     }`}
                             >
