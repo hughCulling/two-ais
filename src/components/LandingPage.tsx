@@ -511,7 +511,7 @@ export default function LandingPage({ nonce }: LandingPageProps) {
               {mounted && (
                 <iframe
                   className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'pkN_uU-nDdk' : 'MwDdvNoMGsk'}`}
+                  src={`https://www.youtube.com/embed/${resolvedTheme === 'dark' ? 'UIX60T2IYK4' : 'MwDdvNoMGsk'}`}
                   title={t.page_VideoTitle}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
