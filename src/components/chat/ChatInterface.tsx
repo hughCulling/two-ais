@@ -2276,13 +2276,6 @@ export function ChatInterface({
                     {conversationStatus === "running" && mergedMessages.length === 0 && !isStopped && (
                         <div className="text-center text-muted-foreground text-sm p-4" role="status" aria-live="polite">Waiting for first message...</div>
                     )}
-                    {conversationStatus === "running" && conversationData?.autoStopPending && conversationData?.autoStopMessage && (
-                        <div className="flex justify-center text-xs text-muted-foreground italic py-1" role="status" aria-live="polite">
-                            <div className="p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-none bg-transparent">
-                                {conversationData.autoStopMessage}
-                            </div>
-                        </div>
-                    )}
                     {isStopped && conversationStatus === "stopped" && !error && (
                         <div className="flex justify-center text-xs text-muted-foreground italic py-1" role="status" aria-live="polite">
                             <div className="p-3 rounded-lg max-w-[75%] whitespace-pre-wrap shadow-none bg-transparent">
