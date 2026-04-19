@@ -19,6 +19,7 @@ interface ParagraphImage {
 
 interface ConversationData {
     status: 'running' | 'stopped' | 'error';
+    ollamaEndpoint?: string;
     imageGenSettings?: {
         enabled: boolean;
         invokeaiEndpoint: string;
@@ -45,7 +46,7 @@ interface MessageData {
 
 export function useInvokeAIImageGen(conversationId: string | null, userId: string | null) {
     const processingRef = useRef<Set<string>>(new Set()); // Track which messages are being processed
-    const generationQueueRef = useRef<Array<{ messageId: string; paragraphIndex: number; messageRef: DocumentReference; paragraphs: string[]; imageGenSettings: NonNullable<ConversationData['imageGenSettings']> }>>([]);
+    const generationQueueRef = useRef<Array<{ messageId: string; paragraphIndex: number; messageRef: DocumentReference; paragraphs: string[]; imageGenSettings: NonNullable<ConversationData['imageGenSettings']>; ollamaEndpoint: string }>>([]);
     const isGeneratingRef = useRef(false);
 
     const processGenerationQueue = useCallback(async () => {
@@ -53,7 +54,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         isGeneratingRef.current = true;
 
         while (generationQueueRef.current.length > 0) {
-            const { messageId, paragraphIndex, messageRef, paragraphs, imageGenSettings } = generationQueueRef.current.shift()!;
+            const { messageId, paragraphIndex, messageRef, paragraphs, imageGenSettings, ollamaEndpoint } = generationQueueRef.current.shift()!;
 
             try {
                 // Get current message data
@@ -85,7 +86,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 const prompt = await generateImagePrompt(
                     paragraph,
                     imageGenSettings.promptLlm,
-                    imageGenSettings.promptSystemMessage
+                    imageGenSettings.promptSystemMessage,
+                    ollamaEndpoint
                 );
 
                 if (!prompt) {
@@ -214,6 +216,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         // Queue all paragraphs for sequential generation
                         // At this point, imageGenSettings is guaranteed to exist due to check at line 167
                         const settings = conversationData.imageGenSettings!;
+                        const convOllamaEndpoint = conversationData.ollamaEndpoint || 'http://localhost:11434';
                         for (let i = 0; i < paragraphs.length; i++) {
                             generationQueueRef.current.push({
                                 messageId,
@@ -221,6 +224,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                                 messageRef: messageDoc.ref,
                                 paragraphs,
                                 imageGenSettings: settings,
+                                ollamaEndpoint: convOllamaEndpoint,
                             });
                         }
 
@@ -243,7 +247,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     async function generateImagePrompt(
         paragraph: string,
         promptLlmId: string,
-        promptSystemMessage: string
+        promptSystemMessage: string,
+        ollamaEndpoint: string = 'http://localhost:11434'
     ): Promise<string | null> {
         try {
             // Replace {paragraph} placeholder
@@ -255,8 +260,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             if (provider === 'Ollama') {
                 // Use Ollama API route
                 const modelName = promptLlmId.replace(/^ollama:/, '');
-                // Use default Ollama endpoint (localhost:11434) - InvokeAI endpoint is separate
-                const ollamaEndpoint = 'http://localhost:11434';
+                // Use the conversation's configured Ollama endpoint (ngrok URL or localhost)
 
                 const response = await fetch('/api/ollama/stream', {
                     method: 'POST',
