@@ -389,6 +389,11 @@ export function ChatInterface({
         setIsBrowserTTSActive(false);
         setTtsError(null);
         setPendingTtsMessage(null);
+        setFullscreenAudioSync({
+            messageId: null,
+            paragraphIndex: null,
+            waitingForImage: false,
+        });
 
         // Notify backend that the message has been played
         const playedMsg = messages.find(m => m.id === playedMsgId);
@@ -545,6 +550,11 @@ export function ChatInterface({
         setIsBrowserTTSActive(false);
         setTtsError(null);
         setPendingTtsMessage(null);
+        setFullscreenAudioSync({
+            messageId: null,
+            paragraphIndex: null,
+            waitingForImage: false,
+        });
 
         const skippedMsg = messages.find(m => m.id === skippedMsgId);
         if (skippedMsg && (skippedMsg.role === 'agentA' || skippedMsg.role === 'agentB')) {
@@ -638,6 +648,15 @@ export function ChatInterface({
 
                         setIsAudioPaused(false);
                         setIsAudioPlaying(true);
+                        const resumeMsgId = currentlyPlayingMsgIdRef.current || currentlyPlayingMsgId;
+                        if (resumeMsgId) {
+                            const rawParagraphIndex = chunkRawParagraphIndicesRef.current[currentChunkIndexRef.current] ?? 0;
+                            setFullscreenAudioSync({
+                                messageId: resumeMsgId,
+                                paragraphIndex: rawParagraphIndex,
+                                waitingForImage: false,
+                            });
+                        }
                         logger.info("[TTS Resume] Successfully restarted TTS from current chunk");
                         return;
                     } else {
@@ -650,6 +669,15 @@ export function ChatInterface({
                 window.speechSynthesis.resume();
                 setIsAudioPaused(false);
                 setIsAudioPlaying(true);
+                const resumeMsgId = currentlyPlayingMsgIdRef.current || currentlyPlayingMsgId;
+                if (resumeMsgId) {
+                    const rawParagraphIndex = chunkRawParagraphIndicesRef.current[currentChunkIndexRef.current] ?? 0;
+                    setFullscreenAudioSync({
+                        messageId: resumeMsgId,
+                        paragraphIndex: rawParagraphIndex,
+                        waitingForImage: false,
+                    });
+                }
                 logger.info("[TTS Resume] Successfully resumed browser TTS");
             } catch (err) {
                 logger.error("[TTS Resume] Failed:", err);
@@ -660,6 +688,14 @@ export function ChatInterface({
             audioPlayerRef.current.play().then(() => {
                 setIsAudioPaused(false);
                 setIsAudioPlaying(true);
+                const resumeMsgId = currentlyPlayingMsgIdRef.current || currentlyPlayingMsgId;
+                if (resumeMsgId) {
+                    setFullscreenAudioSync({
+                        messageId: resumeMsgId,
+                        paragraphIndex: currentAudioParagraphIndexRef.current,
+                        waitingForImage: false,
+                    });
+                }
                 logger.info("[Audio Resume] Successfully resumed HTML5 audio");
             }).catch(err => {
                 logger.error("[Audio Resume] Failed:", err);
@@ -1063,6 +1099,11 @@ export function ChatInterface({
         setPendingTtsMessage(null);
         setHasUserInteracted(false);
         setIsAudioReady(false);
+        setFullscreenAudioSync({
+            messageId: null,
+            paragraphIndex: null,
+            waitingForImage: false,
+        });
 
         try {
             const conversationRef = doc(db, "conversations", conversationId);
@@ -1215,6 +1256,15 @@ export function ChatInterface({
     // --- Image Modal State ---
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
     const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
+    const [fullscreenAudioSync, setFullscreenAudioSync] = useState<{
+        messageId: string | null;
+        paragraphIndex: number | null;
+        waitingForImage: boolean;
+    }>({
+        messageId: null,
+        paragraphIndex: null,
+        waitingForImage: false,
+    });
 
     // --- Auto-update fullscreen image modal when new image arrives ---
     useEffect(() => {
@@ -1231,25 +1281,28 @@ export function ChatInterface({
         }
     }, [visibleMessages, fullScreenImageMsgId]);
 
-    // --- Auto-advance fullscreen gallery when TTS moves to next paragraph ---
+    // --- Auto-sync fullscreen gallery to paragraph audio start events ---
     useEffect(() => {
         if (!fullScreenGallery) return;
+        if (fullscreenAudioSync.waitingForImage) return;
+        if (!fullscreenAudioSync.messageId || fullscreenAudioSync.paragraphIndex === null) return;
 
-        const message = visibleMessages.find(m => m.id === fullScreenGallery.messageId);
-        if (!message || !message.paragraphImages) return;
+        const targetMessage = visibleMessages.find(m => m.id === fullscreenAudioSync.messageId);
+        if (!targetMessage || !targetMessage.paragraphImages) return;
 
-        // Find the paragraph that's currently being read
-        const currentParagraphIndex = currentParagraphIndexRef.current;
-        if (currentParagraphIndex >= 0 && currentParagraphIndex < message.paragraphImages.length) {
-            const currentImage = message.paragraphImages[currentParagraphIndex];
-            if (currentImage && currentImage.status === 'complete' && currentImage.imageUrl) {
-                // Auto-advance to current paragraph's image
-                if (fullScreenGallery.paragraphIndex !== currentParagraphIndex) {
-                    setFullScreenGallery({ messageId: fullScreenGallery.messageId, paragraphIndex: currentParagraphIndex });
-                }
-            }
+        const targetImage = targetMessage.paragraphImages[fullscreenAudioSync.paragraphIndex];
+        if (!targetImage || targetImage.status !== 'complete' || !targetImage.imageUrl) return;
+
+        if (
+            fullScreenGallery.messageId !== fullscreenAudioSync.messageId ||
+            fullScreenGallery.paragraphIndex !== fullscreenAudioSync.paragraphIndex
+        ) {
+            setFullScreenGallery({
+                messageId: fullscreenAudioSync.messageId,
+                paragraphIndex: fullscreenAudioSync.paragraphIndex,
+            });
         }
-    }, [fullScreenGallery, visibleMessages]);
+    }, [fullScreenGallery, fullscreenAudioSync, visibleMessages]);
 
     // --- Effect 5: Audio Playback ---
     useEffect(() => {
@@ -1428,7 +1481,14 @@ export function ChatInterface({
                 const chunkNum = chunkIndexAtStart + 1;
                 const totalChunks = ttsChunkQueueRef.current?.length || 0;
                 const currentChunk = ttsChunkQueueRef.current?.[chunkIndexAtStart];
+                const paragraphIndex = paragraphIndicesRef.current[chunkIndexAtStart] || 0;
+                const rawParagraphIndex = chunkRawParagraphIndicesRef.current[chunkIndexAtStart] ?? 0;
                 logger.info(`[TTS] Started playing message ${nextMsg.id.substring(0, 8)}... chunk ${chunkNum}/${totalChunks} (${currentChunk?.length || 0} chars)`);
+                setFullscreenAudioSync({
+                    messageId: nextMsg.id,
+                    paragraphIndex: rawParagraphIndex,
+                    waitingForImage: false,
+                });
 
                 if (!hasStartedCurrentMessage) {
                     hasStartedCurrentMessage = true;
@@ -1444,7 +1504,6 @@ export function ChatInterface({
                 // Use requestAnimationFrame to ensure DOM is ready
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
-                        const paragraphIndex = paragraphIndicesRef.current[chunkIndexAtStart] || 0;
                         const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
 
                         logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
@@ -1516,6 +1575,11 @@ export function ChatInterface({
 
                 const rawParagraphIndex = chunkRawParagraphIndicesRef.current[chunkIndex] ?? 0;
                 if (!isParagraphImageReady(rawParagraphIndex)) {
+                    setFullscreenAudioSync({
+                        messageId: nextMsg.id,
+                        paragraphIndex: rawParagraphIndex,
+                        waitingForImage: true,
+                    });
                     setPendingTtsMessage(nextMsg);
                     setIsAudioReady(false);
                     if (browserImageWaitTimerRef.current) {
@@ -1750,6 +1814,11 @@ export function ChatInterface({
                 );
 
                 if (!paragraphImageReady) {
+                    setFullscreenAudioSync({
+                        messageId: nextMsg.id,
+                        paragraphIndex: currentParagraphIndex,
+                        waitingForImage: true,
+                    });
                     setPendingTtsMessage(nextMsg);
                     setIsAudioReady(false);
                     if (localAIWaitTimerRef.current) {
@@ -1808,6 +1877,11 @@ export function ChatInterface({
                 }
                 audioPlayerRef.current.play()
                     .then(() => {
+                        setFullscreenAudioSync({
+                            messageId: nextMsg.id,
+                            paragraphIndex: currentParagraphIndex,
+                            waitingForImage: false,
+                        });
                         if (currentParagraphIndex === firstSpeakableParagraphIndex) {
                             isPlaybackStartingRef.current = false;
                             setCurrentlyPlayingMsgId(nextMsg.id);
@@ -2531,6 +2605,15 @@ export function ChatInterface({
                 const currentImageIndex = completeImages.findIndex(img =>
                     message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
                 );
+                const isWaitingForSyncedImage = Boolean(
+                    fullscreenAudioSync.waitingForImage &&
+                    fullscreenAudioSync.messageId &&
+                    fullscreenAudioSync.paragraphIndex !== null &&
+                    (
+                        fullscreenAudioSync.messageId !== fullScreenGallery.messageId ||
+                        fullscreenAudioSync.paragraphIndex !== fullScreenGallery.paragraphIndex
+                    )
+                );
 
                 const navigateImage = (direction: 'prev' | 'next') => {
                     if (direction === 'prev' && currentImageIndex > 0) {
@@ -2594,6 +2677,12 @@ export function ChatInterface({
                                     </div>
                                 )}
                             </>
+                        )}
+
+                        {isWaitingForSyncedImage && (
+                            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                Waiting for next image...
+                            </div>
                         )}
 
                         <button
