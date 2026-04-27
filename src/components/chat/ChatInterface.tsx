@@ -207,6 +207,7 @@ export function ChatInterface({
     const currentlyPlayingMsgIdRef = useRef<string | null>(null);
     const latestMessagesRef = useRef<Message[]>([]);
     const localAIWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const browserImageWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const messageRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
     const paragraphRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
     const scrollViewportRef = useRef<HTMLDivElement>(null);
@@ -214,6 +215,7 @@ export function ChatInterface({
     const ttsChunkQueueRef = useRef<string[]>([]);
     const currentChunkIndexRef = useRef<number>(0);
     const paragraphIndicesRef = useRef<number[]>([]);
+    const chunkRawParagraphIndicesRef = useRef<number[]>([]);
     const currentAudioParagraphIndexRef = useRef<number>(0);
     const isPlaybackStartingRef = useRef(false);
     const streamingAutoScrollRafRef = useRef<number | null>(null);
@@ -324,6 +326,7 @@ export function ChatInterface({
         // Clear chunk queue
         ttsChunkQueueRef.current = [];
         currentChunkIndexRef.current = 0;
+        chunkRawParagraphIndicesRef.current = [];
 
         // Clean up any existing utterance
         if (utteranceRef.current) {
@@ -360,6 +363,10 @@ export function ChatInterface({
         if (localAIWaitTimerRef.current) {
             clearTimeout(localAIWaitTimerRef.current);
             localAIWaitTimerRef.current = null;
+        }
+        if (browserImageWaitTimerRef.current) {
+            clearTimeout(browserImageWaitTimerRef.current);
+            browserImageWaitTimerRef.current = null;
         }
         isPlaybackStartingRef.current = false;
         if (browserTtsWatchdogTimerRef.current) {
@@ -518,6 +525,10 @@ export function ChatInterface({
         if (localAIWaitTimerRef.current) {
             clearTimeout(localAIWaitTimerRef.current);
             localAIWaitTimerRef.current = null;
+        }
+        if (browserImageWaitTimerRef.current) {
+            clearTimeout(browserImageWaitTimerRef.current);
+            browserImageWaitTimerRef.current = null;
         }
 
         isPlaybackStartingRef.current = false;
@@ -1020,6 +1031,10 @@ export function ChatInterface({
             clearTimeout(localAIWaitTimerRef.current);
             localAIWaitTimerRef.current = null;
         }
+        if (browserImageWaitTimerRef.current) {
+            clearTimeout(browserImageWaitTimerRef.current);
+            browserImageWaitTimerRef.current = null;
+        }
 
         // Clean up browser TTS completely
         if (window.speechSynthesis) {
@@ -1268,17 +1283,21 @@ export function ChatInterface({
                     logger.debug(`[TTS] Waiting for image generation to initialize for message ${msg.id.substring(0, 8)}...`);
                     return false;
                 }
-            }
+                const sourceParagraphs = splitIntoParagraphs(msg.content);
+                const firstSpeakableParagraphIndex = sourceParagraphs.findIndex((paragraph) => {
+                    const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+                    return isSpeakableText(cleanedParagraph);
+                });
 
-            // Wait for paragraph images to be generated (or attempted) before starting TTS
-            if (msg.paragraphImages && msg.paragraphImages.length > 0) {
-                // Check if all paragraph images are complete or error (not pending or generating)
-                const allImagesReady = msg.paragraphImages.every(img =>
-                    img.status === 'complete' || img.status === 'error'
-                );
-                if (!allImagesReady) {
-                    logger.debug(`[TTS] Waiting for paragraph images to complete for message ${msg.id.substring(0, 8)}...`);
-                    return false;
+                if (firstSpeakableParagraphIndex !== -1) {
+                    const firstParagraphImage = msg.paragraphImages[firstSpeakableParagraphIndex];
+                    const firstParagraphImageReady = firstParagraphImage &&
+                        (firstParagraphImage.status === 'complete' || firstParagraphImage.status === 'error');
+
+                    if (!firstParagraphImageReady) {
+                        logger.debug(`[TTS] Waiting for first paragraph image to be ready for message ${msg.id.substring(0, 8)}...`);
+                        return false;
+                    }
                 }
             }
 
@@ -1328,31 +1347,47 @@ export function ChatInterface({
                 }
             }
 
-            const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(nextMsg.content)));
-
-            // Split into paragraphs first for better auto-scroll
-            const paragraphs = splitIntoParagraphs(cleanedContent).filter((paragraph) => isSpeakableText(paragraph));
+            // Split into paragraphs first for better auto-scroll.
+            // Keep both speakable and raw indices so each spoken paragraph can wait
+            // for its corresponding paragraph image.
+            const sourceParagraphs = splitIntoParagraphs(nextMsg.content);
+            const speakableParagraphs = sourceParagraphs
+                .map((paragraph, rawParagraphIndex) => {
+                    const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+                    return {
+                        cleanedParagraph,
+                        rawParagraphIndex,
+                    };
+                })
+                .filter(({ cleanedParagraph }) => isSpeakableText(cleanedParagraph))
+                .map((entry, speakableParagraphIndex) => ({
+                    ...entry,
+                    speakableParagraphIndex,
+                }));
 
             // Then split each paragraph into TTS-safe chunks if needed
             const MAX_TTS_LENGTH = 4000;
             const chunks: string[] = [];
-            const paragraphIndices: number[] = []; // Track which paragraph each chunk belongs to
+            const paragraphIndices: number[] = []; // Track speakable paragraph index for auto-scroll
+            const rawParagraphIndices: number[] = []; // Track raw paragraph index for image gating
 
-            paragraphs.forEach((paragraph, paragraphIndex) => {
-                const paragraphChunks = splitIntoTTSChunks(paragraph, MAX_TTS_LENGTH);
+            speakableParagraphs.forEach(({ cleanedParagraph, speakableParagraphIndex, rawParagraphIndex }) => {
+                const paragraphChunks = splitIntoTTSChunks(cleanedParagraph, MAX_TTS_LENGTH);
                 paragraphChunks.forEach(chunk => {
                     chunks.push(chunk);
-                    paragraphIndices.push(paragraphIndex);
+                    paragraphIndices.push(speakableParagraphIndex);
+                    rawParagraphIndices.push(rawParagraphIndex);
                 });
             });
 
             if (chunks.length > 1) {
-                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${paragraphs.length} paragraphs, ${chunks.length} total chunks for browser TTS`);
+                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${speakableParagraphs.length} speakable paragraphs, ${chunks.length} total chunks for browser TTS`);
             }
 
             // Store chunks and paragraph info in queue
             ttsChunkQueueRef.current = chunks;
             paragraphIndicesRef.current = paragraphIndices;
+            chunkRawParagraphIndicesRef.current = rawParagraphIndices;
             currentChunkIndexRef.current = 0;
             currentParagraphIndexRef.current = 0;
 
@@ -1377,6 +1412,12 @@ export function ChatInterface({
                 logger.info(`[TTS] Finished playing all ${ttsChunkQueueRef.current.length} chunks for message ${nextMsg.id.substring(0, 8)}...`);
                 ttsChunkQueueRef.current = [];
                 currentChunkIndexRef.current = 0;
+                chunkRawParagraphIndicesRef.current = [];
+                if (browserImageWaitTimerRef.current) {
+                    clearTimeout(browserImageWaitTimerRef.current);
+                    browserImageWaitTimerRef.current = null;
+                }
+                isPlaybackStartingRef.current = false;
                 setIsBrowserTTSActive(false);
                 handleAudioEnd();
             };
@@ -1391,6 +1432,7 @@ export function ChatInterface({
 
                 if (!hasStartedCurrentMessage) {
                     hasStartedCurrentMessage = true;
+                    isPlaybackStartingRef.current = false;
                     setCurrentlyPlayingMsgId(nextMsg.id);
                     setIsAudioPlaying(true);
                     setIsBrowserTTSActive(true);
@@ -1439,7 +1481,21 @@ export function ChatInterface({
                 }
             };
 
-            const playChunkAtIndex = (chunkIndex: number, reason: 'initial' | 'next' | 'retry' | 'skip' = 'next') => {
+            const isParagraphImageReady = (rawParagraphIndex: number): boolean => {
+                if (!conversationData?.imageGenSettings?.enabled) return true;
+
+                const latestMsg = latestMessagesRef.current.find((m) => m.id === nextMsg.id) ?? nextMsg;
+                const paragraphImages = latestMsg.paragraphImages;
+                if (!paragraphImages || paragraphImages.length === 0) return false;
+
+                const paragraphImage = paragraphImages[rawParagraphIndex];
+                return Boolean(
+                    paragraphImage &&
+                    (paragraphImage.status === 'complete' || paragraphImage.status === 'error')
+                );
+            };
+
+            const playChunkAtIndex = (chunkIndex: number, reason: 'initial' | 'next' | 'retry' | 'skip' | 'wait' = 'next') => {
                 if (chunkIndex < 0 || chunkIndex >= ttsChunkQueueRef.current.length) {
                     finishCurrentMessagePlayback();
                     return;
@@ -1458,12 +1514,32 @@ export function ChatInterface({
                     return;
                 }
 
+                const rawParagraphIndex = chunkRawParagraphIndicesRef.current[chunkIndex] ?? 0;
+                if (!isParagraphImageReady(rawParagraphIndex)) {
+                    setPendingTtsMessage(nextMsg);
+                    setIsAudioReady(false);
+                    if (browserImageWaitTimerRef.current) {
+                        clearTimeout(browserImageWaitTimerRef.current);
+                    }
+                    browserImageWaitTimerRef.current = setTimeout(() => {
+                        playChunkAtIndex(chunkIndex, 'wait');
+                    }, 250);
+                    return;
+                }
+
+                if (browserImageWaitTimerRef.current) {
+                    clearTimeout(browserImageWaitTimerRef.current);
+                    browserImageWaitTimerRef.current = null;
+                }
+
                 if (reason === 'next') {
                     logger.info(`[TTS] Playing next chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length}`);
                 } else if (reason === 'retry') {
                     logger.info(`[TTS] Retrying chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length}`);
                 } else if (reason === 'skip') {
                     logger.info(`[TTS] Playing next chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length} after skip`);
+                } else if (reason === 'wait') {
+                    logger.info(`[TTS] Paragraph image ready. Resuming chunk ${chunkIndex + 1}/${ttsChunkQueueRef.current.length}`);
                 }
 
                 const chunkUtterance = new SpeechSynthesisUtterance(chunkText);
@@ -1588,9 +1664,11 @@ export function ChatInterface({
 
             try {
                 logger.debug(`[TTS] Calling speechSynthesis.speak() for message ${nextMsg.id.substring(0, 8)}...`);
+                isPlaybackStartingRef.current = true;
                 playChunkAtIndex(0, 'initial');
             } catch (err) {
                 logger.error('[TTS] Error in speechSynthesis.speak():', err);
+                isPlaybackStartingRef.current = false;
                 handleAudioEnd();
             }
 
@@ -1663,8 +1741,25 @@ export function ChatInterface({
                 const latestMsg = latestMessagesRef.current.find((m) => m.id === nextMsg.id);
                 const latestUrls = Array.isArray(latestMsg?.paragraphAudioUrls) ? latestMsg.paragraphAudioUrls : urls;
                 const latestErrors = Array.isArray(latestMsg?.paragraphAudioErrors) ? latestMsg.paragraphAudioErrors : [];
+                const latestParagraphImages = latestMsg?.paragraphImages ?? nextMsg.paragraphImages;
                 const paragraphUrl = latestUrls[currentParagraphIndex];
                 const paragraphError = latestErrors[currentParagraphIndex];
+                const paragraphImage = latestParagraphImages?.[currentParagraphIndex];
+                const paragraphImageReady = !conversationData?.imageGenSettings?.enabled || Boolean(
+                    paragraphImage && (paragraphImage.status === 'complete' || paragraphImage.status === 'error')
+                );
+
+                if (!paragraphImageReady) {
+                    setPendingTtsMessage(nextMsg);
+                    setIsAudioReady(false);
+                    if (localAIWaitTimerRef.current) {
+                        clearTimeout(localAIWaitTimerRef.current);
+                    }
+                    localAIWaitTimerRef.current = setTimeout(() => {
+                        playParagraph(currentParagraphIndex);
+                    }, 250);
+                    return;
+                }
 
                 if (paragraphUrl === null || typeof paragraphUrl === 'undefined' || paragraphUrl === '') {
                     setPendingTtsMessage(nextMsg);
@@ -1853,6 +1948,10 @@ export function ChatInterface({
             if (localAIWaitTimerRef.current) {
                 clearTimeout(localAIWaitTimerRef.current);
                 localAIWaitTimerRef.current = null;
+            }
+            if (browserImageWaitTimerRef.current) {
+                clearTimeout(browserImageWaitTimerRef.current);
+                browserImageWaitTimerRef.current = null;
             }
             isPlaybackStartingRef.current = false;
             if (browserTtsWatchdogTimerRef.current) {
