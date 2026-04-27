@@ -93,6 +93,7 @@ interface SessionConfig {
         cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
+        promptLookaheadLimit?: number;
     };
 }
 
@@ -880,6 +881,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiScheduler, setInvokeaiScheduler] = useState<string>('dpmpp_3m_k');
     const [invokeaiClipSkip, setInvokeaiClipSkip] = useState<number>(0);
     const [invokeaiCfgRescaleMultiplier, setInvokeaiCfgRescaleMultiplier] = useState<number>(0);
+    const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -1235,6 +1237,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                 promptLlm: selectedPromptLlm,
                 promptSystemMessage: imagePromptSystemMessage,
+                promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
             };
         }
 
@@ -1408,6 +1411,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                     promptLlm: selectedPromptLlm,
                     promptSystemMessage: imagePromptSystemMessage,
+                    promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                 } : undefined,
                 collapseStates: {
                     cardDescription: collapseCardDescription,
@@ -1485,8 +1489,14 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setInvokeaiCfgRescaleMultiplier(preset.imageGenSettings.cfgRescaleMultiplier ?? 0);
                 setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
                 setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
+                setPromptLookaheadLimit(
+                    typeof preset.imageGenSettings.promptLookaheadLimit === 'number'
+                        ? Math.max(0, Math.min(10, Math.floor(preset.imageGenSettings.promptLookaheadLimit)))
+                        : 1
+                );
             } else {
                 setImageGenEnabled(false);
+                setPromptLookaheadLimit(1);
             }
 
             // Load collapse states if they exist
@@ -2519,6 +2529,25 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         </SelectContent>
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center">The LLM used to generate image prompts from paragraphs</p>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="prompt-lookahead-limit" className="block text-center">Prompt Lookahead Limit</Label>
+                                    <div className="flex items-center justify-center gap-2">
+                                        <input
+                                            id="prompt-lookahead-limit"
+                                            type="number"
+                                            min="0"
+                                            max="10"
+                                            value={promptLookaheadLimit}
+                                            onChange={(e) => setPromptLookaheadLimit(Math.max(0, Math.min(10, parseInt(e.target.value, 10) || 0)))}
+                                            className="w-20 border rounded-md p-2 text-center liquid-glass-input"
+                                            disabled={!user}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground text-center">
+                                        How many upcoming paragraph prompts to pre-generate (0 disables prefetch).
+                                    </p>
                                 </div>
 
                                 {/* System Prompt for Image Prompt LLM */}
