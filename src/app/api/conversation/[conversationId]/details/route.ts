@@ -83,6 +83,7 @@ interface ImageGenSettings {
     size: string;
     promptLlm: string;
     promptSystemMessage: string;
+    promptLookaheadLimit?: number;
 }
 
 interface ConversationDetails {

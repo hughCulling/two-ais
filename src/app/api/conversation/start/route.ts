@@ -186,6 +186,7 @@ interface StartConversationRequest {
     lookaheadLimit?: number; // Number of turns to generate in advance
     imageGenSettings?: {
         enabled: boolean;
+        provider?: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
         negativePrompt?: string;
@@ -199,6 +200,7 @@ interface StartConversationRequest {
         cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
+        promptLookaheadLimit?: number;
     };
 }
 
@@ -238,6 +240,7 @@ type ConversationData = {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
+        provider?: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
         negativePrompt?: string;
@@ -251,6 +254,7 @@ type ConversationData = {
         cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
+        promptLookaheadLimit?: number;
     };
 };
 
@@ -302,6 +306,17 @@ export async function POST(request: NextRequest) {
         if (!VALID_TTS_PROVIDER_IDS_API.includes(agentA_tts.provider) || !VALID_TTS_PROVIDER_IDS_API.includes(agentB_tts.provider)) {
             console.warn(`API Route: Invalid TTS provider specified: AgentA=${agentA_tts.provider}, AgentB=${agentB_tts.provider}`);
             return NextResponse.json({ error: "Invalid TTS provider specified" }, { status: 400 });
+        }
+
+        let normalizedImageGenSettings = imageGenSettings;
+        if (imageGenSettings?.promptLookaheadLimit !== undefined) {
+            if (typeof imageGenSettings.promptLookaheadLimit !== 'number' || !Number.isFinite(imageGenSettings.promptLookaheadLimit)) {
+                return NextResponse.json({ error: "imageGenSettings.promptLookaheadLimit must be a number" }, { status: 400 });
+            }
+            normalizedImageGenSettings = {
+                ...imageGenSettings,
+                promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(imageGenSettings.promptLookaheadLimit))),
+            };
         }
 
         if (ttsEnabled) {
@@ -460,12 +475,12 @@ export async function POST(request: NextRequest) {
             if (lookaheadLimit !== undefined) {
                 conversationData.lookaheadLimit = lookaheadLimit;
             }
-            if (imageGenSettings !== undefined) {
-                conversationData.imageGenSettings = imageGenSettings;
+            if (normalizedImageGenSettings !== undefined) {
+                conversationData.imageGenSettings = normalizedImageGenSettings;
             }
 
             // Add log for imageGenSettings
-            console.log("API Route: imageGenSettings to be stored:", imageGenSettings);
+            console.log("API Route: imageGenSettings to be stored:", normalizedImageGenSettings);
             await newConversationRef.set(conversationData);
             console.log(`API Route: Created conversation document with TTS settings and language: ${conversationId}`);
 

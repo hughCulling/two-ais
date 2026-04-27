@@ -37,6 +37,7 @@ export interface SessionPreset {
         cfgRescaleMultiplier?: number;
         promptLlm: string;
         promptSystemMessage: string;
+        promptLookaheadLimit?: number;
     };
     savedAt?: number; // timestamp
     collapseStates?: {

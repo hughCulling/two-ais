@@ -6,6 +6,7 @@ import type { User } from 'firebase/auth';
 interface AgentTTSSettingsConfig {
     provider: string;
     voice: string | null;
+    selectedTtsModelId?: string;
     ttsApiModelId?: string;
 }
 interface SessionConfig {
@@ -16,6 +17,27 @@ interface SessionConfig {
     agentB_tts: AgentTTSSettingsConfig;
     language?: string;
     initialSystemPrompt: string;
+    ollamaEndpoint?: string;
+    localaiEndpoint?: string;
+    lookaheadLimit?: number;
+    imageGenSettings?: {
+        enabled: boolean;
+        provider: string;
+        invokeaiEndpoint: string;
+        invokeaiModel?: string;
+        negativePrompt?: string;
+        steps?: number;
+        guidanceScale?: number;
+        width?: number;
+        height?: number;
+        seed?: number;
+        scheduler?: string;
+        clipSkip?: number;
+        cfgRescaleMultiplier?: number;
+        promptLlm: string;
+        promptSystemMessage: string;
+        promptLookaheadLimit?: number;
+    };
 }
 
 export default function ResumeHandler({
