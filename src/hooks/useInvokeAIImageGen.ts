@@ -26,6 +26,8 @@ interface ConversationData {
         provider?: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
+        invokeaiLoraKey?: string;
+        invokeaiLoraWeight?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;
@@ -443,6 +445,15 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     prompt,
                     invokeaiEndpoint: imageGenSettings.invokeaiEndpoint,
                     model: imageGenSettings.invokeaiModel,
+                    ...(imageGenSettings.invokeaiLoraKey?.trim()
+                        ? {
+                            lora_key: imageGenSettings.invokeaiLoraKey.trim(),
+                            lora_weight:
+                                typeof imageGenSettings.invokeaiLoraWeight === 'number' && Number.isFinite(imageGenSettings.invokeaiLoraWeight)
+                                    ? imageGenSettings.invokeaiLoraWeight
+                                    : 0.75,
+                        }
+                        : {}),
                     negative_prompt: imageGenSettings.negativePrompt,
                     steps: imageGenSettings.steps,
                     guidance_scale: imageGenSettings.guidanceScale,

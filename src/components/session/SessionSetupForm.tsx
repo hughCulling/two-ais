@@ -82,6 +82,8 @@ interface SessionConfig {
         provider: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
+        invokeaiLoraKey?: string;
+        invokeaiLoraWeight?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;
@@ -676,6 +678,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiHelperEnabled, setInvokeaiHelperEnabled] = useState<boolean>(false);
     const [invokeaiSubdomain, setInvokeaiSubdomain] = useState<string>('');
     const [invokeaiModelNames, setInvokeaiModelNames] = useState<string[]>([]);
+    const [invokeaiLoras, setInvokeaiLoras] = useState<Array<{ key: string; name: string; base?: string }>>([]);
+    const [invokeaiSelectedLoraKey, setInvokeaiSelectedLoraKey] = useState('');
+    const [invokeaiLoraWeight, setInvokeaiLoraWeight] = useState(0.75);
 
     const handleVerifyInvokeAI = async () => {
         const rawEndpoint = invokeaiEndpoint.trim();
@@ -720,9 +725,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             if (data.available) {
                 setCustomInvokeaiAvailable(true);
                 setInvokeaiModelNames(Array.isArray(data.models) ? data.models : []);
+                const rawLoras: unknown[] = Array.isArray(data.loras) ? data.loras : [];
+                const loraList = rawLoras
+                    .filter((x): x is { key: string; name?: string; base?: string } =>
+                        Boolean(x && typeof x === 'object' && typeof (x as { key?: string }).key === 'string'))
+                    .map((x) => ({
+                        key: x.key,
+                        name: typeof x.name === 'string' && x.name.trim() ? x.name : x.key,
+                        ...(typeof x.base === 'string' ? { base: x.base } : {}),
+                    }));
+                setInvokeaiLoras(loraList);
+                setInvokeaiSelectedLoraKey((prev) => {
+                    const p = typeof prev === 'string' ? prev.trim() : '';
+                    if (!p) return '';
+                    const ok = loraList.some((l) => l.key === p);
+                    return ok ? prev : '';
+                });
             } else {
                 setCustomInvokeaiAvailable(false);
                 setInvokeaiModelNames([]);
+                setInvokeaiLoras([]);
                 let errorMessage = data.error || 'Could not connect to InvokeAI at this endpoint.';
                 if (errorMessage.includes('403')) {
                     errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
@@ -732,6 +754,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         } catch {
             setCustomInvokeaiAvailable(false);
             setInvokeaiModelNames([]);
+            setInvokeaiLoras([]);
             setInvokeaiVerifyError('Could not connect to InvokeAI at this endpoint.');
         } finally {
             setCustomInvokeaiLoading(false);
@@ -1241,6 +1264,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 promptSystemMessage: imagePromptSystemMessage,
                 promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                 mediaGranularity,
+                ...(invokeaiSelectedLoraKey.trim()
+                    ? {
+                        invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
+                        invokeaiLoraWeight:
+                            typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
+                                ? invokeaiLoraWeight
+                                : 0.75,
+                    }
+                    : {}),
             };
         }
 
@@ -1416,6 +1448,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     promptSystemMessage: imagePromptSystemMessage,
                     promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                     mediaGranularity,
+                    ...(invokeaiSelectedLoraKey.trim()
+                        ? {
+                            invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
+                            invokeaiLoraWeight:
+                                typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
+                                    ? invokeaiLoraWeight
+                                    : 0.75,
+                        }
+                        : {}),
                 } : undefined,
                 collapseStates: {
                     cardDescription: collapseCardDescription,
@@ -1499,10 +1540,19 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         : 1
                 );
                 setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
+                const lk = preset.imageGenSettings.invokeaiLoraKey;
+                setInvokeaiSelectedLoraKey(typeof lk === 'string' && lk.trim() ? lk.trim() : '');
+                setInvokeaiLoraWeight(
+                    typeof preset.imageGenSettings.invokeaiLoraWeight === 'number' && Number.isFinite(preset.imageGenSettings.invokeaiLoraWeight)
+                        ? preset.imageGenSettings.invokeaiLoraWeight
+                        : 0.75
+                );
             } else {
                 setImageGenEnabled(false);
                 setPromptLookaheadLimit(1);
                 setMediaGranularity('paragraph');
+                setInvokeaiSelectedLoraKey('');
+                setInvokeaiLoraWeight(0.75);
             }
 
             // Load collapse states if they exist
@@ -2396,6 +2446,48 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                             )}
                                         </SelectContent>
                                     </Select>
+                                </div>
+
+                                <div className="space-y-2 flex flex-col items-center w-full">
+                                    <Label className="text-center">LoRA (optional)</Label>
+                                    <Select
+                                        value={invokeaiSelectedLoraKey.trim() === '' ? '_none' : invokeaiSelectedLoraKey.trim()}
+                                        onValueChange={(v) => setInvokeaiSelectedLoraKey(v === '_none' ? '' : v)}
+                                        disabled={!user || !customInvokeaiAvailable}
+                                    >
+                                        <SelectTrigger className="w-full max-w-md relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                            <SelectValue placeholder={customInvokeaiAvailable ? 'No LoRA' : 'Verify Invoke first'} />
+                                        </SelectTrigger>
+                                        <SelectContent className="max-h-60 liquid-glass-panel">
+                                            <SelectItem value="_none" className="justify-center">
+                                                <div className="w-full text-center">None</div>
+                                            </SelectItem>
+                                            {invokeaiLoras.map((lo) => (
+                                                <SelectItem key={lo.key} value={lo.key} className="justify-center">
+                                                    <div className="w-full text-center">{lo.name}</div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-muted-foreground text-center max-w-md">
+                                        Same list as Invoke (model_type=lora). Re-verify endpoint if you install new LoRAs.
+                                    </p>
+                                    {invokeaiSelectedLoraKey.trim() !== '' && (
+                                        <div className="flex flex-col items-center gap-1">
+                                            <Label htmlFor="invokeai-lora-weight" className="text-center text-xs">LoRA strength</Label>
+                                            <input
+                                                id="invokeai-lora-weight"
+                                                type="number"
+                                                step={0.05}
+                                                min={-2}
+                                                max={4}
+                                                value={invokeaiLoraWeight}
+                                                onChange={(e) => setInvokeaiLoraWeight(Number(e.target.value))}
+                                                className="w-24 px-2 py-1 rounded-md text-center liquid-glass-input"
+                                                disabled={!user}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

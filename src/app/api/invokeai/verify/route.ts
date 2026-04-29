@@ -20,6 +20,12 @@ interface InvokeAIModelsResponse {
     models: InvokeAIModel[];
 }
 
+interface LoraSummary {
+    key: string;
+    name: string;
+    base?: string;
+}
+
 export async function POST(request: NextRequest) {
     try {
         let body;
@@ -48,8 +54,9 @@ export async function POST(request: NextRequest) {
             headers['ngrok-skip-browser-warning'] = '1';
         }
 
-        console.log(`[InvokeAI Verify] Checking: ${cleanEndpoint}/api/v2/models/?model_type=main`);
-        const response = await fetch(`${cleanEndpoint}/api/v2/models/?model_type=main`, {
+        const mainUrl = `${cleanEndpoint}/api/v2/models/?model_type=main`;
+        console.log(`[InvokeAI Verify] Checking: ${mainUrl}`);
+        const response = await fetch(mainUrl, {
             method: 'GET',
             headers,
             cache: 'no-store',
@@ -68,7 +75,35 @@ export async function POST(request: NextRequest) {
         const data: InvokeAIModelsResponse = await response.json();
         const models = data.models.map((m) => m.name);
 
-        return NextResponse.json({ available: true, models }, { status: 200 });
+        // LoRAs: same API, different model_type (matches Invoke UI / metadata)
+        let loras: LoraSummary[] = [];
+        try {
+            const loraUrl = `${cleanEndpoint}/api/v2/models/?model_type=lora`;
+            console.log(`[InvokeAI Verify] Fetching LoRAs: ${loraUrl}`);
+            const loraRes = await fetch(loraUrl, {
+                method: 'GET',
+                headers,
+                cache: 'no-store',
+                signal: AbortSignal.timeout(10000),
+            });
+            if (loraRes.ok) {
+                const loraData: InvokeAIModelsResponse = await loraRes.json();
+                const raw = loraData.models || [];
+                loras = raw
+                    .filter((m) => m.key || m.id)
+                    .map((m) => ({
+                        key: (m.key || m.id) as string,
+                        name: m.name,
+                        base: m.base,
+                    }));
+            } else {
+                console.warn(`[InvokeAI Verify] LoRA list unavailable: ${loraRes.status}`);
+            }
+        } catch (loraErr) {
+            console.warn('[InvokeAI Verify] LoRA fetch failed:', loraErr);
+        }
+
+        return NextResponse.json({ available: true, models, loras }, { status: 200 });
     } catch (error) {
         console.error('[InvokeAI Verify] Unexpected error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
