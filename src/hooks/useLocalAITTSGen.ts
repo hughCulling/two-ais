@@ -2,17 +2,22 @@ import { useEffect, useRef, useCallback } from 'react';
 import { doc, collection, onSnapshot, updateDoc, getDoc, DocumentReference } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase/clientApp';
-import { splitIntoParagraphs } from '@/lib/tts-utils';
+import { splitIntoMediaSegments, type MediaGranularity } from '@/lib/segment-utils';
 import removeMarkdown from 'remove-markdown';
 import { cleanTextForTTS, removeEmojis } from '@/lib/utils';
 
 interface ConversationData {
     status: 'running' | 'stopped' | 'error';
     localaiEndpoint?: string;
+    language?: string;
     ttsSettings?: {
         enabled: boolean;
         agentA: { provider: string; voice: string | null; selectedTtsModelId?: string };
         agentB: { provider: string; voice: string | null; selectedTtsModelId?: string };
+    };
+    imageGenSettings?: {
+        enabled?: boolean;
+        mediaGranularity?: MediaGranularity;
     };
 }
 
@@ -30,6 +35,7 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
     const isConversationRunnableRef = useRef(false);
     const localAIEndpointRef = useRef<string | null>(null);
     const localAITtsSettingsRef = useRef<ConversationData['ttsSettings'] | null>(null);
+    const currentConversationDataRef = useRef<ConversationData | null>(null);
     const warnedParagraphErrorRulesRef = useRef(false);
     const generationQueueRef = useRef<Array<{
         messageId: string;
@@ -236,6 +242,7 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
             isConversationRunnableRef.current = true;
             localAIEndpointRef.current = endpoint;
             localAITtsSettingsRef.current = conversationData.ttsSettings;
+            currentConversationDataRef.current = conversationData;
 
             // If work was queued while paused/unavailable, resume processing now.
             if (generationQueueRef.current.length > 0) {
@@ -264,7 +271,11 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                         const voice = typeof agentTts.voice === 'string' ? agentTts.voice.trim() : '';
                         if (!model || !model.trim()) continue;
 
-                        const paragraphs = splitIntoParagraphs(messageData.content);
+                        const currentConversationData = currentConversationDataRef.current;
+                        const granularity: MediaGranularity = currentConversationData?.imageGenSettings?.mediaGranularity || 'paragraph';
+                        const convLanguage = currentConversationData?.language || 'en';
+                        const segments = splitIntoMediaSegments(messageData.content, granularity, convLanguage);
+                        const paragraphs = segments.map(s => s.text);
                         if (paragraphs.length === 0) continue;
 
                         try {
@@ -327,6 +338,7 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
             isConversationRunnableRef.current = false;
             localAIEndpointRef.current = null;
             localAITtsSettingsRef.current = null;
+            currentConversationDataRef.current = null;
             if (unsubscribeMessages) {
                 unsubscribeMessages();
             }

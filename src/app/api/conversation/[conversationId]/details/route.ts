@@ -84,6 +84,7 @@ interface ImageGenSettings {
     promptLlm: string;
     promptSystemMessage: string;
     promptLookaheadLimit?: number;
+    mediaGranularity?: 'paragraph' | 'sentence';
 }
 
 interface ConversationDetails {

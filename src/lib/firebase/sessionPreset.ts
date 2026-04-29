@@ -38,6 +38,7 @@ export interface SessionPreset {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: 'paragraph' | 'sentence';
     };
     savedAt?: number; // timestamp
     collapseStates?: {
