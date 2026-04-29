@@ -38,6 +38,7 @@ import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
+import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
 
 // --- Interfaces ---
 interface ParagraphImage {
@@ -85,7 +86,13 @@ interface ConversationData {
     lastPlayedAgentMessageId?: string; // <-- Add this line
     lastPlayedAgentIndex?: number;
     agentMessageCount?: number;
-    imageGenSettings?: { enabled: boolean; invokeaiEndpoint?: string; promptLlm?: string; promptSystemMessage?: string };
+    imageGenSettings?: {
+        enabled: boolean;
+        invokeaiEndpoint?: string;
+        promptLlm?: string;
+        promptSystemMessage?: string;
+        mediaGranularity?: 'paragraph' | 'sentence';
+    };
 }
 
 interface ChatInterfaceProps {
@@ -242,27 +249,17 @@ export function ChatInterface({
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
-    // --- Helper: Split text into paragraphs for TTS ---
-    const splitIntoParagraphs = useCallback((text: string): string[] => {
-        // Split by ANY newlines (single or double) for fine-grained auto-scroll
-        // This creates more frequent scroll points so text doesn't go out of view
-        const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
-        return paragraphs;
-    }, []);
+    const getSegments = useCallback((text: string) => {
+        const granularity = getMediaGranularity(conversationData);
+        return splitIntoMediaSegments(text, granularity, conversationData?.language || 'en');
+    }, [conversationData]);
 
-    // --- Helper: Get TTS-compatible paragraph indices for auto-scroll ---
-    // Maps DOM paragraph indices to TTS paragraph indices (skipping non-speakable ones)
-    const getTTSParagraphIndex = useCallback((content: string, domIndex: number): number => {
-        const allParagraphs = content.split(/\n+/);
-        let ttsIndex = 0;
-        for (let i = 0; i < domIndex; i++) {
-            const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(allParagraphs[i])));
-            if (isSpeakableText(cleaned)) {
-                ttsIndex++;
-            }
-        }
-        return ttsIndex;
-    }, []);
+    const getSpeakableSegments = useCallback((text: string) => {
+        return getSegments(text).filter((segment) => {
+            const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
+            return isSpeakableText(cleanedSegment);
+        });
+    }, [getSegments]);
 
     // --- Helper: Split text into TTS-safe chunks ---
     const splitIntoTTSChunks = useCallback((text: string, maxLength: number = 4000): string[] => {
@@ -1336,14 +1333,11 @@ export function ChatInterface({
                     logger.debug(`[TTS] Waiting for image generation to initialize for message ${msg.id.substring(0, 8)}...`);
                     return false;
                 }
-                const sourceParagraphs = splitIntoParagraphs(msg.content);
-                const firstSpeakableParagraphIndex = sourceParagraphs.findIndex((paragraph) => {
-                    const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
-                    return isSpeakableText(cleanedParagraph);
-                });
+                const speakableSegments = getSpeakableSegments(msg.content);
+                const firstSpeakableSegmentIndex = speakableSegments[0]?.segmentIndex ?? -1;
 
-                if (firstSpeakableParagraphIndex !== -1) {
-                    const firstParagraphImage = msg.paragraphImages[firstSpeakableParagraphIndex];
+                if (firstSpeakableSegmentIndex !== -1) {
+                    const firstParagraphImage = msg.paragraphImages[firstSpeakableSegmentIndex];
                     const firstParagraphImageReady = firstParagraphImage &&
                         (firstParagraphImage.status === 'complete' || firstParagraphImage.status === 'error');
 
@@ -1403,38 +1397,37 @@ export function ChatInterface({
             // Split into paragraphs first for better auto-scroll.
             // Keep both speakable and raw indices so each spoken paragraph can wait
             // for its corresponding paragraph image.
-            const sourceParagraphs = splitIntoParagraphs(nextMsg.content);
-            const speakableParagraphs = sourceParagraphs
-                .map((paragraph, rawParagraphIndex) => {
-                    const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+            const speakableSegments = getSpeakableSegments(nextMsg.content)
+                .map((segment) => {
+                    const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                     return {
                         cleanedParagraph,
-                        rawParagraphIndex,
+                        segmentIndex: segment.segmentIndex,
                     };
                 })
                 .filter(({ cleanedParagraph }) => isSpeakableText(cleanedParagraph))
-                .map((entry, speakableParagraphIndex) => ({
+                .map((entry, speakableSegmentIndex) => ({
                     ...entry,
-                    speakableParagraphIndex,
+                    speakableSegmentIndex,
                 }));
 
             // Then split each paragraph into TTS-safe chunks if needed
             const MAX_TTS_LENGTH = 4000;
             const chunks: string[] = [];
-            const paragraphIndices: number[] = []; // Track speakable paragraph index for auto-scroll
-            const rawParagraphIndices: number[] = []; // Track raw paragraph index for image gating
+            const paragraphIndices: number[] = []; // Track speakable segment index for auto-scroll
+            const rawParagraphIndices: number[] = []; // Track raw segment index for image gating
 
-            speakableParagraphs.forEach(({ cleanedParagraph, speakableParagraphIndex, rawParagraphIndex }) => {
+            speakableSegments.forEach(({ cleanedParagraph, speakableSegmentIndex, segmentIndex }) => {
                 const paragraphChunks = splitIntoTTSChunks(cleanedParagraph, MAX_TTS_LENGTH);
                 paragraphChunks.forEach(chunk => {
                     chunks.push(chunk);
-                    paragraphIndices.push(speakableParagraphIndex);
-                    rawParagraphIndices.push(rawParagraphIndex);
+                    paragraphIndices.push(speakableSegmentIndex);
+                    rawParagraphIndices.push(segmentIndex);
                 });
             });
 
             if (chunks.length > 1) {
-                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${speakableParagraphs.length} speakable paragraphs, ${chunks.length} total chunks for browser TTS`);
+                logger.info(`[TTS] Message ${nextMsg.id.substring(0, 8)}... split into ${speakableSegments.length} speakable segments, ${chunks.length} total chunks for browser TTS`);
             }
 
             // Store chunks and paragraph info in queue
@@ -1504,7 +1497,7 @@ export function ChatInterface({
                 // Use requestAnimationFrame to ensure DOM is ready
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
-                        const paragraphKey = `${nextMsg.id}-p${paragraphIndex}`;
+                        const paragraphKey = `${nextMsg.id}-s${paragraphIndex}`;
 
                         logger.info(`[TTS Auto-Scroll] Chunk ${chunkNum}/${totalChunks}, Paragraph ${paragraphIndex}, Last paragraph: ${currentParagraphIndexRef.current}`);
                         logger.info(`[TTS Auto-Scroll] Message ID: ${nextMsg.id.substring(0, 8)}..., Looking for key: ${paragraphKey}`);
@@ -1747,9 +1740,9 @@ export function ChatInterface({
                 return;
             }
 
-            const sourceParagraphs = splitIntoParagraphs(nextMsg.content);
-            const speakableParagraphs = sourceParagraphs.map((paragraph) => {
-                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+            const sourceSegments = getSegments(nextMsg.content);
+            const speakableParagraphs = sourceSegments.map((segment) => {
+                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                 return isSpeakableText(cleanedParagraph);
             });
 
@@ -1850,7 +1843,7 @@ export function ChatInterface({
 
                 if (isTTSAutoScrollEnabled) {
                     requestAnimationFrame(() => {
-                        const paragraphKey = `${nextMsg.id}-p${currentParagraphIndex}`;
+                        const paragraphKey = `${nextMsg.id}-s${currentParagraphIndex}`;
                         const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
                         if (paragraphElement) {
                             paragraphElement.scrollIntoView({
@@ -1933,7 +1926,7 @@ export function ChatInterface({
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying,
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, splitIntoParagraphs, scheduleBrowserTtsWatchdog, clearBrowserTtsWatchdog]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, getSegments, getSpeakableSegments, scheduleBrowserTtsWatchdog, clearBrowserTtsWatchdog]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -2346,15 +2339,14 @@ export function ChatInterface({
                                     <>
                                         <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                         <div>
-                                            {msg.content.split(/\n+/).map((paragraph, index) => {
-                                                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(paragraph)));
+                                            {getSegments(msg.content).map((segment) => {
+                                                const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                                                 const isSpeakable = isSpeakableText(cleanedParagraph);
-                                                // Use TTS-compatible index so auto-scroll aligns with TTS
-                                                const ttsIndex = getTTSParagraphIndex(msg.content, index);
-                                                const paragraphKey = `${msg.id}-p${ttsIndex}`;
+                                                const paragraphKey = `${msg.id}-s${segment.segmentIndex}`;
+                                                const segmentImage = msg.paragraphImages?.[segment.segmentIndex];
                                                 return (
                                                     <div
-                                                        key={`${msg.id}-dom-${index}`}
+                                                        key={`${msg.id}-seg-${segment.segmentIndex}`}
                                                         ref={(el) => {
                                                             if (el && isSpeakable) {
                                                                 paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
@@ -2366,31 +2358,31 @@ export function ChatInterface({
                                                     >
                                                         <div className="chat-markdown min-w-0">
                                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                                {paragraph}
+                                                                {segment.text}
                                                             </ReactMarkdown>
                                                         </div>
 
-                                                        {/* Paragraph Image Display */}
-                                                        {msg.paragraphImages && msg.paragraphImages[index] && (
+                                                        {/* Segment image display */}
+                                                        {segmentImage && (
                                                             <div className="mt-2 flex flex-col items-center">
-                                                                {msg.paragraphImages[index].status === 'generating' && (
+                                                                {segmentImage.status === 'generating' && (
                                                                     <div className="text-xs text-muted-foreground">Generating image...</div>
                                                                 )}
-                                                                {msg.paragraphImages[index].status === 'complete' && msg.paragraphImages[index].imageUrl && (
+                                                                {segmentImage.status === 'complete' && segmentImage.imageUrl && (
                                                                     <Image
-                                                                        src={msg.paragraphImages[index].imageUrl}
-                                                                        alt={`Generated image for paragraph ${index + 1}`}
+                                                                        src={segmentImage.imageUrl}
+                                                                        alt={`Generated image for segment ${segment.segmentIndex + 1}`}
                                                                         className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
                                                                         style={{ objectFit: 'contain' }}
-                                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: index })}
+                                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: segment.segmentIndex })}
                                                                         width={512}
                                                                         height={512}
-                                                                        unoptimized={msg.paragraphImages[index].imageUrl?.includes('storage.googleapis.com') || msg.paragraphImages[index].imageUrl?.includes('googleapis.com/storage')}
+                                                                        unoptimized={segmentImage.imageUrl.includes('storage.googleapis.com') || segmentImage.imageUrl.includes('googleapis.com/storage')}
                                                                         aria-label="Show image in full screen"
                                                                     />
                                                                 )}
-                                                                {msg.paragraphImages[index].status === 'error' && (
-                                                                    <div className="text-xs text-destructive mt-1">Image generation failed: {msg.paragraphImages[index].error}</div>
+                                                                {segmentImage.status === 'error' && (
+                                                                    <div className="text-xs text-destructive mt-1">Image generation failed: {segmentImage.error}</div>
                                                                 )}
                                                             </div>
                                                         )}

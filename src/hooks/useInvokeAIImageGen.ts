@@ -1,12 +1,12 @@
 // src/hooks/useInvokeAIImageGen.ts
-// Client-side hook to handle InvokeAI image generation for paragraphs
-// Generates images sequentially, one paragraph at a time
+// Client-side hook to handle InvokeAI image generation for media segments
+// Generates images sequentially, one segment at a time
 
 import { useEffect, useRef, useCallback } from 'react';
 import { doc, collection, onSnapshot, updateDoc, getDoc, DocumentReference } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase/clientApp';
-import { splitIntoParagraphs } from '@/lib/tts-utils';
+import { splitIntoMediaSegments, replacePromptPlaceholders, type MediaGranularity } from '@/lib/segment-utils';
 import { getProviderFromId } from '@/lib/models';
 import { auth } from '@/lib/firebase/clientApp';
 
@@ -20,6 +20,7 @@ interface ParagraphImage {
 interface ConversationData {
     status: 'running' | 'stopped' | 'error';
     ollamaEndpoint?: string;
+    language?: string;
     imageGenSettings?: {
         enabled: boolean;
         provider?: string;
@@ -37,6 +38,7 @@ interface ConversationData {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: MediaGranularity;
     };
 }
 
@@ -50,7 +52,7 @@ interface QueueItem {
     messageId: string;
     paragraphIndex: number;
     messageRef: DocumentReference;
-    paragraphs: string[];
+    segmentTexts: string[];
     imageGenSettings: NonNullable<ConversationData['imageGenSettings']>;
     ollamaEndpoint: string;
 }
@@ -75,7 +77,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         while (generationQueueRef.current.length > 0) {
             const queueItem = generationQueueRef.current.shift();
             if (!queueItem) break;
-            const { messageId, paragraphIndex, messageRef, paragraphs, imageGenSettings, ollamaEndpoint } = queueItem;
+            const { messageId, paragraphIndex, messageRef, segmentTexts, imageGenSettings, ollamaEndpoint } = queueItem;
             const promptKeyPrefix = `${messageId}:`;
             const currentPromptKey = `${messageId}:${paragraphIndex}`;
 
@@ -94,7 +96,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 };
                 await updateDoc(messageRef, { paragraphImages });
 
-                const paragraph = paragraphs[paragraphIndex];
+                const paragraph = segmentTexts[paragraphIndex];
                 if (!paragraph || paragraph.trim().length === 0) {
                     paragraphImages[paragraphIndex] = {
                         ...paragraphImages[paragraphIndex],
@@ -106,7 +108,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 }
 
                 const getOrCreatePrompt = async (targetParagraphIndex: number): Promise<string | null> => {
-                    const targetParagraph = paragraphs[targetParagraphIndex];
+                    const targetParagraph = segmentTexts[targetParagraphIndex];
                     if (!targetParagraph || targetParagraph.trim().length === 0) {
                         return null;
                     }
@@ -156,9 +158,9 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 if (lookaheadLimit > 0) {
                     for (let offset = 1; offset <= lookaheadLimit; offset++) {
                         const nextParagraphIndex = paragraphIndex + offset;
-                        if (nextParagraphIndex >= paragraphs.length) break;
+                        if (nextParagraphIndex >= segmentTexts.length) break;
                         void getOrCreatePrompt(nextParagraphIndex).catch((prefetchError) => {
-                            console.warn(`[InvokeAI ImageGen] Prompt lookahead failed for paragraph ${nextParagraphIndex}:`, prefetchError);
+                            console.warn(`[InvokeAI ImageGen] Prompt lookahead failed for segment ${nextParagraphIndex}:`, prefetchError);
                         });
                     }
                 }
@@ -224,7 +226,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             } finally {
                 promptCacheRef.current.delete(currentPromptKey);
                 promptInFlightRef.current.delete(currentPromptKey);
-                if (paragraphIndex >= paragraphs.length - 1) {
+                if (paragraphIndex >= segmentTexts.length - 1) {
                     for (const key of promptCacheRef.current.keys()) {
                         if (key.startsWith(promptKeyPrefix)) {
                             promptCacheRef.current.delete(key);
@@ -274,16 +276,19 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         !messageData.paragraphImages &&
                         !processingRef.current.has(messageId)) {
 
-                        // Split message into paragraphs
-                        const paragraphs = splitIntoParagraphs(messageData.content);
+                        // Split message into media segments based on configured granularity
+                        const settings = conversationData.imageGenSettings!;
+                        const granularity: MediaGranularity = settings.mediaGranularity || 'paragraph';
+                        const convLanguage = conversationData.language || 'en';
+                        const segments = splitIntoMediaSegments(messageData.content, granularity, convLanguage);
 
-                        if (paragraphs.length === 0) continue;
+                        if (segments.length === 0) continue;
 
                         // Mark as processing
                         processingRef.current.add(messageId);
 
-                        // Initialize paragraph images array
-                        const paragraphImages: ParagraphImage[] = paragraphs.map((_, index) => ({
+                        // Initialize paragraph images array (indexed by segment)
+                        const paragraphImages: ParagraphImage[] = segments.map((_, index) => ({
                             paragraphIndex: index,
                             imageUrl: null,
                             status: 'pending',
@@ -294,16 +299,15 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                             paragraphImages,
                         });
 
-                        // Queue all paragraphs for sequential generation
-                        // At this point, imageGenSettings is guaranteed to exist due to check at line 167
-                        const settings = conversationData.imageGenSettings!;
+                        // Queue all segments for sequential generation
+                        const segmentTexts = segments.map(s => s.text);
                         const convOllamaEndpoint = conversationData.ollamaEndpoint || 'http://localhost:11434';
-                        for (let i = 0; i < paragraphs.length; i++) {
+                        for (let i = 0; i < segments.length; i++) {
                             generationQueueRef.current.push({
                                 messageId,
                                 paragraphIndex: i,
                                 messageRef: messageDoc.ref,
-                                paragraphs,
+                                segmentTexts,
                                 imageGenSettings: settings,
                                 ollamaEndpoint: convOllamaEndpoint,
                             });
@@ -333,8 +337,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         ollamaEndpoint: string = 'http://localhost:11434'
     ): Promise<string | null> {
         try {
-            // Replace {paragraph} placeholder
-            const systemMessage = promptSystemMessage.replace('{paragraph}', paragraph);
+            // Replace {paragraph} / {text} placeholders
+            const systemMessage = replacePromptPlaceholders(promptSystemMessage, paragraph);
 
             // Check if prompt LLM is Ollama (local) or cloud-based
             const provider = getProviderFromId(promptLlmId);

@@ -23,8 +23,9 @@ import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 import Image from 'next/image';
-import {  prepareTTSChunksWithParagraphs } from '@/lib/tts-utils';
+import { splitIntoTTSChunks } from '@/lib/tts-utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
+import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
 
 // Function to get the appropriate date-fns locale based on language code
 function getLocale(languageCode: string) {
@@ -112,6 +113,7 @@ interface ImageGenSettings {
     size: string;
     promptLlm: string;
     promptSystemMessage: string;
+    mediaGranularity?: 'paragraph' | 'sentence';
 }
 
 interface ConversationDetails {
@@ -188,6 +190,23 @@ export default function ChatHistoryViewerPage() {
     const toggleFullscreen = useCallback(() => {
         setIsFullscreen(prev => !prev);
     }, []);
+
+    const getSegments = useCallback((content: string) => {
+        const granularity = getMediaGranularity({
+            imageGenSettings: {
+                enabled: Boolean(details?.imageGenSettings?.enabled),
+                mediaGranularity: details?.imageGenSettings?.mediaGranularity,
+            },
+        });
+        return splitIntoMediaSegments(content, granularity, details?.language || 'en');
+    }, [details]);
+
+    const getSpeakableSegments = useCallback((content: string) => {
+        return getSegments(content).filter((segment) => {
+            const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
+            return cleaned.trim().length > 0;
+        });
+    }, [getSegments]);
 
     const handlePauseAudio = useCallback(() => {
         if (audioRef.current) {
@@ -374,12 +393,20 @@ export default function ChatHistoryViewerPage() {
                 
                 if (ttsConfig?.provider === 'browser') {
                     // Use the same markdown removal and chunking as in ChatInterface
-                    const cleanedContent = cleanTextForTTS(removeEmojis(removeMarkdown(msg.content)));
-                    
-                    // Prepare TTS chunks with paragraph mapping for auto-scroll
-                    const { chunks, paragraphIndices } = prepareTTSChunksWithParagraphs(cleanedContent, 4000);
+                    const speakableSegments = getSpeakableSegments(msg.content);
+                    const chunks: string[] = [];
+                    const segmentIndices: number[] = [];
+                    speakableSegments.forEach((segment) => {
+                        const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
+                        const segmentChunks = splitIntoTTSChunks(cleanedSegment, 4000);
+                        segmentChunks.forEach((chunk) => {
+                            chunks.push(chunk);
+                            segmentIndices.push(segment.segmentIndex);
+                        });
+                    });
+
                     ttsChunkQueueRef.current = chunks;
-                    paragraphIndicesRef.current = paragraphIndices;
+                    paragraphIndicesRef.current = segmentIndices;
                     currentChunkIndexRef.current = 0;
                     currentParagraphIndexRef.current = -1;
                     
@@ -399,7 +426,7 @@ export default function ChatHistoryViewerPage() {
                             if (isTTSAutoScrollEnabled) {
                                 requestAnimationFrame(() => {
                                     const paragraphIndex = paragraphIndicesRef.current[chunkIndex] || 0;
-                                    const paragraphKey = `${msg.id}-p${paragraphIndex}`;
+                                    const paragraphKey = `${msg.id}-s${paragraphIndex}`;
                                     
                                     const isNewParagraph = paragraphIndex !== currentParagraphIndexRef.current;
                                     
@@ -541,7 +568,7 @@ export default function ChatHistoryViewerPage() {
                         const paragraphIndex = paragraphIndexMap[queueIndex] ?? 0;
                         if (isTTSAutoScrollEnabled) {
                             requestAnimationFrame(() => {
-                                const paragraphKey = `${msg.id}-p${paragraphIndex}`;
+                                const paragraphKey = `${msg.id}-s${paragraphIndex}`;
                                 const paragraphElement = paragraphRefsMap.current.get(paragraphKey);
                                 const scrollContainer = scrollViewportRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement;
                                 if (paragraphElement && scrollContainer) {
@@ -700,13 +727,16 @@ export default function ChatHistoryViewerPage() {
                     <div>
                         {(isAgentA || isAgentB) ? (
                             <>
-                                {msg.content.split(/\n+/).map((paragraph, index) => {
-                                    const paragraphKey = `${msg.id}-p${index}`;
+                                {getSegments(msg.content).map((segment) => {
+                                    const paragraphKey = `${msg.id}-s${segment.segmentIndex}`;
+                                    const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
+                                    const isSpeakable = cleanedSegment.trim().length > 0;
+                                    const segmentImage = msg.paragraphImages?.[segment.segmentIndex];
                                     return (
                                         <div
                                             key={paragraphKey}
                                             ref={(el) => {
-                                                if (el) {
+                                                if (el && isSpeakable) {
                                                     paragraphRefsMap.current.set(paragraphKey, el as HTMLDivElement);
                                                 } else {
                                                     paragraphRefsMap.current.delete(paragraphKey);
@@ -716,31 +746,31 @@ export default function ChatHistoryViewerPage() {
                                         >
                                             <div className="chat-markdown min-w-0">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                    {paragraph}
+                                                    {segment.text}
                                                 </ReactMarkdown>
                                             </div>
                                             
-                                            {/* Paragraph Image Display */}
-                                            {msg.paragraphImages && msg.paragraphImages[index] && (
+                                            {/* Segment image display */}
+                                            {segmentImage && (
                                                 <div className="mt-2 flex flex-col items-center">
-                                                    {msg.paragraphImages[index].status === 'generating' && (
+                                                    {segmentImage.status === 'generating' && (
                                                         <div className="text-xs text-muted-foreground">Generating image...</div>
                                                     )}
-                                                    {msg.paragraphImages[index].status === 'complete' && msg.paragraphImages[index].imageUrl && (
+                                                    {segmentImage.status === 'complete' && segmentImage.imageUrl && (
                                                         <Image
-                                                            src={msg.paragraphImages[index].imageUrl}
-                                                            alt={`Generated image for paragraph ${index + 1}`}
+                                                            src={segmentImage.imageUrl}
+                                                            alt={`Generated image for segment ${segment.segmentIndex + 1}`}
                                                             className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
                                                             style={{ objectFit: 'contain' }}
-                                                            onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: index })}
+                                                            onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: segment.segmentIndex })}
                                                             width={512}
                                                             height={512}
-                                                            unoptimized={msg.paragraphImages[index].imageUrl?.includes('storage.googleapis.com') || msg.paragraphImages[index].imageUrl?.includes('googleapis.com/storage')}
+                                                            unoptimized={segmentImage.imageUrl.includes('storage.googleapis.com') || segmentImage.imageUrl.includes('googleapis.com/storage')}
                                                             aria-label="Show image in full screen"
                                                         />
                                                     )}
-                                                    {msg.paragraphImages[index].status === 'error' && (
-                                                        <div className="text-xs text-destructive mt-1">Image generation failed: {msg.paragraphImages[index].error}</div>
+                                                    {segmentImage.status === 'error' && (
+                                                        <div className="text-xs text-destructive mt-1">Image generation failed: {segmentImage.error}</div>
                                                     )}
                                                 </div>
                                             )}

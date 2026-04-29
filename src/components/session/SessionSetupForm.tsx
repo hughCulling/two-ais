@@ -94,6 +94,7 @@ interface SessionConfig {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: 'paragraph' | 'sentence';
     };
 }
 
@@ -882,6 +883,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiClipSkip, setInvokeaiClipSkip] = useState<number>(0);
     const [invokeaiCfgRescaleMultiplier, setInvokeaiCfgRescaleMultiplier] = useState<number>(0);
     const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
+    const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence'>('paragraph');
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -1238,6 +1240,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 promptLlm: selectedPromptLlm,
                 promptSystemMessage: imagePromptSystemMessage,
                 promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
+                mediaGranularity,
             };
         }
 
@@ -1412,6 +1415,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     promptLlm: selectedPromptLlm,
                     promptSystemMessage: imagePromptSystemMessage,
                     promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
+                    mediaGranularity,
                 } : undefined,
                 collapseStates: {
                     cardDescription: collapseCardDescription,
@@ -1494,9 +1498,11 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         ? Math.max(0, Math.min(10, Math.floor(preset.imageGenSettings.promptLookaheadLimit)))
                         : 1
                 );
+                setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
             } else {
                 setImageGenEnabled(false);
                 setPromptLookaheadLimit(1);
+                setMediaGranularity('paragraph');
             }
 
             // Load collapse states if they exist
@@ -2511,6 +2517,37 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
                                 {/* Prompt LLM Selection */}
                                 <div className="space-y-2">
+                                    <Label htmlFor="media-granularity-select" className="block text-center">Image cadence</Label>
+                                    <Select
+                                        value={mediaGranularity}
+                                        onValueChange={(value: 'paragraph' | 'sentence') => setMediaGranularity(value)}
+                                        disabled={!user}
+                                    >
+                                        <SelectTrigger id="media-granularity-select" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                            <SelectValue placeholder="Select image cadence" />
+                                        </SelectTrigger>
+                                        <SelectContent className="liquid-glass-panel">
+                                            <SelectItem value="paragraph">
+                                                <div className="w-full text-center">Per paragraph</div>
+                                            </SelectItem>
+                                            <SelectItem value="sentence">
+                                                <div className="w-full text-center">Per sentence</div>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-muted-foreground text-center">
+                                        {mediaGranularity === 'paragraph'
+                                            ? 'One image per paragraph. Calmer pacing, fewer images.'
+                                            : 'One image per sentence. More cinematic, but generates many more images and audio clips.'}
+                                    </p>
+                                    {mediaGranularity === 'sentence' && (
+                                        <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
+                                            Sentence mode can generate 3-15x more images and audio clips per message, and will take longer.
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
                                     <Label htmlFor="prompt-llm-select" className="block text-center">{t?.sessionSetupForm?.promptLLM || 'Prompt LLM'}</Label>
                                     <Select
                                         value={selectedPromptLlm}
@@ -2528,7 +2565,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <p className="text-xs text-muted-foreground text-center">The LLM used to generate image prompts from paragraphs</p>
+                                    <p className="text-xs text-muted-foreground text-center">
+                                        The LLM used to generate image prompts from the current text segment.
+                                    </p>
                                 </div>
 
                                 <div className="space-y-2">
@@ -2564,7 +2603,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         disabled={!user}
                                     />
                                     <p id="image-prompt-system-message-description" className="text-xs text-muted-foreground text-center">
-                                        Use {"{paragraph}"} as a placeholder for the paragraph text.
+                                        Use {"{text}"} for the current segment text. {"{paragraph}"} is also supported for backward compatibility.
                                     </p>
                                 </div>
                             </div>
