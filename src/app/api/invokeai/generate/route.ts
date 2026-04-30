@@ -34,6 +34,27 @@ interface GraphEdge {
   destination: { node_id: string; field: string };
 }
 
+interface GraphBuildParams {
+  prompt: string;
+  model: InvokeAIModel;
+  steps?: number;
+  cfg_scale?: number;
+  width?: number;
+  height?: number;
+  seed?: number;
+  scheduler?: string;
+  clip_skip?: number;
+  cfg_rescale_multiplier?: number;
+  negative_prompt?: string;
+  lora?: InvokeAIModel | null;
+  lora_weight?: number;
+}
+
+interface GraphBuildResult {
+  graph: { nodes: Record<string, GraphNode>; edges: GraphEdge[] };
+  seed: number;
+}
+
 interface QueueStatus {
   completed: number;
   failed: number;
@@ -68,24 +89,7 @@ async function fetchLoRAModels(endpoint: string): Promise<InvokeAIModel[]> {
   }
 }
 
-// Helper to build InvokeAI graph for text-to-image generation
-// Based on working workflow structure from InvokeAI UI
-function buildInvokeAIGraph(params: {
-  prompt: string;
-  model: InvokeAIModel; // Full model object
-  steps?: number;
-  cfg_scale?: number;
-  width?: number;
-  height?: number;
-  seed?: number;
-  scheduler?: string;
-  clip_skip?: number;
-  cfg_rescale_multiplier?: number;
-  negative_prompt?: string;
-  /** When set (SD‑1 LoRA), inserts lora_selector → lora_collector → lora_collection_loader (Invoke UI parity). */
-  lora?: InvokeAIModel | null;
-  lora_weight?: number;
-}) {
+function buildSD1InvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
   const {
     prompt,
     model,
@@ -361,6 +365,270 @@ function buildInvokeAIGraph(params: {
   };
 }
 
+function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
+  const {
+    prompt,
+    model,
+    steps = 30,
+    cfg_scale = 7.5,
+    width = 512,
+    height = 512,
+    seed,
+    scheduler = 'dpmpp_3m_k',
+    cfg_rescale_multiplier = 0,
+    negative_prompt = '',
+  } = params;
+
+  const finalSeed = seed ?? Math.floor(Math.random() * 2147483647);
+
+  const nodes: Record<string, GraphNode> = {
+    'model_loader': {
+      id: 'model_loader',
+      type: 'sdxl_model_loader',
+      is_intermediate: true,
+      use_cache: true,
+      model,
+    },
+    'positive_prompt': {
+      id: 'positive_prompt',
+      type: 'string',
+      is_intermediate: true,
+      use_cache: true,
+      value: prompt,
+    },
+    'pos_cond': {
+      id: 'pos_cond',
+      type: 'sdxl_compel_prompt',
+      is_intermediate: true,
+      use_cache: true,
+      prompt: '',
+      style: '',
+      original_width: width,
+      original_height: height,
+      crop_top: 0,
+      crop_left: 0,
+      target_width: width,
+      target_height: height,
+      clip: null,
+      clip2: null,
+      mask: null,
+    },
+    'pos_cond_collect': {
+      id: 'pos_cond_collect',
+      type: 'collect',
+      is_intermediate: true,
+      use_cache: true,
+      item: null,
+      collection: [],
+    },
+    'neg_cond': {
+      id: 'neg_cond',
+      type: 'sdxl_compel_prompt',
+      is_intermediate: true,
+      use_cache: true,
+      prompt: negative_prompt,
+      style: '',
+      original_width: width,
+      original_height: height,
+      crop_top: 0,
+      crop_left: 0,
+      target_width: width,
+      target_height: height,
+      clip: null,
+      clip2: null,
+      mask: null,
+    },
+    'neg_cond_collect': {
+      id: 'neg_cond_collect',
+      type: 'collect',
+      is_intermediate: true,
+      use_cache: true,
+      item: null,
+      collection: [],
+    },
+    'seed': {
+      id: 'seed',
+      type: 'integer',
+      is_intermediate: true,
+      use_cache: true,
+      value: finalSeed,
+    },
+    'noise': {
+      id: 'noise',
+      type: 'noise',
+      is_intermediate: true,
+      use_cache: true,
+      seed: 0,
+      width,
+      height,
+      use_cpu: true,
+    },
+    'denoise_latents': {
+      id: 'denoise_latents',
+      type: 'denoise_latents',
+      is_intermediate: true,
+      use_cache: true,
+      positive_conditioning: null,
+      negative_conditioning: null,
+      noise: null,
+      steps,
+      cfg_scale,
+      denoising_start: 0,
+      denoising_end: 1,
+      scheduler,
+      unet: null,
+      control: null,
+      ip_adapter: null,
+      t2i_adapter: null,
+      cfg_rescale_multiplier,
+      latents: null,
+      denoise_mask: null,
+    },
+    'core_metadata': {
+      id: 'core_metadata',
+      type: 'core_metadata',
+      is_intermediate: true,
+      use_cache: true,
+      generation_mode: 'sdxl_txt2img',
+      positive_prompt: null,
+      negative_prompt,
+      width,
+      height,
+      seed: null,
+      rand_device: 'cpu',
+      cfg_scale,
+      cfg_rescale_multiplier,
+      steps,
+      scheduler,
+      seamless_x: false,
+      seamless_y: false,
+      clip_skip: null,
+      model,
+      controlnets: null,
+      ipAdapters: null,
+      t2iAdapters: null,
+      loras: null,
+      strength: null,
+      init_image: null,
+      vae: null,
+      qwen3_encoder: null,
+      hrf_enabled: null,
+      hrf_method: null,
+      hrf_strength: null,
+      positive_style_prompt: null,
+      negative_style_prompt: null,
+      refiner_model: null,
+      refiner_cfg_scale: null,
+      refiner_steps: null,
+      refiner_scheduler: null,
+      refiner_positive_aesthetic_score: null,
+      refiner_negative_aesthetic_score: null,
+      refiner_start: null,
+      ref_images: [],
+    },
+    'l2i': {
+      id: 'l2i',
+      type: 'l2i',
+      is_intermediate: false,
+      use_cache: false,
+      board: null,
+      metadata: null,
+      latents: null,
+      vae: null,
+      tiled: false,
+      tile_size: 0,
+      fp32: true,
+    },
+  };
+
+  const edges: GraphEdge[] = [
+    {
+      source: { node_id: 'model_loader', field: 'unet' },
+      destination: { node_id: 'denoise_latents', field: 'unet' },
+    },
+    {
+      source: { node_id: 'model_loader', field: 'clip' },
+      destination: { node_id: 'pos_cond', field: 'clip' },
+    },
+    {
+      source: { node_id: 'model_loader', field: 'clip' },
+      destination: { node_id: 'neg_cond', field: 'clip' },
+    },
+    {
+      source: { node_id: 'model_loader', field: 'clip2' },
+      destination: { node_id: 'pos_cond', field: 'clip2' },
+    },
+    {
+      source: { node_id: 'model_loader', field: 'clip2' },
+      destination: { node_id: 'neg_cond', field: 'clip2' },
+    },
+    {
+      source: { node_id: 'positive_prompt', field: 'value' },
+      destination: { node_id: 'pos_cond', field: 'prompt' },
+    },
+    {
+      source: { node_id: 'positive_prompt', field: 'value' },
+      destination: { node_id: 'pos_cond', field: 'style' },
+    },
+    {
+      source: { node_id: 'pos_cond', field: 'conditioning' },
+      destination: { node_id: 'pos_cond_collect', field: 'item' },
+    },
+    {
+      source: { node_id: 'pos_cond_collect', field: 'collection' },
+      destination: { node_id: 'denoise_latents', field: 'positive_conditioning' },
+    },
+    {
+      source: { node_id: 'neg_cond', field: 'conditioning' },
+      destination: { node_id: 'neg_cond_collect', field: 'item' },
+    },
+    {
+      source: { node_id: 'neg_cond_collect', field: 'collection' },
+      destination: { node_id: 'denoise_latents', field: 'negative_conditioning' },
+    },
+    {
+      source: { node_id: 'seed', field: 'value' },
+      destination: { node_id: 'noise', field: 'seed' },
+    },
+    {
+      source: { node_id: 'noise', field: 'noise' },
+      destination: { node_id: 'denoise_latents', field: 'noise' },
+    },
+    {
+      source: { node_id: 'denoise_latents', field: 'latents' },
+      destination: { node_id: 'l2i', field: 'latents' },
+    },
+    {
+      source: { node_id: 'seed', field: 'value' },
+      destination: { node_id: 'core_metadata', field: 'seed' },
+    },
+    {
+      source: { node_id: 'positive_prompt', field: 'value' },
+      destination: { node_id: 'core_metadata', field: 'positive_prompt' },
+    },
+    {
+      source: { node_id: 'model_loader', field: 'vae' },
+      destination: { node_id: 'l2i', field: 'vae' },
+    },
+    {
+      source: { node_id: 'core_metadata', field: 'metadata' },
+      destination: { node_id: 'l2i', field: 'metadata' },
+    },
+  ];
+
+  return {
+    graph: { nodes, edges },
+    seed: finalSeed,
+  };
+}
+
+function buildInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
+  if (params.model.base === 'sdxl') {
+    return buildSDXLInvokeAIGraph(params);
+  }
+  return buildSD1InvokeAIGraph(params);
+}
+
 // Helper to poll queue status until completion
 async function pollQueueStatus(
   endpoint: string,
@@ -438,16 +706,8 @@ export async function POST(request: NextRequest) {
       const found = availableModels.find(m => m.name === model || m.id === model);
       if (found) selectedModel = found;
     } else {
-      // Prefer SD 1.5 for compatibility with this generic graph structure
-      // SDXL requires a different graph topology (different conditioning nodes)
-      const sd1 = availableModels.find(m => m.base === 'sd-1');
-      if (sd1) {
-        selectedModel = sd1;
-      } else {
-        // Fallback to SDXL if no SD1 found (might fail with this graph)
-        const sdxl = availableModels.find(m => m.base === 'sdxl');
-        if (sdxl) selectedModel = sdxl;
-      }
+      const compatibleModel = availableModels.find(m => m.base === 'sd-1' || m.base === 'sdxl');
+      if (compatibleModel) selectedModel = compatibleModel;
     }
 
     console.log(`[InvokeAI Generate] Using model: ${selectedModel.name} (${selectedModel.base})`);
@@ -487,14 +747,24 @@ export async function POST(request: NextRequest) {
       console.log(`[InvokeAI Generate] Using LoRA: ${selectedLora.name}`);
     }
 
-    // NOTE: The graph built in this route is currently tailored to SD-1 models.
-    // Some model bases (e.g. SDXL, SD-2, or tiny/specialty pipelines) require different graph topology.
+    // Some model bases (e.g. SD-2 or tiny/specialty pipelines) require different graph topology.
     // Fail fast with a clear message rather than returning a generic 500 later.
-    if (selectedModel.base !== 'sd-1') {
+    if (selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
       return NextResponse.json(
         {
-          error: `Selected model base '${selectedModel.base}' is not supported by this generator yet. Please choose an SD-1 model (e.g. Dreamshaper 8).`,
+          error: `Selected model base '${selectedModel.base}' is not supported by this generator yet. Please choose an SD-1 or SDXL model.`,
           selectedModel: { id: selectedModel.id, name: selectedModel.name, base: selectedModel.base },
+        },
+        { status: 400 }
+      );
+    }
+
+    if (selectedLora && selectedModel.base !== 'sd-1') {
+      return NextResponse.json(
+        {
+          error: 'LoRA image generation currently supports SD-1 models only. Please remove the LoRA or choose an SD-1 model.',
+          selectedLora: { name: selectedLora.name, base: selectedLora.base },
+          selectedModel: { name: selectedModel.name, base: selectedModel.base },
         },
         { status: 400 }
       );
@@ -634,5 +904,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

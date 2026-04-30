@@ -74,6 +74,25 @@ export async function fetchInvokeAILoRAModels(endpoint: string = 'http://localho
     }
 }
 
+export async function getInvokeAIErrorMessage(response: Response): Promise<string> {
+    const fallback = `InvokeAI API error: ${response.status} ${response.statusText}`;
+    const errorText = await response.text().catch(() => '');
+    if (!errorText.trim()) {
+        return fallback;
+    }
+
+    try {
+        const errorData = JSON.parse(errorText);
+        if (typeof errorData?.error === 'string' && errorData.error.trim()) {
+            return errorData.error;
+        }
+    } catch {
+        return `${fallback} - ${errorText}`;
+    }
+
+    return fallback;
+}
+
 /**
  * Generate an image using InvokeAI
  * This will be called from the API route, not directly from the client
@@ -93,6 +112,5 @@ export interface InvokeAIImageGenerationResponse {
     seed?: number;
     model?: string;
 }
-
 
 

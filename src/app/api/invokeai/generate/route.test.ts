@@ -227,6 +227,128 @@ describe('/api/invokeai/generate API Endpoint', () => {
     ).toBe(true);
   });
 
+  it('should enqueue a valid SDXL graph and preserve requested dimensions', async () => {
+    let enqueuedGraph: any | null = null;
+
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input.toString();
+
+      if (url.includes('/api/v2/models')) {
+        return {
+          ok: true,
+          json: async () => ({
+            models: [{
+              id: 'juggernaut-xl-v9',
+              name: 'Juggernaut XL v9',
+              base: 'sdxl',
+              type: 'main',
+              key: 'k-sdxl',
+              hash: 'h-sdxl',
+            }],
+          }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/enqueue_batch')) {
+        if (init && init.body && typeof init.body === 'string') {
+          const parsed = JSON.parse(init.body);
+          enqueuedGraph = parsed?.batch?.graph;
+        }
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ batch: { batch_id: 'batch-sdxl' } }),
+          text: async () => 'ok',
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/b/batch-sdxl/status')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ completed: 1, failed: 0, canceled: 0 }),
+        } as any;
+      }
+
+      if (url.endsWith('/api/v1/images/') || url.endsWith('/api/v1/images')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ items: [{ image_name: 'sdxl-img.png' }] }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/images/i/sdxl-img.png/full')) {
+        const buf = new TextEncoder().encode('sdxl-image-bytes').buffer;
+        return {
+          ok: true,
+          status: 200,
+          arrayBuffer: async () => buf,
+        } as any;
+      }
+
+      return { ok: false, status: 404, statusText: 'Not Found', json: async () => ({}) } as any;
+    });
+
+    const req = makeJsonRequest('http://localhost:3000/api/invokeai/generate', {
+      prompt: 'A cowboy',
+      invokeaiEndpoint: defaultEndpoint,
+      model: 'Juggernaut XL v9',
+      negative_prompt: 'blurry',
+      steps: 30,
+      guidance_scale: 7,
+      width: 768,
+      height: 640,
+      seed: 1925450283,
+      scheduler: 'dpmpp_3m_k',
+      cfg_rescale_multiplier: 0,
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.model).toBe('Juggernaut XL v9');
+    expect(enqueuedGraph).toBeTruthy();
+
+    expect(enqueuedGraph.nodes.model_loader.type).toBe('sdxl_model_loader');
+    expect(enqueuedGraph.nodes.pos_cond.type).toBe('sdxl_compel_prompt');
+    expect(enqueuedGraph.nodes.neg_cond.type).toBe('sdxl_compel_prompt');
+    expect(enqueuedGraph.nodes.pos_cond.original_width).toBe(768);
+    expect(enqueuedGraph.nodes.pos_cond.original_height).toBe(640);
+    expect(enqueuedGraph.nodes.pos_cond.target_width).toBe(768);
+    expect(enqueuedGraph.nodes.pos_cond.target_height).toBe(640);
+    expect(enqueuedGraph.nodes.neg_cond.prompt).toBe('blurry');
+    expect(enqueuedGraph.nodes.noise.width).toBe(768);
+    expect(enqueuedGraph.nodes.noise.height).toBe(640);
+    expect(enqueuedGraph.nodes.core_metadata.generation_mode).toBe('sdxl_txt2img');
+    expect(enqueuedGraph.nodes.core_metadata.width).toBe(768);
+    expect(enqueuedGraph.nodes.core_metadata.height).toBe(640);
+    expect(enqueuedGraph.nodes.clip_skip).toBeUndefined();
+
+    const edges = enqueuedGraph.edges as Array<{
+      source: { node_id: string; field: string };
+      destination: { node_id: string; field: string };
+    }>;
+    expect(
+      edges.some(
+        (e) =>
+          e.source.node_id === 'model_loader' &&
+          e.source.field === 'clip2' &&
+          e.destination.node_id === 'pos_cond' &&
+          e.destination.field === 'clip2'
+      )
+    ).toBe(true);
+    expect(
+      edges.some(
+        (e) =>
+          e.source.node_id === 'core_metadata' &&
+          e.source.field === 'metadata' &&
+          e.destination.node_id === 'l2i' &&
+          e.destination.field === 'metadata'
+      )
+    ).toBe(true);
+  });
+
   it('should return 500 if queue reports failed', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = input.toString();
