@@ -26,6 +26,10 @@ export interface SessionPreset {
         provider: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
+        /** Optional LoRA identifier (prefer model `key` from Invoke `/api/v2/models/?model_type=lora`). */
+        invokeaiLoraKey?: string;
+        /** LoRA strength (typically 0–1). */
+        invokeaiLoraWeight?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;

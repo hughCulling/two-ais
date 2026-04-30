@@ -140,6 +140,93 @@ describe('/api/invokeai/generate API Endpoint', () => {
     expect(uniqueEdgeKeys.size).toBe(edgeKeys.length);
   });
 
+  it('should enqueue an SD1 graph with LoRA nodes when lora_key resolves', async () => {
+    let enqueuedGraph: any | null = null;
+
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input.toString();
+
+      if (url.includes('model_type=lora')) {
+        return {
+          ok: true,
+          json: async () => ({
+            models: [
+              { id: 'lora-id', key: 'lora-key-1', name: 'Test LoRA', base: 'sd-1', type: 'lora', hash: 'h' },
+            ],
+          }),
+        } as any;
+      }
+
+      if (url.includes('/api/v2/models')) {
+        return {
+          ok: true,
+          json: async () => ({
+            models: [
+              { id: 'dreamshaper-8', name: 'Dreamshaper 8', base: 'sd-1', type: 'main', key: 'k-main', hash: 'hm' },
+            ],
+          }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/enqueue_batch')) {
+        if (init && init.body && typeof init.body === 'string') {
+          const parsed = JSON.parse(init.body);
+          enqueuedGraph = parsed?.batch?.graph;
+        }
+        return {
+          ok: true,
+          json: async () => ({ batch: { batch_id: 'batch-lora' } }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/b/batch-lora/status')) {
+        return {
+          ok: true,
+          json: async () => ({ completed: 1, failed: 0, canceled: 0 }),
+        } as any;
+      }
+
+      if (url.endsWith('/api/v1/images/') || url.endsWith('/api/v1/images')) {
+        return {
+          ok: true,
+          json: async () => ({ items: [{ image_name: 'lora-img.png' }] }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/images/i/lora-img.png/full')) {
+        const buf = new TextEncoder().encode('x').buffer;
+        return { ok: true, arrayBuffer: async () => buf } as any;
+      }
+
+      return { ok: false, status: 404, json: async () => ({}) } as any;
+    });
+
+    const req = makeJsonRequest('http://localhost:3000/api/invokeai/generate', {
+      prompt: 'LoRA test',
+      invokeaiEndpoint: defaultEndpoint,
+      model: 'Dreamshaper 8',
+      lora_key: 'lora-key-1',
+      lora_weight: 0.75,
+      steps: 5,
+      width: 256,
+      height: 256,
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+    expect(enqueuedGraph?.nodes?.lora_selector).toBeTruthy();
+    expect(enqueuedGraph?.nodes?.lora_collection_loader).toBeTruthy();
+    const edges = enqueuedGraph.edges as Array<{ source: { node_id: string; field: string }; destination: { node_id: string; field: string } }>;
+    expect(
+      edges.some(
+        (e) =>
+          e.source.node_id === 'lora_collection_loader' &&
+          e.destination.node_id === 'denoise_latents' &&
+          e.source.field === 'unet'
+      )
+    ).toBe(true);
+  });
+
   it('should return 500 if queue reports failed', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = input.toString();

@@ -53,6 +53,28 @@ export async function fetchInvokeAIModels(endpoint: string = 'http://localhost:9
 }
 
 /**
+ * Fetch LoRA models (`type: lora`) installed in InvokeAI (same `/api/v2/models/` API).
+ */
+export async function fetchInvokeAILoRAModels(endpoint: string = 'http://localhost:9090'): Promise<InvokeAIModel[]> {
+    try {
+        const response = await fetch(`${endpoint}/api/v2/models/?model_type=lora`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(5000),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch InvokeAI LoRA models: ${response.statusText}`);
+        }
+
+        const data: InvokeAIModelsResponse = await response.json();
+        return data.models || [];
+    } catch (error) {
+        console.error('Error fetching InvokeAI LoRA models:', error);
+        return [];
+    }
+}
+
+/**
  * Generate an image using InvokeAI
  * This will be called from the API route, not directly from the client
  */

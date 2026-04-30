@@ -189,6 +189,8 @@ interface StartConversationRequest {
         provider?: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
+        invokeaiLoraKey?: string;
+        invokeaiLoraWeight?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;
@@ -243,6 +245,8 @@ type ConversationData = {
         provider?: string;
         invokeaiEndpoint: string;
         invokeaiModel?: string;
+        invokeaiLoraKey?: string;
+        invokeaiLoraWeight?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;

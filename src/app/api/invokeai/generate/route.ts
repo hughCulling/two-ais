@@ -29,6 +29,11 @@ interface GraphNode {
   [key: string]: unknown;
 }
 
+interface GraphEdge {
+  source: { node_id: string; field: string };
+  destination: { node_id: string; field: string };
+}
+
 interface QueueStatus {
   completed: number;
   failed: number;
@@ -51,6 +56,18 @@ async function fetchModels(endpoint: string): Promise<InvokeAIModel[]> {
   }
 }
 
+async function fetchLoRAModels(endpoint: string): Promise<InvokeAIModel[]> {
+  try {
+    const response = await fetch(`${endpoint}/api/v2/models/?model_type=lora`);
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.models || [];
+  } catch (error) {
+    console.error('Failed to fetch LoRA models:', error);
+    return [];
+  }
+}
+
 // Helper to build InvokeAI graph for text-to-image generation
 // Based on working workflow structure from InvokeAI UI
 function buildInvokeAIGraph(params: {
@@ -65,6 +82,9 @@ function buildInvokeAIGraph(params: {
   clip_skip?: number;
   cfg_rescale_multiplier?: number;
   negative_prompt?: string;
+  /** When set (SD‑1 LoRA), inserts lora_selector → lora_collector → lora_collection_loader (Invoke UI parity). */
+  lora?: InvokeAIModel | null;
+  lora_weight?: number;
 }) {
   const {
     prompt,
@@ -77,7 +97,11 @@ function buildInvokeAIGraph(params: {
     scheduler = 'dpmpp_3m_k',
     clip_skip = 0,
     cfg_rescale_multiplier = 0,
+    lora = null,
+    lora_weight = 0.75,
   } = params;
+
+  const useLora = Boolean(lora);
 
   // Generate random seed if not provided
   const finalSeed = seed ?? Math.floor(Math.random() * 2147483647);
@@ -202,27 +226,88 @@ function buildInvokeAIGraph(params: {
     },
   };
 
+  if (useLora) {
+    nodes['lora_selector'] = {
+      id: 'lora_selector',
+      type: 'lora_selector',
+      is_intermediate: true,
+      use_cache: true,
+      lora,
+      weight: typeof lora_weight === 'number' && Number.isFinite(lora_weight) ? lora_weight : 0.75,
+    };
+    nodes['lora_collector'] = {
+      id: 'lora_collector',
+      type: 'collect',
+      is_intermediate: true,
+      use_cache: true,
+      item: null,
+      collection: [],
+    };
+    nodes['lora_collection_loader'] = {
+      id: 'lora_collection_loader',
+      type: 'lora_collection_loader',
+      is_intermediate: true,
+      use_cache: true,
+      loras: null,
+      unet: null,
+      clip: null,
+    };
+  }
+
+  const unetAndClipEdges: GraphEdge[] = useLora
+    ? [
+      {
+        source: { node_id: 'lora_selector', field: 'lora' },
+        destination: { node_id: 'lora_collector', field: 'item' },
+      },
+      {
+        source: { node_id: 'lora_collector', field: 'collection' },
+        destination: { node_id: 'lora_collection_loader', field: 'loras' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'lora_collection_loader', field: 'unet' },
+      },
+      {
+        source: { node_id: 'clip_skip', field: 'clip' },
+        destination: { node_id: 'lora_collection_loader', field: 'clip' },
+      },
+      {
+        source: { node_id: 'lora_collection_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+    ]
+    : [
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'clip_skip', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'clip_skip', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+    ];
+
   // Build edges - connections between nodes
-  const edges = [
-    // Model loader to unet
-    {
-      source: { node_id: 'model_loader', field: 'unet' },
-      destination: { node_id: 'denoise_latents', field: 'unet' },
-    },
+  const edges: GraphEdge[] = [
     // Model loader clip to clip_skip clip (single, unique edge)
     {
       source: { node_id: 'model_loader', field: 'clip' },
       destination: { node_id: 'clip_skip', field: 'clip' },
     },
-    // Clip skip to positive/negative conditioning
-    {
-      source: { node_id: 'clip_skip', field: 'clip' },
-      destination: { node_id: 'pos_cond', field: 'clip' },
-    },
-    {
-      source: { node_id: 'clip_skip', field: 'clip' },
-      destination: { node_id: 'neg_cond', field: 'clip' },
-    },
+    ...unetAndClipEdges,
     // Positive prompt to positive conditioning
     {
       source: { node_id: 'positive_prompt', field: 'value' },
@@ -325,6 +410,13 @@ export async function POST(request: NextRequest) {
       cfg_rescale_multiplier,
     } = body;
 
+    const loraKeyRaw = typeof body.lora_key === 'string' ? body.lora_key : (typeof body.loraKey === 'string' ? body.loraKey : '');
+    const loraWeightParsed = typeof body.lora_weight === 'number'
+      ? body.lora_weight
+      : typeof body.loraWeight === 'number'
+        ? body.loraWeight
+        : undefined;
+
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
@@ -360,6 +452,41 @@ export async function POST(request: NextRequest) {
 
     console.log(`[InvokeAI Generate] Using model: ${selectedModel.name} (${selectedModel.base})`);
 
+    let selectedLora: InvokeAIModel | null = null;
+    const loraLookupKey = typeof loraKeyRaw === 'string' ? loraKeyRaw.trim() : '';
+    if (loraLookupKey) {
+      const loraCandidates = await fetchLoRAModels(endpoint);
+      const found = loraCandidates.find((m) => {
+        const key = typeof m.key === 'string' ? m.key : '';
+        const id = typeof (m as { id?: string }).id === 'string' ? (m as { id?: string }).id : '';
+        return (
+          key === loraLookupKey ||
+          id === loraLookupKey ||
+          (typeof (m as { name?: string }).name === 'string' && (m as { name: string }).name === loraLookupKey)
+        );
+      });
+      if (!found) {
+        return NextResponse.json(
+          {
+            error: `LoRA not found for "${loraLookupKey}". Refresh models in Session Setup or check Invoke\'s LoRA installs.`,
+          },
+          { status: 400 }
+        );
+      }
+      if (found.base && selectedModel.base && found.base !== selectedModel.base) {
+        return NextResponse.json(
+          {
+            error: `Selected LoRA base '${found.base}' does not match the main model base '${selectedModel.base}'.`,
+            selectedLora: { name: found.name, base: found.base },
+            selectedModel: { name: selectedModel.name, base: selectedModel.base },
+          },
+          { status: 400 }
+        );
+      }
+      selectedLora = found;
+      console.log(`[InvokeAI Generate] Using LoRA: ${selectedLora.name}`);
+    }
+
     // NOTE: The graph built in this route is currently tailored to SD-1 models.
     // Some model bases (e.g. SDXL, SD-2, or tiny/specialty pipelines) require different graph topology.
     // Fail fast with a clear message rather than returning a generic 500 later.
@@ -374,6 +501,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 1: Build the graph
+    const resolvedLoraWeight = typeof loraWeightParsed === 'number' && Number.isFinite(loraWeightParsed)
+      ? Math.max(-2, Math.min(4, loraWeightParsed))
+      : 0.75;
+
     const { graph, seed: finalSeed } = buildInvokeAIGraph({
       prompt,
       model: selectedModel, // Pass full model object
@@ -386,6 +517,7 @@ export async function POST(request: NextRequest) {
       scheduler,
       clip_skip,
       cfg_rescale_multiplier,
+      ...(selectedLora ? { lora: selectedLora, lora_weight: resolvedLoraWeight } : { lora: null }),
     });
 
     console.log(`[InvokeAI Generate] Built graph with seed: ${finalSeed}`);
