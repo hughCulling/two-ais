@@ -9,6 +9,7 @@ import { db, storage } from '@/lib/firebase/clientApp';
 import { splitIntoMediaSegments, replacePromptPlaceholders, type MediaGranularity } from '@/lib/segment-utils';
 import { getProviderFromId } from '@/lib/models';
 import { auth } from '@/lib/firebase/clientApp';
+import { getInvokeAIErrorMessage } from '@/lib/invokeai';
 
 interface ParagraphImage {
     paragraphIndex: number;
@@ -168,13 +169,13 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 }
 
                 // Step 2: Generate image using InvokeAI
-                const imageBase64 = await generateImage(prompt, imageGenSettings);
+                const imageResult = await generateImage(prompt, imageGenSettings);
 
-                if (!imageBase64) {
+                if (!imageResult.imageBase64) {
                     paragraphImages[paragraphIndex] = {
                         ...paragraphImages[paragraphIndex],
                         status: 'error',
-                        error: 'Failed to generate image',
+                        error: imageResult.error || 'Failed to generate image',
                     };
                     await updateDoc(messageRef, { paragraphImages });
                     continue;
@@ -185,7 +186,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     conversationId!,
                     messageId,
                     paragraphIndex,
-                    imageBase64
+                    imageResult.imageBase64
                 );
 
                 if (!imageUrl) {
@@ -436,7 +437,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     async function generateImage(
         prompt: string,
         imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
-    ): Promise<string | null> {
+    ): Promise<{ imageBase64: string | null; error?: string }> {
         try {
             const response = await fetch('/api/invokeai/generate', {
                 method: 'POST',
@@ -467,15 +468,14 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`InvokeAI API error: ${response.statusText} - ${errorText}`);
+                throw new Error(await getInvokeAIErrorMessage(response));
             }
 
             const result = await response.json();
-            return result.image || null;
+            return { imageBase64: result.image || null };
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error generating image:', error);
-            return null;
+            return { imageBase64: null, error: error instanceof Error ? error.message : 'Failed to generate image' };
         }
     }
 
