@@ -85,6 +85,7 @@ interface ImageGenSettings {
     promptSystemMessage: string;
     promptLookaheadLimit?: number;
     mediaGranularity?: 'paragraph' | 'sentence';
+    panoramaMode?: boolean;
 }
 
 interface ConversationDetails {

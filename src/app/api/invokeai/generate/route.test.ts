@@ -313,10 +313,10 @@ describe('/api/invokeai/generate API Endpoint', () => {
     expect(enqueuedGraph.nodes.model_loader.type).toBe('sdxl_model_loader');
     expect(enqueuedGraph.nodes.pos_cond.type).toBe('sdxl_compel_prompt');
     expect(enqueuedGraph.nodes.neg_cond.type).toBe('sdxl_compel_prompt');
-    expect(enqueuedGraph.nodes.pos_cond.original_width).toBe(768);
-    expect(enqueuedGraph.nodes.pos_cond.original_height).toBe(640);
-    expect(enqueuedGraph.nodes.pos_cond.target_width).toBe(768);
-    expect(enqueuedGraph.nodes.pos_cond.target_height).toBe(640);
+    expect(enqueuedGraph.nodes.pos_cond.original_width).toBe(1024);
+    expect(enqueuedGraph.nodes.pos_cond.original_height).toBe(1024);
+    expect(enqueuedGraph.nodes.pos_cond.target_width).toBe(1024);
+    expect(enqueuedGraph.nodes.pos_cond.target_height).toBe(1024);
     expect(enqueuedGraph.nodes.neg_cond.prompt).toBe('blurry');
     expect(enqueuedGraph.nodes.noise.width).toBe(768);
     expect(enqueuedGraph.nodes.noise.height).toBe(640);
@@ -345,6 +345,142 @@ describe('/api/invokeai/generate API Endpoint', () => {
           e.source.field === 'metadata' &&
           e.destination.node_id === 'l2i' &&
           e.destination.field === 'metadata'
+      )
+    ).toBe(true);
+  });
+
+  it('should enqueue an SDXL graph with SDXL LoRA routing and metadata', async () => {
+    let enqueuedGraph: any | null = null;
+
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input.toString();
+
+      if (url.includes('model_type=lora')) {
+        return {
+          ok: true,
+          json: async () => ({
+            models: [{
+              id: 'view360-id',
+              key: 'view360-key',
+              name: 'View360',
+              base: 'sdxl',
+              type: 'lora',
+              hash: 'h-view360',
+            }],
+          }),
+        } as any;
+      }
+
+      if (url.includes('/api/v2/models')) {
+        return {
+          ok: true,
+          json: async () => ({
+            models: [{
+              id: 'juggernaut-xl-v9',
+              name: 'Juggernaut XL v9',
+              base: 'sdxl',
+              type: 'main',
+              key: 'k-sdxl',
+              hash: 'h-sdxl',
+            }],
+          }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/enqueue_batch')) {
+        if (init && init.body && typeof init.body === 'string') {
+          const parsed = JSON.parse(init.body);
+          enqueuedGraph = parsed?.batch?.graph;
+        }
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ batch: { batch_id: 'batch-sdxl-lora' } }),
+          text: async () => 'ok',
+        } as any;
+      }
+
+      if (url.includes('/api/v1/queue/default/b/batch-sdxl-lora/status')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ completed: 1, failed: 0, canceled: 0 }),
+        } as any;
+      }
+
+      if (url.endsWith('/api/v1/images/') || url.endsWith('/api/v1/images')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ items: [{ image_name: 'sdxl-lora-img.png' }] }),
+        } as any;
+      }
+
+      if (url.includes('/api/v1/images/i/sdxl-lora-img.png/full')) {
+        const buf = new TextEncoder().encode('sdxl-lora-image-bytes').buffer;
+        return { ok: true, status: 200, arrayBuffer: async () => buf } as any;
+      }
+
+      return { ok: false, status: 404, statusText: 'Not Found', json: async () => ({}) } as any;
+    });
+
+    const req = makeJsonRequest('http://localhost:3000/api/invokeai/generate', {
+      prompt: 'A 360 view of a rocket',
+      invokeaiEndpoint: defaultEndpoint,
+      model: 'Juggernaut XL v9',
+      lora_key: 'view360-key',
+      lora_weight: 0.75,
+      steps: 30,
+      guidance_scale: 7,
+      width: 1600,
+      height: 1024,
+      seed: 1065852334,
+      scheduler: 'dpmpp_3m_k',
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+    expect(enqueuedGraph?.nodes?.lora_selector).toBeTruthy();
+    expect(enqueuedGraph?.nodes?.lora_collector).toBeTruthy();
+    expect(enqueuedGraph?.nodes?.sdxl_lora_collection_loader).toBeTruthy();
+    expect(enqueuedGraph.nodes.core_metadata.loras).toEqual([
+      {
+        model: {
+          id: 'view360-id',
+          key: 'view360-key',
+          name: 'View360',
+          base: 'sdxl',
+          type: 'lora',
+          hash: 'h-view360',
+        },
+        weight: 0.75,
+      },
+    ]);
+    expect(enqueuedGraph.nodes.noise.width).toBe(1600);
+    expect(enqueuedGraph.nodes.noise.height).toBe(1024);
+    expect(enqueuedGraph.nodes.core_metadata.width).toBe(1600);
+    expect(enqueuedGraph.nodes.core_metadata.height).toBe(1024);
+
+    const edges = enqueuedGraph.edges as Array<{
+      source: { node_id: string; field: string };
+      destination: { node_id: string; field: string };
+    }>;
+    expect(
+      edges.some(
+        (e) =>
+          e.source.node_id === 'sdxl_lora_collection_loader' &&
+          e.source.field === 'clip2' &&
+          e.destination.node_id === 'pos_cond' &&
+          e.destination.field === 'clip2'
+      )
+    ).toBe(true);
+    expect(
+      edges.some(
+        (e) =>
+          e.source.node_id === 'sdxl_lora_collection_loader' &&
+          e.source.field === 'unet' &&
+          e.destination.node_id === 'denoise_latents' &&
+          e.destination.field === 'unet'
       )
     ).toBe(true);
   });

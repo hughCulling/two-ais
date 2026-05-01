@@ -58,6 +58,9 @@ interface ImageGenSettings {
     size: string;
     promptLlm: string;
     promptSystemMessage: string;
+    promptLookaheadLimit?: number;
+    mediaGranularity?: 'paragraph' | 'sentence';
+    panoramaMode?: boolean;
 }
 
 interface ConversationSummary {
@@ -302,4 +305,4 @@ export default function HistoryPage() {
             </div>
         </main>
     );
-} 
+}

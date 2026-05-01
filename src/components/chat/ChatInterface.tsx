@@ -39,6 +39,7 @@ import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
+import { PanoramaViewer } from './PanoramaViewer';
 
 // --- Interfaces ---
 interface ParagraphImage {
@@ -92,6 +93,7 @@ interface ConversationData {
         promptLlm?: string;
         promptSystemMessage?: string;
         mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
 }
 
@@ -2116,6 +2118,7 @@ export function ChatInterface({
 
 
     const isWaitingForMessage = pendingTtsMessage?.isStreaming && !isAudioPlaying;
+    const isPanoramaMode = Boolean(conversationData?.imageGenSettings?.panoramaMode);
 
     return (
         <div className={`flex flex-col w-full mx-auto bg-background overflow-hidden ${isFullscreen
@@ -2378,7 +2381,7 @@ export function ChatInterface({
                                                                         width={512}
                                                                         height={512}
                                                                         unoptimized={segmentImage.imageUrl.includes('storage.googleapis.com') || segmentImage.imageUrl.includes('googleapis.com/storage')}
-                                                                        aria-label="Show image in full screen"
+                                                                        aria-label={isPanoramaMode ? "Show image in panorama viewer" : "Show image in full screen"}
                                                                     />
                                                                 )}
                                                                 {segmentImage.status === 'error' && (
@@ -2621,7 +2624,7 @@ export function ChatInterface({
 
                 return ReactDOM.createPortal(
                     <div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 ${isPanoramaMode ? 'p-0' : ''}`}
                         onClick={() => setFullScreenGallery(null)}
                         tabIndex={0}
                         aria-modal="true"
@@ -2629,16 +2632,23 @@ export function ChatInterface({
                     >
                         {currentImage && currentImage.status === 'complete' && currentImage.imageUrl && (
                             <>
-                                <Image
-                                    src={currentImage.imageUrl}
-                                    alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
-                                    className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
-                                    style={{ objectFit: 'contain' }}
-                                    width={1920}
-                                    height={1080}
-                                    unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
-                                    onClick={(e) => e.stopPropagation()}
-                                />
+                                {isPanoramaMode ? (
+                                    <PanoramaViewer
+                                        imageUrl={currentImage.imageUrl}
+                                        alt={`Generated panorama for segment ${fullScreenGallery.paragraphIndex + 1}`}
+                                    />
+                                ) : (
+                                    <Image
+                                        src={currentImage.imageUrl}
+                                        alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
+                                        className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                        style={{ objectFit: 'contain' }}
+                                        width={1920}
+                                        height={1080}
+                                        unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                )}
 
                                 {/* Navigation buttons */}
                                 {completeImages.length > 1 && (

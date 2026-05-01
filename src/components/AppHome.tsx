@@ -47,6 +47,8 @@ interface SessionConfig {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
 }
 interface UserData {

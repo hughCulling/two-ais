@@ -43,6 +43,7 @@ export interface SessionPreset {
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
     savedAt?: number; // timestamp
     collapseStates?: {

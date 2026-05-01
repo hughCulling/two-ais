@@ -42,6 +42,7 @@ interface ConversationData {
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
         mediaGranularity?: MediaGranularity;
+        panoramaMode?: boolean;
     };
 }
 

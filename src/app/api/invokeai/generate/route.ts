@@ -378,9 +378,13 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     scheduler = 'dpmpp_3m_k',
     cfg_rescale_multiplier = 0,
     negative_prompt = '',
+    lora = null,
+    lora_weight = 0.75,
   } = params;
 
+  const useLora = Boolean(lora);
   const finalSeed = seed ?? Math.floor(Math.random() * 2147483647);
+  const conditioningSize = 1024;
 
   const nodes: Record<string, GraphNode> = {
     'model_loader': {
@@ -404,12 +408,12 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       use_cache: true,
       prompt: '',
       style: '',
-      original_width: width,
-      original_height: height,
+      original_width: conditioningSize,
+      original_height: conditioningSize,
       crop_top: 0,
       crop_left: 0,
-      target_width: width,
-      target_height: height,
+      target_width: conditioningSize,
+      target_height: conditioningSize,
       clip: null,
       clip2: null,
       mask: null,
@@ -429,12 +433,12 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       use_cache: true,
       prompt: negative_prompt,
       style: '',
-      original_width: width,
-      original_height: height,
+      original_width: conditioningSize,
+      original_height: conditioningSize,
       crop_top: 0,
       crop_left: 0,
-      target_width: width,
-      target_height: height,
+      target_width: conditioningSize,
+      target_height: conditioningSize,
       clip: null,
       clip2: null,
       mask: null,
@@ -508,7 +512,14 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       controlnets: null,
       ipAdapters: null,
       t2iAdapters: null,
-      loras: null,
+      loras: useLora
+        ? [
+          {
+            model: lora,
+            weight: typeof lora_weight === 'number' && Number.isFinite(lora_weight) ? lora_weight : 0.75,
+          },
+        ]
+        : null,
       strength: null,
       init_image: null,
       vae: null,
@@ -542,27 +553,103 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     },
   };
 
+  if (useLora) {
+    nodes['lora_selector'] = {
+      id: 'lora_selector',
+      type: 'lora_selector',
+      is_intermediate: true,
+      use_cache: true,
+      lora,
+      weight: typeof lora_weight === 'number' && Number.isFinite(lora_weight) ? lora_weight : 0.75,
+    };
+    nodes['lora_collector'] = {
+      id: 'lora_collector',
+      type: 'collect',
+      is_intermediate: true,
+      use_cache: true,
+      item: null,
+      collection: [],
+    };
+    nodes['sdxl_lora_collection_loader'] = {
+      id: 'sdxl_lora_collection_loader',
+      type: 'sdxl_lora_collection_loader',
+      is_intermediate: true,
+      use_cache: true,
+      loras: null,
+      unet: null,
+      clip: null,
+      clip2: null,
+    };
+  }
+
+  const unetAndClipEdges: GraphEdge[] = useLora
+    ? [
+      {
+        source: { node_id: 'lora_selector', field: 'lora' },
+        destination: { node_id: 'lora_collector', field: 'item' },
+      },
+      {
+        source: { node_id: 'lora_collector', field: 'collection' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'loras' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'unet' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+        destination: { node_id: 'pos_cond', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+        destination: { node_id: 'neg_cond', field: 'clip2' },
+      },
+    ]
+    : [
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'pos_cond', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'neg_cond', field: 'clip2' },
+      },
+    ];
+
   const edges: GraphEdge[] = [
-    {
-      source: { node_id: 'model_loader', field: 'unet' },
-      destination: { node_id: 'denoise_latents', field: 'unet' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip' },
-      destination: { node_id: 'pos_cond', field: 'clip' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip' },
-      destination: { node_id: 'neg_cond', field: 'clip' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip2' },
-      destination: { node_id: 'pos_cond', field: 'clip2' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip2' },
-      destination: { node_id: 'neg_cond', field: 'clip2' },
-    },
+    ...unetAndClipEdges,
     {
       source: { node_id: 'positive_prompt', field: 'value' },
       destination: { node_id: 'pos_cond', field: 'prompt' },
@@ -760,10 +847,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (selectedLora && selectedModel.base !== 'sd-1') {
+    if (selectedLora && selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
       return NextResponse.json(
         {
-          error: 'LoRA image generation currently supports SD-1 models only. Please remove the LoRA or choose an SD-1 model.',
+          error: 'LoRA image generation currently supports SD-1 and SDXL models only. Please remove the LoRA or choose a supported model.',
           selectedLora: { name: selectedLora.name, base: selectedLora.base },
           selectedModel: { name: selectedModel.name, base: selectedModel.base },
         },

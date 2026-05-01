@@ -97,6 +97,7 @@ interface SessionConfig {
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
 }
 
@@ -907,6 +908,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiCfgRescaleMultiplier, setInvokeaiCfgRescaleMultiplier] = useState<number>(0);
     const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
     const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence'>('paragraph');
+    const [panoramaMode, setPanoramaMode] = useState<boolean>(false);
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -1264,6 +1266,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 promptSystemMessage: imagePromptSystemMessage,
                 promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                 mediaGranularity,
+                panoramaMode,
                 ...(invokeaiSelectedLoraKey.trim()
                     ? {
                         invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
@@ -1448,6 +1451,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     promptSystemMessage: imagePromptSystemMessage,
                     promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                     mediaGranularity,
+                    panoramaMode,
                     ...(invokeaiSelectedLoraKey.trim()
                         ? {
                             invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
@@ -1540,6 +1544,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                         : 1
                 );
                 setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
+                setPanoramaMode(Boolean(preset.imageGenSettings.panoramaMode));
                 const lk = preset.imageGenSettings.invokeaiLoraKey;
                 setInvokeaiSelectedLoraKey(typeof lk === 'string' && lk.trim() ? lk.trim() : '');
                 setInvokeaiLoraWeight(
@@ -1551,6 +1556,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setImageGenEnabled(false);
                 setPromptLookaheadLimit(1);
                 setMediaGranularity('paragraph');
+                setPanoramaMode(false);
                 setInvokeaiSelectedLoraKey('');
                 setInvokeaiLoraWeight(0.75);
             }
@@ -2637,6 +2643,23 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                             Sentence mode can generate 3-15x more images and audio clips per message, and will take longer.
                                         </div>
                                     )}
+                                </div>
+
+                                <div className="flex flex-col items-center gap-2 rounded-md border border-border/70 p-3">
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Checkbox
+                                            id="panorama-mode-enabled-checkbox"
+                                            checked={panoramaMode}
+                                            onCheckedChange={checked => setPanoramaMode(Boolean(checked))}
+                                            disabled={!user}
+                                        />
+                                        <Label htmlFor="panorama-mode-enabled-checkbox" className="text-sm font-medium">
+                                            VR / panorama viewer
+                                        </Label>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground text-center max-w-md">
+                                        Opens generated images as draggable 360 panoramas, with VR entry on supported headsets. Model, LoRA, and dimensions stay under your control.
+                                    </p>
                                 </div>
 
                                 <div className="space-y-2">

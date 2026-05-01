@@ -18,6 +18,7 @@ interface ConversationData {
     imageGenSettings?: {
         enabled?: boolean;
         mediaGranularity?: MediaGranularity;
+        panoramaMode?: boolean;
     };
 }
 
