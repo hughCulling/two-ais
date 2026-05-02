@@ -114,6 +114,7 @@ interface ImageGenSettings {
     promptLlm: string;
     promptSystemMessage: string;
     mediaGranularity?: 'paragraph' | 'sentence';
+    panoramaMode?: boolean;
 }
 
 interface ConversationDetails {

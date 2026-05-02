@@ -50,6 +50,7 @@ export function middleware(request: NextRequest) {
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);
+  response.headers.set('Permissions-Policy', 'xr-spatial-tracking=(self)');
   response.headers.set('x-nonce', nonce);
 
   return response;

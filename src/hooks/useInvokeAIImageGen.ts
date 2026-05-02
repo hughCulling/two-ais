@@ -42,6 +42,7 @@ interface ConversationData {
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
         mediaGranularity?: MediaGranularity;
+        panoramaMode?: boolean;
     };
 }
 
@@ -439,39 +440,108 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
     ): Promise<{ imageBase64: string | null; error?: string }> {
         try {
-            const response = await fetch('/api/invokeai/generate', {
+            const generationPayload = {
+                prompt,
+                invokeaiEndpoint: imageGenSettings.invokeaiEndpoint,
+                model: imageGenSettings.invokeaiModel,
+                ...(imageGenSettings.invokeaiLoraKey?.trim()
+                    ? {
+                        lora_key: imageGenSettings.invokeaiLoraKey.trim(),
+                        lora_weight:
+                            typeof imageGenSettings.invokeaiLoraWeight === 'number' && Number.isFinite(imageGenSettings.invokeaiLoraWeight)
+                                ? imageGenSettings.invokeaiLoraWeight
+                                : 0.75,
+                    }
+                    : {}),
+                negative_prompt: imageGenSettings.negativePrompt,
+                steps: imageGenSettings.steps,
+                guidance_scale: imageGenSettings.guidanceScale,
+                width: imageGenSettings.width,
+                height: imageGenSettings.height,
+                seed: imageGenSettings.seed,
+                scheduler: imageGenSettings.scheduler,
+                clip_skip: imageGenSettings.clipSkip,
+                cfg_rescale_multiplier: imageGenSettings.cfgRescaleMultiplier,
+            };
+
+            const enqueueResponse = await fetch('/api/invokeai/enqueue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(generationPayload),
+            });
+
+            if (!enqueueResponse.ok) {
+                throw new Error(await getInvokeAIErrorMessage(enqueueResponse));
+            }
+
+            const enqueueResult = await enqueueResponse.json() as {
+                batchId?: string;
+                queueId?: string;
+                endpoint?: string;
+            };
+            if (!enqueueResult.batchId) {
+                throw new Error('InvokeAI did not return a batch ID');
+            }
+
+            const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+            const maxAttempts = 300;
+            const intervalMs = 2000;
+
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                const statusResponse = await fetch('/api/invokeai/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        batchId: enqueueResult.batchId,
+                        queueId: enqueueResult.queueId,
+                        invokeaiEndpoint: enqueueResult.endpoint || imageGenSettings.invokeaiEndpoint,
+                    }),
+                });
+
+                if (!statusResponse.ok) {
+                    throw new Error(await getInvokeAIErrorMessage(statusResponse));
+                }
+
+                const statusResult = await statusResponse.json() as {
+                    status?: {
+                        completed?: number;
+                        failed?: number;
+                        canceled?: number;
+                    };
+                    done?: boolean;
+                };
+                const queueStatus = statusResult.status;
+
+                if ((queueStatus?.failed ?? 0) > 0) {
+                    throw new Error('Image generation failed in InvokeAI. Check InvokeAI server logs for details.');
+                }
+                if ((queueStatus?.canceled ?? 0) > 0) {
+                    throw new Error('Image generation was canceled in InvokeAI.');
+                }
+                if ((queueStatus?.completed ?? 0) > 0 || statusResult.done) {
+                    break;
+                }
+
+                if (attempt >= maxAttempts - 1) {
+                    throw new Error('Image generation timed out while waiting for InvokeAI.');
+                }
+
+                await wait(intervalMs);
+            }
+
+            const resultResponse = await fetch('/api/invokeai/result', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    prompt,
-                    invokeaiEndpoint: imageGenSettings.invokeaiEndpoint,
-                    model: imageGenSettings.invokeaiModel,
-                    ...(imageGenSettings.invokeaiLoraKey?.trim()
-                        ? {
-                            lora_key: imageGenSettings.invokeaiLoraKey.trim(),
-                            lora_weight:
-                                typeof imageGenSettings.invokeaiLoraWeight === 'number' && Number.isFinite(imageGenSettings.invokeaiLoraWeight)
-                                    ? imageGenSettings.invokeaiLoraWeight
-                                    : 0.75,
-                        }
-                        : {}),
-                    negative_prompt: imageGenSettings.negativePrompt,
-                    steps: imageGenSettings.steps,
-                    guidance_scale: imageGenSettings.guidanceScale,
-                    width: imageGenSettings.width,
-                    height: imageGenSettings.height,
-                    seed: imageGenSettings.seed,
-                    scheduler: imageGenSettings.scheduler,
-                    clip_skip: imageGenSettings.clipSkip,
-                    cfg_rescale_multiplier: imageGenSettings.cfgRescaleMultiplier,
+                    invokeaiEndpoint: enqueueResult.endpoint || imageGenSettings.invokeaiEndpoint,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error(await getInvokeAIErrorMessage(response));
+            if (!resultResponse.ok) {
+                throw new Error(await getInvokeAIErrorMessage(resultResponse));
             }
 
-            const result = await response.json();
+            const result = await resultResponse.json() as { image?: string };
             return { imageBase64: result.image || null };
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error generating image:', error);

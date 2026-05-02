@@ -203,6 +203,8 @@ interface StartConversationRequest {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
 }
 
@@ -259,6 +261,8 @@ type ConversationData = {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
+        mediaGranularity?: 'paragraph' | 'sentence';
+        panoramaMode?: boolean;
     };
 };
 

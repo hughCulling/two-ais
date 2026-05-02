@@ -6,14 +6,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 // InvokeAI queue ID (default is usually "default")
-const QUEUE_ID = 'default';
+export const QUEUE_ID = 'default';
 
 // Helper to build InvokeAI graph for text-to-image generation
 // Based on working workflow structure from InvokeAI UI
 // TypeScript interfaces for InvokeAI API responses
-interface InvokeAIModel {
+export interface InvokeAIModel {
   id: string;
   name: string;
   base: string;
@@ -21,7 +22,7 @@ interface InvokeAIModel {
   [key: string]: unknown;
 }
 
-interface GraphNode {
+export interface GraphNode {
   id: string;
   type: string;
   is_intermediate?: boolean;
@@ -29,7 +30,7 @@ interface GraphNode {
   [key: string]: unknown;
 }
 
-interface GraphEdge {
+export interface GraphEdge {
   source: { node_id: string; field: string };
   destination: { node_id: string; field: string };
 }
@@ -55,7 +56,7 @@ interface GraphBuildResult {
   seed: number;
 }
 
-interface QueueStatus {
+export interface QueueStatus {
   completed: number;
   failed: number;
   canceled: number;
@@ -65,7 +66,7 @@ interface QueueStatus {
 }
 
 // Helper to fetch available models
-async function fetchModels(endpoint: string): Promise<InvokeAIModel[]> {
+export async function fetchModels(endpoint: string): Promise<InvokeAIModel[]> {
   try {
     const response = await fetch(`${endpoint}/api/v2/models/?model_type=main`);
     if (!response.ok) return [];
@@ -77,7 +78,7 @@ async function fetchModels(endpoint: string): Promise<InvokeAIModel[]> {
   }
 }
 
-async function fetchLoRAModels(endpoint: string): Promise<InvokeAIModel[]> {
+export async function fetchLoRAModels(endpoint: string): Promise<InvokeAIModel[]> {
   try {
     const response = await fetch(`${endpoint}/api/v2/models/?model_type=lora`);
     if (!response.ok) return [];
@@ -377,9 +378,13 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     scheduler = 'dpmpp_3m_k',
     cfg_rescale_multiplier = 0,
     negative_prompt = '',
+    lora = null,
+    lora_weight = 0.75,
   } = params;
 
+  const useLora = Boolean(lora);
   const finalSeed = seed ?? Math.floor(Math.random() * 2147483647);
+  const conditioningSize = 1024;
 
   const nodes: Record<string, GraphNode> = {
     'model_loader': {
@@ -403,12 +408,12 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       use_cache: true,
       prompt: '',
       style: '',
-      original_width: width,
-      original_height: height,
+      original_width: conditioningSize,
+      original_height: conditioningSize,
       crop_top: 0,
       crop_left: 0,
-      target_width: width,
-      target_height: height,
+      target_width: conditioningSize,
+      target_height: conditioningSize,
       clip: null,
       clip2: null,
       mask: null,
@@ -428,12 +433,12 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       use_cache: true,
       prompt: negative_prompt,
       style: '',
-      original_width: width,
-      original_height: height,
+      original_width: conditioningSize,
+      original_height: conditioningSize,
       crop_top: 0,
       crop_left: 0,
-      target_width: width,
-      target_height: height,
+      target_width: conditioningSize,
+      target_height: conditioningSize,
       clip: null,
       clip2: null,
       mask: null,
@@ -507,7 +512,14 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       controlnets: null,
       ipAdapters: null,
       t2iAdapters: null,
-      loras: null,
+      loras: useLora
+        ? [
+          {
+            model: lora,
+            weight: typeof lora_weight === 'number' && Number.isFinite(lora_weight) ? lora_weight : 0.75,
+          },
+        ]
+        : null,
       strength: null,
       init_image: null,
       vae: null,
@@ -541,27 +553,103 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     },
   };
 
+  if (useLora) {
+    nodes['lora_selector'] = {
+      id: 'lora_selector',
+      type: 'lora_selector',
+      is_intermediate: true,
+      use_cache: true,
+      lora,
+      weight: typeof lora_weight === 'number' && Number.isFinite(lora_weight) ? lora_weight : 0.75,
+    };
+    nodes['lora_collector'] = {
+      id: 'lora_collector',
+      type: 'collect',
+      is_intermediate: true,
+      use_cache: true,
+      item: null,
+      collection: [],
+    };
+    nodes['sdxl_lora_collection_loader'] = {
+      id: 'sdxl_lora_collection_loader',
+      type: 'sdxl_lora_collection_loader',
+      is_intermediate: true,
+      use_cache: true,
+      loras: null,
+      unet: null,
+      clip: null,
+      clip2: null,
+    };
+  }
+
+  const unetAndClipEdges: GraphEdge[] = useLora
+    ? [
+      {
+        source: { node_id: 'lora_selector', field: 'lora' },
+        destination: { node_id: 'lora_collector', field: 'item' },
+      },
+      {
+        source: { node_id: 'lora_collector', field: 'collection' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'loras' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'unet' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+        destination: { node_id: 'pos_cond', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'sdxl_lora_collection_loader', field: 'clip2' },
+        destination: { node_id: 'neg_cond', field: 'clip2' },
+      },
+    ]
+    : [
+      {
+        source: { node_id: 'model_loader', field: 'unet' },
+        destination: { node_id: 'denoise_latents', field: 'unet' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'pos_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip' },
+        destination: { node_id: 'neg_cond', field: 'clip' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'pos_cond', field: 'clip2' },
+      },
+      {
+        source: { node_id: 'model_loader', field: 'clip2' },
+        destination: { node_id: 'neg_cond', field: 'clip2' },
+      },
+    ];
+
   const edges: GraphEdge[] = [
-    {
-      source: { node_id: 'model_loader', field: 'unet' },
-      destination: { node_id: 'denoise_latents', field: 'unet' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip' },
-      destination: { node_id: 'pos_cond', field: 'clip' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip' },
-      destination: { node_id: 'neg_cond', field: 'clip' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip2' },
-      destination: { node_id: 'pos_cond', field: 'clip2' },
-    },
-    {
-      source: { node_id: 'model_loader', field: 'clip2' },
-      destination: { node_id: 'neg_cond', field: 'clip2' },
-    },
+    ...unetAndClipEdges,
     {
       source: { node_id: 'positive_prompt', field: 'value' },
       destination: { node_id: 'pos_cond', field: 'prompt' },
@@ -622,7 +710,7 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
   };
 }
 
-function buildInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
+export function buildInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
   if (params.model.base === 'sdxl') {
     return buildSDXLInvokeAIGraph(params);
   }
@@ -630,7 +718,22 @@ function buildInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
 }
 
 // Helper to poll queue status until completion
-async function pollQueueStatus(
+export async function getInvokeAIQueueStatus(
+  endpoint: string,
+  queueId: string,
+  batchId: string
+): Promise<QueueStatus> {
+  const statusUrl = `${endpoint}/api/v1/queue/${queueId}/b/${batchId}/status`;
+  const response = await fetch(statusUrl);
+
+  if (!response.ok) {
+    throw new Error(`Failed to get queue status: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function pollQueueStatus(
   endpoint: string,
   queueId: string,
   batchId: string,
@@ -638,14 +741,7 @@ async function pollQueueStatus(
   intervalMs = 2000
 ): Promise<QueueStatus> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const statusUrl = `${endpoint}/api/v1/queue/${queueId}/b/${batchId}/status`;
-    const response = await fetch(statusUrl);
-
-    if (!response.ok) {
-      throw new Error(`Failed to get queue status: ${response.statusText}`);
-    }
-
-    const status = await response.json();
+    const status = await getInvokeAIQueueStatus(endpoint, queueId, batchId);
     console.log(`[InvokeAI Poll] Attempt ${attempt + 1}/${maxAttempts}, Status:`, status);
 
     // Check if batch is complete
@@ -660,177 +756,250 @@ async function pollQueueStatus(
   throw new Error('Image generation timed out - queue polling exceeded max attempts');
 }
 
+export interface InvokeAIGenerationInput {
+  prompt?: string;
+  invokeaiEndpoint?: string;
+  model?: string;
+  steps?: number;
+  guidance_scale?: number;
+  width?: number;
+  height?: number;
+  seed?: number;
+  negative_prompt?: string;
+  scheduler?: string;
+  clip_skip?: number;
+  cfg_rescale_multiplier?: number;
+  lora_key?: string;
+  loraKey?: string;
+  lora_weight?: number;
+  loraWeight?: number;
+}
+
+export interface PreparedInvokeAIGeneration {
+  endpoint: string;
+  graph: GraphBuildResult['graph'];
+  seed: number;
+  modelName: string;
+  selectedModel: InvokeAIModel;
+  selectedLora: InvokeAIModel | null;
+}
+
+export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): Promise<PreparedInvokeAIGeneration> {
+  const {
+    prompt,
+    invokeaiEndpoint,
+    model,
+    steps,
+    guidance_scale,
+    width,
+    height,
+    seed,
+    negative_prompt,
+    scheduler,
+    clip_skip,
+    cfg_rescale_multiplier,
+  } = body;
+
+  const loraKeyRaw = typeof body.lora_key === 'string' ? body.lora_key : (typeof body.loraKey === 'string' ? body.loraKey : '');
+  const loraWeightParsed = typeof body.lora_weight === 'number'
+    ? body.lora_weight
+    : typeof body.loraWeight === 'number'
+      ? body.loraWeight
+      : undefined;
+
+  if (!prompt) {
+    throw new Error('Prompt is required');
+  }
+
+  const endpoint = invokeaiEndpoint || 'http://127.0.0.1:9090';
+  console.log(`[InvokeAI Generate] Connecting to endpoint: ${endpoint}`);
+  console.log(`[InvokeAI Generate] Prompt: ${prompt.substring(0, 100)}...`);
+
+  const availableModels = await fetchModels(endpoint);
+  if (availableModels.length === 0) {
+    throw new Error('No models found on InvokeAI server. Please ensure models are installed.');
+  }
+
+  let selectedModel = availableModels[0];
+  if (model) {
+    const found = availableModels.find(m => m.name === model || m.id === model);
+    if (found) selectedModel = found;
+  } else {
+    const compatibleModel = availableModels.find(m => m.base === 'sd-1' || m.base === 'sdxl');
+    if (compatibleModel) selectedModel = compatibleModel;
+  }
+
+  console.log(`[InvokeAI Generate] Using model: ${selectedModel.name} (${selectedModel.base})`);
+
+  let selectedLora: InvokeAIModel | null = null;
+  const loraLookupKey = typeof loraKeyRaw === 'string' ? loraKeyRaw.trim() : '';
+  if (loraLookupKey) {
+    const loraCandidates = await fetchLoRAModels(endpoint);
+    const found = loraCandidates.find((m) => {
+      const key = typeof m.key === 'string' ? m.key : '';
+      const id = typeof (m as { id?: string }).id === 'string' ? (m as { id?: string }).id : '';
+      return (
+        key === loraLookupKey ||
+        id === loraLookupKey ||
+        (typeof (m as { name?: string }).name === 'string' && (m as { name: string }).name === loraLookupKey)
+      );
+    });
+    if (!found) {
+      const error = new Error(`LoRA not found for "${loraLookupKey}". Refresh models in Session Setup or check Invoke's LoRA installs.`);
+      (error as Error & { status?: number }).status = 400;
+      throw error;
+    }
+    if (found.base && selectedModel.base && found.base !== selectedModel.base) {
+      const error = new Error(`Selected LoRA base '${found.base}' does not match the main model base '${selectedModel.base}'.`);
+      (error as Error & { status?: number }).status = 400;
+      throw error;
+    }
+    selectedLora = found;
+    console.log(`[InvokeAI Generate] Using LoRA: ${selectedLora.name}`);
+  }
+
+  if (selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
+    const error = new Error(`Selected model base '${selectedModel.base}' is not supported by this generator yet. Please choose an SD-1 or SDXL model.`);
+    (error as Error & { status?: number }).status = 400;
+    throw error;
+  }
+
+  if (selectedLora && selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
+    const error = new Error('LoRA image generation currently supports SD-1 and SDXL models only. Please remove the LoRA or choose a supported model.');
+    (error as Error & { status?: number }).status = 400;
+    throw error;
+  }
+
+  const resolvedLoraWeight = typeof loraWeightParsed === 'number' && Number.isFinite(loraWeightParsed)
+    ? Math.max(-2, Math.min(4, loraWeightParsed))
+    : 0.75;
+
+  const { graph, seed: finalSeed } = buildInvokeAIGraph({
+    prompt,
+    model: selectedModel,
+    steps,
+    cfg_scale: guidance_scale,
+    width,
+    height,
+    seed,
+    negative_prompt,
+    scheduler,
+    clip_skip,
+    cfg_rescale_multiplier,
+    ...(selectedLora ? { lora: selectedLora, lora_weight: resolvedLoraWeight } : { lora: null }),
+  });
+
+  console.log(`[InvokeAI Generate] Built graph with seed: ${finalSeed}`);
+
+  return {
+    endpoint,
+    graph,
+    seed: finalSeed,
+    modelName: selectedModel.name,
+    selectedModel,
+    selectedLora,
+  };
+}
+
+export async function enqueueInvokeAIBatch(endpoint: string, graph: GraphBuildResult['graph'], queueId = QUEUE_ID): Promise<string> {
+  const enqueueUrl = `${endpoint}/api/v1/queue/${queueId}/enqueue_batch`;
+  const enqueueBody = {
+    prepend: false,
+    batch: {
+      graph,
+      runs: 1,
+      data: [],
+    },
+  };
+
+  console.log(`[InvokeAI Generate] Enqueueing batch...`);
+
+  const enqueueResponse = await fetch(enqueueUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(enqueueBody),
+  });
+
+  if (!enqueueResponse.ok) {
+    const errorText = await enqueueResponse.text();
+    console.error(`[InvokeAI Generate] Enqueue error: ${enqueueResponse.status}`, errorText);
+    throw new Error(`Failed to enqueue batch: ${enqueueResponse.statusText} - ${errorText}`);
+  }
+
+  const enqueueResult = await enqueueResponse.json();
+  const batchId = enqueueResult.batch?.batch_id || enqueueResult.batch_id;
+  console.log(`[InvokeAI Generate] Enqueued batch ID: ${batchId}`);
+  console.log(`[InvokeAI Generate] Full enqueue response:`, JSON.stringify(enqueueResult, null, 2));
+
+  if (!batchId) {
+    throw new Error(`Failed to get batch_id from enqueue response: ${JSON.stringify(enqueueResult)}`);
+  }
+
+  return batchId;
+}
+
+export async function fetchLatestInvokeAIImage(endpoint: string): Promise<{ imageBase64: string; imageName: string }> {
+  const imagesUrl = `${endpoint}/api/v1/images/`;
+  const imagesResponse = await fetch(imagesUrl);
+
+  if (!imagesResponse.ok) {
+    throw new Error('Failed to fetch generated images');
+  }
+
+  const imagesResult = await imagesResponse.json();
+
+  if (!imagesResult.items || imagesResult.items.length === 0) {
+    throw new Error('No images found after generation');
+  }
+
+  const latestImage = imagesResult.items[0];
+  const imageName = latestImage.image_name;
+  const imageUrl = `${endpoint}/api/v1/images/i/${imageName}/full`;
+  const imageResponse = await fetch(imageUrl);
+
+  if (!imageResponse.ok) {
+    throw new Error(`Failed to download generated image: ${imageResponse.statusText}`);
+  }
+
+  const imageBuffer = await imageResponse.arrayBuffer();
+  const imageBase64 = Buffer.from(imageBuffer).toString('base64');
+  console.log(`[InvokeAI Generate] Successfully generated image: ${imageName}`);
+
+  return { imageBase64, imageName };
+}
+
+export function getInvokeAIErrorResponse(error: unknown) {
+  console.error('[InvokeAI Generate] Error:', error);
+
+  if (error instanceof Error && (error.message.includes('fetch failed') || error.message.includes('ECONNREFUSED'))) {
+    const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    const helpMessage = isProduction
+      ? ' Note: InvokeAI must be accessible from the server.'
+      : ' Make sure InvokeAI is running locally. Start it with `invokeai-web` or use the InvokeAI launcher.';
+    return NextResponse.json(
+      { error: `Cannot connect to InvokeAI: ${error.message}.${helpMessage}` },
+      { status: 503 }
+    );
+  }
+
+  const status = error instanceof Error && typeof (error as Error & { status?: unknown }).status === 'number'
+    ? (error as Error & { status: number }).status
+    : 500;
+
+  return NextResponse.json(
+    { error: error instanceof Error ? error.message : 'Unknown error occurred' },
+    { status }
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      prompt,
-      invokeaiEndpoint,
-      model,
-      steps,
-      guidance_scale,
-      width,
-      height,
-      seed,
-      negative_prompt,
-      scheduler,
-      clip_skip,
-      cfg_rescale_multiplier,
-    } = body;
-
-    const loraKeyRaw = typeof body.lora_key === 'string' ? body.lora_key : (typeof body.loraKey === 'string' ? body.loraKey : '');
-    const loraWeightParsed = typeof body.lora_weight === 'number'
-      ? body.lora_weight
-      : typeof body.loraWeight === 'number'
-        ? body.loraWeight
-        : undefined;
-
-    if (!prompt) {
-      return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
-    }
-
-    // Connect to local InvokeAI instance
-    const endpoint = invokeaiEndpoint || 'http://127.0.0.1:9090';
-    console.log(`[InvokeAI Generate] Connecting to endpoint: ${endpoint}`);
-    console.log(`[InvokeAI Generate] Prompt: ${prompt.substring(0, 100)}...`);
-
-    // Fetch available models to find the correct model object
-    const availableModels = await fetchModels(endpoint);
-    if (availableModels.length === 0) {
-      throw new Error('No models found on InvokeAI server. Please ensure models are installed.');
-    }
-
-    // Select model: use provided model name if available, otherwise default to first
-    let selectedModel = availableModels[0];
-    if (model) {
-      const found = availableModels.find(m => m.name === model || m.id === model);
-      if (found) selectedModel = found;
-    } else {
-      const compatibleModel = availableModels.find(m => m.base === 'sd-1' || m.base === 'sdxl');
-      if (compatibleModel) selectedModel = compatibleModel;
-    }
-
-    console.log(`[InvokeAI Generate] Using model: ${selectedModel.name} (${selectedModel.base})`);
-
-    let selectedLora: InvokeAIModel | null = null;
-    const loraLookupKey = typeof loraKeyRaw === 'string' ? loraKeyRaw.trim() : '';
-    if (loraLookupKey) {
-      const loraCandidates = await fetchLoRAModels(endpoint);
-      const found = loraCandidates.find((m) => {
-        const key = typeof m.key === 'string' ? m.key : '';
-        const id = typeof (m as { id?: string }).id === 'string' ? (m as { id?: string }).id : '';
-        return (
-          key === loraLookupKey ||
-          id === loraLookupKey ||
-          (typeof (m as { name?: string }).name === 'string' && (m as { name: string }).name === loraLookupKey)
-        );
-      });
-      if (!found) {
-        return NextResponse.json(
-          {
-            error: `LoRA not found for "${loraLookupKey}". Refresh models in Session Setup or check Invoke\'s LoRA installs.`,
-          },
-          { status: 400 }
-        );
-      }
-      if (found.base && selectedModel.base && found.base !== selectedModel.base) {
-        return NextResponse.json(
-          {
-            error: `Selected LoRA base '${found.base}' does not match the main model base '${selectedModel.base}'.`,
-            selectedLora: { name: found.name, base: found.base },
-            selectedModel: { name: selectedModel.name, base: selectedModel.base },
-          },
-          { status: 400 }
-        );
-      }
-      selectedLora = found;
-      console.log(`[InvokeAI Generate] Using LoRA: ${selectedLora.name}`);
-    }
-
-    // Some model bases (e.g. SD-2 or tiny/specialty pipelines) require different graph topology.
-    // Fail fast with a clear message rather than returning a generic 500 later.
-    if (selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
-      return NextResponse.json(
-        {
-          error: `Selected model base '${selectedModel.base}' is not supported by this generator yet. Please choose an SD-1 or SDXL model.`,
-          selectedModel: { id: selectedModel.id, name: selectedModel.name, base: selectedModel.base },
-        },
-        { status: 400 }
-      );
-    }
-
-    if (selectedLora && selectedModel.base !== 'sd-1') {
-      return NextResponse.json(
-        {
-          error: 'LoRA image generation currently supports SD-1 models only. Please remove the LoRA or choose an SD-1 model.',
-          selectedLora: { name: selectedLora.name, base: selectedLora.base },
-          selectedModel: { name: selectedModel.name, base: selectedModel.base },
-        },
-        { status: 400 }
-      );
-    }
-
-    // Step 1: Build the graph
-    const resolvedLoraWeight = typeof loraWeightParsed === 'number' && Number.isFinite(loraWeightParsed)
-      ? Math.max(-2, Math.min(4, loraWeightParsed))
-      : 0.75;
-
-    const { graph, seed: finalSeed } = buildInvokeAIGraph({
-      prompt,
-      model: selectedModel, // Pass full model object
-      steps,
-      cfg_scale: guidance_scale,
-      width,
-      height,
-      seed,
-      negative_prompt,
-      scheduler,
-      clip_skip,
-      cfg_rescale_multiplier,
-      ...(selectedLora ? { lora: selectedLora, lora_weight: resolvedLoraWeight } : { lora: null }),
-    });
-
-    console.log(`[InvokeAI Generate] Built graph with seed: ${finalSeed}`);
-
-    // Step 2: Enqueue the batch
-    const enqueueUrl = `${endpoint}/api/v1/queue/${QUEUE_ID}/enqueue_batch`;
-    const enqueueBody = {
-      prepend: false,
-      batch: {
-        graph: graph,
-        runs: 1,
-        data: [], // Empty array - InvokeAI fills this automatically
-      },
-    };
-
-    console.log(`[InvokeAI Generate] Enqueueing batch...`);
-
-    const enqueueResponse = await fetch(enqueueUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(enqueueBody),
-    });
-
-    if (!enqueueResponse.ok) {
-      const errorText = await enqueueResponse.text();
-      console.error(`[InvokeAI Generate] Enqueue error: ${enqueueResponse.status}`, errorText);
-      throw new Error(`Failed to enqueue batch: ${enqueueResponse.statusText} - ${errorText}`);
-    }
-
-    const enqueueResult = await enqueueResponse.json();
-    // InvokeAI returns batch_id inside a 'batch' object
-    const batchId = enqueueResult.batch?.batch_id || enqueueResult.batch_id;
-    console.log(`[InvokeAI Generate] Enqueued batch ID: ${batchId}`);
-    console.log(`[InvokeAI Generate] Full enqueue response:`, JSON.stringify(enqueueResult, null, 2));
-
-    if (!batchId) {
-      throw new Error(`Failed to get batch_id from enqueue response: ${JSON.stringify(enqueueResult)}`);
-    }
-
-    // Step 3: Poll for completion
-    const status = await pollQueueStatus(endpoint, QUEUE_ID, batchId);
+    const prepared = await prepareInvokeAIGeneration(body);
+    const batchId = await enqueueInvokeAIBatch(prepared.endpoint, prepared.graph);
+    const status = await pollQueueStatus(prepared.endpoint, QUEUE_ID, batchId);
 
     if (status.failed > 0) {
       throw new Error('Image generation failed in queue. Check InvokeAI server logs for details.');
@@ -840,67 +1009,16 @@ export async function POST(request: NextRequest) {
       throw new Error('Image generation was canceled');
     }
 
-    // Step 4: Get the generated image
-    // We'll try to get the latest image from the images API
-    // This is a simplified approach - in production you'd track the exact output
-
-    // Alternative: Fetch the latest image that was just created
-    // Since we just generated it, we can get it from the images list
-    const imagesUrl = `${endpoint}/api/v1/images/`;
-    const imagesResponse = await fetch(imagesUrl);
-
-    if (!imagesResponse.ok) {
-      throw new Error('Failed to fetch generated images');
-    }
-
-    const imagesResult = await imagesResponse.json();
-
-    if (!imagesResult.items || imagesResult.items.length === 0) {
-      throw new Error('No images found after generation');
-    }
-
-    // Get the most recent image (first in list)
-    const latestImage = imagesResult.items[0];
-    const imageName = latestImage.image_name;
-
-    // Step 5: Download the image as base64
-    const imageUrl = `${endpoint}/api/v1/images/i/${imageName}/full`;
-    const imageResponse = await fetch(imageUrl);
-
-    if (!imageResponse.ok) {
-      throw new Error(`Failed to download generated image: ${imageResponse.statusText}`);
-    }
-
-    const imageBuffer = await imageResponse.arrayBuffer();
-    const base64Image = Buffer.from(imageBuffer).toString('base64');
-
-    console.log(`[InvokeAI Generate] Successfully generated image: ${imageName}`);
+    const { imageBase64, imageName } = await fetchLatestInvokeAIImage(prepared.endpoint);
 
     return NextResponse.json({
-      image: base64Image,
-      seed: finalSeed,
-      model: selectedModel.name,
+      image: imageBase64,
+      seed: prepared.seed,
+      model: prepared.modelName,
       image_name: imageName,
     });
 
   } catch (error) {
-    console.error('[InvokeAI Generate] Error:', error);
-
-    // Check if it's a connection error
-    if (error instanceof Error && (error.message.includes('fetch failed') || error.message.includes('ECONNREFUSED'))) {
-      const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
-      const helpMessage = isProduction
-        ? ' Note: InvokeAI must be accessible from the server.'
-        : ' Make sure InvokeAI is running locally. Start it with `invokeai-web` or use the InvokeAI launcher.';
-      return NextResponse.json(
-        { error: `Cannot connect to InvokeAI: ${error.message}.${helpMessage}` },
-        { status: 503 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error occurred' },
-      { status: 500 }
-    );
+    return getInvokeAIErrorResponse(error);
   }
 }
