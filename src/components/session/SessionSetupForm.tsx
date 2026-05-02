@@ -38,7 +38,7 @@ import { getNextSelectedVoiceId } from '@/lib/tts-selection';
 import { isLanguageSupported } from '@/lib/model-language-support';
 import { isTTSModelLanguageSupported } from '@/lib/tts_models';
 // import { AlertTriangle, Info, Check, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
-import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, Play } from "lucide-react";
+import { AlertTriangle, Info, Check, X, Download, Save, ChevronDown, ChevronUp, Play, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,
@@ -64,6 +64,19 @@ interface AgentTTSSettings {
     selectedTtsModelId?: string;
     ttsApiModelId?: string;
 }
+
+type LLMTestAgent = 'A' | 'B';
+type LLMTestState = {
+    status: 'idle' | 'streaming' | 'success' | 'error';
+    response: string;
+    error: string | null;
+};
+
+const emptyLLMTestState: LLMTestState = {
+    status: 'idle',
+    response: '',
+    error: null,
+};
 
 // --- SessionConfig Interface ---
 interface SessionConfig {
@@ -838,6 +851,10 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     const [agentA_llm, setAgentA_llm] = useState<string>('');
     const [agentB_llm, setAgentB_llm] = useState<string>('');
+    const [llmTestStates, setLlmTestStates] = useState<Record<LLMTestAgent, LLMTestState>>({
+        A: emptyLLMTestState,
+        B: emptyLLMTestState,
+    });
     const [savedKeyStatus, setSavedKeyStatus] = useState<Record<string, boolean>>({});
     const [isLoadingStatus, setIsLoadingStatus] = useState(true);
     const [statusError, setStatusError] = useState<string | null>(null);
@@ -1149,6 +1166,133 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             }
         }
     }, [elevenLabsProviderInfo]);
+
+    const resetLLMTestState = useCallback((agent: LLMTestAgent) => {
+        setLlmTestStates(prev => ({ ...prev, [agent]: emptyLLMTestState }));
+    }, []);
+
+    useEffect(() => {
+        resetLLMTestState('A');
+    }, [agentA_llm, resetLLMTestState]);
+
+    useEffect(() => {
+        resetLLMTestState('B');
+    }, [agentB_llm, resetLLMTestState]);
+
+    const updateLLMTestState = useCallback((agent: LLMTestAgent, patch: Partial<LLMTestState>) => {
+        setLlmTestStates(prev => ({
+            ...prev,
+            [agent]: { ...prev[agent], ...patch },
+        }));
+    }, []);
+
+    const handleTestLLM = useCallback(async (agent: LLMTestAgent) => {
+        if (!user) {
+            updateLLMTestState(agent, {
+                status: 'error',
+                response: '',
+                error: 'Please sign in before testing an LLM.',
+            });
+            return;
+        }
+
+        const modelId = agent === 'A' ? agentA_llm : agentB_llm;
+        if (!modelId) {
+            updateLLMTestState(agent, {
+                status: 'error',
+                response: '',
+                error: `Please select a model for Agent ${agent} first.`,
+            });
+            return;
+        }
+
+        updateLLMTestState(agent, { status: 'streaming', response: '', error: null });
+
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch('/api/llm/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+                body: JSON.stringify({
+                    modelId,
+                    ollamaEndpoint: ollamaEndpoint.trim() || undefined,
+                }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = `LLM test failed (${response.status} ${response.statusText}).`;
+                try {
+                    const errorData = await response.json();
+                    if (typeof errorData.error === 'string') errorMessage = errorData.error;
+                } catch {
+                    // Keep the HTTP status fallback.
+                }
+                throw new Error(errorMessage);
+            }
+
+            const reader = response.body?.getReader();
+            if (!reader) throw new Error('No response body returned by the LLM test.');
+
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let fullResponse = '';
+            let streamFinished = false;
+
+            while (!streamFinished) {
+                const { done, value } = await reader.read();
+                if (value) buffer += decoder.decode(value, { stream: !done });
+                if (done) buffer += decoder.decode();
+
+                const lines = buffer.split('\n');
+                buffer = done ? '' : (lines.pop() || '');
+
+                for (const line of lines) {
+                    if (!line.startsWith('data: ')) continue;
+                    const data = line.slice(6).trim();
+                    if (!data) continue;
+                    if (data === '[DONE]') {
+                        streamFinished = true;
+                        break;
+                    }
+
+                    try {
+                        const parsed = JSON.parse(data);
+                        if (typeof parsed.token === 'string') {
+                            fullResponse += parsed.token;
+                            updateLLMTestState(agent, {
+                                status: 'streaming',
+                                response: fullResponse,
+                                error: null,
+                            });
+                        } else if (typeof parsed.error === 'string') {
+                            throw new Error(parsed.error);
+                        }
+                    } catch (parseError) {
+                        if (parseError instanceof Error && parseError.message) {
+                            throw parseError;
+                        }
+                    }
+                }
+
+                if (done) break;
+            }
+
+            updateLLMTestState(agent, {
+                status: 'success',
+                response: fullResponse.trim() || '(The model returned an empty response.)',
+                error: null,
+            });
+        } catch (error) {
+            updateLLMTestState(agent, {
+                status: 'error',
+                response: '',
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+    }, [agentA_llm, agentB_llm, ollamaEndpoint, updateLLMTestState, user]);
 
     useEffect(() => {
         if (agentATTSSettings.provider === 'google-cloud') {
@@ -1628,6 +1772,79 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         }
     }
 
+    const renderLLMTestPreview = (agent: LLMTestAgent) => {
+        const state = llmTestStates[agent];
+        if (state.status === 'idle') return null;
+
+        const modelId = agent === 'A' ? agentA_llm : agentB_llm;
+        const selectedLLM = modelId ? getLLMInfoById(modelId) : null;
+        const heading = selectedLLM?.name || `Agent ${agent} model`;
+
+        return (
+            <div
+                className={`rounded-md border p-3 text-left text-sm ${state.status === 'error'
+                    ? 'border-red-200 bg-red-50 text-red-900 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-100'
+                    : 'border-border bg-muted/40'
+                    }`}
+                aria-live="polite"
+            >
+                <div className="mb-1 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                    {state.status === 'streaming' && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                    {state.status === 'success' && <Check className="h-3.5 w-3.5 text-green-700 dark:text-green-300" />}
+                    {state.status === 'error' && <X className="h-3.5 w-3.5 text-red-700 dark:text-red-300" />}
+                    <span>{state.status === 'error' ? `${heading} test failed` : `${heading} preview`}</span>
+                </div>
+                {state.status === 'error' ? (
+                    <p className="whitespace-pre-wrap break-words">{state.error}</p>
+                ) : (
+                    <p className="whitespace-pre-wrap break-words">
+                        {state.response}
+                        {state.status === 'streaming' && <span className="ml-0.5 animate-pulse">|</span>}
+                    </p>
+                )}
+            </div>
+        );
+    };
+
+    const renderLLMSelectorWithTest = (
+        agent: LLMTestAgent,
+        value: string,
+        onChange: (id: string) => void,
+        label: string,
+        placeholder: string
+    ) => {
+        const isTesting = llmTestStates[agent].status === 'streaming';
+
+        return (
+            <div className="space-y-2">
+                <div className="flex items-end gap-2">
+                    <div className="min-w-0 flex-1">
+                        <LLMSelector
+                            value={value}
+                            onChange={onChange}
+                            disabled={isLoading || isLoadingStatus || !user}
+                            label={label}
+                            placeholder={placeholder}
+                        />
+                    </div>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="mb-0 h-10 w-10 shrink-0"
+                        onClick={() => handleTestLLM(agent)}
+                        disabled={isTesting || isLoadingStatus || !user || !value}
+                        title={`Test Agent ${agent} LLM`}
+                        aria-label={`Test Agent ${agent} LLM`}
+                    >
+                        {isTesting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                    </Button>
+                </div>
+                {renderLLMTestPreview(agent)}
+            </div>
+        );
+    };
+
     const renderTTSConfigForAgent = (
         agentIdentifier: 'A' | 'B',
         currentAgentTTSSettings: AgentTTSSettings,
@@ -2044,25 +2261,21 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     <div className="space-y-2">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Agent A LLM Selector */}
-                            <div className="space-y-2">
-                                <LLMSelector
-                                    value={agentA_llm}
-                                    onChange={setAgentA_llm}
-                                    disabled={isLoading || isLoadingStatus || !user}
-                                    label={t?.sessionSetupForm?.agentAModel || ''}
-                                    placeholder={t?.sessionSetupForm?.selectLLMForAgentA || ''}
-                                />
-                            </div>
+                            {renderLLMSelectorWithTest(
+                                'A',
+                                agentA_llm,
+                                setAgentA_llm,
+                                t?.sessionSetupForm?.agentAModel || '',
+                                t?.sessionSetupForm?.selectLLMForAgentA || ''
+                            )}
                             {/* Agent B LLM Selector */}
-                            <div className="space-y-2">
-                                <LLMSelector
-                                    value={agentB_llm}
-                                    onChange={setAgentB_llm}
-                                    disabled={isLoading || isLoadingStatus || !user}
-                                    label={t?.sessionSetupForm?.agentBModel || ''}
-                                    placeholder={t?.sessionSetupForm?.selectLLMForAgentB || ''}
-                                />
-                            </div>
+                            {renderLLMSelectorWithTest(
+                                'B',
+                                agentB_llm,
+                                setAgentB_llm,
+                                t?.sessionSetupForm?.agentBModel || '',
+                                t?.sessionSetupForm?.selectLLMForAgentB || ''
+                            )}
                         </div>
                         {/* Explanation Notes - Only visible on mobile/touch devices */}
                         <div className="md:hidden space-y-1">
