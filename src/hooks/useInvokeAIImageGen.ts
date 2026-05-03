@@ -61,18 +61,106 @@ interface QueueItem {
     ollamaEndpoint: string;
 }
 
+interface PromptQueueItem {
+    promptKey: string;
+    paragraph: string;
+    promptLlmId: string;
+    promptSystemMessage: string;
+    ollamaEndpoint: string;
+    resolve: (prompt: string | null) => void;
+}
+
 export function useInvokeAIImageGen(conversationId: string | null, userId: string | null) {
     const processingRef = useRef<Set<string>>(new Set()); // Track which messages are being processed
     const generationQueueRef = useRef<QueueItem[]>([]);
     const isGeneratingRef = useRef(false);
-    const promptCacheRef = useRef<Map<string, string | null>>(new Map());
+    const promptCacheRef = useRef<Map<string, string>>(new Map());
     const promptInFlightRef = useRef<Map<string, Promise<string | null>>>(new Map());
+    const promptQueueRef = useRef<PromptQueueItem[]>([]);
+    const queuedPromptKeysRef = useRef<Set<string>>(new Set());
+    const isPromptWorkerRunningRef = useRef(false);
     const resetGenerationState = useCallback(() => {
         generationQueueRef.current = [];
         processingRef.current.clear();
         promptCacheRef.current.clear();
         promptInFlightRef.current.clear();
+        promptQueueRef.current = [];
+        queuedPromptKeysRef.current.clear();
+        isPromptWorkerRunningRef.current = false;
     }, []);
+
+    const runPromptQueue = useCallback(async () => {
+        if (isPromptWorkerRunningRef.current) return;
+        isPromptWorkerRunningRef.current = true;
+
+        while (promptQueueRef.current.length > 0) {
+            const promptQueueItem = promptQueueRef.current.shift();
+            if (!promptQueueItem) break;
+
+            queuedPromptKeysRef.current.delete(promptQueueItem.promptKey);
+
+            try {
+                const generatedPrompt = await generateImagePrompt(
+                    promptQueueItem.paragraph,
+                    promptQueueItem.promptLlmId,
+                    promptQueueItem.promptSystemMessage,
+                    promptQueueItem.ollamaEndpoint
+                );
+                const trimmedPrompt = generatedPrompt?.trim() || null;
+
+                if (trimmedPrompt) {
+                    promptCacheRef.current.set(promptQueueItem.promptKey, trimmedPrompt);
+                }
+
+                promptQueueItem.resolve(trimmedPrompt);
+            } catch (error) {
+                console.error('[InvokeAI ImageGen] Sequential prompt worker failed:', error);
+                promptQueueItem.resolve(null);
+            } finally {
+                promptInFlightRef.current.delete(promptQueueItem.promptKey);
+            }
+        }
+
+        isPromptWorkerRunningRef.current = false;
+
+        if (promptQueueRef.current.length > 0) {
+            void runPromptQueue();
+        }
+    }, []);
+
+    const enqueuePromptGeneration = useCallback((
+        promptKey: string,
+        paragraph: string,
+        imageGenSettings: NonNullable<ConversationData['imageGenSettings']>,
+        ollamaEndpoint: string
+    ): Promise<string | null> => {
+        const cachedPrompt = promptCacheRef.current.get(promptKey);
+        if (cachedPrompt) {
+            return Promise.resolve(cachedPrompt);
+        }
+
+        const inFlightPrompt = promptInFlightRef.current.get(promptKey);
+        if (inFlightPrompt) {
+            return inFlightPrompt;
+        }
+
+        const promptPromise = new Promise<string | null>((resolve) => {
+            promptQueueRef.current.push({
+                promptKey,
+                paragraph,
+                promptLlmId: imageGenSettings.promptLlm,
+                promptSystemMessage: imageGenSettings.promptSystemMessage,
+                ollamaEndpoint,
+                resolve,
+            });
+            queuedPromptKeysRef.current.add(promptKey);
+        });
+
+        promptInFlightRef.current.set(promptKey, promptPromise);
+        void runPromptQueue();
+
+        return promptPromise;
+    }, [runPromptQueue]);
 
     const processGenerationQueue = useCallback(async () => {
         if (isGeneratingRef.current) return;
@@ -120,7 +208,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     const promptKey = `${messageId}:${targetParagraphIndex}`;
 
                     if (promptCacheRef.current.has(promptKey)) {
-                        return promptCacheRef.current.get(promptKey) ?? null;
+                        return promptCacheRef.current.get(promptKey) || null;
                     }
 
                     const inFlightPrompt = promptInFlightRef.current.get(promptKey);
@@ -128,20 +216,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         return inFlightPrompt;
                     }
 
-                    const promptPromise = generateImagePrompt(
-                        targetParagraph,
-                        imageGenSettings.promptLlm,
-                        imageGenSettings.promptSystemMessage,
-                        ollamaEndpoint
-                    ).then((generatedPrompt) => {
-                        promptCacheRef.current.set(promptKey, generatedPrompt);
-                        return generatedPrompt;
-                    }).finally(() => {
-                        promptInFlightRef.current.delete(promptKey);
-                    });
-
-                    promptInFlightRef.current.set(promptKey, promptPromise);
-                    return promptPromise;
+                    return enqueuePromptGeneration(promptKey, targetParagraph, imageGenSettings, ollamaEndpoint);
                 };
 
                 // Step 1: Ensure prompt for current paragraph is ready
@@ -163,9 +238,18 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     for (let offset = 1; offset <= lookaheadLimit; offset++) {
                         const nextParagraphIndex = paragraphIndex + offset;
                         if (nextParagraphIndex >= segmentTexts.length) break;
-                        void getOrCreatePrompt(nextParagraphIndex).catch((prefetchError) => {
-                            console.warn(`[InvokeAI ImageGen] Prompt lookahead failed for segment ${nextParagraphIndex}:`, prefetchError);
-                        });
+                        const nextPromptKey = `${messageId}:${nextParagraphIndex}`;
+                        if (!promptCacheRef.current.has(nextPromptKey) &&
+                            !promptInFlightRef.current.has(nextPromptKey) &&
+                            !queuedPromptKeysRef.current.has(nextPromptKey)) {
+                            void getOrCreatePrompt(nextParagraphIndex).then((prefetchedPrompt) => {
+                                if (!prefetchedPrompt) {
+                                    console.warn(`[InvokeAI ImageGen] Prompt lookahead returned no prompt for segment ${nextParagraphIndex}`);
+                                }
+                            }).catch((prefetchError) => {
+                                console.warn(`[InvokeAI ImageGen] Prompt lookahead failed for segment ${nextParagraphIndex}:`, prefetchError);
+                            });
+                        }
                     }
                 }
 
@@ -241,12 +325,18 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                             promptInFlightRef.current.delete(key);
                         }
                     }
+                    promptQueueRef.current = promptQueueRef.current.filter((item) => !item.promptKey.startsWith(promptKeyPrefix));
+                    for (const key of queuedPromptKeysRef.current.keys()) {
+                        if (key.startsWith(promptKeyPrefix)) {
+                            queuedPromptKeysRef.current.delete(key);
+                        }
+                    }
                 }
             }
         }
 
         isGeneratingRef.current = false;
-    }, [conversationId]);
+    }, [conversationId, enqueuePromptGeneration]);
 
     useEffect(() => {
         if (!conversationId || !userId) {
