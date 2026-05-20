@@ -26,6 +26,8 @@ type ExportJob = {
     errorMessage?: string;
 };
 
+const STALE_ACTIVE_JOB_MS = 10 * 60 * 1000;
+
 export default function DataExportPage() {
     const { user } = useAuth();
     const [jobs, setJobs] = useState<ExportJob[]>([]);
@@ -58,7 +60,7 @@ export default function DataExportPage() {
     }, [user]);
 
     const activeJob = useMemo(
-        () => jobs.find((job) => job.status === 'queued' || job.status === 'processing') ?? null,
+        () => jobs.find((job) => (job.status === 'queued' || job.status === 'processing') && !isStaleActiveJob(job)) ?? null,
         [jobs],
     );
 
@@ -91,6 +93,34 @@ export default function DataExportPage() {
             }
         } catch (exportError) {
             setError(exportError instanceof Error ? exportError.message : 'Unable to queue export.');
+        } finally {
+            setIsRequesting(false);
+        }
+    };
+
+    const handleRetry = async (job: ExportJob) => {
+        if (!user) return;
+
+        setIsRequesting(true);
+        setError(null);
+
+        try {
+            const idToken = await user.getIdToken(true);
+            const response = await fetch('/api/account/export/jobs', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${idToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ retryJobId: job.id }),
+            });
+
+            if (!response.ok) {
+                const payload = await response.json().catch(() => null) as { error?: string } | null;
+                throw new Error(payload?.error || 'Unable to retry export.');
+            }
+        } catch (retryError) {
+            setError(retryError instanceof Error ? retryError.message : 'Unable to retry export.');
         } finally {
             setIsRequesting(false);
         }
@@ -156,7 +186,7 @@ export default function DataExportPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        You can close this tab and come back later; the latest status will appear below. Raw API-key values are not included.
+                        You can close this tab and come back later; the latest status will appear below. Raw API-key values are not included, and large media files are listed with temporary download links.
                     </p>
                     <Button onClick={handleRequestExport} disabled={!user || isRequesting || Boolean(activeJob)} className="gap-2">
                         <Download className="h-4 w-4" aria-hidden="true" />
@@ -178,6 +208,7 @@ export default function DataExportPage() {
                     ) : (
                         jobs.map((job) => {
                             const expired = job.expiresAt ? job.expiresAt.toDate().getTime() <= Date.now() : false;
+                            const retryable = job.status === 'failed' || isStaleActiveJob(job);
                             return (
                                 <div key={job.id} className="flex flex-col gap-3 rounded-md border p-4 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="space-y-1">
@@ -201,6 +232,15 @@ export default function DataExportPage() {
                                             {downloadingJobId === job.id ? 'Downloading...' : 'Download'}
                                         </Button>
                                     )}
+                                    {retryable && (
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => handleRetry(job)}
+                                            disabled={isRequesting}
+                                        >
+                                            {isRequesting ? 'Retrying...' : 'Retry'}
+                                        </Button>
+                                    )}
                                 </div>
                             );
                         })
@@ -209,6 +249,12 @@ export default function DataExportPage() {
             </Card>
         </div>
     );
+}
+
+function isStaleActiveJob(job: ExportJob): boolean {
+    if (job.status !== 'queued' && job.status !== 'processing') return false;
+    const timestamp = getTimestamp(job.requestedAt);
+    return timestamp > 0 && Date.now() - timestamp > STALE_ACTIVE_JOB_MS;
 }
 
 function getTimestamp(value?: Timestamp): number {
