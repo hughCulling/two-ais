@@ -7,6 +7,8 @@ import { sanitizeLocalPreferences } from '@/lib/data-export';
 
 export const dynamic = 'force-dynamic';
 
+const STALE_ACTIVE_JOB_MS = 10 * 60 * 1000;
+
 let firebaseAdminApp: App | null = null;
 let dbAdmin: Firestore | null = null;
 let functionsAdmin: Functions | null = null;
@@ -69,6 +71,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized: Invalid token.' }, { status: 401 });
     }
 
+    let requestBody: unknown = {};
+    try {
+        requestBody = await request.json();
+    } catch {
+        requestBody = {};
+    }
+
     const existingJobs = await dbAdmin.collection('exportJobs')
         .where('userId', '==', decodedToken.uid)
         .get();
@@ -79,18 +88,75 @@ export async function POST(request: NextRequest) {
 
     if (existingActiveJob) {
         const doc = existingActiveJob;
-        return NextResponse.json({
-            jobId: doc.id,
-            status: doc.data().status,
-            reusedExistingJob: true,
-        }, { status: 200 });
+        const data = doc.data();
+        const updatedAt = data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : 0;
+        const isStale = updatedAt > 0 && Date.now() - updatedAt > STALE_ACTIVE_JOB_MS;
+
+        if (isStale) {
+            await doc.ref.update({
+                status: 'failed',
+                updatedAt: Timestamp.now(),
+                errorMessage: 'Marked failed because the export job was queued for too long without being processed. You can request a new export.',
+            });
+        } else {
+            return NextResponse.json({
+                jobId: doc.id,
+                status: data.status,
+                reusedExistingJob: true,
+            }, { status: 200 });
+        }
     }
 
-    let requestBody: unknown = {};
-    try {
-        requestBody = await request.json();
-    } catch {
-        requestBody = {};
+    const retryJobId = typeof requestBody === 'object' && requestBody !== null
+        ? (requestBody as Record<string, unknown>).retryJobId
+        : undefined;
+
+    if (typeof retryJobId === 'string' && retryJobId.trim()) {
+        const retryRef = dbAdmin.collection('exportJobs').doc(retryJobId.trim());
+        const retrySnapshot = await retryRef.get();
+        if (!retrySnapshot.exists) {
+            return NextResponse.json({ error: 'Export job not found.' }, { status: 404 });
+        }
+
+        const retryData = retrySnapshot.data();
+        if (!retryData || retryData.userId !== decodedToken.uid) {
+            return NextResponse.json({ error: 'Forbidden.' }, { status: 403 });
+        }
+
+        const retryStatus = retryData.status;
+        const retryUpdatedAt = retryData.updatedAt instanceof Timestamp ? retryData.updatedAt.toMillis() : 0;
+        const canRetry = retryStatus === 'failed'
+            || (retryStatus === 'queued' && retryUpdatedAt > 0 && Date.now() - retryUpdatedAt > STALE_ACTIVE_JOB_MS);
+
+        if (!canRetry) {
+            return NextResponse.json({ error: 'This export is not ready to retry yet.' }, { status: 409 });
+        }
+
+        await retryRef.update({
+            status: 'queued',
+            updatedAt: Timestamp.now(),
+            errorMessage: null,
+        });
+
+        try {
+            await functionsAdmin.taskQueue<{ jobId: string }>('processDataExport').enqueue({ jobId: retryRef.id });
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unable to enqueue export job.';
+            await retryRef.update({
+                status: 'failed',
+                updatedAt: Timestamp.now(),
+                errorMessage,
+            });
+            console.error('Failed to enqueue export retry:', error);
+            return NextResponse.json({ error: `Unable to retry export job. ${errorMessage}` }, { status: 500 });
+        }
+
+        return NextResponse.json({
+            jobId: retryRef.id,
+            status: 'queued',
+            reusedExistingJob: true,
+            retried: true,
+        }, { status: 202 });
     }
 
     const localPreferences = sanitizeLocalPreferences(
