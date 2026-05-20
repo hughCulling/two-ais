@@ -45,6 +45,13 @@ service cloud.firestore {
       }
     }
 
+    // Users can inspect their own export jobs, but only trusted server code creates
+    // or mutates them.
+    match /exportJobs/{jobId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if false;
+    }
+
     // Access to any other path not explicitly matched remains denied by default.
   }
 }

@@ -12,6 +12,7 @@ import { getTTSInputChunks } from "./tts_utils";
 import { getBackendTTSModelById } from "./tts_models";
 import { onRequest } from "firebase-functions/v2/https";
 import { triggerAgentResponse } from "./agentOrchestrator";
+export { processDataExport } from "./dataExport";
 
 // --- Initialization of Firebase Admin and Clients ---
 if (admin.apps.length === 0) {
