@@ -20,6 +20,7 @@ export default function SettingsSidebar() {
         { name: t.settings.sections.language, href: `/${language.code}/app/settings/language` },
         { name: t.settings.sections.apiKeys, href: `/${language.code}/app/settings/api-key` },
         { name: t.settings.sections.sessionPreset, href: `/${language.code}/app/settings/session-preset` },
+        { name: 'Data Export', href: `/${language.code}/app/settings/data-export` },
         // Add more settings links here later (e.g., Profile, Billing)
         // { name: 'Profile', href: '/settings/profile' },
     ];

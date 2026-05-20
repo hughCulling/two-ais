@@ -52,6 +52,7 @@
     "date-fns": "^4.1.0",
     "firebase": "^11.10.0",
     "firebase-admin": "^13.2.0",
+    "jszip": "^3.10.1",
     "langchain": "^0.3.21",
     "lucide-react": "^0.488.0",
     "next": "15.2.8",
