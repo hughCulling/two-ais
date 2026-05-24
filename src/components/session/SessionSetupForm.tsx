@@ -54,6 +54,15 @@ import { saveSessionPreset, loadSessionPreset, SessionPreset } from '@/lib/fireb
 // import { cn } from "@/lib/utils";
 // import { AVAILABLE_IMAGE_MODELS, ImageModelQuality, ImageModelSize, ImageAspectRatio } from '@/lib/image_models';
 import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
+import {
+    DEFAULT_IMAGE_GENERATION_PROMPT,
+    DEFAULT_IMAGE_SEARCH_PROMPT,
+    IMAGE_SEARCH_SIZE_LABELS,
+    type ImageMediaProvider,
+    type ImageSearchOrientation,
+    type ImageSearchSize,
+    type ImageSearchType,
+} from '@/lib/image-media';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'localai';
@@ -92,8 +101,8 @@ interface SessionConfig {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        invokeaiEndpoint: string;
+        provider: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -111,6 +120,9 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 }
 
@@ -154,7 +166,7 @@ const INVOKEAI_SCHEDULERS: { id: string; label: string }[] = [
     { id: 'uni_pc_bh2', label: 'UniPC BH2' },
 ];
 
-const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral'];
+const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral', 'pixabay'];
 
 const ANY_OPENAI_REQUIRES_ORG_VERIFICATION = getAllAvailableLLMs().some(
     llm => llm.provider === 'OpenAI' && llm.requiresOrgVerification
@@ -911,8 +923,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
 
     // --- Image Generation State ---
     const [imageGenEnabled, setImageGenEnabled] = useState(false);
+    const [imageMediaProvider, setImageMediaProvider] = useState<ImageMediaProvider>('invokeai');
     const [selectedPromptLlm, setSelectedPromptLlm] = useState<string>('');
-    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
+    const [imagePromptSystemMessage, setImagePromptSystemMessage] = useState<string>(t?.sessionSetupForm?.defaultImagePromptSystemMessage || DEFAULT_IMAGE_GENERATION_PROMPT);
     const [invokeaiSelectedModel, setInvokeaiSelectedModel] = useState<string>('');
     const [invokeaiNegativePrompt, setInvokeaiNegativePrompt] = useState<string>('');
     const [invokeaiSteps, setInvokeaiSteps] = useState<number>(20);
@@ -926,6 +939,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
     const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence'>('paragraph');
     const [panoramaMode, setPanoramaMode] = useState<boolean>(false);
+    const [imageSearchOrientation, setImageSearchOrientation] = useState<ImageSearchOrientation>('landscape');
+    const [imageSearchSize, setImageSearchSize] = useState<ImageSearchSize>('medium');
+    const [imageSearchType, setImageSearchType] = useState<ImageSearchType>('photo');
+
+    const handleImageMediaProviderChange = (provider: ImageMediaProvider) => {
+        setImageMediaProvider(provider);
+        setImagePromptSystemMessage(prev => {
+            const trimmed = prev.trim();
+            if (provider === 'pixabay' && (trimmed === DEFAULT_IMAGE_GENERATION_PROMPT || trimmed === (t?.sessionSetupForm?.defaultImagePromptSystemMessage || '').trim())) {
+                return DEFAULT_IMAGE_SEARCH_PROMPT;
+            }
+            if (provider === 'invokeai' && trimmed === DEFAULT_IMAGE_SEARCH_PROMPT) {
+                return t?.sessionSetupForm?.defaultImagePromptSystemMessage || DEFAULT_IMAGE_GENERATION_PROMPT;
+            }
+            return prev;
+        });
+        if (provider === 'pixabay') {
+            setPanoramaMode(false);
+        }
+    };
 
     // Update quality/size when model changes
     // useEffect(() => {
@@ -1362,13 +1395,18 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         // Image generation validation
         let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
         if (imageGenEnabled) {
-            if (!customInvokeaiAvailable || !invokeaiEndpoint.trim()) {
-                alert('Please verify your InvokeAI endpoint above before enabling image generation.');
-                return;
-            }
+            if (imageMediaProvider === 'invokeai') {
+                if (!customInvokeaiAvailable || !invokeaiEndpoint.trim()) {
+                    alert('Please verify your InvokeAI endpoint above before enabling image generation.');
+                    return;
+                }
 
-            if (!invokeaiSelectedModel) {
-                alert('Please select an InvokeAI model.');
+                if (!invokeaiSelectedModel) {
+                    alert('Please select an InvokeAI model.');
+                    return;
+                }
+            } else if (imageMediaProvider === 'pixabay' && !savedKeyStatus.pixabay) {
+                alert('Missing required Pixabay API key. Please add it in Settings.');
                 return;
             }
 
@@ -1392,35 +1430,48 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 }
             }
 
-            imageGenSettings = {
+            const commonImageSettings = {
                 enabled: true,
-                provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
-                invokeaiEndpoint: invokeaiEndpoint,
-                invokeaiModel: invokeaiSelectedModel,
-                negativePrompt: invokeaiNegativePrompt.trim() || undefined,
-                steps: invokeaiSteps,
-                guidanceScale: invokeaiGuidanceScale,
-                width: invokeaiWidth,
-                height: invokeaiHeight,
-                seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
-                scheduler: invokeaiScheduler.trim() || undefined,
-                clipSkip: invokeaiClipSkip,
-                cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                 promptLlm: selectedPromptLlm,
                 promptSystemMessage: imagePromptSystemMessage,
                 promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                 mediaGranularity,
-                panoramaMode,
-                ...(invokeaiSelectedLoraKey.trim()
-                    ? {
-                        invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
-                        invokeaiLoraWeight:
-                            typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
-                                ? invokeaiLoraWeight
-                                : 0.75,
-                    }
-                    : {}),
             };
+
+            imageGenSettings = imageMediaProvider === 'invokeai'
+                ? {
+                    ...commonImageSettings,
+                    provider: "invokeai",
+                    invokeaiEndpoint: invokeaiEndpoint,
+                    invokeaiModel: invokeaiSelectedModel,
+                    negativePrompt: invokeaiNegativePrompt.trim() || undefined,
+                    steps: invokeaiSteps,
+                    guidanceScale: invokeaiGuidanceScale,
+                    width: invokeaiWidth,
+                    height: invokeaiHeight,
+                    seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
+                    scheduler: invokeaiScheduler.trim() || undefined,
+                    clipSkip: invokeaiClipSkip,
+                    cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
+                    panoramaMode,
+                    ...(invokeaiSelectedLoraKey.trim()
+                        ? {
+                            invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
+                            invokeaiLoraWeight:
+                                typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
+                                    ? invokeaiLoraWeight
+                                    : 0.75,
+                        }
+                        : {}),
+                }
+                : {
+                    ...commonImageSettings,
+                    provider: "pixabay",
+                    panoramaMode: false,
+                    searchOrientation: imageSearchOrientation,
+                    searchSize: imageSearchSize,
+                    searchImageType: imageSearchType,
+                };
         }
 
         // ***FIX: Define a type-safe constant for the disabled state***
@@ -1577,35 +1628,50 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 initialSystemPrompt,
                 localaiEndpoint: localaiEndpoint.trim() || undefined,
                 lookaheadLimit,
-                imageGenSettings: imageGenEnabled ? {
-                    enabled: true,
-                    provider: "invokeai", // Signal to backend that InvokeAI (client-side) handles image generation
-                    invokeaiEndpoint: invokeaiEndpoint,
-                    invokeaiModel: invokeaiSelectedModel,
-                    negativePrompt: invokeaiNegativePrompt.trim() || undefined,
-                    steps: invokeaiSteps,
-                    guidanceScale: invokeaiGuidanceScale,
-                    width: invokeaiWidth,
-                    height: invokeaiHeight,
-                    seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
-                    scheduler: invokeaiScheduler.trim() || undefined,
-                    clipSkip: invokeaiClipSkip,
-                    cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
-                    promptLlm: selectedPromptLlm,
-                    promptSystemMessage: imagePromptSystemMessage,
-                    promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
-                    mediaGranularity,
-                    panoramaMode,
-                    ...(invokeaiSelectedLoraKey.trim()
+                imageGenSettings: imageGenEnabled ? (
+                    imageMediaProvider === 'invokeai'
                         ? {
-                            invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
-                            invokeaiLoraWeight:
-                                typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
-                                    ? invokeaiLoraWeight
-                                    : 0.75,
+                            enabled: true,
+                            provider: "invokeai",
+                            invokeaiEndpoint: invokeaiEndpoint,
+                            invokeaiModel: invokeaiSelectedModel,
+                            negativePrompt: invokeaiNegativePrompt.trim() || undefined,
+                            steps: invokeaiSteps,
+                            guidanceScale: invokeaiGuidanceScale,
+                            width: invokeaiWidth,
+                            height: invokeaiHeight,
+                            seed: invokeaiSeed.trim() ? Number(invokeaiSeed.trim()) : undefined,
+                            scheduler: invokeaiScheduler.trim() || undefined,
+                            clipSkip: invokeaiClipSkip,
+                            cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
+                            promptLlm: selectedPromptLlm,
+                            promptSystemMessage: imagePromptSystemMessage,
+                            promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
+                            mediaGranularity,
+                            panoramaMode,
+                            ...(invokeaiSelectedLoraKey.trim()
+                                ? {
+                                    invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
+                                    invokeaiLoraWeight:
+                                        typeof invokeaiLoraWeight === 'number' && Number.isFinite(invokeaiLoraWeight)
+                                            ? invokeaiLoraWeight
+                                            : 0.75,
+                                }
+                                : {}),
                         }
-                        : {}),
-                } : undefined,
+                        : {
+                            enabled: true,
+                            provider: "pixabay",
+                            promptLlm: selectedPromptLlm,
+                            promptSystemMessage: imagePromptSystemMessage,
+                            promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
+                            mediaGranularity,
+                            panoramaMode: false,
+                            searchOrientation: imageSearchOrientation,
+                            searchSize: imageSearchSize,
+                            searchImageType: imageSearchType,
+                        }
+                ) : undefined,
                 collapseStates: {
                     cardDescription: collapseCardDescription,
                     initialPromptDescription: collapseInitialPromptDescription,
@@ -1668,7 +1734,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             // Load InvokeAI image generation settings if they exist
             if (preset.imageGenSettings?.enabled) {
                 setImageGenEnabled(true);
-                setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint);
+                const presetProvider = (preset.imageGenSettings.provider === 'pixabay' ? 'pixabay' : 'invokeai') as ImageMediaProvider;
+                setImageMediaProvider(presetProvider);
+                setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint || '');
                 setInvokeaiSelectedModel(preset.imageGenSettings.invokeaiModel || '');
                 setInvokeaiNegativePrompt(preset.imageGenSettings.negativePrompt || '');
                 setInvokeaiSteps(preset.imageGenSettings.steps ?? 20);
@@ -1681,14 +1749,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setInvokeaiClipSkip(preset.imageGenSettings.clipSkip ?? 0);
                 setInvokeaiCfgRescaleMultiplier(preset.imageGenSettings.cfgRescaleMultiplier ?? 0);
                 setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
-                setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}');
+                setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || (presetProvider === 'pixabay' ? DEFAULT_IMAGE_SEARCH_PROMPT : DEFAULT_IMAGE_GENERATION_PROMPT));
                 setPromptLookaheadLimit(
                     typeof preset.imageGenSettings.promptLookaheadLimit === 'number'
                         ? Math.max(0, Math.min(10, Math.floor(preset.imageGenSettings.promptLookaheadLimit)))
                         : 1
                 );
                 setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
-                setPanoramaMode(Boolean(preset.imageGenSettings.panoramaMode));
+                setPanoramaMode(presetProvider === 'invokeai' && Boolean(preset.imageGenSettings.panoramaMode));
+                setImageSearchOrientation(preset.imageGenSettings.searchOrientation || 'landscape');
+                setImageSearchSize(preset.imageGenSettings.searchSize || 'medium');
+                setImageSearchType(preset.imageGenSettings.searchImageType || 'photo');
                 const lk = preset.imageGenSettings.invokeaiLoraKey;
                 setInvokeaiSelectedLoraKey(typeof lk === 'string' && lk.trim() ? lk.trim() : '');
                 setInvokeaiLoraWeight(
@@ -1698,9 +1769,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 );
             } else {
                 setImageGenEnabled(false);
+                setImageMediaProvider('invokeai');
                 setPromptLookaheadLimit(1);
                 setMediaGranularity('paragraph');
                 setPanoramaMode(false);
+                setImageSearchOrientation('landscape');
+                setImageSearchSize('medium');
+                setImageSearchType('photo');
                 setInvokeaiSelectedLoraKey('');
                 setInvokeaiLoraWeight(0.75);
             }
@@ -2515,7 +2590,38 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             <div className="space-y-4 pt-4" role="group" aria-labelledby="image-gen-settings-label">
                                 <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
 
+                                <div className="space-y-2 flex flex-col items-center">
+                                    <Label htmlFor="image-source-select" className="text-center">Image source</Label>
+                                    <Select
+                                        value={imageMediaProvider}
+                                        onValueChange={(value: ImageMediaProvider) => handleImageMediaProviderChange(value)}
+                                        disabled={!user}
+                                    >
+                                        <SelectTrigger id="image-source-select" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                            <SelectValue placeholder="Select image source" />
+                                        </SelectTrigger>
+                                        <SelectContent className="liquid-glass-panel">
+                                            <SelectItem value="invokeai">
+                                                <div className="w-full text-center">Generate locally with InvokeAI</div>
+                                            </SelectItem>
+                                            <SelectItem value="pixabay">
+                                                <div className="w-full text-center">Search Pixabay image library</div>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-muted-foreground text-center max-w-md">
+                                        InvokeAI creates new images on your hardware. Pixabay finds existing images through the Pixabay API.
+                                    </p>
+                                    {imageMediaProvider === 'pixabay' && !savedKeyStatus.pixabay && (
+                                        <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
+                                            Add a Pixabay API key in Settings before starting a Pixabay image session.
+                                        </div>
+                                    )}
+                                </div>
+
                                 {/* Invoke Setup (LandingPage exact copy) */}
+                                {imageMediaProvider === 'invokeai' && (
+                                    <>
                                 <Collapsible
                                     open={openCollapsibles['invokeai-setup'] || false}
                                     onOpenChange={() => toggleCollapsible('invokeai-setup')}
@@ -2825,6 +2931,70 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         disabled={!user}
                                     />
                                 </div>
+                                    </>
+                                )}
+
+                                {imageMediaProvider === 'pixabay' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-md border border-border/70 p-3">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="image-search-orientation" className="block text-center">Orientation</Label>
+                                            <Select
+                                                value={imageSearchOrientation}
+                                                onValueChange={(value: ImageSearchOrientation) => setImageSearchOrientation(value)}
+                                                disabled={!user}
+                                            >
+                                                <SelectTrigger id="image-search-orientation" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                    <SelectValue placeholder="Orientation" />
+                                                </SelectTrigger>
+                                                <SelectContent className="liquid-glass-panel">
+                                                    <SelectItem value="any"><div className="w-full text-center">Any</div></SelectItem>
+                                                    <SelectItem value="landscape"><div className="w-full text-center">Landscape</div></SelectItem>
+                                                    <SelectItem value="portrait"><div className="w-full text-center">Portrait</div></SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="image-search-size" className="block text-center">Size</Label>
+                                            <Select
+                                                value={imageSearchSize}
+                                                onValueChange={(value: ImageSearchSize) => setImageSearchSize(value)}
+                                                disabled={!user}
+                                            >
+                                                <SelectTrigger id="image-search-size" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                    <SelectValue placeholder="Size" />
+                                                </SelectTrigger>
+                                                <SelectContent className="liquid-glass-panel">
+                                                    {(Object.keys(IMAGE_SEARCH_SIZE_LABELS) as ImageSearchSize[]).map(size => (
+                                                        <SelectItem key={size} value={size}>
+                                                            <div className="w-full text-center">{IMAGE_SEARCH_SIZE_LABELS[size]}</div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="image-search-type" className="block text-center">Type</Label>
+                                            <Select
+                                                value={imageSearchType}
+                                                onValueChange={(value: ImageSearchType) => setImageSearchType(value)}
+                                                disabled={!user}
+                                            >
+                                                <SelectTrigger id="image-search-type" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                    <SelectValue placeholder="Type" />
+                                                </SelectTrigger>
+                                                <SelectContent className="liquid-glass-panel">
+                                                    <SelectItem value="photo"><div className="w-full text-center">Photo</div></SelectItem>
+                                                    <SelectItem value="illustration"><div className="w-full text-center">Illustration</div></SelectItem>
+                                                    <SelectItem value="vector"><div className="w-full text-center">Vector</div></SelectItem>
+                                                    <SelectItem value="all"><div className="w-full text-center">All</div></SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <p className="md:col-span-3 text-xs text-muted-foreground text-center">
+                                            These preferences become Pixabay API filters before the app picks the first suitable result.
+                                        </p>
+                                    </div>
+                                )}
 
                                 {/* Prompt LLM Selection */}
                                 <div className="space-y-2">
@@ -2858,22 +3028,24 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     )}
                                 </div>
 
-                                <div className="flex flex-col items-center gap-2 rounded-md border border-border/70 p-3">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <Checkbox
-                                            id="panorama-mode-enabled-checkbox"
-                                            checked={panoramaMode}
-                                            onCheckedChange={checked => setPanoramaMode(Boolean(checked))}
-                                            disabled={!user}
-                                        />
-                                        <Label htmlFor="panorama-mode-enabled-checkbox" className="text-sm font-medium">
-                                            VR / panorama viewer
-                                        </Label>
+                                {imageMediaProvider === 'invokeai' && (
+                                    <div className="flex flex-col items-center gap-2 rounded-md border border-border/70 p-3">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Checkbox
+                                                id="panorama-mode-enabled-checkbox"
+                                                checked={panoramaMode}
+                                                onCheckedChange={checked => setPanoramaMode(Boolean(checked))}
+                                                disabled={!user}
+                                            />
+                                            <Label htmlFor="panorama-mode-enabled-checkbox" className="text-sm font-medium">
+                                                VR / panorama viewer
+                                            </Label>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground text-center max-w-md">
+                                            Opens generated images as draggable 360 panoramas, with VR entry on supported headsets. Model, LoRA, and dimensions stay under your control.
+                                        </p>
                                     </div>
-                                    <p className="text-xs text-muted-foreground text-center max-w-md">
-                                        Opens generated images as draggable 360 panoramas, with VR entry on supported headsets. Model, LoRA, and dimensions stay under your control.
-                                    </p>
-                                </div>
+                                )}
 
                                 <div className="space-y-2">
                                     <Label htmlFor="prompt-llm-select" className="block text-center">{t?.sessionSetupForm?.promptLLM || 'Prompt LLM'}</Label>
@@ -2894,7 +3066,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         </SelectContent>
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center">
-                                        The LLM used to generate image prompts from the current text segment.
+                                        The LLM used to generate {imageMediaProvider === 'pixabay' ? 'image search terms' : 'image prompts'} from the current text segment.
                                     </p>
                                 </div>
 
@@ -2913,7 +3085,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         />
                                     </div>
                                     <p className="text-xs text-muted-foreground text-center">
-                                        How many upcoming paragraph prompts to pre-generate (0 disables prefetch).
+                                        How many upcoming {imageMediaProvider === 'pixabay' ? 'search terms' : 'prompts'} to pre-generate (0 disables prefetch).
                                     </p>
                                 </div>
 

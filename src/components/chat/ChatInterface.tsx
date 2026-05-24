@@ -40,6 +40,7 @@ import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
 import { PanoramaViewer } from './PanoramaViewer';
+import type { ImageSourceMetadata } from '@/lib/image-media';
 
 // --- Interfaces ---
 interface ParagraphImage {
@@ -47,6 +48,10 @@ interface ParagraphImage {
     imageUrl: string | null;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
+    source?: ImageSourceMetadata;
+    alt?: string;
+    width?: number;
+    height?: number;
 }
 
 interface Message {
@@ -89,6 +94,7 @@ interface ConversationData {
     agentMessageCount?: number;
     imageGenSettings?: {
         enabled: boolean;
+        provider?: string;
         invokeaiEndpoint?: string;
         promptLlm?: string;
         promptSystemMessage?: string;
@@ -2369,23 +2375,37 @@ export function ChatInterface({
                                                         {segmentImage && (
                                                             <div className="mt-2 flex flex-col items-center">
                                                                 {segmentImage.status === 'generating' && (
-                                                                    <div className="text-xs text-muted-foreground">Generating image...</div>
+                                                                    <div className="text-xs text-muted-foreground">
+                                                                        {conversationData?.imageGenSettings?.provider === 'pixabay' ? 'Finding image...' : 'Generating image...'}
+                                                                    </div>
                                                                 )}
                                                                 {segmentImage.status === 'complete' && segmentImage.imageUrl && (
-                                                                    <Image
-                                                                        src={segmentImage.imageUrl}
-                                                                        alt={`Generated image for segment ${segment.segmentIndex + 1}`}
-                                                                        className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
-                                                                        style={{ objectFit: 'contain' }}
-                                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: segment.segmentIndex })}
-                                                                        width={512}
-                                                                        height={512}
-                                                                        unoptimized={segmentImage.imageUrl.includes('storage.googleapis.com') || segmentImage.imageUrl.includes('googleapis.com/storage')}
-                                                                        aria-label={isPanoramaMode ? "Show image in panorama viewer" : "Show image in full screen"}
-                                                                    />
+                                                                    <>
+                                                                        <Image
+                                                                            src={segmentImage.imageUrl}
+                                                                            alt={segmentImage.alt || `Image for segment ${segment.segmentIndex + 1}`}
+                                                                            className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
+                                                                            style={{ objectFit: 'contain' }}
+                                                                            onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: segment.segmentIndex })}
+                                                                            width={segmentImage.width || 512}
+                                                                            height={segmentImage.height || 512}
+                                                                            unoptimized={segmentImage.imageUrl.includes('storage.googleapis.com') || segmentImage.imageUrl.includes('googleapis.com/storage') || segmentImage.imageUrl.includes('pixabay.com')}
+                                                                            aria-label={isPanoramaMode ? "Show image in panorama viewer" : "Show image in full screen"}
+                                                                        />
+                                                                        {segmentImage.source && (
+                                                                            <a
+                                                                                href={segmentImage.source.sourceUrl}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="mt-1 text-[11px] text-muted-foreground underline-offset-2 hover:underline"
+                                                                            >
+                                                                                Image: {segmentImage.source.providerName}{segmentImage.source.authorName ? ` / ${segmentImage.source.authorName}` : ''}
+                                                                            </a>
+                                                                        )}
+                                                                    </>
                                                                 )}
                                                                 {segmentImage.status === 'error' && (
-                                                                    <div className="text-xs text-destructive mt-1">Image generation failed: {segmentImage.error}</div>
+                                                                    <div className="text-xs text-destructive mt-1">Image failed: {segmentImage.error}</div>
                                                                 )}
                                                             </div>
                                                         )}
@@ -2638,16 +2658,29 @@ export function ChatInterface({
                                         alt={`Generated panorama for segment ${fullScreenGallery.paragraphIndex + 1}`}
                                     />
                                 ) : (
-                                    <Image
-                                        src={currentImage.imageUrl}
-                                        alt={`Generated image for paragraph ${fullScreenGallery.paragraphIndex + 1}`}
-                                        className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
-                                        style={{ objectFit: 'contain' }}
-                                        width={1920}
-                                        height={1080}
-                                        unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage')}
-                                        onClick={(e) => e.stopPropagation()}
-                                    />
+                                    <>
+                                        <Image
+                                            src={currentImage.imageUrl}
+                                            alt={currentImage.alt || `Image for segment ${fullScreenGallery.paragraphIndex + 1}`}
+                                            className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                            style={{ objectFit: 'contain' }}
+                                            width={currentImage.width || 1920}
+                                            height={currentImage.height || 1080}
+                                            unoptimized={currentImage.imageUrl.includes('storage.googleapis.com') || currentImage.imageUrl.includes('googleapis.com/storage') || currentImage.imageUrl.includes('pixabay.com')}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                        {currentImage.source && (
+                                            <a
+                                                href={currentImage.source.sourceUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded bg-black/70 px-3 py-1 text-xs text-white underline-offset-2 hover:underline"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                Image: {currentImage.source.providerName}{currentImage.source.authorName ? ` / ${currentImage.source.authorName}` : ''}
+                                            </a>
+                                        )}
+                                    </>
                                 )}
 
                                 {/* Navigation buttons */}

@@ -1,6 +1,7 @@
 // src/lib/firebase/sessionPreset.ts
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from './clientApp';
+import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
 
 export interface SessionPreset {
     agentA_llm: string;
@@ -23,8 +24,8 @@ export interface SessionPreset {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        invokeaiEndpoint: string;
+        provider: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         /** Optional LoRA identifier (prefer model `key` from Invoke `/api/v2/models/?model_type=lora`). */
         invokeaiLoraKey?: string;
@@ -44,6 +45,9 @@ export interface SessionPreset {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
     savedAt?: number; // timestamp
     collapseStates?: {

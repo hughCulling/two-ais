@@ -9,6 +9,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useTranslation } from '@/hooks/useTranslation';
 import ResumeHandler from "./ResumeHandler";
+import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
 
 // --- Types from page.tsx ---
 interface AgentTTSSettingsConfig {
@@ -30,8 +31,8 @@ interface SessionConfig {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        invokeaiEndpoint: string;
+        provider: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -49,6 +50,9 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 }
 interface UserData {

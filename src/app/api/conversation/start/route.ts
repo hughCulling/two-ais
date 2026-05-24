@@ -17,6 +17,7 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models';
+import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
 
 // --- Initialize Services (Keep existing logic) ---
 let firebaseAdminApp: App | null = null;
@@ -186,8 +187,8 @@ interface StartConversationRequest {
     lookaheadLimit?: number; // Number of turns to generate in advance
     imageGenSettings?: {
         enabled: boolean;
-        provider?: string;
-        invokeaiEndpoint: string;
+        provider?: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -205,6 +206,9 @@ interface StartConversationRequest {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 }
 
@@ -244,8 +248,8 @@ type ConversationData = {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
-        provider?: string;
-        invokeaiEndpoint: string;
+        provider?: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -263,6 +267,9 @@ type ConversationData = {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 };
 
@@ -425,6 +432,10 @@ export async function POST(request: NextRequest) {
             }
             if (agentBLLMInfo.provider === 'Ollama') {
                 userApiSecretVersions[agentBRequiredKey] = 'ollama-local';
+            }
+
+            if (normalizedImageGenSettings?.enabled && normalizedImageGenSettings.provider === 'pixabay' && !userApiSecretVersions.pixabay) {
+                return NextResponse.json({ error: "Pixabay API key reference not found in settings." }, { status: 404 });
             }
         } catch (firestoreError) {
             console.error(`API Route: Firestore error fetching secret versions for user ${userId}:`, firestoreError);
