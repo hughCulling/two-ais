@@ -98,6 +98,13 @@ const initialApiKeys: ApiKeyInput[] = [
         tooltip: 'Mistral AI account required and you must choose a plan. You can find keys at ',
         learnMoreLink: 'https://console.mistral.ai/api-keys'
     },
+    {
+        id: 'pixabay',
+        label: 'Pixabay API Key',
+        value: '',
+        tooltip: 'Used to search Pixabay images as an alternative to local image generation. Pixabay API access is free with an account and subject to Pixabay API limits and content terms.',
+        learnMoreLink: 'https://pixabay.com/api/docs/'
+    },
 ];
 
 export default function ApiKeyManager() {

@@ -10,12 +10,26 @@ import { splitIntoMediaSegments, replacePromptPlaceholders, type MediaGranularit
 import { getProviderFromId } from '@/lib/models';
 import { auth } from '@/lib/firebase/clientApp';
 import { getInvokeAIErrorMessage } from '@/lib/invokeai';
+import {
+    normalizeImageSearchQuery,
+    type ImageMediaProvider,
+    type ImageSearchOrientation,
+    type ImageSearchResult,
+    type ImageSearchSize,
+    type ImageSearchType,
+    type ImageSourceMetadata,
+} from '@/lib/image-media';
 
 interface ParagraphImage {
     paragraphIndex: number;
     imageUrl: string | null;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
+    source?: ImageSourceMetadata;
+    alt?: string;
+    width?: number;
+    height?: number;
+    searchQuery?: string;
 }
 
 interface ConversationData {
@@ -24,8 +38,8 @@ interface ConversationData {
     language?: string;
     imageGenSettings?: {
         enabled: boolean;
-        provider?: string;
-        invokeaiEndpoint: string;
+        provider?: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -43,6 +57,9 @@ interface ConversationData {
         promptLookaheadLimit?: number;
         mediaGranularity?: MediaGranularity;
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 }
 
@@ -251,6 +268,33 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                             });
                         }
                     }
+                }
+
+                if (imageGenSettings.provider === 'pixabay') {
+                    const imageResult = await searchPixabayImage(prompt, imageGenSettings);
+
+                    if (!imageResult.result) {
+                        paragraphImages[paragraphIndex] = {
+                            ...paragraphImages[paragraphIndex],
+                            status: 'error',
+                            error: imageResult.error || 'Failed to find a Pixabay image',
+                        };
+                        await updateDoc(messageRef, { paragraphImages });
+                        continue;
+                    }
+
+                    paragraphImages[paragraphIndex] = {
+                        ...paragraphImages[paragraphIndex],
+                        imageUrl: imageResult.result.imageUrl,
+                        status: 'complete',
+                        source: imageResult.result.source,
+                        alt: imageResult.result.alt || prompt,
+                        width: imageResult.result.width,
+                        height: imageResult.result.height,
+                        searchQuery: normalizeImageSearchQuery(prompt),
+                    };
+                    await updateDoc(messageRef, { paragraphImages });
+                    continue;
                 }
 
                 // Step 2: Generate image using InvokeAI
@@ -525,11 +569,58 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         }
     }
 
+    async function searchPixabayImage(
+        query: string,
+        imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
+    ): Promise<{ result: ImageSearchResult | null; error?: string }> {
+        try {
+            const normalizedQuery = normalizeImageSearchQuery(query);
+            if (!normalizedQuery) {
+                return { result: null, error: 'Image search query was empty' };
+            }
+
+            const currentUser = auth.currentUser;
+            const idToken = currentUser ? await currentUser.getIdToken() : null;
+            if (!idToken) {
+                throw new Error('Not authenticated');
+            }
+
+            const response = await fetch('/api/image-search/pixabay', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+                body: JSON.stringify({
+                    query: normalizedQuery,
+                    orientation: imageGenSettings.searchOrientation || 'landscape',
+                    size: imageGenSettings.searchSize || 'medium',
+                    imageType: imageGenSettings.searchImageType || 'photo',
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Pixabay search error: ${response.status} ${response.statusText} - ${errorText}`);
+            }
+
+            const data = await response.json() as { result?: ImageSearchResult };
+            return { result: data.result || null };
+        } catch (error) {
+            console.error('[InvokeAI ImageGen] Error searching Pixabay:', error);
+            return { result: null, error: error instanceof Error ? error.message : 'Failed to search Pixabay' };
+        }
+    }
+
     async function generateImage(
         prompt: string,
         imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
     ): Promise<{ imageBase64: string | null; error?: string }> {
         try {
+            if (!imageGenSettings.invokeaiEndpoint) {
+                return { imageBase64: null, error: 'InvokeAI endpoint is missing' };
+            }
+
             const generationPayload = {
                 prompt,
                 invokeaiEndpoint: imageGenSettings.invokeaiEndpoint,

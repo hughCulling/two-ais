@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { User } from 'firebase/auth';
+import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
 
 interface AgentTTSSettingsConfig {
     provider: string;
@@ -22,8 +23,8 @@ interface SessionConfig {
     lookaheadLimit?: number;
     imageGenSettings?: {
         enabled: boolean;
-        provider: string;
-        invokeaiEndpoint: string;
+        provider: ImageMediaProvider;
+        invokeaiEndpoint?: string;
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
@@ -41,6 +42,9 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        searchOrientation?: ImageSearchOrientation;
+        searchSize?: ImageSearchSize;
+        searchImageType?: ImageSearchType;
     };
 }
 
@@ -115,6 +119,7 @@ export default function ResumeHandler({
                             agentB_tts: data.ttsSettings?.agentB || { provider: 'none', voice: null },
                             language: data.language,
                             initialSystemPrompt: data.initialSystemPrompt || '',
+                            imageGenSettings: data.imageGenSettings,
                         });
                         setActiveConversationId(resumeConversationId);
                         setPollingForRunning(false);

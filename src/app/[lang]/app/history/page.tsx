@@ -34,7 +34,8 @@ function getVoiceName(provider: string, voiceId: string): string {
 }
 
 // Helper function to get image model name
-function getImageModelName(modelId: string): string {
+function getImageModelName(modelId: string | null | undefined): string {
+    if (!modelId) return 'Image media';
     return getImageModelById(modelId)?.name || modelId;
 }
 
@@ -53,9 +54,9 @@ interface TTSSettings {
 interface ImageGenSettings {
     enabled: boolean;
     provider: string;
-    model: string;
-    quality: string;
-    size: string;
+    model?: string;
+    quality?: string;
+    size?: string;
     promptLlm: string;
     promptSystemMessage: string;
     promptLookaheadLimit?: number;
@@ -266,11 +267,11 @@ export default function HistoryPage() {
                                                             <div className="flex items-center justify-center text-xs text-muted-foreground min-w-0 w-full">
                                                                 <ImageIcon className="h-3 w-3 mr-1 flex-shrink-0" />
                                                                 <span className="flex-shrink-0 mr-1">{t.history.imageGenerationEnabled || 'Image'}:</span>
-                                                                {convo.imageGenSettings?.model && (
-                                                                    <span className="truncate min-w-0">
-                                                                        {getImageModelName(convo.imageGenSettings.model)}
-                                                                    </span>
-                                                                )}
+                                                                <span className="truncate min-w-0">
+                                                                    {convo.imageGenSettings.provider === 'pixabay'
+                                                                        ? 'Pixabay search'
+                                                                        : getImageModelName(convo.imageGenSettings.model)}
+                                                                </span>
                                                             </div>
                                                         )}
                                                     </div>

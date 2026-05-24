@@ -15,6 +15,7 @@ import { BaseLanguageModelInput } from '@langchain/core/language_models/base';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 import { getProviderFromId, getLLMInfoById } from '@/lib/models';
+import { replacePromptPlaceholders } from '@/lib/segment-utils';
 
 type RequestBody = {
   paragraph: string;
@@ -26,14 +27,7 @@ let firebaseAdminApp: App | null = null;
 let dbAdmin: Firestore | null = null;
 let secretManagerClient: SecretManagerServiceClient | null = null;
 
-function initializeServices() {
-  if (getApps().length > 0) {
-    if (!firebaseAdminApp) firebaseAdminApp = getApps()[0];
-    if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
-    if (!secretManagerClient) secretManagerClient = new SecretManagerServiceClient();
-    return;
-  }
-
+function loadServiceAccount(): ServiceAccount {
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
   if (!serviceAccountJson) {
     throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.');
@@ -46,10 +40,11 @@ function initializeServices() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (serviceAccount as any).private_key = rawPrivateKey.replace(/\\n/g, '\n');
   }
+  return serviceAccount;
+}
 
-  firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) });
-  dbAdmin = getFirestore(firebaseAdminApp);
-  secretManagerClient = new SecretManagerServiceClient({
+function createSecretManagerClient(serviceAccount: ServiceAccount): SecretManagerServiceClient {
+  return new SecretManagerServiceClient({
     credentials: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client_email: (serviceAccount as any).client_email,
@@ -59,6 +54,21 @@ function initializeServices() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     projectId: (serviceAccount as any).project_id,
   });
+}
+
+function initializeServices() {
+  const serviceAccount = loadServiceAccount();
+
+  if (getApps().length > 0) {
+    if (!firebaseAdminApp) firebaseAdminApp = getApps()[0];
+    if (!dbAdmin) dbAdmin = getFirestore(firebaseAdminApp);
+    if (!secretManagerClient) secretManagerClient = createSecretManagerClient(serviceAccount);
+    return;
+  }
+
+  firebaseAdminApp = initializeApp({ credential: cert(serviceAccount) });
+  dbAdmin = getFirestore(firebaseAdminApp);
+  secretManagerClient = createSecretManagerClient(serviceAccount);
 }
 
 async function getApiKeyFromSecret(secretVersionName: string): Promise<string | null> {
@@ -143,7 +153,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Cloud prompt generation not supported yet for provider '${provider}'` }, { status: 400 });
     }
 
-    const systemMessage = promptSystemMessage.replace('{paragraph}', paragraph).replace('{turn}', paragraph);
+    const systemMessage = replacePromptPlaceholders(promptSystemMessage, paragraph).replace(/\{turn\}/g, paragraph);
     const messages = [
       new SystemMessage({ content: systemMessage }),
       new HumanMessage({ content: paragraph }),

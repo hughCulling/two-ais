@@ -3,6 +3,7 @@ import { type NextRequest } from 'next/server';
 import { initializeApp, getApps, App, cert } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
 import { getFirestore, Firestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
+import type { ImageSourceMetadata } from '@/lib/image-media';
 
 // Ensure Firebase Admin is initialized
 let firebaseAdminApp: App | null = null;
@@ -45,6 +46,10 @@ interface ParagraphImage {
     imageUrl: string | null;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
+    source?: ImageSourceMetadata;
+    alt?: string;
+    width?: number;
+    height?: number;
 }
 
 interface Message {
@@ -78,9 +83,9 @@ interface ConversationTTSSettings {
 interface ImageGenSettings {
     enabled: boolean;
     provider: string;
-    model: string;
-    quality: string;
-    size: string;
+    model?: string;
+    quality?: string;
+    size?: string;
     promptLlm: string;
     promptSystemMessage: string;
     promptLookaheadLimit?: number;

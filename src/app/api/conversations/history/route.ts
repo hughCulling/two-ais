@@ -64,9 +64,9 @@ interface TTSSettings {
 interface ImageGenSettings {
     enabled: boolean;
     provider: string;
-    model: string;
-    quality: string;
-    size: string;
+    model?: string;
+    quality?: string;
+    size?: string;
     promptLlm: string;
     promptSystemMessage: string;
     promptLookaheadLimit?: number;
