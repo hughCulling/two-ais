@@ -72,6 +72,7 @@ interface ImageGenSettings {
     promptLookaheadLimit?: number;
     mediaGranularity?: 'paragraph' | 'sentence';
     panoramaMode?: boolean;
+    pixabayMediaType?: 'image' | 'video';
 }
 
 interface ConversationSummary {

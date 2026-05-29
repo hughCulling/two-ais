@@ -1,7 +1,15 @@
 // src/lib/firebase/sessionPreset.ts
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from './clientApp';
-import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
+import type {
+    ImageMediaProvider,
+    ImageSearchOrientation,
+    ImageSearchSize,
+    ImageSearchType,
+    PixabayMediaType,
+    VideoSearchDuration,
+    VideoSearchType,
+} from '@/lib/image-media';
 
 export interface SessionPreset {
     agentA_llm: string;
@@ -45,9 +53,12 @@ export interface SessionPreset {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
     savedAt?: number; // timestamp
     collapseStates?: {

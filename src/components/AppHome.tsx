@@ -9,7 +9,15 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useTranslation } from '@/hooks/useTranslation';
 import ResumeHandler from "./ResumeHandler";
-import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
+import type {
+    ImageMediaProvider,
+    ImageSearchOrientation,
+    ImageSearchSize,
+    ImageSearchType,
+    PixabayMediaType,
+    VideoSearchDuration,
+    VideoSearchType,
+} from '@/lib/image-media';
 
 // --- Types from page.tsx ---
 interface AgentTTSSettingsConfig {
@@ -50,9 +58,12 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 }
 interface UserData {

@@ -40,18 +40,23 @@ import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
 import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
 import { PanoramaViewer } from './PanoramaViewer';
-import type { ImageSourceMetadata } from '@/lib/image-media';
+import type { ImageSourceMetadata, PixabayMediaType } from '@/lib/image-media';
 
 // --- Interfaces ---
 interface ParagraphImage {
     paragraphIndex: number;
     imageUrl: string | null;
+    mediaType?: PixabayMediaType;
+    videoUrl?: string;
+    posterUrl?: string;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
     source?: ImageSourceMetadata;
     alt?: string;
     width?: number;
     height?: number;
+    duration?: number;
+    sizeBytes?: number;
 }
 
 interface Message {
@@ -100,6 +105,7 @@ interface ConversationData {
         promptSystemMessage?: string;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
     };
 }
 
@@ -1297,7 +1303,7 @@ export function ChatInterface({
         if (!targetMessage || !targetMessage.paragraphImages) return;
 
         const targetImage = targetMessage.paragraphImages[fullscreenAudioSync.paragraphIndex];
-        if (!targetImage || targetImage.status !== 'complete' || !targetImage.imageUrl) return;
+        if (!targetImage || targetImage.status !== 'complete' || (!targetImage.imageUrl && !targetImage.videoUrl)) return;
 
         if (
             fullScreenGallery.messageId !== fullscreenAudioSync.messageId ||
@@ -2372,15 +2378,43 @@ export function ChatInterface({
                                                             </ReactMarkdown>
                                                         </div>
 
-                                                        {/* Segment image display */}
+                                                        {/* Segment media display */}
                                                         {segmentImage && (
                                                             <div className="mt-2 flex flex-col items-center">
                                                                 {segmentImage.status === 'generating' && (
                                                                     <div className="text-xs text-muted-foreground">
-                                                                        {conversationData?.imageGenSettings?.provider === 'pixabay' ? 'Finding image...' : 'Generating image...'}
+                                                                        {conversationData?.imageGenSettings?.provider === 'pixabay'
+                                                                            ? `Finding ${conversationData?.imageGenSettings?.pixabayMediaType === 'video' ? 'video' : 'image'}...`
+                                                                            : 'Generating image...'}
                                                                     </div>
                                                                 )}
-                                                                {segmentImage.status === 'complete' && segmentImage.imageUrl && (
+                                                                {segmentImage.status === 'complete' && segmentImage.mediaType === 'video' && segmentImage.videoUrl && (
+                                                                    <>
+                                                                        <video
+                                                                            src={segmentImage.videoUrl}
+                                                                            poster={segmentImage.posterUrl || segmentImage.imageUrl || undefined}
+                                                                            className="rounded-md max-w-full max-h-[30vh] cursor-pointer border border-muted-foreground/20 shadow mt-2"
+                                                                            style={{ objectFit: 'contain' }}
+                                                                            muted
+                                                                            loop
+                                                                            playsInline
+                                                                            autoPlay
+                                                                            onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: segment.segmentIndex })}
+                                                                            aria-label="Show video in full screen"
+                                                                        />
+                                                                        {segmentImage.source && (
+                                                                            <a
+                                                                                href={segmentImage.source.sourceUrl}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="mt-1 text-[11px] text-muted-foreground underline-offset-2 hover:underline"
+                                                                            >
+                                                                                Video: {segmentImage.source.providerName}{segmentImage.source.authorName ? ` / ${segmentImage.source.authorName}` : ''}
+                                                                            </a>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                                {segmentImage.status === 'complete' && segmentImage.mediaType !== 'video' && segmentImage.imageUrl && (
                                                                     <>
                                                                         <Image
                                                                             src={segmentImage.imageUrl}
@@ -2406,7 +2440,7 @@ export function ChatInterface({
                                                                     </>
                                                                 )}
                                                                 {segmentImage.status === 'error' && (
-                                                                    <div className="text-xs text-destructive mt-1">Image failed: {segmentImage.error}</div>
+                                                                    <div className="text-xs text-destructive mt-1">Media failed: {segmentImage.error}</div>
                                                                 )}
                                                             </div>
                                                         )}
@@ -2420,11 +2454,16 @@ export function ChatInterface({
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={() => setFullScreenGallery({ messageId: msg.id, paragraphIndex: 0 })}
+                                                        onClick={() => {
+                                                            const firstCompleteMedia = msg.paragraphImages?.findIndex(img => img.status === 'complete' && (img.imageUrl || img.videoUrl)) ?? -1;
+                                                            if (firstCompleteMedia >= 0) {
+                                                                setFullScreenGallery({ messageId: msg.id, paragraphIndex: firstCompleteMedia });
+                                                            }
+                                                        }}
                                                         className="text-xs"
                                                     >
                                                         <ImageIcon className="h-3 w-3 mr-1" />
-                                                        View {msg.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl).length} images
+                                                        View {msg.paragraphImages.filter(img => img.status === 'complete' && (img.imageUrl || img.videoUrl)).length} media
                                                     </Button>
                                                 </div>
                                             )}
@@ -2563,12 +2602,12 @@ export function ChatInterface({
                     {/* Image Gallery Button - Show if there are paragraph images */}
                     {(() => {
                         const messagesWithImages = visibleMessages.filter(
-                            m => m.paragraphImages && m.paragraphImages.some(img => img.status === 'complete' && img.imageUrl)
+                            m => m.paragraphImages && m.paragraphImages.some(img => img.status === 'complete' && (img.imageUrl || img.videoUrl))
                         );
                         if (messagesWithImages.length === 0) return null;
 
                         const totalImages = messagesWithImages.reduce((sum, m) =>
-                            sum + (m.paragraphImages?.filter(img => img.status === 'complete' && img.imageUrl).length || 0), 0
+                            sum + (m.paragraphImages?.filter(img => img.status === 'complete' && (img.imageUrl || img.videoUrl)).length || 0), 0
                         );
 
                         return (
@@ -2580,7 +2619,7 @@ export function ChatInterface({
                                     const firstMsgWithImages = messagesWithImages[0];
                                     if (firstMsgWithImages && firstMsgWithImages.paragraphImages) {
                                         const firstCompleteImage = firstMsgWithImages.paragraphImages.findIndex(
-                                            img => img.status === 'complete' && img.imageUrl
+                                            img => img.status === 'complete' && (img.imageUrl || img.videoUrl)
                                         );
                                         if (firstCompleteImage >= 0) {
                                             setFullScreenGallery({
@@ -2591,8 +2630,8 @@ export function ChatInterface({
                                     }
                                 }}
                                 className="h-12 w-12 rounded-full"
-                                aria-label={`View ${totalImages} generated images`}
-                                title={`View ${totalImages} generated images`}
+                                aria-label={`View ${totalImages} generated media`}
+                                title={`View ${totalImages} generated media`}
                             >
                                 <ImageIcon className="h-6 w-6" />
                             </Button>
@@ -2617,7 +2656,7 @@ export function ChatInterface({
                 }
 
                 const currentImage = message.paragraphImages[fullScreenGallery.paragraphIndex];
-                const completeImages = message.paragraphImages.filter(img => img.status === 'complete' && img.imageUrl);
+                const completeImages = message.paragraphImages.filter(img => img.status === 'complete' && (img.imageUrl || img.videoUrl));
                 const currentImageIndex = completeImages.findIndex(img =>
                     message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
                 );
@@ -2662,14 +2701,39 @@ export function ChatInterface({
                         aria-modal="true"
                         role="dialog"
                     >
-                        {currentImage && currentImage.status === 'complete' && currentImage.imageUrl && (
+                        {currentImage && currentImage.status === 'complete' && (currentImage.imageUrl || currentImage.videoUrl) && (
                             <>
-                                {isPanoramaMode ? (
+                                {currentImage.mediaType === 'video' && currentImage.videoUrl ? (
+                                    <>
+                                        <video
+                                            src={currentImage.videoUrl}
+                                            poster={currentImage.posterUrl || currentImage.imageUrl || undefined}
+                                            className="w-auto h-auto max-w-[98vw] max-h-[98vh] rounded shadow-lg border border-white"
+                                            style={{ objectFit: 'contain' }}
+                                            muted
+                                            loop
+                                            playsInline
+                                            autoPlay
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                        {currentImage.source && (
+                                            <a
+                                                href={currentImage.source.sourceUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded bg-black/70 px-3 py-1 text-xs text-white underline-offset-2 hover:underline"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                Video: {currentImage.source.providerName}{currentImage.source.authorName ? ` / ${currentImage.source.authorName}` : ''}
+                                            </a>
+                                        )}
+                                    </>
+                                ) : isPanoramaMode && currentImage.imageUrl ? (
                                     <PanoramaViewer
                                         imageUrl={currentImage.imageUrl}
                                         alt={`Generated panorama for segment ${fullScreenGallery.paragraphIndex + 1}`}
                                     />
-                                ) : (
+                                ) : currentImage.imageUrl ? (
                                     <>
                                         <Image
                                             src={currentImage.imageUrl}
@@ -2693,7 +2757,7 @@ export function ChatInterface({
                                             </a>
                                         )}
                                     </>
-                                )}
+                                ) : null}
 
                                 {/* Navigation buttons */}
                                 {completeImages.length > 1 && (

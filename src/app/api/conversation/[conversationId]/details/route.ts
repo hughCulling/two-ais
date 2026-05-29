@@ -3,7 +3,7 @@ import { type NextRequest } from 'next/server';
 import { initializeApp, getApps, App, cert } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
 import { getFirestore, Firestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
-import type { ImageSourceMetadata } from '@/lib/image-media';
+import type { ImageSourceMetadata, PixabayMediaType } from '@/lib/image-media';
 
 // Ensure Firebase Admin is initialized
 let firebaseAdminApp: App | null = null;
@@ -44,12 +44,17 @@ try {
 interface ParagraphImage {
     paragraphIndex: number;
     imageUrl: string | null;
+    mediaType?: PixabayMediaType;
+    videoUrl?: string;
+    posterUrl?: string;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
     source?: ImageSourceMetadata;
     alt?: string;
     width?: number;
     height?: number;
+    duration?: number;
+    sizeBytes?: number;
 }
 
 interface Message {
@@ -91,6 +96,7 @@ interface ImageGenSettings {
     promptLookaheadLimit?: number;
     mediaGranularity?: 'paragraph' | 'sentence';
     panoramaMode?: boolean;
+    pixabayMediaType?: PixabayMediaType;
 }
 
 interface ConversationDetails {

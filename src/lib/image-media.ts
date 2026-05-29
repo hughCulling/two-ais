@@ -1,7 +1,10 @@
 export type ImageMediaProvider = 'invokeai' | 'pixabay';
+export type PixabayMediaType = 'image' | 'video';
 export type ImageSearchOrientation = 'any' | 'landscape' | 'portrait';
 export type ImageSearchSize = 'small' | 'medium' | 'large';
 export type ImageSearchType = 'photo' | 'illustration' | 'vector' | 'all';
+export type VideoSearchType = 'film' | 'animation' | 'all';
+export type VideoSearchDuration = 'short' | 'medium' | 'any';
 
 export interface ImageSourceMetadata {
     provider: 'pixabay';
@@ -23,16 +26,37 @@ export interface ImageSearchResult {
     source: ImageSourceMetadata;
 }
 
+export interface VideoSearchResult {
+    videoUrl: string;
+    posterUrl?: string;
+    sourceUrl: string;
+    width?: number;
+    height?: number;
+    duration?: number;
+    sizeBytes?: number;
+    alt?: string;
+    source: ImageSourceMetadata;
+}
+
 export const DEFAULT_IMAGE_GENERATION_PROMPT =
     'Create a prompt to give to the image generation model based on this paragraph: {paragraph}';
 
 export const DEFAULT_IMAGE_SEARCH_PROMPT =
     'Create a concise image search query for this text. Prefer concrete visual nouns, setting, mood, and era. Return only the search query. Text: {text}';
 
+export const DEFAULT_VIDEO_SEARCH_PROMPT =
+    'Create a concise stock video search query for this text. Prefer concrete visual nouns, setting, motion, mood, and era. Return only the search query. Text: {text}';
+
 export const IMAGE_SEARCH_SIZE_LABELS: Record<ImageSearchSize, string> = {
     small: 'Small / fast',
     medium: 'Medium',
     large: 'Large',
+};
+
+export const VIDEO_SEARCH_DURATION_LABELS: Record<VideoSearchDuration, string> = {
+    short: 'Short, up to 10s',
+    medium: 'Medium, up to 30s',
+    any: 'Any length',
 };
 
 export function normalizeImageSearchQuery(query: string): string {
@@ -68,4 +92,10 @@ export function getImageSearchMinDimensions(
         return { minWidth: preset.longEdge, minHeight: preset.shortEdge };
     }
     return { minWidth: preset.shortEdge, minHeight: preset.shortEdge };
+}
+
+export function getVideoSearchMaxDuration(duration: VideoSearchDuration): number | null {
+    if (duration === 'short') return 10;
+    if (duration === 'medium') return 30;
+    return null;
 }

@@ -17,7 +17,15 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 // --- Import LLM Info Helper ---
 import { getLLMInfoById } from '@/lib/models';
-import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
+import type {
+    ImageMediaProvider,
+    ImageSearchOrientation,
+    ImageSearchSize,
+    ImageSearchType,
+    PixabayMediaType,
+    VideoSearchDuration,
+    VideoSearchType,
+} from '@/lib/image-media';
 
 // --- Initialize Services (Keep existing logic) ---
 let firebaseAdminApp: App | null = null;
@@ -206,9 +214,12 @@ interface StartConversationRequest {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 }
 
@@ -267,9 +278,12 @@ type ConversationData = {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 };
 

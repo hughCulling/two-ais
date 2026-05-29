@@ -57,11 +57,16 @@ import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } fr
 import {
     DEFAULT_IMAGE_GENERATION_PROMPT,
     DEFAULT_IMAGE_SEARCH_PROMPT,
+    DEFAULT_VIDEO_SEARCH_PROMPT,
     IMAGE_SEARCH_SIZE_LABELS,
+    VIDEO_SEARCH_DURATION_LABELS,
     type ImageMediaProvider,
     type ImageSearchOrientation,
     type ImageSearchSize,
     type ImageSearchType,
+    type PixabayMediaType,
+    type VideoSearchDuration,
+    type VideoSearchType,
 } from '@/lib/image-media';
 
 // --- Define TTS Types ---
@@ -120,9 +125,12 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 }
 
@@ -939,18 +947,35 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
     const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence'>('paragraph');
     const [panoramaMode, setPanoramaMode] = useState<boolean>(false);
+    const [pixabayMediaType, setPixabayMediaType] = useState<PixabayMediaType>('image');
     const [imageSearchOrientation, setImageSearchOrientation] = useState<ImageSearchOrientation>('landscape');
     const [imageSearchSize, setImageSearchSize] = useState<ImageSearchSize>('medium');
     const [imageSearchType, setImageSearchType] = useState<ImageSearchType>('photo');
+    const [videoSearchType, setVideoSearchType] = useState<VideoSearchType>('film');
+    const [videoSearchDuration, setVideoSearchDuration] = useState<VideoSearchDuration>('short');
+
+    const handlePixabayMediaTypeChange = (mediaType: PixabayMediaType) => {
+        setPixabayMediaType(mediaType);
+        setImagePromptSystemMessage(prev => {
+            const trimmed = prev.trim();
+            if (mediaType === 'video' && trimmed === DEFAULT_IMAGE_SEARCH_PROMPT) {
+                return DEFAULT_VIDEO_SEARCH_PROMPT;
+            }
+            if (mediaType === 'image' && trimmed === DEFAULT_VIDEO_SEARCH_PROMPT) {
+                return DEFAULT_IMAGE_SEARCH_PROMPT;
+            }
+            return prev;
+        });
+    };
 
     const handleImageMediaProviderChange = (provider: ImageMediaProvider) => {
         setImageMediaProvider(provider);
         setImagePromptSystemMessage(prev => {
             const trimmed = prev.trim();
             if (provider === 'pixabay' && (trimmed === DEFAULT_IMAGE_GENERATION_PROMPT || trimmed === (t?.sessionSetupForm?.defaultImagePromptSystemMessage || '').trim())) {
-                return DEFAULT_IMAGE_SEARCH_PROMPT;
+                return pixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : DEFAULT_IMAGE_SEARCH_PROMPT;
             }
-            if (provider === 'invokeai' && trimmed === DEFAULT_IMAGE_SEARCH_PROMPT) {
+            if (provider === 'invokeai' && (trimmed === DEFAULT_IMAGE_SEARCH_PROMPT || trimmed === DEFAULT_VIDEO_SEARCH_PROMPT)) {
                 return t?.sessionSetupForm?.defaultImagePromptSystemMessage || DEFAULT_IMAGE_GENERATION_PROMPT;
             }
             return prev;
@@ -1468,9 +1493,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     ...commonImageSettings,
                     provider: "pixabay",
                     panoramaMode: false,
+                    pixabayMediaType,
                     searchOrientation: imageSearchOrientation,
                     searchSize: imageSearchSize,
-                    searchImageType: imageSearchType,
+                    ...(pixabayMediaType === 'video'
+                        ? {
+                            videoSearchType,
+                            videoSearchDuration,
+                        }
+                        : {
+                            searchImageType: imageSearchType,
+                        }),
                 };
         }
 
@@ -1667,9 +1700,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                             mediaGranularity,
                             panoramaMode: false,
+                            pixabayMediaType,
                             searchOrientation: imageSearchOrientation,
                             searchSize: imageSearchSize,
-                            searchImageType: imageSearchType,
+                            ...(pixabayMediaType === 'video'
+                                ? {
+                                    videoSearchType,
+                                    videoSearchDuration,
+                                }
+                                : {
+                                    searchImageType: imageSearchType,
+                                }),
                         }
                 ) : undefined,
                 collapseStates: {
@@ -1735,6 +1776,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             if (preset.imageGenSettings?.enabled) {
                 setImageGenEnabled(true);
                 const presetProvider = (preset.imageGenSettings.provider === 'pixabay' ? 'pixabay' : 'invokeai') as ImageMediaProvider;
+                const presetPixabayMediaType = preset.imageGenSettings.pixabayMediaType || 'image';
                 setImageMediaProvider(presetProvider);
                 setInvokeaiEndpoint(preset.imageGenSettings.invokeaiEndpoint || '');
                 setInvokeaiSelectedModel(preset.imageGenSettings.invokeaiModel || '');
@@ -1749,7 +1791,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setInvokeaiClipSkip(preset.imageGenSettings.clipSkip ?? 0);
                 setInvokeaiCfgRescaleMultiplier(preset.imageGenSettings.cfgRescaleMultiplier ?? 0);
                 setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
-                setImagePromptSystemMessage(preset.imageGenSettings.promptSystemMessage || (presetProvider === 'pixabay' ? DEFAULT_IMAGE_SEARCH_PROMPT : DEFAULT_IMAGE_GENERATION_PROMPT));
+                setImagePromptSystemMessage(
+                    preset.imageGenSettings.promptSystemMessage ||
+                    (presetProvider === 'pixabay'
+                        ? (presetPixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : DEFAULT_IMAGE_SEARCH_PROMPT)
+                        : DEFAULT_IMAGE_GENERATION_PROMPT)
+                );
                 setPromptLookaheadLimit(
                     typeof preset.imageGenSettings.promptLookaheadLimit === 'number'
                         ? Math.max(0, Math.min(10, Math.floor(preset.imageGenSettings.promptLookaheadLimit)))
@@ -1757,9 +1804,12 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 );
                 setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
                 setPanoramaMode(presetProvider === 'invokeai' && Boolean(preset.imageGenSettings.panoramaMode));
+                setPixabayMediaType(presetPixabayMediaType);
                 setImageSearchOrientation(preset.imageGenSettings.searchOrientation || 'landscape');
                 setImageSearchSize(preset.imageGenSettings.searchSize || 'medium');
                 setImageSearchType(preset.imageGenSettings.searchImageType || 'photo');
+                setVideoSearchType(preset.imageGenSettings.videoSearchType || 'film');
+                setVideoSearchDuration(preset.imageGenSettings.videoSearchDuration || 'short');
                 const lk = preset.imageGenSettings.invokeaiLoraKey;
                 setInvokeaiSelectedLoraKey(typeof lk === 'string' && lk.trim() ? lk.trim() : '');
                 setInvokeaiLoraWeight(
@@ -1770,12 +1820,15 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             } else {
                 setImageGenEnabled(false);
                 setImageMediaProvider('invokeai');
+                setPixabayMediaType('image');
                 setPromptLookaheadLimit(1);
                 setMediaGranularity('paragraph');
                 setPanoramaMode(false);
                 setImageSearchOrientation('landscape');
                 setImageSearchSize('medium');
                 setImageSearchType('photo');
+                setVideoSearchType('film');
+                setVideoSearchDuration('short');
                 setInvokeaiSelectedLoraKey('');
                 setInvokeaiLoraWeight(0.75);
             }
@@ -2591,7 +2644,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 <div id="image-gen-settings-label" className="sr-only">Image Generation Settings</div>
 
                                 <div className="space-y-2 flex flex-col items-center">
-                                    <Label htmlFor="image-source-select" className="text-center">Image source</Label>
+                                    <Label htmlFor="image-source-select" className="text-center">Media source</Label>
                                     <Select
                                         value={imageMediaProvider}
                                         onValueChange={(value: ImageMediaProvider) => handleImageMediaProviderChange(value)}
@@ -2605,16 +2658,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 <div className="w-full text-center">Generate locally with InvokeAI</div>
                                             </SelectItem>
                                             <SelectItem value="pixabay">
-                                                <div className="w-full text-center">Search Pixabay image library</div>
+                                                <div className="w-full text-center">Search Pixabay media library</div>
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center max-w-md">
-                                        InvokeAI creates new images on your hardware. Pixabay finds existing images through the Pixabay API.
+                                        InvokeAI creates new images on your hardware. Pixabay finds existing images or videos through the Pixabay API.
                                     </p>
                                     {imageMediaProvider === 'pixabay' && !savedKeyStatus.pixabay && (
                                         <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
-                                            Add a Pixabay API key in Settings before starting a Pixabay image session.
+                                            Add a Pixabay API key in Settings before starting a Pixabay media session.
                                         </div>
                                     )}
                                 </div>
@@ -2935,7 +2988,23 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 )}
 
                                 {imageMediaProvider === 'pixabay' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-md border border-border/70 p-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 rounded-md border border-border/70 p-3">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="pixabay-media-type" className="block text-center">Media</Label>
+                                            <Select
+                                                value={pixabayMediaType}
+                                                onValueChange={(value: PixabayMediaType) => handlePixabayMediaTypeChange(value)}
+                                                disabled={!user}
+                                            >
+                                                <SelectTrigger id="pixabay-media-type" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                    <SelectValue placeholder="Media" />
+                                                </SelectTrigger>
+                                                <SelectContent className="liquid-glass-panel">
+                                                    <SelectItem value="image"><div className="w-full text-center">Images</div></SelectItem>
+                                                    <SelectItem value="video"><div className="w-full text-center">Videos</div></SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="image-search-orientation" className="block text-center">Orientation</Label>
                                             <Select
@@ -2972,40 +3041,81 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="image-search-type" className="block text-center">Type</Label>
-                                            <Select
-                                                value={imageSearchType}
-                                                onValueChange={(value: ImageSearchType) => setImageSearchType(value)}
-                                                disabled={!user}
-                                            >
-                                                <SelectTrigger id="image-search-type" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
-                                                    <SelectValue placeholder="Type" />
-                                                </SelectTrigger>
-                                                <SelectContent className="liquid-glass-panel">
-                                                    <SelectItem value="photo"><div className="w-full text-center">Photo</div></SelectItem>
-                                                    <SelectItem value="illustration"><div className="w-full text-center">Illustration</div></SelectItem>
-                                                    <SelectItem value="vector"><div className="w-full text-center">Vector</div></SelectItem>
-                                                    <SelectItem value="all"><div className="w-full text-center">All</div></SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        <p className="md:col-span-3 text-xs text-muted-foreground text-center">
-                                            These preferences become Pixabay API filters before the app picks the first suitable result.
+                                        {pixabayMediaType === 'video' ? (
+                                            <>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="video-search-type" className="block text-center">Type</Label>
+                                                    <Select
+                                                        value={videoSearchType}
+                                                        onValueChange={(value: VideoSearchType) => setVideoSearchType(value)}
+                                                        disabled={!user}
+                                                    >
+                                                        <SelectTrigger id="video-search-type" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                            <SelectValue placeholder="Type" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="liquid-glass-panel">
+                                                            <SelectItem value="film"><div className="w-full text-center">Film</div></SelectItem>
+                                                            <SelectItem value="animation"><div className="w-full text-center">Animation</div></SelectItem>
+                                                            <SelectItem value="all"><div className="w-full text-center">All</div></SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="video-search-duration" className="block text-center">Duration</Label>
+                                                    <Select
+                                                        value={videoSearchDuration}
+                                                        onValueChange={(value: VideoSearchDuration) => setVideoSearchDuration(value)}
+                                                        disabled={!user}
+                                                    >
+                                                        <SelectTrigger id="video-search-duration" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                            <SelectValue placeholder="Duration" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="liquid-glass-panel">
+                                                            {(Object.keys(VIDEO_SEARCH_DURATION_LABELS) as VideoSearchDuration[]).map(duration => (
+                                                                <SelectItem key={duration} value={duration}>
+                                                                    <div className="w-full text-center">{VIDEO_SEARCH_DURATION_LABELS[duration]}</div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                <Label htmlFor="image-search-type" className="block text-center">Type</Label>
+                                                <Select
+                                                    value={imageSearchType}
+                                                    onValueChange={(value: ImageSearchType) => setImageSearchType(value)}
+                                                    disabled={!user}
+                                                >
+                                                    <SelectTrigger id="image-search-type" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                        <SelectValue placeholder="Type" />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="liquid-glass-panel">
+                                                        <SelectItem value="photo"><div className="w-full text-center">Photo</div></SelectItem>
+                                                        <SelectItem value="illustration"><div className="w-full text-center">Illustration</div></SelectItem>
+                                                        <SelectItem value="vector"><div className="w-full text-center">Vector</div></SelectItem>
+                                                        <SelectItem value="all"><div className="w-full text-center">All</div></SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
+                                        <p className="md:col-span-4 text-xs text-muted-foreground text-center">
+                                            These preferences become Pixabay API filters where supported, then the app picks the first suitable result.
                                         </p>
                                     </div>
                                 )}
 
                                 {/* Prompt LLM Selection */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="media-granularity-select" className="block text-center">Image cadence</Label>
+                                    <Label htmlFor="media-granularity-select" className="block text-center">Media cadence</Label>
                                     <Select
                                         value={mediaGranularity}
                                         onValueChange={(value: 'paragraph' | 'sentence') => setMediaGranularity(value)}
                                         disabled={!user}
                                     >
                                         <SelectTrigger id="media-granularity-select" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
-                                            <SelectValue placeholder="Select image cadence" />
+                                            <SelectValue placeholder="Select media cadence" />
                                         </SelectTrigger>
                                         <SelectContent className="liquid-glass-panel">
                                             <SelectItem value="paragraph">
@@ -3018,12 +3128,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center">
                                         {mediaGranularity === 'paragraph'
-                                            ? 'One image per paragraph. Calmer pacing, fewer images.'
-                                            : 'One image per sentence. More cinematic, but generates many more images and audio clips.'}
+                                            ? 'One image or video per paragraph. Calmer pacing, fewer media requests.'
+                                            : 'One image or video per sentence. More cinematic, but generates many more media requests and audio clips.'}
                                     </p>
                                     {mediaGranularity === 'sentence' && (
                                         <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
-                                            Sentence mode can generate 3-15x more images and audio clips per message, and will take longer.
+                                            Sentence mode can generate 3-15x more media requests and audio clips per message, and will take longer.
+                                            {imageMediaProvider === 'pixabay' && pixabayMediaType === 'video' ? ' Videos also use more viewer bandwidth than images.' : ''}
                                         </div>
                                     )}
                                 </div>
@@ -3066,7 +3177,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         </SelectContent>
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center">
-                                        The LLM used to generate {imageMediaProvider === 'pixabay' ? 'image search terms' : 'image prompts'} from the current text segment.
+                                        The LLM used to generate {imageMediaProvider === 'pixabay' ? `${pixabayMediaType} search terms` : 'image prompts'} from the current text segment.
                                     </p>
                                 </div>
 
@@ -3097,7 +3208,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         className="w-full px-3 py-2 rounded-md text-center liquid-glass-input min-h-[60px]"
                                         value={imagePromptSystemMessage}
                                         onChange={e => setImagePromptSystemMessage(e.target.value)}
-                                        placeholder="Create a prompt to give to the image generation model based on this paragraph: {paragraph}"
+                                        placeholder={imageMediaProvider === 'pixabay' && pixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}'}
                                         aria-describedby="image-prompt-system-message-description"
                                         aria-label="System prompt for image prompt LLM"
                                         disabled={!user}
