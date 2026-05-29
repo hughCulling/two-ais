@@ -8,9 +8,9 @@ const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://vercel.live https://analytics.vercel.com https://va.vercel-scripts.com https://www.google.com/recaptcha/ https://apis.google.com https://*.firebaseio.com 'unsafe-inline';
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/ https://storage.googleapis.com https://*.googleapis.com https://cdn.pixabay.com https://pixabay.com;
+  img-src 'self' data: https://img.youtube.com https://i.ytimg.com https://www.google.com/images/ https://storage.googleapis.com https://*.googleapis.com https://cdn.pixabay.com https://pixabay.com https://i.vimeocdn.com;
   font-src 'self' https://fonts.gstatic.com;
-  media-src 'self' blob: data: https://storage.googleapis.com https://firebasestorage.googleapis.com;
+  media-src 'self' blob: data: https://storage.googleapis.com https://firebasestorage.googleapis.com https://cdn.pixabay.com https://pixabay.com;
   connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.vercel.com https://www.gstatic.com https://firebase.googleapis.com https://content-firebaseappcheck.googleapis.com https://securetoken.googleapis.com https://www.google.com/recaptcha/ https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com https://us-central1-two-ais.cloudfunctions.net https://firebaseinstallations.googleapis.com;
   frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://two-ais.firebaseapp.com https://*.firebaseio.com https://accounts.google.com;
   object-src 'none';
@@ -137,6 +137,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'pixabay.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.vimeocdn.com',
         port: '',
         pathname: '/**',
       },

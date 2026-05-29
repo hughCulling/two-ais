@@ -2,7 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { User } from 'firebase/auth';
-import type { ImageMediaProvider, ImageSearchOrientation, ImageSearchSize, ImageSearchType } from '@/lib/image-media';
+import type {
+    ImageMediaProvider,
+    ImageSearchOrientation,
+    ImageSearchSize,
+    ImageSearchType,
+    PixabayMediaType,
+    VideoSearchDuration,
+    VideoSearchType,
+} from '@/lib/image-media';
 
 interface AgentTTSSettingsConfig {
     provider: string;
@@ -42,9 +50,12 @@ interface SessionConfig {
         promptLookaheadLimit?: number;
         mediaGranularity?: 'paragraph' | 'sentence';
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 }
 

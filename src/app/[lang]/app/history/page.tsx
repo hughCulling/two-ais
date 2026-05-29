@@ -62,6 +62,7 @@ interface ImageGenSettings {
     promptLookaheadLimit?: number;
     mediaGranularity?: 'paragraph' | 'sentence';
     panoramaMode?: boolean;
+    pixabayMediaType?: 'image' | 'video';
 }
 
 interface ConversationSummary {
@@ -269,7 +270,7 @@ export default function HistoryPage() {
                                                                 <span className="flex-shrink-0 mr-1">{t.history.imageGenerationEnabled || 'Image'}:</span>
                                                                 <span className="truncate min-w-0">
                                                                     {convo.imageGenSettings.provider === 'pixabay'
-                                                                        ? 'Pixabay search'
+                                                                        ? `Pixabay ${convo.imageGenSettings.pixabayMediaType === 'video' ? 'video' : 'image'} search`
                                                                         : getImageModelName(convo.imageGenSettings.model)}
                                                                 </span>
                                                             </div>

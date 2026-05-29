@@ -18,17 +18,26 @@ import {
     type ImageSearchSize,
     type ImageSearchType,
     type ImageSourceMetadata,
+    type PixabayMediaType,
+    type VideoSearchDuration,
+    type VideoSearchResult,
+    type VideoSearchType,
 } from '@/lib/image-media';
 
 interface ParagraphImage {
     paragraphIndex: number;
     imageUrl: string | null;
+    mediaType?: PixabayMediaType;
+    videoUrl?: string;
+    posterUrl?: string;
     status: 'pending' | 'generating' | 'complete' | 'error';
     error?: string;
     source?: ImageSourceMetadata;
     alt?: string;
     width?: number;
     height?: number;
+    duration?: number;
+    sizeBytes?: number;
     searchQuery?: string;
 }
 
@@ -57,9 +66,12 @@ interface ConversationData {
         promptLookaheadLimit?: number;
         mediaGranularity?: MediaGranularity;
         panoramaMode?: boolean;
+        pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
         searchSize?: ImageSearchSize;
         searchImageType?: ImageSearchType;
+        videoSearchType?: VideoSearchType;
+        videoSearchDuration?: VideoSearchDuration;
     };
 }
 
@@ -271,11 +283,47 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 }
 
                 if (imageGenSettings.provider === 'pixabay') {
+                    const mediaType = imageGenSettings.pixabayMediaType || 'image';
+
+                    if (mediaType === 'video') {
+                        const videoResult = await searchPixabayVideo(prompt, imageGenSettings);
+
+                        if (!videoResult.result) {
+                            paragraphImages[paragraphIndex] = {
+                                ...paragraphImages[paragraphIndex],
+                                mediaType: 'video',
+                                status: 'error',
+                                error: videoResult.error || 'Failed to find a Pixabay video',
+                            };
+                            await updateDoc(messageRef, { paragraphImages });
+                            continue;
+                        }
+
+                        paragraphImages[paragraphIndex] = {
+                            ...paragraphImages[paragraphIndex],
+                            mediaType: 'video',
+                            imageUrl: videoResult.result.posterUrl || null,
+                            videoUrl: videoResult.result.videoUrl,
+                            posterUrl: videoResult.result.posterUrl,
+                            status: 'complete',
+                            source: videoResult.result.source,
+                            alt: videoResult.result.alt || prompt,
+                            width: videoResult.result.width,
+                            height: videoResult.result.height,
+                            duration: videoResult.result.duration,
+                            sizeBytes: videoResult.result.sizeBytes,
+                            searchQuery: normalizeImageSearchQuery(prompt),
+                        };
+                        await updateDoc(messageRef, { paragraphImages });
+                        continue;
+                    }
+
                     const imageResult = await searchPixabayImage(prompt, imageGenSettings);
 
                     if (!imageResult.result) {
                         paragraphImages[paragraphIndex] = {
                             ...paragraphImages[paragraphIndex],
+                            mediaType: 'image',
                             status: 'error',
                             error: imageResult.error || 'Failed to find a Pixabay image',
                         };
@@ -285,6 +333,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
                     paragraphImages[paragraphIndex] = {
                         ...paragraphImages[paragraphIndex],
+                        mediaType: 'image',
                         imageUrl: imageResult.result.imageUrl,
                         status: 'complete',
                         source: imageResult.result.source,
@@ -331,6 +380,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 // Step 4: Update message with image URL
                 paragraphImages[paragraphIndex] = {
                     ...paragraphImages[paragraphIndex],
+                    mediaType: 'image',
                     imageUrl,
                     status: 'complete',
                 };
@@ -429,6 +479,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         const paragraphImages: ParagraphImage[] = segments.map((_, index) => ({
                             paragraphIndex: index,
                             imageUrl: null,
+                            mediaType: settings.provider === 'pixabay' ? (settings.pixabayMediaType || 'image') : 'image',
                             status: 'pending',
                         }));
 
@@ -609,6 +660,50 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error searching Pixabay:', error);
             return { result: null, error: error instanceof Error ? error.message : 'Failed to search Pixabay' };
+        }
+    }
+
+    async function searchPixabayVideo(
+        query: string,
+        imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
+    ): Promise<{ result: VideoSearchResult | null; error?: string }> {
+        try {
+            const normalizedQuery = normalizeImageSearchQuery(query);
+            if (!normalizedQuery) {
+                return { result: null, error: 'Video search query was empty' };
+            }
+
+            const currentUser = auth.currentUser;
+            const idToken = currentUser ? await currentUser.getIdToken() : null;
+            if (!idToken) {
+                throw new Error('Not authenticated');
+            }
+
+            const response = await fetch('/api/video-search/pixabay', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+                body: JSON.stringify({
+                    query: normalizedQuery,
+                    orientation: imageGenSettings.searchOrientation || 'landscape',
+                    size: imageGenSettings.searchSize || 'medium',
+                    videoType: imageGenSettings.videoSearchType || 'film',
+                    duration: imageGenSettings.videoSearchDuration || 'short',
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Pixabay video search error: ${response.status} ${response.statusText} - ${errorText}`);
+            }
+
+            const data = await response.json() as { result?: VideoSearchResult };
+            return { result: data.result || null };
+        } catch (error) {
+            console.error('[InvokeAI ImageGen] Error searching Pixabay video:', error);
+            return { result: null, error: error instanceof Error ? error.message : 'Failed to search Pixabay video' };
         }
     }
 
