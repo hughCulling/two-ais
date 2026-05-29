@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // Removed unused PlayCircle, PauseCircle
-import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Volume2, Pause, Play, ScrollText, Maximize2, Minimize2, ImageIcon, X, ChevronLeft, ChevronRight, SkipForward, Captions } from "lucide-react";
 import {
     Alert,
     AlertDescription,
@@ -1261,6 +1261,7 @@ export function ChatInterface({
     // --- Image Modal State ---
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
     const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
+    const [gallerySubtitlesEnabled, setGallerySubtitlesEnabled] = useState(false);
     const [fullscreenAudioSync, setFullscreenAudioSync] = useState<{
         messageId: string | null;
         paragraphIndex: number | null;
@@ -2620,6 +2621,17 @@ export function ChatInterface({
                 const currentImageIndex = completeImages.findIndex(img =>
                     message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
                 );
+                const currentSegment = getSegments(message.content).find(
+                    segment => segment.segmentIndex === fullScreenGallery.paragraphIndex
+                );
+                const subtitleText = currentSegment
+                    ? cleanTextForTTS(removeEmojis(removeMarkdown(currentSegment.text))).trim()
+                    : '';
+                const subtitlesAvailable = Boolean(
+                    conversationData?.imageGenSettings?.enabled &&
+                    conversationData?.ttsSettings?.enabled &&
+                    subtitleText
+                );
                 const isWaitingForSyncedImage = Boolean(
                     fullscreenAudioSync.waitingForImage &&
                     fullscreenAudioSync.messageId &&
@@ -2707,9 +2719,42 @@ export function ChatInterface({
 
                                 {/* Image counter */}
                                 {completeImages.length > 1 && (
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
                                         {currentImageIndex + 1} / {completeImages.length}
                                     </div>
+                                )}
+
+                                {subtitlesAvailable && (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className={`absolute top-4 left-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold shadow transition-colors ${
+                                                gallerySubtitlesEnabled
+                                                    ? 'bg-white text-black hover:bg-white/90'
+                                                    : 'bg-black/70 text-white hover:bg-black/85'
+                                            }`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setGallerySubtitlesEnabled(enabled => !enabled);
+                                            }}
+                                            aria-label={gallerySubtitlesEnabled ? 'Hide subtitles' : 'Show subtitles'}
+                                            aria-pressed={gallerySubtitlesEnabled}
+                                        >
+                                            <Captions className="h-4 w-4" />
+                                            Subtitles
+                                        </button>
+
+                                        {gallerySubtitlesEnabled && (
+                                            <div
+                                                className={`absolute left-1/2 max-h-[30vh] w-[min(92vw,56rem)] -translate-x-1/2 overflow-y-auto rounded-md bg-black/75 px-4 py-3 text-center text-base leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-lg ${
+                                                    currentImage.source ? 'bottom-14' : 'bottom-4'
+                                                }`}
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                {subtitleText}
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </>
                         )}
