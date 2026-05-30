@@ -51,7 +51,7 @@ export interface SessionPreset {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
-        mediaGranularity?: 'paragraph' | 'sentence';
+        mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
         panoramaMode?: boolean;
         pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;

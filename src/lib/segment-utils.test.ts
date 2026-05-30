@@ -3,9 +3,13 @@
 import {
     splitIntoMediaSegments,
     getMediaGranularity,
+    resolveMediaSegments,
     replacePromptPlaceholders,
+    buildMarkedSmartMediaSegments,
+    buildIndexedSmartMediaSegments,
+    createIndexedMediaSegmentationPrompt,
+    SMART_MEDIA_BREAK_MARKER,
     type MediaSegment,
-    type MediaGranularity,
 } from './segment-utils';
 
 describe('splitIntoMediaSegments', () => {
@@ -172,6 +176,36 @@ describe('getMediaGranularity', () => {
             imageGenSettings: { enabled: true, mediaGranularity: 'sentence' }
         })).toBe('sentence');
     });
+
+    it('returns smart when configured', () => {
+        expect(getMediaGranularity({
+            imageGenSettings: { enabled: true, mediaGranularity: 'smart' }
+        })).toBe('smart');
+    });
+});
+
+describe('resolveMediaSegments', () => {
+    it('uses persisted smart segments when available', () => {
+        const persisted: MediaSegment[] = [
+            { text: 'A gate opens', segmentIndex: 7, paragraphIndex: 2, sentenceIndex: 0 },
+            { text: 'A garden appears', segmentIndex: 8, paragraphIndex: 2, sentenceIndex: 0 },
+        ];
+
+        const segments = resolveMediaSegments('A gate opens and a garden appears.', 'smart', 'en', persisted);
+
+        expect(segments).toEqual([
+            { text: 'A gate opens', segmentIndex: 0, paragraphIndex: 2, sentenceIndex: 0 },
+            { text: 'A garden appears', segmentIndex: 1, paragraphIndex: 2, sentenceIndex: 0 },
+        ]);
+    });
+
+    it('falls back to paragraph mode for smart without persisted segments', () => {
+        const segments = resolveMediaSegments('One.\n\nTwo.', 'smart');
+
+        expect(segments).toHaveLength(2);
+        expect(segments[0].text).toBe('One.');
+        expect(segments[1].text).toBe('Two.');
+    });
 });
 
 describe('replacePromptPlaceholders', () => {
@@ -201,5 +235,94 @@ describe('replacePromptPlaceholders', () => {
 
     it('handles templates with no placeholders', () => {
         expect(replacePromptPlaceholders('No placeholders here', 'test')).toBe('No placeholders here');
+    });
+});
+
+describe('buildMarkedSmartMediaSegments', () => {
+    it('builds exact media segments from inserted break markers', () => {
+        const content = 'The camera opens on a city street. A train rushes past.';
+        const marked = `The camera opens on a city street.${SMART_MEDIA_BREAK_MARKER} A train rushes past.`;
+
+        const result = buildMarkedSmartMediaSegments(content, marked);
+
+        expect(result.mismatch).toBeUndefined();
+        expect(result.breakOffsets).toEqual(['The camera opens on a city street.'.length]);
+        expect(result.segments?.map(segment => segment.text)).toEqual([
+            'The camera opens on a city street.',
+            ' A train rushes past.',
+        ]);
+    });
+
+    it('allows marker-only whitespace that the model adds around a marker', () => {
+        const content = 'First scene.\n\nSecond scene.';
+        const marked = `First scene.\n\n${SMART_MEDIA_BREAK_MARKER}\n\nSecond scene.`;
+
+        const result = buildMarkedSmartMediaSegments(content, marked);
+
+        expect(result.mismatch).toBeUndefined();
+        expect(result.segments?.map(segment => segment.text)).toEqual([
+            'First scene.\n\n',
+            'Second scene.',
+        ]);
+    });
+
+    it('rejects output that rewrites the original text', () => {
+        const content = 'A small boat crosses the lake.';
+        const marked = `A tiny boat${SMART_MEDIA_BREAK_MARKER} crosses the lake.`;
+
+        const result = buildMarkedSmartMediaSegments(content, marked);
+
+        expect(result.segments).toBeNull();
+        expect(result.mismatch?.reason).toBe('marker-text-mismatch');
+    });
+});
+
+describe('indexed smart media segmentation', () => {
+    it('creates indexed text while preserving exact token offsets', () => {
+        const content = 'Jean-Luc smiles.\n\nA train arrives.';
+        const prompt = createIndexedMediaSegmentationPrompt(content);
+
+        expect(prompt.indexedText).toBe('[1] Jean-Luc [2] smiles.\n\n[3] A [4] train [5] arrives.');
+        expect(prompt.tokens.map(token => content.slice(token.startOffset, token.endOffset))).toEqual([
+            'Jean-Luc',
+            'smiles.',
+            'A',
+            'train',
+            'arrives.',
+        ]);
+    });
+
+    it('builds segments from valid break token ids without copying LLM text', () => {
+        const content = 'The camera opens on a city street. A train rushes past.';
+        const { tokens } = createIndexedMediaSegmentationPrompt(content);
+        const result = buildIndexedSmartMediaSegments(content, tokens, [7]);
+
+        expect(result.mismatch).toBeUndefined();
+        expect(result.breakTokenIds).toEqual([7]);
+        expect(result.segments?.map(segment => segment.text)).toEqual([
+            'The camera opens on a city street. ',
+            'A train rushes past.',
+        ]);
+    });
+
+    it('allows a single-token first segment', () => {
+        const content = 'Boom. Smoke fills the room.';
+        const { tokens } = createIndexedMediaSegmentationPrompt(content);
+        const result = buildIndexedSmartMediaSegments(content, tokens, [1]);
+
+        expect(result.mismatch).toBeUndefined();
+        expect(result.segments?.map(segment => segment.text)).toEqual([
+            'Boom. ',
+            'Smoke fills the room.',
+        ]);
+    });
+
+    it('rejects invalid break token ids', () => {
+        const content = 'One two three.';
+        const { tokens } = createIndexedMediaSegmentationPrompt(content);
+        const result = buildIndexedSmartMediaSegments(content, tokens, [2, 99, 'bad']);
+
+        expect(result.segments).toBeNull();
+        expect(result.mismatch?.reason).toBe('invalid-break-token-ids');
     });
 });

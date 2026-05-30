@@ -6,11 +6,20 @@ import { useEffect, useRef, useCallback } from 'react';
 import { doc, collection, onSnapshot, updateDoc, getDoc, DocumentReference } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase/clientApp';
-import { splitIntoMediaSegments, replacePromptPlaceholders, type MediaGranularity } from '@/lib/segment-utils';
+import {
+    buildIndexedSmartMediaSegments,
+    createIndexedMediaSegmentationPrompt,
+    splitIntoMediaSegments,
+    replacePromptPlaceholders,
+    type MediaGranularity,
+    type IndexedMediaSegmentationMismatch,
+    type MediaSegment,
+} from '@/lib/segment-utils';
 import { getProviderFromId } from '@/lib/models';
 import { auth } from '@/lib/firebase/clientApp';
 import { getInvokeAIErrorMessage } from '@/lib/invokeai';
 import {
+    DEFAULT_SMART_MEDIA_SEGMENTATION_PROMPT,
     normalizeImageSearchQuery,
     type ImageMediaProvider,
     type ImageSearchOrientation,
@@ -39,6 +48,32 @@ interface ParagraphImage {
     duration?: number;
     sizeBytes?: number;
     searchQuery?: string;
+    mediaPrompt?: string;
+    mediaPromptType?: 'image-prompt' | 'search-query';
+}
+
+interface MediaSegmentationDebug {
+    status: 'ok' | 'empty' | 'invalid-json' | 'invalid-indexes' | 'source-mismatch' | 'error';
+    rawResponse?: string;
+    rawResponseTruncated?: boolean;
+    parsedSections?: string[];
+    parsedSectionsTruncated?: boolean;
+    mismatch?: SmartMediaMismatchDetails;
+    breakOffsets?: number[];
+    breakTokenIds?: number[];
+    tokenCount?: number;
+    fallbackUsed: 'paragraph' | null;
+    error?: string;
+    promptLlm?: string;
+    segmentCount?: number;
+    createdAt: string;
+}
+
+type SmartMediaMismatchDetails = IndexedMediaSegmentationMismatch;
+
+interface SmartMediaSegmentationResult {
+    segments: MediaSegment[];
+    debug?: MediaSegmentationDebug;
 }
 
 interface ConversationData {
@@ -79,6 +114,8 @@ interface MessageData {
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
     paragraphImages?: ParagraphImage[];
+    mediaSegments?: MediaSegment[];
+    mediaSegmentationDebug?: MediaSegmentationDebug;
 }
 
 interface QueueItem {
@@ -117,6 +154,15 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         queuedPromptKeysRef.current.clear();
         isPromptWorkerRunningRef.current = false;
     }, []);
+
+    const isPermissionDeniedError = (error: unknown): boolean => {
+        return Boolean(
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            (error as { code?: string }).code === 'permission-denied'
+        );
+    };
 
     const runPromptQueue = useCallback(async () => {
         if (isPromptWorkerRunningRef.current) return;
@@ -284,6 +330,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
                 if (imageGenSettings.provider === 'pixabay') {
                     const mediaType = imageGenSettings.pixabayMediaType || 'image';
+                    const searchQuery = normalizeImageSearchQuery(prompt);
 
                     if (mediaType === 'video') {
                         const videoResult = await searchPixabayVideo(prompt, imageGenSettings);
@@ -312,7 +359,9 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                             height: videoResult.result.height,
                             duration: videoResult.result.duration,
                             sizeBytes: videoResult.result.sizeBytes,
-                            searchQuery: normalizeImageSearchQuery(prompt),
+                            searchQuery,
+                            mediaPrompt: searchQuery,
+                            mediaPromptType: 'search-query',
                         };
                         await updateDoc(messageRef, { paragraphImages });
                         continue;
@@ -340,7 +389,9 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         alt: imageResult.result.alt || prompt,
                         width: imageResult.result.width,
                         height: imageResult.result.height,
-                        searchQuery: normalizeImageSearchQuery(prompt),
+                        searchQuery,
+                        mediaPrompt: searchQuery,
+                        mediaPromptType: 'search-query',
                     };
                     await updateDoc(messageRef, { paragraphImages });
                     continue;
@@ -383,6 +434,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                     mediaType: 'image',
                     imageUrl,
                     status: 'complete',
+                    mediaPrompt: prompt,
+                    mediaPromptType: 'image-prompt',
                 };
                 await updateDoc(messageRef, { paragraphImages });
 
@@ -464,34 +517,38 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         !messageData.paragraphImages &&
                         !processingRef.current.has(messageId)) {
 
+                        // Mark before any async segmentation work so repeated snapshots do not
+                        // enqueue the same message while the prompt LLM is deciding sections.
+                        processingRef.current.add(messageId);
+
                         // Split message into media segments based on configured granularity
                         const settings = conversationData.imageGenSettings!;
                         const granularity: MediaGranularity = settings.mediaGranularity || 'paragraph';
                         const convLanguage = conversationData.language || 'en';
-                        const segments = splitIntoMediaSegments(messageData.content, granularity, convLanguage);
+                        const convOllamaEndpoint = conversationData.ollamaEndpoint || 'http://localhost:11434';
+                        const segmentationResult = granularity === 'smart'
+                            ? await generateSmartMediaSegments(messageData.content, settings, convOllamaEndpoint)
+                            : { segments: splitIntoMediaSegments(messageData.content, granularity, convLanguage) };
+                        const { segments } = segmentationResult;
 
-                        if (segments.length === 0) continue;
+                        if (segments.length === 0) {
+                            processingRef.current.delete(messageId);
+                            continue;
+                        }
 
-                        // Mark as processing
-                        processingRef.current.add(messageId);
-
-                        // Initialize paragraph images array (indexed by segment)
-                        const paragraphImages: ParagraphImage[] = segments.map((_, index) => ({
-                            paragraphIndex: index,
-                            imageUrl: null,
-                            mediaType: settings.provider === 'pixabay' ? (settings.pixabayMediaType || 'image') : 'image',
-                            status: 'pending',
-                        }));
-
-                        // Update message with initial paragraph images state
-                        await updateDoc(messageDoc.ref, {
-                            paragraphImages,
+                        const initializedSegments = await initializeMediaSegmentsForMessage({
+                            messageRef: messageDoc.ref,
+                            content: messageData.content,
+                            segments,
+                            settings,
+                            granularity,
+                            language: convLanguage,
+                            debug: segmentationResult.debug,
                         });
 
                         // Queue all segments for sequential generation
-                        const segmentTexts = segments.map(s => s.text);
-                        const convOllamaEndpoint = conversationData.ollamaEndpoint || 'http://localhost:11434';
-                        for (let i = 0; i < segments.length; i++) {
+                        const segmentTexts = initializedSegments.map(s => s.text);
+                        for (let i = 0; i < initializedSegments.length; i++) {
                             generationQueueRef.current.push({
                                 messageId,
                                 paragraphIndex: i,
@@ -517,7 +574,301 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
             unsubscribeConversation();
             resetGenerationState();
         };
+    // Smart segmentation only reads per-call settings and stable module imports.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId, userId, processGenerationQueue, resetGenerationState]);
+
+    async function initializeMediaSegmentsForMessage({
+        messageRef,
+        content,
+        segments,
+        settings,
+        granularity,
+        language,
+        debug,
+    }: {
+        messageRef: DocumentReference;
+        content: string;
+        segments: MediaSegment[];
+        settings: NonNullable<ConversationData['imageGenSettings']>;
+        granularity: MediaGranularity;
+        language: string;
+        debug?: MediaSegmentationDebug;
+    }): Promise<MediaSegment[]> {
+        const makeParagraphImages = (targetSegments: MediaSegment[]): ParagraphImage[] =>
+            targetSegments.map((_, index) => ({
+                paragraphIndex: index,
+                imageUrl: null,
+                mediaType: settings.provider === 'pixabay' ? (settings.pixabayMediaType || 'image') : 'image',
+                status: 'pending',
+            }));
+
+        const paragraphImages = makeParagraphImages(segments);
+
+        if (granularity !== 'smart') {
+            await updateDoc(messageRef, { paragraphImages });
+            return segments;
+        }
+
+        try {
+            await updateDoc(messageRef, {
+                paragraphImages,
+                mediaSegments: segments,
+                ...(debug ? { mediaSegmentationDebug: debug } : {}),
+            });
+            return segments;
+        } catch (error) {
+            if (!isPermissionDeniedError(error)) {
+                throw error;
+            }
+
+            if (debug) {
+                try {
+                    await updateDoc(messageRef, { paragraphImages, mediaSegments: segments });
+                    console.warn(
+                        '[InvokeAI ImageGen] Firestore rules blocked mediaSegmentationDebug updates. ' +
+                        'Smart media still ran, but deploy firestore.rules to persist segmentation debug details.'
+                    );
+                    return segments;
+                } catch (fallbackError) {
+                    if (!isPermissionDeniedError(fallbackError)) {
+                        throw fallbackError;
+                    }
+                }
+            }
+
+            console.warn(
+                '[InvokeAI ImageGen] Firestore rules blocked mediaSegments updates. ' +
+                'Falling back to paragraph media for this message. Deploy firestore.rules to enable AI-directed sections and segmentation debug details.'
+            );
+
+            const fallbackSegments = splitIntoMediaSegments(content, 'paragraph', language);
+            await updateDoc(messageRef, { paragraphImages: makeParagraphImages(fallbackSegments) });
+            return fallbackSegments;
+        }
+    }
+
+    async function generateSmartMediaSegments(
+        content: string,
+        imageGenSettings: NonNullable<ConversationData['imageGenSettings']>,
+        ollamaEndpoint: string
+    ): Promise<SmartMediaSegmentationResult> {
+        const fallbackSegments = splitIntoMediaSegments(content, 'paragraph');
+        const indexedPrompt = createIndexedMediaSegmentationPrompt(content);
+
+        try {
+            const response = await generateImagePrompt(
+                indexedPrompt.indexedText,
+                imageGenSettings.promptLlm,
+                DEFAULT_SMART_MEDIA_SEGMENTATION_PROMPT,
+                ollamaEndpoint
+            );
+
+            if (!response) {
+                const debug = createMediaSegmentationDebug({
+                    status: 'empty',
+                    rawResponse: response || '',
+                    fallbackUsed: 'paragraph',
+                    promptLlm: imageGenSettings.promptLlm,
+                    segmentCount: fallbackSegments.length,
+                });
+                logSmartSegmentationDebug(debug);
+                console.warn('[InvokeAI ImageGen] Smart media segmentation returned no response. Falling back to paragraph mode.');
+                return { segments: fallbackSegments, debug };
+            }
+
+            const requestedBreakTokenIds = parseSmartMediaBreakTokenIds(response);
+            if (!requestedBreakTokenIds) {
+                const debug = createMediaSegmentationDebug({
+                    status: 'invalid-json',
+                    rawResponse: response,
+                    fallbackUsed: 'paragraph',
+                    promptLlm: imageGenSettings.promptLlm,
+                    segmentCount: fallbackSegments.length,
+                    tokenCount: indexedPrompt.tokens.length,
+                });
+                logSmartSegmentationDebug(debug);
+                console.warn('[InvokeAI ImageGen] Smart media segmentation returned invalid breakpoint JSON. Falling back to paragraph mode.');
+                return { segments: fallbackSegments, debug };
+            }
+
+            const indexedResult = buildIndexedSmartMediaSegments(content, indexedPrompt.tokens, requestedBreakTokenIds);
+            if (!indexedResult.segments || indexedResult.segments.length === 0) {
+                const debug = createMediaSegmentationDebug({
+                    status: 'invalid-indexes',
+                    rawResponse: response,
+                    mismatch: indexedResult.mismatch,
+                    breakOffsets: indexedResult.breakOffsets,
+                    breakTokenIds: indexedResult.breakTokenIds,
+                    fallbackUsed: 'paragraph',
+                    promptLlm: imageGenSettings.promptLlm,
+                    segmentCount: fallbackSegments.length,
+                    tokenCount: indexedPrompt.tokens.length,
+                });
+                logSmartSegmentationDebug(debug);
+                console.warn('[InvokeAI ImageGen] Smart media segmentation returned invalid breakpoint indexes. Falling back to paragraph mode.');
+                return { segments: fallbackSegments, debug };
+            }
+
+            const smartSegments = indexedResult.segments;
+            const debug = createMediaSegmentationDebug({
+                status: 'ok',
+                rawResponse: response,
+                parsedSections: smartSegments.map(segment => segment.text),
+                breakOffsets: indexedResult.breakOffsets,
+                breakTokenIds: indexedResult.breakTokenIds,
+                fallbackUsed: null,
+                promptLlm: imageGenSettings.promptLlm,
+                segmentCount: smartSegments.length,
+                tokenCount: indexedPrompt.tokens.length,
+            });
+            logSmartSegmentationDebug(debug);
+
+            return { segments: smartSegments, debug };
+        } catch (error) {
+            const debug = createMediaSegmentationDebug({
+                status: 'error',
+                fallbackUsed: 'paragraph',
+                error: error instanceof Error ? error.message : String(error),
+                promptLlm: imageGenSettings.promptLlm,
+                segmentCount: fallbackSegments.length,
+            });
+            logSmartSegmentationDebug(debug);
+            console.warn('[InvokeAI ImageGen] Smart media segmentation failed. Falling back to paragraph mode:', error);
+            return { segments: fallbackSegments, debug };
+        }
+    }
+
+    function createMediaSegmentationDebug({
+        status,
+        rawResponse,
+        parsedSections,
+        mismatch,
+        breakOffsets,
+        breakTokenIds,
+        fallbackUsed,
+        error,
+        promptLlm,
+        segmentCount,
+        tokenCount,
+    }: {
+        status: MediaSegmentationDebug['status'];
+        rawResponse?: string;
+        parsedSections?: string[];
+        mismatch?: SmartMediaMismatchDetails;
+        breakOffsets?: number[];
+        breakTokenIds?: number[];
+        fallbackUsed: 'paragraph' | null;
+        error?: string;
+        promptLlm?: string;
+        segmentCount?: number;
+        tokenCount?: number;
+    }): MediaSegmentationDebug {
+        const maxRawResponseLength = 12000;
+        const maxSections = 80;
+        const maxSectionLength = 2000;
+        const safeRawResponse = typeof rawResponse === 'string'
+            ? rawResponse.slice(0, maxRawResponseLength)
+            : undefined;
+        const safeSections = Array.isArray(parsedSections)
+            ? parsedSections
+                .slice(0, maxSections)
+                .map(section => section.slice(0, maxSectionLength))
+            : undefined;
+
+        return {
+            status,
+            ...(typeof safeRawResponse === 'string' ? { rawResponse: safeRawResponse } : {}),
+            ...(typeof rawResponse === 'string' && rawResponse.length > maxRawResponseLength ? { rawResponseTruncated: true } : {}),
+            ...(safeSections ? { parsedSections: safeSections } : {}),
+            ...(Array.isArray(parsedSections) && parsedSections.length > maxSections ? { parsedSectionsTruncated: true } : {}),
+            ...(mismatch ? { mismatch } : {}),
+            ...(Array.isArray(breakOffsets) ? { breakOffsets: breakOffsets.slice(0, maxSections) } : {}),
+            ...(Array.isArray(breakTokenIds) ? { breakTokenIds: breakTokenIds.slice(0, maxSections) } : {}),
+            fallbackUsed,
+            ...(error ? { error: error.slice(0, 1000) } : {}),
+            ...(promptLlm ? { promptLlm } : {}),
+            ...(typeof segmentCount === 'number' ? { segmentCount } : {}),
+            ...(typeof tokenCount === 'number' ? { tokenCount } : {}),
+            createdAt: new Date().toISOString(),
+        };
+    }
+
+    function logSmartSegmentationDebug(debug: MediaSegmentationDebug) {
+        console.info('[InvokeAI ImageGen] Smart media segmentation debug:', debug);
+        if (process.env.NODE_ENV === 'development') {
+            void fetch('/api/client-debug-log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    scope: 'smart-media',
+                    message: 'segmentation summary',
+                    data: {
+                        status: debug.status,
+                        fallbackUsed: debug.fallbackUsed,
+                        segmentCount: debug.segmentCount,
+                        breakCount: debug.breakOffsets?.length ?? 0,
+                        breakTokenCount: debug.breakTokenIds?.length ?? 0,
+                        tokenCount: debug.tokenCount,
+                        promptLlm: debug.promptLlm,
+                        mismatchReason: debug.mismatch?.reason,
+                        invalidBreakTokenIds: debug.mismatch
+                            ? debug.mismatch.invalidBreakTokenIds.slice(0, 20)
+                            : undefined,
+                    },
+                }),
+            }).catch(() => undefined);
+        }
+    }
+
+    function parseSmartMediaBreakTokenIds(response: string): unknown[] | null {
+        const trimmed = response.trim();
+        const withoutFence = trimmed
+            .replace(/^```(?:json)?\s*/i, '')
+            .replace(/\s*```$/i, '')
+            .trim();
+        const jsonStart = withoutFence.indexOf('{');
+        const jsonEnd = withoutFence.lastIndexOf('}');
+        const jsonText = jsonStart >= 0 && jsonEnd > jsonStart
+            ? withoutFence.slice(jsonStart, jsonEnd + 1)
+            : withoutFence;
+
+        try {
+            const parsed = JSON.parse(jsonText) as unknown;
+            const ids = Array.isArray(parsed)
+                ? parsed
+                : typeof parsed === 'object' && parsed !== null
+                    ? readBreakTokenIds(parsed as Record<string, unknown>)
+                    : null;
+
+            if (!ids) return null;
+
+            return ids.map((id) => {
+                if (typeof id === 'string' && /^-?\d+$/.test(id.trim())) {
+                    return Number(id.trim());
+                }
+                return id;
+            });
+        } catch {
+            return null;
+        }
+    }
+
+    function readBreakTokenIds(parsed: Record<string, unknown>): unknown[] | null {
+        const candidateKeys = [
+            'breakAfterTokenIds',
+            'breakAfterTokens',
+            'break_after_token_ids',
+            'breakpoints',
+        ];
+
+        for (const key of candidateKeys) {
+            const value = parsed[key];
+            if (Array.isArray(value)) return value;
+        }
+
+        return null;
+    }
 
     async function generateImagePrompt(
         paragraph: string,

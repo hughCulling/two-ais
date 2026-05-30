@@ -25,7 +25,7 @@ import { removeEmojis, cleanTextForTTS } from '@/lib/utils';
 import Image from 'next/image';
 import { splitIntoTTSChunks } from '@/lib/tts-utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
-import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
+import { resolveMediaSegments, getMediaGranularity, type MediaSegment } from '@/lib/segment-utils';
 import type { ImageSourceMetadata, PixabayMediaType } from '@/lib/image-media';
 
 // Function to get the appropriate date-fns locale based on language code
@@ -87,6 +87,39 @@ interface ParagraphImage {
     height?: number;
     duration?: number;
     sizeBytes?: number;
+    searchQuery?: string;
+    mediaPrompt?: string;
+    mediaPromptType?: 'image-prompt' | 'search-query';
+}
+
+interface MediaSegmentationDebug {
+    status: 'ok' | 'empty' | 'invalid-json' | 'invalid-indexes' | 'source-mismatch' | 'error';
+    rawResponse?: string;
+    rawResponseTruncated?: boolean;
+    parsedSections?: string[];
+    parsedSectionsTruncated?: boolean;
+    mismatch?: (
+        {
+            reason: 'marker-text-mismatch';
+            responseIndex: number;
+            sourceIndex: number;
+            responseContext: string;
+            sourceContext: string;
+            marker: string;
+        } | {
+            reason: 'invalid-break-token-ids';
+            invalidBreakTokenIds: Array<string | number | boolean | null>;
+            tokenCount: number;
+        }
+    );
+    breakOffsets?: number[];
+    breakTokenIds?: number[];
+    tokenCount?: number;
+    fallbackUsed: 'paragraph' | null;
+    error?: string;
+    promptLlm?: string;
+    segmentCount?: number;
+    createdAt: string;
 }
 
 interface Message {
@@ -96,6 +129,8 @@ interface Message {
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
+    mediaSegments?: MediaSegment[];
+    mediaSegmentationDebug?: MediaSegmentationDebug;
     paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
@@ -123,7 +158,7 @@ interface ImageGenSettings {
     size?: string;
     promptLlm: string;
     promptSystemMessage: string;
-    mediaGranularity?: 'paragraph' | 'sentence';
+    mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
     panoramaMode?: boolean;
     pixabayMediaType?: PixabayMediaType;
 }
@@ -203,22 +238,26 @@ export default function ChatHistoryViewerPage() {
         setIsFullscreen(prev => !prev);
     }, []);
 
-    const getSegments = useCallback((content: string) => {
+    const getSegments = useCallback((content: string, mediaSegments?: MediaSegment[]) => {
         const granularity = getMediaGranularity({
             imageGenSettings: {
                 enabled: Boolean(details?.imageGenSettings?.enabled),
                 mediaGranularity: details?.imageGenSettings?.mediaGranularity,
             },
         });
-        return splitIntoMediaSegments(content, granularity, details?.language || 'en');
+        return resolveMediaSegments(content, granularity, details?.language || 'en', mediaSegments);
     }, [details]);
 
-    const getSpeakableSegments = useCallback((content: string) => {
-        return getSegments(content).filter((segment) => {
+    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+        return getSegments(message.content, message.mediaSegments);
+    }, [getSegments]);
+
+    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+        return getMessageSegments(message).filter((segment) => {
             const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
             return cleaned.trim().length > 0;
         });
-    }, [getSegments]);
+    }, [getMessageSegments]);
 
     const handlePauseAudio = useCallback(() => {
         if (audioRef.current) {
@@ -355,6 +394,7 @@ export default function ChatHistoryViewerPage() {
     }> = ({ msg }) => {
         const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
         const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
+        const [galleryPromptEnabled, setGalleryPromptEnabled] = useState(false);
         const [imageLoadStatus, setImageLoadStatus] = useState<Record<string, 'loading' | 'loaded' | 'error'>>({});
         
         const isAgentA = msg.role === 'agentA';
@@ -405,7 +445,7 @@ export default function ChatHistoryViewerPage() {
                 
                 if (ttsConfig?.provider === 'browser') {
                     // Use the same markdown removal and chunking as in ChatInterface
-                    const speakableSegments = getSpeakableSegments(msg.content);
+                    const speakableSegments = getSpeakableSegments(msg);
                     const chunks: string[] = [];
                     const segmentIndices: number[] = [];
                     speakableSegments.forEach((segment) => {
@@ -739,7 +779,7 @@ export default function ChatHistoryViewerPage() {
                     <div>
                         {(isAgentA || isAgentB) ? (
                             <>
-                                {getSegments(msg.content).map((segment) => {
+                                {getMessageSegments(msg).map((segment) => {
                                     const paragraphKey = `${msg.id}-s${segment.segmentIndex}`;
                                     const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                                     const isSpeakable = cleanedSegment.trim().length > 0;
@@ -947,6 +987,11 @@ export default function ChatHistoryViewerPage() {
                     if (!currentImage || currentImage.status !== 'complete' || (!currentImage.imageUrl && !currentImage.videoUrl)) {
                         return null;
                     }
+
+                    const mediaPromptText = (currentImage.mediaPrompt || currentImage.searchQuery || '').trim();
+                    const mediaPromptLabel = currentImage.mediaPromptType === 'search-query' || currentImage.searchQuery
+                        ? 'Query'
+                        : 'Prompt';
                     
                     return ReactDOM.createPortal(
                         <div
@@ -990,6 +1035,40 @@ export default function ChatHistoryViewerPage() {
                                 >
                                     {currentImage.mediaType === 'video' ? 'Video' : 'Image'}: {currentImage.source.providerName}{currentImage.source.authorName ? ` / ${currentImage.source.authorName}` : ''}
                                 </a>
+                            )}
+
+                            {mediaPromptText && (
+                                <>
+                                    <button
+                                        type="button"
+                                        className={`absolute left-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold shadow transition-colors ${
+                                            galleryPromptEnabled
+                                                ? 'bg-white text-black hover:bg-white/90'
+                                                : 'bg-black/70 text-white hover:bg-black/85'
+                                        }`}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setGalleryPromptEnabled(enabled => !enabled);
+                                        }}
+                                        aria-label={galleryPromptEnabled ? `Hide ${mediaPromptLabel.toLowerCase()}` : `Show ${mediaPromptLabel.toLowerCase()}`}
+                                        aria-pressed={galleryPromptEnabled}
+                                    >
+                                        <ScrollText className="h-4 w-4" />
+                                        {mediaPromptLabel}
+                                    </button>
+
+                                    {galleryPromptEnabled && (
+                                        <div
+                                            className="absolute left-1/2 top-16 max-h-[28vh] w-[min(92vw,56rem)] -translate-x-1/2 overflow-y-auto rounded-md bg-black/75 px-4 py-3 text-center text-sm leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-base"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-white/70">
+                                                {mediaPromptLabel}
+                                            </div>
+                                            {mediaPromptText}
+                                        </div>
+                                    )}
+                                </>
                             )}
                             
                             {/* Navigation buttons */}

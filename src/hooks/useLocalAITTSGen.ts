@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { doc, collection, onSnapshot, updateDoc, getDoc, DocumentReference } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase/clientApp';
-import { splitIntoMediaSegments, type MediaGranularity } from '@/lib/segment-utils';
+import { resolveMediaSegments, type MediaGranularity, type MediaSegment } from '@/lib/segment-utils';
 import removeMarkdown from 'remove-markdown';
 import { cleanTextForTTS, removeEmojis } from '@/lib/utils';
 
@@ -26,6 +26,7 @@ interface MessageData {
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
     isStreaming?: boolean;
+    mediaSegments?: MediaSegment[];
     paragraphAudioUrls?: Array<string | null>;
     paragraphAudioErrors?: Array<string | null>;
 }
@@ -275,7 +276,14 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                         const currentConversationData = currentConversationDataRef.current;
                         const granularity: MediaGranularity = currentConversationData?.imageGenSettings?.mediaGranularity || 'paragraph';
                         const convLanguage = currentConversationData?.language || 'en';
-                        const segments = splitIntoMediaSegments(messageData.content, granularity, convLanguage);
+                        if (
+                            currentConversationData?.imageGenSettings?.enabled &&
+                            granularity === 'smart' &&
+                            (!Array.isArray(messageData.mediaSegments) || messageData.mediaSegments.length === 0)
+                        ) {
+                            continue;
+                        }
+                        const segments = resolveMediaSegments(messageData.content, granularity, convLanguage, messageData.mediaSegments);
                         const paragraphs = segments.map(s => s.text);
                         if (paragraphs.length === 0) continue;
 
