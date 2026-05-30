@@ -38,7 +38,7 @@ import remarkGfm from 'remark-gfm';
 import removeMarkdown from 'remove-markdown';
 import { removeEmojis, cleanTextForTTS, isSpeakableText } from '@/lib/utils';
 import { AGENT_B_BUBBLE_CLASS } from '@/lib/chat-theme';
-import { splitIntoMediaSegments, getMediaGranularity } from '@/lib/segment-utils';
+import { resolveMediaSegments, getMediaGranularity, type MediaSegment } from '@/lib/segment-utils';
 import { PanoramaViewer } from './PanoramaViewer';
 import type { ImageSourceMetadata, PixabayMediaType } from '@/lib/image-media';
 
@@ -57,6 +57,39 @@ interface ParagraphImage {
     height?: number;
     duration?: number;
     sizeBytes?: number;
+    searchQuery?: string;
+    mediaPrompt?: string;
+    mediaPromptType?: 'image-prompt' | 'search-query';
+}
+
+interface MediaSegmentationDebug {
+    status: 'ok' | 'empty' | 'invalid-json' | 'invalid-indexes' | 'source-mismatch' | 'error';
+    rawResponse?: string;
+    rawResponseTruncated?: boolean;
+    parsedSections?: string[];
+    parsedSectionsTruncated?: boolean;
+    mismatch?: (
+        {
+            reason: 'marker-text-mismatch';
+            responseIndex: number;
+            sourceIndex: number;
+            responseContext: string;
+            sourceContext: string;
+            marker: string;
+        } | {
+            reason: 'invalid-break-token-ids';
+            invalidBreakTokenIds: Array<string | number | boolean | null>;
+            tokenCount: number;
+        }
+    );
+    breakOffsets?: number[];
+    breakTokenIds?: number[];
+    tokenCount?: number;
+    fallbackUsed: 'paragraph' | null;
+    error?: string;
+    promptLlm?: string;
+    segmentCount?: number;
+    createdAt: string;
 }
 
 interface Message {
@@ -71,6 +104,8 @@ interface Message {
     isStreaming?: boolean;
     imageUrl?: string | null;
     imageGenError?: string | null;
+    mediaSegments?: MediaSegment[];
+    mediaSegmentationDebug?: MediaSegmentationDebug;
     paragraphImages?: ParagraphImage[];
 }
 
@@ -103,7 +138,7 @@ interface ConversationData {
         invokeaiEndpoint?: string;
         promptLlm?: string;
         promptSystemMessage?: string;
-        mediaGranularity?: 'paragraph' | 'sentence';
+        mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
         panoramaMode?: boolean;
         pixabayMediaType?: PixabayMediaType;
     };
@@ -263,17 +298,21 @@ export function ChatInterface({
 
     const scrollToBottom = useOptimizedScroll({ behavior: 'instant', block: 'nearest' });
 
-    const getSegments = useCallback((text: string) => {
+    const getSegments = useCallback((text: string, mediaSegments?: MediaSegment[]) => {
         const granularity = getMediaGranularity(conversationData);
-        return splitIntoMediaSegments(text, granularity, conversationData?.language || 'en');
+        return resolveMediaSegments(text, granularity, conversationData?.language || 'en', mediaSegments);
     }, [conversationData]);
 
-    const getSpeakableSegments = useCallback((text: string) => {
-        return getSegments(text).filter((segment) => {
+    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+        return getSegments(message.content, message.mediaSegments);
+    }, [getSegments]);
+
+    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+        return getMessageSegments(message).filter((segment) => {
             const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
             return isSpeakableText(cleanedSegment);
         });
-    }, [getSegments]);
+    }, [getMessageSegments]);
 
     // --- Helper: Split text into TTS-safe chunks ---
     const splitIntoTTSChunks = useCallback((text: string, maxLength: number = 4000): string[] => {
@@ -794,6 +833,8 @@ export function ChatInterface({
                             isStreaming: data.isStreaming,
                             imageUrl: data.imageUrl,
                             imageGenError: data.imageGenError,
+                            mediaSegments: data.mediaSegments,
+                            mediaSegmentationDebug: data.mediaSegmentationDebug,
                             paragraphImages: data.paragraphImages
                         } as Message);
                     } else {
@@ -1268,6 +1309,7 @@ export function ChatInterface({
     const [fullScreenImageMsgId, setFullScreenImageMsgId] = useState<string | null>(null);
     const [fullScreenGallery, setFullScreenGallery] = useState<{ messageId: string; paragraphIndex: number } | null>(null);
     const [gallerySubtitlesEnabled, setGallerySubtitlesEnabled] = useState(false);
+    const [galleryPromptEnabled, setGalleryPromptEnabled] = useState(false);
     const [fullscreenAudioSync, setFullscreenAudioSync] = useState<{
         messageId: string | null;
         paragraphIndex: number | null;
@@ -1348,7 +1390,7 @@ export function ChatInterface({
                     logger.debug(`[TTS] Waiting for image generation to initialize for message ${msg.id.substring(0, 8)}...`);
                     return false;
                 }
-                const speakableSegments = getSpeakableSegments(msg.content);
+                const speakableSegments = getSpeakableSegments(msg);
                 const firstSpeakableSegmentIndex = speakableSegments[0]?.segmentIndex ?? -1;
 
                 if (firstSpeakableSegmentIndex !== -1) {
@@ -1412,7 +1454,7 @@ export function ChatInterface({
             // Split into paragraphs first for better auto-scroll.
             // Keep both speakable and raw indices so each spoken paragraph can wait
             // for its corresponding paragraph image.
-            const speakableSegments = getSpeakableSegments(nextMsg.content)
+            const speakableSegments = getSpeakableSegments(nextMsg)
                 .map((segment) => {
                     const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                     return {
@@ -1755,7 +1797,7 @@ export function ChatInterface({
                 return;
             }
 
-            const sourceSegments = getSegments(nextMsg.content);
+            const sourceSegments = getMessageSegments(nextMsg);
             const speakableParagraphs = sourceSegments.map((segment) => {
                 const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                 return isSpeakableText(cleanedParagraph);
@@ -1941,7 +1983,7 @@ export function ChatInterface({
                 });
         }
     }, [visibleMessages, playedMessageIds, hasUserInteracted, isAudioPaused, isAudioPlaying,
-        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, getSegments, getSpeakableSegments, scheduleBrowserTtsWatchdog, clearBrowserTtsWatchdog]);
+        conversationData, handleAudioEnd, imageLoadStatus, pendingTtsMessage, isAudioReady, isStopped, conversationStatus, isBrowserTTSActive, splitIntoTTSChunks, isTTSAutoScrollEnabled, getMessageSegments, getSpeakableSegments, scheduleBrowserTtsWatchdog, clearBrowserTtsWatchdog]);
 
     // Add effect to handle pending messages when they become ready
     useEffect(() => {
@@ -2355,7 +2397,7 @@ export function ChatInterface({
                                     <>
                                         <p className="text-xs font-bold mb-1">{msg.role === 'agentA' ? 'Agent A' : 'Agent B'}</p>
                                         <div>
-                                            {getSegments(msg.content).map((segment) => {
+                                            {getMessageSegments(msg).map((segment) => {
                                                 const cleanedParagraph = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
                                                 const isSpeakable = isSpeakableText(cleanedParagraph);
                                                 const paragraphKey = `${msg.id}-s${segment.segmentIndex}`;
@@ -2660,7 +2702,7 @@ export function ChatInterface({
                 const currentImageIndex = completeImages.findIndex(img =>
                     message.paragraphImages?.indexOf(img) === fullScreenGallery.paragraphIndex
                 );
-                const currentSegment = getSegments(message.content).find(
+                const currentSegment = getMessageSegments(message).find(
                     segment => segment.segmentIndex === fullScreenGallery.paragraphIndex
                 );
                 const subtitleText = currentSegment
@@ -2671,6 +2713,11 @@ export function ChatInterface({
                     conversationData?.ttsSettings?.enabled &&
                     subtitleText
                 );
+                const mediaPromptText = (currentImage?.mediaPrompt || currentImage?.searchQuery || '').trim();
+                const mediaPromptLabel = currentImage?.mediaPromptType === 'search-query' || currentImage?.searchQuery
+                    ? 'Query'
+                    : 'Prompt';
+                const mediaPromptAvailable = Boolean(mediaPromptText);
                 const isWaitingForSyncedImage = Boolean(
                     fullscreenAudioSync.waitingForImage &&
                     fullscreenAudioSync.messageId &&
@@ -2788,37 +2835,71 @@ export function ChatInterface({
                                     </div>
                                 )}
 
-                                {subtitlesAvailable && (
-                                    <>
-                                        <button
-                                            type="button"
-                                            className={`absolute top-4 left-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold shadow transition-colors ${
-                                                gallerySubtitlesEnabled
-                                                    ? 'bg-white text-black hover:bg-white/90'
-                                                    : 'bg-black/70 text-white hover:bg-black/85'
-                                            }`}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setGallerySubtitlesEnabled(enabled => !enabled);
-                                            }}
-                                            aria-label={gallerySubtitlesEnabled ? 'Hide subtitles' : 'Show subtitles'}
-                                            aria-pressed={gallerySubtitlesEnabled}
-                                        >
-                                            <Captions className="h-4 w-4" />
-                                            Subtitles
-                                        </button>
-
-                                        {gallerySubtitlesEnabled && (
-                                            <div
-                                                className={`absolute left-1/2 max-h-[30vh] w-[min(92vw,56rem)] -translate-x-1/2 overflow-y-auto rounded-md bg-black/75 px-4 py-3 text-center text-base leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-lg ${
-                                                    currentImage.source ? 'bottom-14' : 'bottom-4'
+                                {(subtitlesAvailable || mediaPromptAvailable) && (
+                                    <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                                        {subtitlesAvailable && (
+                                            <button
+                                                type="button"
+                                                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold shadow transition-colors ${
+                                                    gallerySubtitlesEnabled
+                                                        ? 'bg-white text-black hover:bg-white/90'
+                                                        : 'bg-black/70 text-white hover:bg-black/85'
                                                 }`}
-                                                onClick={(e) => e.stopPropagation()}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setGallerySubtitlesEnabled(enabled => !enabled);
+                                                }}
+                                                aria-label={gallerySubtitlesEnabled ? 'Hide subtitles' : 'Show subtitles'}
+                                                aria-pressed={gallerySubtitlesEnabled}
                                             >
-                                                {subtitleText}
-                                            </div>
+                                                <Captions className="h-4 w-4" />
+                                                Subtitles
+                                            </button>
                                         )}
-                                    </>
+
+                                        {mediaPromptAvailable && (
+                                            <button
+                                                type="button"
+                                                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold shadow transition-colors ${
+                                                    galleryPromptEnabled
+                                                        ? 'bg-white text-black hover:bg-white/90'
+                                                        : 'bg-black/70 text-white hover:bg-black/85'
+                                                }`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setGalleryPromptEnabled(enabled => !enabled);
+                                                }}
+                                                aria-label={galleryPromptEnabled ? `Hide ${mediaPromptLabel.toLowerCase()}` : `Show ${mediaPromptLabel.toLowerCase()}`}
+                                                aria-pressed={galleryPromptEnabled}
+                                            >
+                                                <ScrollText className="h-4 w-4" />
+                                                {mediaPromptLabel}
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {mediaPromptAvailable && galleryPromptEnabled && (
+                                    <div
+                                        className="absolute left-1/2 top-16 max-h-[28vh] w-[min(92vw,56rem)] -translate-x-1/2 overflow-y-auto rounded-md bg-black/75 px-4 py-3 text-center text-sm leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-base"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-white/70">
+                                            {mediaPromptLabel}
+                                        </div>
+                                        {mediaPromptText}
+                                    </div>
+                                )}
+
+                                {subtitlesAvailable && gallerySubtitlesEnabled && (
+                                    <div
+                                        className={`absolute left-1/2 max-h-[30vh] w-[min(92vw,56rem)] -translate-x-1/2 overflow-y-auto rounded-md bg-black/75 px-4 py-3 text-center text-base leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-lg ${
+                                            currentImage.source ? 'bottom-14' : 'bottom-4'
+                                        }`}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        {subtitleText}
+                                    </div>
                                 )}
                             </>
                         )}

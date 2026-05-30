@@ -7,7 +7,9 @@ import { splitIntoParagraphs } from './tts-utils';
 
 // ── Public types ────────────────────────────────────────────────────────
 
-export type MediaGranularity = 'paragraph' | 'sentence';
+export type MediaGranularity = 'paragraph' | 'sentence' | 'smart';
+
+export const SMART_MEDIA_BREAK_MARKER = '<<<MEDIA_BREAK>>>';
 
 export interface MediaSegment {
     /** Raw text of this segment (may contain Markdown). */
@@ -18,6 +20,45 @@ export interface MediaSegment {
     paragraphIndex: number;
     /** Sentence index within the paragraph. Always 0 in paragraph mode. */
     sentenceIndex: number;
+}
+
+export interface MarkedMediaSegmentationMismatch {
+    reason: 'marker-text-mismatch';
+    responseIndex: number;
+    sourceIndex: number;
+    responseContext: string;
+    sourceContext: string;
+}
+
+export interface MarkedMediaSegmentationResult {
+    segments: MediaSegment[] | null;
+    breakOffsets: number[];
+    mismatch?: MarkedMediaSegmentationMismatch;
+}
+
+export interface IndexedMediaToken {
+    id: number;
+    text: string;
+    startOffset: number;
+    endOffset: number;
+}
+
+export interface IndexedMediaSegmentationMismatch {
+    reason: 'invalid-break-token-ids';
+    invalidBreakTokenIds: Array<string | number | boolean | null>;
+    tokenCount: number;
+}
+
+export interface IndexedMediaSegmentationPrompt {
+    tokens: IndexedMediaToken[];
+    indexedText: string;
+}
+
+export interface IndexedMediaSegmentationResult {
+    segments: MediaSegment[] | null;
+    breakOffsets: number[];
+    breakTokenIds: number[];
+    mismatch?: IndexedMediaSegmentationMismatch;
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -214,9 +255,10 @@ function stripMarkdownForSegmentation(md: string): string {
  * Split message content into an ordered list of media segments.
  *
  * @param content  The full message content (may contain Markdown).
- * @param granularity  `'paragraph'` (one segment per paragraph, current
- *                     behaviour) or `'sentence'` (one segment per sentence,
- *                     with atomic blocks kept whole).
+ * @param granularity  `'paragraph'` (one segment per paragraph), `'sentence'`
+ *                     (one segment per sentence, with atomic blocks kept whole),
+ *                     or `'smart'` as a synchronous paragraph fallback when
+ *                     no persisted AI-directed segments are available yet.
  * @param language  BCP-47 language tag for `Intl.Segmenter` (default `'en'`).
  */
 export function splitIntoMediaSegments(
@@ -229,14 +271,16 @@ export function splitIntoMediaSegments(
     let segmentIndex = 0;
 
     // Preserve fenced code blocks as atomic units for sentence mode.
-    const sentenceParagraphs = granularity === 'sentence'
+    const effectiveGranularity = granularity === 'smart' ? 'paragraph' : granularity;
+
+    const sentenceParagraphs = effectiveGranularity === 'sentence'
         ? mergeFencedCodeBlocks(paragraphs)
         : paragraphs;
 
     for (let pIdx = 0; pIdx < sentenceParagraphs.length; pIdx++) {
         const paragraph = sentenceParagraphs[pIdx];
 
-        if (granularity === 'paragraph' || isAtomicParagraph(paragraph)) {
+        if (effectiveGranularity === 'paragraph' || isAtomicParagraph(paragraph)) {
             // One segment per paragraph (or atomic block in sentence mode).
             segments.push({
                 text: paragraph,
@@ -264,6 +308,264 @@ export function splitIntoMediaSegments(
     }
 
     return segments;
+}
+
+export function buildMarkedSmartMediaSegments(
+    content: string,
+    markedContent: string,
+    marker = SMART_MEDIA_BREAK_MARKER
+): MarkedMediaSegmentationResult {
+    const breakOffsets: number[] = [];
+    let responseIndex = 0;
+    let sourceIndex = 0;
+    let justSawMarker = false;
+
+    while (responseIndex < markedContent.length) {
+        if (markedContent.startsWith(marker, responseIndex)) {
+            breakOffsets.push(sourceIndex);
+            responseIndex += marker.length;
+            justSawMarker = true;
+            continue;
+        }
+
+        const responseChar = markedContent[responseIndex];
+        const sourceChar = content[sourceIndex];
+
+        if (responseChar === sourceChar) {
+            responseIndex++;
+            sourceIndex++;
+            justSawMarker = false;
+            continue;
+        }
+
+        if (/\s/.test(responseChar || '')) {
+            const nextNonWhitespace = findNextNonWhitespaceIndex(markedContent, responseIndex);
+            const whitespaceBeforeMarker = markedContent.startsWith(marker, nextNonWhitespace);
+            const whitespaceAfterMarker = justSawMarker;
+
+            if (whitespaceBeforeMarker || whitespaceAfterMarker) {
+                responseIndex++;
+                continue;
+            }
+        }
+
+        return {
+            segments: null,
+            breakOffsets,
+            mismatch: {
+                reason: 'marker-text-mismatch',
+                responseIndex,
+                sourceIndex,
+                responseContext: makeSegmentationContext(markedContent, responseIndex),
+                sourceContext: makeSegmentationContext(content, sourceIndex),
+            },
+        };
+    }
+
+    if (sourceIndex !== content.length) {
+        return {
+            segments: null,
+            breakOffsets,
+            mismatch: {
+                reason: 'marker-text-mismatch',
+                responseIndex,
+                sourceIndex,
+                responseContext: makeSegmentationContext(markedContent, responseIndex),
+                sourceContext: makeSegmentationContext(content, sourceIndex),
+            },
+        };
+    }
+
+    const uniqueBreakOffsets = Array.from(new Set(breakOffsets))
+        .filter(offset => offset > 0 && offset < content.length)
+        .sort((a, b) => a - b);
+
+    const segments: MediaSegment[] = [];
+    let segmentStart = 0;
+
+    for (const breakOffset of uniqueBreakOffsets) {
+        const text = content.slice(segmentStart, breakOffset);
+        if (text.trim()) {
+            segments.push({
+                text,
+                segmentIndex: segments.length,
+                paragraphIndex: getParagraphIndexForOffset(content, segmentStart),
+                sentenceIndex: 0,
+            });
+        }
+        segmentStart = breakOffset;
+    }
+
+    const finalText = content.slice(segmentStart);
+    if (finalText.trim()) {
+        segments.push({
+            text: finalText,
+            segmentIndex: segments.length,
+            paragraphIndex: getParagraphIndexForOffset(content, segmentStart),
+            sentenceIndex: 0,
+        });
+    }
+
+    return {
+        segments: normalizeMediaSegments(segments),
+        breakOffsets: uniqueBreakOffsets,
+    };
+}
+
+export function createIndexedMediaSegmentationPrompt(content: string): IndexedMediaSegmentationPrompt {
+    const tokens = tokenizeIndexedMediaText(content);
+    let indexedText = '';
+    let cursor = 0;
+
+    for (const token of tokens) {
+        indexedText += content.slice(cursor, token.startOffset);
+        indexedText += `[${token.id}] ${token.text}`;
+        cursor = token.endOffset;
+    }
+
+    indexedText += content.slice(cursor);
+
+    return { tokens, indexedText };
+}
+
+export function buildIndexedSmartMediaSegments(
+    content: string,
+    tokens: IndexedMediaToken[],
+    requestedBreakTokenIds: unknown[]
+): IndexedMediaSegmentationResult {
+    if (tokens.length === 0) {
+        return { segments: [], breakOffsets: [], breakTokenIds: [] };
+    }
+
+    const invalidBreakTokenIds = requestedBreakTokenIds.filter((id) => {
+        return typeof id !== 'number' || !Number.isInteger(id) || id < 1 || id > tokens.length;
+    });
+
+    if (invalidBreakTokenIds.length > 0) {
+        return {
+            segments: null,
+            breakOffsets: [],
+            breakTokenIds: [],
+            mismatch: {
+                reason: 'invalid-break-token-ids',
+                invalidBreakTokenIds: invalidBreakTokenIds.map(id => sanitizeInvalidBreakTokenId(id)),
+                tokenCount: tokens.length,
+            },
+        };
+    }
+
+    const breakTokenIds = Array.from(new Set(requestedBreakTokenIds as number[]))
+        .filter(id => id < tokens.length)
+        .sort((a, b) => a - b);
+    const breakOffsets = breakTokenIds.map(id => getBreakOffsetAfterToken(tokens, id));
+    const segments: MediaSegment[] = [];
+    let segmentStart = 0;
+
+    for (const breakOffset of breakOffsets) {
+        const text = content.slice(segmentStart, breakOffset);
+        if (text.trim()) {
+            segments.push({
+                text,
+                segmentIndex: segments.length,
+                paragraphIndex: getParagraphIndexForOffset(content, segmentStart),
+                sentenceIndex: 0,
+            });
+        }
+        segmentStart = breakOffset;
+    }
+
+    const finalText = content.slice(segmentStart);
+    if (finalText.trim()) {
+        segments.push({
+            text: finalText,
+            segmentIndex: segments.length,
+            paragraphIndex: getParagraphIndexForOffset(content, segmentStart),
+            sentenceIndex: 0,
+        });
+    }
+
+    return {
+        segments: normalizeMediaSegments(segments),
+        breakOffsets,
+        breakTokenIds,
+    };
+}
+
+function tokenizeIndexedMediaText(content: string): IndexedMediaToken[] {
+    const tokens: IndexedMediaToken[] = [];
+    const tokenRegex = /\S+/gu;
+    let match: RegExpExecArray | null;
+
+    while ((match = tokenRegex.exec(content)) !== null) {
+        tokens.push({
+            id: tokens.length + 1,
+            text: match[0],
+            startOffset: match.index,
+            endOffset: match.index + match[0].length,
+        });
+    }
+
+    return tokens;
+}
+
+function sanitizeInvalidBreakTokenId(id: unknown): string | number | boolean | null {
+    if (typeof id === 'string' || typeof id === 'number' || typeof id === 'boolean' || id === null) {
+        return id;
+    }
+
+    return String(id);
+}
+
+function getBreakOffsetAfterToken(tokens: IndexedMediaToken[], tokenId: number): number {
+    const currentToken = tokens[tokenId - 1];
+    const nextToken = tokens[tokenId];
+    return nextToken ? nextToken.startOffset : currentToken.endOffset;
+}
+
+function findNextNonWhitespaceIndex(text: string, start: number): number {
+    let index = start;
+    while (index < text.length && /\s/.test(text[index])) {
+        index++;
+    }
+    return index;
+}
+
+function makeSegmentationContext(text: string, index: number): string {
+    const radius = 160;
+    const start = Math.max(0, index - radius);
+    const end = Math.min(text.length, index + radius);
+    const prefix = start > 0 ? '...' : '';
+    const suffix = end < text.length ? '...' : '';
+    return `${prefix}${text.slice(start, end)}${suffix}`;
+}
+
+function getParagraphIndexForOffset(content: string, offset: number): number {
+    const before = content.slice(0, Math.max(0, offset));
+    return before.split(/\n+/).length - 1;
+}
+
+export function normalizeMediaSegments(segments: MediaSegment[]): MediaSegment[] {
+    return segments
+        .map((segment, index) => ({
+            text: segment.text,
+            segmentIndex: index,
+            paragraphIndex: typeof segment.paragraphIndex === 'number' ? segment.paragraphIndex : index,
+            sentenceIndex: typeof segment.sentenceIndex === 'number' ? segment.sentenceIndex : 0,
+        }))
+        .filter(segment => segment.text.trim().length > 0);
+}
+
+export function resolveMediaSegments(
+    content: string,
+    granularity: MediaGranularity,
+    language: string = 'en',
+    persistedSegments?: MediaSegment[] | null
+): MediaSegment[] {
+    if (granularity === 'smart' && Array.isArray(persistedSegments) && persistedSegments.length > 0) {
+        return normalizeMediaSegments(persistedSegments);
+    }
+
+    return splitIntoMediaSegments(content, granularity, language);
 }
 
 /**

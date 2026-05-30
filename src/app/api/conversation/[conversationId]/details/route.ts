@@ -4,6 +4,7 @@ import { initializeApp, getApps, App, cert } from 'firebase-admin/app';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
 import { getFirestore, Firestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
 import type { ImageSourceMetadata, PixabayMediaType } from '@/lib/image-media';
+import type { MediaSegment } from '@/lib/segment-utils';
 
 // Ensure Firebase Admin is initialized
 let firebaseAdminApp: App | null = null;
@@ -55,6 +56,39 @@ interface ParagraphImage {
     height?: number;
     duration?: number;
     sizeBytes?: number;
+    searchQuery?: string;
+    mediaPrompt?: string;
+    mediaPromptType?: 'image-prompt' | 'search-query';
+}
+
+interface MediaSegmentationDebug {
+    status: 'ok' | 'empty' | 'invalid-json' | 'invalid-indexes' | 'source-mismatch' | 'error';
+    rawResponse?: string;
+    rawResponseTruncated?: boolean;
+    parsedSections?: string[];
+    parsedSectionsTruncated?: boolean;
+    mismatch?: (
+        {
+            reason: 'marker-text-mismatch';
+            responseIndex: number;
+            sourceIndex: number;
+            responseContext: string;
+            sourceContext: string;
+            marker: string;
+        } | {
+            reason: 'invalid-break-token-ids';
+            invalidBreakTokenIds: Array<string | number | boolean | null>;
+            tokenCount: number;
+        }
+    );
+    breakOffsets?: number[];
+    breakTokenIds?: number[];
+    tokenCount?: number;
+    fallbackUsed: 'paragraph' | null;
+    error?: string;
+    promptLlm?: string;
+    segmentCount?: number;
+    createdAt: string;
 }
 
 interface Message {
@@ -64,6 +98,8 @@ interface Message {
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
+    mediaSegments?: MediaSegment[];
+    mediaSegmentationDebug?: MediaSegmentationDebug;
     paragraphImages?: ParagraphImage[];
     isStreaming?: boolean;
     audioUrl?: string;
@@ -94,7 +130,7 @@ interface ImageGenSettings {
     promptLlm: string;
     promptSystemMessage: string;
     promptLookaheadLimit?: number;
-    mediaGranularity?: 'paragraph' | 'sentence';
+    mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
     panoramaMode?: boolean;
     pixabayMediaType?: PixabayMediaType;
 }
@@ -184,6 +220,8 @@ export async function GET(
                 timestamp: isoTimestamp,
                 imageUrl: data.imageUrl || null,
                 imageGenError: data.imageGenError || null,
+                mediaSegments: data.mediaSegments || undefined,
+                mediaSegmentationDebug: data.mediaSegmentationDebug || undefined,
                 paragraphImages: data.paragraphImages || undefined,
                 isStreaming: data.isStreaming || false,
                 audioUrl: data.audioUrl,

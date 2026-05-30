@@ -47,6 +47,16 @@ export const DEFAULT_IMAGE_SEARCH_PROMPT =
 export const DEFAULT_VIDEO_SEARCH_PROMPT =
     'Create a concise stock video search query for this text. Prefer concrete visual nouns, setting, motion, mood, and era. Return only the search query. Text: {text}';
 
+export const DEFAULT_SMART_MEDIA_SEGMENTATION_PROMPT = [
+    'You will receive the original text with numbered token IDs inserted before each non-whitespace token, for example: [1] The [2] quiet [3] street.',
+    'Choose where synchronized audio and visual media should change. Each resulting section will receive its own image or video.',
+    'Return only JSON in this exact shape: {"breakAfterTokenIds":[3,12,27]}.',
+    'Each number means: create a media break immediately after that token ID. You may create single-token sections when one word or very short phrase deserves its own media.',
+    'Use as many breakpoints as the text calls for, including inside sentences when the visual subject, location, action, object of focus, time, mood, or scene changes.',
+    'Do not copy the text. Do not return token words. Do not use Markdown fences, labels, commentary, or explanations.',
+    'Return {"breakAfterTokenIds":[]} only if the whole text should use one media item.',
+].join(' ');
+
 export const IMAGE_SEARCH_SIZE_LABELS: Record<ImageSearchSize, string> = {
     small: 'Small / fast',
     medium: 'Medium',

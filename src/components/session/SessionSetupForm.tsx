@@ -123,7 +123,7 @@ interface SessionConfig {
         promptLlm: string;
         promptSystemMessage: string;
         promptLookaheadLimit?: number;
-        mediaGranularity?: 'paragraph' | 'sentence';
+        mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
         panoramaMode?: boolean;
         pixabayMediaType?: PixabayMediaType;
         searchOrientation?: ImageSearchOrientation;
@@ -945,7 +945,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiClipSkip, setInvokeaiClipSkip] = useState<number>(0);
     const [invokeaiCfgRescaleMultiplier, setInvokeaiCfgRescaleMultiplier] = useState<number>(0);
     const [promptLookaheadLimit, setPromptLookaheadLimit] = useState<number>(1);
-    const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence'>('paragraph');
+    const [mediaGranularity, setMediaGranularity] = useState<'paragraph' | 'sentence' | 'smart'>('paragraph');
     const [panoramaMode, setPanoramaMode] = useState<boolean>(false);
     const [pixabayMediaType, setPixabayMediaType] = useState<PixabayMediaType>('image');
     const [imageSearchOrientation, setImageSearchOrientation] = useState<ImageSearchOrientation>('landscape');
@@ -3111,7 +3111,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                     <Label htmlFor="media-granularity-select" className="block text-center">Media cadence</Label>
                                     <Select
                                         value={mediaGranularity}
-                                        onValueChange={(value: 'paragraph' | 'sentence') => setMediaGranularity(value)}
+                                        onValueChange={(value: 'paragraph' | 'sentence' | 'smart') => setMediaGranularity(value)}
                                         disabled={!user}
                                     >
                                         <SelectTrigger id="media-granularity-select" className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
@@ -3124,16 +3124,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                             <SelectItem value="sentence">
                                                 <div className="w-full text-center">Per sentence</div>
                                             </SelectItem>
+                                            <SelectItem value="smart">
+                                                <div className="w-full text-center">AI-directed</div>
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <p className="text-xs text-muted-foreground text-center">
                                         {mediaGranularity === 'paragraph'
                                             ? 'One image or video per paragraph. Calmer pacing, fewer media requests.'
-                                            : 'One image or video per sentence. More cinematic, but generates many more media requests and audio clips.'}
+                                            : mediaGranularity === 'sentence'
+                                                ? 'One image or video per sentence. More cinematic, but generates many more media requests and audio clips.'
+                                                : 'A prompt LLM first splits each turn into visual sections. Each section gets its own media request and audio clip.'}
                                     </p>
                                     {mediaGranularity === 'sentence' && (
                                         <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
                                             Sentence mode can generate 3-15x more media requests and audio clips per message, and will take longer.
+                                            {imageMediaProvider === 'pixabay' && pixabayMediaType === 'video' ? ' Videos also use more viewer bandwidth than images.' : ''}
+                                        </div>
+                                    )}
+                                    {mediaGranularity === 'smart' && (
+                                        <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 text-center">
+                                            AI-directed mode adds a segmentation LLM step before media and audio generation, and can create as many sections as the text calls for.
                                             {imageMediaProvider === 'pixabay' && pixabayMediaType === 'video' ? ' Videos also use more viewer bandwidth than images.' : ''}
                                         </div>
                                     )}
