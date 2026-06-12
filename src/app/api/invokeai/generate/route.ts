@@ -940,7 +940,7 @@ export async function uploadReferenceImageToInvokeAI(endpoint: string, dataUrl: 
   const { mimeType, buffer } = parseDataUrlImage(dataUrl);
   const extension = mimeType.includes('jpeg') || mimeType.includes('jpg') ? 'jpg' : 'png';
   const formData = new FormData();
-  formData.append('file', new Blob([buffer], { type: mimeType }), `two-ais-reference.${extension}`);
+  formData.append('file', new Blob([new Uint8Array(buffer)], { type: mimeType }), `two-ais-reference.${extension}`);
 
   const uploadUrl = `${endpoint}/api/v1/images/upload?image_category=user&is_intermediate=false`;
   const response = await fetch(uploadUrl, {
