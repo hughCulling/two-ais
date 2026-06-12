@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       endpoint: prepared.endpoint,
       seed: prepared.seed,
       model: prepared.modelName,
+      referenceImageName: prepared.referenceImageName,
     });
   } catch (error) {
     return getInvokeAIErrorResponse(error);

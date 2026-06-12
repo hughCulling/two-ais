@@ -111,6 +111,14 @@ interface SessionConfig {
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
+        invokeaiReferenceImageEnabled?: boolean;
+        invokeaiReferenceImageModelKey?: string;
+        invokeaiReferenceImageDataUrl?: string;
+        invokeaiReferenceImageWeight?: number;
+        invokeaiReferenceImageMethod?: string;
+        invokeaiReferenceImageClipVisionModel?: string;
+        invokeaiReferenceImageBeginStepPct?: number;
+        invokeaiReferenceImageEndStepPct?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;
@@ -173,6 +181,51 @@ const INVOKEAI_SCHEDULERS: { id: string; label: string }[] = [
     { id: 'uni_pc_k', label: 'UniPC Karras' },
     { id: 'uni_pc_bh2', label: 'UniPC BH2' },
 ];
+
+const INVOKEAI_REFERENCE_METHODS: { id: string; label: string }[] = [
+    { id: 'style', label: 'Style' },
+    { id: 'composition', label: 'Composition' },
+    { id: 'style_strong', label: 'Style Strong' },
+    { id: 'style_precise', label: 'Style Precise' },
+];
+
+const INVOKEAI_CLIP_VISION_MODELS = ['ViT-H', 'ViT-G', 'ViT-L'];
+
+async function resizeReferenceImageFile(file: File): Promise<string> {
+    if (!file.type.startsWith('image/')) {
+        throw new Error('Please choose an image file.');
+    }
+
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = () => reject(new Error('Could not read the image file.'));
+        reader.readAsDataURL(file);
+    });
+
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = document.createElement('img');
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('Could not load the image file.'));
+        img.src = dataUrl;
+    });
+
+    const maxDimension = 768;
+    const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+        throw new Error('Could not prepare the image preview.');
+    }
+
+    context.drawImage(image, 0, 0, width, height);
+    return canvas.toDataURL('image/jpeg', 0.88);
+}
 
 const ALL_REQUIRED_KEY_IDS = ['openai', 'google_ai', 'anthropic', 'xai', 'together_ai', 'googleCloudApiKey', 'elevenlabs', 'gemini_api_key', 'deepseek', 'mistral', 'pixabay'];
 
@@ -715,6 +768,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [invokeaiLoras, setInvokeaiLoras] = useState<Array<{ key: string; name: string; base?: string }>>([]);
     const [invokeaiSelectedLoraKey, setInvokeaiSelectedLoraKey] = useState('');
     const [invokeaiLoraWeight, setInvokeaiLoraWeight] = useState(0.75);
+    const [invokeaiIPAdapters, setInvokeaiIPAdapters] = useState<Array<{ key: string; name: string; base?: string }>>([]);
+    const [invokeaiReferenceImageEnabled, setInvokeaiReferenceImageEnabled] = useState(false);
+    const [invokeaiReferenceImageDataUrl, setInvokeaiReferenceImageDataUrl] = useState('');
+    const [invokeaiReferenceImageFileName, setInvokeaiReferenceImageFileName] = useState('');
+    const [invokeaiReferenceImageModelKey, setInvokeaiReferenceImageModelKey] = useState('');
+    const [invokeaiReferenceImageWeight, setInvokeaiReferenceImageWeight] = useState(0.8);
+    const [invokeaiReferenceImageMethod, setInvokeaiReferenceImageMethod] = useState('style');
+    const [invokeaiReferenceImageClipVisionModel, setInvokeaiReferenceImageClipVisionModel] = useState('ViT-H');
+    const [invokeaiReferenceImageBeginStepPct, setInvokeaiReferenceImageBeginStepPct] = useState(0);
+    const [invokeaiReferenceImageEndStepPct, setInvokeaiReferenceImageEndStepPct] = useState(1);
+    const [invokeaiReferenceImageError, setInvokeaiReferenceImageError] = useState<string | null>(null);
 
     const handleVerifyInvokeAI = async () => {
         const rawEndpoint = invokeaiEndpoint.trim();
@@ -775,10 +839,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     const ok = loraList.some((l) => l.key === p);
                     return ok ? prev : '';
                 });
+                const rawIPAdapters: unknown[] = Array.isArray(data.ipAdapters) ? data.ipAdapters : [];
+                const ipAdapterList = rawIPAdapters
+                    .filter((x): x is { key: string; name?: string; base?: string } =>
+                        Boolean(x && typeof x === 'object' && typeof (x as { key?: string }).key === 'string'))
+                    .map((x) => ({
+                        key: x.key,
+                        name: typeof x.name === 'string' && x.name.trim() ? x.name : x.key,
+                        ...(typeof x.base === 'string' ? { base: x.base } : {}),
+                    }));
+                setInvokeaiIPAdapters(ipAdapterList);
+                setInvokeaiReferenceImageModelKey((prev) => {
+                    const p = typeof prev === 'string' ? prev.trim() : '';
+                    if (!p) return '';
+                    const ok = ipAdapterList.some((m) => m.key === p);
+                    return ok ? prev : '';
+                });
             } else {
                 setCustomInvokeaiAvailable(false);
                 setInvokeaiModelNames([]);
                 setInvokeaiLoras([]);
+                setInvokeaiIPAdapters([]);
                 let errorMessage = data.error || 'Could not connect to InvokeAI at this endpoint.';
                 if (errorMessage.includes('403')) {
                     errorMessage += ' (Wait! 403 Forbidden usually means you forgot the --host-header flag in your ngrok command)';
@@ -789,10 +870,37 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             setCustomInvokeaiAvailable(false);
             setInvokeaiModelNames([]);
             setInvokeaiLoras([]);
+            setInvokeaiIPAdapters([]);
             setInvokeaiVerifyError('Could not connect to InvokeAI at this endpoint.');
         } finally {
             setCustomInvokeaiLoading(false);
         }
+    };
+
+    const handleInvokeReferenceImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setInvokeaiReferenceImageError(null);
+        try {
+            const resizedDataUrl = await resizeReferenceImageFile(file);
+            setInvokeaiReferenceImageDataUrl(resizedDataUrl);
+            setInvokeaiReferenceImageFileName(file.name);
+            setInvokeaiReferenceImageEnabled(true);
+        } catch (error) {
+            setInvokeaiReferenceImageDataUrl('');
+            setInvokeaiReferenceImageFileName('');
+            setInvokeaiReferenceImageError(error instanceof Error ? error.message : 'Could not prepare the image.');
+        } finally {
+            event.target.value = '';
+        }
+    };
+
+    const clearInvokeReferenceImage = () => {
+        setInvokeaiReferenceImageDataUrl('');
+        setInvokeaiReferenceImageFileName('');
+        setInvokeaiReferenceImageEnabled(false);
+        setInvokeaiReferenceImageError(null);
     };
 
     // LocalAI endpoint (ngrok URL) - manual verify flow
@@ -1427,6 +1535,17 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     alert('Please select an InvokeAI model.');
                     return;
                 }
+
+                if (invokeaiReferenceImageEnabled) {
+                    if (!invokeaiReferenceImageDataUrl) {
+                        alert('Please upload a reference image or turn off reference image.');
+                        return;
+                    }
+                    if (!invokeaiReferenceImageModelKey.trim()) {
+                        alert('Please select an IP Adapter model for the reference image.');
+                        return;
+                    }
+                }
             } else if (imageMediaProvider === 'pixabay' && !savedKeyStatus.pixabay) {
                 alert('Missing required Pixabay API key. Please add it in Settings.');
                 return;
@@ -1476,6 +1595,27 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                     clipSkip: invokeaiClipSkip,
                     cfgRescaleMultiplier: invokeaiCfgRescaleMultiplier,
                     panoramaMode,
+                    ...(invokeaiReferenceImageEnabled
+                        ? {
+                            invokeaiReferenceImageEnabled: true,
+                            invokeaiReferenceImageModelKey: invokeaiReferenceImageModelKey.trim(),
+                            invokeaiReferenceImageDataUrl,
+                            invokeaiReferenceImageWeight:
+                                typeof invokeaiReferenceImageWeight === 'number' && Number.isFinite(invokeaiReferenceImageWeight)
+                                    ? invokeaiReferenceImageWeight
+                                    : 0.8,
+                            invokeaiReferenceImageMethod: invokeaiReferenceImageMethod.trim() || 'style',
+                            invokeaiReferenceImageClipVisionModel: invokeaiReferenceImageClipVisionModel.trim() || 'ViT-H',
+                            invokeaiReferenceImageBeginStepPct:
+                                typeof invokeaiReferenceImageBeginStepPct === 'number' && Number.isFinite(invokeaiReferenceImageBeginStepPct)
+                                    ? Math.max(0, Math.min(1, invokeaiReferenceImageBeginStepPct))
+                                    : 0,
+                            invokeaiReferenceImageEndStepPct:
+                                typeof invokeaiReferenceImageEndStepPct === 'number' && Number.isFinite(invokeaiReferenceImageEndStepPct)
+                                    ? Math.max(0, Math.min(1, invokeaiReferenceImageEndStepPct))
+                                    : 1,
+                        }
+                        : {}),
                     ...(invokeaiSelectedLoraKey.trim()
                         ? {
                             invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
@@ -1679,6 +1819,26 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                             promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(promptLookaheadLimit))),
                             mediaGranularity,
                             panoramaMode,
+                            ...(invokeaiReferenceImageEnabled
+                                ? {
+                                    invokeaiReferenceImageEnabled: true,
+                                    invokeaiReferenceImageModelKey: invokeaiReferenceImageModelKey.trim() || undefined,
+                                    invokeaiReferenceImageWeight:
+                                        typeof invokeaiReferenceImageWeight === 'number' && Number.isFinite(invokeaiReferenceImageWeight)
+                                            ? invokeaiReferenceImageWeight
+                                            : 0.8,
+                                    invokeaiReferenceImageMethod: invokeaiReferenceImageMethod.trim() || 'style',
+                                    invokeaiReferenceImageClipVisionModel: invokeaiReferenceImageClipVisionModel.trim() || 'ViT-H',
+                                    invokeaiReferenceImageBeginStepPct:
+                                        typeof invokeaiReferenceImageBeginStepPct === 'number' && Number.isFinite(invokeaiReferenceImageBeginStepPct)
+                                            ? Math.max(0, Math.min(1, invokeaiReferenceImageBeginStepPct))
+                                            : 0,
+                                    invokeaiReferenceImageEndStepPct:
+                                        typeof invokeaiReferenceImageEndStepPct === 'number' && Number.isFinite(invokeaiReferenceImageEndStepPct)
+                                            ? Math.max(0, Math.min(1, invokeaiReferenceImageEndStepPct))
+                                            : 1,
+                                }
+                                : {}),
                             ...(invokeaiSelectedLoraKey.trim()
                                 ? {
                                     invokeaiLoraKey: invokeaiSelectedLoraKey.trim(),
@@ -1804,6 +1964,28 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 );
                 setMediaGranularity(preset.imageGenSettings.mediaGranularity || 'paragraph');
                 setPanoramaMode(presetProvider === 'invokeai' && Boolean(preset.imageGenSettings.panoramaMode));
+                setInvokeaiReferenceImageEnabled(presetProvider === 'invokeai' && Boolean(preset.imageGenSettings.invokeaiReferenceImageEnabled));
+                setInvokeaiReferenceImageDataUrl('');
+                setInvokeaiReferenceImageFileName('');
+                setInvokeaiReferenceImageError(null);
+                setInvokeaiReferenceImageModelKey(preset.imageGenSettings.invokeaiReferenceImageModelKey || '');
+                setInvokeaiReferenceImageWeight(
+                    typeof preset.imageGenSettings.invokeaiReferenceImageWeight === 'number' && Number.isFinite(preset.imageGenSettings.invokeaiReferenceImageWeight)
+                        ? preset.imageGenSettings.invokeaiReferenceImageWeight
+                        : 0.8
+                );
+                setInvokeaiReferenceImageMethod(preset.imageGenSettings.invokeaiReferenceImageMethod || 'style');
+                setInvokeaiReferenceImageClipVisionModel(preset.imageGenSettings.invokeaiReferenceImageClipVisionModel || 'ViT-H');
+                setInvokeaiReferenceImageBeginStepPct(
+                    typeof preset.imageGenSettings.invokeaiReferenceImageBeginStepPct === 'number' && Number.isFinite(preset.imageGenSettings.invokeaiReferenceImageBeginStepPct)
+                        ? Math.max(0, Math.min(1, preset.imageGenSettings.invokeaiReferenceImageBeginStepPct))
+                        : 0
+                );
+                setInvokeaiReferenceImageEndStepPct(
+                    typeof preset.imageGenSettings.invokeaiReferenceImageEndStepPct === 'number' && Number.isFinite(preset.imageGenSettings.invokeaiReferenceImageEndStepPct)
+                        ? Math.max(0, Math.min(1, preset.imageGenSettings.invokeaiReferenceImageEndStepPct))
+                        : 1
+                );
                 setPixabayMediaType(presetPixabayMediaType);
                 setImageSearchOrientation(preset.imageGenSettings.searchOrientation || 'landscape');
                 setImageSearchSize(preset.imageGenSettings.searchSize || 'medium');
@@ -1831,6 +2013,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setVideoSearchDuration('short');
                 setInvokeaiSelectedLoraKey('');
                 setInvokeaiLoraWeight(0.75);
+                clearInvokeReferenceImage();
+                setInvokeaiReferenceImageModelKey('');
+                setInvokeaiReferenceImageWeight(0.8);
+                setInvokeaiReferenceImageMethod('style');
+                setInvokeaiReferenceImageClipVisionModel('ViT-H');
+                setInvokeaiReferenceImageBeginStepPct(0);
+                setInvokeaiReferenceImageEndStepPct(1);
             }
 
             // Load collapse states if they exist
@@ -2864,6 +3053,163 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                                 className="w-24 px-2 py-1 rounded-md text-center liquid-glass-input"
                                                 disabled={!user}
                                             />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-3 flex flex-col items-center w-full rounded-md border border-border/70 p-3">
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Checkbox
+                                            id="invokeai-reference-image-enabled"
+                                            checked={invokeaiReferenceImageEnabled}
+                                            onCheckedChange={checked => setInvokeaiReferenceImageEnabled(Boolean(checked))}
+                                            disabled={!user || !customInvokeaiAvailable}
+                                        />
+                                        <Label htmlFor="invokeai-reference-image-enabled" className="text-sm font-medium">
+                                            Reference image
+                                        </Label>
+                                    </div>
+
+                                    {invokeaiReferenceImageEnabled && (
+                                        <div className="w-full space-y-3">
+                                            <div className="flex flex-col items-center gap-2">
+                                                {invokeaiReferenceImageDataUrl && (
+                                                    <Image
+                                                        src={invokeaiReferenceImageDataUrl}
+                                                        alt="Reference image preview"
+                                                        width={96}
+                                                        height={96}
+                                                        unoptimized
+                                                        className="h-24 w-24 rounded-md object-cover border border-border"
+                                                    />
+                                                )}
+                                                <input
+                                                    id="invokeai-reference-image-file"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={handleInvokeReferenceImageChange}
+                                                    className="w-full max-w-md text-sm liquid-glass-input file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-sm"
+                                                    disabled={!user || !customInvokeaiAvailable}
+                                                />
+                                                {invokeaiReferenceImageFileName && (
+                                                    <p className="text-xs text-muted-foreground text-center max-w-md">{invokeaiReferenceImageFileName}</p>
+                                                )}
+                                                {invokeaiReferenceImageError && (
+                                                    <p className="text-xs text-red-600 dark:text-red-400 text-center max-w-md">{invokeaiReferenceImageError}</p>
+                                                )}
+                                                {invokeaiReferenceImageDataUrl && (
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={clearInvokeReferenceImage}
+                                                        disabled={!user}
+                                                    >
+                                                        Clear image
+                                                    </Button>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-2 flex flex-col items-center">
+                                                <Label className="text-center">IP Adapter model</Label>
+                                                <Select
+                                                    value={invokeaiReferenceImageModelKey}
+                                                    onValueChange={setInvokeaiReferenceImageModelKey}
+                                                    disabled={!user || !customInvokeaiAvailable || invokeaiIPAdapters.length === 0}
+                                                >
+                                                    <SelectTrigger className="w-full max-w-md relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                        <SelectValue placeholder={customInvokeaiAvailable ? 'Select IP Adapter' : 'Verify Invoke first'} />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="max-h-60 liquid-glass-panel">
+                                                        {invokeaiIPAdapters.length > 0 ? (
+                                                            invokeaiIPAdapters.map((adapter) => (
+                                                                <SelectItem key={adapter.key} value={adapter.key} className="justify-center">
+                                                                    <div className="w-full text-center">{adapter.name}</div>
+                                                                </SelectItem>
+                                                            ))
+                                                        ) : (
+                                                            <SelectItem value="__no_ip_adapters" disabled className="justify-center">
+                                                                <div className="w-full text-center">No IP Adapters detected</div>
+                                                            </SelectItem>
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="invokeai-reference-weight" className="block text-center">Weight</Label>
+                                                    <input
+                                                        id="invokeai-reference-weight"
+                                                        type="number"
+                                                        step={0.05}
+                                                        min={0}
+                                                        max={2}
+                                                        value={invokeaiReferenceImageWeight}
+                                                        onChange={(e) => setInvokeaiReferenceImageWeight(Number(e.target.value))}
+                                                        className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                                        disabled={!user}
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label className="block text-center">Method</Label>
+                                                    <Select value={invokeaiReferenceImageMethod} onValueChange={setInvokeaiReferenceImageMethod} disabled={!user}>
+                                                        <SelectTrigger className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="max-h-60 liquid-glass-panel">
+                                                            {INVOKEAI_REFERENCE_METHODS.map((method) => (
+                                                                <SelectItem key={method.id} value={method.id} className="justify-center">
+                                                                    <div className="w-full text-center">{method.label}</div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label className="block text-center">CLIP Vision</Label>
+                                                    <Select value={invokeaiReferenceImageClipVisionModel} onValueChange={setInvokeaiReferenceImageClipVisionModel} disabled={!user}>
+                                                        <SelectTrigger className="w-full relative [&>span]:mx-auto [&>span]:text-center [&>svg]:absolute [&>svg]:right-3">
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="max-h-60 liquid-glass-panel">
+                                                            {INVOKEAI_CLIP_VISION_MODELS.map((modelName) => (
+                                                                <SelectItem key={modelName} value={modelName} className="justify-center">
+                                                                    <div className="w-full text-center">{modelName}</div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="invokeai-reference-begin" className="block text-center">Begin</Label>
+                                                    <input
+                                                        id="invokeai-reference-begin"
+                                                        type="number"
+                                                        step={0.05}
+                                                        min={0}
+                                                        max={1}
+                                                        value={invokeaiReferenceImageBeginStepPct}
+                                                        onChange={(e) => setInvokeaiReferenceImageBeginStepPct(Number(e.target.value))}
+                                                        className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                                        disabled={!user}
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="invokeai-reference-end" className="block text-center">End</Label>
+                                                    <input
+                                                        id="invokeai-reference-end"
+                                                        type="number"
+                                                        step={0.05}
+                                                        min={0}
+                                                        max={1}
+                                                        value={invokeaiReferenceImageEndStepPct}
+                                                        onChange={(e) => setInvokeaiReferenceImageEndStepPct(Number(e.target.value))}
+                                                        className="w-full px-3 py-2 rounded-md text-center liquid-glass-input"
+                                                        disabled={!user}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
                                 </div>

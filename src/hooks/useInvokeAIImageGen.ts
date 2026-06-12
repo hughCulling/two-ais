@@ -87,6 +87,14 @@ interface ConversationData {
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
+        invokeaiReferenceImageEnabled?: boolean;
+        invokeaiReferenceImageModelKey?: string;
+        invokeaiReferenceImageDataUrl?: string;
+        invokeaiReferenceImageWeight?: number;
+        invokeaiReferenceImageMethod?: string;
+        invokeaiReferenceImageClipVisionModel?: string;
+        invokeaiReferenceImageBeginStepPct?: number;
+        invokeaiReferenceImageEndStepPct?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;
@@ -145,6 +153,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     const promptQueueRef = useRef<PromptQueueItem[]>([]);
     const queuedPromptKeysRef = useRef<Set<string>>(new Set());
     const isPromptWorkerRunningRef = useRef(false);
+    const invokeReferenceImageNameRef = useRef<string | null>(null);
     const resetGenerationState = useCallback(() => {
         generationQueueRef.current = [];
         processingRef.current.clear();
@@ -153,6 +162,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
         promptQueueRef.current = [];
         queuedPromptKeysRef.current.clear();
         isPromptWorkerRunningRef.current = false;
+        invokeReferenceImageNameRef.current = null;
     }, []);
 
     const isPermissionDeniedError = (error: unknown): boolean => {
@@ -1082,6 +1092,30 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                                 : 0.75,
                     }
                     : {}),
+                ...(imageGenSettings.invokeaiReferenceImageEnabled
+                    ? {
+                        reference_image_enabled: true,
+                        reference_image_model_key: imageGenSettings.invokeaiReferenceImageModelKey,
+                        reference_image_data_url: invokeReferenceImageNameRef.current
+                            ? undefined
+                            : imageGenSettings.invokeaiReferenceImageDataUrl,
+                        reference_image_name: invokeReferenceImageNameRef.current || undefined,
+                        reference_image_weight:
+                            typeof imageGenSettings.invokeaiReferenceImageWeight === 'number' && Number.isFinite(imageGenSettings.invokeaiReferenceImageWeight)
+                                ? imageGenSettings.invokeaiReferenceImageWeight
+                                : 0.8,
+                        reference_image_method: imageGenSettings.invokeaiReferenceImageMethod || 'style',
+                        reference_image_clip_vision_model: imageGenSettings.invokeaiReferenceImageClipVisionModel || 'ViT-H',
+                        reference_image_begin_step_pct:
+                            typeof imageGenSettings.invokeaiReferenceImageBeginStepPct === 'number' && Number.isFinite(imageGenSettings.invokeaiReferenceImageBeginStepPct)
+                                ? imageGenSettings.invokeaiReferenceImageBeginStepPct
+                                : 0,
+                        reference_image_end_step_pct:
+                            typeof imageGenSettings.invokeaiReferenceImageEndStepPct === 'number' && Number.isFinite(imageGenSettings.invokeaiReferenceImageEndStepPct)
+                                ? imageGenSettings.invokeaiReferenceImageEndStepPct
+                                : 1,
+                    }
+                    : {}),
                 negative_prompt: imageGenSettings.negativePrompt,
                 steps: imageGenSettings.steps,
                 guidance_scale: imageGenSettings.guidanceScale,
@@ -1107,9 +1141,13 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 batchId?: string;
                 queueId?: string;
                 endpoint?: string;
+                referenceImageName?: string;
             };
             if (!enqueueResult.batchId) {
                 throw new Error('InvokeAI did not return a batch ID');
+            }
+            if (enqueueResult.referenceImageName) {
+                invokeReferenceImageNameRef.current = enqueueResult.referenceImageName;
             }
 
             const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
