@@ -41,11 +41,31 @@ export interface VideoSearchResult {
 export const DEFAULT_IMAGE_GENERATION_PROMPT =
     'Create a prompt to give to the image generation model based on this paragraph: {paragraph}';
 
-export const DEFAULT_IMAGE_SEARCH_PROMPT =
+export const LEGACY_DEFAULT_IMAGE_SEARCH_PROMPT =
     'Create a concise image search query for this text. Prefer concrete visual nouns, setting, mood, and era. Return only the search query. Text: {text}';
 
-export const DEFAULT_VIDEO_SEARCH_PROMPT =
+export const LEGACY_DEFAULT_VIDEO_SEARCH_PROMPT =
     'Create a concise stock video search query for this text. Prefer concrete visual nouns, setting, motion, mood, and era. Return only the search query. Text: {text}';
+
+export const DEFAULT_IMAGE_SEARCH_PROMPT =
+    [
+        'Create a Pixabay image search query for this text.',
+        'Return 2-4 plain stock-search words, not a sentence.',
+        'Prefer the main visual subject plus one concrete setting, action, mood, or era when useful.',
+        'Avoid filler words, camera directions, art styles, and overly specific details that stock search may not match.',
+        'Do not include labels, punctuation, quotes, hashtags, or explanation.',
+        'Text: {text}',
+    ].join(' ');
+
+export const DEFAULT_VIDEO_SEARCH_PROMPT =
+    [
+        'Create a Pixabay stock video search query for this text.',
+        'Return 2-4 plain stock-search words, not a sentence.',
+        'Prefer the main visual subject plus one concrete setting, motion, mood, or era when useful.',
+        'Avoid filler words, camera directions, art styles, and overly specific details that stock search may not match.',
+        'Do not include labels, punctuation, quotes, hashtags, or explanation.',
+        'Text: {text}',
+    ].join(' ');
 
 export const DEFAULT_SMART_MEDIA_SEGMENTATION_PROMPT = [
     'You will receive the original text with numbered token IDs inserted before each non-whitespace token, for example: [1] The [2] quiet [3] street.',
@@ -75,6 +95,10 @@ export function normalizeImageSearchQuery(query: string): string {
         .split('\n')[0]
         .replace(/^["'“”‘’]+|["'“”‘’]+$/g, '')
         .replace(/^(image\s+)?search\s+(query|term)\s*:\s*/i, '')
+        .replace(/^["'“”‘’]+|["'“”‘’]+$/g, '')
+        .replace(/[,:;]+/g, ' ')
+        .replace(/[.!?]+$/g, '')
+        .replace(/\s+/g, ' ')
         .trim();
 
     if (normalized.length <= 100) return normalized;
@@ -82,6 +106,36 @@ export function normalizeImageSearchQuery(query: string): string {
     const truncated = normalized.slice(0, 100);
     const lastSpace = truncated.lastIndexOf(' ');
     return (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trim();
+}
+
+export function getDefaultPixabaySearchPrompt(mediaType: PixabayMediaType): string {
+    return mediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : DEFAULT_IMAGE_SEARCH_PROMPT;
+}
+
+export function isDefaultPixabaySearchPrompt(prompt: string): boolean {
+    const trimmed = prompt.trim();
+    return [
+        DEFAULT_IMAGE_SEARCH_PROMPT,
+        DEFAULT_VIDEO_SEARCH_PROMPT,
+        LEGACY_DEFAULT_IMAGE_SEARCH_PROMPT,
+        LEGACY_DEFAULT_VIDEO_SEARCH_PROMPT,
+    ].includes(trimmed);
+}
+
+export function getPixabaySearchQueryCandidates(query: string): string[] {
+    const normalized = normalizeImageSearchQuery(query);
+    if (!normalized) return [];
+
+    const candidates = [normalized];
+    const words = normalized.split(/\s+/).filter(Boolean);
+
+    for (const wordCount of [4, 3, 2]) {
+        if (words.length > wordCount) {
+            candidates.push(words.slice(0, wordCount).join(' '));
+        }
+    }
+
+    return Array.from(new Set(candidates));
 }
 
 export function getImageSearchMinDimensions(
