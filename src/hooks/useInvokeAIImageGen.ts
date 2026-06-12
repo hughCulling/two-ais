@@ -330,7 +330,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
                 if (imageGenSettings.provider === 'pixabay') {
                     const mediaType = imageGenSettings.pixabayMediaType || 'image';
-                    const searchQuery = normalizeImageSearchQuery(prompt);
+                    const requestedSearchQuery = normalizeImageSearchQuery(prompt);
 
                     if (mediaType === 'video') {
                         const videoResult = await searchPixabayVideo(prompt, imageGenSettings);
@@ -346,6 +346,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                             continue;
                         }
 
+                        const searchQuery = videoResult.searchQuery || requestedSearchQuery;
                         paragraphImages[paragraphIndex] = {
                             ...paragraphImages[paragraphIndex],
                             mediaType: 'video',
@@ -380,6 +381,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         continue;
                     }
 
+                    const searchQuery = imageResult.searchQuery || requestedSearchQuery;
                     paragraphImages[paragraphIndex] = {
                         ...paragraphImages[paragraphIndex],
                         mediaType: 'image',
@@ -974,7 +976,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     async function searchPixabayImage(
         query: string,
         imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
-    ): Promise<{ result: ImageSearchResult | null; error?: string }> {
+    ): Promise<{ result: ImageSearchResult | null; error?: string; searchQuery?: string }> {
         try {
             const normalizedQuery = normalizeImageSearchQuery(query);
             if (!normalizedQuery) {
@@ -1006,8 +1008,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 throw new Error(`Pixabay search error: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
-            const data = await response.json() as { result?: ImageSearchResult };
-            return { result: data.result || null };
+            const data = await response.json() as { result?: ImageSearchResult; searchQuery?: string };
+            return { result: data.result || null, searchQuery: data.searchQuery };
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error searching Pixabay:', error);
             return { result: null, error: error instanceof Error ? error.message : 'Failed to search Pixabay' };
@@ -1017,7 +1019,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
     async function searchPixabayVideo(
         query: string,
         imageGenSettings: NonNullable<ConversationData['imageGenSettings']>
-    ): Promise<{ result: VideoSearchResult | null; error?: string }> {
+    ): Promise<{ result: VideoSearchResult | null; error?: string; searchQuery?: string }> {
         try {
             const normalizedQuery = normalizeImageSearchQuery(query);
             if (!normalizedQuery) {
@@ -1050,8 +1052,8 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                 throw new Error(`Pixabay video search error: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
-            const data = await response.json() as { result?: VideoSearchResult };
-            return { result: data.result || null };
+            const data = await response.json() as { result?: VideoSearchResult; searchQuery?: string };
+            return { result: data.result || null, searchQuery: data.searchQuery };
         } catch (error) {
             console.error('[InvokeAI ImageGen] Error searching Pixabay video:', error);
             return { result: null, error: error instanceof Error ? error.message : 'Failed to search Pixabay video' };

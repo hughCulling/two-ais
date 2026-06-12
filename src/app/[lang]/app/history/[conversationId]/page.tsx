@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check, ScrollText, Maximize2, Minimize2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Loader2, AlertTriangle, ArrowLeft, MessageCircle, Play, Pause, Check, ScrollText, Maximize2, Minimize2, ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
 import { format, Locale } from 'date-fns';
 import ReactDOM from 'react-dom';
 import { enUS, fr, de, es, it, pt, ru, ja, ko, zhCN, ar, he, tr, pl, sv, da, fi, nl, cs, sk, hu, ro, bg, hr, sl, et, lv, lt, mk, sq, bs, sr, uk, ka, hy, el, th, vi, id, ms } from 'date-fns/locale';
@@ -71,6 +71,177 @@ function getProviderDisplayName(provider: string): string {
         'browser': 'Browser TTS'  // Reverted back to original
     };
     return providerMap[provider] || provider;
+}
+
+function escapeHtml(value: string): string {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function getRoleDisplayName(role: Message['role']): string {
+    const roleMap: Record<Message['role'], string> = {
+        user: 'User',
+        human: 'User',
+        assistant: 'Assistant',
+        ai: 'Assistant',
+        agentA: 'Agent A',
+        agentB: 'Agent B',
+        system: 'System',
+    };
+    return roleMap[role] || role;
+}
+
+function slugifyFilenamePart(value: string): string {
+    const slug = value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 48);
+    return slug || 'conversation';
+}
+
+function getPrintableMessageClasses(role: Message['role']): { rowClass: string; bubbleClass: string } {
+    if (role === 'agentA') {
+        return { rowClass: 'row-left', bubbleClass: 'bubble-agent-a' };
+    }
+    if (role === 'agentB') {
+        return { rowClass: 'row-right', bubbleClass: 'bubble-agent-b' };
+    }
+    if (role === 'user' || role === 'human') {
+        return { rowClass: 'row-right', bubbleClass: 'bubble-user' };
+    }
+    if (role === 'system') {
+        return { rowClass: 'row-center', bubbleClass: 'bubble-system' };
+    }
+    return { rowClass: 'row-center', bubbleClass: 'bubble-system' };
+}
+
+function renderInlineMarkdown(value: string): string {
+    const codeSpans: string[] = [];
+    const withCodePlaceholders = escapeHtml(value).replace(/`([^`]+)`/g, (_, code: string) => {
+        const index = codeSpans.push(`<code>${code}</code>`) - 1;
+        return `@@CODE_SPAN_${index}@@`;
+    });
+
+    return withCodePlaceholders
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+        .replace(/@@CODE_SPAN_(\d+)@@/g, (_, index: string) => codeSpans[Number(index)] || '');
+}
+
+function renderMarkdownToHtml(markdown: string): string {
+    const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+    const blocks: string[] = [];
+    let paragraphLines: string[] = [];
+    let listItems: string[] = [];
+    let listType: 'ul' | 'ol' | null = null;
+    let quoteLines: string[] = [];
+    let codeLines: string[] = [];
+    let inCodeBlock = false;
+
+    const flushParagraph = () => {
+        if (paragraphLines.length === 0) return;
+        blocks.push(`<p>${renderInlineMarkdown(paragraphLines.join(' '))}</p>`);
+        paragraphLines = [];
+    };
+
+    const flushList = () => {
+        if (!listType || listItems.length === 0) return;
+        blocks.push(`<${listType}>${listItems.map(item => `<li>${renderInlineMarkdown(item)}</li>`).join('')}</${listType}>`);
+        listItems = [];
+        listType = null;
+    };
+
+    const flushQuote = () => {
+        if (quoteLines.length === 0) return;
+        blocks.push(`<blockquote>${renderInlineMarkdown(quoteLines.join(' '))}</blockquote>`);
+        quoteLines = [];
+    };
+
+    const flushCode = () => {
+        blocks.push(`<pre class="code-block"><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+        codeLines = [];
+    };
+
+    for (const line of lines) {
+        if (line.trim().startsWith('```')) {
+            if (inCodeBlock) {
+                flushCode();
+                inCodeBlock = false;
+            } else {
+                flushParagraph();
+                flushList();
+                flushQuote();
+                inCodeBlock = true;
+                codeLines = [];
+            }
+            continue;
+        }
+
+        if (inCodeBlock) {
+            codeLines.push(line);
+            continue;
+        }
+
+        if (!line.trim()) {
+            flushParagraph();
+            flushList();
+            flushQuote();
+            continue;
+        }
+
+        const headingMatch = line.match(/^(#{1,4})\s+(.+)$/);
+        if (headingMatch) {
+            flushParagraph();
+            flushList();
+            flushQuote();
+            const level = headingMatch[1].length + 1;
+            blocks.push(`<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`);
+            continue;
+        }
+
+        const quoteMatch = line.match(/^>\s?(.*)$/);
+        if (quoteMatch) {
+            flushParagraph();
+            flushList();
+            quoteLines.push(quoteMatch[1]);
+            continue;
+        }
+
+        const unorderedMatch = line.match(/^\s*[-*]\s+(.+)$/);
+        if (unorderedMatch) {
+            flushParagraph();
+            flushQuote();
+            if (listType !== 'ul') flushList();
+            listType = 'ul';
+            listItems.push(unorderedMatch[1]);
+            continue;
+        }
+
+        const orderedMatch = line.match(/^\s*\d+\.\s+(.+)$/);
+        if (orderedMatch) {
+            flushParagraph();
+            flushQuote();
+            if (listType !== 'ol') flushList();
+            listType = 'ol';
+            listItems.push(orderedMatch[1]);
+            continue;
+        }
+
+        paragraphLines.push(line);
+    }
+
+    if (inCodeBlock) flushCode();
+    flushParagraph();
+    flushList();
+    flushQuote();
+
+    return blocks.join('');
 }
 
 interface ParagraphImage {
@@ -173,6 +344,113 @@ interface ConversationDetails {
     imageGenSettings?: ImageGenSettings;
     messages: Message[];
     status: 'running' | 'completed' | 'failed';
+}
+
+function buildPrintableConversationHtml(
+    details: ConversationDetails,
+    formattedCreationDate: string,
+    options: { includeMedia: boolean }
+): string {
+    const messagesHtml = details.messages.map((msg, index) => {
+        const messageDate = new Date(msg.timestamp);
+        const messageTime = Number.isNaN(messageDate.getTime()) ? '' : messageDate.toLocaleString();
+        const { rowClass, bubbleClass } = getPrintableMessageClasses(msg.role);
+        const mediaItems = options.includeMedia
+            ? (msg.paragraphImages || [])
+                .filter((media) => media.status === 'complete' && (media.imageUrl || media.videoUrl || media.posterUrl))
+                .map((media) => {
+                    const previewUrl = media.mediaType === 'video'
+                        ? media.posterUrl || media.imageUrl
+                        : media.imageUrl;
+                    const source = media.source;
+                    const sourceLabel = [
+                        source?.providerName,
+                        source?.authorName ? `by ${source.authorName}` : '',
+                    ].filter(Boolean).join(' ');
+
+                    return [
+                        '<figure class="media-item">',
+                        previewUrl ? `<img src="${escapeHtml(previewUrl)}" alt="${escapeHtml(media.alt || 'Conversation media')}" />` : '',
+                        '<figcaption>',
+                        media.mediaType === 'video' ? '<strong>Video still</strong>' : '<strong>Image</strong>',
+                        media.searchQuery ? `<span>Search query: ${escapeHtml(media.searchQuery)}</span>` : '',
+                        source?.sourceUrl ? `<a href="${escapeHtml(source.sourceUrl)}">${escapeHtml(sourceLabel || source.sourceUrl)}</a>` : '',
+                        '</figcaption>',
+                        '</figure>',
+                    ].join('');
+                }).join('')
+            : '';
+
+        return [
+            `<article class="message-row ${rowClass}">`,
+            `<div class="message-bubble ${bubbleClass}">`,
+            '<div class="message-meta">',
+            `<strong>${escapeHtml(getRoleDisplayName(msg.role))}</strong>`,
+            `<span>${escapeHtml(messageTime || `Message ${index + 1}`)}</span>`,
+            '</div>',
+            `<div class="message-content">${renderMarkdownToHtml(msg.content)}</div>`,
+            mediaItems ? `<div class="media-grid">${mediaItems}</div>` : '',
+            '</div>',
+            '</article>',
+        ].join('');
+    }).join('');
+
+    return [
+        '<!doctype html>',
+        '<html lang="en">',
+        '<head>',
+        '<meta charset="utf-8" />',
+        '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+        `<title>Two AIs conversation ${escapeHtml(details.conversationId)}</title>`,
+        '<style>',
+        ':root { color-scheme: light; }',
+        '* { box-sizing: border-box; }',
+        'body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #171717; background: #f8fafc; line-height: 1.55; }',
+        'main { max-width: 820px; margin: 0 auto; padding: 40px 28px; }',
+        'h1 { margin: 0 0 8px; font-size: 28px; }',
+        '.meta { margin: 0 0 28px; color: #555; font-size: 14px; }',
+        '.transcript { display: flex; flex-direction: column; gap: 16px; }',
+        '.message-row { display: flex; width: 100%; break-inside: avoid; }',
+        '.row-left { justify-content: flex-start; }',
+        '.row-right { justify-content: flex-end; }',
+        '.row-center { justify-content: center; }',
+        '.message-bubble { max-width: 75%; min-width: 0; padding: 12px; border-radius: 8px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); overflow-wrap: anywhere; }',
+        '.bubble-agent-a { background: #f1f5f9; color: #0f172a; }',
+        '.bubble-agent-b { background: #111827; color: #f8fafc; }',
+        '.bubble-user { background: #e2e8f0; color: #0f172a; }',
+        '.bubble-system { max-width: 75%; background: transparent; color: #64748b; box-shadow: none; font-style: italic; text-align: center; }',
+        '.message-meta { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 8px; font-size: 12px; opacity: 0.78; }',
+        '.message-meta span { white-space: nowrap; }',
+        '.message-content > *:first-child { margin-top: 0; }',
+        '.message-content > *:last-child { margin-bottom: 0; }',
+        '.message-content p { margin: 0 0 12px; }',
+        '.message-content h2, .message-content h3, .message-content h4, .message-content h5 { margin: 16px 0 8px; line-height: 1.25; }',
+        '.message-content ul, .message-content ol { margin: 0 0 12px; padding-left: 24px; }',
+        '.message-content blockquote { margin: 0 0 12px; padding-left: 14px; border-left: 3px solid #bbb; color: #555; }',
+        'code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; background: #f2f2f2; padding: 1px 4px; border-radius: 4px; }',
+        '.code-block { margin: 0 0 12px; padding: 12px; overflow-wrap: anywhere; white-space: pre-wrap; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; }',
+        '.code-block code { background: transparent; padding: 0; }',
+        '.media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }',
+        '.media-item { margin: 0; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; break-inside: avoid; }',
+        '.media-item img { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; }',
+        'figcaption { display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; font-size: 12px; color: #555; }',
+        'a { color: #0645ad; overflow-wrap: anywhere; }',
+        '.bubble-agent-b a { color: #bfdbfe; }',
+        '.bubble-agent-b code { background: rgba(255,255,255,0.14); }',
+        '.bubble-agent-b .code-block { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }',
+        '@media (max-width: 640px) { main { padding: 24px 14px; } .message-bubble { max-width: 88%; } }',
+        '@media print { body { background: #fff; } main { padding: 0; } .message-row { break-inside: avoid-page; } .message-bubble, .media-item { print-color-adjust: exact; -webkit-print-color-adjust: exact; } a { color: inherit; text-decoration: none; } }',
+        '</style>',
+        '</head>',
+        '<body>',
+        '<main>',
+        '<h1>Two AIs conversation</h1>',
+        `<p class="meta">Started ${escapeHtml(formattedCreationDate)} &middot; ${escapeHtml(details.messages.length.toString())} messages &middot; ID ${escapeHtml(details.conversationId)}</p>`,
+        `<section class="transcript">${messagesHtml || '<p>No messages.</p>'}</section>`,
+        '</main>',
+        '</body>',
+        '</html>',
+    ].join('');
 }
 
 interface AudioState {
@@ -388,6 +666,18 @@ export default function ChatHistoryViewerPage() {
     }
 
     const formattedCreationDate = format(new Date(details.createdAt), 'PPP p', { locale: getLocale(language.code) });
+    const handleDownloadPrintableDocument = (includeMedia: boolean) => {
+        const html = buildPrintableConversationHtml(details, formattedCreationDate, { includeMedia });
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `two-ais-${slugifyFilenamePart(details.createdAt)}-${includeMedia ? 'with-media' : 'text-only'}-${details.conversationId.slice(0, 8)}.html`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
 
     const TranscriptMessageBubble: React.FC<{
         msg: Message;
@@ -1298,6 +1588,28 @@ export default function ChatHistoryViewerPage() {
                         {/* Header Section */}
                         <div className={`flex-shrink-0 flex justify-between items-center pb-2 mb-2 border-b ${isFullscreen ? 'max-w-3xl mx-auto w-full px-4 pt-4' : ''}`}>
                             <h2 className="text-lg font-semibold">{t.history.transcript}</h2>
+                            <div className="flex flex-wrap justify-end gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleDownloadPrintableDocument(true)}
+                                    disabled={details.messages.length === 0}
+                                    aria-label="Download printable conversation document with media"
+                                >
+                                    <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+                                    With media
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleDownloadPrintableDocument(false)}
+                                    disabled={details.messages.length === 0}
+                                    aria-label="Download printable conversation document without media"
+                                >
+                                    <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+                                    Text only
+                                </Button>
+                            </div>
                         </div>
 
                         {/* Scrollable Message Area */}

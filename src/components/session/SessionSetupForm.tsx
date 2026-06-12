@@ -56,9 +56,9 @@ import { saveSessionPreset, loadSessionPreset, SessionPreset } from '@/lib/fireb
 import { isSafariBrowser, isChromeBrowser, isFirefoxBrowser, isOperaBrowser } from '@/lib/browser-utils';
 import {
     DEFAULT_IMAGE_GENERATION_PROMPT,
-    DEFAULT_IMAGE_SEARCH_PROMPT,
-    DEFAULT_VIDEO_SEARCH_PROMPT,
+    getDefaultPixabaySearchPrompt,
     IMAGE_SEARCH_SIZE_LABELS,
+    isDefaultPixabaySearchPrompt,
     VIDEO_SEARCH_DURATION_LABELS,
     type ImageMediaProvider,
     type ImageSearchOrientation,
@@ -958,11 +958,8 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setPixabayMediaType(mediaType);
         setImagePromptSystemMessage(prev => {
             const trimmed = prev.trim();
-            if (mediaType === 'video' && trimmed === DEFAULT_IMAGE_SEARCH_PROMPT) {
-                return DEFAULT_VIDEO_SEARCH_PROMPT;
-            }
-            if (mediaType === 'image' && trimmed === DEFAULT_VIDEO_SEARCH_PROMPT) {
-                return DEFAULT_IMAGE_SEARCH_PROMPT;
+            if (isDefaultPixabaySearchPrompt(trimmed)) {
+                return getDefaultPixabaySearchPrompt(mediaType);
             }
             return prev;
         });
@@ -973,9 +970,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
         setImagePromptSystemMessage(prev => {
             const trimmed = prev.trim();
             if (provider === 'pixabay' && (trimmed === DEFAULT_IMAGE_GENERATION_PROMPT || trimmed === (t?.sessionSetupForm?.defaultImagePromptSystemMessage || '').trim())) {
-                return pixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : DEFAULT_IMAGE_SEARCH_PROMPT;
+                return getDefaultPixabaySearchPrompt(pixabayMediaType);
             }
-            if (provider === 'invokeai' && (trimmed === DEFAULT_IMAGE_SEARCH_PROMPT || trimmed === DEFAULT_VIDEO_SEARCH_PROMPT)) {
+            if (provider === 'invokeai' && isDefaultPixabaySearchPrompt(trimmed)) {
                 return t?.sessionSetupForm?.defaultImagePromptSystemMessage || DEFAULT_IMAGE_GENERATION_PROMPT;
             }
             return prev;
@@ -1791,10 +1788,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 setInvokeaiClipSkip(preset.imageGenSettings.clipSkip ?? 0);
                 setInvokeaiCfgRescaleMultiplier(preset.imageGenSettings.cfgRescaleMultiplier ?? 0);
                 setSelectedPromptLlm(preset.imageGenSettings.promptLlm || '');
+                const presetPromptSystemMessage = preset.imageGenSettings.promptSystemMessage || '';
                 setImagePromptSystemMessage(
-                    preset.imageGenSettings.promptSystemMessage ||
+                    (presetProvider === 'pixabay' && isDefaultPixabaySearchPrompt(presetPromptSystemMessage)
+                        ? getDefaultPixabaySearchPrompt(presetPixabayMediaType)
+                        : presetPromptSystemMessage) ||
                     (presetProvider === 'pixabay'
-                        ? (presetPixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : DEFAULT_IMAGE_SEARCH_PROMPT)
+                        ? getDefaultPixabaySearchPrompt(presetPixabayMediaType)
                         : DEFAULT_IMAGE_GENERATION_PROMPT)
                 );
                 setPromptLookaheadLimit(
@@ -3219,7 +3219,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                         className="w-full px-3 py-2 rounded-md text-center liquid-glass-input min-h-[60px]"
                                         value={imagePromptSystemMessage}
                                         onChange={e => setImagePromptSystemMessage(e.target.value)}
-                                        placeholder={imageMediaProvider === 'pixabay' && pixabayMediaType === 'video' ? DEFAULT_VIDEO_SEARCH_PROMPT : 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}'}
+                                        placeholder={imageMediaProvider === 'pixabay' ? getDefaultPixabaySearchPrompt(pixabayMediaType) : 'Create a prompt to give to the image generation model based on this paragraph: {paragraph}'}
                                         aria-describedby="image-prompt-system-message-description"
                                         aria-label="System prompt for image prompt LLM"
                                         disabled={!user}

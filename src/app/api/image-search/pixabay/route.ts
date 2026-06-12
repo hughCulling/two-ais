@@ -7,6 +7,7 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 import {
     getImageSearchMinDimensions,
+    getPixabaySearchQueryCandidates,
     normalizeImageSearchQuery,
     type ImageSearchOrientation,
     type ImageSearchResult,
@@ -187,40 +188,45 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Could not load Pixabay API key.' }, { status: 500 });
         }
 
-        const searchParams = new URLSearchParams({
-            key: apiKey,
-            q: query,
-            image_type: imageType,
-            orientation: toPixabayOrientation(orientation),
-            safesearch: 'true',
-            order: 'popular',
-            per_page: '10',
-            min_width: String(minWidth),
-            min_height: String(minHeight),
-        });
+        for (const candidateQuery of getPixabaySearchQueryCandidates(query)) {
+            const searchParams = new URLSearchParams({
+                key: apiKey,
+                q: candidateQuery,
+                image_type: imageType,
+                orientation: toPixabayOrientation(orientation),
+                safesearch: 'true',
+                order: 'popular',
+                per_page: '10',
+                min_width: String(minWidth),
+                min_height: String(minHeight),
+            });
 
-        const response = await fetch(`https://pixabay.com/api/?${searchParams.toString()}`, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(15000),
-        });
+            const response = await fetch(`https://pixabay.com/api/?${searchParams.toString()}`, {
+                cache: 'no-store',
+                signal: AbortSignal.timeout(15000),
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            return NextResponse.json(
-                { error: `Pixabay API error: ${response.status} ${response.statusText} - ${errorText}` },
-                { status: response.status }
-            );
+            if (!response.ok) {
+                const errorText = await response.text();
+                return NextResponse.json(
+                    { error: `Pixabay API error: ${response.status} ${response.statusText} - ${errorText}` },
+                    { status: response.status }
+                );
+            }
+
+            const data = await response.json() as PixabayResponse;
+            const hits = Array.isArray(data.hits) ? data.hits : [];
+            const firstAcceptable = hits.find(hit => isAcceptableHit(hit, orientation, minWidth, minHeight));
+
+            if (firstAcceptable) {
+                return NextResponse.json(
+                    { result: toSearchResult(firstAcceptable), searchQuery: candidateQuery },
+                    { status: 200 }
+                );
+            }
         }
 
-        const data = await response.json() as PixabayResponse;
-        const hits = Array.isArray(data.hits) ? data.hits : [];
-        const firstAcceptable = hits.find(hit => isAcceptableHit(hit, orientation, minWidth, minHeight));
-
-        if (!firstAcceptable) {
-            return NextResponse.json({ error: 'No suitable Pixabay image found for this query.' }, { status: 404 });
-        }
-
-        return NextResponse.json({ result: toSearchResult(firstAcceptable) }, { status: 200 });
+        return NextResponse.json({ error: 'No suitable Pixabay image found for this query.' }, { status: 404 });
     } catch (error) {
         console.error('[pixabay-search] Error:', error);
         return NextResponse.json(
