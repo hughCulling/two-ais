@@ -4,8 +4,145 @@
 
 import { useEffect, useRef } from 'react';
 import { doc, collection, onSnapshot, updateDoc, setDoc, serverTimestamp, increment } from 'firebase/firestore';
-import { db, rtdb } from '@/lib/firebase/clientApp';
+import { auth, db, rtdb } from '@/lib/firebase/clientApp';
 import { ref, set, update } from 'firebase/database';
+import { getProviderFromId } from '@/lib/models';
+import { DEFAULT_TURN_TRANSFORM_PROMPT, type TurnTransformMetadata, type TurnTransformSettings } from '@/lib/turn-transform';
+
+async function readOllamaStream(response: Response): Promise<string> {
+  const reader = response.body?.getReader();
+  if (!reader) return '';
+
+  const decoder = new TextDecoder();
+  let content = '';
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (value) {
+      buffer += decoder.decode(value, { stream: !done });
+    } else if (done) {
+      buffer += decoder.decode();
+    }
+
+    const lines = buffer.split('\n');
+    buffer = done ? '' : (lines.pop() || '');
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6);
+      if (data === '[DONE]') return content;
+
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.token) {
+          content += parsed.token;
+        } else if (parsed.error) {
+          throw new Error(`Ollama error: ${parsed.error}`);
+        }
+      } catch (parseError) {
+        if (parseError instanceof Error && parseError.message.startsWith('Ollama error:')) {
+          throw parseError;
+        }
+      }
+    }
+
+    if (done) break;
+  }
+
+  return content;
+}
+
+async function transformTurnForPresentation(params: {
+  rawTurn: string;
+  settings?: TurnTransformSettings;
+  ollamaEndpoint: string;
+}): Promise<{ presentationContent?: string; metadata: TurnTransformMetadata }> {
+  const { rawTurn, settings, ollamaEndpoint } = params;
+  if (!settings?.enabled) {
+    return { metadata: { status: 'disabled' } };
+  }
+
+  const transformLlmId = settings.llm?.trim();
+  const transformPrompt = (settings.prompt || DEFAULT_TURN_TRANSFORM_PROMPT).trim();
+  if (!transformLlmId || !transformPrompt) {
+    return { metadata: { status: 'error', model: transformLlmId, prompt: transformPrompt, error: 'Missing turn conversion model or prompt.' } };
+  }
+
+  try {
+    const provider = getProviderFromId(transformLlmId);
+    let presentationContent = '';
+
+    if (provider === 'Ollama') {
+      const modelName = transformLlmId.replace(/^ollama:/, '');
+      const response = await fetch('/api/ollama/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: 'system', content: transformPrompt.replace(/\{turn\}/g, rawTurn) },
+            { role: 'user', content: rawTurn },
+          ],
+          ollamaEndpoint,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
+      }
+      presentationContent = (await readOllamaStream(response)).trim();
+    } else {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error('User is not signed in.');
+      }
+      const idToken = await currentUser.getIdToken();
+      const response = await fetch('/api/turn-transform', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          turn: rawTurn,
+          transformLlmId,
+          transformPrompt,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+      }
+      presentationContent = String(data.presentationContent || '').trim();
+    }
+
+    if (!presentationContent) {
+      throw new Error('Turn conversion returned empty text.');
+    }
+
+    return {
+      presentationContent,
+      metadata: {
+        status: 'done',
+        model: transformLlmId,
+        prompt: transformPrompt,
+      },
+    };
+  } catch (error) {
+    console.error('[Turn Transform] Failed; using raw turn for presentation:', error);
+    return {
+      metadata: {
+        status: 'error',
+        model: transformLlmId,
+        prompt: transformPrompt,
+        error: error instanceof Error ? error.message : String(error),
+      },
+    };
+  }
+}
 
 export function useOllamaAgent(conversationId: string | null, userId: string | null) {
   const processingRef = useRef(false);
@@ -294,9 +431,17 @@ export function useOllamaAgent(conversationId: string | null, userId: string | n
         // Save to Firestore using the same messageId as the streaming message
         // This prevents duplicate TTS playback by ensuring the streaming message
         // and Firestore message have the same ID
+        const transformResult = await transformTurnForPresentation({
+          rawTurn: fullContent,
+          settings: data.turnTransformSettings,
+          ollamaEndpoint,
+        });
+
         await setDoc(doc(db, 'conversations', conversationId, 'messages', messageId), {
           role: agentToRespond,
           content: fullContent,
+          ...(transformResult.presentationContent ? { presentationContent: transformResult.presentationContent } : {}),
+          turnTransform: transformResult.metadata,
           timestamp: serverTimestamp(),
           isStreaming: false,
           audioUrl: null, // Will be populated by TTS if enabled

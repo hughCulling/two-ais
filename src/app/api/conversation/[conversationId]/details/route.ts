@@ -95,6 +95,7 @@ interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
     content: string;
+    presentationContent?: string;
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
@@ -217,6 +218,7 @@ export async function GET(
                 id: doc.id,
                 role: data.role || 'unknown', // Provide a fallback for role
                 content: data.content || '',
+                presentationContent: data.presentationContent || undefined,
                 timestamp: isoTimestamp,
                 imageUrl: data.imageUrl || null,
                 imageGenError: data.imageGenError || null,

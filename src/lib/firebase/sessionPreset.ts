@@ -10,6 +10,7 @@ import type {
     VideoSearchDuration,
     VideoSearchType,
 } from '@/lib/image-media';
+import type { TurnTransformSettings } from '@/lib/turn-transform';
 
 export interface SessionPreset {
     agentA_llm: string;
@@ -30,6 +31,7 @@ export interface SessionPreset {
     initialSystemPrompt: string;
     localaiEndpoint?: string;
     lookaheadLimit?: number;
+    turnTransformSettings?: TurnTransformSettings;
     imageGenSettings?: {
         enabled: boolean;
         provider: ImageMediaProvider;

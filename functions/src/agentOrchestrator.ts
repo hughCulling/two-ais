@@ -25,6 +25,20 @@ type QuotaError = { code?: string; status?: number };
 
 const LOOKAHEAD_LIMIT = 3; // How many agent messages ahead can be generated
 
+const DEFAULT_TURN_TRANSFORM_PROMPT = [
+    "Convert the following story turn into a single script-style passage.",
+    "",
+    "Include dialogue, narration, and brief visual storyboard cues where useful.",
+    "Keep it as one continuous document, not separate script and storyboard documents.",
+    "Do not add analysis or commentary.",
+    "Keep the meaning of the original turn.",
+    "When adding image prompts or storyboard cues, make them short, concrete, and suitable for Pixabay-style search keywords.",
+    "If a cue describes a character-focused image, prefer one visible person unless the original turn clearly requires more.",
+    "",
+    "Story turn:",
+    "{turn}",
+].join("\n");
+
 // --- ConversationData type for linter ---
 type ConversationData = {
     agentA_llm: string;
@@ -54,7 +68,131 @@ type ConversationData = {
         size?: string;
         model?: string;
     };
+    turnTransformSettings?: {
+        enabled: boolean;
+        llm: string;
+        prompt: string;
+    };
 };
+
+type TurnTransformMetadata = {
+    status: "done" | "error" | "disabled";
+    model?: string;
+    prompt?: string;
+    error?: string;
+};
+
+function extractModelText(result: unknown): string {
+    if (typeof result === "string") return result;
+    if (!result || typeof result !== "object" || !("content" in result)) return "";
+
+    const content = (result as { content: unknown }).content;
+    if (typeof content === "string") return content;
+    if (Array.isArray(content)) {
+        return content
+            .map((x: unknown) => (typeof x === "string" ? x : JSON.stringify(x)))
+            .join(" ");
+    }
+    return "";
+}
+
+async function transformTurnForPresentation(params: {
+    rawTurn: string;
+    conversationData: ConversationData;
+    logger: Console;
+}): Promise<{ presentationContent?: string; metadata: TurnTransformMetadata }> {
+    const { rawTurn, conversationData, logger } = params;
+    const settings = conversationData.turnTransformSettings;
+    if (!settings?.enabled) {
+        return { metadata: { status: "disabled" } };
+    }
+
+    const transformModelId = (settings.llm || "").trim();
+    const transformPrompt = (settings.prompt || DEFAULT_TURN_TRANSFORM_PROMPT).trim();
+    if (!transformModelId || !transformPrompt) {
+        return {
+            metadata: {
+                status: "error",
+                model: transformModelId,
+                prompt: transformPrompt,
+                error: "Missing turn conversion model or prompt.",
+            },
+        };
+    }
+
+    try {
+        const provider = getProviderFromId(transformModelId);
+        if (!provider) {
+            throw new Error(`Could not determine provider for turn conversion model ${transformModelId}.`);
+        }
+
+        let presentationContent = "";
+        const messages = [
+            new SystemMessage({ content: transformPrompt.replace(/\{turn\}/g, rawTurn) }),
+            new HumanMessage({ content: rawTurn }),
+        ];
+
+        if (provider === "Ollama") {
+            const ollamaModelName = transformModelId.replace(/^ollama:/, "");
+            const ollamaEndpoint = conversationData.ollamaEndpoint || "http://localhost:11434";
+            const ollama = new Ollama({ host: ollamaEndpoint });
+            const response = await ollama.chat({
+                model: ollamaModelName,
+                messages: [
+                    { role: "system", content: transformPrompt.replace(/\{turn\}/g, rawTurn) },
+                    { role: "user", content: rawTurn },
+                ],
+                stream: false,
+            });
+            presentationContent = (response.message?.content || "").trim();
+        } else if (provider === "Mistral AI") {
+            const firestoreKeyId = getFirestoreKeyIdFromProvider(provider);
+            if (!firestoreKeyId) {
+                throw new Error(`Invalid Firestore key ID for turn conversion provider: ${provider}`);
+            }
+            const secretVersionName = conversationData.apiSecretVersions[firestoreKeyId];
+            if (!secretVersionName) {
+                throw new Error(`API key reference missing for turn conversion LLM (${provider}).`);
+            }
+            const apiKey = await getApiKeyFromSecret(secretVersionName);
+            if (!apiKey) {
+                throw new Error(`getApiKeyFromSecret returned null for turn conversion LLM version ${secretVersionName}`);
+            }
+            const model = new ChatMistralAI({
+                apiKey,
+                modelName: transformModelId,
+                temperature: 0.3,
+            });
+            const result = await model.invoke(messages as BaseLanguageModelInput);
+            presentationContent = extractModelText(result).trim();
+        } else {
+            throw new Error(`Turn conversion not supported yet for provider ${provider}.`);
+        }
+
+        if (!presentationContent) {
+            throw new Error("Turn conversion returned empty text.");
+        }
+
+        return {
+            presentationContent,
+            metadata: {
+                status: "done",
+                model: transformModelId,
+                prompt: transformPrompt,
+            },
+        };
+    } catch (error) {
+        logger.warn("[Turn Transform] Failed; using raw turn for presentation:", error);
+        return {
+            metadata: {
+                status: "error",
+                model: transformModelId,
+                prompt: transformPrompt,
+                error: error instanceof Error ? error.message : String(error),
+            },
+        };
+    }
+}
 
 async function getLookaheadState(
     conversationRef: DocumentReference,
@@ -439,12 +577,19 @@ export async function triggerAgentResponse(
             logger.error("Streaming error occurred, aborting before Firestore write.");
             throw new Error(`LLM streaming failed for ${agentToRespond} (${agentModelId}): ${errorDetails}`);
         }
-        logger.info("Streaming complete. Preparing to start TTS and image generation in parallel", { messageId, responseContent });
+        const transformResult = await transformTurnForPresentation({
+            rawTurn: responseContent,
+            conversationData,
+            logger,
+        });
+        const presentationContent = transformResult.presentationContent || responseContent;
+
+        logger.info("Streaming complete. Preparing to start TTS and image generation in parallel", { messageId, responseContent, presentationContent });
 
         // --- TTS and IMAGE GENERATION in PARALLEL ---
         const ttsSettings = conversationData.ttsSettings;
         const agentSettings = agentToRespond === "agentA" ? ttsSettings?.agentA : ttsSettings?.agentB;
-        const textToSpeak = removeMarkdown(responseContent);
+        const textToSpeak = removeMarkdown(presentationContent);
         const imageGenSettings = conversationData.imageGenSettings;
 
         // Add debug log for imageGenSettings
@@ -694,10 +839,10 @@ export async function triggerAgentResponse(
                         // else if (promptLlmProvider === "DeepSeek") promptLlmModel = new ChatDeepSeek({ apiKey: promptLlmApiKey, modelName: promptLlmId });
                         else throw new Error(`Unsupported provider for image prompt LLM: ${promptLlmProvider}`);
                         // Compose system/user messages
-                        const systemMsg = promptSystemMessage.replace("{turn}", responseContent);
+                        const systemMsg = promptSystemMessage.replace("{turn}", presentationContent);
                         const promptMessages = [
                             new SystemMessage({ content: systemMsg }),
-                            new HumanMessage({ content: responseContent })
+                            new HumanMessage({ content: presentationContent })
                         ];
                         // Use .invoke for single-turn prompt
                         const promptResult = await promptLlmModel.invoke(promptMessages as BaseLanguageModelInput);
@@ -709,7 +854,7 @@ export async function triggerAgentResponse(
                         } else if (promptResult && Array.isArray(promptResult.content)) {
                             imagePrompt = promptResult.content.map(x => (typeof x === "string" ? x : JSON.stringify(x))).join(" ");
                         } else {
-                            imagePrompt = responseContent;
+                            imagePrompt = presentationContent;
                         }
                         logger.info(`[ImageGen] Generated image prompt: ${imagePrompt}`);
 
@@ -954,9 +1099,11 @@ export async function triggerAgentResponse(
 
         // --- Write Firestore message only after both are ready ---
         const nextTurn = agentToRespond === "agentA" ? "agentB" : "agentA";
-        const responseMessage: { role: string; content: string; timestamp: FieldValue; audioUrl?: string | null; ttsWasSplit?: boolean; imageUrl?: string | null; imageGenError?: string | null } = {
+        const responseMessage: { role: string; content: string; presentationContent?: string; turnTransform?: TurnTransformMetadata; timestamp: FieldValue; audioUrl?: string | null; ttsWasSplit?: boolean; imageUrl?: string | null; imageGenError?: string | null } = {
             role: agentToRespond, content: responseContent, timestamp: admin.firestore.FieldValue.serverTimestamp(),
         };
+        if (transformResult.presentationContent) { responseMessage.presentationContent = transformResult.presentationContent; }
+        responseMessage.turnTransform = transformResult.metadata;
         if (ttsResult.audioUrl) { responseMessage.audioUrl = ttsResult.audioUrl; }
         if (ttsResult.ttsWasSplit) { responseMessage.ttsWasSplit = true; }
         if (imageResult.imageUrl !== undefined) { responseMessage.imageUrl = imageResult.imageUrl; }

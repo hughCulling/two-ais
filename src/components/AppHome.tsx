@@ -18,6 +18,7 @@ import type {
     VideoSearchDuration,
     VideoSearchType,
 } from '@/lib/image-media';
+import type { TurnTransformSettings } from '@/lib/turn-transform';
 
 // --- Types from page.tsx ---
 interface AgentTTSSettingsConfig {
@@ -37,6 +38,7 @@ interface SessionConfig {
     ollamaEndpoint?: string;
     localaiEndpoint?: string;
     lookaheadLimit?: number;
+    turnTransformSettings?: TurnTransformSettings;
     imageGenSettings?: {
         enabled: boolean;
         provider: ImageMediaProvider;

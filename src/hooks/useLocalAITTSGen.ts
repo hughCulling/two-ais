@@ -25,6 +25,7 @@ interface ConversationData {
 interface MessageData {
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
+    presentationContent?: string;
     isStreaming?: boolean;
     mediaSegments?: MediaSegment[];
     paragraphAudioUrls?: Array<string | null>;
@@ -283,7 +284,8 @@ export function useLocalAITTSGen(conversationId: string | null, userId: string |
                         ) {
                             continue;
                         }
-                        const segments = resolveMediaSegments(messageData.content, granularity, convLanguage, messageData.mediaSegments);
+                        const presentationContent = messageData.presentationContent?.trim() || messageData.content;
+                        const segments = resolveMediaSegments(presentationContent, granularity, convLanguage, messageData.mediaSegments);
                         const paragraphs = segments.map(s => s.text);
                         if (paragraphs.length === 0) continue;
 
