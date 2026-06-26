@@ -49,6 +49,7 @@ interface GraphBuildParams {
   negative_prompt?: string;
   lora?: InvokeAIModel | null;
   lora_weight?: number;
+  reference_image?: InvokeAIReferenceImage | null;
 }
 
 interface GraphBuildResult {
@@ -63,6 +64,16 @@ export interface QueueStatus {
   pending?: number;
   in_progress?: number;
   [key: string]: unknown;
+}
+
+interface InvokeAIReferenceImage {
+  image_name: string;
+  model: InvokeAIModel;
+  weight: number;
+  method: string;
+  clip_vision_model: string;
+  begin_step_percent: number;
+  end_step_percent: number;
 }
 
 // Helper to fetch available models
@@ -90,6 +101,68 @@ export async function fetchLoRAModels(endpoint: string): Promise<InvokeAIModel[]
   }
 }
 
+export async function fetchIPAdapterModels(endpoint: string): Promise<InvokeAIModel[]> {
+  try {
+    const response = await fetch(`${endpoint}/api/v2/models/?model_type=ip_adapter`);
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.models || [];
+  } catch (error) {
+    console.error('Failed to fetch IP Adapter models:', error);
+    return [];
+  }
+}
+
+function clampNumber(value: unknown, fallback: number, min: number, max: number): number {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.max(min, Math.min(max, value))
+    : fallback;
+}
+
+function withNullableSubmodel(model: InvokeAIModel): InvokeAIModel {
+  return { ...model, submodel_type: model.submodel_type ?? null };
+}
+
+function addReferenceImageNodesAndEdges(
+  nodes: Record<string, GraphNode>,
+  edges: GraphEdge[],
+  referenceImage: InvokeAIReferenceImage
+) {
+  nodes['ip_adapter_collector'] = {
+    id: 'ip_adapter_collector',
+    type: 'collect',
+    is_intermediate: true,
+    use_cache: true,
+    item: null,
+    collection: [],
+  };
+  nodes['ip_adapter_reference_image'] = {
+    id: 'ip_adapter_reference_image',
+    type: 'ip_adapter',
+    is_intermediate: true,
+    use_cache: true,
+    image: { image_name: referenceImage.image_name },
+    ip_adapter_model: withNullableSubmodel(referenceImage.model),
+    clip_vision_model: referenceImage.clip_vision_model,
+    weight: referenceImage.weight,
+    method: referenceImage.method,
+    begin_step_percent: referenceImage.begin_step_percent,
+    end_step_percent: referenceImage.end_step_percent,
+    mask: null,
+  };
+
+  edges.push(
+    {
+      source: { node_id: 'ip_adapter_reference_image', field: 'ip_adapter' },
+      destination: { node_id: 'ip_adapter_collector', field: 'item' },
+    },
+    {
+      source: { node_id: 'ip_adapter_collector', field: 'collection' },
+      destination: { node_id: 'denoise_latents', field: 'ip_adapter' },
+    }
+  );
+}
+
 function buildSD1InvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
   const {
     prompt,
@@ -104,6 +177,7 @@ function buildSD1InvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     cfg_rescale_multiplier = 0,
     lora = null,
     lora_weight = 0.75,
+    reference_image = null,
   } = params;
 
   const useLora = Boolean(lora);
@@ -360,6 +434,10 @@ function buildSD1InvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     },
   ];
 
+  if (reference_image) {
+    addReferenceImageNodesAndEdges(nodes, edges, reference_image);
+  }
+
   return {
     graph: { nodes, edges },
     seed: finalSeed,
@@ -380,6 +458,7 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     negative_prompt = '',
     lora = null,
     lora_weight = 0.75,
+    reference_image = null,
   } = params;
 
   const useLora = Boolean(lora);
@@ -536,7 +615,29 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
       refiner_positive_aesthetic_score: null,
       refiner_negative_aesthetic_score: null,
       refiner_start: null,
-      ref_images: [],
+      ref_images: reference_image
+        ? [
+          {
+            id: 'reference_image:conversation_face',
+            isEnabled: true,
+            config: {
+              type: 'ip_adapter',
+              image: {
+                original: {
+                  image: {
+                    image_name: reference_image.image_name,
+                  },
+                },
+              },
+              model: reference_image.model,
+              beginEndStepPct: [reference_image.begin_step_percent, reference_image.end_step_percent],
+              method: reference_image.method,
+              clipVisionModel: reference_image.clip_vision_model,
+              weight: reference_image.weight,
+            },
+          },
+        ]
+        : [],
     },
     'l2i': {
       id: 'l2i',
@@ -704,6 +805,10 @@ function buildSDXLInvokeAIGraph(params: GraphBuildParams): GraphBuildResult {
     },
   ];
 
+  if (reference_image) {
+    addReferenceImageNodesAndEdges(nodes, edges, reference_image);
+  }
+
   return {
     graph: { nodes, edges },
     seed: finalSeed,
@@ -773,6 +878,24 @@ export interface InvokeAIGenerationInput {
   loraKey?: string;
   lora_weight?: number;
   loraWeight?: number;
+  reference_image_enabled?: boolean;
+  referenceImageEnabled?: boolean;
+  reference_image_model_key?: string;
+  referenceImageModelKey?: string;
+  reference_image_data_url?: string;
+  referenceImageDataUrl?: string;
+  reference_image_name?: string;
+  referenceImageName?: string;
+  reference_image_weight?: number;
+  referenceImageWeight?: number;
+  reference_image_method?: string;
+  referenceImageMethod?: string;
+  reference_image_clip_vision_model?: string;
+  referenceImageClipVisionModel?: string;
+  reference_image_begin_step_pct?: number;
+  referenceImageBeginStepPct?: number;
+  reference_image_end_step_pct?: number;
+  referenceImageEndStepPct?: number;
 }
 
 export interface PreparedInvokeAIGeneration {
@@ -782,6 +905,60 @@ export interface PreparedInvokeAIGeneration {
   modelName: string;
   selectedModel: InvokeAIModel;
   selectedLora: InvokeAIModel | null;
+  referenceImageName?: string;
+}
+
+function getLookupModel(candidates: InvokeAIModel[], lookupKey: string): InvokeAIModel | null {
+  const normalizedLookupKey = lookupKey.trim();
+  if (!normalizedLookupKey) return null;
+  return candidates.find((m) => {
+    const key = typeof m.key === 'string' ? m.key : '';
+    const id = typeof (m as { id?: string }).id === 'string' ? (m as { id?: string }).id : '';
+    return (
+      key === normalizedLookupKey ||
+      id === normalizedLookupKey ||
+      (typeof (m as { name?: string }).name === 'string' && (m as { name: string }).name === normalizedLookupKey)
+    );
+  }) || null;
+}
+
+function parseDataUrlImage(dataUrl: string): { mimeType: string; buffer: Buffer } {
+  const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,([a-zA-Z0-9+/=]+)$/);
+  if (!match) {
+    const error = new Error('Reference image must be a base64 image data URL.');
+    (error as Error & { status?: number }).status = 400;
+    throw error;
+  }
+
+  return {
+    mimeType: match[1],
+    buffer: Buffer.from(match[2], 'base64'),
+  };
+}
+
+export async function uploadReferenceImageToInvokeAI(endpoint: string, dataUrl: string): Promise<string> {
+  const { mimeType, buffer } = parseDataUrlImage(dataUrl);
+  const extension = mimeType.includes('jpeg') || mimeType.includes('jpg') ? 'jpg' : 'png';
+  const formData = new FormData();
+  formData.append('file', new Blob([new Uint8Array(buffer)], { type: mimeType }), `two-ais-reference.${extension}`);
+
+  const uploadUrl = `${endpoint}/api/v1/images/upload?image_category=user&is_intermediate=false`;
+  const response = await fetch(uploadUrl, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '');
+    throw new Error(`Failed to upload reference image to InvokeAI: ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
+  }
+
+  const result = await response.json() as { image_name?: string };
+  if (!result.image_name) {
+    throw new Error('InvokeAI did not return an image_name for the reference image.');
+  }
+
+  return result.image_name;
 }
 
 export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): Promise<PreparedInvokeAIGeneration> {
@@ -806,6 +983,32 @@ export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): 
     : typeof body.loraWeight === 'number'
       ? body.loraWeight
       : undefined;
+  const referenceImageEnabled = body.reference_image_enabled === true || body.referenceImageEnabled === true;
+  const referenceImageModelKeyRaw = typeof body.reference_image_model_key === 'string'
+    ? body.reference_image_model_key
+    : typeof body.referenceImageModelKey === 'string'
+      ? body.referenceImageModelKey
+      : '';
+  const referenceImageDataUrlRaw = typeof body.reference_image_data_url === 'string'
+    ? body.reference_image_data_url
+    : typeof body.referenceImageDataUrl === 'string'
+      ? body.referenceImageDataUrl
+      : '';
+  const referenceImageNameRaw = typeof body.reference_image_name === 'string'
+    ? body.reference_image_name
+    : typeof body.referenceImageName === 'string'
+      ? body.referenceImageName
+      : '';
+  const referenceImageMethodRaw = typeof body.reference_image_method === 'string'
+    ? body.reference_image_method
+    : typeof body.referenceImageMethod === 'string'
+      ? body.referenceImageMethod
+      : '';
+  const referenceImageClipVisionModelRaw = typeof body.reference_image_clip_vision_model === 'string'
+    ? body.reference_image_clip_vision_model
+    : typeof body.referenceImageClipVisionModel === 'string'
+      ? body.referenceImageClipVisionModel
+      : '';
 
   if (!prompt) {
     throw new Error('Prompt is required');
@@ -835,15 +1038,7 @@ export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): 
   const loraLookupKey = typeof loraKeyRaw === 'string' ? loraKeyRaw.trim() : '';
   if (loraLookupKey) {
     const loraCandidates = await fetchLoRAModels(endpoint);
-    const found = loraCandidates.find((m) => {
-      const key = typeof m.key === 'string' ? m.key : '';
-      const id = typeof (m as { id?: string }).id === 'string' ? (m as { id?: string }).id : '';
-      return (
-        key === loraLookupKey ||
-        id === loraLookupKey ||
-        (typeof (m as { name?: string }).name === 'string' && (m as { name: string }).name === loraLookupKey)
-      );
-    });
+    const found = getLookupModel(loraCandidates, loraLookupKey);
     if (!found) {
       const error = new Error(`LoRA not found for "${loraLookupKey}". Refresh models in Session Setup or check Invoke's LoRA installs.`);
       (error as Error & { status?: number }).status = 400;
@@ -856,6 +1051,60 @@ export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): 
     }
     selectedLora = found;
     console.log(`[InvokeAI Generate] Using LoRA: ${selectedLora.name}`);
+  }
+
+  let referenceImage: InvokeAIReferenceImage | null = null;
+  let uploadedReferenceImageName: string | undefined;
+  if (referenceImageEnabled) {
+    const referenceImageModelKey = referenceImageModelKeyRaw.trim();
+    if (!referenceImageModelKey) {
+      const error = new Error('Reference image model is required when reference image is enabled.');
+      (error as Error & { status?: number }).status = 400;
+      throw error;
+    }
+
+    const ipAdapterCandidates = await fetchIPAdapterModels(endpoint);
+    const selectedIPAdapter = getLookupModel(ipAdapterCandidates, referenceImageModelKey);
+    if (!selectedIPAdapter) {
+      const error = new Error(`IP Adapter model not found for "${referenceImageModelKey}". Refresh models in Session Setup or check Invoke's IP Adapter installs.`);
+      (error as Error & { status?: number }).status = 400;
+      throw error;
+    }
+    if (selectedIPAdapter.base && selectedModel.base && selectedIPAdapter.base !== selectedModel.base) {
+      const error = new Error(`Selected IP Adapter base '${selectedIPAdapter.base}' does not match the main model base '${selectedModel.base}'.`);
+      (error as Error & { status?: number }).status = 400;
+      throw error;
+    }
+
+    const existingReferenceImageName = referenceImageNameRaw.trim();
+    const referenceImageDataUrl = referenceImageDataUrlRaw.trim();
+    uploadedReferenceImageName = existingReferenceImageName || undefined;
+    if (!uploadedReferenceImageName) {
+      if (!referenceImageDataUrl) {
+        const error = new Error('Reference image upload is required when reference image is enabled.');
+        (error as Error & { status?: number }).status = 400;
+        throw error;
+      }
+      uploadedReferenceImageName = await uploadReferenceImageToInvokeAI(endpoint, referenceImageDataUrl);
+    }
+
+    referenceImage = {
+      image_name: uploadedReferenceImageName,
+      model: selectedIPAdapter,
+      weight: clampNumber(body.reference_image_weight ?? body.referenceImageWeight, 0.8, 0, 2),
+      method: referenceImageMethodRaw.trim() || 'style',
+      clip_vision_model: referenceImageClipVisionModelRaw.trim() || 'ViT-H',
+      begin_step_percent: clampNumber(body.reference_image_begin_step_pct ?? body.referenceImageBeginStepPct, 0, 0, 1),
+      end_step_percent: clampNumber(body.reference_image_end_step_pct ?? body.referenceImageEndStepPct, 1, 0, 1),
+    };
+
+    if (referenceImage.end_step_percent < referenceImage.begin_step_percent) {
+      const start = referenceImage.begin_step_percent;
+      referenceImage.begin_step_percent = referenceImage.end_step_percent;
+      referenceImage.end_step_percent = start;
+    }
+
+    console.log(`[InvokeAI Generate] Using IP Adapter reference image: ${selectedIPAdapter.name}`);
   }
 
   if (selectedModel.base !== 'sd-1' && selectedModel.base !== 'sdxl') {
@@ -887,6 +1136,7 @@ export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): 
     clip_skip,
     cfg_rescale_multiplier,
     ...(selectedLora ? { lora: selectedLora, lora_weight: resolvedLoraWeight } : { lora: null }),
+    ...(referenceImage ? { reference_image: referenceImage } : { reference_image: null }),
   });
 
   console.log(`[InvokeAI Generate] Built graph with seed: ${finalSeed}`);
@@ -898,6 +1148,7 @@ export async function prepareInvokeAIGeneration(body: InvokeAIGenerationInput): 
     modelName: selectedModel.name,
     selectedModel,
     selectedLora,
+    ...(uploadedReferenceImageName ? { referenceImageName: uploadedReferenceImageName } : {}),
   };
 }
 
@@ -1016,6 +1267,7 @@ export async function POST(request: NextRequest) {
       seed: prepared.seed,
       model: prepared.modelName,
       image_name: imageName,
+      reference_image_name: prepared.referenceImageName,
     });
 
   } catch (error) {

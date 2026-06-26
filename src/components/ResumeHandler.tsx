@@ -36,6 +36,14 @@ interface SessionConfig {
         invokeaiModel?: string;
         invokeaiLoraKey?: string;
         invokeaiLoraWeight?: number;
+        invokeaiReferenceImageEnabled?: boolean;
+        invokeaiReferenceImageModelKey?: string;
+        invokeaiReferenceImageDataUrl?: string;
+        invokeaiReferenceImageWeight?: number;
+        invokeaiReferenceImageMethod?: string;
+        invokeaiReferenceImageClipVisionModel?: string;
+        invokeaiReferenceImageBeginStepPct?: number;
+        invokeaiReferenceImageEndStepPct?: number;
         negativePrompt?: string;
         steps?: number;
         guidanceScale?: number;

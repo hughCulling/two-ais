@@ -26,6 +26,12 @@ interface LoraSummary {
     base?: string;
 }
 
+interface IPAdapterSummary {
+    key: string;
+    name: string;
+    base?: string;
+}
+
 export async function POST(request: NextRequest) {
     try {
         let body;
@@ -103,7 +109,34 @@ export async function POST(request: NextRequest) {
             console.warn('[InvokeAI Verify] LoRA fetch failed:', loraErr);
         }
 
-        return NextResponse.json({ available: true, models, loras }, { status: 200 });
+        let ipAdapters: IPAdapterSummary[] = [];
+        try {
+            const ipAdapterUrl = `${cleanEndpoint}/api/v2/models/?model_type=ip_adapter`;
+            console.log(`[InvokeAI Verify] Fetching IP Adapters: ${ipAdapterUrl}`);
+            const ipAdapterRes = await fetch(ipAdapterUrl, {
+                method: 'GET',
+                headers,
+                cache: 'no-store',
+                signal: AbortSignal.timeout(10000),
+            });
+            if (ipAdapterRes.ok) {
+                const ipAdapterData: InvokeAIModelsResponse = await ipAdapterRes.json();
+                const raw = ipAdapterData.models || [];
+                ipAdapters = raw
+                    .filter((m) => m.key || m.id)
+                    .map((m) => ({
+                        key: (m.key || m.id) as string,
+                        name: m.name,
+                        base: m.base,
+                    }));
+            } else {
+                console.warn(`[InvokeAI Verify] IP Adapter list unavailable: ${ipAdapterRes.status}`);
+            }
+        } catch (ipAdapterErr) {
+            console.warn('[InvokeAI Verify] IP Adapter fetch failed:', ipAdapterErr);
+        }
+
+        return NextResponse.json({ available: true, models, loras, ipAdapters }, { status: 200 });
     } catch (error) {
         console.error('[InvokeAI Verify] Unexpected error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
