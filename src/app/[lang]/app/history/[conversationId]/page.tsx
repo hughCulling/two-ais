@@ -297,6 +297,7 @@ interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system' | 'human' | 'ai' | 'agentA' | 'agentB';
     content: string;
+    presentationContent?: string;
     timestamp: string; // ISO string
     imageUrl?: string | null;
     imageGenError?: string | null;
@@ -388,7 +389,7 @@ function buildPrintableConversationHtml(
             `<strong>${escapeHtml(getRoleDisplayName(msg.role))}</strong>`,
             `<span>${escapeHtml(messageTime || `Message ${index + 1}`)}</span>`,
             '</div>',
-            `<div class="message-content">${renderMarkdownToHtml(msg.content)}</div>`,
+            `<div class="message-content">${renderMarkdownToHtml(msg.presentationContent?.trim() || msg.content)}</div>`,
             mediaItems ? `<div class="media-grid">${mediaItems}</div>` : '',
             '</div>',
             '</article>',
@@ -526,11 +527,11 @@ export default function ChatHistoryViewerPage() {
         return resolveMediaSegments(content, granularity, details?.language || 'en', mediaSegments);
     }, [details]);
 
-    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
-        return getSegments(message.content, message.mediaSegments);
+    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'presentationContent' | 'mediaSegments'>) => {
+        return getSegments(message.presentationContent?.trim() || message.content, message.mediaSegments);
     }, [getSegments]);
 
-    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'presentationContent' | 'mediaSegments'>) => {
         return getMessageSegments(message).filter((segment) => {
             const cleaned = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
             return cleaned.trim().length > 0;
@@ -1187,7 +1188,7 @@ export default function ChatHistoryViewerPage() {
                         ) : (
                             <div className="chat-markdown min-w-0">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {msg.content}
+                                    {msg.presentationContent?.trim() || msg.content}
                                 </ReactMarkdown>
                             </div>
                         )}

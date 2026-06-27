@@ -96,6 +96,7 @@ interface Message {
     id: string;
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
+    presentationContent?: string;
     timestamp: Timestamp | null;
     audioUrl?: string; // Optional audioUrl
     paragraphAudioUrls?: Array<string | null>;
@@ -141,6 +142,11 @@ interface ConversationData {
         mediaGranularity?: 'paragraph' | 'sentence' | 'smart';
         panoramaMode?: boolean;
         pixabayMediaType?: PixabayMediaType;
+    };
+    turnTransformSettings?: {
+        enabled: boolean;
+        llm: string;
+        prompt: string;
     };
 }
 
@@ -303,11 +309,17 @@ export function ChatInterface({
         return resolveMediaSegments(text, granularity, conversationData?.language || 'en', mediaSegments);
     }, [conversationData]);
 
-    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
-        return getSegments(message.content, message.mediaSegments);
-    }, [getSegments]);
+    const getPresentationContent = useCallback((message: Pick<Message, 'content' | 'presentationContent'>) => {
+        return typeof message.presentationContent === 'string' && message.presentationContent.trim()
+            ? message.presentationContent
+            : message.content;
+    }, []);
 
-    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'mediaSegments'>) => {
+    const getMessageSegments = useCallback((message: Pick<Message, 'content' | 'presentationContent' | 'mediaSegments'>) => {
+        return getSegments(getPresentationContent(message), message.mediaSegments);
+    }, [getSegments, getPresentationContent]);
+
+    const getSpeakableSegments = useCallback((message: Pick<Message, 'content' | 'presentationContent' | 'mediaSegments'>) => {
         return getMessageSegments(message).filter((segment) => {
             const cleanedSegment = cleanTextForTTS(removeEmojis(removeMarkdown(segment.text)));
             return isSpeakableText(cleanedSegment);
@@ -825,6 +837,7 @@ export function ChatInterface({
                             id: doc.id,
                             role: data.role,
                             content: data.content,
+                            presentationContent: data.presentationContent,
                             timestamp: data.timestamp || null,
                             audioUrl: data.audioUrl,
                             paragraphAudioUrls: data.paragraphAudioUrls,
@@ -1257,6 +1270,7 @@ export function ChatInterface({
                     id: streamingMessage.id,
                     role: streamingMessage.role,
                     content: streamingMessage.content,
+                    presentationContent: undefined,
                     timestamp: null,
                     audioUrl: undefined,
                     ttsWasSplit: false,

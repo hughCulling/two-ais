@@ -121,6 +121,7 @@ interface ConversationData {
 interface MessageData {
     role: 'agentA' | 'agentB' | 'user' | 'system';
     content: string;
+    presentationContent?: string;
     paragraphImages?: ParagraphImage[];
     mediaSegments?: MediaSegment[];
     mediaSegmentationDebug?: MediaSegmentationDebug;
@@ -538,9 +539,10 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
                         const granularity: MediaGranularity = settings.mediaGranularity || 'paragraph';
                         const convLanguage = conversationData.language || 'en';
                         const convOllamaEndpoint = conversationData.ollamaEndpoint || 'http://localhost:11434';
+                        const presentationContent = messageData.presentationContent?.trim() || messageData.content;
                         const segmentationResult = granularity === 'smart'
-                            ? await generateSmartMediaSegments(messageData.content, settings, convOllamaEndpoint)
-                            : { segments: splitIntoMediaSegments(messageData.content, granularity, convLanguage) };
+                            ? await generateSmartMediaSegments(presentationContent, settings, convOllamaEndpoint)
+                            : { segments: splitIntoMediaSegments(presentationContent, granularity, convLanguage) };
                         const { segments } = segmentationResult;
 
                         if (segments.length === 0) {
@@ -550,7 +552,7 @@ export function useInvokeAIImageGen(conversationId: string | null, userId: strin
 
                         const initializedSegments = await initializeMediaSegmentsForMessage({
                             messageRef: messageDoc.ref,
-                            content: messageData.content,
+                            content: presentationContent,
                             segments,
                             settings,
                             granularity,

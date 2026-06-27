@@ -26,6 +26,7 @@ import type {
     VideoSearchDuration,
     VideoSearchType,
 } from '@/lib/image-media';
+import type { TurnTransformSettings } from '@/lib/turn-transform';
 
 // --- Initialize Services (Keep existing logic) ---
 let firebaseAdminApp: App | null = null;
@@ -193,6 +194,7 @@ interface StartConversationRequest {
     ollamaEndpoint?: string; // ngrok URL for remote Ollama access
     localaiEndpoint?: string; // ngrok URL for remote LocalAI access (TTS)
     lookaheadLimit?: number; // Number of turns to generate in advance
+    turnTransformSettings?: TurnTransformSettings;
     imageGenSettings?: {
         enabled: boolean;
         provider?: ImageMediaProvider;
@@ -265,6 +267,7 @@ type ConversationData = {
     ollamaEndpoint?: string;
     localaiEndpoint?: string;
     lookaheadLimit?: number;
+    turnTransformSettings?: TurnTransformSettings;
     imageGenSettings?: {
         enabled: boolean;
         provider?: ImageMediaProvider;
@@ -341,7 +344,7 @@ export async function POST(request: NextRequest) {
             console.error("API Route: Error parsing request body:", e);
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', ollamaEndpoint, localaiEndpoint, lookaheadLimit, imageGenSettings } = requestBody;
+        const { agentA_llm, agentB_llm, ttsEnabled, agentA_tts, agentB_tts, language = 'en', initialSystemPrompt = '', ollamaEndpoint, localaiEndpoint, lookaheadLimit, turnTransformSettings, imageGenSettings } = requestBody;
 
         if (!agentA_llm || !agentB_llm || typeof ttsEnabled !== 'boolean' || !agentA_tts || !agentB_tts) {
             console.warn("API Route: Missing required configuration fields in request body.");
@@ -362,6 +365,17 @@ export async function POST(request: NextRequest) {
                 ...imageGenSettings,
                 promptLookaheadLimit: Math.max(0, Math.min(10, Math.floor(imageGenSettings.promptLookaheadLimit))),
             };
+        }
+
+        const normalizedTurnTransformSettings = turnTransformSettings?.enabled
+            ? {
+                enabled: true,
+                llm: String(turnTransformSettings.llm || '').trim(),
+                prompt: String(turnTransformSettings.prompt || '').trim(),
+            }
+            : undefined;
+        if (normalizedTurnTransformSettings && (!normalizedTurnTransformSettings.llm || !normalizedTurnTransformSettings.prompt)) {
+            return NextResponse.json({ error: "turnTransformSettings.llm and turnTransformSettings.prompt are required when turn conversion is enabled" }, { status: 400 });
         }
 
         if (ttsEnabled) {
@@ -467,6 +481,19 @@ export async function POST(request: NextRequest) {
             if (normalizedImageGenSettings?.enabled && normalizedImageGenSettings.provider === 'pixabay' && !userApiSecretVersions.pixabay) {
                 return NextResponse.json({ error: "Pixabay API key reference not found in settings." }, { status: 404 });
             }
+
+            if (normalizedTurnTransformSettings?.enabled) {
+                const transformLLMInfo = getLLMInfoById(normalizedTurnTransformSettings.llm);
+                if (!transformLLMInfo && !normalizedTurnTransformSettings.llm.startsWith('ollama:')) {
+                    return NextResponse.json({ error: "Invalid script/storyboard LLM selection provided" }, { status: 400 });
+                }
+                if (transformLLMInfo?.provider !== 'Ollama') {
+                    const transformKey = transformLLMInfo?.apiKeySecretName;
+                    if (!transformKey || !userApiSecretVersions[transformKey]) {
+                        return NextResponse.json({ error: `API key reference for ${transformLLMInfo?.provider || 'script/storyboard LLM'} not found in settings.` }, { status: 404 });
+                    }
+                }
+            }
         } catch (firestoreError) {
             console.error(`API Route: Firestore error fetching secret versions for user ${userId}:`, firestoreError);
             return NextResponse.json({ error: "Error retrieving API key configuration." }, { status: 500 });
@@ -527,9 +554,13 @@ export async function POST(request: NextRequest) {
             if (normalizedImageGenSettings !== undefined) {
                 conversationData.imageGenSettings = normalizedImageGenSettings;
             }
+            if (normalizedTurnTransformSettings !== undefined) {
+                conversationData.turnTransformSettings = normalizedTurnTransformSettings;
+            }
 
             // Add log for imageGenSettings
             console.log("API Route: imageGenSettings to be stored:", normalizedImageGenSettings);
+            console.log("API Route: turnTransformSettings to be stored:", normalizedTurnTransformSettings);
             await newConversationRef.set(conversationData);
             console.log(`API Route: Created conversation document with TTS settings and language: ${conversationId}`);
 

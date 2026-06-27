@@ -68,6 +68,7 @@ import {
     type VideoSearchDuration,
     type VideoSearchType,
 } from '@/lib/image-media';
+import { DEFAULT_TURN_TRANSFORM_PROMPT, type TurnTransformSettings } from '@/lib/turn-transform';
 
 // --- Define TTS Types ---
 type TTSProviderOptionId = TTSProviderInfo['id'] | 'localai';
@@ -104,6 +105,7 @@ interface SessionConfig {
     ollamaEndpoint?: string;
     localaiEndpoint?: string;
     lookaheadLimit?: number;
+    turnTransformSettings?: TurnTransformSettings;
     imageGenSettings?: {
         enabled: boolean;
         provider: ImageMediaProvider;
@@ -991,6 +993,9 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
     const [showEdgeRecommendation, setShowEdgeRecommendation] = useState<boolean>(false);
     const [initialSystemPrompt, setInitialSystemPrompt] = useState<string>(() => t?.sessionSetupForm?.startTheConversation || '');
     const [lookaheadLimit, setLookaheadLimit] = useState<number>(3);
+    const [turnTransformEnabled, setTurnTransformEnabled] = useState<boolean>(false);
+    const [turnTransformLlm, setTurnTransformLlm] = useState<string>('');
+    const [turnTransformPrompt, setTurnTransformPrompt] = useState<string>(DEFAULT_TURN_TRANSFORM_PROMPT);
 
     // Preset management state
     const [showOverwriteDialog, setShowOverwriteDialog] = useState<boolean>(false);
@@ -1522,6 +1527,33 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             return;
         }
 
+        let turnTransformSettings: SessionConfig['turnTransformSettings'] = undefined;
+        if (turnTransformEnabled) {
+            if (!turnTransformLlm) {
+                alert('Please select a script/storyboard LLM or disable turn conversion.');
+                return;
+            }
+            if (!turnTransformPrompt.trim()) {
+                alert('Please provide a script/storyboard conversion prompt.');
+                return;
+            }
+
+            const transformLLMInfo = getLLMInfoById(turnTransformLlm);
+            if (transformLLMInfo && transformLLMInfo.provider !== 'Ollama') {
+                const transformLLMKey = transformLLMInfo.apiKeySecretName;
+                if (!savedKeyStatus[transformLLMKey]) {
+                    alert(`Missing required API key for script/storyboard LLM (${transformLLMInfo.provider}). Please add it in Settings.`);
+                    return;
+                }
+            }
+
+            turnTransformSettings = {
+                enabled: true,
+                llm: turnTransformLlm,
+                prompt: turnTransformPrompt.trim(),
+            };
+        }
+
         // Image generation validation
         let imageGenSettings: SessionConfig['imageGenSettings'] = undefined;
         if (imageGenEnabled) {
@@ -1693,6 +1725,7 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             initialSystemPrompt,
             ollamaEndpoint: ollamaEndpoint.trim() || undefined,
             localaiEndpoint: localaiEndpoint.trim() || undefined,
+            turnTransformSettings,
             imageGenSettings,
             lookaheadLimit,
         });
@@ -1798,6 +1831,13 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                 initialSystemPrompt,
                 localaiEndpoint: localaiEndpoint.trim() || undefined,
                 lookaheadLimit,
+                turnTransformSettings: turnTransformEnabled
+                    ? {
+                        enabled: true,
+                        llm: turnTransformLlm,
+                        prompt: turnTransformPrompt.trim() || DEFAULT_TURN_TRANSFORM_PROMPT,
+                    }
+                    : undefined,
                 imageGenSettings: imageGenEnabled ? (
                     imageMediaProvider === 'invokeai'
                         ? {
@@ -1924,6 +1964,16 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
             setInitialSystemPrompt(preset.initialSystemPrompt);
             if (typeof (preset as unknown as { lookaheadLimit?: number }).lookaheadLimit === 'number') {
                 setLookaheadLimit((preset as unknown as { lookaheadLimit: number }).lookaheadLimit);
+            }
+            const presetTurnTransformSettings = (preset as unknown as { turnTransformSettings?: TurnTransformSettings }).turnTransformSettings;
+            if (presetTurnTransformSettings?.enabled) {
+                setTurnTransformEnabled(true);
+                setTurnTransformLlm(presetTurnTransformSettings.llm || '');
+                setTurnTransformPrompt(presetTurnTransformSettings.prompt || DEFAULT_TURN_TRANSFORM_PROMPT);
+            } else {
+                setTurnTransformEnabled(false);
+                setTurnTransformLlm('');
+                setTurnTransformPrompt(DEFAULT_TURN_TRANSFORM_PROMPT);
             }
             if (typeof (preset as unknown as { localaiEndpoint?: unknown }).localaiEndpoint === 'string') {
                 setLocalaiEndpoint((preset as unknown as { localaiEndpoint: string }).localaiEndpoint);
@@ -2632,6 +2682,56 @@ function SessionSetupForm({ onStartSession, isLoading }: SessionSetupFormProps) 
                                 </p>
                             )}
                         </div>
+                    </div>
+
+                    {/* Turn Conversion Section */}
+                    <hr className="my-6" />
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Checkbox
+                                id="turn-transform-enabled-checkbox"
+                                checked={turnTransformEnabled}
+                                onCheckedChange={checked => setTurnTransformEnabled(Boolean(checked))}
+                                disabled={!user}
+                                aria-describedby="turn-transform-checkbox-description"
+                            />
+                            <Label
+                                htmlFor="turn-transform-enabled-checkbox"
+                                className="text-base font-medium"
+                            >
+                                Convert turns into script/storyboard text
+                            </Label>
+                        </div>
+                        <div id="turn-transform-checkbox-description" className="sr-only">
+                            Check this box to convert each completed agent turn into presentation text before TTS, scrolling, and media generation use it.
+                        </div>
+
+                        {turnTransformEnabled && (
+                            <div className="space-y-4 pt-2">
+                                <LLMSelector
+                                    value={turnTransformLlm}
+                                    onChange={setTurnTransformLlm}
+                                    disabled={!user}
+                                    label="Script/storyboard LLM"
+                                    placeholder="Select conversion LLM"
+                                />
+                                <div className="space-y-2 flex flex-col items-center">
+                                    <Label htmlFor="turn-transform-prompt" className="text-center">
+                                        Conversion prompt
+                                    </Label>
+                                    <textarea
+                                        id="turn-transform-prompt"
+                                        value={turnTransformPrompt}
+                                        onChange={(e) => setTurnTransformPrompt(e.target.value)}
+                                        className="w-full min-h-[160px] px-3 py-2 text-sm rounded-md liquid-glass-input resize-y"
+                                        disabled={!user}
+                                    />
+                                    <p className="text-xs text-muted-foreground text-center max-w-md">
+                                        Use <code>{'{turn}'}</code> where the raw agent turn should be inserted. If omitted, the turn is also sent as the user message.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* TTS Configuration Section */}
